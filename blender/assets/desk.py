@@ -103,7 +103,7 @@ def build(**overrides):
 
     walnut = common.pbr_material("M_Walnut", (0.105, 0.042, 0.016), roughness=0.5, coat=0.25)
     common.set_base_color_map(walnut, textures.load(textures.walnut()))
-    steel = common.pbr_material("M_Steel_Polished", (0.85, 0.85, 0.86), roughness=0.18, metallic=1.0)
+    steel = common.pbr_material("M_Steel_Polished", (0.85, 0.85, 0.86), roughness=0.08, metallic=1.0)
 
     w, d, t = p["top"]
     top = common.mesh_object(f"{n}_Top", common.rounded_slab_bmesh(w, d, t, p["corner"]),

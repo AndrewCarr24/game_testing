@@ -377,3 +377,79 @@ def world_aabb(objects):
 def aabb_gltf(lo, hi):
     a, b = to_gltf(lo), to_gltf(hi)
     return {"min": [min(a[i], b[i]) for i in range(3)], "max": [max(a[i], b[i]) for i in range(3)]}
+
+
+# ------------------------------------------------------------ baked lighting
+
+def lightmap_uv(objects, solids, bounds, resolution=1024, padding=4, name="Lightmap"):
+    """Second UV layer for baked lighting (exported as TEXCOORD_1).
+
+    Every face that can be seen from the air inside `bounds` gets its own
+    rectangle in one shared atlas at a uniform texel density; faces buried in
+    another solid or facing out of the bounds collapse to a corner so they
+    don't waste space. Meant for axis-aligned architecture (box faces).
+    solids: list of (lo, hi) boxes; bounds: (lo, hi) of the walkable air.
+    Returns texels per metre."""
+    lo, hi = bounds
+
+    def in_air(p):
+        inside = all(lo[i] - 1e-6 <= p[i] <= hi[i] + 1e-6 for i in range(3))
+        buried = any(all(s_lo[i] < p[i] < s_hi[i] for i in range(3)) for s_lo, s_hi in solids)
+        return inside and not buried
+
+    faces = []   # (ob, poly, axes, mins, size)
+    for ob in objects:
+        me = ob.data
+        if name not in me.uv_layers:
+            me.uv_layers.new(name=name)
+        me.uv_layers.active_index = 0
+        off = Vector(ob.location)
+        for poly in me.polygons:
+            if not in_air(off + poly.center + poly.normal * 0.05):
+                continue
+            n = [abs(c) for c in poly.normal]
+            na = n.index(max(n))
+            axes = [i for i in range(3) if i != na]
+            cos = [off + me.vertices[vi].co for vi in poly.vertices]
+            mins = [min(c[a] for c in cos) for a in axes]
+            size = [max(c[a] for c in cos) - mins[k] for k, a in enumerate(axes)]
+            faces.append((ob, poly, axes, mins, size))
+
+    def pack(k):
+        """Shelf-pack all rectangles at k texels/metre; return placements or None."""
+        order = sorted(range(len(faces)), key=lambda i: -faces[i][4][1])
+        x = y = shelf = 0
+        out = {}
+        for i in order:
+            w = faces[i][4][0] * k + 2 * padding
+            h = faces[i][4][1] * k + 2 * padding
+            if x + w > resolution:
+                x, y, shelf = 0, y + shelf, 0
+            if w > resolution or y + h > resolution:
+                return None
+            out[i] = (x + padding, y + padding)
+            x += w
+            shelf = max(shelf, h)
+        return out
+
+    lo_k, hi_k = 1.0, float(resolution)
+    for _ in range(40):
+        mid = (lo_k + hi_k) / 2
+        lo_k, hi_k = (mid, hi_k) if pack(mid) else (lo_k, mid)
+    k = int(lo_k * 0.995)
+    placed = pack(k)
+
+    for ob in objects:
+        layer = ob.data.uv_layers[name]
+        for d in layer.data:
+            d.uv = (0.0, 0.0)
+    for i, (ob, poly, axes, mins, size) in enumerate(faces):
+        px, py = placed[i]
+        layer = ob.data.uv_layers[name]
+        off = Vector(ob.location)
+        for li in poly.loop_indices:
+            co = off + ob.data.vertices[ob.data.loops[li].vertex_index].co
+            u = px + (co[axes[0]] - mins[0]) * k
+            v = py + (co[axes[1]] - mins[1]) * k
+            layer.data[li].uv = (u / resolution, v / resolution)
+    return k

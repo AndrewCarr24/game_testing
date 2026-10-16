@@ -16,6 +16,7 @@ import os
 import sys
 
 import bpy
+from mathutils import Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BLENDER_DIR = os.path.join(HERE, "..")
@@ -40,8 +41,16 @@ P = dict(
     mullion_pitch=1.4,
     mullion=(0.05, 0.12),  # width, depth
     glass_t=0.012,
-    light_strips=[(-1.6, -0.6), (0.6, 1.6)],  # (x, y) centres of ceiling light coves
-    light_strip_size=(4.2, 0.08),
+    light_strips=[(-1.3, -0.6), (0.6, 1.6)],  # (x, y) centres of ceiling light coves
+    light_strip_size=(4.0, 0.08),
+    # lighting, shared by the Blender bake and the engine
+    sun_dir=(-0.35, -0.72, -0.6),   # direction the light travels (Blender coords): in through the window
+    sun_strength=4.0,               # W/m² in Blender = DirectionalLight intensity in three.js
+    sky=(0.55, 0.68, 0.85),
+    sky_strength=1.0,
+    cove_power=80.0,                # W per ceiling light cove (daylight should dominate)
+    lightmap_res=1024,
+    exposure=0.8,                   # engine tone-mapping exposure for the baked look
 )
 
 # (asset module, Blender location, rotation about Z in degrees)
@@ -79,25 +88,28 @@ def shell(p):
 
     W, D, H, T = p["width"], p["depth"], p["height"], p["wall_t"]
     hw, hd = W / 2, D / 2
-    colliders = []
+    colliders, solids, baked = [], [], []
 
-    def box(name, lo, hi, mat, collide=True, uv_tile=1.0):
+    def box(name, lo, hi, mat, collide=True, uv_tile=1.0, bake=False):
         size = [hi[i] - lo[i] for i in range(3)]
         ob = common.mesh_object(f"{NAME}_{name}", common.box_bmesh(size), col, mat, root, smooth=False)
         ob.location = [(lo[i] + hi[i]) / 2 for i in range(3)]
         common.box_uv(ob, tile=uv_tile)
+        solids.append((lo, hi))
         if collide:
             colliders.append(common.aabb_gltf(lo, hi))
+        if bake:
+            baked.append(ob)
         return ob
 
-    box("Floor", (-hw - T, -hd - T, -0.1), (hw + T, hd + T, 0.0), oak, uv_tile=2.0)
-    box("Ceiling", (-hw - T, -hd - T, H), (hw + T, hd + T, H + 0.1), ceiling_m)
-    box("Wall_W", (-hw - T, -hd - T, 0), (-hw, hd + T, H), plaster)
-    box("Wall_E", (hw, -hd - T, 0), (hw + T, hd + T, H), plaster)
+    box("Floor", (-hw - T, -hd - T, -0.1), (hw + T, hd + T, 0.0), oak, uv_tile=2.0, bake=True)
+    box("Ceiling", (-hw - T, -hd - T, H), (hw + T, hd + T, H + 0.1), ceiling_m, bake=True)
+    box("Wall_W", (-hw - T, -hd - T, 0), (-hw, hd + T, H), plaster, bake=True)
+    box("Wall_E", (hw, -hd - T, 0), (hw + T, hd + T, H), plaster, bake=True)
     dx0, dx1 = p["door_x"] - p["door_w"] / 2, p["door_x"] + p["door_w"] / 2
-    box("Wall_S_A", (-hw, -hd - T, 0), (dx0, -hd, H), plaster)
-    box("Wall_S_B", (dx1, -hd - T, 0), (hw, -hd, H), plaster)
-    box("Wall_S_Header", (dx0, -hd - T, p["door_h"]), (dx1, -hd, H), plaster)
+    box("Wall_S_A", (-hw, -hd - T, 0), (dx0, -hd, H), plaster, bake=True)
+    box("Wall_S_B", (dx1, -hd - T, 0), (hw, -hd, H), plaster, bake=True)
+    box("Wall_S_Header", (dx0, -hd - T, p["door_h"]), (dx1, -hd, H), plaster, bake=True)
 
     # window wall: head and sill channels, mullions, one glass pane
     mw, md = p["mullion"]
@@ -118,13 +130,19 @@ def shell(p):
     lights = []
     sw, sd = p["light_strip_size"]
     for i, (x, y) in enumerate(p["light_strips"]):
-        box(f"LightStrip_{i}", (x - sw / 2, y - sd / 2, H - 0.004), (x + sw / 2, y + sd / 2, H),
+        box(f"LightStrip_{i}", (x - sw / 2, y - sd / 2, H - 0.006), (x + sw / 2, y + sd / 2, H - 0.001),
             glow, collide=False)
         lights.append({"type": "rect", "position": common.to_gltf((x, y, H - 0.01)),
                        "width": sw, "height": 0.25, "intensity": 6.0, "color": [1.0, 0.92, 0.82],
                        "lookAt": common.to_gltf((x, y, 0))})
 
-    lights.append({"type": "sun", "direction": [-0.35, -0.6, 0.72], "intensity": 2.5,
+    # lightmap atlas over every surface visible from inside the room (+ the doorway)
+    air = ((-hw, -hd - T - 0.01, 0.0), (hw, hd, H))
+    texels = common.lightmap_uv(baked, solids, air, resolution=p["lightmap_res"])
+    print(f"lightmap: {len(baked)} objects at {texels} texels/m")
+
+    sun = Vector(p["sun_dir"]).normalized()
+    lights.append({"type": "sun", "direction": common.to_gltf(sun), "intensity": p["sun_strength"],
                    "color": [1.0, 0.96, 0.9]})
     lights.append({"type": "ambient_env", "intensity": 0.6})
     # stand-in for bounced light until lightmaps are baked: warm floor bounce lights the ceiling
@@ -133,23 +151,37 @@ def shell(p):
     return root, colliders, lights
 
 
-def blender_preview_lights(p, lights):
-    """Matching Blender lights so EEVEE previews look like the engine (not exported)."""
+def blender_lights(p):
+    """Blender lights + sky. These drive the Cycles bake (blender/levels/bake.py);
+    they are not exported. The engine gets the sun from the level JSON."""
     col = common.fresh_collection(f"{NAME}_PreviewLights")
     for i, (x, y) in enumerate(p["light_strips"]):
         ld = bpy.data.lights.get(f"{NAME}_Cove_{i}") or bpy.data.lights.new(f"{NAME}_Cove_{i}", "AREA")
         ld.shape = "RECTANGLE"
         ld.size, ld.size_y = p["light_strip_size"][0], 0.25
-        ld.energy = 900
+        ld.energy = p["cove_power"]
         ld.color = (1.0, 0.92, 0.82)
         ob = bpy.data.objects.new(f"{NAME}_Cove_{i}", ld)
         ob.location = (x, y, p["height"] - 0.02)
         col.objects.link(ob)
     sd = bpy.data.lights.get(f"{NAME}_Sun") or bpy.data.lights.new(f"{NAME}_Sun", "SUN")
-    sd.energy = 4.0
+    sd.energy = p["sun_strength"]
+    sd.color = (1.0, 0.96, 0.9)
+    sd.angle = math.radians(1.5)
     sun = bpy.data.objects.new(f"{NAME}_Sun", sd)
-    sun.rotation_euler = (math.radians(50), 0, math.radians(200))
+    sun.rotation_euler = Vector(p["sun_dir"]).to_track_quat("-Z", "Y").to_euler()
     col.objects.link(sun)
+
+    scene = bpy.context.scene
+    world = scene.world or bpy.data.worlds.new("World")
+    scene.world = world
+    try:
+        world.use_nodes = True
+    except AttributeError:
+        pass
+    bg = next(nd for nd in world.node_tree.nodes if nd.type == "BACKGROUND")
+    bg.inputs["Color"].default_value = (*p["sky"], 1)
+    bg.inputs["Strength"].default_value = p["sky_strength"]
 
 
 def build(export=True):
@@ -161,7 +193,7 @@ def build(export=True):
 
     props_col = common.fresh_collection(f"{NAME}_Props")  # linked copies; clear before rebuilding assets
     shell_root, colliders, lights = shell(p)
-    blender_preview_lights(p, lights)
+    blender_lights(p)
 
     assets, roots, placed = {}, {}, []
     for asset, loc, rot in PLACEMENTS:

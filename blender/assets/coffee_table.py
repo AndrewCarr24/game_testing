@@ -33,7 +33,7 @@ def build(**overrides):
 
     marble = common.pbr_material("M_Marble_White", (0.8, 0.79, 0.77), roughness=0.12, coat=0.0)
     common.set_base_color_map(marble, textures.load(textures.marble()))
-    steel = common.pbr_material("M_Steel_Polished", (0.85, 0.85, 0.86), roughness=0.18, metallic=1.0)
+    steel = common.pbr_material("M_Steel_Polished", (0.85, 0.85, 0.86), roughness=0.08, metallic=1.0)
 
     w, d, t = p["top"]
     top = common.mesh_object(f"{n}_Top", common.rounded_slab_bmesh(w, d, t, p["corner"]),

@@ -21,3 +21,8 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
 ## Interactables
 - A moving part is its own empty (pivot/origin where it rests) with an `interact` custom property, e.g. `Desk_Drawer["interact"] = {"type": "slide", "axis": [glTF, parent space], "distance", "duration", "range", "prompt", "promptActive"}`. `export_extras=True` writes it to glTF extras → three.js `userData.interact`, so every placement of the asset gets the behaviour with no level changes.
 - Engine side: `viewer/interactables.js` (nearest item in range on its opening side; E toggles; eased slide). Test: `viewer/tools/drawer.mjs`.
+
+## Baked lighting
+- `blender/levels/bake.py` (headless: `Blender -b blender/levels/office.blend --python blender/levels/bake.py -- office 512`, ~1 min on the M4 GPU) bakes Cycles diffuse lighting for every shell mesh with a `Lightmap` UV layer into `assets/textures/T_Office_Lightmap.png`, renders a 360° room panorama (sun hidden) to `T_Office_Env.hdr`, and writes `assets/levels/office_bake.json`. Save the .blend first; re-bake whenever the level layout changes.
+- The lightmap UV atlas is generated in `office.py` (`common.lightmap_uv`); sun direction/strength, sky, cove power and exposure live in office.py's `P` and feed both the bake and the engine.
+- Engine (`viewer/baked.js`): lightmapped materials have real-time diffuse switched off (no double lighting), keep real-time specular. Props: real-time sun + the panorama as environment. `?bake=0` shows the old unbaked lighting for comparison.

@@ -1,0 +1,26 @@
+{
+  "lightmap": {
+    "file": "textures/T_Office_Lightmap.png",
+    "uv": 1,
+    "intensity": 5.9887,
+    "objects": [
+      "Office_Floor",
+      "Office_Ceiling",
+      "Office_Wall_W",
+      "Office_Wall_E",
+      "Office_Wall_S_A",
+      "Office_Wall_S_B",
+      "Office_Wall_S_Header"
+    ]
+  },
+  "environment": {
+    "file": "textures/T_Office_Env.hdr",
+    "position": [
+      0.0,
+      1.3,
+      -0.0
+    ]
+  },
+  "exposure": 0.8,
+  "samples": 512
+}

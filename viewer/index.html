@@ -36,6 +36,7 @@
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
     import { Interactables } from './interactables.js';
+    import { loadBake } from './baked.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -110,9 +111,16 @@
       scene.background = new THREE.Color(0xb9cde3);
       RectAreaLightUniformsLib.init();
 
+      // baked lighting replaces the stand-in fill lights; the sun stays real-time
+      const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer);
+      if (baked) {
+        scene.environment = baked.envMap;
+        renderer.toneMappingExposure = baked.bake.exposure;
+      }
       const env = level.lights.find((l) => l.type === 'ambient_env');
-      const envIntensity = env ? env.intensity : 1;
+      const envIntensity = baked ? 1 : env ? env.intensity : 1;
       for (const l of level.lights) {
+        if (baked && l.type !== 'sun') continue;
         if (l.type === 'rect') {
           const light = new THREE.RectAreaLight(new THREE.Color(...l.color), l.intensity, l.width, l.height);
           light.position.set(...l.position);
@@ -138,6 +146,7 @@
       const [shell, ...protos] = await Promise.all(
         [level.shell, ...names.map((n) => level.assets[n].file)].map((f) => loadGltf(base + f)));
       let total = prepare(shell.scene, envIntensity).tris;
+      if (baked) baked.applyLightmap(shell.scene);
       scene.add(shell.scene);
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity);
