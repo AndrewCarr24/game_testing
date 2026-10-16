@@ -1,0 +1,13 @@
+import { chromium } from 'playwright-core';
+const [url, out, w = 1400, h = 850] = process.argv.slice(2);
+const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: +w, height: +h } });
+p.on('console', (m) => console.log('console:', m.type(), m.text()));
+p.on('pageerror', (e) => console.log('pageerror:', e.message));
+const t0 = Date.now();
+await p.goto(url);
+await p.waitForFunction(() => window.__loaded || document.getElementById('stats').textContent.startsWith('load error'), null, { timeout: 90000 });
+await p.waitForTimeout(1500);
+console.log('loaded in', Date.now() - t0, 'ms;', await p.textContent('#stats'));
+await p.screenshot({ path: out });
+await b.close();

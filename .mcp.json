@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "blender": {
+      "type": "stdio",
+      "command": "/opt/homebrew/Caskroom/miniconda/base/bin/uvx",
+      "args": [
+        "mcp-for-blender"
+      ],
+      "env": {}
+    }
+  }
+}

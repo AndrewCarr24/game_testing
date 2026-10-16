@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Viewer</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #1d1f22; overflow: hidden; font: 13px system-ui, sans-serif; color: #ccc; }
+    #hud { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.45); padding: 8px 12px; border-radius: 6px; }
+    #hud a { color: #9cf; margin-right: 8px; }
+    #hint { position: absolute; bottom: 14px; width: 100%; text-align: center; color: #eee; text-shadow: 0 1px 3px #000; }
+  </style>
+  <script type="importmap">
+    { "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <a href="?level=office">office</a>
+    <a href="?asset=lounge_chair">lounge_chair</a>
+    <a href="?asset=desk_chair">desk_chair</a>
+    <a href="?asset=desk">desk</a>
+    <a href="?asset=coffee_table">coffee_table</a>
+    <a href="?asset=rug">rug</a>
+    <span id="stats"></span>
+  </div>
+  <div id="hint"></div>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+
+    const params = new URLSearchParams(location.search);
+    const stats = document.getElementById('stats');
+    const hint = document.getElementById('hint');
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const envMap = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = envMap;
+    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.01, 200);
+    const loader = new GLTFLoader();
+    const loadGltf = (url) => new Promise((ok, fail) => loader.load(url, ok, undefined, fail));
+
+    function prepare(root, envIntensity = 1) {
+      let tris = 0, meshes = 0;
+      root.traverse((o) => {
+        if (!o.isMesh) return;
+        meshes++;
+        tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
+        const m = o.material;
+        m.envMapIntensity = envIntensity;
+        if (m.transparent) { o.castShadow = false; o.receiveShadow = false; m.depthWrite = false; }
+        else { o.castShadow = o.receiveShadow = true; }
+      });
+      return { tris, meshes };
+    }
+
+    let update = () => {};
+    window.__camera = camera;
+
+    // ------------------------------------------------------------ single asset
+    async function viewAsset(name) {
+      scene.background = new THREE.Color(0x1d1f22);
+      camera.fov = 40; camera.updateProjectionMatrix();
+      camera.position.set(1.4, 1.1, 1.8);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 0.4, 0);
+      controls.enableDamping = true;
+      update = () => controls.update();
+
+      const sun = new THREE.DirectionalLight(0xffffff, 2.0);
+      sun.position.set(2, 4, 3);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      Object.assign(sun.shadow.camera, { left: -2, right: 2, top: 2, bottom: -2 });
+      sun.shadow.bias = -0.0005;
+      scene.add(sun);
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20),
+        new THREE.MeshStandardMaterial({ color: 0x8a8580, roughness: 0.9 }));
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      const gltf = await loadGltf(`../assets/models/${name}.glb`);
+      const { tris, meshes } = prepare(gltf.scene);
+      scene.add(gltf.scene);
+      const size = new THREE.Box3().setFromObject(gltf.scene).getSize(new THREE.Vector3());
+      stats.textContent = `${meshes} meshes · ${Math.round(tris)} tris · ${size.x.toFixed(2)}×${size.z.toFixed(2)}×${size.y.toFixed(2)} m`;
+    }
+
+    // ------------------------------------------------------------ level
+    async function viewLevel(name) {
+      const base = '../assets/';
+      const level = await (await fetch(`${base}levels/${name}.json`)).json();
+      scene.background = new THREE.Color(0xb9cde3);
+      RectAreaLightUniformsLib.init();
+
+      const env = level.lights.find((l) => l.type === 'ambient_env');
+      const envIntensity = env ? env.intensity : 1;
+      for (const l of level.lights) {
+        if (l.type === 'rect') {
+          const light = new THREE.RectAreaLight(new THREE.Color(...l.color), l.intensity, l.width, l.height);
+          light.position.set(...l.position);
+          light.lookAt(...l.lookAt);
+          scene.add(light);
+        } else if (l.type === 'hemisphere') {
+          scene.add(new THREE.HemisphereLight(new THREE.Color(...l.sky), new THREE.Color(...l.ground), l.intensity));
+        } else if (l.type === 'sun') {
+          const sun = new THREE.DirectionalLight(new THREE.Color(...l.color), l.intensity);
+          const dir = new THREE.Vector3(...l.direction).normalize();
+          sun.position.copy(dir.clone().multiplyScalar(-20));
+          sun.castShadow = true;
+          sun.shadow.mapSize.set(4096, 4096);
+          Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 50 });
+          sun.shadow.bias = -0.0004;
+          sun.shadow.normalBias = 0.02;
+          scene.add(sun, sun.target);
+        }
+      }
+
+      // load each asset once, clone per placement (geometry + materials shared)
+      const names = [...new Set(level.props.map((p) => p.asset))];
+      const [shell, ...protos] = await Promise.all(
+        [level.shell, ...names.map((n) => level.assets[n].file)].map((f) => loadGltf(base + f)));
+      let total = prepare(shell.scene, envIntensity).tris;
+      scene.add(shell.scene);
+      const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
+      for (const n of names) prepare(proto[n], envIntensity);
+
+      const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
+      for (const p of level.props) {
+        const obj = proto[p.asset].clone(true);
+        obj.position.set(...p.position);
+        obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
+        scene.add(obj);
+        obj.updateMatrixWorld(true);
+        total += level.assets[p.asset].tris;
+        const a = level.assets[p.asset].aabb;
+        if (a.max[1] - a.min[1] > 0.05)   // rugs are walkable
+          colliders.push(new THREE.Box3(new THREE.Vector3(...a.min), new THREE.Vector3(...a.max)).applyMatrix4(obj.matrixWorld));
+      }
+      stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders`;
+
+      // first-person walk with simple circle-vs-box collision on the floor plane
+      camera.fov = 65; camera.updateProjectionMatrix();
+      // ?pos=x,y,z&look=x,y,z overrides the spawn view (handy for screenshots)
+      const vec = (k, d) => (params.get(k) ? params.get(k).split(',').map(Number) : d);
+      camera.position.set(...vec('pos', level.spawn.position));
+      camera.lookAt(...vec('look', level.spawn.lookAt));
+      const controls = new PointerLockControls(camera, document.body);
+      hint.textContent = 'click to walk · WASD move · mouse look · Esc release';
+      document.body.addEventListener('click', () => controls.lock());
+      const keys = {};
+      addEventListener('keydown', (e) => (keys[e.code] = true));
+      addEventListener('keyup', (e) => (keys[e.code] = false));
+      const R = 0.3, eye = level.spawn.position[1];
+      const blocked = (x, z) => colliders.some((b) =>
+        b.max.y > 0.05 && b.min.y < eye && x > b.min.x - R && x < b.max.x + R && z > b.min.z - R && z < b.max.z + R);
+      const clock = new THREE.Clock();
+      update = () => {
+        const dt = Math.min(clock.getDelta(), 0.05);
+        if (!controls.isLocked) return;
+        const speed = 2.2 * dt;
+        const f = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0), s = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
+        const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+        const right = new THREE.Vector3().crossVectors(fwd, camera.up);
+        const move = fwd.multiplyScalar(f * speed).add(right.multiplyScalar(s * speed));
+        const p = camera.position;
+        if (!blocked(p.x + move.x, p.z)) p.x += move.x;   // slide along walls
+        if (!blocked(p.x, p.z + move.z)) p.z += move.z;
+      };
+    }
+
+    const ready = params.get('level') ? viewLevel(params.get('level')) : viewAsset(params.get('asset') || 'lounge_chair');
+    ready.then(() => (window.__loaded = true)).catch((e) => (stats.textContent = 'load error: ' + e));
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+    renderer.setAnimationLoop(() => { update(); renderer.render(scene, camera); });
+  </script>
+</body>
+</html>

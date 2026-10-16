@@ -1,0 +1,10 @@
+# Blender autosave/backup
+*.blend1
+*.blend@
+# Python
+__pycache__/
+*.pyc
+# tooling
+node_modules/
+.deepeval/
+.DS_Store
