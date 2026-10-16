@@ -48,7 +48,7 @@ P = dict(
 # Every asset faces -Y at rotation 0.
 PLACEMENTS = [
     ("desk", (0.3, 1.5, 0.0), 0),
-    ("desk_chair", (0.3, 2.3, 0.0), 0),
+    ("desk_chair", (0.3, 2.5, 0.0), 0),   # clear of the drawer when it's open
     ("rug", (-1.6, -1.0, 0.0), 0),
     ("coffee_table", (-1.6, -1.0, 0.0), 90),
     ("lounge_chair", (-2.55, -1.0, 0.0), 90),

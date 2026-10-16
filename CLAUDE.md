@@ -17,3 +17,7 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
 - Viewer: `viewer/?level=office` (click to walk, WASD; `&pos=x,y,z&look=x,y,z` sets the view).
 - Variants come from overrides: `desk_chair.py` is `lounge_chair.build()` with different parameters.
 - Screenshots / tests of the viewer: `viewer/tools/shot.mjs <url> <out.png>` and `walk.mjs` (Playwright with the installed Chrome; `npm i playwright-core` in a scratch dir). Plain headless Chrome `--screenshot` does not wait for multi-file levels to load.
+
+## Interactables
+- A moving part is its own empty (pivot/origin where it rests) with an `interact` custom property, e.g. `Desk_Drawer["interact"] = {"type": "slide", "axis": [glTF, parent space], "distance", "duration", "range", "prompt", "promptActive"}`. `export_extras=True` writes it to glTF extras → three.js `userData.interact`, so every placement of the asset gets the behaviour with no level changes.
+- Engine side: `viewer/interactables.js` (nearest item in range on its opening side; E toggles; eased slide). Test: `viewer/tools/drawer.mjs`.

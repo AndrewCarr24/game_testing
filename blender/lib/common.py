@@ -310,6 +310,7 @@ def export_glb(root, filepath):
         use_selection=True,
         export_apply=True,
         export_yup=True,
+        export_extras=True,   # custom properties (e.g. "interact") -> node extras
     )
     for o in view_layer.objects.selected:
         o.select_set(False)
