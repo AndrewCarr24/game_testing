@@ -476,8 +476,9 @@ def lightmap_uv(objects, solids, air, resolution=1024, padding=4, name="Lightmap
 
 # ------------------------------------------------------------------ collision
 
-# trim that never blocks the player
-COLLIDER_SKIP = ("Piping",)
+# trim and small wall fixtures that never block the player (standing on a 1 cm
+# keycard reader is not a thing)
+COLLIDER_SKIP = ("Piping", "Reader")
 
 
 def part_colliders(parts, skip=COLLIDER_SKIP):

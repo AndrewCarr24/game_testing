@@ -93,53 +93,103 @@ export class Player {
     const travel = Math.max(Math.abs(this.vel.x), Math.abs(this.vel.y), Math.abs(this.vel.z)) * dt;
     const steps = Math.max(1, Math.ceil(travel / 0.04));
     const h = dt / steps;
-    this.grounded = false;
     for (let i = 0; i < steps; i++) {
       this.moveHorizontal('x', this.vel.x * h);
       this.moveHorizontal('z', this.vel.z * h);
       this.moveVertical(this.vel.y * h);
+      this.depenetrate();
     }
     this.syncCamera();
   }
 
+  // Move along one horizontal axis. Boxes we run into stop us at the side we were
+  // approaching from (the nearest one wins); low edges are stepped up onto. Boxes we
+  // were already inside on this axis are left to depenetrate(), so a bad start
+  // never flings the player through to a box's far side.
   moveHorizontal(axis, d) {
     if (d === 0) return;
+    const r = this.o.radius;
+    const start = this.pos[axis];
     this.pos[axis] += d;
+    let limit = null;
     for (const c of this.overlapping(this.pos)) {
-      // low edge: step up onto it if there's room
-      const rise = c.max.y - this.pos.y;
-      if (rise > 0 && rise <= this.o.stepHeight) {
-        const up = this.pos.clone(); up.y = c.max.y;
-        if (this.overlapping(up).length === 0) { this.pos.y = c.max.y; continue; }
-      }
-      this.pos[axis] = d > 0 ? c.min[axis] - this.o.radius - 1e-3 : c.max[axis] + this.o.radius + 1e-3;
+      if (this.tryStepUp(c)) continue;
+      const side = d > 0 ? c.min[axis] - r - 1e-3 : c.max[axis] + r + 1e-3;
+      const wasOutside = d > 0 ? start <= side + 1e-3 : start >= side - 1e-3;
+      if (!wasOutside) continue;
+      limit = limit === null ? side : d > 0 ? Math.min(limit, side) : Math.max(limit, side);
+    }
+    if (limit !== null) {
+      this.pos[axis] = limit;
       this.vel[axis] = 0;
     }
   }
 
-  moveVertical(d) {
-    this.pos.y += d;
-    const hits = this.overlapping(this.pos);
-    if (!hits.length) return;
-    if (d < 0) {          // landed on the highest thing underneath
-      this.pos.y = Math.max(...hits.map((c) => c.max.y));
-      this.grounded = true;
-    } else {              // bumped a head on something
-      this.pos.y = Math.min(...hits.map((c) => c.min.y)) - this.height - 1e-3;
-    }
-    this.vel.y = 0;
+  // low edge (rug, threshold, step) right in front: climb onto it if there's room.
+  // Never while rising: mid-jump it would boost the jump off the edge of a table.
+  tryStepUp(c) {
+    if (this.vel.y > 0) return false;
+    const rise = c.max.y - this.pos.y;
+    if (rise <= 0 || rise > this.o.stepHeight) return false;
+    const up = this.pos.clone();
+    up.y = c.max.y;
+    if (this.overlapping(up).length) return false;
+    this.pos.y = c.max.y;
+    return true;
   }
 
-  // shortest horizontal way out of a box the player ended up inside
-  pushOutOf(box) {
-    const b = this.boxAt(this.pos);
-    if (!b.intersectsBox(box)) return;
+  // Fall/rise. Land only on tops that were under the feet before the move, bump only
+  // on undersides that were above the head. A box overlapped from the
+  // side (a wall) never moves the player vertically: that's what used to put players
+  // on the roof, or under the floor when jumping against a wall.
+  moveVertical(d) {
+    const prev = this.pos.y;
+    this.pos.y += d;
+    const hits = this.overlapping(this.pos);
+    if (!hits.length) {
+      this.grounded = false;
+      return;
+    }
+    if (d < 0) {
+      const under = hits.filter((c) => c.max.y <= prev + 0.01);   // (sinking into a low ledge is depenetrate's job)
+      if (under.length) {
+        this.pos.y = Math.max(...under.map((c) => c.max.y));
+        this.grounded = true;
+        this.vel.y = 0;
+      }
+    } else {
+      const over = hits.filter((c) => c.min.y >= prev + this.height - 1e-3);
+      if (over.length) {
+        this.pos.y = Math.min(...over.map((c) => c.min.y)) - this.height - 1e-3;
+        this.vel.y = 0;
+      }
+    }
+  }
+
+  // Anything still overlapping after a move pushes the player out the shortest way
+  // horizontally (or up, if it's only a step high).
+  depenetrate() {
+    for (let i = 0; i < 4; i++) {
+      const hits = this.overlapping(this.pos);
+      if (!hits.length) return;
+      if (!this.tryStepUp(hits[0])) this.pushOut(hits[0]);
+    }
+  }
+
+  pushOut(box) {
     const r = this.o.radius;
     const moves = [
       ['x', box.min.x - r - 1e-3], ['x', box.max.x + r + 1e-3],
       ['z', box.min.z - r - 1e-3], ['z', box.max.z + r + 1e-3],
     ].sort((m, n) => Math.abs(m[1] - this.pos[m[0]]) - Math.abs(n[1] - this.pos[n[0]]));
     this.pos[moves[0][0]] = moves[0][1];
+  }
+
+  // a door that just finished opening may overlap the player: step clear of it
+  pushOutOf(box) {
+    if (!this.boxAt(this.pos).intersectsBox(box)) return;
+    this.pushOut(box);
+    this.depenetrate();
     this.syncCamera();
   }
 
