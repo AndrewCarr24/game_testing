@@ -26,3 +26,9 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
 - `blender/levels/bake.py` (headless: `Blender -b blender/levels/office.blend --python blender/levels/bake.py -- office 512`, ~1 min on the M4 GPU) bakes Cycles diffuse lighting for every shell mesh with a `Lightmap` UV layer into `assets/textures/T_Office_Lightmap.png`, renders a 360° room panorama (sun hidden) to `T_Office_Env.hdr`, and writes `assets/levels/office_bake.json`. Save the .blend first; re-bake whenever the level layout changes.
 - The lightmap UV atlas is generated in `office.py` (`common.lightmap_uv`); sun direction/strength, sky, cove power and exposure live in office.py's `P` and feed both the bake and the engine.
 - Engine (`viewer/baked.js`): lightmapped materials have real-time diffuse switched off (no double lighting), keep real-time specular. Props: real-time sun + the panorama as environment. `?bake=0` shows the old unbaked lighting for comparison.
+
+## Web performance budget (it ships as an online three.js game)
+- Measured office (2026-10-16): 2.4 MB download, 81 draw calls, 33k tris, 34 MB GPU textures; 612 fps on the M4 Pro, 28 fps at 720p with no GPU at all (SwiftShader). Keep new rooms in that range: < ~5 MB download per room, < ~200 draw calls, 1024² textures by default.
+- Export with `common.export_gltf` (WebP textures in the shared `assets/models/textures/`), not `export_glb` (embeds a copy of every texture per file).
+- Viewer: pixel ratio capped at 1.5, one 2048 shadow map redrawn only when something moves, identical textures shared on the GPU.
+- Measure: `viewer/tools/perf.mjs <url>` (download, draw calls, texture MB) and `viewer/tools/fps.mjs <url> swiftshader 1280 720 1` (worst-case frame rate).

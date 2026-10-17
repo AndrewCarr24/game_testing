@@ -1,8 +1,8 @@
 {
   "lightmap": {
-    "file": "textures/T_Office_Lightmap.png",
+    "file": "textures/T_Office_Lightmap.webp",
     "uv": 1,
-    "intensity": 5.9887,
+    "intensity": 5.9923,
     "objects": [
       "Office_Floor",
       "Office_Ceiling",

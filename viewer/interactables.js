@@ -52,12 +52,16 @@ export class Interactables {
     it.target = it.target ? 0 : 1;
   }
 
+  // advance animations; returns true if anything moved (so shadows need redrawing)
   update(dt) {
+    let moved = false;
     for (const it of this.items) {
       if (it.t === it.target) continue;
+      moved = true;
       const step = dt / it.def.duration;
       it.t = it.target > it.t ? Math.min(it.target, it.t + step) : Math.max(it.target, it.t - step);
       it.node.position.copy(it.rest).addScaledVector(it.axis, it.def.distance * ease(it.t));
     }
+    return moved;
   }
 }

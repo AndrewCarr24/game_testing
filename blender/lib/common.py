@@ -295,8 +295,20 @@ def triangle_count(objects):
     return total
 
 
+def export_gltf(root, filepath, texture_dir="textures", image_format="WEBP", quality=88):
+    """Export `root` and its children for the web: .gltf + .bin, with images
+    converted to WebP in a texture folder shared by every asset (relative to the
+    .gltf), so a texture used by several assets downloads once."""
+    _export(root, filepath, export_format="GLTF_SEPARATE", export_texture_dir=texture_dir,
+            export_image_format=image_format, export_image_quality=quality)
+
+
 def export_glb(root, filepath):
-    """Export `root` and its children as a single .glb."""
+    """Export `root` and its children as a single self-contained .glb."""
+    _export(root, filepath, export_format="GLB")
+
+
+def _export(root, filepath, **opts):
     view_layer = bpy.context.view_layer
     for o in view_layer.objects.selected:
         o.select_set(False)
@@ -306,7 +318,7 @@ def export_glb(root, filepath):
     view_layer.objects.active = root
     bpy.ops.export_scene.gltf(
         filepath=filepath,
-        export_format="GLB",
+        **opts,
         use_selection=True,
         export_apply=True,
         export_yup=True,

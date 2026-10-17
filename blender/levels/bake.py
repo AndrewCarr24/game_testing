@@ -4,7 +4,7 @@
       --python blender/levels/bake.py -- office [samples]
 
 Writes (never saves the .blend):
-  assets/textures/T_<Level>_Lightmap.png  diffuse lighting (direct + bounce, no
+  assets/textures/T_<Level>_Lightmap.webp  diffuse lighting (direct + bounce, no
                                           albedo) for every shell mesh that has a
                                           "Lightmap" UV layer; sRGB-encoded, divided by `scale`
   assets/textures/T_<Level>_Env.hdr        360° radiance panorama from the room centre,
@@ -85,11 +85,11 @@ def bake_lightmap(res):
     lit = lin.max(axis=2)
     # 99th percentile: the few texels hidden behind emissive strips may clip, everything visible keeps precision
     scale = float(np.percentile(lit[lit > 1e-4], 99.0)) if (lit > 1e-4).any() else 1.0
-    textures._save(f"T_{NAME}_Lightmap", textures._to_srgb(lin / scale))
+    textures._save(f"T_{NAME}_Lightmap", textures._to_srgb(lin / scale), fmt="WEBP", quality=92)
     return [o.name for o in objs], scale
 
 
-def render_environment(probe, width=1024):
+def render_environment(probe, width=512):   # only feeds blurred reflections + ambient
     cam_data = bpy.data.cameras.new(f"{NAME}_EnvProbe")
     cam_data.type = "PANO"
     try:
@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     bake = {
         "lightmap": {
-            "file": f"textures/T_{NAME}_Lightmap.png",
+            "file": f"textures/T_{NAME}_Lightmap.webp",
             "uv": 1,
             # three.js lightMap is irradiance; Cycles' diffuse bake is irradiance / pi
             "intensity": round(math.pi * scale, 4),

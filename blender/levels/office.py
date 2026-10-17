@@ -2,8 +2,9 @@
 
 Builds the room shell, builds every prop from its asset script, places the
 props, and exports:
-  assets/models/office_shell.glb      static architecture
-  assets/models/<asset>.glb           one file per prop (origin at floor centre)
+  assets/models/office_shell.gltf     static architecture
+  assets/models/<asset>.gltf          one file per prop (origin at floor centre)
+  assets/models/textures/*.webp       textures shared by all of the above
   assets/levels/office.json           placements, colliders and lights for the engine
 
 Blender is Z-up with the room's window wall on +Y; the JSON is in glTF/three.js
@@ -203,10 +204,10 @@ def build(export=True):
             root, parts = mod.build()
             roots[asset] = root
             lo, hi = common.world_aabb(parts)
-            assets[asset] = {"file": f"models/{asset}.glb", "aabb": common.aabb_gltf(lo, hi),
+            assets[asset] = {"file": f"models/{asset}.gltf", "aabb": common.aabb_gltf(lo, hi),
                              "tris": common.triangle_count(parts)}
             if export:
-                common.export_glb(root, os.path.join(models, f"{asset}.glb"))
+                common.export_gltf(root, os.path.join(models, f"{asset}.gltf"))
             ob = root
         else:
             ob = common.duplicate_hierarchy(roots[asset], props_col, f".{len(placed):02d}")
@@ -215,11 +216,11 @@ def build(export=True):
         placed.append({"asset": asset, "position": common.to_gltf(loc), "rotationY": rot})
 
     if export:
-        common.export_glb(shell_root, os.path.join(models, "office_shell.glb"))
+        common.export_gltf(shell_root, os.path.join(models, "office_shell.gltf"))
     level = {
         "name": NAME,
         "units": "metres, Y-up (glTF)",
-        "shell": "models/office_shell.glb",
+        "shell": "models/office_shell.gltf",
         "assets": assets,
         "props": placed,
         "colliders": colliders,

@@ -31,9 +31,10 @@ def _to_srgb(lin):
     return np.where(lin <= 0.0031308, lin * 12.92, 1.055 * lin ** (1 / 2.4) - 0.055)
 
 
-def _save(name, rgb, non_color=False):
-    os.makedirs(TEX_DIR, exist_ok=True)
-    path = os.path.join(TEX_DIR, name + ".png")
+def _save(name, rgb, non_color=False, fmt="PNG", quality=90, folder=None):
+    folder = folder or TEX_DIR
+    os.makedirs(folder, exist_ok=True)
+    path = os.path.join(folder, name + (".webp" if fmt == "WEBP" else ".png"))
     h, w, _ = rgb.shape
     img = bpy.data.images.get(name)
     if img is not None:
@@ -42,8 +43,8 @@ def _save(name, rgb, non_color=False):
     rgba = np.concatenate([rgb, np.ones((h, w, 1))], axis=2)
     img.pixels.foreach_set(rgba[::-1].astype(np.float32).ravel())  # Blender rows go bottom-up
     img.filepath_raw = path
-    img.file_format = "PNG"
-    img.save()
+    img.file_format = fmt
+    img.save(quality=quality) if fmt == "WEBP" else img.save()
     bpy.data.images.remove(img)
     return path
 
@@ -96,7 +97,7 @@ def leather_normal(n=1024, seed=3, strength=2.5, force=False):
     return _save("T_Leather_Normal", nrm * 0.5 + 0.5, non_color=True)
 
 
-def oak_floor(n=2048, seed=11, force=False):
+def oak_floor(n=1024, seed=11, force=False):
     """Wide-plank light oak, planks run along u. One tile = 2 m x 2 m,
     10 rows of 0.2 m planks, each 2 m long with a staggered butt joint."""
     path = os.path.join(TEX_DIR, "T_OakFloor_BaseColor.png")
@@ -113,10 +114,10 @@ def oak_floor(n=2048, seed=11, force=False):
     phase = rng.uniform(0, 10, rows * 2 + 2)[plank]
     vin = (v * rows) % 1.0                            # position across the plank
     warp = _noise(n, 0.02, 1.0, 2.0, rng)
-    rings = 0.5 + 0.5 * np.sin(2 * np.pi * (vin * 9 + phase + warp * 3.0))
-    rings = rings ** 4
+    rings = 0.5 + 0.5 * np.sin(2 * np.pi * (vin * 5 + phase + warp * 0.8))   # gentle, mostly straight grain
+    rings = rings ** 3
     streak = _noise(n, 0.015, 1.0, 0.7, rng) * 0.5 + 0.5
-    t = np.clip(0.3 * rings + 0.55 * streak + 0.15 * (tone * 0.5 + 0.5), 0, 1)
+    t = np.clip(0.18 * rings + 0.62 * streak + 0.2 * (tone * 0.5 + 0.5), 0, 1)
     light = np.array([0.46, 0.32, 0.185])
     dark = np.array([0.33, 0.215, 0.115])
     lin = dark + (light - dark) * t[..., None]

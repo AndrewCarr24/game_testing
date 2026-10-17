@@ -43,11 +43,14 @@
     const hint = document.getElementById('hint');
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // cap the render resolution: retina screens would otherwise draw 4x the pixels
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(innerWidth, innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // nothing casts moving shadows except interactables, so only redraw shadows on demand
+    renderer.shadowMap.autoUpdate = false;
     document.body.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -57,11 +60,24 @@
     const loader = new GLTFLoader();
     const loadGltf = (url) => new Promise((ok, fail) => loader.load(url, ok, undefined, fail));
 
+    // assets that use the same image (e.g. walnut) share one GPU texture
+    const textureCache = new Map();
+    function shareTextures(m) {
+      for (const k of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap']) {
+        const t = m[k];
+        if (!t || !t.name) continue;
+        const key = `${t.name}:${t.image?.width}x${t.image?.height}`;
+        if (!textureCache.has(key)) textureCache.set(key, t);
+        else if (textureCache.get(key) !== t) { t.dispose(); m[k] = textureCache.get(key); }
+      }
+    }
+
     function prepare(root, envIntensity = 1) {
       let tris = 0, meshes = 0;
       root.traverse((o) => {
         if (!o.isMesh) return;
         meshes++;
+        shareTextures(o.material);
         tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
         const m = o.material;
         m.envMapIntensity = envIntensity;
@@ -73,6 +89,7 @@
 
     let update = () => {};
     window.__camera = camera;
+    window.__three = { renderer, scene, camera };
 
     // ------------------------------------------------------------ single asset
     async function viewAsset(name) {
@@ -97,7 +114,7 @@
       floor.receiveShadow = true;
       scene.add(floor);
 
-      const gltf = await loadGltf(`../assets/models/${name}.glb`);
+      const gltf = await loadGltf(`../assets/models/${name}.gltf`);
       const { tris, meshes } = prepare(gltf.scene);
       scene.add(gltf.scene);
       const size = new THREE.Box3().setFromObject(gltf.scene).getSize(new THREE.Vector3());
@@ -133,7 +150,7 @@
           const dir = new THREE.Vector3(...l.direction).normalize();
           sun.position.copy(dir.clone().multiplyScalar(-20));
           sun.castShadow = true;
-          sun.shadow.mapSize.set(4096, 4096);
+          sun.shadow.mapSize.set(2048, 2048);
           Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 50 });
           sun.shadow.bias = -0.0004;
           sun.shadow.normalBias = 0.02;
@@ -191,7 +208,7 @@
       const clock = new THREE.Clock();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
-        interact.update(dt);
+        if (interact.update(dt)) renderer.shadowMap.needsUpdate = true;
         focus = controls.isLocked ? interact.nearest(camera.position) : null;
         hint.textContent = focus ? `E · ${interact.prompt(focus)}` : walkHint;
         if (!controls.isLocked) return;
@@ -207,7 +224,7 @@
     }
 
     const ready = params.get('level') ? viewLevel(params.get('level')) : viewAsset(params.get('asset') || 'lounge_chair');
-    ready.then(() => (window.__loaded = true)).catch((e) => (stats.textContent = 'load error: ' + e));
+    ready.then(() => { renderer.shadowMap.needsUpdate = true; window.__loaded = true; }).catch((e) => (stats.textContent = 'load error: ' + e));
 
     addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;

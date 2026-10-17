@@ -1,10 +1,10 @@
 {
   "name": "Office",
   "units": "metres, Y-up (glTF)",
-  "shell": "models/office_shell.glb",
+  "shell": "models/office_shell.gltf",
   "assets": {
     "desk": {
-      "file": "models/desk.glb",
+      "file": "models/desk.gltf",
       "aabb": {
         "min": [
           -1.0,
@@ -20,7 +20,7 @@
       "tris": 3488
     },
     "desk_chair": {
-      "file": "models/desk_chair.glb",
+      "file": "models/desk_chair.gltf",
       "aabb": {
         "min": [
           -0.32,
@@ -36,7 +36,7 @@
       "tris": 8796
     },
     "rug": {
-      "file": "models/rug.glb",
+      "file": "models/rug.gltf",
       "aabb": {
         "min": [
           -1.5,
@@ -52,7 +52,7 @@
       "tris": 428
     },
     "coffee_table": {
-      "file": "models/coffee_table.glb",
+      "file": "models/coffee_table.gltf",
       "aabb": {
         "min": [
           -0.525,
@@ -68,7 +68,7 @@
       "tris": 2012
     },
     "lounge_chair": {
-      "file": "models/lounge_chair.glb",
+      "file": "models/lounge_chair.gltf",
       "aabb": {
         "min": [
           -0.415,
