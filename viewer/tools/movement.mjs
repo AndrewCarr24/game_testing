@@ -1,7 +1,7 @@
 // Character controller checks in the office. Usage: node movement.mjs [out-dir]
 import { chromium } from 'playwright-core';
 const out = process.argv[2] || '.';
-const base = 'http://localhost:8765/viewer/index.html?level=office';
+const base = 'http://localhost:8765/viewer/index.html?level=mansion';
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 let fails = 0;
 const check = (label, ok, detail) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}  ${detail}`); if (!ok) fails++; };

@@ -1,0 +1,78 @@
+{
+  "rooms": {
+    "office": {
+      "lightmap": {
+        "file": "textures/T_Mansion_Office_Lightmap.webp",
+        "uv": 1,
+        "intensity": 5.9477,
+        "objects": [
+          "Mansion_Office_Floor",
+          "Mansion_Office_Ceiling",
+          "Mansion_Office_Wall_W",
+          "Mansion_Office_Wall_E",
+          "Mansion_Office_Wall_S_West",
+          "Mansion_Office_Wall_S_A",
+          "Mansion_Office_Wall_S_B",
+          "Mansion_Office_Wall_S_Header"
+        ]
+      },
+      "environment": {
+        "file": "textures/T_Mansion_Office_Env.hdr",
+        "position": [
+          0.0,
+          1.3,
+          -0.0
+        ]
+      }
+    },
+    "hall": {
+      "lightmap": {
+        "file": "textures/T_Mansion_Hall_Lightmap.webp",
+        "uv": 1,
+        "intensity": 2.6473,
+        "objects": [
+          "Mansion_Hall_Floor",
+          "Mansion_Hall_Ceiling",
+          "Mansion_Hall_Wall_W",
+          "Mansion_Hall_Wall_E"
+        ]
+      },
+      "environment": {
+        "file": "textures/T_Mansion_Hall_Env.hdr",
+        "position": [
+          2.4,
+          1.5,
+          8.3
+        ]
+      }
+    },
+    "bedroom": {
+      "lightmap": {
+        "file": "textures/T_Mansion_Bedroom_Lightmap.webp",
+        "uv": 1,
+        "intensity": 13.7801,
+        "objects": [
+          "Mansion_Bedroom_Floor",
+          "Mansion_Bedroom_Ceiling",
+          "Mansion_Bedroom_Wall_N_A",
+          "Mansion_Bedroom_Wall_N_B",
+          "Mansion_Bedroom_Wall_N_Header",
+          "Mansion_Bedroom_Wall_S",
+          "Mansion_Bedroom_Wall_E",
+          "Mansion_Bedroom_Wall_W_S",
+          "Mansion_Bedroom_Wall_W_N"
+        ]
+      },
+      "environment": {
+        "file": "textures/T_Mansion_Bedroom_Env.hdr",
+        "position": [
+          1.0,
+          1.3,
+          15.6
+        ]
+      }
+    }
+  },
+  "exposure": 0.8,
+  "samples": 1024
+}

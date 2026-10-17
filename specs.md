@@ -23,61 +23,151 @@ Entry format:
 ---
 
 ## vase
-- Status: DRAFT
+- Status: APPROVED
 - Model: sonnet
-- What: a sculptural ceramic vase, the kind on a billionaire's coffee table
-- Size: about 0.18 wide x 0.32 tall (proposed)
-- Materials: new matte glazed ceramic (proposed: warm off-white or charcoal), subtle
-  speckle texture
-- Details that sell it: turned profile (built by revolving a curve), a thin lip with a
-  visible wall thickness, a slightly glossier glaze inside the mouth, a faint unglazed
-  foot ring
-- Interact: pickup (item "vase", name "Vase"); also throwable once the arm feature exists
-- Budget: under 3,000 triangles, one 1024 texture at most
-- Placement: on the coffee table in the office (proposed)
-- Open questions:
-  1. Style: ceramic (matte white / charcoal / terracotta), glass, or bronze?
-  2. Size: tabletop vase (~32 cm), or a tall floor vase?
-  3. Empty, or with dried stems / a branch in it? (stems are much harder to make look good)
-  4. When thrown: does it shatter, bounce and stay whole, or shatter and leave pieces?
-     Can the player pick it up again?
+- What: a heavy, hand-blown-looking smoked-glass vase for the office coffee table; empty
+- Size: about 0.13 diameter x 0.28 tall
+- Shape: built by revolving a profile (bmesh spin or your own lathe): a thick solid glass
+  base (~2 cm, visibly solid when seen through the walls), a body that swells to a
+  rounded shoulder, a narrower neck and a slightly flared lip. Real wall thickness
+  (~4-5 mm): outer surface, inner surface and a rounded top of the lip joining them.
+  Shallow vertical flutes (12-16 ribs) around the body so light catches it.
+- Materials: `materials.glass("M_Glass_Smoke", tint=(0.42, 0.40, 0.37), alpha=0.35,
+  roughness=0.04)` for the walls; the solid base may use a second, slightly denser glass
+  material (alpha ~0.55) so the thickness reads. Alpha-blended only (no transmission).
+- Details that sell it: the wall thickness visible at the lip, the solid base, the flutes,
+  smooth shading (no faceting on the curved profile: enough segments around, ~48).
+- Interact: on the root empty:
+  `{"type": "pickup", "item": "vase", "name": "Glass vase", "prompt": "Take vase",
+    "range": 1.4, "throwable": true}`
+  The engine handles throwing and shattering; don't model fracture pieces.
+- Origin: centre of the underside, sitting on z = 0.
+- Budget: under 3,000 triangles; no textures needed.
+- Placement: on the office coffee table (the orchestrator places it).
 
 ## picture_frame
-- Status: DRAFT
+- Status: APPROVED
 - Model: sonnet
-- What: a framed artwork for the hall walls; one asset with parameters for size and
-  artwork, so the hall can hang several different pieces
-- Size: parameterised; e.g. 0.6 x 0.8, 0.9 x 1.2, 1.2 x 0.8 (w x h), ~4 cm deep
-- Materials: thin black or walnut frame, white mat, artwork as a generated texture
-- Details that sell it: mat bevel, a glass sheen (slight reflection), the frame casting a
-  thin shadow line on the wall (it stands ~1 cm off the wall)
-- Interact: none (proposed)
-- Budget: under 500 triangles per frame; artwork textures 1024 at most
-- Placement: hall walls
-- Open questions:
-  1. Artwork style: abstract colour fields (Rothko-like), geometric (Mondrian-like),
-     line drawings, black-and-white "photographs" (generated, not real photos), or a mix?
-  2. Any story role? e.g. one picture hides a safe, or shows the billionaire / his company.
-  3. Frame: black, walnut (matches the office), or brushed metal?
+- What: framed artworks for the hall: one script with a `variant` parameter that sets the
+  size and the artwork, so the hall can hang several different pieces
+- Frame: slim gallery frame in `materials.black_metal()`: 2 cm face, 4 cm deep, with a
+  bright white mat (8-10 cm border) whose window has a small 45-degree bevel, and the
+  artwork recessed behind it. A faint glass layer over the front
+  (`materials.glass("M_Glass_Picture", alpha=0.06, roughness=0.02)`).
+- Artwork: generated with numpy, 1024 px on the long side, one texture per variant named
+  `T_Art_<Variant>`. A cohesive set that suits a modern collector's hallway, palette of warm
+  neutrals, ink blue, cognac and ochre:
+  - `colorfield_a` 0.9 x 1.2 (w x h): two or three soft-edged stacked colour fields with
+    brush texture and slightly feathered edges (Rothko-like)
+  - `colorfield_b` 1.2 x 0.8: a horizontal variant in different colours
+  - `geometric_a` 0.8 x 0.8: hard-edged geometric composition (rectangles, one circle),
+    flat paint with a faint canvas grain
+  - `geometric_b` 0.6 x 0.8: a quieter geometric piece, mostly negative space
+  - `linework_a` 0.9 x 1.2: a single continuous ink line drawing on cream paper
+  The default variant (`build()` with no arguments) is `colorfield_a`. Put the variant
+  table in a `VARIANTS` dict at the top of the script.
+- Orientation: hangs on a wall. Origin at the centre of the frame's back, on the wall
+  plane; the picture faces -Y, extends ±w/2 in X and ±h/2 in Z, and sits 1 cm off the wall
+  (a hidden spacer behind it). Ignore the "not on the ground" report line for this asset.
+- Interact: none.
+- Budget: under 600 triangles per frame; one 1024 texture per variant.
+- Check every variant's preview (`--no-export --set variant=<name>`), not just the default.
+- Placement: hall walls (the orchestrator places them).
 
-## bedroom assets (one entry each once the list is agreed)
-- Status: DRAFT
-- Model: sonnet (bed: opus if it gets bedding with folds; that's the hardest piece)
-- Proposed list: bed with headboard and bedding, two nightstands (one with a drawer),
-  table lamp, wardrobe or built-in closet, rug, bench at the foot of the bed
-- Open questions:
-  1. What should the bedroom contain? Add or cut from the list above.
-  2. Is anything in it interactive or part of the story? (a nightstand drawer with
-     something in it, a closet that opens, a lamp you can switch...)
-  3. Mood: same warm walnut / white / cognac palette as the office, or its own
-     (e.g. darker, more private)?
+## Bedroom palette (shared by every bedroom asset)
+Evening, private, warmer and darker than the office. Use these exactly (blender/lib/materials.py):
+- wood: `materials.smoked_oak()`; metal: `materials.bronze()`
+- ink upholstery: `materials.fabric("M_Fabric_Ink", (0.018, 0.024, 0.04), roughness=0.8)`
+- oat linen: `materials.fabric("M_Fabric_Oat", (0.42, 0.37, 0.30))`
+- stone throw / accents: `materials.fabric("M_Fabric_Stone", (0.16, 0.15, 0.135))`
+- recessed plinths / shadow gaps: `materials.black_metal()`
+
+## bed
+- Status: APPROVED
+- Model: sonnet
+- What: a king platform bed, the hero piece of the bedroom
+- Size: 1.95 wide x 2.15 long; headboard 1.15 tall and ~2.1 wide
+- Build: smoked oak platform 0.30 tall on a recessed black plinth so it seems to float;
+  mattress 0.25 thick (oat, soft rounded edges: `common.cushion_bmesh` + subdivision);
+  a tailored duvet that overhangs the sides by ~0.12 with softly rounded edges, turned back
+  at the head end so a second layer shows; two sleeping pillows (oat) and two smaller
+  cushions (ink) leaning against the headboard; a folded throw (stone) across the foot.
+  Headboard: ink upholstery in vertical channels (6-8 padded channels) on a smoked oak frame.
+- Details that sell it: soft, slightly irregular bedding (not perfect boxes: vary crowns and
+  rotate pillows a few degrees), seams/piping on pillows, the floating platform shadow gap.
+- Orientation: origin at the floor centre; the foot of the bed faces -Y, headboard at +Y.
+- Interact: none
+- Budget: under 20,000 triangles (hero piece); fabric/wood textures come from the palette.
+
+## nightstand
+- Status: APPROVED
+- Model: sonnet
+- What: a floating-look nightstand with one drawer and an open shelf below
+- Size: 0.55 wide x 0.42 deep x 0.55 tall
+- Build: smoked oak case on a recessed black plinth; one drawer on top that opens (copy the
+  desk drawer pattern in `desk.py`: an empty `<Asset>_Drawer` carrying
+  `{"type": "slide", "axis": common.to_gltf((0, -1, 0)), "distance": 0.25, "duration": 0.4,
+  "range": 1.4, "prompt": "Open drawer", "promptActive": "Close drawer"}`; note this drawer
+  opens toward -Y, the front); a real drawer box inside; a slim recessed bronze pull; an open
+  shelf below with a visible back panel.
+- Orientation: origin at the floor centre; the front (drawer side) faces -Y.
+- Budget: under 4,000 triangles.
+
+## table_lamp
+- Status: APPROVED
+- Model: sonnet
+- What: a bedside lamp that gives the room its warm glow
+- Size: 0.62 tall; drum shade 0.36 diameter x 0.26 tall; base ~0.16 diameter
+- Build: weighted round base (smoked oak or bronze), slim bronze stem, a drum shade in
+  glowing linen (`materials.emissive("M_LampShade_Warm", (1.0, 0.78, 0.52), 1.5)`) with a
+  thin bronze rim top and bottom, an open top and bottom so the inside of the shade reads,
+  a small bright bulb shape inside.
+- Orientation: origin at the centre of the underside.
+- Interact: none (it's on; switching comes later)
+- Budget: under 4,000 triangles.
+
+## wardrobe
+- Status: APPROVED
+- Model: sonnet
+- What: a tall two-door wardrobe in smoked oak
+- Size: 1.8 wide x 0.62 deep x 2.4 tall
+- Build: two full-height doors with 3 mm reveal gaps, vertical grain, full-height slim bronze
+  bar pulls at the meeting edges, a recessed black plinth (5 cm), a top shadow gap; the sides
+  and top a touch thicker than the doors so it reads as furniture, not a box.
+- Orientation: origin at the floor centre; doors face -Y.
+- Interact: none for now (static doors).
+- Budget: under 4,000 triangles.
+
+## bench
+- Status: APPROVED
+- Model: sonnet
+- What: an upholstered bench for the foot of the bed
+- Size: 1.45 wide x 0.42 deep x 0.46 tall
+- Build: a boxed cushion top in ink upholstery with piping (see the lounge chair cushions),
+  on a slim bronze flat-bar frame (two sled-style ends joined by a stretcher).
+- Orientation: origin at the floor centre; front faces -Y.
+- Budget: under 6,000 triangles.
+
+## bedroom_rug
+- Status: APPROVED
+- Model: sonnet
+- What: a large, soft wool rug under the bed
+- Size: 3.2 x 2.6, 15 mm thick, small rounded corners
+- Build: like `rug.py`, but oat/cream wool with a quiet tone-on-tone pattern (a soft inset
+  border or broad low-contrast stripes) and visible pile texture: generate `T_BedroomRug_BaseColor`
+  (and optionally a normal map) at 1024, tiled or mapped once across the rug.
+- Orientation: origin at the floor centre.
+- Budget: under 1,000 triangles.
 
 ---
 
 ## Orchestrator work (not sub-agent jobs)
 
-### Arm feature (engine)
-Proposed controls, to confirm:
+### Arm feature (engine) — DONE
+Decided: I opens the inventory, the up/down arrows choose, Enter arms; with an item armed,
+Enter uses it and Delete (Backspace on a Mac) puts it away. The keycard only works armed
+(locks and unlocks doors with a reader); the vase is thrown in an arc and shatters.
+Original proposal, for reference:
 - Number keys 1-9 (or the mouse wheel) choose an inventory slot; the armed slot is
   highlighted in the HUD and the item shows in the player's hand (bottom-right of view).
 - Left click uses the armed item. E stays for the world (drawers, door handles, pickups).
@@ -91,7 +181,7 @@ Open questions:
    someone out)?
 3. Mouse wheel or number keys, or both?
 
-### Hall (level)
+### Hall (level) — DONE (10 m gallery hall, five artworks, door to the bedroom; more to come)
 Replaces the corridor stub behind the office door.
 Open questions:
 1. Length and shape: straight, ~10 m, ~2 m wide? Ceiling height?
@@ -99,7 +189,7 @@ Open questions:
    now, even locked ones for later rooms?
 3. Windows, or interior only?
 
-### Bedroom (level)
+### Bedroom (level) — DONE (evening mood, west window, lamps baked)
 Open questions:
 1. Size (~6 x 5 m?) and does it have the same floor-to-ceiling glass as the office?
 2. Is its door locked, and if so what opens it?

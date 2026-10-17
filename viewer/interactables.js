@@ -8,8 +8,9 @@ import * as THREE from 'three';
 //           (a card in a drawer) it can only be taken while that one is open
 // Common fields: duration, range (m), prompt / promptActive, side ("axis" = only
 // from the side it opens toward, "both"), collide (moving collider), indicator
-// (node name of a status light). A level can lock an item: it then needs that
-// inventory item once, after which it stays unlocked.
+// (node name of a status light). A level can lock an item with an inventory
+// item id (its `lockKey`); the player locks/unlocks it by arming that item and
+// using it nearby (useArmed). E on a locked item only reports that it's locked.
 
 const ease = (t) => t * t * (3 - 2 * t);
 const GREEN = new THREE.Color(0.05, 1.0, 0.25);
@@ -29,7 +30,8 @@ export class Interactables {
       if (!def) return;
       const it = {
         node, def, root, t: 0, target: 0, taken: false,
-        locked: def.type === 'pickup' ? null : lock,
+        lockKey: def.type === 'pickup' ? null : lock,
+        locked: def.type !== 'pickup' && !!lock,
         axis: def.axis ? new THREE.Vector3(...def.axis).normalize() : null,
         rest: node.position.clone(), restQuat: node.quaternion.clone(),
         host: def.type === 'pickup' ? this.hostOf(node) : null,
@@ -122,8 +124,40 @@ export class Interactables {
   prompt(it) {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
-    if (it.locked) return this.inventory.has(it.locked) ? d.unlockPrompt || 'Unlock' : d.lockedPrompt || 'Locked';
+    if (it.locked) return d.lockedPrompt || 'Locked';
     return it.target ? d.promptActive : d.prompt;
+  }
+
+  // the lockable item the armed key works on from here, if any
+  lockTarget(itemId, player) {
+    let best = null, bestD = Infinity;
+    for (const it of this.items) {
+      if (it.lockKey !== itemId) continue;
+      const d = this.reach(it, player);
+      if (d <= it.def.range && d < bestD) { best = it; bestD = d; }
+    }
+    return best;
+  }
+
+  // hint for the armed item ("Unlock door", "Throw vase"), or null if it does nothing here
+  armedPrompt(itemId, player) {
+    const entry = this.inventory.get(itemId);
+    if (!entry) return null;
+    if (entry.def.throwable) return `Throw ${entry.name.toLowerCase()}`;
+    const lock = this.lockTarget(itemId, player);
+    if (lock) return lock.locked ? 'Unlock door' : 'Lock door';
+    return null;
+  }
+
+  // use the armed key on the nearest thing it locks; returns a message
+  useKey(itemId, player) {
+    const it = this.lockTarget(itemId, player);
+    const name = this.inventory.name(itemId);
+    if (!it) return `Nothing to use the ${name.toLowerCase()} on here`;
+    if (!it.locked && (it.t > 0 || it.target > 0)) return 'Close the door first';
+    it.locked = !it.locked;
+    this.setIndicator(it, it.locked ? RED : GREEN);
+    return it.locked ? 'Door locked' : 'Door unlocked';
   }
 
   // press E on an item; returns a message to show, or null
@@ -132,16 +166,16 @@ export class Interactables {
     if (d.type === 'pickup') {
       it.taken = true;
       it.node.parent.remove(it.node);
-      this.inventory.add(d.item, d.name);
-      return `Picked up: ${d.name}`;
+      this.inventory.add(d.item, d.name, it.node, d);
+      return `Picked up: ${d.name} · press I for inventory`;
     }
     if (it.locked) {
-      if (!this.inventory.has(it.locked)) return d.lockedPrompt || 'Locked';
-      const name = this.inventory.name(it.locked);
-      it.locked = null;
-      this.setIndicator(it, GREEN);
-      it.target = 1;
-      return `Unlocked with ${name}`;
+      if (this.inventory.has(it.lockKey)) {
+        const name = this.inventory.name(it.lockKey).toLowerCase();
+        return this.inventory.armed === it.lockKey ? `Locked · press Enter to use the ${name}`
+                                                   : `Locked · arm the ${name} (I, then Enter)`;
+      }
+      return d.lockedPrompt || 'Locked';
     }
     if (it.target === 1 && it.collider) {
       // don't close a door on the player
@@ -177,11 +211,40 @@ export class Interactables {
 }
 
 export class Inventory {
+  // Items the player carries. One can be armed (held, ready to use); the
+  // inventory screen (I) picks which. `node` is the item's 3D model, kept for
+  // showing it in the hand or throwing it.
   constructor(onChange) {
-    this.items = new Map();   // id -> display name
+    this.items = new Map();   // id -> { name, node, def }
+    this.armed = null;
+    this.open = false;
+    this.sel = 0;
     this.onChange = onChange;
   }
-  add(id, name) { this.items.set(id, name); this.onChange?.(this); }
+  changed() { this.onChange?.(this); }
+  add(id, name, node = null, def = {}) { this.items.set(id, { name, node, def }); this.changed(); }
+  remove(id) {
+    this.items.delete(id);
+    if (this.armed === id) this.armed = null;
+    this.sel = Math.min(this.sel, Math.max(0, this.items.size - 1));
+    this.changed();
+  }
   has(id) { return this.items.has(id); }
-  name(id) { return this.items.get(id); }
+  get(id) { return this.items.get(id); }
+  name(id) { return this.items.get(id)?.name; }
+  ids() { return [...this.items.keys()]; }
+  toggle() { this.open = !this.open; this.sel = Math.max(0, this.ids().indexOf(this.armed)); this.changed(); }
+  move(step) {
+    const n = this.items.size;
+    if (n) this.sel = (this.sel + step + n) % n;
+    this.changed();
+  }
+  armSelected() {
+    const id = this.ids()[this.sel];
+    if (id) this.armed = id;
+    this.open = false;
+    this.changed();
+    return id;
+  }
+  holster() { const id = this.armed; this.armed = null; this.changed(); return id; }
 }

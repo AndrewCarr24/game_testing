@@ -2,7 +2,7 @@
 // visitor side or far away. Usage: node drawer.mjs <out-dir>
 import { chromium } from 'playwright-core';
 const out = process.argv[2] || '.';
-const base = 'http://localhost:8765/viewer/index.html?level=office';
+const base = 'http://localhost:8765/viewer/index.html?level=mansion';
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 
 async function at(pos, look, label, pressE) {

@@ -1,0 +1,34 @@
+// Inventory screen: I opens it, the up/down arrows step through items, Enter arms.
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
+const p = await b.newPage({ viewport: { width: 1100, height: 700 } });
+p.on('pageerror', (e) => console.log('pageerror:', e.message));
+let fails = 0;
+const check = (label, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}  ${detail}`); if (!ok) fails++; };
+await p.goto('http://localhost:8765/viewer/index.html?level=mansion');
+await p.waitForFunction(() => window.__loaded, null, { timeout: 60000 });
+await p.mouse.click(550, 350); await p.waitForTimeout(400);
+await p.evaluate(() => { const i = window.__inventory; i.add('a', 'Item A'); i.add('b', 'Item B'); i.add('c', 'Item C'); });
+const sel = () => p.evaluate(() => window.__inventory.sel);
+const look = () => p.evaluate(() => window.__camera.quaternion.toArray().map((v) => +v.toFixed(4)).join(','));
+await p.keyboard.press('KeyI'); await p.waitForTimeout(200);
+const before = await look();
+const s0 = await sel();
+await p.keyboard.press('ArrowDown'); await p.waitForTimeout(80);
+const s1 = await sel();
+await p.keyboard.press('ArrowDown'); await p.waitForTimeout(80);
+const s2 = await sel();
+check('Down arrow steps to the next item', s0 === 0 && s1 === 1 && s2 === 2, `sel ${s0} -> ${s1} -> ${s2}`);
+await p.keyboard.press('ArrowUp'); await p.waitForTimeout(80);
+check('Up arrow steps back', (await sel()) === 1, `sel=${await sel()}`);
+const pos = await p.evaluate(() => window.__player.pos.toArray().join(','));
+await p.keyboard.down('ArrowDown'); await p.waitForTimeout(300); await p.keyboard.up('ArrowDown');
+check('arrows do not move the player while the inventory is open', (await p.evaluate(() => window.__player.pos.toArray().join(','))) === pos);
+check('the view does not turn while the inventory is open', (await look()) === before);
+await p.keyboard.press('ArrowUp'); await p.waitForTimeout(80);   // back to item B... 
+await p.keyboard.press('ArrowDown'); await p.waitForTimeout(80);
+await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+check('Enter arms the highlighted item', (await p.evaluate(() => window.__inventory.armed)) === 'c');
+await b.close();
+console.log(fails ? `${fails} failed` : 'all passed');
+process.exit(fails ? 1 : 0);

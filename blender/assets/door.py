@@ -28,6 +28,7 @@ P = dict(
     stop=(0.015, 0.02),     # width into the opening, depth
     pull_len=0.7,
     pull_z=1.05,            # centre height of the bar pull
+    reader_enabled=True,    # keycard reader beside the door (False for an ordinary door)
     reader=(0.07, 0.012, 0.11),
     reader_offset=0.18,     # from the latch-side jamb to the reader centre
     reader_z=1.2,
@@ -64,12 +65,14 @@ def build(**overrides):
         "range": 1.8,
         "side": "both",
         "collide": True,                      # the slab is a moving collider
-        "indicator": f"{n}_ReaderLED",        # turns green when unlocked
         "prompt": "Open door",
         "promptActive": "Close door",
         "lockedPrompt": "Locked · keycard required",
         "unlockPrompt": "Unlock with keycard",
     }
+
+    if p["reader_enabled"]:
+        hinge["interact"]["indicator"] = f"{n}_ReaderLED"   # turns green when unlocked
 
     slab = common.mesh_object(f"{n}_Slab", common.box_bmesh((sw, st, sh)), col, walnut, hinge)
     slab.location = (sw / 2, -st / 2, p["floor_gap"] + sh / 2)
@@ -96,6 +99,9 @@ def build(**overrides):
         ob.location = loc
 
     # keycard reader on the room-side wall face, beside the latch jamb
+    if not p["reader_enabled"]:
+        parts = [o for o in root.children_recursive if o.type == "MESH"]
+        return root, parts
     rw, rt, rh = p["reader"]
     ry = p["wall_t"] / 2 + rt / 2
     rx = w / 2 + p["reader_offset"]

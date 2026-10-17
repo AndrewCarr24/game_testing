@@ -14,6 +14,10 @@ placed in the game as-is.
   textures), `desk.py` (an interactable drawer), `keycard.py` (a pickup), `door.py`.
   Same structure: `NAME`, a parameter dict `P`, `build(**overrides)` that rebuilds its
   collection from scratch and returns `(root, parts)`.
+- Materials: use `blender/lib/materials.py` (`walnut()`, `steel()`, `black_metal()`,
+  `smoked_oak()`, `bronze()`, `fabric(name, colour)`, `glass(...)`, `emissive(...)`) whenever
+  the spec names one, so every asset shares the same material and texture. Only create a
+  new material when nothing there fits.
 - Conventions: metres; origin at the floor centre (or the centre of the underside for
   small items); the front faces -Y; parts named `<Asset>_<Part>`; Principled BSDF plus
   image textures only. Reuse existing materials by name where they fit (`M_Walnut`,
@@ -32,6 +36,11 @@ Build headless (its own Blender process, safe to run alongside other agents):
 
     /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup \
         --python blender/tools/build_asset.py -- <asset>
+
+To preview a parameter variant without exporting it:
+
+    ... build_asset.py -- <asset> --no-export --set variant=<name>
+    (preview: build/previews/<asset>_<name>.png)
 
 Then:
 1. Read the REPORT lines: size against the spec, `bottom z = 0`, triangles, textures.

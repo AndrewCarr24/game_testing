@@ -165,3 +165,42 @@ def wool(n=1024, seed=9, force=False):
     light = np.array([0.12, 0.118, 0.115])
     lin = dark + (light - dark) * (t ** 1.6)[..., None]
     return _save("T_Wool_BaseColor", _to_srgb(lin))
+
+
+def wood(name, dark, light, n=1024, seed=21, rings=40, force=False):
+    """Generic straight-grained hardwood albedo (grain along u). One tile = 0.5 m.
+    dark / light: linear RGB of latewood / earlywood."""
+    path = os.path.join(TEX_DIR, f"{name}.png")
+    if os.path.exists(path) and not force:
+        return path
+    rng = np.random.default_rng(seed)
+    v = np.linspace(0, 1, n, endpoint=False)[:, None] * np.ones((1, n))
+    warp = _noise(n, 0.01, 1.0, 2.2, rng)
+    # gentle warp so the grain stays mostly straight (strong warp reads as zebra stripes)
+    ring = (0.5 + 0.5 * np.sin(2 * np.pi * (v * rings + warp * 0.35))) ** 3
+    streak = _noise(n, 0.015, 1.0, 0.8, rng)
+    blotch = _noise(n, 0.25, 1.0, 2.4, rng)
+    t = np.clip(0.16 * (1 - ring) + 0.56 * (streak * 0.5 + 0.5) + 0.28 * (blotch * 0.5 + 0.5), 0, 1)
+    lin = np.array(dark) + (np.array(light) - np.array(dark)) * t[..., None]
+    return _save(name, _to_srgb(lin))
+
+
+def fabric(name, n=1024, seed=17, strength=1.6, force=False):
+    """Woven fabric normal map (fine plain weave + slubs). One tile = 0.25 m.
+    Tint the material's base colour; this only adds the weave."""
+    path = os.path.join(TEX_DIR, f"{name}.png")
+    if os.path.exists(path) and not force:
+        return path
+    rng = np.random.default_rng(seed)
+    x = np.linspace(0, 1, n, endpoint=False)[None, :] * np.ones((n, 1))
+    y = np.linspace(0, 1, n, endpoint=False)[:, None] * np.ones((1, n))
+    threads = 180
+    warp_t = np.sin(2 * np.pi * x * threads) * (0.5 + 0.5 * np.sign(np.sin(np.pi * y * threads)))
+    weft_t = np.sin(2 * np.pi * y * threads) * (0.5 - 0.5 * np.sign(np.sin(np.pi * x * threads)))
+    h = 0.5 * (np.abs(warp_t) + np.abs(weft_t)) + 0.35 * _noise(n, 0.05, 1.0, 1.2, rng)
+    h /= np.abs(h).max()
+    dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * strength
+    dy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * strength
+    nrm = np.stack([-dx, dy, np.ones_like(h)], axis=-1)
+    nrm /= np.linalg.norm(nrm, axis=-1, keepdims=True)
+    return _save(name, nrm * 0.5 + 0.5, non_color=True)

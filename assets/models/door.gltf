@@ -61,11 +61,11 @@
 					"range":1.8,
 					"side":"both",
 					"collide":true,
-					"indicator":"Door_ReaderLED",
 					"prompt":"Open door",
 					"promptActive":"Close door",
 					"lockedPrompt":"Locked \u00b7 keycard required",
-					"unlockPrompt":"Unlock with keycard"
+					"unlockPrompt":"Unlock with keycard",
+					"indicator":"Door_ReaderLED"
 				}
 			},
 			"name":"Door_Hinge",

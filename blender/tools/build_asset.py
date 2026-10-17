@@ -1,7 +1,7 @@
 """Build one asset headless, export it, and render a preview sheet.
 
   /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup \
-      --python blender/tools/build_asset.py -- <asset> [--no-export] [--size 512]
+      --python blender/tools/build_asset.py -- <asset> [--no-export] [--size 512] [--set key=value ...]
 
 Each call is its own Blender process with an empty scene, so several can run in
 parallel without touching each other or the Blender window you have open.
@@ -38,7 +38,23 @@ def args():
     ap.add_argument("asset")
     ap.add_argument("--no-export", action="store_true")
     ap.add_argument("--size", type=int, default=512, help="pixels per preview tile")
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                    help="override a build() parameter, e.g. --set variant=geometric_a (repeatable)")
     return ap.parse_args(argv)
+
+
+def overrides(pairs):
+    out = {}
+    for pair in pairs:
+        k, v = pair.split("=", 1)
+        for cast in (int, float):
+            try:
+                v = cast(v)
+                break
+            except ValueError:
+                pass
+        out[k] = v
+    return out
 
 
 def report(root, parts, common):
@@ -157,7 +173,8 @@ def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     from lib import common
     mod = importlib.import_module(a.asset)
-    root, parts = mod.build()
+    kw = overrides(a.set)
+    root, parts = mod.build(**kw)
     lo, hi = report(root, parts, common)
     if not a.no_export:
         out = os.path.join(PROJECT, "assets", "models", f"{a.asset}.gltf")
@@ -165,7 +182,8 @@ def main():
         print(f"EXPORT {out}")
     prev_dir = os.path.join(PROJECT, "build", "previews")
     os.makedirs(prev_dir, exist_ok=True)
-    preview(lo, hi, os.path.join(prev_dir, f"{a.asset}.png"), a.size)
+    tag = "".join(f"_{v}" for v in kw.values())
+    preview(lo, hi, os.path.join(prev_dir, f"{a.asset}{tag}.png"), a.size)
     print(f"DONE {a.asset} in {time.time() - t0:.1f}s")
 
 

@@ -1,18 +1,19 @@
-"""Bake a level's lighting with Cycles. Run headless on the saved level file:
+"""Bake a level's lighting with Cycles, room by room. Run headless on the saved level file:
 
-  /Applications/Blender.app/Contents/MacOS/Blender -b blender/levels/office.blend \
-      --python blender/levels/bake.py -- office [samples]
+  /Applications/Blender.app/Contents/MacOS/Blender -b blender/levels/mansion.blend \
+      --python blender/levels/bake.py -- mansion [samples]
 
-Writes (never saves the .blend):
-  assets/textures/T_<Level>_Lightmap.webp  diffuse lighting (direct + bounce, no
-                                          albedo) for every shell mesh that has a
-                                          "Lightmap" UV layer; sRGB-encoded, divided by `scale`
-  assets/textures/T_<Level>_Env.hdr        360° radiance panorama from the room centre,
-                                          sun hidden (the sun stays real-time); used for
-                                          prop lighting and all reflections
-  assets/levels/<level>_bake.json          what the engine needs to apply the above
+For every room (shell meshes carry a "room" property and a "Lightmap" UV layer),
+writes (never saves the .blend):
+  assets/textures/T_<Level>_<Room>_Lightmap.webp  diffuse lighting (direct + bounce, no
+                                                 albedo), sRGB-encoded, divided by `scale`
+  assets/textures/T_<Level>_<Room>_Env.hdr        360° radiance panorama from the room's probe
+                                                 point, sun hidden (the sun stays real-time);
+                                                 lights that room's props and reflections
+  assets/levels/<level>_bake.json                 what the engine needs to apply the above
 
-Re-run after anything in the level moves (office.py rebuilds the UV atlas).
+All rooms are present in every bake, so light passes through open doorways.
+Re-run after anything in the level moves (the level script rebuilds the UV atlases).
 """
 import json
 import math
@@ -30,7 +31,7 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, textures  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-LEVEL = args[0] if args else "office"
+LEVEL = args[0] if args else "mansion"
 SAMPLES = int(args[1]) if len(args) > 1 else 512
 NAME = LEVEL.capitalize()
 ENV_CLAMP = 3.0      # max radiance kept in the environment panorama
@@ -55,10 +56,8 @@ def use_gpu():
     return "CPU"
 
 
-def bake_lightmap(res):
-    objs = [o for o in bpy.data.collections[f"{NAME}_Shell"].all_objects
-            if o.type == "MESH" and "Lightmap" in o.data.uv_layers]
-    img = bpy.data.images.new(f"{NAME}_LightmapBake", res, res, alpha=False, float_buffer=True)
+def bake_lightmap(room, objs, res):
+    img = bpy.data.images.new(f"{NAME}_{room}_LightmapBake", res, res, alpha=False, float_buffer=True)
     added = []
     for mat in {m for o in objs for m in o.data.materials}:
         node = mat.node_tree.nodes.new("ShaderNodeTexImage")
@@ -74,11 +73,13 @@ def bake_lightmap(res):
     view_layer.objects.active = objs[0]
 
     scene.cycles.samples = SAMPLES
+    # clamp indirect light: small bright sources (lamps) otherwise leave fireflies in dim rooms
+    scene.cycles.sample_clamp_indirect = 4.0
     scene.render.bake.margin = 4
     scene.render.bake.use_clear = True
     t = time.time()
     bpy.ops.object.bake(type="DIFFUSE", pass_filter={"DIRECT", "INDIRECT"}, target="IMAGE_TEXTURES")
-    print(f"lightmap bake: {time.time() - t:.0f}s")
+    print(f"lightmap bake {room}: {time.time() - t:.0f}s")
 
     for mat, node in added:
         mat.node_tree.nodes.remove(node)
@@ -86,11 +87,13 @@ def bake_lightmap(res):
     lit = lin.max(axis=2)
     # 99th percentile: the few texels hidden behind emissive strips may clip, everything visible keeps precision
     scale = float(np.percentile(lit[lit > 1e-4], 99.0)) if (lit > 1e-4).any() else 1.0
-    textures._save(f"T_{NAME}_Lightmap", textures._to_srgb(lin / scale), fmt="WEBP", quality=92)
+    textures._save(f"T_{NAME}_{room.capitalize()}_Lightmap", textures._to_srgb(lin / scale), fmt="WEBP", quality=92)
+    for o in objs:
+        o.select_set(False)
     return [o.name for o in objs], scale
 
 
-def render_environment(probe, width=512):   # only feeds blurred reflections + ambient
+def render_environment(room, probe, width=512):   # only feeds blurred reflections + ambient
     cam_data = bpy.data.cameras.new(f"{NAME}_EnvProbe")
     cam_data.type = "PANO"
     try:
@@ -114,11 +117,11 @@ def render_environment(probe, width=512):   # only feeds blurred reflections + a
     scene.cycles.use_denoising = True
     scene.render.film_transparent = False
     scene.render.image_settings.file_format = "HDR"
-    path = os.path.join(textures.TEX_DIR, f"T_{NAME}_Env.hdr")
+    path = os.path.join(textures.TEX_DIR, f"T_{NAME}_{room.capitalize()}_Env.hdr")
     scene.render.filepath = path
     t = time.time()
     bpy.ops.render.render(write_still=True)
-    print(f"environment render: {time.time() - t:.0f}s")
+    print(f"environment render {room}: {time.time() - t:.0f}s")
     # cap tiny, very bright sources (the light strips): left in, they flare as
     # blotches in every glossy reflection; their light is already in the lightmap
     img = bpy.data.images.load(path)
@@ -138,24 +141,31 @@ if __name__ == "__main__":
     print("device:", use_gpu())
     sys.path.insert(0, HERE)
     p = __import__(LEVEL).P   # level parameters (importing doesn't rebuild anything)
+    with open(os.path.join(PROJECT, "assets", "levels", f"{LEVEL}.json")) as f:
+        level = json.load(f)
 
-    objects, scale = bake_lightmap(p["lightmap_res"])
-    probe = (0.0, 0.0, 1.3)
-    render_environment(probe)
-
-    bake = {
-        "lightmap": {
-            "file": f"textures/T_{NAME}_Lightmap.webp",
-            "uv": 1,
-            # three.js lightMap is irradiance; Cycles' diffuse bake is irradiance / pi
-            "intensity": round(math.pi * scale, 4),
-            "objects": objects,
-        },
-        "environment": {"file": f"textures/T_{NAME}_Env.hdr", "position": common.to_gltf(probe)},
-        "exposure": p.get("exposure", 1.0),
-        "samples": SAMPLES,
-    }
+    shell = [o for o in bpy.data.collections[f"{NAME}_Shell"].all_objects
+             if o.type == "MESH" and "Lightmap" in o.data.uv_layers]
+    rooms = {}
+    for room, info in level["rooms"].items():
+        objs = [o for o in shell if o.get("room") == room]
+        names, scale = bake_lightmap(room, objs, p["lightmap_res"])
+        gx, gy, gz = info["probe"]
+        probe = (gx, -gz, gy)                     # glTF -> Blender
+        render_environment(room, probe)
+        R = room.capitalize()
+        rooms[room] = {
+            "lightmap": {
+                "file": f"textures/T_{NAME}_{R}_Lightmap.webp",
+                "uv": 1,
+                # three.js lightMap is irradiance; Cycles' diffuse bake is irradiance / pi
+                "intensity": round(math.pi * scale, 4),
+                "objects": names,
+            },
+            "environment": {"file": f"textures/T_{NAME}_{R}_Env.hdr", "position": info["probe"]},
+        }
+    bake = {"rooms": rooms, "exposure": p.get("exposure", 1.0), "samples": SAMPLES}
     out = os.path.join(PROJECT, "assets", "levels", f"{LEVEL}_bake.json")
     with open(out, "w") as f:
         json.dump(bake, f, indent=2)
-    print("wrote", out, "scale", round(scale, 4))
+    print("wrote", out, {r: v["lightmap"]["intensity"] for r, v in rooms.items()})

@@ -8,7 +8,7 @@
     html, body { margin: 0; height: 100%; background: #1d1f22; overflow: hidden; font: 13px system-ui, sans-serif; color: #ccc; }
     #hud { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.45); padding: 8px 12px; border-radius: 6px; }
     #hud a { color: #9cf; margin-right: 8px; }
-    #hint { position: absolute; bottom: 14px; width: 100%; text-align: center; color: #eee; text-shadow: 0 1px 3px #000; }
+    #hint { position: absolute; bottom: 14px; width: 100%; text-align: center; color: #eee; text-shadow: 0 1px 3px #000; white-space: pre; }
     #toast { position: absolute; top: 38%; width: 100%; text-align: center; font-size: 17px; color: #fff;
              text-shadow: 0 1px 4px #000; opacity: 0; transition: opacity .25s; pointer-events: none; }
     #toast.show { opacity: 1; }
@@ -16,6 +16,18 @@
     .slot { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.18);
             border-radius: 6px; padding: 6px 10px; color: #eee; }
     .slot .card { width: 22px; height: 14px; border-radius: 2px; background: linear-gradient(90deg, #e9e9e6 72%, #1846a8 72%); }
+    .slot .glass { width: 12px; height: 18px; border-radius: 4px 4px 3px 3px; background: linear-gradient(180deg, rgba(190,200,200,.5), rgba(120,115,110,.8)); }
+    .slot.armed { border-color: #f0c674; box-shadow: 0 0 0 1px #f0c674 inset; }
+    .slot .tag { font-size: 10px; letter-spacing: .08em; color: #f0c674; }
+    #inv-panel { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10,12,14,.55); }
+    #inv-panel.open { display: flex; }
+    #inv-panel .box { min-width: 320px; background: rgba(20,22,25,.92); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 18px 20px; }
+    #inv-panel h2 { margin: 0 0 12px; font-size: 13px; letter-spacing: .14em; color: #aaa; font-weight: 600; }
+    #inv-panel .row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 6px; color: #ddd; font-size: 15px; }
+    #inv-panel .row.sel { background: rgba(240,198,116,.16); color: #fff; outline: 1px solid rgba(240,198,116,.6); }
+    #inv-panel .row .tag { margin-left: auto; font-size: 11px; color: #f0c674; letter-spacing: .08em; }
+    #inv-panel .empty { color: #888; padding: 8px 2px; }
+    #inv-panel .help { margin-top: 14px; font-size: 12px; color: #999; }
   </style>
   <script type="importmap">
     { "imports": {
@@ -26,7 +38,7 @@
 </head>
 <body>
   <div id="hud">
-    <a href="?level=office">office</a>
+    <a href="?level=mansion">mansion</a>
     <a href="?asset=lounge_chair">lounge_chair</a>
     <a href="?asset=desk_chair">desk_chair</a>
     <a href="?asset=desk">desk</a>
@@ -37,6 +49,8 @@
   <div id="hint"></div>
   <div id="toast"></div>
   <div id="inventory"></div>
+  <div id="inv-panel"><div class="box"><h2>INVENTORY</h2><div id="inv-list"></div>
+    <div class="help">↑ ↓ · choose &nbsp;&nbsp; Enter · arm &nbsp;&nbsp; I · close</div></div></div>
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -47,6 +61,7 @@
     import { Interactables, Inventory } from './interactables.js';
     import { loadBake } from './baked.js';
     import { Player, KEYS } from './player.js';
+    import { Hand, Throwables } from './items.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -141,7 +156,7 @@
       // baked lighting replaces the stand-in fill lights; the sun stays real-time
       const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer);
       if (baked) {
-        scene.environment = baked.envMap;
+        scene.environment = baked.defaultEnv;
         renderer.toneMappingExposure = baked.bake.exposure;
       }
       const env = level.lights.find((l) => l.type === 'ambient_env');
@@ -158,10 +173,17 @@
         } else if (l.type === 'sun') {
           const sun = new THREE.DirectionalLight(new THREE.Color(...l.color), l.intensity);
           const dir = new THREE.Vector3(...l.direction).normalize();
-          sun.position.copy(dir.clone().multiplyScalar(-20));
+          // the shadow must cover the whole level: walls and ceilings are what keep the
+          // sun out of interior rooms, so a prop outside the shadow box is lit as if outdoors
+          const bounds = new THREE.Box3();
+          for (const c of level.colliders) bounds.union(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
+          const centre = bounds.getCenter(new THREE.Vector3());
+          const radius = bounds.getSize(new THREE.Vector3()).length() / 2;
+          sun.target.position.copy(centre);
+          sun.position.copy(centre).addScaledVector(dir, -(radius + 5));
           sun.castShadow = true;
           sun.shadow.mapSize.set(2048, 2048);
-          Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 50 });
+          Object.assign(sun.shadow.camera, { left: -radius, right: radius, top: radius, bottom: -radius, near: 1, far: 2 * radius + 10 });
           sun.shadow.bias = -0.0004;
           sun.shadow.normalBias = 0.02;
           scene.add(sun, sun.target);
@@ -173,17 +195,26 @@
       const [shell, ...protos] = await Promise.all(
         [level.shell, ...names.map((n) => level.assets[n].file)].map((f) => loadGltf(base + f)));
       let total = prepare(shell.scene, envIntensity).tris;
-      if (baked) baked.applyLightmap(shell.scene);
+      if (baked) baked.applyLightmaps(shell.scene);
       scene.add(shell.scene);
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity);
 
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
       const inventoryEl = document.getElementById('inventory');
+      const invPanel = document.getElementById('inv-panel');
+      const invList = document.getElementById('inv-list');
+      const icon = (id) => (id === 'keycard' ? '<span class="card"></span>' : id === 'vase' ? '<span class="glass"></span>' : '');
       const inventory = new Inventory((inv) => {
-        inventoryEl.innerHTML = [...inv.items].map(([id, name]) =>
-          `<div class="slot">${id === 'keycard' ? '<span class="card"></span>' : ''}${name}</div>`).join('');
+        inventoryEl.innerHTML = [...inv.items].map(([id, it]) =>
+          `<div class="slot${inv.armed === id ? ' armed' : ''}">${icon(id)}${it.name}${inv.armed === id ? ' <span class="tag">ARMED</span>' : ''}</div>`).join('');
+        invPanel.classList.toggle('open', inv.open);
+        invList.innerHTML = inv.items.size
+          ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}${inv.name(id)}${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
+          : '<div class="empty">Nothing yet.</div>';
+        hand?.show(inv.armed, inv.armed && inv.get(inv.armed).node);
       });
+      let hand = null;
       const interact = new Interactables(inventory, colliders);
       window.__interact = interact;
       window.__inventory = inventory;
@@ -192,6 +223,7 @@
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
         obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
+        if (baked) baked.applyRoom(obj, p.room);
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
@@ -219,9 +251,13 @@
       camera.lookAt(...vec('look', level.spawn.lookAt));
       const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]]);
       window.__player = player;
+      scene.add(camera);                       // so the held item (a child of the camera) renders
+      hand = new Hand(camera);
+      const throwables = new Throwables(scene, colliders, () => toast('Smash!'));
+      window.__throwables = throwables;
 
       const controls = new PointerLockControls(camera, document.body);
-      const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · Esc release';
+      const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
       hint.textContent = walkHint;
       document.body.addEventListener('click', () => controls.lock());
       const keys = {};
@@ -229,16 +265,51 @@
       addEventListener('keydown', (e) => {
         keys[e.code] = true;
         if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
-        if (e.code === 'KeyE' && !e.repeat && controls.isLocked && focus) {
+        if (!controls.isLocked || e.repeat) return;
+        if (e.code === 'KeyI') { inventory.toggle(); if (inventory.open) frozenLook.copy(camera.quaternion); return; }
+        // with the inventory open, the up/down arrows step through it (movement is paused then)
+        if (inventory.open && (e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
+          inventory.move(e.code === 'ArrowDown' ? 1 : -1);
+          return;
+        }
+        if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+          if (inventory.open) {
+            const id = inventory.armSelected();
+            if (id) toast(`Armed: ${inventory.name(id)} · Enter to use · Delete to put away`);
+          } else if (inventory.armed) useArmed();
+          return;
+        }
+        // Mac keyboards send Backspace for the key labelled "delete"
+        if ((e.code === 'Delete' || e.code === 'Backspace') && inventory.armed) {
+          e.preventDefault();
+          toast(`${inventory.name(inventory.holster())} put away`);
+          return;
+        }
+        if (e.code === 'KeyE' && focus && !inventory.open) {
           const msg = interact.use(focus, player.boxAt(player.pos).clone());
           if (msg) toast(msg);
           renderer.shadowMap.needsUpdate = true;
         }
       });
+      const frozenLook = new THREE.Quaternion();
+
+      function useArmed() {
+        const id = inventory.armed;
+        const entry = inventory.get(id);
+        if (entry.def.throwable) {
+          const dir = new THREE.Vector3();
+          camera.getWorldDirection(dir);
+          const origin = camera.position.clone().addScaledVector(dir, 0.45).add(new THREE.Vector3(0, -0.15, 0));
+          throwables.throw(entry.node, origin, dir);
+          inventory.remove(id);
+          return;
+        }
+        toast(interact.useKey(id, camera.position));
+      }
       addEventListener('keyup', (e) => (keys[e.code] = false));
       const releaseAll = () => { for (const k in keys) keys[k] = false; };
       addEventListener('blur', releaseAll);
-      controls.addEventListener('unlock', releaseAll);
+      controls.addEventListener('unlock', () => { releaseAll(); if (inventory.open) inventory.toggle(); });
       const held = (names) => names.some((k) => keys[k]);
       const toastEl = document.getElementById('toast');
       let toastTimer;
@@ -257,14 +328,21 @@
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
-        const on = controls.isLocked;
+        if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
+        if (inventory.open) camera.quaternion.copy(frozenLook);   // the inventory screen pauses looking and moving
+        const on = controls.isLocked && !inventory.open;
         player.update(dt, {
           forward: on && held(KEYS.forward), back: on && held(KEYS.back),
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
         focus = on ? interact.nearest(camera.position) : null;
-        hint.textContent = focus ? `E · ${interact.prompt(focus)}` : walkHint;
+        const armedHint = on && inventory.armed ? interact.armedPrompt(inventory.armed, camera.position) : null;
+        const parts = [];
+        if (focus && !(focus.locked && armedHint)) parts.push(`E · ${interact.prompt(focus)}`);
+        if (armedHint) parts.push(`Enter · ${armedHint}`);
+        if (on && inventory.armed) parts.push('Delete · put away');
+        hint.textContent = parts.length ? parts.join('   |   ') : walkHint;
       };
     }
 
