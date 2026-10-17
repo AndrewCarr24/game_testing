@@ -23,8 +23,12 @@ async function at(pos, look, label, pressE) {
     await p.keyboard.press('KeyE'); await p.waitForTimeout(900);
     console.log(`[${label}] after E: hint="${await hint()}" drawerZ=${await drawerZ()}`);
     await p.screenshot({ path: `${out}/drawer_${label.replace(/ /g, "_")}.png` });
+    if ((await hint()).includes('Take')) {   // the keycard has priority while the drawer is open
+      await p.keyboard.press('KeyE'); await p.waitForTimeout(300);
+      console.log(`[${label}] took the card: hint="${await hint()}"`);
+    }
     await p.keyboard.press('KeyE'); await p.waitForTimeout(900);
-    console.log(`[${label}] after 2nd E: hint="${await hint()}" drawerZ=${await drawerZ()}`);
+    console.log(`[${label}] after closing E: hint="${await hint()}" drawerZ=${await drawerZ()}`);
   }
   await p.close();
 }

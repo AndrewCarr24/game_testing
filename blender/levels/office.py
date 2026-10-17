@@ -42,20 +42,28 @@ P = dict(
     mullion_pitch=1.4,
     mullion=(0.05, 0.12),  # width, depth
     glass_t=0.012,
-    light_strips=[(-1.3, -0.6), (0.6, 1.6)],  # (x, y) centres of ceiling light coves
-    light_strip_size=(4.0, 0.08),
+    # placeholder corridor behind the door, until the next room exists
+    corridor=dict(width=1.5, length=3.3, height=2.8),
+    # recessed ceiling light strips: centre (x, y), size (x, y), ceiling height, area-light watts
+    light_strips=[
+        dict(pos=(-1.3, -0.6), size=(4.0, 0.08), z=3.4, power=80.0),
+        dict(pos=(0.6, 1.6), size=(4.0, 0.08), z=3.4, power=80.0),
+        dict(pos=(2.4, -4.85), size=(0.08, 2.6), z=2.8, power=35.0),   # corridor
+    ],
     # lighting, shared by the Blender bake and the engine
     sun_dir=(-0.35, -0.72, -0.6),   # direction the light travels (Blender coords): in through the window
     sun_strength=4.0,               # W/m² in Blender = DirectionalLight intensity in three.js
     sky=(0.55, 0.68, 0.85),
     sky_strength=1.0,
-    cove_power=80.0,                # W per ceiling light cove (daylight should dominate)
     lightmap_res=1024,
     exposure=0.8,                   # engine tone-mapping exposure for the baked look
 )
 
-# (asset module, Blender location, rotation about Z in degrees)
-# Every asset faces -Y at rotation 0.
+# (asset module, Blender location, rotation about Z in degrees[, options])
+# Every asset faces -Y at rotation 0. Options:
+#   lock:   item id needed to use the asset's interactable (e.g. a locked door)
+#   attach: (asset, node) - parent to that node of the asset's first placement;
+#           location/rotation are then local to the node (e.g. inside a drawer)
 PLACEMENTS = [
     ("desk", (0.3, 1.5, 0.0), 0),
     ("desk_chair", (0.3, 2.5, 0.0), 0),   # clear of the drawer when it's open
@@ -63,6 +71,9 @@ PLACEMENTS = [
     ("coffee_table", (-1.6, -1.0, 0.0), 90),
     ("lounge_chair", (-2.55, -1.0, 0.0), 90),
     ("lounge_chair", (-0.65, -1.0, 0.0), -90),
+    ("door", (2.4, -3.1, 0.0), 0, {"lock": "keycard"}),
+    # in the drawer: drawer-local, its floor is 1.85 cm below the drawer's origin
+    ("keycard", (0.09, -0.16, -0.0185), 18, {"attach": ("desk", "Desk_Drawer")}),
 ]
 
 
@@ -108,9 +119,24 @@ def shell(p):
     box("Wall_W", (-hw - T, -hd - T, 0), (-hw, hd + T, H), plaster, bake=True)
     box("Wall_E", (hw, -hd - T, 0), (hw + T, hd + T, H), plaster, bake=True)
     dx0, dx1 = p["door_x"] - p["door_w"] / 2, p["door_x"] + p["door_w"] / 2
-    box("Wall_S_A", (-hw, -hd - T, 0), (dx0, -hd, H), plaster, bake=True)
-    box("Wall_S_B", (dx1, -hd - T, 0), (hw, -hd, H), plaster, bake=True)
+    c = p["corridor"]
+    cx0, cx1 = p["door_x"] - c["width"] / 2, p["door_x"] + c["width"] / 2
+    # south wall, split where the corridor walls meet it so each face is either
+    # in the office or in the corridor (keeps the lightmap atlas tight)
+    box("Wall_S_A", (-hw, -hd - T, 0), (cx0, -hd, H), plaster, bake=True)
+    box("Wall_S_A2", (cx0, -hd - T, 0), (dx0, -hd, H), plaster, bake=True)
+    box("Wall_S_B2", (dx1, -hd - T, 0), (cx1, -hd, H), plaster, bake=True)
+    box("Wall_S_B", (cx1, -hd - T, 0), (hw, -hd, H), plaster, bake=True)
     box("Wall_S_Header", (dx0, -hd - T, p["door_h"]), (dx1, -hd, H), plaster, bake=True)
+
+    # corridor stub behind the door
+    Hc, y1 = c["height"], -hd - T
+    y0c = y1 - c["length"]
+    box("Corridor_Floor", (cx0 - T, y0c - T, -0.1), (cx1 + T, y1, 0.0), oak, uv_tile=2.0, bake=True)
+    box("Corridor_Ceiling", (cx0 - T, y0c - T, Hc), (cx1 + T, y1, Hc + 0.1), ceiling_m, bake=True)
+    box("Corridor_Wall_W", (cx0 - T, y0c - T, 0), (cx0, y1, Hc), plaster, bake=True)
+    box("Corridor_Wall_E", (cx1, y0c - T, 0), (cx1 + T, y1, Hc), plaster, bake=True)
+    box("Corridor_Wall_End", (cx0, y0c - T, 0), (cx1, y0c, Hc), plaster, bake=True)
 
     # window wall: head and sill channels, mullions, one glass pane
     mw, md = p["mullion"]
@@ -129,16 +155,16 @@ def shell(p):
 
     # ceiling light coves (emissive strips; real lights are listed in the JSON)
     lights = []
-    sw, sd = p["light_strip_size"]
-    for i, (x, y) in enumerate(p["light_strips"]):
-        box(f"LightStrip_{i}", (x - sw / 2, y - sd / 2, H - 0.006), (x + sw / 2, y + sd / 2, H - 0.001),
+    for i, ls in enumerate(p["light_strips"]):
+        (x, y), (sw, sd), z = ls["pos"], ls["size"], ls["z"]
+        box(f"LightStrip_{i}", (x - sw / 2, y - sd / 2, z - 0.006), (x + sw / 2, y + sd / 2, z - 0.001),
             glow, collide=False)
-        lights.append({"type": "rect", "position": common.to_gltf((x, y, H - 0.01)),
-                       "width": sw, "height": 0.25, "intensity": 6.0, "color": [1.0, 0.92, 0.82],
-                       "lookAt": common.to_gltf((x, y, 0))})
+        lights.append({"type": "rect", "position": common.to_gltf((x, y, z - 0.01)),
+                       "width": max(sw, 0.25), "height": max(sd, 0.25), "intensity": 6.0,
+                       "color": [1.0, 0.92, 0.82], "lookAt": common.to_gltf((x, y, 0))})
 
-    # lightmap atlas over every surface visible from inside the room (+ the doorway)
-    air = ((-hw, -hd - T - 0.01, 0.0), (hw, hd, H))
+    # lightmap atlas over every surface visible from the office, doorway or corridor
+    air = [((-hw, -hd - T - 0.01, 0.0), (hw, hd, H)), ((cx0, y0c, 0.0), (cx1, y1 + 0.01, Hc))]
     texels = common.lightmap_uv(baked, solids, air, resolution=p["lightmap_res"])
     print(f"lightmap: {len(baked)} objects at {texels} texels/m")
 
@@ -156,14 +182,14 @@ def blender_lights(p):
     """Blender lights + sky. These drive the Cycles bake (blender/levels/bake.py);
     they are not exported. The engine gets the sun from the level JSON."""
     col = common.fresh_collection(f"{NAME}_PreviewLights")
-    for i, (x, y) in enumerate(p["light_strips"]):
+    for i, ls in enumerate(p["light_strips"]):
         ld = bpy.data.lights.get(f"{NAME}_Cove_{i}") or bpy.data.lights.new(f"{NAME}_Cove_{i}", "AREA")
         ld.shape = "RECTANGLE"
-        ld.size, ld.size_y = p["light_strip_size"][0], 0.25
-        ld.energy = p["cove_power"]
+        ld.size, ld.size_y = max(ls["size"][0], 0.25), max(ls["size"][1], 0.25)
+        ld.energy = ls["power"]
         ld.color = (1.0, 0.92, 0.82)
         ob = bpy.data.objects.new(f"{NAME}_Cove_{i}", ld)
-        ob.location = (x, y, p["height"] - 0.02)
+        ob.location = (*ls["pos"], ls["z"] - 0.02)
         col.objects.link(ob)
     sd = bpy.data.lights.get(f"{NAME}_Sun") or bpy.data.lights.new(f"{NAME}_Sun", "SUN")
     sd.energy = p["sun_strength"]
@@ -197,7 +223,8 @@ def build(export=True):
     blender_lights(p)
 
     assets, roots, placed = {}, {}, []
-    for asset, loc, rot in PLACEMENTS:
+    for asset, loc, rot, *rest in PLACEMENTS:
+        opts = rest[0] if rest else {}
         if asset not in roots:
             mod = importlib.import_module(asset)
             importlib.reload(mod)
@@ -205,15 +232,23 @@ def build(export=True):
             roots[asset] = root
             lo, hi = common.world_aabb(parts)
             assets[asset] = {"file": f"models/{asset}.gltf", "aabb": common.aabb_gltf(lo, hi),
+                             "colliders": common.part_colliders(parts),
                              "tris": common.triangle_count(parts)}
             if export:
                 common.export_gltf(root, os.path.join(models, f"{asset}.gltf"))
             ob = root
         else:
             ob = common.duplicate_hierarchy(roots[asset], props_col, f".{len(placed):02d}")
+        entry = {"asset": asset, "position": common.to_gltf(loc), "rotationY": rot}
+        if "attach" in opts:
+            host, node = opts["attach"]
+            ob.parent = bpy.data.objects[node]       # the host asset's first placement
+            entry["attach"] = {"asset": host, "node": node}
+        if "lock" in opts:
+            entry["lock"] = opts["lock"]
         ob.location = loc
         ob.rotation_euler = (0, 0, math.radians(rot))
-        placed.append({"asset": asset, "position": common.to_gltf(loc), "rotationY": rot})
+        placed.append(entry)
 
     if export:
         common.export_gltf(shell_root, os.path.join(models, "office_shell.gltf"))
@@ -231,7 +266,7 @@ def build(export=True):
         json.dump(level, f, indent=2)
     shell_parts = [o for o in shell_root.children_recursive if o.type == "MESH"]
     total = common.triangle_count(shell_parts) + sum(
-        assets[a]["tris"] for a, _, _ in PLACEMENTS)
+        assets[e[0]]["tris"] for e in PLACEMENTS)
     print(f"{NAME}: {len(placed)} props, {len(colliders)} colliders, {total} tris total")
     return level
 

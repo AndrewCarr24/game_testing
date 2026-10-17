@@ -8,3 +8,6 @@ __pycache__/
 node_modules/
 .deepeval/
 .DS_Store
+
+# headless build previews
+build/

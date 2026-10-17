@@ -393,19 +393,19 @@ def aabb_gltf(lo, hi):
 
 # ------------------------------------------------------------ baked lighting
 
-def lightmap_uv(objects, solids, bounds, resolution=1024, padding=4, name="Lightmap"):
+def lightmap_uv(objects, solids, air, resolution=1024, padding=4, name="Lightmap"):
     """Second UV layer for baked lighting (exported as TEXCOORD_1).
 
     Every face that can be seen from the air inside `bounds` gets its own
     rectangle in one shared atlas at a uniform texel density; faces buried in
     another solid or facing out of the bounds collapse to a corner so they
     don't waste space. Meant for axis-aligned architecture (box faces).
-    solids: list of (lo, hi) boxes; bounds: (lo, hi) of the walkable air.
+    solids: list of (lo, hi) boxes; air: list of (lo, hi) boxes the player can be in.
+    A face counts as visible if any of five sample points on it borders air.
     Returns texels per metre."""
-    lo, hi = bounds
 
     def in_air(p):
-        inside = all(lo[i] - 1e-6 <= p[i] <= hi[i] + 1e-6 for i in range(3))
+        inside = any(all(lo[i] - 1e-6 <= p[i] <= hi[i] + 1e-6 for i in range(3)) for lo, hi in air)
         buried = any(all(s_lo[i] < p[i] < s_hi[i] for i in range(3)) for s_lo, s_hi in solids)
         return inside and not buried
 
@@ -417,14 +417,21 @@ def lightmap_uv(objects, solids, bounds, resolution=1024, padding=4, name="Light
         me.uv_layers.active_index = 0
         off = Vector(ob.location)
         for poly in me.polygons:
-            if not in_air(off + poly.center + poly.normal * 0.05):
-                continue
             n = [abs(c) for c in poly.normal]
             na = n.index(max(n))
             axes = [i for i in range(3) if i != na]
             cos = [off + me.vertices[vi].co for vi in poly.vertices]
             mins = [min(c[a] for c in cos) for a in axes]
             size = [max(c[a] for c in cos) - mins[k] for k, a in enumerate(axes)]
+            centre = off + poly.center + poly.normal * 0.05
+            samples = [centre]
+            for f0, f1 in ((0.1, 0.1), (0.9, 0.1), (0.1, 0.9), (0.9, 0.9)):
+                q = centre.copy()
+                q[axes[0]] = mins[0] + f0 * size[0]
+                q[axes[1]] = mins[1] + f1 * size[1]
+                samples.append(q)
+            if not any(in_air(q) for q in samples):
+                continue
             faces.append((ob, poly, axes, mins, size))
 
     def pack(k):
@@ -465,3 +472,24 @@ def lightmap_uv(objects, solids, bounds, resolution=1024, padding=4, name="Light
             v = py + (co[axes[1]] - mins[1]) * k
             layer.data[li].uv = (u / resolution, v / resolution)
     return k
+
+
+# ------------------------------------------------------------------ collision
+
+# trim that never blocks the player
+COLLIDER_SKIP = ("Piping",)
+
+
+def part_colliders(parts, skip=COLLIDER_SKIP):
+    """One box per mesh part (asset at the origin), in glTF coords, so the
+    player can stand on a seat or a desktop instead of on the asset's overall
+    bounding box. Parts under an interactable (anything with an "interact"
+    property) move, so the engine gives them their own dynamic collider."""
+    def moves(ob):
+        while ob is not None:
+            if "interact" in ob.keys():
+                return True
+            ob = ob.parent
+        return False
+    return [aabb_gltf(*world_aabb([ob])) for ob in parts
+            if ob.type == "MESH" and not moves(ob) and not any(s in ob.name for s in skip)]

@@ -33,6 +33,7 @@ args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 LEVEL = args[0] if args else "office"
 SAMPLES = int(args[1]) if len(args) > 1 else 512
 NAME = LEVEL.capitalize()
+ENV_CLAMP = 3.0      # max radiance kept in the environment panorama
 scene = bpy.context.scene
 
 
@@ -118,9 +119,17 @@ def render_environment(probe, width=512):   # only feeds blurred reflections + a
     t = time.time()
     bpy.ops.render.render(write_still=True)
     print(f"environment render: {time.time() - t:.0f}s")
-    check = bpy.data.images.load(path)
-    px = np.array(check.pixels[:], dtype=np.float32)
-    print(f"environment max {px.max():.2f} mean {px.reshape(-1, 4)[:, :3].mean():.3f}")
+    # cap tiny, very bright sources (the light strips): left in, they flare as
+    # blotches in every glossy reflection; their light is already in the lightmap
+    img = bpy.data.images.load(path)
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(-1, 4)
+    raw_max = px[:, :3].max()
+    px[:, :3] = np.minimum(px[:, :3], ENV_CLAMP)
+    img.pixels.foreach_set(px.ravel())
+    img.filepath_raw = path
+    img.file_format = "HDR"
+    img.save()
+    print(f"environment max {raw_max:.2f} -> {px[:, :3].max():.2f}, mean {px[:, :3].mean():.3f}")
     return path
 
 

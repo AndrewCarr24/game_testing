@@ -9,6 +9,13 @@
     #hud { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.45); padding: 8px 12px; border-radius: 6px; }
     #hud a { color: #9cf; margin-right: 8px; }
     #hint { position: absolute; bottom: 14px; width: 100%; text-align: center; color: #eee; text-shadow: 0 1px 3px #000; }
+    #toast { position: absolute; top: 38%; width: 100%; text-align: center; font-size: 17px; color: #fff;
+             text-shadow: 0 1px 4px #000; opacity: 0; transition: opacity .25s; pointer-events: none; }
+    #toast.show { opacity: 1; }
+    #inventory { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 8px; }
+    .slot { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.18);
+            border-radius: 6px; padding: 6px 10px; color: #eee; }
+    .slot .card { width: 22px; height: 14px; border-radius: 2px; background: linear-gradient(90deg, #e9e9e6 72%, #1846a8 72%); }
   </style>
   <script type="importmap">
     { "imports": {
@@ -28,6 +35,8 @@
     <span id="stats"></span>
   </div>
   <div id="hint"></div>
+  <div id="toast"></div>
+  <div id="inventory"></div>
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -35,8 +44,9 @@
     import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-    import { Interactables } from './interactables.js';
+    import { Interactables, Inventory } from './interactables.js';
     import { loadBake } from './baked.js';
+    import { Player, KEYS } from './player.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -169,57 +179,92 @@
       for (const n of names) prepare(proto[n], envIntensity);
 
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
-      const interact = new Interactables();
+      const inventoryEl = document.getElementById('inventory');
+      const inventory = new Inventory((inv) => {
+        inventoryEl.innerHTML = [...inv.items].map(([id, name]) =>
+          `<div class="slot">${id === 'keycard' ? '<span class="card"></span>' : ''}${name}</div>`).join('');
+      });
+      const interact = new Interactables(inventory, colliders);
       window.__interact = interact;
+      window.__inventory = inventory;
+      const placed = {};   // asset -> first placed object, for attachments
       for (const p of level.props) {
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
         obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
+        if (p.attach) {
+          // e.g. the keycard rides inside the desk drawer
+          placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
+          interact.collect(obj, { lock: p.lock });
+          total += level.assets[p.asset].tris;
+          continue;
+        }
         scene.add(obj);
+        placed[p.asset] ??= obj;
         obj.updateMatrixWorld(true);
-        interact.collect(obj);
+        interact.collect(obj, { lock: p.lock });
         total += level.assets[p.asset].tris;
-        const a = level.assets[p.asset].aabb;
-        if (a.max[1] - a.min[1] > 0.05)   // rugs are walkable
-          colliders.push(new THREE.Box3(new THREE.Vector3(...a.min), new THREE.Vector3(...a.max)).applyMatrix4(obj.matrixWorld));
+        // one box per part (seat, desktop, ...) so the player can stand on them
+        const a = level.assets[p.asset];
+        for (const c of a.colliders || [a.aabb])
+          colliders.push(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)).applyMatrix4(obj.matrixWorld));
       }
       stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders`;
 
-      // first-person walk with simple circle-vs-box collision on the floor plane
       camera.fov = 65; camera.updateProjectionMatrix();
-      // ?pos=x,y,z&look=x,y,z overrides the spawn view (handy for screenshots)
+      // ?pos=x,y,z&look=x,y,z overrides the spawn view (pos is eye position; handy for screenshots)
       const vec = (k, d) => (params.get(k) ? params.get(k).split(',').map(Number) : d);
-      camera.position.set(...vec('pos', level.spawn.position));
+      const eyePos = vec('pos', level.spawn.position);
+      camera.position.set(...eyePos);
       camera.lookAt(...vec('look', level.spawn.lookAt));
+      const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]]);
+      window.__player = player;
+
       const controls = new PointerLockControls(camera, document.body);
-      const walkHint = 'click to walk · WASD move · mouse look · Esc release';
+      const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · Esc release';
       hint.textContent = walkHint;
       document.body.addEventListener('click', () => controls.lock());
       const keys = {};
       let focus = null;   // interactable the player can use right now
       addEventListener('keydown', (e) => {
         keys[e.code] = true;
-        if (e.code === 'KeyE' && !e.repeat && controls.isLocked && focus) interact.toggle(focus);
+        if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+        if (e.code === 'KeyE' && !e.repeat && controls.isLocked && focus) {
+          const msg = interact.use(focus, player.boxAt(player.pos).clone());
+          if (msg) toast(msg);
+          renderer.shadowMap.needsUpdate = true;
+        }
       });
       addEventListener('keyup', (e) => (keys[e.code] = false));
-      const R = 0.3, eye = level.spawn.position[1];
-      const blocked = (x, z) => colliders.some((b) =>
-        b.max.y > 0.05 && b.min.y < eye && x > b.min.x - R && x < b.max.x + R && z > b.min.z - R && z < b.max.z + R);
+      const releaseAll = () => { for (const k in keys) keys[k] = false; };
+      addEventListener('blur', releaseAll);
+      controls.addEventListener('unlock', releaseAll);
+      const held = (names) => names.some((k) => keys[k]);
+      const toastEl = document.getElementById('toast');
+      let toastTimer;
+      const toast = (msg) => {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+      };
+      window.__toast = () => toastEl.textContent;
+
       const clock = new THREE.Clock();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
-        if (interact.update(dt)) renderer.shadowMap.needsUpdate = true;
-        focus = controls.isLocked ? interact.nearest(camera.position) : null;
+        const moved = interact.update(dt);
+        if (moved.length) renderer.shadowMap.needsUpdate = true;
+        // a door that has just finished opening may now overlap the player: step them clear
+        for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
+        const on = controls.isLocked;
+        player.update(dt, {
+          forward: on && held(KEYS.forward), back: on && held(KEYS.back),
+          left: on && held(KEYS.left), right: on && held(KEYS.right),
+          run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
+        });
+        focus = on ? interact.nearest(camera.position) : null;
         hint.textContent = focus ? `E · ${interact.prompt(focus)}` : walkHint;
-        if (!controls.isLocked) return;
-        const speed = 2.2 * dt;
-        const f = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0), s = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
-        const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
-        const right = new THREE.Vector3().crossVectors(fwd, camera.up);
-        const move = fwd.multiplyScalar(f * speed).add(right.multiplyScalar(s * speed));
-        const p = camera.position;
-        if (!blocked(p.x + move.x, p.z)) p.x += move.x;   // slide along walls
-        if (!blocked(p.x, p.z + move.z)) p.z += move.z;
       };
     }
 

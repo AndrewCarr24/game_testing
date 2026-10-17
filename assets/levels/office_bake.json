@@ -2,15 +2,22 @@
   "lightmap": {
     "file": "textures/T_Office_Lightmap.webp",
     "uv": 1,
-    "intensity": 5.9923,
+    "intensity": 5.8981,
     "objects": [
       "Office_Floor",
       "Office_Ceiling",
       "Office_Wall_W",
       "Office_Wall_E",
       "Office_Wall_S_A",
+      "Office_Wall_S_A2",
+      "Office_Wall_S_B2",
       "Office_Wall_S_B",
-      "Office_Wall_S_Header"
+      "Office_Wall_S_Header",
+      "Office_Corridor_Floor",
+      "Office_Corridor_Ceiling",
+      "Office_Corridor_Wall_W",
+      "Office_Corridor_Wall_E",
+      "Office_Corridor_Wall_End"
     ]
   },
   "environment": {

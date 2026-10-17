@@ -14,13 +14,17 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
 - `blender/levels/<level>.py` builds the shell (walls/floor/ceiling/glass), builds each prop from its asset script, places them, and exports `assets/models/<level>_shell.glb`, one `.glb` per prop, and `assets/levels/<level>.json` (props + transforms, AABB colliders, lights, spawn) in glTF Y-up coords. Blender→glTF is `(x, y, z) -> (x, z, -y)`; a Z rotation becomes the same angle about Y.
 - Run: `import runpy; runpy.run_path(".../blender/levels/office.py", run_name="__main__")`. Working file: `blender/levels/office.blend`.
 - Lights are data in the JSON (Blender lights don't transfer); the hemisphere light stands in for bounce until lightmaps are baked.
-- Viewer: `viewer/?level=office` (click to walk, WASD; `&pos=x,y,z&look=x,y,z` sets the view).
+- Viewer: `viewer/?level=office` (click to play; WASD, Shift run, Space jump, C crouch, E interact; `&pos=x,y,z&look=x,y,z` sets the eye position/view).
+- Collision: each prop gets one box per mesh part (`common.part_colliders`, skipping trim and moving parts) so seats and desktops can be stood on. Player: `viewer/player.js` (box character, gravity, ~1 m jump, 0.3 m auto step-up). Test: `viewer/tools/movement.mjs`.
+- Crouch is C, not Cmd/Ctrl: Cmd+W / Ctrl+W close the tab and can't be blocked, and macOS drops other keys' keyup while Cmd is held.
 - Variants come from overrides: `desk_chair.py` is `lounge_chair.build()` with different parameters.
 - Screenshots / tests of the viewer: `viewer/tools/shot.mjs <url> <out.png>` and `walk.mjs` (Playwright with the installed Chrome; `npm i playwright-core` in a scratch dir). Plain headless Chrome `--screenshot` does not wait for multi-file levels to load.
 
 ## Interactables
-- A moving part is its own empty (pivot/origin where it rests) with an `interact` custom property, e.g. `Desk_Drawer["interact"] = {"type": "slide", "axis": [glTF, parent space], "distance", "duration", "range", "prompt", "promptActive"}`. `export_extras=True` writes it to glTF extras → three.js `userData.interact`, so every placement of the asset gets the behaviour with no level changes.
-- Engine side: `viewer/interactables.js` (nearest item in range on its opening side; E toggles; eased slide). Test: `viewer/tools/drawer.mjs`.
+- A moving part is its own empty (pivot/origin where it rests) with an `interact` custom property, written to glTF extras (`export_extras=True`) → three.js `userData.interact`, so every placement of the asset gets the behaviour with no level changes. Types: `slide` (drawer: axis, distance), `rotate` (door: axis through the empty's origin, angle), `pickup` (keycard: item, name). Shared fields: duration, range (to the item's nearest edge), prompt/promptActive, side, `collide` (moving collider, solid only once settled), `indicator` (status-light node).
+- State lives in the level, not the asset: `PLACEMENTS` options `lock` (item id the interactable needs) and `attach` (parent to another placement's node, e.g. the keycard inside `Desk_Drawer`). A pickup inside another interactable can only be taken while that one is open.
+- Engine: `viewer/interactables.js` (`Interactables`, `Inventory`), HUD in index.html (inventory slots, toast messages). Tests: `viewer/tools/drawer.mjs`, `keycard_door.mjs`.
+- The corridor behind the office door (`corridor` in office.py's `P`) is a placeholder until the next room exists.
 
 ## Baked lighting
 - `blender/levels/bake.py` (headless: `Blender -b blender/levels/office.blend --python blender/levels/bake.py -- office 512`, ~1 min on the M4 GPU) bakes Cycles diffuse lighting for every shell mesh with a `Lightmap` UV layer into `assets/textures/T_Office_Lightmap.png`, renders a 360° room panorama (sun hidden) to `T_Office_Env.hdr`, and writes `assets/levels/office_bake.json`. Save the .blend first; re-bake whenever the level layout changes.
@@ -32,3 +36,7 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
 - Export with `common.export_gltf` (WebP textures in the shared `assets/models/textures/`), not `export_glb` (embeds a copy of every texture per file).
 - Viewer: pixel ratio capped at 1.5, one 2048 shadow map redrawn only when something moves, identical textures shared on the GPU.
 - Measure: `viewer/tools/perf.mjs <url>` (download, draw calls, texture MB) and `viewer/tools/fps.mjs <url> swiftshader 1280 720 1` (worst-case frame rate).
+
+## Building assets in parallel
+- `blender/tools/build_asset.py` builds one asset in its own headless Blender (`Blender -b --factory-startup --python blender/tools/build_asset.py -- <asset> [--no-export]`, ~2-7 s): report with budget WARNs, `.gltf` export, preview sheet at `build/previews/<asset>.png`. Safe to run several at once; never touches the open Blender window.
+- Sub-agents get `prompts/build_asset.md` plus one entry from `specs.md` (status DRAFT → READY once the user has answered its open questions). They create only `blender/assets/<asset>.py`; placing assets in a level, engine features and commits stay with the orchestrator.
