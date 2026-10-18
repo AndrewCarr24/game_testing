@@ -18,3 +18,5 @@
 {"date":"2026-10-18T15:25:14.718Z","commit":"90a637a+dirty","label":"outdoor","profile":"soft","fps":3.9,"frameP95":603.1,"gpuP95":361.03,"hitches":108,"callsMax":369,"trisMax":423904,"downloadMB":10.79,"textureMB":214,"loadS":4.6}
 {"date":"2026-10-18T15:30:17.016Z","commit":"90a637a+dirty","label":"estate","profile":"gpu","fps":568.7,"frameP95":2.6,"gpuP95":2.24,"hitches":2,"callsMax":454,"trisMax":452324,"downloadMB":10.79,"textureMB":214,"loadS":1.6}
 {"date":"2026-10-18T15:31:27.226Z","commit":"90a637a+dirty","label":"estate","profile":"soft","fps":4.2,"frameP95":584.5,"gpuP95":340.81,"hitches":116,"callsMax":368,"trisMax":425016,"downloadMB":10.79,"textureMB":214,"loadS":4.8}
+{"date":"2026-10-18T15:51:59.552Z","commit":"bce4b24+dirty","label":"scans","profile":"gpu","fps":569.6,"frameP95":2.5,"gpuP95":2.21,"hitches":2,"callsMax":454,"trisMax":452324,"downloadMB":11.69,"textureMB":214,"loadS":1.6}
+{"date":"2026-10-18T15:53:09.644Z","commit":"bce4b24+dirty","label":"scans","profile":"soft","fps":4.1,"frameP95":592.6,"gpuP95":360.82,"hitches":113,"callsMax":369,"trisMax":427320,"downloadMB":11.69,"textureMB":214,"loadS":4.8}

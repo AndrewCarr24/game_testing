@@ -41,32 +41,45 @@ rng = np.random.default_rng(12)
 
 
 def material(name, color_node_fn):
-    """Principled material whose base colour comes from color_node_fn(nodes, links), mixed
-    toward the horizon haze by distance from the camera."""
+    """Principled material whose base colour comes from color_node_fn(nodes, links)."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
-    nt = m.node_tree
-    nodes, links = nt.nodes, nt.links
+    nodes, links = m.node_tree.nodes, m.node_tree.links
     bsdf = next(n for n in nodes if n.type == "BSDF_PRINCIPLED")
     bsdf.inputs["Roughness"].default_value = 0.95
     links.new(color_node_fn(nodes, links), bsdf.inputs["Base Color"])
+    return m
+
+
+def add_haze(m):
+    """Aerial perspective inside the material: with f = 1 - exp(-d / 3500 m) (d = distance
+    from the camera), the surface's colour is scaled by (1 - f) and it emits HAZE x f. Done
+    in the Principled BSDF itself (not by mixing shaders), so alpha-cut leaves stay cut."""
+    if not m or not m.use_nodes:
+        return
+    nodes, links = m.node_tree.nodes, m.node_tree.links
+    bsdf = next((n for n in nodes if n.type == "BSDF_PRINCIPLED"), None)
+    if bsdf is None or "_haze" in m:
+        return
+    m["_haze"] = True
     cam = nodes.new("ShaderNodeCameraData")
-    # haze = 1 - exp(-d / 3500 m)
     div = nodes.new("ShaderNodeMath"); div.operation = "DIVIDE"; div.inputs[1].default_value = -3500.0
     links.new(cam.outputs["View Distance"], div.inputs[0])
     ex = nodes.new("ShaderNodeMath"); ex.operation = "EXPONENT"
     links.new(div.outputs[0], ex.inputs[0])
-    inv = nodes.new("ShaderNodeMath"); inv.operation = "SUBTRACT"; inv.inputs[0].default_value = 1.0
-    links.new(ex.outputs[0], inv.inputs[1])
-    emit = nodes.new("ShaderNodeEmission")
-    emit.inputs["Color"].default_value = (*HAZE, 1)
-    mix = nodes.new("ShaderNodeMixShader")
-    links.new(inv.outputs[0], mix.inputs["Fac"])
-    links.new(bsdf.outputs[0], mix.inputs[1])
-    links.new(emit.outputs[0], mix.inputs[2])
-    out = next(n for n in nodes if n.type == "OUTPUT_MATERIAL")
-    links.new(mix.outputs[0], out.inputs["Surface"])
-    return m
+    f = nodes.new("ShaderNodeMath"); f.operation = "SUBTRACT"; f.inputs[0].default_value = 1.0
+    links.new(ex.outputs[0], f.inputs[1])
+    base = bsdf.inputs["Base Color"]
+    mix = nodes.new("ShaderNodeMix"); mix.data_type = "RGBA"
+    mix.inputs["B"].default_value = (0, 0, 0, 1)
+    if base.is_linked:
+        links.new(base.links[0].from_socket, mix.inputs["A"])
+    else:
+        mix.inputs["A"].default_value = base.default_value
+    links.new(f.outputs[0], mix.inputs["Factor"])
+    links.new(mix.outputs["Result"], base)
+    bsdf.inputs["Emission Color"].default_value = (*HAZE, 1)
+    links.new(f.outputs[0], bsdf.inputs["Emission Strength"])
 
 
 def ramp_by(nodes, links, fac_socket, stops):
@@ -204,6 +217,59 @@ def tree_meshes(col, leaf, bark):
     return protos
 
 
+# Poly Haven (CC0) scanned trees: id, mesh-name filter, kind, height range in metres
+SCANNED = [
+    ("island_tree_01", None, "broad", (13, 19)),
+    ("island_tree_02", None, "broad", (11, 16)),
+    ("tree_small_02", None, "broad", (8, 12)),
+    ("jacaranda_tree", None, "broad", (12, 16)),
+    ("fir_tree_01", "fir_tree_01_a", "conifer", (18, 26)),
+    ("fir_tree_01", "fir_tree_01_b", "conifer", (15, 22)),
+    ("fir_tree_01", "fir_tree_01_c", "conifer", (10, 15)),
+]
+WEIGHTS = {"island_tree_01": 3, "island_tree_02": 3, "tree_small_02": 2, "jacaranda_tree": 0.4, "fir_tree_01": 1.2}
+
+
+def scanned_trees():
+    """Import the scanned trees once each as instance prototypes (collections kept out of
+    the scene). Returns [(collection, height_m, (hmin, hmax), weight)], [] if unavailable."""
+    sys.path.insert(0, os.path.join(PROJECT, "blender", "tools"))
+    try:
+        from polyhaven_models import fetch_model
+    except Exception as e:
+        print("no scanned trees:", e)
+        return []
+    protos, loaded = [], {}
+    for ph_id, only, kind, hr in SCANNED:
+        if ph_id not in loaded:
+            try:
+                path = fetch_model(ph_id)
+            except Exception as e:
+                print(f"skip {ph_id}: {e}")
+                loaded[ph_id] = []
+                continue
+            before = set(bpy.data.objects)
+            bpy.ops.import_scene.gltf(filepath=path)
+            loaded[ph_id] = [o for o in bpy.data.objects if o not in before and o.type == "MESH"]
+        for ob in loaded[ph_id]:
+            if only and not ob.name.startswith(only):
+                continue
+            coll = bpy.data.collections.new(f"Proto_{ob.name}")
+            for c in list(ob.users_collection):
+                c.objects.unlink(ob)
+            coll.objects.link(ob)
+            ob.parent = None
+            bpy.context.view_layer.update()
+            pts = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+            zmin, zmax = min(p.z for p in pts), max(p.z for p in pts)
+            cx = sum(p.x for p in pts) / 8
+            cy = sum(p.y for p in pts) / 8
+            coll.instance_offset = (cx, cy, zmin)
+            protos.append((coll, zmax - zmin, hr, WEIGHTS.get(ph_id, 1)))
+            print(f"scanned tree {ob.name}: {len(ob.data.polygons)} faces, {zmax - zmin:.1f} m")
+    return protos
+
+
 def scatter_trees(col, protos, height):
     """Belts and copses beyond the hedge (80-320 m), denser in clumps, with gaps that
     open views to the hills; sparse copses farther out on the hillsides."""
@@ -224,10 +290,25 @@ def scatter_trees(col, protos, height):
         r = rng.uniform(400, 1600)
         a = rng.uniform(0, 2 * np.pi)
         pts.append(np.array([r * math.cos(a), r * math.sin(a)]))
+    scanned = isinstance(protos[0], tuple)
+    if scanned:
+        w = np.array([p[3] for p in protos], float)
+        w /= w.sum()
     for i, (x, y) in enumerate(pts):
-        proto = protos[rng.integers(len(protos))]
         r, t = np.hypot(x, y), np.arctan2(y, x)
         z = float(height(np.array([r]), np.array([t]))[0]) if r > 300 else 0.0
+        if scanned:
+            coll, h, (h0, h1), _ = protos[rng.choice(len(protos), p=w)]
+            inst = bpy.data.objects.new(f"Tree.{i}", None)
+            inst.instance_type = "COLLECTION"
+            inst.instance_collection = coll
+            col.objects.link(inst)
+            s = rng.uniform(h0, h1) / h * (1.25 if r > 400 else 1.0)
+            inst.scale = (s, s, s)
+            inst.rotation_euler = (0, 0, rng.uniform(0, 2 * np.pi))
+            inst.location = (x, y, z - 0.2)
+            continue
+        proto = protos[rng.integers(len(protos))]
         for src in (proto, proto.children[0]):
             ob = bpy.data.objects.new(f"{src.name}.{i}", src.data)
             col.objects.link(ob)
@@ -253,9 +334,11 @@ def main():
     leaf = material("M_Leaves", leaf_color)
     bark = material("M_Bark", flat_color((0.03, 0.022, 0.015)))
     _, height = terrain(col, land)
-    protos = tree_meshes(col, leaf, bark)
+    protos = scanned_trees() or tree_meshes(col, leaf, bark)
     n = scatter_trees(col, protos, height)
-    print("trees:", n)
+    print("trees:", n, "(scanned)" if isinstance(protos[0], tuple) else "(generated)")
+    for m in bpy.data.materials:
+        add_haze(m)
 
     sun_data = bpy.data.lights.new("Sun", "SUN")
     sun_data.energy = SUN_STRENGTH
@@ -292,6 +375,8 @@ def main():
         pass
     scene.cycles.samples = SAMPLES
     scene.cycles.use_denoising = True
+    scene.cycles.transparent_max_bounces = 24      # layered alpha-cut leaves
+    scene.cycles.max_bounces = 4
     scene.render.film_transparent = True
     scene.render.resolution_x = WIDTH
     scene.render.resolution_y = round(WIDTH * (LAT[1] - LAT[0]) / 360)
