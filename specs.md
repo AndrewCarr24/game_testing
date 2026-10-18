@@ -193,3 +193,90 @@ Open questions:
 Open questions:
 1. Size (~6 x 5 m?) and does it have the same floor-to-ceiling glass as the office?
 2. Is its door locked, and if so what opens it?
+
+---
+
+## Rooms (main house; see prompts/build_room.md)
+Interior sizes and every door/window: `python3 blender/levels/room_info.py <room>`.
+House palette: warm minimal modern. Walnut, smoked oak, bronze, polished steel, cognac
+leather, ink blue, oat linen, white marble, limestone. Each room may lean its own way.
+
+### great_room + den (prefix `living_`)
+- great_room: 12.2 x 20.7 m, double height (8.4 m), a full-height west glass wall, two wide
+  openings to the gallery (east), opening to dining (north), door to the den (south). The
+  house's main living space: two or three seating groups (sofas, lounge chairs, coffee
+  tables, rugs), a fireplace or media wall as a focal point, side tables, floor lamps, a
+  large plant or sculpture. Limestone or oak floor; consider a feature wall.
+- den: 12.2 x 9.2 m, no windows: a media room / snug. Deep sectional facing a screen wall,
+  dimmer and cosier, darker finishes (e.g. green or ink fabric wall, smoked oak).
+
+### kitchen + scullery (prefix `kitchen_`)
+- kitchen: 17.7 x 9.2 m, glass north wall, openings to dining (west), gallery (south),
+  scullery (east). A chef's kitchen: a long waterfall-marble island with stools, a wall of
+  tall walnut or black-oak cabinetry with integrated fridge and ovens, a range with a hood,
+  pendants over the island, a breakfast table near the glass. Stone or large-tile floor.
+- scullery: 5.2 x 9.2 m: the working back kitchen: open shelving, a second sink, pantry
+  cabinets, a coffee station.
+
+### dining + wine_room (prefix `dining_`)
+- dining: 15.7 x 9.2 m, glass north wall, openings to the great room, kitchen and gallery.
+  A long table for 12-14, upholstered dining chairs, a sculptural chandelier or row of
+  pendants (point lights), a sideboard, art.
+- wine_room: 12.2 x 9.2 m, door from the scullery: a collector's cellar. Floor-to-ceiling
+  wine racking with bottles (instanced, cheap geometry), a glass-fronted climate wall, a
+  tasting table.
+
+### entry + powder + cloak (prefix `entry_`)
+- entry: 15.7 x 9.2 m, double height, an 8.4 m glass front (south), the floating stair along
+  the north wall (keep it and 1 m in front clear), doors to the powder room (west) and
+  cloakroom (east), opening to the gallery (north-east). Pale limestone floor. A statement
+  chandelier or light sculpture in the double-height volume, a round console table with a
+  sculpture or flowers, a bench, a large artwork.
+- powder: 5.2 x 9.2 m: a luxurious powder room: stone vanity with vessel basin, a large
+  mirror, a wall-hung WC, sconces. Dramatic finish (dark stone or veined marble walls).
+- cloak: 5.2 x 9.2 m: coat cloakroom: walnut wardrobes, a bench, a mirror.
+
+### courtyard (prefix `courtyard_`)
+- courtyard: 20 x 14 m, open to the sky (sun and sky light it), glass on all four sides on
+  both floors, a doorway from the south gallery at x -1.5..1.5. Limestone paving (FINISHES
+  floor), an olive tree (or two) in a large stone planter, a long reflecting pool or
+  fountain, an outdoor lounge (teak and cushions), low planting. Keep a clear path from the
+  doorway. No ceiling; no ceiling LIGHTS (it's outdoors).
+
+### garage + mudroom (prefix `garage_`)
+- garage: 12.2 x 19.7 m, garage door on the south wall, door to the mudroom (north).
+  Polished concrete floor, a showroom feel: 4-6 parking bays (leave them clear: the car is
+  built separately and will be placed by the orchestrator in two bays at local
+  (-3, -5.5) and (+3, -5.5), facing south), a tool wall / cabinetry, EV chargers, good bright
+  strip lighting.
+- mudroom: 12.2 x 10.2 m, doors to the gallery (west) and garage (south), a window east:
+  lockers with a bench, a laundry wall (washer, dryer, sink, folding counter).
+
+### car (prefix `car_`; Opus) — asset only
+- `car_ev`: one hero asset: a sleek modern luxury electric car (an original design, no real
+  brand), ~4.9 x 2.0 x 1.4 m, origin at the floor centre, front facing -Y. Body panels with
+  clean surfaces and shut lines, glass canopy, wheels with tyres and brake discs, light bars
+  front and rear (emissive), interior visible through the glass (seats, dashboard, wheel).
+  Up to 25k triangles. Paint parameter (colour) so the garage can show two different cars.
+
+### primary_bath (prefix `bath_`)
+- primary_bath: 9.7 x 9.2 m, upper floor, door from the primary bedroom (east wall of the
+  bedroom, the bath's west wall). Book-matched marble walls and floor, a freestanding stone
+  tub, a double vanity with mirrors, a walk-in glass shower, a towel warmer, sconces.
+
+### guest_room + gym (prefix `guest_`)
+- guest_room: 12.2 x 10.2 m, upper floor, glass east wall, door from the east gallery: a
+  calm guest suite in a lighter palette (oak, linen, sage): bed (a new guest bed asset, or
+  the existing `bed`), nightstands, a desk, an armchair, a rug.
+- gym: 12.2 x 9.2 m, upper floor, glass north wall, door from the office (west): rubber
+  floor (FINISHES), a mirror wall, treadmill, bench and weight rack, a cable machine or
+  rower, mats.
+
+### library + office (prefix `library_`)
+- library: 17.7 x 9.2 m, upper floor, interior glass looking into the great room (north
+  wall, west part), glass west wall, door from the south gallery: floor-to-ceiling walnut
+  bookshelves with books (cheap repeated geometry with a book-spine texture), a rolling
+  ladder, reading chairs, a large library table, a rug, reading lamps.
+- office: 13.2 x 9.2 m (rooms/office.py exists: keep the desk, desk chair, the lounge
+  group, the vase and the keycard attachment exactly as they are): add what the big room
+  lacks: bookshelves or a credenza on the walls, a sofa or second seating, a plant, art.

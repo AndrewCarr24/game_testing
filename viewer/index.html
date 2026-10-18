@@ -54,6 +54,7 @@
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -62,6 +63,7 @@
     import { loadBake } from './baked.js';
     import { Player, KEYS } from './player.js';
     import { Hand, Throwables } from './items.js';
+    import { batchRooms, RoomCuller } from './batching.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -83,6 +85,8 @@
     scene.environment = envMap;
     const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.01, 200);
     const loader = new GLTFLoader();
+    // assets are exported with Draco-compressed geometry
+    loader.setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const loadGltf = (url) => new Promise((ok, fail) => loader.load(url, ok, undefined, fail));
 
     // assets that use the same image (e.g. walnut) share one GPU texture
@@ -150,6 +154,7 @@
     async function viewLevel(name) {
       const base = '../assets/';
       const level = await (await fetch(`${base}levels/${name}.json`)).json();
+      window.__level = level;
       scene.background = new THREE.Color(0xb9cde3);
       RectAreaLightUniformsLib.init();
 
@@ -163,6 +168,9 @@
       const envIntensity = baked ? 1 : env ? env.intensity : 1;
       for (const l of level.lights) {
         if (baked && l.type !== 'sun') continue;
+        // a real-time area light per ceiling strip is far too slow for a whole house
+        // (every material pays for every light); unbaked, the hemisphere + environment stand in
+        if (l.type === 'rect') continue;
         if (l.type === 'rect') {
           const light = new THREE.RectAreaLight(new THREE.Color(...l.color), l.intensity, l.width, l.height);
           light.position.set(...l.position);
@@ -219,6 +227,7 @@
       window.__interact = interact;
       window.__inventory = inventory;
       const placed = {};   // asset -> first placed object, for attachments
+      const roomRoots = {};   // room -> placed prop roots (for batching and culling)
       for (const p of level.props) {
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
@@ -233,6 +242,7 @@
         }
         scene.add(obj);
         placed[p.asset] ??= obj;
+        (roomRoots[p.room] ??= []).push(obj);
         obj.updateMatrixWorld(true);
         interact.collect(obj, { lock: p.lock });
         total += level.assets[p.asset].tris;
@@ -241,7 +251,14 @@
         for (const c of a.colliders || [a.aabb])
           colliders.push(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)).applyMatrix4(obj.matrixWorld));
       }
-      stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders`;
+      // merge each room's static furniture, then draw only rooms near the player
+      const moving = new Set();
+      for (const it of interact.items) it.node.traverse((o) => moving.add(o));
+      const { batches, before, after } = batchRooms(roomRoots, moving);
+      for (const list of Object.values(batches)) for (const m of list) scene.add(m);
+      const culler = new RoomCuller(level, roomRoots, batches);
+      window.__culler = culler;
+      stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders · ${before}→${after} meshes`;
 
       camera.fov = 65; camera.updateProjectionMatrix();
       // ?pos=x,y,z&look=x,y,z overrides the spawn view (pos is eye position; handy for screenshots)
@@ -329,6 +346,7 @@
         // a door that has just finished opening may now overlap the player: step them clear
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
+        if (culler.update(camera.position)) renderer.shadowMap.needsUpdate = true;
         if (inventory.open) camera.quaternion.copy(frozenLook);   // the inventory screen pauses looking and moving
         const on = controls.isLocked && !inventory.open;
         player.update(dt, {

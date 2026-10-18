@@ -28,7 +28,8 @@ export async function loadBake(base, levelName, renderer) {
     envHdr.mapping = THREE.EquirectangularReflectionMapping;
     const envMap = pmrem.fromEquirectangular(envHdr).texture;
     envHdr.dispose();
-    rooms[room] = { lightTex, envMap, intensity: r.lightmap.intensity, objects: new Set(r.lightmap.objects) };
+    rooms[room] = { lightTex, envMap, intensity: r.lightmap.intensity, objects: new Set(r.lightmap.objects),
+                    sh: r.sh ? r.sh.map((c) => new THREE.Vector3(...c)) : null };
   }));
   pmrem.dispose();
 
@@ -62,11 +63,28 @@ export async function loadBake(base, levelName, renderer) {
     return m;
   }
 
+  // Props: diffuse light from the room's spherical-harmonics probe (computed from the
+  // unclamped panorama, so the ceiling strips' full light reaches the furniture, matching
+  // the baked walls); reflections from the room's (highlight-clamped) panorama.
   function roomMaterial(src, room) {
     const key = `${room}|${src.uuid}|env`;
     if (clones.has(key)) return clones.get(key);
     const m = src.clone();
-    m.envMap = rooms[room].envMap;
+    const r = rooms[room];
+    m.envMap = r.envMap;
+    if (r.sh) {
+      m.onBeforeCompile = (shader) => {
+        shader.uniforms.roomSH = { value: r.sh };
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 roomSH[ 9 ];')
+          .replace('#include <lights_fragment_maps>', [
+            '#include <lights_fragment_maps>',
+            'iblIrradiance = vec3( 0.0 );',
+            'irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH );',
+          ].join('\n'));
+      };
+      m.customProgramCacheKey = () => 'room-sh';
+    }
     clones.set(key, m);
     return m;
   }

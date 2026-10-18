@@ -4,18 +4,16 @@
 		"version":"2.0"
 	},
 	"extensionsUsed":[
+		"KHR_draco_mesh_compression",
 		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
+		"KHR_draco_mesh_compression",
 		"EXT_texture_webp"
 	],
 	"scene":0,
 	"scenes":[
 		{
-			"extras":{
-				"uuid":"f82c9184-8a6a-4629-93b8-e8a6b0def30f",
-				"assets reported":{}
-			},
 			"name":"Scene",
 			"nodes":[
 				1
@@ -62,8 +60,19 @@
 						"NORMAL":1,
 						"TEXCOORD_0":2
 					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":0,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
 					"indices":3,
-					"material":0
+					"material":0,
+					"mode":4
 				}
 			]
 		}
@@ -87,7 +96,6 @@
 	],
 	"accessors":[
 		{
-			"bufferView":0,
 			"componentType":5126,
 			"count":402,
 			"max":[
@@ -103,19 +111,16 @@
 			"type":"VEC3"
 		},
 		{
-			"bufferView":1,
 			"componentType":5126,
 			"count":402,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":2,
 			"componentType":5126,
 			"count":402,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":3,
 			"componentType":5123,
 			"count":1284,
 			"type":"SCALAR"
@@ -124,27 +129,8 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4824,
-			"byteOffset":0,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":4824,
-			"byteOffset":4824,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":3216,
-			"byteOffset":9648,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":2568,
-			"byteOffset":12864,
-			"target":34963
+			"byteLength":2593,
+			"byteOffset":0
 		}
 	],
 	"samplers":[
@@ -155,7 +141,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":15432,
+			"byteLength":2596,
 			"uri":"rug.bin"
 		}
 	]

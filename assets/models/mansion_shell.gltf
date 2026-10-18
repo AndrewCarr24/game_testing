@@ -4,505 +4,1379 @@
 		"version":"2.0"
 	},
 	"extensionsUsed":[
+		"KHR_draco_mesh_compression",
 		"KHR_materials_clearcoat",
 		"KHR_materials_emissive_strength",
 		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
+		"KHR_draco_mesh_compression",
 		"EXT_texture_webp"
 	],
 	"scene":0,
 	"scenes":[
 		{
-			"extras":{
-				"uuid":"f82c9184-8a6a-4629-93b8-e8a6b0def30f",
-				"assets reported":{}
-			},
 			"name":"Scene",
 			"nodes":[
-				40
+				114
 			]
 		}
 	],
 	"nodes":[
 		{
-			"extras":{
-				"room":"bedroom"
-			},
 			"mesh":0,
-			"name":"Mansion_Bedroom_Ceiling",
+			"name":"Mansion___M_Aluminium_Black",
 			"translation":[
-				1,
-				3.25,
-				16.149999618530273
+				0,
+				0.02500000037252903,
+				20
 			]
 		},
 		{
-			"extras":{
-				"room":"bedroom"
-			},
 			"mesh":1,
-			"name":"Mansion_Bedroom_Floor",
+			"name":"Mansion___M_GarageDoor",
 			"translation":[
-				1,
-				-0.05000000074505806,
-				16.149999618530273
+				19.75,
+				1.600000023841858,
+				20
 			]
 		},
 		{
-			"extras":{
-				"room":"bedroom"
-			},
 			"mesh":2,
-			"name":"Mansion_bedroom_Glass",
+			"name":"Mansion___M_Glass",
 			"translation":[
-				-2.059999942779541,
-				1.600000023841858,
-				16.100000381469727
+				0,
+				4.199999809265137,
+				20
 			]
 		},
 		{
-			"extras":{
-				"room":"bedroom"
-			},
 			"mesh":3,
-			"name":"Mansion_bedroom_Mullion_0",
+			"name":"Mansion___M_Glass_Rail",
 			"translation":[
-				-2.059999942779541,
-				1.600000023841858,
-				17.587499618530273
+				-3.25,
+				5.099999904632568,
+				10.5
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"cloak"
 			},
 			"mesh":4,
-			"name":"Mansion_bedroom_Mullion_1",
+			"name":"Mansion_cloak_M_Ceiling_Warm",
 			"translation":[
-				-2.059999942779541,
-				1.600000023841858,
-				16.100000381469727
+				10.75,
+				4.300000190734863,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"cloak"
 			},
 			"mesh":5,
-			"name":"Mansion_bedroom_Mullion_2",
+			"name":"Mansion_cloak_M_LightStrip",
 			"translation":[
-				-2.059999942779541,
-				1.600000023841858,
-				14.612500190734863
+				10.149999618530273,
+				4.196499824523926,
+				14.949999809265137
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"cloak"
 			},
 			"mesh":6,
-			"name":"Mansion_Bedroom_Wall_E",
+			"name":"Mansion_cloak_M_OakFloor_Smoked",
 			"translation":[
-				4.099999904632568,
-				1.600000023841858,
-				16.149999618530273
+				10.75,
+				-0.10000000149011612,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"cloak"
 			},
 			"mesh":7,
-			"name":"Mansion_Bedroom_Wall_N_A",
+			"name":"Mansion_cloak_M_Plaster_Cloak",
 			"translation":[
-				-0.17499999701976776,
-				1.600000023841858,
-				13.300000190734863
+				10.75,
+				2.0999999046325684,
+				10.574999809265137
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"courtyard"
 			},
 			"mesh":8,
-			"name":"Mansion_Bedroom_Wall_N_B",
+			"name":"Mansion_courtyard_M_Courtyard_Limestone",
 			"translation":[
-				3.575000047683716,
-				1.600000023841858,
-				13.300000190734863
+				0,
+				-0.10000000149011612,
+				0
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"den"
 			},
 			"mesh":9,
-			"name":"Mansion_Bedroom_Wall_N_Header",
+			"name":"Mansion_den_M_Ceiling_Den",
 			"translation":[
-				2.4000000953674316,
-				2.8499999046325684,
-				13.300000190734863
+				-19.75,
+				4.300000190734863,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"den"
 			},
 			"mesh":10,
-			"name":"Mansion_Bedroom_Wall_S",
+			"name":"Mansion_den_M_Fabric_DenGreen",
 			"translation":[
-				1,
-				1.600000023841858,
-				19
+				-23.149999618530273,
+				2.0999999046325684,
+				10.574999809265137
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"den"
 			},
 			"mesh":11,
-			"name":"Mansion_Bedroom_Wall_W_N",
+			"name":"Mansion_den_M_LightStrip",
 			"translation":[
-				-2.0999999046325684,
-				1.600000023841858,
-				14
+				-19.75,
+				4.196499824523926,
+				16.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"den"
 			},
 			"mesh":12,
-			"name":"Mansion_Bedroom_Wall_W_S",
+			"name":"Mansion_den_M_OakFloor_Smoked",
 			"translation":[
-				-2.0999999046325684,
-				1.600000023841858,
-				18.25
+				-19.75,
+				-0.10000000149011612,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"dining"
 			},
 			"mesh":13,
-			"name":"Mansion_bedroom_Window_Head",
+			"name":"Mansion_dining_M_Ceiling_Warm",
 			"translation":[
-				-2.059999942779541,
-				3.174999952316284,
-				16.100000381469727
+				-18,
+				4.300000190734863,
+				-15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"dining"
 			},
 			"mesh":14,
-			"name":"Mansion_bedroom_Window_Sill",
+			"name":"Mansion_dining_M_LightStrip",
 			"translation":[
-				-2.059999942779541,
-				0.02500000037252903,
-				16.100000381469727
+				-18.5,
+				4.196499824523926,
+				-15.850000381469727
 			]
 		},
 		{
 			"extras":{
-				"room":"hall"
+				"room":"dining"
 			},
 			"mesh":15,
-			"name":"Mansion_Hall_Ceiling",
+			"name":"Mansion_dining_M_OakFloor",
 			"translation":[
-				2.4000000953674316,
-				3.049999952316284,
-				8.300000190734863
+				-18,
+				-0.10000000149011612,
+				-15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"hall"
+				"room":"dining"
 			},
 			"mesh":16,
-			"name":"Mansion_Hall_Floor",
+			"name":"Mansion_dining_M_Plaster_Dining",
 			"translation":[
-				2.4000000953674316,
-				-0.05000000074505806,
-				8.300000190734863
+				-25,
+				2.0999999046325684,
+				-19.924999237060547
 			]
 		},
 		{
 			"extras":{
-				"room":"hall"
+				"room":"dining"
 			},
 			"mesh":17,
-			"name":"Mansion_Hall_Wall_E",
+			"name":"Mansion_dining_M_Plaster_Olive",
 			"translation":[
-				3.700000047683716,
-				1.5,
-				8.300000190734863
+				-25.924999237060547,
+				2.0999999046325684,
+				-15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"hall"
+				"room":"entry"
 			},
 			"mesh":18,
-			"name":"Mansion_Hall_Wall_W",
+			"name":"Mansion_entry_M_Ceiling_Entry",
 			"translation":[
-				1.100000023841858,
-				1.5,
-				8.300000190734863
+				0,
+				8.5,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"entry"
 			},
 			"mesh":19,
-			"name":"Mansion_LightStrip_0",
+			"name":"Mansion_entry_M_Entry_Limestone",
 			"translation":[
-				-1.2999999523162842,
-				3.3965001106262207,
-				0.6000000238418579
+				0,
+				-0.10000000149011612,
+				15.25
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"entry"
 			},
 			"mesh":20,
-			"name":"Mansion_LightStrip_1",
+			"name":"Mansion_entry_M_LightStrip",
 			"translation":[
-				0.6000000238418579,
-				3.3965001106262207,
-				-1.600000023841858
+				0,
+				8.396499633789062,
+				16.850000381469727
 			]
 		},
 		{
 			"extras":{
-				"room":"hall"
+				"room":"entry"
 			},
 			"mesh":21,
-			"name":"Mansion_LightStrip_2",
+			"name":"Mansion_entry_M_Plaster_Entry",
 			"translation":[
-				2.4000000953674316,
-				2.996500015258789,
-				8.300000190734863
+				-7,
+				4.199999809265137,
+				19.924999237060547
 			]
 		},
 		{
 			"extras":{
-				"room":"bedroom"
+				"room":"entry"
 			},
 			"mesh":22,
-			"name":"Mansion_LightStrip_3",
+			"name":"Mansion_entry_M_Plaster_Entry_Greige",
 			"translation":[
-				3.5999999046325684,
-				3.196500062942505,
-				16.149999618530273
+				-3.25,
+				2.299999952316284,
+				10.574999809265137
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"entry"
 			},
 			"mesh":23,
-			"name":"Mansion_Office_Ceiling",
+			"name":"Mansion_entry_M_Walnut",
 			"translation":[
-				0,
-				3.450000047683716,
-				0
+				-5.849999904632568,
+				0.14692308008670807,
+				11.850000381469727
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_e"
 			},
 			"mesh":24,
-			"name":"Mansion_Office_Floor",
+			"name":"Mansion_gallery_e_M_Ceiling_White",
 			"translation":[
-				0,
-				-0.05000000074505806,
+				11.75,
+				4.300000190734863,
 				0
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_e"
 			},
 			"mesh":25,
-			"name":"Mansion_office_Glass",
+			"name":"Mansion_gallery_e_M_LightStrip",
 			"translation":[
-				0,
-				1.7000000476837158,
-				-3.059999942779541
+				11.75,
+				4.196499824523926,
+				0
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_e"
 			},
 			"mesh":26,
-			"name":"Mansion_office_Mullion_0",
+			"name":"Mansion_gallery_e_M_OakFloor",
 			"translation":[
-				-3.487499952316284,
-				1.7000000476837158,
-				-3.059999942779541
+				11.75,
+				-0.10000000149011612,
+				0
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_e"
 			},
 			"mesh":27,
-			"name":"Mansion_office_Mullion_1",
+			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
 			"translation":[
-				-2.0999999046325684,
-				1.7000000476837158,
-				-3.059999942779541
+				13.425000190734863,
+				2.0999999046325684,
+				2.0250000953674316
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_n"
 			},
 			"mesh":28,
-			"name":"Mansion_office_Mullion_2",
+			"name":"Mansion_gallery_n_M_Ceiling_White",
 			"translation":[
-				-0.699999988079071,
-				1.7000000476837158,
-				-3.059999942779541
+				0,
+				4.300000190734863,
+				-8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_n"
 			},
 			"mesh":29,
-			"name":"Mansion_office_Mullion_3",
+			"name":"Mansion_gallery_n_M_LightStrip",
 			"translation":[
-				0.699999988079071,
-				1.7000000476837158,
-				-3.059999942779541
+				0,
+				4.196499824523926,
+				-8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_n"
 			},
 			"mesh":30,
-			"name":"Mansion_office_Mullion_4",
+			"name":"Mansion_gallery_n_M_OakFloor",
 			"translation":[
-				2.0999999046325684,
-				1.7000000476837158,
-				-3.059999942779541
+				0,
+				-0.10000000149011612,
+				-8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_n"
 			},
 			"mesh":31,
-			"name":"Mansion_office_Mullion_5",
+			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
 			"translation":[
-				3.487499952316284,
-				1.7000000476837158,
-				-3.059999942779541
+				-13.25,
+				2.0999999046325684,
+				-10.425000190734863
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_s"
 			},
 			"mesh":32,
-			"name":"Mansion_Office_Wall_E",
+			"name":"Mansion_gallery_s_M_Ceiling_White",
 			"translation":[
-				3.5999999046325684,
-				1.7000000476837158,
-				0
+				0,
+				4.300000190734863,
+				8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_s"
 			},
 			"mesh":33,
-			"name":"Mansion_Office_Wall_S_A",
+			"name":"Mansion_gallery_s_M_LightStrip",
 			"translation":[
-				1.524999976158142,
-				1.7000000476837158,
-				3.0999999046325684
+				0,
+				4.196499824523926,
+				8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_s"
 			},
 			"mesh":34,
-			"name":"Mansion_Office_Wall_S_B",
+			"name":"Mansion_gallery_s_M_OakFloor",
 			"translation":[
-				3.2249999046325684,
-				1.7000000476837158,
-				3.0999999046325684
+				0,
+				-0.10000000149011612,
+				8.75
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_s"
 			},
 			"mesh":35,
-			"name":"Mansion_Office_Wall_S_Header",
+			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
 			"translation":[
-				2.4000000953674316,
-				2.950000047683716,
-				3.0999999046325684
+				0,
+				3.5999999046325684,
+				7.074999809265137
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_w"
 			},
 			"mesh":36,
-			"name":"Mansion_Office_Wall_S_West",
+			"name":"Mansion_gallery_w_M_Ceiling_White",
 			"translation":[
-				-1.149999976158142,
-				1.7000000476837158,
-				3.0999999046325684
-			]
-		},
-		{
-			"extras":{
-				"room":"office"
-			},
-			"mesh":37,
-			"name":"Mansion_Office_Wall_W",
-			"translation":[
-				-3.5999999046325684,
-				1.7000000476837158,
+				-11.75,
+				4.300000190734863,
 				0
 			]
 		},
 		{
 			"extras":{
-				"room":"office"
+				"room":"gallery_w"
+			},
+			"mesh":37,
+			"name":"Mansion_gallery_w_M_LightStrip",
+			"translation":[
+				-11.75,
+				4.196499824523926,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"gallery_w"
 			},
 			"mesh":38,
-			"name":"Mansion_office_Window_Head",
+			"name":"Mansion_gallery_w_M_OakFloor",
 			"translation":[
-				0,
-				3.375,
-				-3.059999942779541
+				-11.75,
+				-0.10000000149011612,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"gallery_w"
+			},
+			"mesh":39,
+			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
+			"translation":[
+				-13.425000190734863,
+				2.0999999046325684,
+				6.25
+			]
+		},
+		{
+			"extras":{
+				"room":"garage"
+			},
+			"mesh":40,
+			"name":"Mansion_garage_M_Garage_Ceiling",
+			"translation":[
+				19.75,
+				4.300000190734863,
+				10
+			]
+		},
+		{
+			"extras":{
+				"room":"garage"
+			},
+			"mesh":41,
+			"name":"Mansion_garage_M_Garage_PolishedConcrete",
+			"translation":[
+				19.75,
+				-0.10000000149011612,
+				10
+			]
+		},
+		{
+			"extras":{
+				"room":"garage"
+			},
+			"mesh":42,
+			"name":"Mansion_garage_M_Garage_Wall",
+			"translation":[
+				14.5,
+				2.0999999046325684,
+				19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"garage"
+			},
+			"mesh":43,
+			"name":"Mansion_garage_M_Garage_WallDark",
+			"translation":[
+				16.350000381469727,
+				2.0999999046325684,
+				0.07500000298023224
+			]
+		},
+		{
+			"extras":{
+				"room":"garage"
+			},
+			"mesh":44,
+			"name":"Mansion_garage_M_LightStrip",
+			"translation":[
+				15.25,
+				4.196499824523926,
+				10.5
+			]
+		},
+		{
+			"extras":{
+				"room":"great_room"
+			},
+			"mesh":45,
+			"name":"Mansion_great_room_M_Ceiling_Living",
+			"translation":[
+				-19.75,
+				8.5,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"great_room"
+			},
+			"mesh":46,
+			"name":"Mansion_great_room_M_LightStrip",
+			"translation":[
+				-17.75,
+				8.396499633789062,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"great_room"
+			},
+			"mesh":47,
+			"name":"Mansion_great_room_M_Living_Limestone",
+			"translation":[
+				-19.75,
+				-0.10000000149011612,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"great_room"
+			},
+			"mesh":48,
+			"name":"Mansion_great_room_M_Plaster_Living",
+			"translation":[
+				-24.5,
+				4.199999809265137,
+				-10.425000190734863
+			]
+		},
+		{
+			"extras":{
+				"room":"great_room"
+			},
+			"mesh":49,
+			"name":"Mansion_great_room_M_Plaster_LivingClay",
+			"translation":[
+				-25.5,
+				4.199999809265137,
+				10.425000190734863
+			]
+		},
+		{
+			"extras":{
+				"room":"guest_room"
+			},
+			"mesh":50,
+			"name":"Mansion_guest_room_M_Ceiling_Warm",
+			"translation":[
+				19.75,
+				8.5,
+				-5.25
+			]
+		},
+		{
+			"extras":{
+				"room":"guest_room"
+			},
+			"mesh":51,
+			"name":"Mansion_guest_room_M_LightStrip",
+			"translation":[
+				16.75,
+				8.396499633789062,
+				-5.75
+			]
+		},
+		{
+			"extras":{
+				"room":"guest_room"
+			},
+			"mesh":52,
+			"name":"Mansion_guest_room_M_OakFloor_Pale",
+			"translation":[
+				19.75,
+				4.5,
+				-5.25
+			]
+		},
+		{
+			"extras":{
+				"room":"guest_room"
+			},
+			"mesh":53,
+			"name":"Mansion_guest_room_M_Plaster_Linen",
+			"translation":[
+				19.75,
+				6.5,
+				-10.425000190734863
+			]
+		},
+		{
+			"extras":{
+				"room":"guest_room"
+			},
+			"mesh":54,
+			"name":"Mansion_guest_room_M_Plaster_Sage",
+			"translation":[
+				13.574999809265137,
+				6.5,
+				-1.475000023841858
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":55,
+			"name":"Mansion_gym_M_Ceiling_Warm",
+			"translation":[
+				19.75,
+				8.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":56,
+			"name":"Mansion_gym_M_LightStrip",
+			"translation":[
+				18.75,
+				8.396499633789062,
+				-13.25
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":57,
+			"name":"Mansion_gym_M_Mirror",
+			"translation":[
+				19.75,
+				6.5,
+				-10.574999809265137
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":58,
+			"name":"Mansion_gym_M_Oak_Light",
+			"translation":[
+				25.924999237060547,
+				6.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":59,
+			"name":"Mansion_gym_M_Plaster_Greige",
+			"translation":[
+				14.25,
+				6.5,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"gym"
+			},
+			"mesh":60,
+			"name":"Mansion_gym_M_Rubber_Floor",
+			"translation":[
+				19.75,
+				4.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"kitchen"
+			},
+			"mesh":61,
+			"name":"Mansion_kitchen_M_Ceiling_White",
+			"translation":[
+				-1,
+				4.300000190734863,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"kitchen"
+			},
+			"mesh":62,
+			"name":"Mansion_kitchen_M_Kitchen_Stone",
+			"translation":[
+				-1,
+				-0.10000000149011612,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"kitchen"
+			},
+			"mesh":63,
+			"name":"Mansion_kitchen_M_LightStrip",
+			"translation":[
+				-0.5,
+				4.196499824523926,
+				-14.100000381469727
+			]
+		},
+		{
+			"extras":{
+				"room":"kitchen"
+			},
+			"mesh":64,
+			"name":"Mansion_kitchen_M_Plaster_Kitchen",
+			"translation":[
+				-9,
+				2.0999999046325684,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"library"
+			},
+			"mesh":65,
+			"name":"Mansion_library_M_Ceiling_Warm",
+			"translation":[
+				-17,
+				8.5,
+				15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"library"
+			},
+			"mesh":66,
+			"name":"Mansion_library_M_LightStrip",
+			"translation":[
+				-17.5,
+				8.396499633789062,
+				17.549999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"library"
+			},
+			"mesh":67,
+			"name":"Mansion_library_M_OakFloor_Smoked",
+			"translation":[
+				-17,
+				4.5,
+				15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"library"
+			},
+			"mesh":68,
+			"name":"Mansion_library_M_Plaster_Library",
+			"translation":[
+				-25.5,
+				6.5,
+				10.574999809265137
+			]
+		},
+		{
+			"extras":{
+				"room":"mudroom"
+			},
+			"mesh":69,
+			"name":"Mansion_mudroom_M_Ceiling_Warm",
+			"translation":[
+				19.75,
+				4.300000190734863,
+				-5.25
+			]
+		},
+		{
+			"extras":{
+				"room":"mudroom"
+			},
+			"mesh":70,
+			"name":"Mansion_mudroom_M_LightStrip",
+			"translation":[
+				19.75,
+				4.196499824523926,
+				-9.449999809265137
+			]
+		},
+		{
+			"extras":{
+				"room":"mudroom"
+			},
+			"mesh":71,
+			"name":"Mansion_mudroom_M_Mudroom_Tile",
+			"translation":[
+				19.75,
+				-0.10000000149011612,
+				-5.25
+			]
+		},
+		{
+			"extras":{
+				"room":"mudroom"
+			},
+			"mesh":72,
+			"name":"Mansion_mudroom_M_Plaster_Cream",
+			"translation":[
+				19.75,
+				2.0999999046325684,
+				-10.425000190734863
 			]
 		},
 		{
 			"extras":{
 				"room":"office"
 			},
-			"mesh":39,
-			"name":"Mansion_office_Window_Sill",
+			"mesh":73,
+			"name":"Mansion_office_M_Ceiling_White",
+			"translation":[
+				6.75,
+				8.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"office"
+			},
+			"mesh":74,
+			"name":"Mansion_office_M_LightStrip",
+			"translation":[
+				3.3499999046325684,
+				8.396499633789062,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"office"
+			},
+			"mesh":75,
+			"name":"Mansion_office_M_OakFloor",
+			"translation":[
+				6.75,
+				4.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"office"
+			},
+			"mesh":76,
+			"name":"Mansion_office_M_Plaster_WarmWhite",
+			"translation":[
+				0.5,
+				6.5,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"powder"
+			},
+			"mesh":77,
+			"name":"Mansion_powder_M_Ceiling_Powder",
+			"translation":[
+				-10.75,
+				4.300000190734863,
+				15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"powder"
+			},
+			"mesh":78,
+			"name":"Mansion_powder_M_Entry_DarkMarble",
+			"translation":[
+				-10.75,
+				2.0999999046325684,
+				10.574999809265137
+			]
+		},
+		{
+			"extras":{
+				"room":"powder"
+			},
+			"mesh":79,
+			"name":"Mansion_powder_M_Entry_Limestone",
+			"translation":[
+				-10.75,
+				-0.10000000149011612,
+				15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"powder"
+			},
+			"mesh":80,
+			"name":"Mansion_powder_M_LightStrip",
+			"translation":[
+				-10.75,
+				4.196499824523926,
+				11.850000381469727
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bath"
+			},
+			"mesh":81,
+			"name":"Mansion_primary_bath_M_Bath_Marble",
+			"translation":[
+				-5,
+				6.5,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bath"
+			},
+			"mesh":82,
+			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
+			"translation":[
+				-0.07500000298023224,
+				6.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bath"
+			},
+			"mesh":83,
+			"name":"Mansion_primary_bath_M_Bath_MarbleFloor",
+			"translation":[
+				-5,
+				4.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bath"
+			},
+			"mesh":84,
+			"name":"Mansion_primary_bath_M_Ceiling_Bath",
+			"translation":[
+				-5,
+				8.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bath"
+			},
+			"mesh":85,
+			"name":"Mansion_primary_bath_M_LightStrip",
+			"translation":[
+				-5.400000095367432,
+				8.396499633789062,
+				-18.799999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bedroom"
+			},
+			"mesh":86,
+			"name":"Mansion_primary_bedroom_M_Ceiling_Warm",
+			"translation":[
+				-18,
+				8.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bedroom"
+			},
+			"mesh":87,
+			"name":"Mansion_primary_bedroom_M_LightStrip",
+			"translation":[
+				-18,
+				8.396499633789062,
+				-11.350000381469727
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bedroom"
+			},
+			"mesh":88,
+			"name":"Mansion_primary_bedroom_M_OakFloor_Smoked",
+			"translation":[
+				-18,
+				4.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bedroom"
+			},
+			"mesh":89,
+			"name":"Mansion_primary_bedroom_M_Plaster_Ink",
+			"translation":[
+				-25.924999237060547,
+				6.5,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"primary_bedroom"
+			},
+			"mesh":90,
+			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
+			"translation":[
+				-25,
+				6.5,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"scullery"
+			},
+			"mesh":91,
+			"name":"Mansion_scullery_M_Ceiling_White",
+			"translation":[
+				10.75,
+				4.300000190734863,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"scullery"
+			},
+			"mesh":92,
+			"name":"Mansion_scullery_M_Kitchen_Stone",
+			"translation":[
+				10.75,
+				-0.10000000149011612,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"scullery"
+			},
+			"mesh":93,
+			"name":"Mansion_scullery_M_LightStrip",
+			"translation":[
+				9.75,
+				4.196499824523926,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"scullery"
+			},
+			"mesh":94,
+			"name":"Mansion_scullery_M_Plaster_Scullery",
+			"translation":[
+				10.75,
+				2.0999999046325684,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_e"
+			},
+			"mesh":95,
+			"name":"Mansion_ugallery_e_M_Ceiling_White",
+			"translation":[
+				11.75,
+				8.5,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_e"
+			},
+			"mesh":96,
+			"name":"Mansion_ugallery_e_M_LightStrip",
+			"translation":[
+				11.75,
+				8.396499633789062,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_e"
+			},
+			"mesh":97,
+			"name":"Mansion_ugallery_e_M_OakFloor",
+			"translation":[
+				11.75,
+				4.5,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_e"
+			},
+			"mesh":98,
+			"name":"Mansion_ugallery_e_M_Plaster_WarmWhite",
+			"translation":[
+				13.425000190734863,
+				6.5,
+				6.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_n"
+			},
+			"mesh":99,
+			"name":"Mansion_ugallery_n_M_Ceiling_White",
 			"translation":[
 				0,
-				0.02500000037252903,
-				-3.059999942779541
+				8.5,
+				-8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_n"
+			},
+			"mesh":100,
+			"name":"Mansion_ugallery_n_M_LightStrip",
+			"translation":[
+				0,
+				8.396499633789062,
+				-8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_n"
+			},
+			"mesh":101,
+			"name":"Mansion_ugallery_n_M_OakFloor",
+			"translation":[
+				0,
+				4.5,
+				-8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_n"
+			},
+			"mesh":102,
+			"name":"Mansion_ugallery_n_M_Plaster_WarmWhite",
+			"translation":[
+				-12.899999618530273,
+				6.5,
+				-10.425000190734863
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_s"
+			},
+			"mesh":103,
+			"name":"Mansion_ugallery_s_M_Ceiling_White",
+			"translation":[
+				0,
+				8.5,
+				8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_s"
+			},
+			"mesh":104,
+			"name":"Mansion_ugallery_s_M_LightStrip",
+			"translation":[
+				0,
+				8.396499633789062,
+				8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_s"
+			},
+			"mesh":105,
+			"name":"Mansion_ugallery_s_M_OakFloor",
+			"translation":[
+				0,
+				4.5,
+				8.75
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_s"
+			},
+			"mesh":106,
+			"name":"Mansion_ugallery_s_M_Plaster_WarmWhite",
+			"translation":[
+				-12.399999618530273,
+				6.5,
+				10.425000190734863
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_w"
+			},
+			"mesh":107,
+			"name":"Mansion_ugallery_w_M_Ceiling_White",
+			"translation":[
+				-11.75,
+				8.5,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_w"
+			},
+			"mesh":108,
+			"name":"Mansion_ugallery_w_M_LightStrip",
+			"translation":[
+				-11.75,
+				8.396499633789062,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"ugallery_w"
+			},
+			"mesh":109,
+			"name":"Mansion_ugallery_w_M_OakFloor",
+			"translation":[
+				-11.75,
+				4.5,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"wine_room"
+			},
+			"mesh":110,
+			"name":"Mansion_wine_room_M_Ceiling_Cellar",
+			"translation":[
+				19.75,
+				4.300000190734863,
+				-15.25
+			]
+		},
+		{
+			"extras":{
+				"room":"wine_room"
+			},
+			"mesh":111,
+			"name":"Mansion_wine_room_M_LightStrip",
+			"translation":[
+				19.75,
+				4.196499824523926,
+				-18.950000762939453
+			]
+		},
+		{
+			"extras":{
+				"room":"wine_room"
+			},
+			"mesh":112,
+			"name":"Mansion_wine_room_M_Plaster_Cellar",
+			"translation":[
+				19.75,
+				2.0999999046325684,
+				-19.924999237060547
+			]
+		},
+		{
+			"extras":{
+				"room":"wine_room"
+			},
+			"mesh":113,
+			"name":"Mansion_wine_room_M_Slate_Dark",
+			"translation":[
+				19.75,
+				-0.10000000149011612,
+				-15.25
 			]
 		},
 		{
@@ -546,7 +1420,81 @@
 				36,
 				37,
 				38,
-				39
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75,
+				76,
+				77,
+				78,
+				79,
+				80,
+				81,
+				82,
+				83,
+				84,
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94,
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110,
+				111,
+				112,
+				113
 			],
 			"name":"Mansion_Shell"
 		}
@@ -554,27 +1502,30 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Ceiling_Warm",
+			"name":"M_Aluminium_Black",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.47999998927116394,
-					0.46000000834465027,
-					0.4300000071525574,
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
 					1
 				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_OakFloor_Smoked",
+			"name":"M_GarageDoor",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.75
+				"baseColorFactor":[
+					0.18000000715255737,
+					0.18000000715255737,
+					0.1899999976158142,
+					1
+				],
+				"metallicFactor":0.6000000238418579,
+				"roughnessFactor":0.4000000059604645
 			}
 		},
 		{
@@ -593,85 +1544,28 @@
 			}
 		},
 		{
+			"alphaMode":"BLEND",
 			"doubleSided":true,
-			"name":"M_Aluminium_Black",
+			"name":"M_Glass_Rail",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Plaster_Stone",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.36000001430511475,
-					0.33500000834465027,
-					0.30000001192092896,
-					1
+					0.8500000238418579,
+					0.9200000166893005,
+					0.9200000166893005,
+					0.1599999964237213
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.9200000166893005
+				"roughnessFactor":0.019999999552965164
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Plaster_Ink",
+			"name":"M_Ceiling_Warm",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.03500000014901161,
-					0.04500000178813934,
-					0.06199999898672104,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.9200000166893005
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Ceiling_White",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.800000011920929,
-					0.800000011920929,
-					0.7900000214576721,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.10000000149011612
-				}
-			},
-			"name":"M_OakFloor",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":1
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.44999998807907104
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Plaster_WarmWhite",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.7200000286102295,
-					0.699999988079071,
-					0.6600000262260437,
+					0.47999998927116394,
+					0.46000000834465027,
+					0.4300000071525574,
 					1
 				],
 				"metallicFactor":0,
@@ -701,55 +1595,741 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.6000000238418579
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_OakFloor_Smoked",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.75
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Cloak",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5,
+					0.44999998807907104,
+					0.38499999046325684,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Courtyard_Limestone",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.8199999928474426
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Den",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.10999999940395355,
+					0.10000000149011612,
+					0.09200000017881393,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_DenGreen",
+			"normalTexture":{
+				"index":2,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.026000000536441803,
+					0.057999998331069946,
+					0.03999999910593033,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.10000000149011612
+				}
+			},
+			"name":"M_OakFloor",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":3
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.44999998807907104
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Dining",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.6000000238418579,
+					0.5649999976158142,
+					0.5049999952316284,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Olive",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.06499999761581421,
+					0.08500000089406967,
+					0.04500000178813934,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Entry",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5799999833106995,
+					0.5600000023841858,
+					0.5199999809265137,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Entry_Limestone",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":4
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.7799999713897705
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Entry",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5600000023841858,
+					0.5199999809265137,
+					0.46000000834465027,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Entry_Greige",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.30000001192092896,
+					0.26499998569488525,
+					0.22499999403953552,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.25
+				}
+			},
+			"name":"M_Walnut",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":5
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_White",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.800000011920929,
+					0.800000011920929,
+					0.7900000214576721,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_WarmWhite",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.7200000286102295,
+					0.699999988079071,
+					0.6600000262260437,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Garage_Ceiling",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.6200000047683716,
+					0.6200000047683716,
+					0.6100000143051147,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.4000000059604645
+				}
+			},
+			"name":"M_Garage_PolishedConcrete",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":6
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.2199999988079071
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Garage_Wall",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.27000001072883606,
+					0.27000001072883606,
+					0.26499998569488525,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Garage_WallDark",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.07000000029802322,
+					0.07199999690055847,
+					0.07599999755620956,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Living",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.6000000238418579,
+					0.574999988079071,
+					0.5400000214576721,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Living_Limestone",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":7
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.7200000286102295
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Living",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5199999809265137,
+					0.4699999988079071,
+					0.4000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_LivingClay",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.27000001072883606,
+					0.20000000298023224,
+					0.1550000011920929,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.949999988079071
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_OakFloor_Pale",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":8
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6000000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Linen",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5199999809265137,
+					0.49000000953674316,
+					0.4300000071525574,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Sage",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.17000000178813934,
+					0.23499999940395355,
+					0.15000000596046448,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Mirror",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.8199999928474426,
+					0.8399999737739563,
+					0.8600000143051147,
+					1
+				],
+				"roughnessFactor":0.029999999329447746
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.05000000074505806
+				}
+			},
+			"name":"M_Oak_Light",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":9
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Greige",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.4000000059604645,
+					0.375,
+					0.3400000035762787,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Rubber_Floor",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":10
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.8199999928474426
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Kitchen_Stone",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":11
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Kitchen",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.6600000262260437,
+					0.6200000047683716,
+					0.5600000023841858,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Library",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.20000000298023224,
+					0.17000000178813934,
+					0.14000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.15000000596046448
+				}
+			},
+			"name":"M_Mudroom_Tile",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":12
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.4000000059604645
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Cream",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.36000001430511475,
+					0.32499998807907104,
+					0.27000001072883606,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Powder",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.1599999964237213,
+					0.14499999582767487,
+					0.12999999523162842,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Entry_DarkMarble",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":13
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.30000001192092896
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.3499999940395355
+				}
+			},
+			"name":"M_Bath_Marble",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":14
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.2199999988079071
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.5
+				}
+			},
+			"name":"M_Bath_MarbleDark",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":15
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.1599999964237213
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.5
+				}
+			},
+			"name":"M_Bath_MarbleFloor",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":16
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.14000000059604645
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Bath",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.699999988079071,
+					0.6800000071525574,
+					0.6399999856948853,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Ink",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.03500000014901161,
+					0.04500000178813934,
+					0.06199999898672104,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Stone",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.36000001430511475,
+					0.33500000834465027,
+					0.30000001192092896,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Scullery",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5,
+					0.4699999988079071,
+					0.41999998688697815,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceiling_Cellar",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.17000000178813934,
+					0.13500000536441803,
+					0.10000000149011612,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Plaster_Cellar",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.27000001072883606,
+					0.20000000298023224,
+					0.14000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.15000000596046448
+				}
+			},
+			"name":"M_Slate_Dark",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":17
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Mansion_Bedroom_Ceiling",
+			"name":"Mansion___M_Aluminium_Black",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"TEXCOORD_1":3
+						"TEXCOORD_0":2
 					},
-					"indices":4,
-					"material":0
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":0,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Floor",
+			"name":"Mansion___M_GarageDoor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"TEXCOORD_1":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
-					"indices":4,
-					"material":1
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":1,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Glass",
+			"name":"Mansion___M_Glass",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
-					"indices":4,
-					"material":2
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":2,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Mullion_0",
+			"name":"Mansion___M_Glass_Rail",
 			"primitives":[
 				{
 					"attributes":{
@@ -757,86 +2337,130 @@
 						"NORMAL":13,
 						"TEXCOORD_0":14
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":15,
+					"material":3,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Mullion_1",
+			"name":"Mansion_cloak_M_Ceiling_Warm",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18,
+						"TEXCOORD_1":19
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Mullion_2",
+			"name":"Mansion_cloak_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":18,
-						"NORMAL":19,
-						"TEXCOORD_0":20
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_E",
+			"name":"Mansion_cloak_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":21,
-						"NORMAL":22,
-						"TEXCOORD_0":23,
-						"TEXCOORD_1":24
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26,
+						"TEXCOORD_1":27
 					},
-					"indices":4,
-					"material":4
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":6,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_N_A",
+			"name":"Mansion_cloak_M_Plaster_Cloak",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"TEXCOORD_1":28
+						"POSITION":28,
+						"NORMAL":29,
+						"TEXCOORD_0":30,
+						"TEXCOORD_1":31
 					},
-					"indices":4,
-					"material":4
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":32,
+					"material":7,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_N_B",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":29,
-						"NORMAL":30,
-						"TEXCOORD_0":31,
-						"TEXCOORD_1":32
-					},
-					"indices":4,
-					"material":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_Bedroom_Wall_N_Header",
+			"name":"Mansion_courtyard_M_Courtyard_Limestone",
 			"primitives":[
 				{
 					"attributes":{
@@ -845,13 +2469,25 @@
 						"TEXCOORD_0":35,
 						"TEXCOORD_1":36
 					},
-					"indices":4,
-					"material":4
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":8,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_S",
+			"name":"Mansion_den_M_Ceiling_Den",
 			"primitives":[
 				{
 					"attributes":{
@@ -860,13 +2496,25 @@
 						"TEXCOORD_0":39,
 						"TEXCOORD_1":40
 					},
-					"indices":4,
-					"material":5
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":9,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_W_N",
+			"name":"Mansion_den_M_Fabric_DenGreen",
 			"primitives":[
 				{
 					"attributes":{
@@ -875,258 +2523,397 @@
 						"TEXCOORD_0":43,
 						"TEXCOORD_1":44
 					},
-					"indices":4,
-					"material":4
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":32,
+					"material":10,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Bedroom_Wall_W_S",
+			"name":"Mansion_den_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":45,
 						"NORMAL":46,
-						"TEXCOORD_0":47,
-						"TEXCOORD_1":48
+						"TEXCOORD_0":47
 					},
-					"indices":4,
-					"material":4
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Window_Head",
+			"name":"Mansion_den_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":49,
 						"NORMAL":50,
-						"TEXCOORD_0":51
+						"TEXCOORD_0":51,
+						"TEXCOORD_1":52
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":6,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_bedroom_Window_Sill",
+			"name":"Mansion_dining_M_Ceiling_Warm",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":52,
-						"NORMAL":53,
-						"TEXCOORD_0":54
+						"POSITION":53,
+						"NORMAL":54,
+						"TEXCOORD_0":55,
+						"TEXCOORD_1":56
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Hall_Ceiling",
+			"name":"Mansion_dining_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":55,
-						"NORMAL":56,
-						"TEXCOORD_0":57,
-						"TEXCOORD_1":58
+						"POSITION":57,
+						"NORMAL":58,
+						"TEXCOORD_0":59
 					},
-					"indices":4,
-					"material":6
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Hall_Floor",
+			"name":"Mansion_dining_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":59,
-						"NORMAL":60,
-						"TEXCOORD_0":61,
-						"TEXCOORD_1":62
+						"POSITION":60,
+						"NORMAL":61,
+						"TEXCOORD_0":62,
+						"TEXCOORD_1":63
 					},
-					"indices":4,
-					"material":7
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Hall_Wall_E",
+			"name":"Mansion_dining_M_Plaster_Dining",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":63,
-						"NORMAL":64,
-						"TEXCOORD_0":65,
-						"TEXCOORD_1":66
+						"POSITION":64,
+						"NORMAL":65,
+						"TEXCOORD_0":66,
+						"TEXCOORD_1":67
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":68,
+					"material":12,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Hall_Wall_W",
+			"name":"Mansion_dining_M_Plaster_Olive",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":67,
-						"NORMAL":68,
-						"TEXCOORD_0":69,
-						"TEXCOORD_1":70
+						"POSITION":69,
+						"NORMAL":70,
+						"TEXCOORD_0":71,
+						"TEXCOORD_1":72
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":17,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":13,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_LightStrip_0",
+			"name":"Mansion_entry_M_Ceiling_Entry",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":71,
-						"NORMAL":72,
-						"TEXCOORD_0":73
+						"POSITION":73,
+						"NORMAL":74,
+						"TEXCOORD_0":75,
+						"TEXCOORD_1":76
 					},
-					"indices":4,
-					"material":9
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":18,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":14,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_LightStrip_1",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":74,
-						"NORMAL":75,
-						"TEXCOORD_0":76
-					},
-					"indices":4,
-					"material":9
-				}
-			]
-		},
-		{
-			"name":"Mansion_LightStrip_2",
+			"name":"Mansion_entry_M_Entry_Limestone",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":77,
 						"NORMAL":78,
-						"TEXCOORD_0":79
+						"TEXCOORD_0":79,
+						"TEXCOORD_1":80
 					},
-					"indices":4,
-					"material":9
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":19,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":15,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_LightStrip_3",
+			"name":"Mansion_entry_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":80,
-						"NORMAL":81,
-						"TEXCOORD_0":82
+						"POSITION":81,
+						"NORMAL":82,
+						"TEXCOORD_0":83
 					},
-					"indices":4,
-					"material":9
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":20,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Ceiling",
+			"name":"Mansion_entry_M_Plaster_Entry",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":83,
-						"NORMAL":84,
-						"TEXCOORD_0":85,
-						"TEXCOORD_1":86
+						"POSITION":84,
+						"NORMAL":85,
+						"TEXCOORD_0":86,
+						"TEXCOORD_1":87
 					},
-					"indices":4,
-					"material":6
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":21,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":88,
+					"material":16,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Floor",
+			"name":"Mansion_entry_M_Plaster_Entry_Greige",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":87,
-						"NORMAL":88,
-						"TEXCOORD_0":89,
-						"TEXCOORD_1":90
+						"POSITION":89,
+						"NORMAL":90,
+						"TEXCOORD_0":91,
+						"TEXCOORD_1":92
 					},
-					"indices":4,
-					"material":7
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":22,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":93,
+					"material":17,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Glass",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":91,
-						"NORMAL":92,
-						"TEXCOORD_0":93
-					},
-					"indices":4,
-					"material":2
-				}
-			]
-		},
-		{
-			"name":"Mansion_office_Mullion_0",
+			"name":"Mansion_entry_M_Walnut",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":94,
 						"NORMAL":95,
-						"TEXCOORD_0":96
+						"TEXCOORD_0":96,
+						"TEXCOORD_1":97
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":23,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":98,
+					"material":18,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Mullion_1",
+			"name":"Mansion_gallery_e_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":97,
-						"NORMAL":98,
-						"TEXCOORD_0":99
+						"POSITION":99,
+						"NORMAL":100,
+						"TEXCOORD_0":101,
+						"TEXCOORD_1":102
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":24,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Mullion_2",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":100,
-						"NORMAL":101,
-						"TEXCOORD_0":102
-					},
-					"indices":4,
-					"material":3
-				}
-			]
-		},
-		{
-			"name":"Mansion_office_Mullion_3",
+			"name":"Mansion_gallery_e_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
@@ -1134,154 +2921,2355 @@
 						"NORMAL":104,
 						"TEXCOORD_0":105
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":25,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Mullion_4",
+			"name":"Mansion_gallery_e_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":106,
 						"NORMAL":107,
-						"TEXCOORD_0":108
+						"TEXCOORD_0":108,
+						"TEXCOORD_1":109
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":26,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Mullion_5",
+			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":109,
-						"NORMAL":110,
-						"TEXCOORD_0":111
+						"POSITION":110,
+						"NORMAL":111,
+						"TEXCOORD_0":112,
+						"TEXCOORD_1":113
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":27,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":23,
+					"material":20,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_E",
+			"name":"Mansion_gallery_n_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":112,
-						"NORMAL":113,
-						"TEXCOORD_0":114,
-						"TEXCOORD_1":115
+						"POSITION":114,
+						"NORMAL":115,
+						"TEXCOORD_0":116,
+						"TEXCOORD_1":117
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":28,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_S_A",
+			"name":"Mansion_gallery_n_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":116,
-						"NORMAL":117,
-						"TEXCOORD_0":118,
-						"TEXCOORD_1":119
+						"POSITION":118,
+						"NORMAL":119,
+						"TEXCOORD_0":120
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":29,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_S_B",
+			"name":"Mansion_gallery_n_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":120,
-						"NORMAL":121,
-						"TEXCOORD_0":122,
-						"TEXCOORD_1":123
+						"POSITION":121,
+						"NORMAL":122,
+						"TEXCOORD_0":123,
+						"TEXCOORD_1":124
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":30,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_S_Header",
+			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":124,
-						"NORMAL":125,
-						"TEXCOORD_0":126,
-						"TEXCOORD_1":127
+						"POSITION":125,
+						"NORMAL":126,
+						"TEXCOORD_0":127,
+						"TEXCOORD_1":128
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":31,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":93,
+					"material":20,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_S_West",
+			"name":"Mansion_gallery_s_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":128,
-						"NORMAL":129,
-						"TEXCOORD_0":130,
-						"TEXCOORD_1":131
+						"POSITION":129,
+						"NORMAL":130,
+						"TEXCOORD_0":131,
+						"TEXCOORD_1":132
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":32,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Office_Wall_W",
+			"name":"Mansion_gallery_s_M_LightStrip",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":132,
-						"NORMAL":133,
-						"TEXCOORD_0":134,
-						"TEXCOORD_1":135
+						"POSITION":133,
+						"NORMAL":134,
+						"TEXCOORD_0":135
 					},
-					"indices":4,
-					"material":8
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":33,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Window_Head",
+			"name":"Mansion_gallery_s_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":136,
 						"NORMAL":137,
-						"TEXCOORD_0":138
+						"TEXCOORD_0":138,
+						"TEXCOORD_1":139
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":34,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_office_Window_Sill",
+			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":139,
-						"NORMAL":140,
-						"TEXCOORD_0":141
+						"POSITION":140,
+						"NORMAL":141,
+						"TEXCOORD_0":142,
+						"TEXCOORD_1":143
 					},
-					"indices":4,
-					"material":3
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":35,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":32,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gallery_w_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":144,
+						"NORMAL":145,
+						"TEXCOORD_0":146,
+						"TEXCOORD_1":147
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":36,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gallery_w_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":148,
+						"NORMAL":149,
+						"TEXCOORD_0":150
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":37,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gallery_w_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":151,
+						"NORMAL":152,
+						"TEXCOORD_0":153,
+						"TEXCOORD_1":154
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":38,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":155,
+						"NORMAL":156,
+						"TEXCOORD_0":157,
+						"TEXCOORD_1":158
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":39,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":159,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_garage_M_Garage_Ceiling",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":160,
+						"NORMAL":161,
+						"TEXCOORD_0":162,
+						"TEXCOORD_1":163
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":40,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":21,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_garage_M_Garage_PolishedConcrete",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":164,
+						"NORMAL":165,
+						"TEXCOORD_0":166,
+						"TEXCOORD_1":167
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":41,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":22,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_garage_M_Garage_Wall",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":168,
+						"NORMAL":169,
+						"TEXCOORD_0":170,
+						"TEXCOORD_1":171
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":42,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":159,
+					"material":23,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_garage_M_Garage_WallDark",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":172,
+						"NORMAL":173,
+						"TEXCOORD_0":174,
+						"TEXCOORD_1":175
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":43,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":23,
+					"material":24,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_garage_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":176,
+						"NORMAL":177,
+						"TEXCOORD_0":178
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":44,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":159,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Ceiling_Living",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":179,
+						"NORMAL":180,
+						"TEXCOORD_0":181,
+						"TEXCOORD_1":182
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":45,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":25,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":183,
+						"NORMAL":184,
+						"TEXCOORD_0":185
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":46,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Living_Limestone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":186,
+						"NORMAL":187,
+						"TEXCOORD_0":188,
+						"TEXCOORD_1":189
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":47,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":26,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Plaster_Living",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":190,
+						"NORMAL":191,
+						"TEXCOORD_0":192,
+						"TEXCOORD_1":193
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":48,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":194,
+					"material":27,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Plaster_LivingClay",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":195,
+						"NORMAL":196,
+						"TEXCOORD_0":197,
+						"TEXCOORD_1":198
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":49,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":159,
+					"material":28,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":199,
+						"NORMAL":200,
+						"TEXCOORD_0":201,
+						"TEXCOORD_1":202
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":50,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":203,
+						"NORMAL":204,
+						"TEXCOORD_0":205
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":51,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_OakFloor_Pale",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":206,
+						"NORMAL":207,
+						"TEXCOORD_0":208,
+						"TEXCOORD_1":209
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":52,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":29,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_Plaster_Linen",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":210,
+						"NORMAL":211,
+						"TEXCOORD_0":212,
+						"TEXCOORD_1":213
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":53,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":214,
+					"material":30,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_Plaster_Sage",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":215,
+						"NORMAL":216,
+						"TEXCOORD_0":217,
+						"TEXCOORD_1":218
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":54,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":23,
+					"material":31,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":219,
+						"NORMAL":220,
+						"TEXCOORD_0":221,
+						"TEXCOORD_1":222
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":55,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":223,
+						"NORMAL":224,
+						"TEXCOORD_0":225
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":56,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Mirror",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":226,
+						"NORMAL":227,
+						"TEXCOORD_0":228,
+						"TEXCOORD_1":229
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":57,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":32,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Oak_Light",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":230,
+						"NORMAL":231,
+						"TEXCOORD_0":232,
+						"TEXCOORD_1":233
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":58,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":33,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Plaster_Greige",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":234,
+						"NORMAL":235,
+						"TEXCOORD_0":236,
+						"TEXCOORD_1":237
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":59,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":159,
+					"material":34,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Rubber_Floor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":238,
+						"NORMAL":239,
+						"TEXCOORD_0":240,
+						"TEXCOORD_1":241
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":60,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":35,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_kitchen_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":242,
+						"NORMAL":243,
+						"TEXCOORD_0":244,
+						"TEXCOORD_1":245
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":61,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_kitchen_M_Kitchen_Stone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":246,
+						"NORMAL":247,
+						"TEXCOORD_0":248,
+						"TEXCOORD_1":249
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":62,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":36,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_kitchen_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":250,
+						"NORMAL":251,
+						"TEXCOORD_0":252
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":63,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_kitchen_M_Plaster_Kitchen",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":253,
+						"NORMAL":254,
+						"TEXCOORD_0":255,
+						"TEXCOORD_1":256
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":64,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":257,
+					"material":37,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_library_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":258,
+						"NORMAL":259,
+						"TEXCOORD_0":260,
+						"TEXCOORD_1":261
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":65,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_library_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":262,
+						"NORMAL":263,
+						"TEXCOORD_0":264
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":66,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_library_M_OakFloor_Smoked",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":265,
+						"NORMAL":266,
+						"TEXCOORD_0":267,
+						"TEXCOORD_1":268
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":67,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_library_M_Plaster_Library",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":269,
+						"NORMAL":270,
+						"TEXCOORD_0":271,
+						"TEXCOORD_1":272
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":68,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":88,
+					"material":38,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":273,
+						"NORMAL":274,
+						"TEXCOORD_0":275,
+						"TEXCOORD_1":276
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":69,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":277,
+						"NORMAL":278,
+						"TEXCOORD_0":279
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":70,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_Mudroom_Tile",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":280,
+						"NORMAL":281,
+						"TEXCOORD_0":282,
+						"TEXCOORD_1":283
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":71,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":39,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_Plaster_Cream",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":284,
+						"NORMAL":285,
+						"TEXCOORD_0":286,
+						"TEXCOORD_1":287
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":72,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":257,
+					"material":40,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_office_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":288,
+						"NORMAL":289,
+						"TEXCOORD_0":290,
+						"TEXCOORD_1":291
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":73,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_office_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":292,
+						"NORMAL":293,
+						"TEXCOORD_0":294
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":74,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":214,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_office_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":295,
+						"NORMAL":296,
+						"TEXCOORD_0":297,
+						"TEXCOORD_1":298
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":75,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_office_M_Plaster_WarmWhite",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":299,
+						"NORMAL":300,
+						"TEXCOORD_0":301,
+						"TEXCOORD_1":302
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":76,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":303,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_powder_M_Ceiling_Powder",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":304,
+						"NORMAL":305,
+						"TEXCOORD_0":306,
+						"TEXCOORD_1":307
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":77,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":41,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_powder_M_Entry_DarkMarble",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":308,
+						"NORMAL":309,
+						"TEXCOORD_0":310,
+						"TEXCOORD_1":311
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":78,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":32,
+					"material":42,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_powder_M_Entry_Limestone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":312,
+						"NORMAL":313,
+						"TEXCOORD_0":314,
+						"TEXCOORD_1":315
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":79,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":15,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_powder_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":316,
+						"NORMAL":317,
+						"TEXCOORD_0":318
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":80,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Bath_Marble",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":319,
+						"NORMAL":320,
+						"TEXCOORD_0":321,
+						"TEXCOORD_1":322
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":81,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":159,
+					"material":43,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":323,
+						"NORMAL":324,
+						"TEXCOORD_0":325,
+						"TEXCOORD_1":326
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":82,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":44,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Bath_MarbleFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":327,
+						"NORMAL":328,
+						"TEXCOORD_0":329,
+						"TEXCOORD_1":330
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":83,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":45,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Ceiling_Bath",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":331,
+						"NORMAL":332,
+						"TEXCOORD_0":333,
+						"TEXCOORD_1":334
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":84,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":46,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":335,
+						"NORMAL":336,
+						"TEXCOORD_0":337
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":85,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":338,
+						"NORMAL":339,
+						"TEXCOORD_0":340,
+						"TEXCOORD_1":341
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":86,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":342,
+						"NORMAL":343,
+						"TEXCOORD_0":344
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":87,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":48,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_OakFloor_Smoked",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":345,
+						"NORMAL":346,
+						"TEXCOORD_0":347,
+						"TEXCOORD_1":348
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":88,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_Plaster_Ink",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":349,
+						"NORMAL":350,
+						"TEXCOORD_0":351,
+						"TEXCOORD_1":352
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":89,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":47,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":353,
+						"NORMAL":354,
+						"TEXCOORD_0":355,
+						"TEXCOORD_1":356
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":90,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":88,
+					"material":48,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_scullery_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":357,
+						"NORMAL":358,
+						"TEXCOORD_0":359,
+						"TEXCOORD_1":360
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":91,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_scullery_M_Kitchen_Stone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":361,
+						"NORMAL":362,
+						"TEXCOORD_0":363,
+						"TEXCOORD_1":364
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":92,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":36,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_scullery_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":365,
+						"NORMAL":366,
+						"TEXCOORD_0":367
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":93,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_scullery_M_Plaster_Scullery",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":368,
+						"NORMAL":369,
+						"TEXCOORD_0":370,
+						"TEXCOORD_1":371
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":94,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":88,
+					"material":49,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_e_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":372,
+						"NORMAL":373,
+						"TEXCOORD_0":374,
+						"TEXCOORD_1":375
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":95,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_e_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":376,
+						"NORMAL":377,
+						"TEXCOORD_0":378
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":96,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_e_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":379,
+						"NORMAL":380,
+						"TEXCOORD_0":381,
+						"TEXCOORD_1":382
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":97,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_e_M_Plaster_WarmWhite",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":383,
+						"NORMAL":384,
+						"TEXCOORD_0":385,
+						"TEXCOORD_1":386
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":98,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":214,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_n_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":387,
+						"NORMAL":388,
+						"TEXCOORD_0":389,
+						"TEXCOORD_1":390
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":99,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_n_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":391,
+						"NORMAL":392,
+						"TEXCOORD_0":393
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":100,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_n_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":394,
+						"NORMAL":395,
+						"TEXCOORD_0":396,
+						"TEXCOORD_1":397
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":101,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_n_M_Plaster_WarmWhite",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":398,
+						"NORMAL":399,
+						"TEXCOORD_0":400,
+						"TEXCOORD_1":401
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":102,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":93,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_s_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":402,
+						"NORMAL":403,
+						"TEXCOORD_0":404,
+						"TEXCOORD_1":405
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":103,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_s_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":406,
+						"NORMAL":407,
+						"TEXCOORD_0":408
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":104,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_s_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":409,
+						"NORMAL":410,
+						"TEXCOORD_0":411,
+						"TEXCOORD_1":412
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":105,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_s_M_Plaster_WarmWhite",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":413,
+						"NORMAL":414,
+						"TEXCOORD_0":415,
+						"TEXCOORD_1":416
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":106,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":88,
+					"material":20,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_w_M_Ceiling_White",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":417,
+						"NORMAL":418,
+						"TEXCOORD_0":419,
+						"TEXCOORD_1":420
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":107,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":19,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_w_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":421,
+						"NORMAL":422,
+						"TEXCOORD_0":423
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":108,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_ugallery_w_M_OakFloor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":424,
+						"NORMAL":425,
+						"TEXCOORD_0":426,
+						"TEXCOORD_1":427
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":109,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":11,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_wine_room_M_Ceiling_Cellar",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":428,
+						"NORMAL":429,
+						"TEXCOORD_0":430,
+						"TEXCOORD_1":431
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":110,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":50,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_wine_room_M_LightStrip",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":432,
+						"NORMAL":433,
+						"TEXCOORD_0":434
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":111,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":159,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_wine_room_M_Plaster_Cellar",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":435,
+						"NORMAL":436,
+						"TEXCOORD_0":437,
+						"TEXCOORD_1":438
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":112,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":32,
+					"material":51,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_wine_room_M_Slate_Dark",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":439,
+						"NORMAL":440,
+						"TEXCOORD_0":441,
+						"TEXCOORD_1":442
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":113,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":7,
+					"material":52,
+					"mode":4
 				}
 			]
 		}
@@ -1302,6 +5290,134 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":2
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":3
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":4
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":5
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":6
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":7
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":8
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":9
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":10
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":11
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":12
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":13
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":14
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":15
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":16
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":17
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
@@ -1312,1259 +5428,3442 @@
 		},
 		{
 			"mimeType":"image/webp",
+			"name":"T_Courtyard_Limestone_BaseColor",
+			"uri":"textures/T_Courtyard_Limestone_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Fabric_Normal",
+			"uri":"textures/T_Fabric_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
 			"name":"T_OakFloor_BaseColor",
 			"uri":"textures/T_OakFloor_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Entry_Limestone",
+			"uri":"textures/T_Entry_Limestone.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Walnut_BaseColor",
+			"uri":"textures/T_Walnut_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Garage_Concrete_BaseColor",
+			"uri":"textures/T_Garage_Concrete_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Living_Limestone_BaseColor",
+			"uri":"textures/T_Living_Limestone_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_OakFloorPale_BaseColor",
+			"uri":"textures/T_OakFloorPale_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Guest_Oak_BaseColor",
+			"uri":"textures/T_Guest_Oak_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Guest_Rubber_BaseColor",
+			"uri":"textures/T_Guest_Rubber_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Kitchen_Stone_BaseColor",
+			"uri":"textures/T_Kitchen_Stone_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Garage_MudroomTile_BaseColor",
+			"uri":"textures/T_Garage_MudroomTile_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Entry_DarkMarble",
+			"uri":"textures/T_Entry_DarkMarble.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Bath_Marble_BaseColor",
+			"uri":"textures/T_Bath_Marble_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Bath_MarbleDark_BaseColor",
+			"uri":"textures/T_Bath_MarbleDark_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Bath_MarbleFloor_BaseColor",
+			"uri":"textures/T_Bath_MarbleFloor_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Dining_Slate_BaseColor",
+			"uri":"textures/T_Dining_Slate_BaseColor.webp"
 		}
 	],
 	"accessors":[
 		{
-			"bufferView":0,
+			"componentType":5126,
+			"count":5784,
+			"max":[
+				26.059999465942383,
+				8.375,
+				0.05999999865889549
+			],
+			"min":[
+				-26.059999465942383,
+				-0.02500000037252903,
+				-40.060001373291016
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":5784,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":5784,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":8676,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"max":[
-				3.200000047683716,
-				0.05000000074505806,
-				2.950000047683716
+				4.25,
+				1.600000023841858,
+				0.029999999329447746
 			],
 			"min":[
-				-3.200000047683716,
-				-0.05000000074505806,
-				-2.950000047683716
+				-4.25,
+				-1.600000023841858,
+				-0.029999999329447746
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":1,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":2,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":3,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":4,
 			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
 		{
-			"bufferView":5,
 			"componentType":5126,
-			"count":24,
+			"count":528,
 			"max":[
-				3.200000047683716,
-				0.05000000074505806,
-				2.950000047683716
-			],
-			"min":[
-				-3.200000047683716,
-				-0.05000000074505806,
-				-2.950000047683716
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":6,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":7,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":8,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":9,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.006000000052154064,
-				1.5499999523162842,
-				1.5
-			],
-			"min":[
-				-0.006000000052154064,
-				-1.5499999523162842,
-				-1.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":10,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":11,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":12,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.05999999865889549,
-				1.5499999523162842,
-				0.012500000186264515
-			],
-			"min":[
-				-0.05999999865889549,
-				-1.5499999523162842,
-				-0.012500000186264515
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":13,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":14,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":15,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.05999999865889549,
-				1.5499999523162842,
-				0.02500000037252903
-			],
-			"min":[
-				-0.05999999865889549,
-				-1.5499999523162842,
-				-0.02500000037252903
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":16,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":17,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":18,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.05999999865889549,
-				1.5499999523162842,
-				0.012500000186264515
-			],
-			"min":[
-				-0.05999999865889549,
-				-1.5499999523162842,
-				-0.012500000186264515
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":19,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":20,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":21,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.10000000149011612,
-				1.600000023841858,
-				2.75
-			],
-			"min":[
-				-0.10000000149011612,
-				-1.600000023841858,
-				-2.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":22,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":23,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":24,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":25,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2.0250000953674316,
-				1.600000023841858,
-				0.10000000149011612
-			],
-			"min":[
-				-2.0250000953674316,
-				-1.600000023841858,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":26,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":27,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":28,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":29,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.625,
-				1.600000023841858,
-				0.10000000149011612
-			],
-			"min":[
-				-0.625,
-				-1.600000023841858,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":30,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":31,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":32,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":33,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.550000011920929,
-				0.3499999940395355,
-				0.10000000149011612
-			],
-			"min":[
-				-0.550000011920929,
-				-0.3499999940395355,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":34,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":35,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":36,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":37,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				3.200000047683716,
-				1.600000023841858,
-				0.10000000149011612
-			],
-			"min":[
-				-3.200000047683716,
-				-1.600000023841858,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":38,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":39,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":40,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":41,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.10000000149011612,
-				1.600000023841858,
-				0.6000000238418579
-			],
-			"min":[
-				-0.10000000149011612,
-				-1.600000023841858,
-				-0.6000000238418579
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":42,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":43,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":44,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":45,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.10000000149011612,
-				1.600000023841858,
-				0.6499999761581421
-			],
-			"min":[
-				-0.10000000149011612,
-				-1.600000023841858,
-				-0.6499999761581421
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":46,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":47,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":48,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":49,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.05999999865889549,
-				0.02500000037252903,
-				1.5
-			],
-			"min":[
-				-0.05999999865889549,
-				-0.02500000037252903,
-				-1.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":50,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":51,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":52,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.05999999865889549,
-				0.02500000037252903,
-				1.5
-			],
-			"min":[
-				-0.05999999865889549,
-				-0.02500000037252903,
-				-1.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":53,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":54,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":55,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				1.399999976158142,
-				0.05000000074505806,
-				4.900000095367432
-			],
-			"min":[
-				-1.399999976158142,
-				-0.05000000074505806,
-				-4.900000095367432
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":56,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":57,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":58,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":59,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				1.399999976158142,
-				0.05000000074505806,
-				4.900000095367432
-			],
-			"min":[
-				-1.399999976158142,
-				-0.05000000074505806,
-				-4.900000095367432
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":60,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":61,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":62,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":63,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.10000000149011612,
-				1.5,
-				4.900000095367432
-			],
-			"min":[
-				-0.10000000149011612,
-				-1.5,
-				-4.900000095367432
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":64,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":65,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":66,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":67,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.10000000149011612,
-				1.5,
-				4.900000095367432
-			],
-			"min":[
-				-0.10000000149011612,
-				-1.5,
-				-4.900000095367432
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":68,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":69,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":70,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":71,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-2,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":72,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":73,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":74,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-2,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":75,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":76,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":77,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				4.099999904632568
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-4.099999904632568
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":78,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":79,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":80,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				2.200000047683716
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-2.200000047683716
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":81,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":82,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":83,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				3.700000047683716,
-				0.05000000074505806,
-				3.200000047683716
-			],
-			"min":[
-				-3.700000047683716,
-				-0.05000000074505806,
-				-3.200000047683716
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":84,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":85,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":86,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":87,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				3.700000047683716,
-				0.05000000074505806,
-				3.200000047683716
-			],
-			"min":[
-				-3.700000047683716,
-				-0.05000000074505806,
-				-3.200000047683716
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":88,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":89,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":90,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":91,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				3.5,
-				1.649999976158142,
+				26.006000518798828,
+				4.150000095367432,
 				0.006000000052154064
 			],
 			"min":[
-				-3.5,
-				-1.649999976158142,
-				-0.006000000052154064
+				-26.006000518798828,
+				-4.150000095367432,
+				-40.00600051879883
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":92,
 			"componentType":5126,
-			"count":24,
+			"count":528,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":93,
 			"componentType":5126,
-			"count":24,
+			"count":528,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":94,
+			"componentType":5123,
+			"count":792,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"max":[
-				0.012500000186264515,
-				1.649999976158142,
-				0.05999999865889549
+				11.25,
+				0.5,
+				2.6000001430511475
 			],
 			"min":[
-				-0.012500000186264515,
-				-1.649999976158142,
-				-0.05999999865889549
+				-10.260000228881836,
+				-4.954907417297363,
+				-17.5
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":95,
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":96,
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":97,
+			"componentType":5123,
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.02500000037252903,
-				1.649999976158142,
-				0.05999999865889549
-			],
-			"min":[
-				-0.02500000037252903,
-				-1.649999976158142,
-				-0.05999999865889549
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":98,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":99,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":100,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.02500000037252903,
-				1.649999976158142,
-				0.05999999865889549
-			],
-			"min":[
-				-0.02500000037252903,
-				-1.649999976158142,
-				-0.05999999865889549
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":101,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":102,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":103,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.02500000037252903,
-				1.649999976158142,
-				0.05999999865889549
-			],
-			"min":[
-				-0.02500000037252903,
-				-1.649999976158142,
-				-0.05999999865889549
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":104,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":105,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":106,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.02500000037252903,
-				1.649999976158142,
-				0.05999999865889549
-			],
-			"min":[
-				-0.02500000037252903,
-				-1.649999976158142,
-				-0.05999999865889549
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":107,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":108,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":109,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.012500000186264515,
-				1.649999976158142,
-				0.05999999865889549
-			],
-			"min":[
-				-0.012500000186264515,
-				-1.649999976158142,
-				-0.05999999865889549
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":110,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":111,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":112,
-			"componentType":5126,
-			"count":24,
-			"max":[
+				2.75,
 				0.10000000149011612,
-				1.7000000476837158,
-				3.200000047683716
+				4.75
 			],
 			"min":[
+				-2.75,
 				-0.10000000149011612,
-				-1.7000000476837158,
-				-3.200000047683716
+				-4.75
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":113,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":114,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":115,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":116,
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"max":[
-				0.32499998807907104,
-				1.7000000476837158,
-				0.10000000149011612
+				2.8000004291534424,
+				0.0024999999441206455,
+				3.5400009155273438
 			],
 			"min":[
-				-0.32499998807907104,
-				-1.7000000476837158,
-				-0.10000000149011612
+				-1.5999996662139893,
+				-0.0024999999441206455,
+				-3.5
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":117,
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":118,
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":119,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
 		},
 		{
-			"bufferView":120,
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.2750000059604645,
-				1.7000000476837158,
-				0.10000000149011612
-			],
-			"min":[
-				-0.2750000059604645,
-				-1.7000000476837158,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":121,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":122,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":123,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":124,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.550000011920929,
-				0.44999998807907104,
-				0.10000000149011612
-			],
-			"min":[
-				-0.550000011920929,
-				-0.44999998807907104,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":125,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":126,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":127,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":128,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2.3499999046325684,
-				1.7000000476837158,
-				0.10000000149011612
-			],
-			"min":[
-				-2.3499999046325684,
-				-1.7000000476837158,
-				-0.10000000149011612
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":129,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":130,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":131,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":132,
-			"componentType":5126,
-			"count":24,
-			"max":[
+				2.75,
 				0.10000000149011612,
-				1.7000000476837158,
-				3.200000047683716
+				4.75
 			],
 			"min":[
+				-2.75,
 				-0.10000000149011612,
-				-1.7000000476837158,
-				-3.200000047683716
+				-4.75
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":133,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":134,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":135,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":136,
+			"componentType":5126,
+			"count":144,
+			"max":[
+				2.750000238418579,
+				2.0999999046325684,
+				9.425000190734863
+			],
+			"min":[
+				-2.750000238418579,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":216,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
 			"count":24,
+			"max":[
+				10,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-10,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				9.649999618530273,
+				2.0999999046325684,
+				9.425000190734863
+			],
+			"min":[
+				-2.8500003814697266,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
 			"max":[
 				3.5,
-				0.02500000037252903,
-				0.05999999865889549
+				0.0024999999441206455,
+				0.03999999910593033
 			],
 			"min":[
 				-3.5,
-				-0.02500000037252903,
-				-0.05999999865889549
+				-0.0024999999441206455,
+				-3.8400001525878906
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":137,
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":72,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":138,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":139,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"max":[
-				3.5,
-				0.02500000037252903,
-				0.05999999865889549
+				8,
+				0.10000000149011612,
+				4.75
 			],
 			"min":[
-				-3.5,
-				-0.02500000037252903,
-				-0.05999999865889549
+				-8,
+				-0.10000000149011612,
+				-4.75
 			],
 			"type":"VEC3"
 		},
 		{
-			"bufferView":140,
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":141,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				5.300000190734863,
+				0.0024999999441206455,
+				4.539999961853027
+			],
+			"min":[
+				-6.689999580383301,
+				-0.0024999999441206455,
+				-2.299999952316284
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"max":[
+				15,
+				2.1000001430511475,
+				9.424999237060547
+			],
+			"min":[
+				-1,
+				-2.0999999046325684,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":360,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.07500000298023224,
+				2.0999999046325684,
+				4.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-2.0999999046325684,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				6,
+				0.0024999999441206455,
+				0.05000000074505806
+			],
+			"min":[
+				-6,
+				-0.0024999999441206455,
+				-2.8500001430511475
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				15,
+				4.199999809265137,
+				0.07500040531158447
+			],
+			"min":[
+				-1.000000238418579,
+				-4.199999809265137,
+				-9.424999237060547
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":288,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"max":[
+				11.25,
+				6.09999942779541,
+				0.07500000298023224
+			],
+			"min":[
+				-4.75,
+				-2.299999952316284,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":252,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":624,
+			"max":[
+				10.350000381469727,
+				4.4530768394470215,
+				1.2000000476837158
+			],
+			"min":[
+				-0.15000000596046448,
+				-0.029999999329447746,
+				-1.3500007390975952
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":624,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":624,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":624,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":936,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.03999999910593033,
+				0.0024999999441206455,
+				5.5
+			],
+			"min":[
+				-0.03999999910593033,
+				-0.0024999999441206455,
+				-5.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.07500000298023224,
+				2.0999999046325684,
+				4.974999904632568
+			],
+			"min":[
+				-0.07500000298023224,
+				-2.0999999046325684,
+				-9.02500057220459
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				12,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-12,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"max":[
+				26.75,
+				2.1000001430511475,
+				3.4250001907348633
+			],
+			"min":[
+				-0.2500001788139343,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				12,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-12,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				13.5,
+				0.6000002026557922,
+				3.4250004291534424
+			],
+			"min":[
+				-13.5,
+				-3.5999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.03999999910593033,
+				0.0024999999441206455,
+				5.5
+			],
+			"min":[
+				-0.03999999910593033,
+				-0.0024999999441206455,
+				-5.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				0.07500000298023224,
+				2.1000001430511475,
+				0.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-2.0999999046325684,
+				-13.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":180,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				10
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-10
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				10
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-10
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				11.5,
+				2.1000001430511475,
+				0.07500076293945312
+			],
+			"min":[
+				-1.000000238418579,
+				-2.0999999046325684,
+				-19.924999237060547
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				9.649999618530273,
+				2.0999999046325684,
+				0.07500000298023224
+			],
+			"min":[
+				-2.8499999046325684,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				10,
+				0.0024999999441206455,
+				8.5
+			],
+			"min":[
+				-1,
+				-0.0024999999441206455,
+				-8.949999809265137
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				10.5
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-10.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.05999999865889549,
+				0.0024999999441206455,
+				8
+			],
+			"min":[
+				-5.660000324249268,
+				-0.0024999999441206455,
+				-8
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				10.5
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-10.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"max":[
+				11,
+				4.200000286102295,
+				20.924999237060547
+			],
+			"min":[
+				-1.5,
+				-4.199999809265137,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":432,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				12,
+				4.199999809265137,
+				0.07500000298023224
+			],
+			"min":[
+				-0.5,
+				-4.199999809265137,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				8.5,
+				0.0024999999441206455,
+				4.539999961853027
+			],
+			"min":[
+				-0.03999999910593033,
+				-0.0024999999441206455,
+				-3
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				6.25,
+				1.899999976158142,
+				10.425000190734863
+			],
+			"min":[
+				-6.25,
+				-1.899999976158142,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				1.475000023841858
+			],
+			"min":[
+				-0.07500000298023224,
+				-1.899999976158142,
+				-9.024999618530273
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				5.839999198913574,
+				0.0024999999441206455,
+				0.8999996185302734
+			],
+			"min":[
+				-4.5,
+				-0.0024999999441206455,
+				-3.1000003814697266
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				1.899999976158142,
+				0.07500000298023224
+			],
+			"min":[
+				-6.25,
+				-1.899999976158142,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				4.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-1.899999976158142,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				11.75,
+				1.899999976158142,
+				9.424999237060547
+			],
+			"min":[
+				-0.7500001788139343,
+				-1.899999976158142,
+				-0.07500040531158447
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				9,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-9,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				9,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-9,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				5.5,
+				0.0024999999441206455,
+				1.9900007247924805
+			],
+			"min":[
+				-7.5,
+				-0.0024999999441206455,
+				-3.089999198913574
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"max":[
+				17,
+				2.1000001430511475,
+				9.424999237060547
+			],
+			"min":[
+				-1.000000238418579,
+				-2.0999999046325684,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":396,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				9,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-9,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				7.5,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-7.5,
+				-0.0024999999441206455,
+				-4.539999008178711
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				9,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-9,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				17.5,
+				1.899999976158142,
+				9.425000190734863
+			],
+			"min":[
+				-0.5,
+				-1.899999976158142,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				5.5,
+				0.0024999999441206455,
+				8.139999389648438
+			],
+			"min":[
+				-5.5,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"max":[
+				6.25,
+				2.1000001430511475,
+				10.425000190734863
+			],
+			"min":[
+				-6.25,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":264,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				9.300000190734863,
+				0.0024999999441206455,
+				3.439999580383301
+			],
+			"min":[
+				-2.5,
+				-0.0024999999441206455,
+				-1.0399999618530273
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"max":[
+				13,
+				1.899999976158142,
+				9.424999237060547
+			],
+			"min":[
+				-0.5,
+				-1.899999976158142,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				2.750000238418579,
+				2.0999999046325684,
+				9.425000190734863
+			],
+			"min":[
+				-2.750000238418579,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				1.7999999523162842,
+				0.0024999999441206455,
+				4.439999580383301
+			],
+			"min":[
+				-1.7999999523162842,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				5,
+				1.899999976158142,
+				9.424999237060547
+			],
+			"min":[
+				-5,
+				-1.899999976158142,
+				-0.07500040531158447
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				4.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-1.899999976158142,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				5,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-5,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				5,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-5,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				2.640000104904175,
+				0.0024999999441206455,
+				6.049999237060547
+			],
+			"min":[
+				-3.299999713897705,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				4.5,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-6,
+				-0.0024999999441206455,
+				-4.739998817443848
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				4.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-1.899999976158142,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				15,
+				1.899999976158142,
+				9.424999237060547
+			],
+			"min":[
+				-1,
+				-1.899999976158142,
+				-0.07500040531158447
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				3,
+				0.0024999999441206455,
+				3.75
+			],
+			"min":[
+				-1,
+				-0.0024999999441206455,
+				-3.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				2.750000238418579,
+				2.0999999046325684,
+				9.424999237060547
+			],
+			"min":[
+				-2.750000238418579,
+				-2.0999999046325684,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.03999999910593033,
+				0.0024999999441206455,
+				5.5
+			],
+			"min":[
+				-0.03999999910593033,
+				-0.0024999999441206455,
+				-5.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				0.25
+			],
+			"min":[
+				-0.07500000298023224,
+				-1.899999976158142,
+				-13.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				12,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-12,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"max":[
+				26.400001525878906,
+				1.899999976158142,
+				3.4250001907348633
+			],
+			"min":[
+				-0.6000005602836609,
+				-1.899999976158142,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				12,
+				0.0024999999441206455,
+				0.03999999910593033
+			],
+			"min":[
+				-12,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				25.900001525878906,
+				1.899999976158142,
+				0.07500000298023224
+			],
+			"min":[
+				-1.1000006198883057,
+				-1.899999976158142,
+				-3.4250001907348633
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.03999999910593033,
+				0.0024999999441206455,
+				5.5
+			],
+			"min":[
+				-0.03999999910593033,
+				-0.0024999999441206455,
+				-5.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"max":[
+				5.2400007247924805,
+				0.0024999999441206455,
+				7.800000190734863
+			],
+			"min":[
+				-5.239999771118164,
+				-0.0024999999441206455,
+				-0.03999999910593033
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":120,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				6.25,
+				2.0999999046325684,
+				9.424999237060547
+			],
+			"min":[
+				-6.25,
+				-2.0999999046325684,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
@@ -2573,855 +8872,573 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":0,
-			"target":34962
+			"byteLength":14067,
+			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":288,
-			"target":34962
+			"byteLength":337,
+			"byteOffset":14068
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":576,
-			"target":34962
+			"byteLength":1971,
+			"byteOffset":14408
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":768,
-			"target":34962
+			"byteLength":775,
+			"byteOffset":16380
 		},
 		{
 			"buffer":0,
-			"byteLength":72,
-			"byteOffset":960,
-			"target":34963
+			"byteLength":405,
+			"byteOffset":17156
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":1032,
-			"target":34962
+			"byteLength":578,
+			"byteOffset":17564
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":1320,
-			"target":34962
+			"byteLength":402,
+			"byteOffset":18144
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":1608,
-			"target":34962
+			"byteLength":1048,
+			"byteOffset":18548
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":1800,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":19596
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":1992,
-			"target":34962
+			"byteLength":397,
+			"byteOffset":19988
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":2280,
-			"target":34962
+			"byteLength":1030,
+			"byteOffset":20388
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":2568,
-			"target":34962
+			"byteLength":387,
+			"byteOffset":21420
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":2760,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":21808
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":3048,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":22204
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":3336,
-			"target":34962
+			"byteLength":577,
+			"byteOffset":22600
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":3528,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":23180
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":3816,
-			"target":34962
+			"byteLength":1394,
+			"byteOffset":23572
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":4104,
-			"target":34962
+			"byteLength":413,
+			"byteOffset":24968
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":4296,
-			"target":34962
+			"byteLength":394,
+			"byteOffset":25384
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":4584,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":25780
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":4872,
-			"target":34962
+			"byteLength":380,
+			"byteOffset":26172
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":5064,
-			"target":34962
+			"byteLength":1197,
+			"byteOffset":26552
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":5352,
-			"target":34962
+			"byteLength":1087,
+			"byteOffset":27752
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":5640,
-			"target":34962
+			"byteLength":2712,
+			"byteOffset":28840
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":5832,
-			"target":34962
+			"byteLength":412,
+			"byteOffset":31552
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":6024,
-			"target":34962
+			"byteLength":263,
+			"byteOffset":31964
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":6312,
-			"target":34962
+			"byteLength":400,
+			"byteOffset":32228
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":6600,
-			"target":34962
+			"byteLength":722,
+			"byteOffset":32628
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":6792,
-			"target":34962
+			"byteLength":403,
+			"byteOffset":33352
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":6984,
-			"target":34962
+			"byteLength":253,
+			"byteOffset":33756
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":7272,
-			"target":34962
+			"byteLength":386,
+			"byteOffset":34012
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":7560,
-			"target":34962
+			"byteLength":1117,
+			"byteOffset":34400
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":7752,
-			"target":34962
+			"byteLength":404,
+			"byteOffset":35520
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":7944,
-			"target":34962
+			"byteLength":253,
+			"byteOffset":35924
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":8232,
-			"target":34962
+			"byteLength":386,
+			"byteOffset":36180
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":8520,
-			"target":34962
+			"byteLength":1061,
+			"byteOffset":36568
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":8712,
-			"target":34962
+			"byteLength":413,
+			"byteOffset":37632
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":8904,
-			"target":34962
+			"byteLength":263,
+			"byteOffset":38048
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":9192,
-			"target":34962
+			"byteLength":400,
+			"byteOffset":38312
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":9480,
-			"target":34962
+			"byteLength":857,
+			"byteOffset":38712
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":9672,
-			"target":34962
+			"byteLength":399,
+			"byteOffset":39572
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":9864,
-			"target":34962
+			"byteLength":396,
+			"byteOffset":39972
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":10152,
-			"target":34962
+			"byteLength":946,
+			"byteOffset":40368
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":10440,
-			"target":34962
+			"byteLength":773,
+			"byteOffset":41316
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":10632,
-			"target":34962
+			"byteLength":759,
+			"byteOffset":42092
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":10824,
-			"target":34962
+			"byteLength":399,
+			"byteOffset":42852
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":11112,
-			"target":34962
+			"byteLength":371,
+			"byteOffset":43252
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":11400,
-			"target":34962
+			"byteLength":396,
+			"byteOffset":43624
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":11592,
-			"target":34962
+			"byteLength":1539,
+			"byteOffset":44020
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":11784,
-			"target":34962
+			"byteLength":930,
+			"byteOffset":45560
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":12072,
-			"target":34962
+			"byteLength":397,
+			"byteOffset":46492
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":12360,
-			"target":34962
+			"byteLength":586,
+			"byteOffset":46892
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":12552,
-			"target":34962
+			"byteLength":392,
+			"byteOffset":47480
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":12840,
-			"target":34962
+			"byteLength":812,
+			"byteOffset":47872
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":13128,
-			"target":34962
+			"byteLength":769,
+			"byteOffset":48684
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":13320,
-			"target":34962
+			"byteLength":397,
+			"byteOffset":49456
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":13608,
-			"target":34962
+			"byteLength":572,
+			"byteOffset":49856
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":13896,
-			"target":34962
+			"byteLength":412,
+			"byteOffset":50428
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":14088,
-			"target":34962
+			"byteLength":415,
+			"byteOffset":50840
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":14280,
-			"target":34962
+			"byteLength":972,
+			"byteOffset":51256
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":14568,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":52228
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":14856,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":52624
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":15048,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":53020
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":15240,
-			"target":34962
+			"byteLength":536,
+			"byteOffset":53412
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":15528,
-			"target":34962
+			"byteLength":1455,
+			"byteOffset":53948
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":15816,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":55404
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":16008,
-			"target":34962
+			"byteLength":420,
+			"byteOffset":55800
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":16200,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":56220
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":16488,
-			"target":34962
+			"byteLength":1224,
+			"byteOffset":56612
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":16776,
-			"target":34962
+			"byteLength":397,
+			"byteOffset":57836
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":16968,
-			"target":34962
+			"byteLength":540,
+			"byteOffset":58236
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":17160,
-			"target":34962
+			"byteLength":392,
+			"byteOffset":58776
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":17448,
-			"target":34962
+			"byteLength":1492,
+			"byteOffset":59168
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":17736,
-			"target":34962
+			"byteLength":393,
+			"byteOffset":60660
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":17928,
-			"target":34962
+			"byteLength":705,
+			"byteOffset":61056
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":18216,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":61764
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":18504,
-			"target":34962
+			"byteLength":1284,
+			"byteOffset":62156
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":18696,
-			"target":34962
+			"byteLength":405,
+			"byteOffset":63440
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":18984,
-			"target":34962
+			"byteLength":1046,
+			"byteOffset":63848
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":19272,
-			"target":34962
+			"byteLength":402,
+			"byteOffset":64896
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":19464,
-			"target":34962
+			"byteLength":461,
+			"byteOffset":65300
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":19752,
-			"target":34962
+			"byteLength":940,
+			"byteOffset":65764
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":20040,
-			"target":34962
+			"byteLength":411,
+			"byteOffset":66704
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":20232,
-			"target":34962
+			"byteLength":358,
+			"byteOffset":67116
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":20520,
-			"target":34962
+			"byteLength":362,
+			"byteOffset":67476
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":20808,
-			"target":34962
+			"byteLength":585,
+			"byteOffset":67840
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":21000,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":68428
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":21192,
-			"target":34962
+			"byteLength":436,
+			"byteOffset":68824
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":21480,
-			"target":34962
+			"byteLength":389,
+			"byteOffset":69260
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":21768,
-			"target":34962
+			"byteLength":415,
+			"byteOffset":69652
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":21960,
-			"target":34962
+			"byteLength":1204,
+			"byteOffset":70068
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":22152,
-			"target":34962
+			"byteLength":405,
+			"byteOffset":71272
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":22440,
-			"target":34962
+			"byteLength":402,
+			"byteOffset":71680
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":22728,
-			"target":34962
+			"byteLength":533,
+			"byteOffset":72084
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":22920,
-			"target":34962
+			"byteLength":1223,
+			"byteOffset":72620
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":23208,
-			"target":34962
+			"byteLength":415,
+			"byteOffset":73844
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":23496,
-			"target":34962
+			"byteLength":263,
+			"byteOffset":74260
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":23688,
-			"target":34962
+			"byteLength":407,
+			"byteOffset":74524
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":23976,
-			"target":34962
+			"byteLength":874,
+			"byteOffset":74932
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":24264,
-			"target":34962
+			"byteLength":403,
+			"byteOffset":75808
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":24456,
-			"target":34962
+			"byteLength":253,
+			"byteOffset":76212
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":24744,
-			"target":34962
+			"byteLength":401,
+			"byteOffset":76468
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":25032,
-			"target":34962
+			"byteLength":1079,
+			"byteOffset":76872
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":25224,
-			"target":34962
+			"byteLength":404,
+			"byteOffset":77952
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":25512,
-			"target":34962
+			"byteLength":253,
+			"byteOffset":78356
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":25800,
-			"target":34962
+			"byteLength":401,
+			"byteOffset":78612
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":25992,
-			"target":34962
+			"byteLength":1159,
+			"byteOffset":79016
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":26280,
-			"target":34962
+			"byteLength":414,
+			"byteOffset":80176
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":26568,
-			"target":34962
+			"byteLength":263,
+			"byteOffset":80592
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":26760,
-			"target":34962
+			"byteLength":412,
+			"byteOffset":80856
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":27048,
-			"target":34962
+			"byteLength":397,
+			"byteOffset":81268
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":27336,
-			"target":34962
+			"byteLength":774,
+			"byteOffset":81668
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":27528,
-			"target":34962
+			"byteLength":1059,
+			"byteOffset":82444
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":27816,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":28104,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":28296,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":28488,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":28776,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":29064,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":29256,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":29448,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":29736,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":30024,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":30216,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":30408,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":30696,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":30984,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":31176,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":31368,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":31656,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":31944,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":32136,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":32328,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":32616,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":32904,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":33096,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":33288,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":33576,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":33864,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":34056,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":34344,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":34632,
-			"target":34962
+			"byteLength":395,
+			"byteOffset":83504
 		}
 	],
 	"samplers":[
@@ -3432,7 +9449,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":34824,
+			"byteLength":83900,
 			"uri":"mansion_shell.bin"
 		}
 	]

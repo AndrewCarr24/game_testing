@@ -4,9 +4,12 @@ const [url, w = 1600, h = 900, dpr = 2] = process.argv.slice(2);
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const ctx = await b.newContext({ viewport: { width: +w, height: +h }, deviceScaleFactor: +dpr });
 const p = await ctx.newPage();
-let bytes = 0; const files = {};
+let bytes = 0, requests = 0; const files = {}, seen = new Set();
 p.on('response', async (r) => {
   if (!r.url().includes('localhost')) return;
+  requests++;
+  if (seen.has(r.url())) return;          // the same texture requested by several assets downloads once
+  seen.add(r.url());
   try { const n = (await r.body()).length; bytes += n; files[r.url().split('/').pop().split('?')[0]] = n; } catch {}
 });
 await p.goto(url);
@@ -32,6 +35,6 @@ const r = await p.evaluate(() => {
   return { calls, tris, textures: seen.size, texMB: +(texBytes / 1e6).toFixed(1), msPerFrame: +ms.toFixed(2),
            buffer: `${gl.drawingBufferWidth}x${gl.drawingBufferHeight}`, shadowAuto: renderer.shadowMap.autoUpdate };
 });
-console.log(JSON.stringify({ downloadMB: +(bytes / 1e6).toFixed(2), ...r }));
+console.log(JSON.stringify({ downloadMB: +(bytes / 1e6).toFixed(2), files: seen.size, requests, ...r }));
 console.log(Object.entries(files).sort((a, c) => c[1] - a[1]).slice(0, 12).map(([k, v]) => `${k} ${(v / 1e6).toFixed(2)}MB`).join(' | '));
 await b.close();

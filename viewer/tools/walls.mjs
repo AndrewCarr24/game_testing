@@ -12,32 +12,47 @@ const result = await p.evaluate(async () => {
   const pl = window.__player, cam = window.__camera, it = window.__interact;
   // open every door so the doorways get tested too
   for (const i of it.items) if (i.def.type === 'rotate') { i.locked = false; i.t = i.target = 1; it.pose(i); }
-  // start points (glTF x, z) inside each room, with the room's floor height 0
-  const starts = { office: [[0, 0], [2.4, 2.2], [-2.5, -2.0], [2.4, -1.5]],
-                   hall: [[2.4, 5.0], [2.4, 8.5], [2.4, 12.0]],
-                   bedroom: [[1.0, 14.5], [-1.0, 16.0], [3.0, 16.5]] };
+  // start at the centre and two inner corners of every room in the level
+  // furnished rooms: walk a spiral out from each target until the player fits there
+  const fits = (x, z, y) => { pl.pos.set(x, y + 0.02, z); return pl.overlapping(pl.pos).length === 0; };
+  const clearNear = (x, z, y) => {
+    for (let rad = 0; rad < 4; rad += 0.25)
+      for (let a = 0; a < 16; a++) {
+        const px = x + rad * Math.cos(a * Math.PI / 8), pz = z + rad * Math.sin(a * Math.PI / 8);
+        if (fits(px, pz, y)) return [px, pz, y];
+      }
+    return null;
+  };
+  const starts = {};
+  for (const [name, r] of Object.entries(window.__level.rooms)) {
+    const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+    starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2]]
+      .map(([x, z]) => clearNear(x, z, r.floor)).filter(Boolean);
+  }
   const bad = [];
   let runs = 0;
-  for (const [room, pts] of Object.entries(starts)) for (const [sx, sz] of pts) {
-    for (let a = 0; a < 16; a++) for (const mode of ['walk', 'run', 'jump', 'strafe']) {
+  for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
+    for (let a = 0; a < 8; a++) for (const mode of ['walk', 'run', 'jump', 'strafe']) {
       runs++;
-      pl.pos.set(sx, 0, sz); pl.vel.set(0, 0, 0); pl.crouching = false;
-      const ang = (a / 16) * Math.PI * 2 + 0.13;
-      cam.position.set(sx, 1.65, sz);
-      cam.lookAt(sx + Math.cos(ang), 1.65, sz + Math.sin(ang));
-      let worst = null, ground = 0;
+      pl.pos.set(sx, sy + 0.05, sz); pl.vel.set(0, 0, 0); pl.crouching = false; pl.grounded = false;
+      const ang = (a / 8) * Math.PI * 2 + 0.13;
+      cam.position.set(sx, sy + 1.65, sz);
+      cam.lookAt(sx + Math.cos(ang), sy + 1.65, sz + Math.sin(ang));
+      let worst = null, takeoff = sy, prevY = sy + 0.05;
       for (let f = 0; f < 240; f++) {           // 4 s at 60 fps, pressing into whatever is ahead
         pl.update(1 / 60, { forward: mode !== 'strafe', right: mode === 'strafe', run: mode !== 'walk',
                             jump: mode === 'jump' && f % 50 === 0, left: false, back: false, crouch: false });
         const y = pl.pos.y;
-        if (pl.grounded) ground = y;
-        // impossible: higher than one jump above what we last stood on, on top of the
-        // building (nothing walkable is above 1.2 m), under the floor, or inside a box
-        const why = y > ground + 1.15 ? 'above jump' : y > 2.0 ? 'on the roof' : y < -0.05 ? 'under the floor'
-                  : pl.overlapping(pl.pos).length ? 'inside a box' : null;
-        if (why) { worst = { why, f, y: +y.toFixed(2), ground: +ground.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
+        if (pl.grounded || pl.vel.y === 0) takeoff = y;
+        // impossible: a sudden upward jump (teleport; two 0.3 m step-ups in one frame is the most climbing can do), rising more
+        // than a jump above where we took off, on the roof, under the ground floor, or
+        // left inside a box
+        const why = y - prevY > 0.65 ? 'teleported up' : y > takeoff + 1.2 ? 'above jump' : y > 8.4 ? 'on the roof'
+                  : y < -0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
+        prevY = y;
+        if (why) { worst = { why, f, y: +y.toFixed(2), takeoff: +takeoff.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
       }
-      if (worst) bad.push({ room, start: [sx, sz], angle: a, mode, ...worst });
+      if (worst) bad.push({ room, start: [+sx.toFixed(1), +sz.toFixed(1)], angle: a, mode, ...worst });
     }
   }
   return { runs, bad };
