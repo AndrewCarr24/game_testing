@@ -126,3 +126,28 @@ CUTS = [
 STAIR = dict(room="entry", x=(-6.0, 1.5), y=(-13.05, -10.65), landing=(1.5, 4.5), risers=26)
 
 SPAWN = dict(position=(0.0, -17.0), look=(0.0, 0.0, 1.5))   # in the entry, facing the courtyard
+
+# Grounds around the main block, seen through the windows (not walkable yet). The lawn
+# (z = 0 of every zone, 8 cm below the house floor) reaches past the perimeter hedge so the
+# upper floor looks over it; a stone terrace rings the house; there is a gap in the hedge
+# for the drive. Everything beyond the hedge is the horizon panorama (horizon.py).
+# ZONES are dressed by blender/levels/outdoor/<zone>.py (like rooms): rect in plan metres,
+# tris = triangle budget for everything the zone places (the whole estate shares ~70k).
+GROUNDS = dict(
+    lawn=(-90, -80, 90, 80),
+    terrace=[(-31, -25, 31, -20), (-31, 20, 31, 25), (-31, -20, -26, 20), (26, -20, 31, 20)],
+    hedge=dict(rect=(-70, -62, 70, 62), thick=1.4, height=2.8, gaps=[("s", 14.0, 25.5)]),
+    zones={
+        "pool_terrace":   dict(rect=(-8, 25, 24, 52), tris=7000),     # north, below kitchen / office / gym
+        "pool_house":     dict(rect=(24, 25, 66, 58), tris=7000),     # north-east: cabana, outdoor kitchen
+        "fire_garden":    dict(rect=(-48, 25, -8, 58), tris=5000),    # north-west, below dining / bedroom
+        "west_garden":    dict(rect=(-66, -22, -31, 25), tris=6000),  # outside the great room's glass wall
+        "motor_court":    dict(rect=(-14, -46, 30, -25), tris=6000),  # south: arrival court at the front
+        "drive_gate":     dict(rect=(12, -66, 30, -46), tris=5000),   # the drive down to the gate in the hedge
+        "south_lawn":     dict(rect=(-66, -60, -14, -25), tris=4000), # south-west: sculpture lawn
+        "tennis":         dict(rect=(33, -22, 68, 25), tris=4000),    # east, below the guest room
+        "kitchen_garden": dict(rect=(30, -60, 68, -25), tris=6000),   # south-east: greenhouse, beds, orchard
+        "planting":       dict(rect=(-70, -62, 70, 62), tris=12000),  # trees + shrubs estate-wide (see brief)
+    },
+)
+LAWN_Z = -0.08            # world z of the lawn surface = z 0 in every zone

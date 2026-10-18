@@ -1,0 +1,23 @@
+{
+  "file": "textures/T_Mansion_Horizon.webp",
+  "scale": 0.319,
+  "latitude": [
+    -10.0,
+    16.0
+  ],
+  "horizon": [
+    0.8,
+    0.86,
+    0.95
+  ],
+  "zenith": [
+    0.28,
+    0.46,
+    0.85
+  ],
+  "sun": [
+    0.3498,
+    0.5997,
+    -0.7197
+  ]
+}

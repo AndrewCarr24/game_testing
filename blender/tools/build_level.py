@@ -8,6 +8,9 @@ render previews. Never touches the Blender window you have open.
   --room ROOM     interior views of ROOM from its four corners at eye height, lit by its
                   lights (EEVEE) -> build/previews/room_<ROOM>.png (2x2 sheet); repeatable
   --only-room R   dress only these rooms (faster previews while iterating one room)
+  --zone ZONE     outdoor zone preview (dresses only that zone, no room furniture):
+                  build/previews/zone_<ZONE>.png = overview, the view from the house's
+                  nearest window, and two eye-level views from the zone's corners
 """
 import argparse
 import math
@@ -34,6 +37,7 @@ def args():
     ap.add_argument("--only-room", action="append", default=[])
     ap.add_argument("--no-export", action="store_true")
     ap.add_argument("--no-save", action="store_true")
+    ap.add_argument("--zone", action="append", default=[])
     ap.add_argument("--size", type=int, default=900)
     return ap.parse_args(argv)
 
@@ -156,14 +160,56 @@ def room_views(room, size, h):
     print(f"PREVIEW {out}  (corners: top-left SW, top-right SE, bottom-left NW, bottom-right NE)")
 
 
+def zone_views(zone, size):
+    """Overview from above, the view from the house's nearest window, two eye-level views."""
+    import plan
+    scene = bpy.context.scene
+    engine(scene)
+    x0, y0, x1, y1 = plan.GROUNDS["zones"][zone]["rect"]
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    z = plan.LAWN_Z
+    cam = bpy.data.objects.new("ZoneCam", bpy.data.cameras.new("ZoneCam"))
+    cam.data.clip_start, cam.data.clip_end = 0.05, 2000
+    scene.collection.objects.link(cam)
+    scene.camera = cam
+    # the house's nearest facade point (just inside the glass), upper floor if the zone is big
+    hx = max(-25.6, min(25.6, cx))
+    hy = max(-19.6, min(19.6, cy))
+    if abs(cx) > 26 and abs(cy) < 20:
+        hx, hy = math.copysign(24.6, cx), hy + 0.75      # 1.4 m inside, between mullions
+    elif abs(cy) > 20:
+        hx, hy = hx + 0.75, math.copysign(18.6, cy)
+    span = max(x1 - x0, y1 - y0)
+    views = [
+        ((cx - span * 0.55, cy - span * 0.75, z + span * 0.7), 24),       # overview from the south-west, above
+        ((hx, hy, 6.25), 16),                                             # from the upper floor window
+        ((x0 + 1.0, y0 + 1.0, z + 1.7), 18),                              # eye level, two corners
+        ((x1 - 1.0, y1 - 1.0, z + 1.7), 18),
+    ]
+    paths = []
+    for i, (loc, lens) in enumerate(views):
+        cam.location = loc
+        cam.data.lens = lens
+        target = Vector((cx, cy, z + (0.5 if i else 0.0)))
+        cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
+        p = os.path.join(PREV, f"_zone_{zone}_{i}.png")
+        render_to(p, size, int(size * 0.62))
+        paths.append(p)
+    out = os.path.join(PREV, f"zone_{zone}.png")
+    sheet(paths, out, (size, int(size * 0.62)))
+    bpy.data.objects.remove(cam)
+    print(f"PREVIEW {out}  (top-left overview, top-right from the house window, bottom: eye level from two corners)")
+
+
 def main():
     a = args()
     t0 = time.time()
     os.makedirs(PREV, exist_ok=True)
     bpy.ops.wm.read_factory_settings(use_empty=True)
     ns = runpy.run_path(os.path.join(LEVELS, "mansion.py"))
-    level, h = ns["build"](export=not a.no_export, rooms_only=a.only_room or None,
-                           write_json=not a.no_export)
+    level, h = ns["build"](export=not a.no_export,
+                           rooms_only=a.only_room or (["-"] if a.zone else None),
+                           write_json=not a.no_export, zones_only=a.zone or None)
     if not a.no_save:
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(LEVELS, "mansion.blend"))
     if not a.no_export:
@@ -172,6 +218,8 @@ def main():
         plan_views(a.size)
     for room in a.room:
         room_views(room, a.size, h)
+    for zone in a.zone:
+        zone_views(zone, a.size)
     print(f"DONE in {time.time() - t0:.1f}s")
 
 

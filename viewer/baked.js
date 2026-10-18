@@ -11,6 +11,35 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 // Props (anything that moves) are lit by the real-time sun plus their room's baked
 // panorama as environment map. Materials are cloned per room where rooms share them.
 
+// A room panorama: .hdr (older bakes) or 8-bit sRGB WebP holding radiance / scale, which
+// is decoded back to linear float radiance here so prefiltering sees the same light.
+export async function loadEnvironment(url, scale = 1) {
+  if (url.endsWith('.hdr')) return new RGBELoader().loadAsync(url);
+  const blob = await (await fetch(url)).blob();
+  const bmp = await createImageBitmap(blob, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+  const g = new OffscreenCanvas(bmp.width, bmp.height).getContext('2d');
+  g.drawImage(bmp, 0, 0);
+  const src = g.getImageData(0, 0, bmp.width, bmp.height).data;
+  const lut = new Float32Array(256);
+  for (let i = 0; i < 256; i++) { const c = i / 255; lut[i] = scale * (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)); }
+  const half = new Uint16Array(256);           // half floats, as RGBELoader gives (half the upload)
+  for (let i = 0; i < 256; i++) half[i] = THREE.DataUtils.toHalfFloat(lut[i]);
+  const one = THREE.DataUtils.toHalfFloat(1);
+  const data = new Uint16Array(bmp.width * bmp.height * 4);
+  // canvas rows run top-down; equirect textures here are bottom-up (flipY = false below)
+  for (let y = 0; y < bmp.height; y++) {
+    const row = (bmp.height - 1 - y) * bmp.width * 4, out = y * bmp.width * 4;
+    for (let x = 0; x < bmp.width * 4; x += 4) {
+      data[out + x] = half[src[row + x]]; data[out + x + 1] = half[src[row + x + 1]]; data[out + x + 2] = half[src[row + x + 2]]; data[out + x + 3] = one;
+    }
+  }
+  const tex = new THREE.DataTexture(data, bmp.width, bmp.height, THREE.RGBAFormat, THREE.HalfFloatType);
+  tex.colorSpace = THREE.LinearSRGBColorSpace;
+  tex.magFilter = tex.minFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  return tex;
+}
+
 export async function loadBake(base, levelName, renderer) {
   const res = await fetch(`${base}levels/${levelName}_bake.json`);
   if (!res.ok) return null;
@@ -20,7 +49,7 @@ export async function loadBake(base, levelName, renderer) {
   await Promise.all(Object.entries(bake.rooms).map(async ([room, r]) => {
     const [lightTex, envHdr] = await Promise.all([
       new THREE.TextureLoader().loadAsync(base + r.lightmap.file),
-      new RGBELoader().loadAsync(base + r.environment.file),
+      loadEnvironment(base + r.environment.file, r.environment.scale),
     ]);
     lightTex.flipY = false;                  // glTF UV convention
     lightTex.colorSpace = THREE.SRGBColorSpace;
@@ -66,8 +95,10 @@ export async function loadBake(base, levelName, renderer) {
   // Props: diffuse light from the room's spherical-harmonics probe (computed from the
   // unclamped panorama, so the ceiling strips' full light reaches the furniture, matching
   // the baked walls); reflections from the room's (highlight-clamped) panorama.
-  function roomMaterial(src, room) {
-    const key = `${room}|${src.uuid}|env`;
+  // sunless: the room never gets direct sun (mansion.json rooms[r].sun === false), so its
+  // props skip the real-time sun (and its shadow lookups) entirely
+  function roomMaterial(src, room, sunless = false) {
+    const key = `${room}|${src.uuid}|env${sunless ? '|nosun' : ''}`;
     if (clones.has(key)) return clones.get(key);
     const m = src.clone();
     const r = rooms[room];
@@ -81,9 +112,10 @@ export async function loadBake(base, levelName, renderer) {
             '#include <lights_fragment_maps>',
             'iblIrradiance = vec3( 0.0 );',
             'irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH );',
+            ...(sunless ? ['reflectedLight.directDiffuse = vec3( 0.0 );', 'reflectedLight.directSpecular = vec3( 0.0 );'] : []),
           ].join('\n'));
       };
-      m.customProgramCacheKey = () => 'room-sh';
+      m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun' : 'room-sh');
     }
     clones.set(key, m);
     return m;
@@ -103,10 +135,17 @@ export async function loadBake(base, levelName, renderer) {
   }
 
   // props: light everything under `root` with its room's environment
-  function applyRoom(root, room) {
+  function applyRoom(root, room, sunless = false) {
     if (!rooms[room]) return;
-    root.traverse((o) => { if (o.isMesh) o.material = roomMaterial(o.material, room); });
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      o.material = roomMaterial(o.material, room, sunless);
+      if (sunless) o.castShadow = o.receiveShadow = false;   // nothing for the sun to shade here
+    });
   }
 
-  return { bake, rooms, applyLightmaps, applyRoom, defaultEnv: Object.values(rooms)[0]?.envMap };
+  // materials without a room of their own (the house's window glass) reflect the entry's
+  // panorama; picked by name, not by which room happened to finish loading first
+  const fallback = rooms.entry ?? rooms[Object.keys(bake.rooms)[0]];
+  return { bake, rooms, applyLightmaps, applyRoom, defaultEnv: fallback?.envMap };
 }

@@ -2,6 +2,99 @@
   "name": "Mansion",
   "units": "metres, Y-up (glTF)",
   "shell": "models/mansion_shell.gltf",
+  "outdoor": "models/mansion_outdoor.gltf",
+  "zones": {
+    "pool_terrace": {
+      "rect": [
+        -8,
+        -52,
+        24,
+        -25
+      ],
+      "tris": 5686
+    },
+    "pool_house": {
+      "rect": [
+        24,
+        -58,
+        66,
+        -25
+      ],
+      "tris": 6826
+    },
+    "fire_garden": {
+      "rect": [
+        -48,
+        -58,
+        -8,
+        -25
+      ],
+      "tris": 4908
+    },
+    "west_garden": {
+      "rect": [
+        -66,
+        -25,
+        -31,
+        22
+      ],
+      "tris": 5864
+    },
+    "motor_court": {
+      "rect": [
+        -14,
+        25,
+        30,
+        46
+      ],
+      "tris": 5784
+    },
+    "drive_gate": {
+      "rect": [
+        12,
+        46,
+        30,
+        66
+      ],
+      "tris": 4435
+    },
+    "south_lawn": {
+      "rect": [
+        -66,
+        25,
+        -14,
+        60
+      ],
+      "tris": 3772
+    },
+    "tennis": {
+      "rect": [
+        33,
+        -25,
+        68,
+        22
+      ],
+      "tris": 3826
+    },
+    "kitchen_garden": {
+      "rect": [
+        30,
+        25,
+        68,
+        60
+      ],
+      "tris": 5718
+    },
+    "planting": {
+      "rect": [
+        -70,
+        -62,
+        70,
+        62
+      ],
+      "tris": 11909
+    }
+  },
   "rooms": {
     "entry": {
       "probe": [
@@ -18,7 +111,8 @@
         10.5,
         8,
         20
-      ]
+      ],
+      "sun": true
     },
     "powder": {
       "probe": [
@@ -35,7 +129,8 @@
         10.5,
         -8,
         20
-      ]
+      ],
+      "sun": false
     },
     "cloak": {
       "probe": [
@@ -52,7 +147,8 @@
         10.5,
         13.5,
         20
-      ]
+      ],
+      "sun": false
     },
     "den": {
       "probe": [
@@ -69,7 +165,8 @@
         10.5,
         -13.5,
         20
-      ]
+      ],
+      "sun": false
     },
     "great_room": {
       "probe": [
@@ -86,7 +183,8 @@
         -10.5,
         -13.5,
         10.5
-      ]
+      ],
+      "sun": false
     },
     "dining": {
       "probe": [
@@ -103,7 +201,8 @@
         -20,
         -10,
         -10.5
-      ]
+      ],
+      "sun": true
     },
     "kitchen": {
       "probe": [
@@ -120,7 +219,8 @@
         -20,
         8,
         -10.5
-      ]
+      ],
+      "sun": true
     },
     "scullery": {
       "probe": [
@@ -137,7 +237,8 @@
         -20,
         13.5,
         -10.5
-      ]
+      ],
+      "sun": false
     },
     "wine_room": {
       "probe": [
@@ -154,7 +255,8 @@
         -20,
         26,
         -10.5
-      ]
+      ],
+      "sun": false
     },
     "mudroom": {
       "probe": [
@@ -171,7 +273,8 @@
         -10.5,
         26,
         0
-      ]
+      ],
+      "sun": true
     },
     "garage": {
       "probe": [
@@ -188,7 +291,8 @@
         0,
         26,
         20
-      ]
+      ],
+      "sun": false
     },
     "gallery_s": {
       "probe": [
@@ -205,7 +309,8 @@
         7,
         13.5,
         10.5
-      ]
+      ],
+      "sun": true
     },
     "gallery_n": {
       "probe": [
@@ -222,7 +327,8 @@
         -10.5,
         13.5,
         -7
-      ]
+      ],
+      "sun": false
     },
     "gallery_w": {
       "probe": [
@@ -239,7 +345,8 @@
         -7,
         -10,
         7
-      ]
+      ],
+      "sun": true
     },
     "gallery_e": {
       "probe": [
@@ -256,7 +363,8 @@
         -7,
         13.5,
         7
-      ]
+      ],
+      "sun": false
     },
     "courtyard": {
       "probe": [
@@ -273,7 +381,8 @@
         -7,
         10,
         7
-      ]
+      ],
+      "sun": true
     },
     "library": {
       "probe": [
@@ -290,7 +399,8 @@
         10.5,
         -8,
         20
-      ]
+      ],
+      "sun": true
     },
     "primary_bedroom": {
       "probe": [
@@ -307,7 +417,8 @@
         -20,
         -10,
         -10.5
-      ]
+      ],
+      "sun": true
     },
     "primary_bath": {
       "probe": [
@@ -324,7 +435,8 @@
         -20,
         0,
         -10.5
-      ]
+      ],
+      "sun": false
     },
     "office": {
       "probe": [
@@ -341,7 +453,8 @@
         -20,
         13.5,
         -10.5
-      ]
+      ],
+      "sun": true
     },
     "gym": {
       "probe": [
@@ -358,7 +471,8 @@
         -20,
         26,
         -10.5
-      ]
+      ],
+      "sun": true
     },
     "guest_room": {
       "probe": [
@@ -375,7 +489,8 @@
         -10.5,
         26,
         0
-      ]
+      ],
+      "sun": true
     },
     "ugallery_s": {
       "probe": [
@@ -392,7 +507,8 @@
         7,
         13.5,
         10.5
-      ]
+      ],
+      "sun": true
     },
     "ugallery_n": {
       "probe": [
@@ -409,7 +525,8 @@
         -10.5,
         13.5,
         -7
-      ]
+      ],
+      "sun": false
     },
     "ugallery_w": {
       "probe": [
@@ -426,7 +543,8 @@
         -7,
         -10,
         7
-      ]
+      ],
+      "sun": true
     },
     "ugallery_e": {
       "probe": [
@@ -443,7 +561,8 @@
         -7,
         13.5,
         7
-      ]
+      ],
+      "sun": true
     }
   },
   "assets": {
@@ -30358,6 +30477,18 @@
       ],
       "max": [
         4.5,
+        5.8,
+        13.13
+      ]
+    },
+    {
+      "min": [
+        4.5,
+        4.6,
+        10.5
+      ],
+      "max": [
+        4.58,
         5.8,
         13.13
       ]

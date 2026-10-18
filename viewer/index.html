@@ -64,6 +64,7 @@
     import { Player, KEYS } from './player.js';
     import { Hand, Throwables } from './items.js';
     import { batchRooms, RoomCuller } from './batching.js';
+    import { loadSky, applyOutdoor } from './sky.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -73,7 +74,27 @@
     // cap the render resolution: retina screens would otherwise draw 4x the pixels
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(innerWidth, innerHeight);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    // Tone mapping (?tm=neutral|agx|aces). Neutral = Khronos PBR Neutral (three.js ships it
+    // from r162; here it's the custom slot): true base colours, gentle highlight roll-off, and
+    // the cheapest of the three. Tone mapping runs in every material's shader, per pixel drawn.
+    THREE.ShaderChunk.tonemapping_pars_fragment = THREE.ShaderChunk.tonemapping_pars_fragment.replace(
+      'vec3 CustomToneMapping( vec3 color ) { return color; }', `vec3 CustomToneMapping( vec3 color ) {
+        const float StartCompression = 0.8 - 0.04;
+        const float Desaturation = 0.15;
+        color *= toneMappingExposure;
+        float x = min( color.r, min( color.g, color.b ) );
+        float offset = x < 0.08 ? x - 6.25 * x * x : 0.04;
+        color -= offset;
+        float peak = max( color.r, max( color.g, color.b ) );
+        if ( peak < StartCompression ) return color;
+        float d = 1.0 - StartCompression;
+        float newPeak = 1.0 - d * d / ( peak + d - StartCompression );
+        color *= newPeak / peak;
+        float g = 1.0 - 1.0 / ( Desaturation * ( peak - newPeak ) + 1.0 );
+        return mix( color, vec3( newPeak ), g );
+      }`);
+    const TONE = { neutral: THREE.CustomToneMapping, agx: THREE.AgXToneMapping, aces: THREE.ACESFilmicToneMapping };
+    renderer.toneMapping = TONE[params.get('tm')] ?? THREE.CustomToneMapping;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     // nothing casts moving shadows except interactables, so only redraw shadows on demand
@@ -91,13 +112,17 @@
 
     // assets that use the same image (e.g. walnut) share one GPU texture
     const textureCache = new Map();
+    const ANISOTROPY = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     function shareTextures(m) {
       for (const k of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap']) {
         const t = m[k];
         if (!t || !t.name) continue;
         const key = `${t.name}:${t.image?.width}x${t.image?.height}`;
-        if (!textureCache.has(key)) textureCache.set(key, t);
-        else if (textureCache.get(key) !== t) { t.dispose(); m[k] = textureCache.get(key); }
+        if (!textureCache.has(key)) {
+          textureCache.set(key, t);
+          // floors and walls seen at a grazing angle stay sharp instead of smearing
+          t.anisotropy = ANISOTROPY;
+        } else if (textureCache.get(key) !== t) { t.dispose(); m[k] = textureCache.get(key); }
       }
     }
 
@@ -164,6 +189,9 @@
         scene.environment = baked.defaultEnv;
         renderer.toneMappingExposure = baked.bake.exposure;
       }
+      // the view out of the windows: procedural sky + horizon panorama (blender/levels/horizon.py)
+      const sky = await loadSky(`${base}levels/${name}_sky.json`, renderer);
+      if (sky) scene.add(sky.dome);
       const env = level.lights.find((l) => l.type === 'ambient_env');
       const envIntensity = baked ? 1 : env ? env.intensity : 1;
       for (const l of level.lights) {
@@ -200,11 +228,19 @@
 
       // load each asset once, clone per placement (geometry + materials shared)
       const names = [...new Set(level.props.map((p) => p.asset))];
+      const outdoorLoad = level.outdoor && sky ? loadGltf(base + level.outdoor) : null;
       const [shell, ...protos] = await Promise.all(
         [level.shell, ...names.map((n) => level.assets[n].file)].map((f) => loadGltf(base + f)));
       let total = prepare(shell.scene, envIntensity).tris;
       if (baked) baked.applyLightmaps(shell.scene);
       scene.add(shell.scene);
+      // the grounds: lawn, terrace, hedge and the outdoor zones, lighting baked into vertex colours
+      if (outdoorLoad) {
+        const outdoor = await outdoorLoad;
+        total += prepare(outdoor.scene).tris;
+        applyOutdoor(outdoor.scene, sky, baked?.bake.outdoor);
+        scene.add(outdoor.scene);
+      }
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity);
 
@@ -232,7 +268,7 @@
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
         obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
-        if (baked) baked.applyRoom(obj, p.room);
+        if (baked) baked.applyRoom(obj, p.room, level.rooms[p.room]?.sun === false);
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
@@ -372,7 +408,20 @@
       camera.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight);
     });
-    renderer.setAnimationLoop(() => { update(); renderer.render(scene, camera); });
+    // window.__bench (set by viewer/tools/bench.mjs and shots.mjs) can time each frame and
+    // drive the camera after the game's own update; the game never sets it
+    renderer.setAnimationLoop(() => {
+      // nothing is drawn until the level is in: on a slow GPU each frame drawn during the load
+      // (of a half-built scene nobody can play yet) delays the load itself
+      if (!window.__loaded) return;
+      const b = window.__bench;
+      b?.frameStart();
+      update();
+      b?.drive();
+      b?.renderStart();
+      renderer.render(scene, camera);
+      b?.frameEnd();
+    });
   </script>
 </body>
 </html>

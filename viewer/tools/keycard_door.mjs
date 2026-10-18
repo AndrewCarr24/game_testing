@@ -70,7 +70,9 @@ await p.screenshot({ path: `${out}/door_open.png` });
 // walk through: toward the door's local -y (into the bedroom)
 const inside = fromProp(door, [0.0, -1.5, 1.65]);
 await p.evaluate((t) => window.__camera.lookAt(t[0], t[1], t[2]), inside);
-await p.keyboard.down('KeyW'); await p.waitForTimeout(1400); await p.keyboard.up('KeyW');
+// ~3 m, whatever the walking speed (close enough to the door to reach it from inside)
+const walkMs = (3.0 / (await p.evaluate(() => window.__player.o.walk))) * 1000;
+await p.keyboard.down('KeyW'); await p.waitForTimeout(walkMs); await p.keyboard.up('KeyW');
 s = await S();
 check('walk through the doorway into the bedroom', dist(s.pos, inside) < dist(s.pos, front) && dist(s.pos, front) > 2.0,
       `${dist(s.pos, front).toFixed(2)} m from the gallery spot`);

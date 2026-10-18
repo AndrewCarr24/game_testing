@@ -1,0 +1,18 @@
+{
+  "_note": "Cost guardrail for the quality loop: the 'baseline' bench run of 2026-10-17 (commit 90a637a) plus a noise allowance: +10% on GPU/frame timings (two identical runs differ by ~5-10%), +15% on SwiftShader timings (only ~220 frames), +3% on deterministic counts and sizes. Hitches (>50 ms frames) are reported but not gated: the few seen are one-off shader-compile spikes. The deterministic counts and the SwiftShader timings are the real gate (the M4 is barely loaded at ~550 fps); M4 timings are a tie-breaker. Quality changes may not push any metric past its limit. Metric paths refer to build/bench/<label>/stats-<profile>.json.",
+  "gpu": {
+    "gpuMs.p50": 1.39,
+    "gpuMs.p95": 2.35,
+    "frameMs.p95": 2.9,
+    "drawCalls.mean": 284,
+    "drawCalls.max": 677,
+    "triangles.max": 516000,
+    "load.downloadMB": 13.7,
+    "load.textureMB": 216
+  },
+  "soft": {
+    "gpuMs.p50": 280,
+    "gpuMs.p95": 440,
+    "frameMs.p50": 319
+  }
+}

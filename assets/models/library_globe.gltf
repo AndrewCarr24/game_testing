@@ -362,13 +362,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4702,
+			"byteLength":4671,
 			"byteOffset":4644
 		},
 		{
 			"buffer":0,
 			"byteLength":718,
-			"byteOffset":9348
+			"byteOffset":9316
 		}
 	],
 	"samplers":[
@@ -379,7 +379,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10068,
+			"byteLength":10036,
 			"uri":"library_globe.bin"
 		}
 	]

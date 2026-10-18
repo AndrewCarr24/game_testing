@@ -54,7 +54,9 @@ const f2 = (v) => v.toFixed(2);
   const top = desk.position[1] + 0.74;
   await hold(['KeyW'], 1200); let s = await state();
   check('walking into the desk is blocked', s.y < desk.position[1] + 0.01, `feet=${f2(s.y)}`);
-  await p.keyboard.down('KeyW'); await hold(['Space'], 120); await p.waitForTimeout(700); await p.keyboard.up('KeyW');
+  // forward for ~1.4 m (desk centre), whatever the walking speed, with a jump on the way
+  const walkMs = (1.4 / (await p.evaluate(() => window.__player.o.walk))) * 1000;
+  await p.keyboard.down('KeyW'); await hold(['Space'], 120); await p.waitForTimeout(walkMs - 120); await p.keyboard.up('KeyW');
   await p.waitForTimeout(400); s = await state();
   check('jump + forward lands on the desktop', Math.abs(s.y - top) < 0.02 && s.grounded, `feet=${f2(s.y)} (desktop ${f2(top)})`);
   await p.close();

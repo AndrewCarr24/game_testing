@@ -38,8 +38,10 @@ class House:
         self.doors = []                   # door placements generated from cuts
         self.glow = materials.emissive("M_LightStrip", (1.0, 0.92, 0.82), 4.0)
         self.frame = materials.black_metal()
-        self.glass = materials.glass("M_Glass", tint=(0.9, 0.95, 0.95), alpha=0.12, roughness=0.02)
-        self.rail_glass = materials.glass("M_Glass_Rail", tint=(0.85, 0.92, 0.92), alpha=0.16, roughness=0.02)
+        # window glass has (almost) no diffuse colour: a light tint here would be lit by the
+        # sun like a white sheet and veil the view; dark + low alpha = a faint tint + reflections
+        self.glass = materials.glass("M_Glass", tint=(0.02, 0.026, 0.026), alpha=0.1, roughness=0.02)
+        self.rail_glass = materials.glass("M_Glass_Rail", tint=(0.03, 0.045, 0.045), alpha=0.14, roughness=0.02)
 
     # ------------------------------------------------------------- geometry
     def box(self, room, name, lo, hi, mat, collide=True, uv_tile=1.0, bake=False, solid=True):
@@ -241,6 +243,11 @@ class House:
                                    self.rail_glass, self.root, smooth=False)
         glass.location = ((x0 + x1) / 2, y0 - 0.04, top / 2 + 0.55)
         glass.rotation_euler = (0, -math.atan2(top, x1 - x0), 0)
+        # the landing's far end overlooks the entry too: glass + rail collider across it
+        end = common.mesh_object(f"{self.name}_Stair_Glass_End", common.box_bmesh((0.02, y1 + P.T - y0, 0.95)), self.col,
+                                 self.rail_glass, self.root, smooth=False)
+        end.location = (lx1 + 0.04, (y0 + y1 + P.T) / 2, top + 0.55)
+        self.colliders.append(common.aabb_gltf((lx1, y0 - 0.08, top), (lx1 + 0.08, y1 + P.T, top + 1.2)))
 
     # ---------------------------------------------------------------- lights
     def strip(self, room, pos, size, z, power):

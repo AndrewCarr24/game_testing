@@ -14,7 +14,10 @@ await p.waitForFunction(() => window.__loaded, null, { timeout: 60000 });
 await p.mouse.click(550, 350); await p.waitForTimeout(400);
 const S = () => p.evaluate(() => window.__player.pos.toArray());
 await p.screenshot({ path: `${out}/stair_bottom.png` });
-await p.keyboard.down('KeyW'); await p.waitForTimeout(5200); await p.keyboard.up('KeyW');
+// walk until past the top step (by position, so the test doesn't depend on walking speed)
+await p.keyboard.down('KeyW');
+await p.waitForFunction(() => window.__player.pos.x > 2.5, null, { timeout: 15000 }).catch(() => {});
+await p.keyboard.up('KeyW'); await p.waitForTimeout(300);
 let s = await S();
 check('walk up the stair to the landing', Math.abs(s[1] - upper.y) < 0.05 && s[0] > 1.4, `feet=${s[1].toFixed(2)} x=${s[0].toFixed(2)}`);
 // turn north (glTF -z) and step off the landing into the upper gallery

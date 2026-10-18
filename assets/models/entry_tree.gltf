@@ -459,28 +459,28 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":53926,
+			"byteLength":53939,
 			"byteOffset":1284
 		},
 		{
 			"buffer":0,
 			"byteLength":4469,
-			"byteOffset":55212
+			"byteOffset":55224
 		},
 		{
 			"buffer":0,
 			"byteLength":1249,
-			"byteOffset":59684
+			"byteOffset":59696
 		},
 		{
 			"buffer":0,
 			"byteLength":820,
-			"byteOffset":60936
+			"byteOffset":60948
 		},
 		{
 			"buffer":0,
 			"byteLength":2044,
-			"byteOffset":61756
+			"byteOffset":61768
 		}
 	],
 	"samplers":[
@@ -491,7 +491,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":63800,
+			"byteLength":63812,
 			"uri":"entry_tree.bin"
 		}
 	]

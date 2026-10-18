@@ -663,43 +663,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":13647,
+			"byteLength":13594,
 			"byteOffset":824
 		},
 		{
 			"buffer":0,
 			"byteLength":8696,
-			"byteOffset":14472
+			"byteOffset":14420
 		},
 		{
 			"buffer":0,
 			"byteLength":859,
-			"byteOffset":23168
+			"byteOffset":23116
 		},
 		{
 			"buffer":0,
 			"byteLength":859,
-			"byteOffset":24028
+			"byteOffset":23976
 		},
 		{
 			"buffer":0,
 			"byteLength":349,
-			"byteOffset":24888
+			"byteOffset":24836
 		},
 		{
 			"buffer":0,
 			"byteLength":875,
-			"byteOffset":25240
+			"byteOffset":25188
 		},
 		{
 			"buffer":0,
 			"byteLength":875,
-			"byteOffset":26116
+			"byteOffset":26064
 		},
 		{
 			"buffer":0,
 			"byteLength":875,
-			"byteOffset":26992
+			"byteOffset":26940
 		}
 	],
 	"samplers":[
@@ -710,7 +710,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":27868,
+			"byteLength":27816,
 			"uri":"guest_kettlebells.bin"
 		}
 	]

@@ -204,3 +204,55 @@ def fabric(name, n=1024, seed=17, strength=1.6, force=False):
     nrm = np.stack([-dx, dy, np.ones_like(h)], axis=-1)
     nrm /= np.linalg.norm(nrm, axis=-1, keepdims=True)
     return _save(name, nrm * 0.5 + 0.5, non_color=True)
+
+
+def grass(n=512, seed=31, force=False):
+    """Mown lawn albedo: fine blades, clover-ish clumps and faint dry patches. One tile
+    = 3 m. (The engine adds the mowing stripes and large-scale variation, so the tile
+    doesn't repeat visibly across a big lawn.)"""
+    path = os.path.join(TEX_DIR, "T_Grounds_Grass_BaseColor.png")
+    if os.path.exists(path) and not force:
+        return path
+    rng = np.random.default_rng(seed)
+    # fine detail only: anything large in a 3 m tile repeats visibly across the lawn
+    blades = _noise(n, 1.0, 0.35, 0.2, rng)          # fine, slightly streaky
+    clumps = _noise(n, 1.0, 1.0, 0.9, rng)
+    t = np.clip(0.5 + 0.34 * blades + 0.22 * clumps, 0, 1)
+    dark = np.array([0.020, 0.048, 0.011])
+    light = np.array([0.070, 0.140, 0.028])
+    lin = dark + (light - dark) * t[..., None]
+    return _save("T_Grounds_Grass_BaseColor", _to_srgb(lin))
+
+
+def hedge(n=512, seed=37, force=False):
+    """Clipped boxwood/yew hedge albedo: small dark leaves with lit edges and deep gaps.
+    One tile = 1.5 m."""
+    path = os.path.join(TEX_DIR, "T_Grounds_Hedge_BaseColor.png")
+    if os.path.exists(path) and not force:
+        return path
+    rng = np.random.default_rng(seed)
+    leaves = _noise(n, 1.0, 1.0, 0.6, rng)
+    clusters = _noise(n, 1.0, 1.0, 1.6, rng)
+    t = np.clip(0.5 + 0.45 * leaves + 0.3 * clusters, 0, 1) ** 1.4
+    dark = np.array([0.006, 0.016, 0.006])
+    light = np.array([0.050, 0.100, 0.025])
+    lin = dark + (light - dark) * t[..., None]
+    return _save("T_Grounds_Hedge_BaseColor", _to_srgb(lin))
+
+
+def gravel(n=512, seed=41, force=False):
+    """Pale raked gravel / decomposed granite: small stones, a few darker, faint rake
+    lines. One tile = 2 m."""
+    path = os.path.join(TEX_DIR, "T_Out_Gravel_BaseColor.png")
+    if os.path.exists(path) and not force:
+        return path
+    rng = np.random.default_rng(seed)
+    stones = _noise(n, 1.0, 1.0, 0.1, rng)
+    clumps = _noise(n, 1.0, 1.0, 0.8, rng)
+    v = np.linspace(0, 1, n, endpoint=False)[:, None] * np.ones((1, n))
+    rake = 0.5 + 0.5 * np.sin(2 * np.pi * v * 40)
+    t = np.clip(0.55 + 0.35 * stones + 0.15 * clumps + 0.06 * rake, 0, 1)
+    dark = np.array([0.20, 0.18, 0.15])
+    light = np.array([0.62, 0.58, 0.51])
+    lin = dark + (light - dark) * t[..., None]
+    return _save("T_Out_Gravel_BaseColor", _to_srgb(lin))

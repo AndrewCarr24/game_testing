@@ -35,10 +35,11 @@ PROJECT = os.path.abspath(os.path.join(BLENDER_DIR, ".."))
 for d in (BLENDER_DIR, os.path.join(BLENDER_DIR, "assets"), HERE, os.path.join(HERE, "rooms")):
     if d not in sys.path:
         sys.path.insert(0, d)
-from lib import common, house, materials, textures  # noqa: E402
+from lib import common, house, materials, outdoor, textures  # noqa: E402
 import plan  # noqa: E402
+import grounds  # noqa: E402
 
-for m in (common, textures, materials, house, plan):
+for m in (common, textures, materials, outdoor, house, plan, grounds):
     importlib.reload(m)
 
 NAME = "Mansion"
@@ -151,8 +152,9 @@ def default_lights(h, room):
     return [dict(kind="strip", pos=(0, 0), size=size, power=30.0 + 1.5 * w * d)]
 
 
-def build(export=True, rooms_only=None, write_json=True):
-    """rooms_only: dress just these rooms (the shell is always complete); for previews."""
+def build(export=True, rooms_only=None, write_json=True, zones_only=None):
+    """rooms_only: dress just these rooms (the shell is always complete); zones_only: dress
+    just these outdoor zones (the lawn, terrace and hedge are always there); for previews."""
     p = P
     models = os.path.join(PROJECT, "assets", "models")
     levels = os.path.join(PROJECT, "assets", "levels")
@@ -237,8 +239,12 @@ def build(export=True, rooms_only=None, write_json=True):
         ob.rotation_euler = (0, 0, math.radians(rot))
         placed.append(entry)
 
+    # the grounds (after the rooms: they reuse assets the rooms already built)
+    bpy.context.view_layer.update()
+    out_root, _, zone_tris = grounds.build(h, plan, roots, zones_only)
     if export:
         common.export_gltf(h.root, os.path.join(models, "mansion_shell.gltf"))
+        common.export_gltf(out_root, os.path.join(models, "mansion_outdoor.gltf"))
     sun = Vector(p["sun_dir"]).normalized()
     sx, sy = plan.SPAWN["position"]
     rooms = {}
@@ -252,6 +258,9 @@ def build(export=True, rooms_only=None, write_json=True):
         "name": NAME,
         "units": "metres, Y-up (glTF)",
         "shell": "models/mansion_shell.gltf",
+        "outdoor": "models/mansion_outdoor.gltf",
+        "zones": {z: {"rect": [x0, -y1, x1, -y0], "tris": zone_tris.get(z)}      # glTF x0, z0, x1, z1
+                  for z, (x0, y0, x1, y1) in ((z, i["rect"]) for z, i in plan.GROUNDS["zones"].items())},
         "rooms": rooms,
         "assets": assets,
         "props": placed,

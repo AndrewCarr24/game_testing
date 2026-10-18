@@ -280,3 +280,103 @@ leather, ink blue, oat linen, white marble, limestone. Each room may lean its ow
 - office: 13.2 x 9.2 m (rooms/office.py exists: keep the desk, desk chair, the lounge
   group, the vase and the keycard attachment exactly as they are): add what the big room
   lacks: bookshelves or a credenza on the walls, a sofa or second seating, a plant, art.
+
+## Grounds (outdoor zones; see prompts/build_zone.md)
+Estate character, shared by every zone: a modern tech-billionaire estate. Clean
+rectilinear architecture and hardscape matching the house (white render, pale limestone,
+dark bronze/black metal, weathered teak), generous scale, restraint; planting in a
+Mediterranean / Pacific-coast palette (olive, Italian cypress, clipped boxwood and yew,
+ornamental grasses, lavender), immaculately kept. Nothing rustic or cute. Everything is
+seen through the house's windows, mostly from 5-60 m away.
+
+### pool_terrace (prefix `pool_`), rect x -8..24, y 25..52, 7,000 tris
+The view from the kitchen (ground floor) and the office and gym (upper floor). A raised
+limestone pool deck (about 0.45 m above the lawn, with broad steps down to the lawn on
+its open sides) carrying a 25 x 6 m lap pool running east-west, roughly centred on the
+office windows. Its north long side is an infinity (vanishing) edge: the water runs to a
+knife edge with a catch trough a step lower outside it. A sun shelf (very shallow water)
+at the west end with two in-water loungers. Six to eight teak sun loungers with sand
+cushions in pairs, two large square cantilever umbrellas (charcoal canvas, dark metal),
+a low limestone bench wall, side tables, a pair of large stone planters with clipped
+shrubs. Keep the deck's edge 2 m clear of the house terrace so the two read as levels.
+
+### pool_house (prefix `cabana_`), rect x 24..66, y 25..58, 7,000 tris
+The pool's companion, seen from the gym and office (upper) at an angle. A modern pool
+pavilion about 14 x 7 m: a thin cantilevered flat roof (0.3 m slab, white render) on
+slender dark metal columns, floor-to-ceiling glass on the pool side (outdoor.glass()),
+teak screen walls on the others; inside, glimpsed through the glass, a sofa, a bar and a
+daybed. Beside it an outdoor kitchen: an 8 m stone counter run (grill, sink, dark metal
+cabinet fronts) under a teak-and-dark-metal pergola with an outdoor dining table for ten.
+Stone stepping slabs set in the lawn link it to the pool deck to the west.
+
+### fire_garden (prefix `firepit_`), rect x -48..-8, y 25..58, 5,000 tris
+Seen from the dining room (ground) and the primary bedroom (upper). A circular stone
+terrace about 10 m across, slightly raised, with a built-in curved bench (stone base,
+cushion top) around three quarters of it and a central fire bowl (dark metal or stone,
+low embers using outdoor.lamp()); four lounge chairs. A ring of low clipped hedge
+(outdoor.foliage(), ~0.9 m) with openings frames it. Gravel paths lead from the house
+terrace to it and on to a small gravel pétanque court with a teak bench. Beds of
+ornamental grass and lavender (planting assets) soften the edges.
+
+### west_garden (prefix `garden_`), rect x -66..-31, y -22..25, 6,000 tris
+The most visible zone: the great room's 8.4 m glass wall looks straight down it (great
+room centre line y = 0) and the library looks over it from above. A formal axial garden
+on the great room's axis: a long reflecting pool (about 30 x 4 m, crisp stone coping,
+water almost flush) running west from the terrace on y = 0; parallel stone walks either
+side; symmetrical rows of clipped box cubes and an allée of olive trees (plant_tree_olive)
+or cypress; at the far west end a large abstract sculpture (bronze or dark metal, 4-5 m)
+as the focal point of the view; a pair of stone benches facing the pool.
+
+### motor_court (prefix `court_`), rect x -14..30, y -46..-25, 6,000 tris (may also use the south terrace band y -25..-20)
+The arrival court in front of the entry's glass wall (x -6..6) and the garage door
+(x 15.5..24): a large paved court (limestone banding framing a pale gravel field), a
+central circular fountain (raised stone basin about 8 m across, still water, a monolithic
+stone or bronze sculpture rising from it), a cantilevered entrance canopy over the front
+of the entry (thin flat roof about 12 x 5 m on two slender columns, on the terrace band),
+large planters with multi-stem trees, bollard lights (outdoor.lamp()) at the edges. The
+drive (drive_gate) arrives at the court's south edge around x 14..25.
+
+### drive_gate (prefix `gate_`), rect x 12..30, y -66..-46, 5,000 tris
+The drive from the motor court south to the gap in the hedge (x 14..25.5 at y -62): a 7 m
+wide drive (stone edging, gravel or stone surface), lined with an avenue of Italian
+cypress (plant_tree_cypress) and low bollard lights. At the hedge: a modern gate - two
+monolithic stone piers about 3 m tall, sliding dark metal gates of vertical slats - and a
+small gatehouse (white render and glass, flat roof) just inside it.
+
+### south_lawn (prefix `lawn_`), rect x -66..-14, y -60..-25, 4,000 tris
+Seen from the entry's glass front at an angle and the library above. A sculpture lawn: two
+or three large modern sculptures (abstract stone and bronze forms, 3-6 m) placed with
+care on the open lawn, a gravel walk looping between them, a low limestone retaining
+wall with a bench, and a grove of specimen trees (planting assets) at one side.
+
+### tennis (prefix `tennis_`), rect x 33..68, y -22..25, 4,000 tris
+Seen from the guest room (upper) and mudroom windows to the east. A tennis court running
+north-south: 36.6 x 18.3 m surround, playing area 23.77 x 10.97 m, a dark green hard
+court with a blue-grey playing area and crisp white lines (thin strips 3 mm proud), net
+with posts; a refined dark metal fence (slim posts and rails, about 3 m behind the
+baselines and lower at the sides), a small shaded viewing pavilion with a bench and a
+teak umpire's chair.
+
+### kitchen_garden (prefix `kgarden_`), rect x 30..68, y -60..-25, 6,000 tris
+The estate's working garden, south-east. A glass greenhouse about 12 x 6 m (slim dark metal
+frame, outdoor.glass(), gabled roof, potting benches inside), a grid of raised beds (teak
+or dark metal sides, soil, rows of crops as low foliage strips), gravel paths, a small
+orchard of fruit trees (plant_tree_fruit) and a timber potting shed.
+
+### planting (prefix `plant_`), rect: the whole estate, 12,000 tris
+Owns every tree and shrub asset; write these FIRST (other zones place them), then plant
+the estate. Assets (each a thin wrapper of one `plant_tree.py` / `plant_shrub.py`
+generator, like `door_plain.py` wraps `door.py`): `plant_tree_round` (broad deciduous
+crown, 12 m), `plant_tree_olive` (gnarled multi-trunk olive, 5 m, silver-green crown as
+a flat colour), `plant_tree_cypress` (Italian cypress, 10 m, slim), `plant_tree_multistem`
+(multi-stem birch-like, 7 m, light green flat crown), `plant_tree_fruit` (small apple
+tree, 4 m); `plant_shrub_round` (boxwood ball 1 m), `plant_shrub_box` (clipped cube
+1 x 1 x 0.8 m), `plant_shrub_grass` (ornamental grass clump, straw colour),
+`plant_shrub_lavender` (grey-violet mound). Budgets: trees 400-900 triangles (cypress
+~300), shrubs under 150. Crowns read as masses of leaves, not balls: lumpy, layered, with
+gaps and some limbs showing; foliage() for green crowns, flat colours for olive, birch,
+lavender and grass. Then the zone module (zone-local = plan coordinates, the estate centre
+is (0, 0)): groups of trees inside the hedge (within 4 m of it, irregular groups, not a
+row), a few specimen trees on open lawn between other zones (stay out of every other
+zone's rect, `plan.GROUNDS["zones"]`), and planting just outside the terrace's outer edge
+(1-2 m beds of shrubs and grasses, keeping the big windows' views open).

@@ -292,13 +292,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4691,
+			"byteLength":4699,
 			"byteOffset":14920
 		},
 		{
 			"buffer":0,
 			"byteLength":2798,
-			"byteOffset":19612
+			"byteOffset":19620
 		}
 	],
 	"samplers":[
@@ -309,7 +309,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":22412,
+			"byteLength":22420,
 			"uri":"library_bookcase_a.bin"
 		}
 	]

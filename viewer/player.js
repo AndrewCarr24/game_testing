@@ -12,8 +12,8 @@ const DEFAULTS = {
   crouchHeight: 1.1,
   eye: 1.65,             // eye height above the feet, standing
   crouchEye: 0.95,
-  walk: 2.2,             // m/s
-  run: 4.4,
+  walk: 2.6,             // m/s
+  run: 5.2,
   crouchSpeed: 1.2,
   gravity: 24,           // m/s² (snappier than 9.8, as in most games)
   jumpHeight: 1.05,      // apex in metres; clears a 0.74 m desk

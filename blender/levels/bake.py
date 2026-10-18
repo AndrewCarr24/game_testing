@@ -7,9 +7,12 @@ For every room (shell meshes carry a "room" property and a "Lightmap" UV layer),
 writes (never saves the .blend):
   assets/textures/T_<Level>_<Room>_Lightmap.webp  diffuse lighting (direct + bounce, no
                                                  albedo), sRGB-encoded, divided by `scale`
-  assets/textures/T_<Level>_<Room>_Env.hdr        360° radiance panorama from the room's probe
-                                                 point, sun hidden (the sun stays real-time);
-                                                 lights that room's props and reflections
+  assets/textures/T_<Level>_<Room>_Env.webp       360° radiance panorama from the room's probe
+                                                 point, sun hidden (the sun stays real-time),
+                                                 sRGB of radiance / ENV_CLAMP; reflections only
+                                                 (props' diffuse light comes from its SH)
+  assets/models/<level>_outdoor.gltf             the grounds with their lighting baked into
+                                                 vertex colours (bake_outdoor)
   assets/levels/<level>_bake.json                 what the engine needs to apply the above
 
 All rooms are present in every bake, so light passes through open doorways.
@@ -32,7 +35,7 @@ from lib import common, textures  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 LEVEL = args[0] if args else "mansion"
-SAMPLES = int(args[1]) if len(args) > 1 else 512
+SAMPLES = int(args[1]) if len(args) > 1 else 1024
 NAME = LEVEL.capitalize()
 ENV_CLAMP = 3.0      # max radiance kept in the environment panorama
 scene = bpy.context.scene
@@ -94,22 +97,57 @@ def bake_lightmap(room, objs, res):
     return [o.name for o in objs], scale
 
 
-def denoise(lin, passes=2):
-    """Average each texel with its lit neighbours (3x3, twice): smooths the Monte Carlo
-    grain of the bake. Unlit texels (outside UV islands) don't contribute, and islands are
-    padded by 4 px, so light never bleeds from one surface into another."""
-    mask = (lin.max(axis=2) > 1e-5).astype(np.float32)
-    out = lin.copy()
-    for _ in range(passes):
+def dilate(lin, mask, steps=12):
+    """Grow each UV island's edge texels outward into the empty space between islands, so
+    neither the denoiser nor texture filtering pulls black into the islands' borders."""
+    out, m = lin.copy(), mask.astype(np.float32)
+    for _ in range(steps):
         acc = np.zeros_like(out)
-        wsum = np.zeros_like(mask)
-        for dy in (-1, 0, 1):
-            for dx in (-1, 0, 1):
-                k = 2.0 if dx == dy == 0 else 1.0
-                acc += k * np.roll(np.roll(out * mask[..., None], dy, 0), dx, 1)
-                wsum += k * np.roll(np.roll(mask, dy, 0), dx, 1)
-        out = np.where(mask[..., None] > 0, acc / np.maximum(wsum, 1e-6)[..., None], out)
+        wsum = np.zeros_like(m)
+        for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)):
+            acc += np.roll(np.roll(out * m[..., None], dy, 0), dx, 1)
+            wsum += np.roll(np.roll(m, dy, 0), dx, 1)
+        grow = (m == 0) & (wsum > 0)
+        out[grow] = acc[grow] / wsum[grow][..., None]
+        m = np.maximum(m, grow.astype(np.float32))
     return out
+
+
+def denoise(lin):
+    """Intel Open Image Denoise (Blender's compositor Denoise node) on the baked lightmap:
+    removes the Monte Carlo grain while keeping contact shadows and corners sharp. The
+    islands are dilated first so the filter never sees the black gaps between them."""
+    mask = lin.max(axis=2) > 1e-5
+    lin = dilate(lin, mask)
+    h, w, _ = lin.shape
+    src = bpy.data.images.new("_LightmapNoisy", w, h, alpha=False, float_buffer=True)
+    src.pixels.foreach_set(np.concatenate([lin[::-1], np.ones((h, w, 1), np.float32)], axis=2).ravel())
+    sc = bpy.data.scenes.get("_Denoise") or bpy.data.scenes.new("_Denoise")
+    tree = bpy.data.node_groups.get("_DenoiseTree")
+    if tree is None:
+        tree = bpy.data.node_groups.new("_DenoiseTree", "CompositorNodeTree")
+        tree.interface.new_socket("Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+        n_img = tree.nodes.new("CompositorNodeImage")
+        n_dn = tree.nodes.new("CompositorNodeDenoise")
+        n_dn.inputs["HDR"].default_value = True
+        out = tree.nodes.new("NodeGroupOutput")
+        tree.links.new(n_img.outputs["Image"], n_dn.inputs["Image"])
+        tree.links.new(n_dn.outputs["Image"], out.inputs[0])
+    sc.compositing_node_group = tree
+    next(n for n in tree.nodes if n.bl_idname == "CompositorNodeImage").image = src
+    sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = w, h, 100
+    sc.render.use_compositing = True
+    sc.render.engine = "BLENDER_WORKBENCH"
+    sc.render.image_settings.file_format = "OPEN_EXR"
+    bpy.ops.render.render(scene=sc.name)
+    path = os.path.join(PROJECT, "build", "_denoised.exr")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    bpy.data.images["Render Result"].save_render(path, scene=sc)
+    res = bpy.data.images.load(path)
+    out = np.array(res.pixels[:], dtype=np.float32).reshape(h, w, 4)[::-1, :, :3]
+    bpy.data.images.remove(res)
+    bpy.data.images.remove(src)
+    return np.maximum(out, 0)
 
 
 def render_environment(room, probe, width=512):   # only feeds blurred reflections + ambient
@@ -136,7 +174,8 @@ def render_environment(room, probe, width=512):   # only feeds blurred reflectio
     scene.cycles.use_denoising = True
     scene.render.film_transparent = False
     scene.render.image_settings.file_format = "HDR"
-    path = os.path.join(textures.TEX_DIR, f"T_{NAME}_{room.capitalize()}_Env.hdr")
+    path = os.path.join(PROJECT, "build", "env", f"T_{NAME}_{room.capitalize()}_Env.hdr")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     scene.render.filepath = path
     t = time.time()
     bpy.ops.render.render(write_still=True)
@@ -149,12 +188,12 @@ def render_environment(room, probe, width=512):   # only feeds blurred reflectio
     sh = sh9(px[:, :3].reshape(hgt, w, 3))       # before clamping: props need the lights' full energy
     raw_max = px[:, :3].max()
     px[:, :3] = np.minimum(px[:, :3], ENV_CLAMP)
-    img.pixels.foreach_set(px.ravel())
-    img.filepath_raw = path
-    img.file_format = "HDR"
-    img.save()
+    # 8-bit sRGB of radiance / ENV_CLAMP: a fraction of the .hdr's size, and it only feeds
+    # blurred reflections (the engine scales it back up before prefiltering)
+    rgb = px[:, :3].reshape(hgt, w, 3)[::-1] / ENV_CLAMP
+    out = textures._save(f"T_{NAME}_{room.capitalize()}_Env", textures._to_srgb(rgb), fmt="WEBP", quality=90)
     print(f"environment max {raw_max:.2f} -> {px[:, :3].max():.2f}, mean {px[:, :3].mean():.3f}")
-    return path, sh
+    return out, sh
 
 
 def sh9(rad):
@@ -174,6 +213,60 @@ def sh9(rad):
              1.092548 * x * y, 1.092548 * y * z, 0.315392 * (3 * z * z - 1), 1.092548 * x * z,
              0.546274 * (x * x - y * y)]
     return [[round(float((rad[..., c] * b * d_omega).sum()), 5) for c in range(3)] for b in basis]
+
+
+def bake_outdoor(samples=256):
+    """The grounds (grounds.py): bake lighting into each merged outdoor mesh's "Bake" vertex
+    colours (flat materials: colour x light; textured: light only, the texture multiplies in
+    the engine), normalise, collapse the flat mesh to one material, export
+    assets/models/<level>_outdoor.gltf. Returns {kind: scale} for the bake JSON."""
+    col = bpy.data.collections.get(f"{NAME}_Outdoor")
+    if col is None:
+        return None
+    view_layer = bpy.context.view_layer
+    scales = {}
+    for kind, passes in (("flat", {"DIRECT", "INDIRECT", "COLOR"}), ("textured", {"DIRECT", "INDIRECT"})):
+        group = [o for o in col.all_objects if o.type == "MESH" and o.get("outdoor") == kind]
+        if not group:
+            continue
+        for o in view_layer.objects:
+            o.select_set(False)
+        for o in group:
+            o.data.color_attributes.active_color = o.data.color_attributes["Bake"]
+            o.select_set(True)
+        view_layer.objects.active = group[0]
+        scene.cycles.samples = samples
+        t = time.time()
+        bpy.ops.object.bake(type="DIFFUSE", pass_filter=passes, target="VERTEX_COLORS")
+        cols = {o: np.array([c.color[:] for c in o.data.color_attributes["Bake"].data], np.float32) for o in group}
+        lit = np.concatenate([c[:, :3].max(axis=1) for c in cols.values()])
+        scale = float(np.percentile(lit, 99.5)) or 1.0
+        for o, c in cols.items():
+            c[:, :3] = np.clip(c[:, :3] / scale, 0, 1)
+            c[:, 3] = 1
+            o.data.color_attributes["Bake"].data.foreach_set("color", c.ravel())
+        scales[kind] = round(scale, 5)
+        print(f"outdoor bake {kind}: {len(group)} meshes, {sum(len(c) for c in cols.values())} corners, "
+              f"scale {scale:.4f}, {time.time() - t:.0f}s")
+    # the flat mesh's colours now include each material's colour: one material for all
+    flat_mat = bpy.data.materials.get("M_Outdoor_Flat") or common.pbr_material("M_Outdoor_Flat", (1, 1, 1), roughness=1)
+    for o in col.all_objects:
+        if o.type == "MESH" and o.get("outdoor") == "flat":
+            o.data.materials.clear()
+            o.data.materials.append(flat_mat)
+            for poly in o.data.polygons:
+                poly.material_index = 0
+    root = bpy.data.objects[f"{NAME}_Outdoor"]
+    common._export(root, os.path.join(PROJECT, "assets", "models", f"{LEVEL}_outdoor.gltf"),
+                   export_format="GLTF_SEPARATE", export_texture_dir="textures", export_image_format="WEBP",
+                   export_image_quality=88, export_vertex_color="NAME", export_vertex_color_name="Bake",
+                   export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=6,
+                   export_draco_position_quantization=14, export_draco_normal_quantization=10,
+                   export_draco_texcoord_quantization=12, export_draco_color_quantization=10)
+    # the export rewrote shared textures at full size; shrink prop textures again (as build_level does)
+    import runpy
+    runpy.run_path(os.path.join(PROJECT, "blender", "tools", "optimize_textures.py"))
+    return scales
 
 
 if __name__ == "__main__":
@@ -207,10 +300,13 @@ if __name__ == "__main__":
                 "intensity": round(math.pi * scale, 4),
                 "objects": names,
             },
-            "environment": {"file": f"textures/T_{NAME}_{R}_Env.hdr", "position": info["probe"]},
+            "environment": {"file": f"textures/T_{NAME}_{R}_Env.webp", "scale": ENV_CLAMP, "position": info["probe"]},
             "sh": sh,            # diffuse light for the room's props (three.js SH order, glTF axes)
         }
+    outdoor = bake_outdoor()
     bake = {"rooms": rooms, "exposure": p.get("exposure", 1.0), "samples": SAMPLES}
+    if outdoor:
+        bake["outdoor"] = outdoor      # vertex-colour scale per kind (flat: colour x light, textured: light)
     out = os.path.join(PROJECT, "assets", "levels", f"{LEVEL}_bake.json")
     with open(out, "w") as f:
         json.dump(bake, f, indent=2)
