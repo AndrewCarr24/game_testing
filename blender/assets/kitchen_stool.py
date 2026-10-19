@@ -70,11 +70,12 @@ def build(**overrides):
 
     sh, sr, st = p["seat_h"], p["seat_r"], p["seat_t"]
     # seat cushion: rounded disc
-    prof = L.catmull([(0.0, sh - st), (sr - 0.02, sh - st), (sr, sh - st + 0.02), (sr, sh - 0.03),
-                      (sr - 0.02, sh - 0.005), (sr * 0.55, sh + 0.004), (0.0, sh + 0.005)], per=3)
-    prof[0] = (0.0, sh - st)
-    prof[-1] = (0.0, sh + 0.005)
-    seat = b.lathe("Seat", prof, leather, segs=28, uv_tile=0.2)
+    # seat cushion: a soft drum with a piped welt round the top shoulder (the profile's
+    # bead), its underside on the steel plate (not modelled where covered)
+    prof = [(sr - 0.032, sh - st), (sr - 0.016, sh - st + 0.002), (sr - 0.004, sh - st + 0.012), (sr, sh - st + 0.028),
+            (sr, sh - 0.032), (sr - 0.0035, sh - 0.019), (sr + 0.0015, sh - 0.0145), (sr - 0.0035, sh - 0.0095),
+            (sr - 0.018, sh - 0.002), (sr - 0.06, sh + 0.003), (sr * 0.45, sh + 0.0055), (0.0, sh + 0.006)]
+    seat = b.lathe("Seat", prof, leather, segs=28, sharp=60, uv_tile=0.2, closed=False)
     # seat plate under the cushion
     b.lathe("Plate", [(0, sh - st - 0.012), (sr - 0.03, sh - st - 0.012), (sr - 0.03, sh - st), (0, sh - st)], dark,
             segs=24, uv_tile=0)
@@ -91,7 +92,7 @@ def build(**overrides):
     t = 1 - (fz - 0.001) / (sh - st - 0.012)
     rr = a_leg * (1.38 - 0.38 * (1 - t) * 0 - 0.38 * (fz - 0.001) / (sh - st - 0.012))
     ring = [(rr * math.cos(2 * math.pi * k / 28), rr * math.sin(2 * math.pi * k / 28), fz) for k in range(28)]
-    b.tube("FootRing", ring, 0.0085, bronze, closed=True, res=3)
+    b.tube("FootRing", ring, 0.0085, bronze, closed=True, res=2)
 
     # low curved back on two posts
     a0, a1 = p["back_arc"]

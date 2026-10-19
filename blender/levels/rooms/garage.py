@@ -78,14 +78,21 @@ PLACEMENTS = [
     ("garage_workbench", (-3.0, 6.7), 0),
 ]
 
+# Lighting: a car showroom is where long ceiling lines are the right answer, so the garage
+# keeps its four (and the workshop's); added: pairs of ceiling cans over the two display bays
+# so the cars' paint catches tight highlights, and the vitrines' glow.
+_CAR_CANS = [(sx * 3.0, y) for sx in (-1, 1) for y in (-4.3, -6.7)]
+PLACEMENTS += [("light_g_downlight", (x, y, 4.2), 0) for x, y in _CAR_CANS]
 LIGHTS = [
     dict(kind="strip", pos=(-4.5, -0.5), size=(0.1, 17.0), power=180.0),
     dict(kind="strip", pos=(-1.5, -0.5), size=(0.1, 17.0), power=180.0),
     dict(kind="strip", pos=(1.5, -0.5), size=(0.1, 17.0), power=180.0),
     dict(kind="strip", pos=(4.5, -0.5), size=(0.1, 17.0), power=180.0),
     dict(kind="strip", pos=(0.0, 8.4), size=(11.0, 0.1), power=160.0),
-    dict(kind="point", pos=(-5.0, -6.5, 2.2), power=30.0, color=(1.0, 0.82, 0.6)),
-    dict(kind="point", pos=(5.0, -6.5, 2.2), power=30.0, color=(1.0, 0.82, 0.6)),
+    dict(kind="point", pos=(-5.0, -6.5, 2.2), power=40.0, color=(1.0, 0.82, 0.6)),
+    dict(kind="point", pos=(5.0, -6.5, 2.2), power=40.0, color=(1.0, 0.82, 0.6)),
+    *[dict(kind="spot", pos=(x, y, 4.08), aim=(x, y, 0.0), power=300.0, angle=36, blend=0.5, color=(1.0, 0.92, 0.84))
+      for x, y in _CAR_CANS],
 ]
 
 PROBE = (0.0, -1.0, 1.6)

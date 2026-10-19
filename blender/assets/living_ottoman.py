@@ -1,5 +1,5 @@
-"""Large square ottoman / coffee pouf: a boxed cognac-leather top with a soft crown, a
-slim bronze-capped base on black feet. Units are metres; origin is the floor centre.
+"""Large square ottoman / coffee pouf: a boxed cognac-leather cushion with a soft crown and
+welted edges, on a slim bronze frame band raised on four tapered black feet. Units are metres; origin is the floor centre.
 """
 import importlib
 import os
@@ -8,6 +8,12 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, materials, textures  # noqa: E402
+
+import bmesh  # noqa: E402
+from mathutils import Vector  # noqa: E402
+
+sys.path.insert(0, HERE)
+import living_sofa  # noqa: E402  (welt helper)
 
 importlib.reload(common)
 importlib.reload(materials)
@@ -29,8 +35,24 @@ def build(**overrides):
     w, d = p["size"]
     h = p["height"]
     foot = 0.06
-    base = common.mesh_object(f"{n}_Base", common.box_bmesh((w - 0.12, d - 0.12, foot)), col, black, root, smooth=False)
-    base.location = (0, 0, foot / 2)
+    # four tapered black block feet set in from the corners (one mesh)
+    fb = bmesh.new()
+    fs = 0.07
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            t = common.box_bmesh((fs, fs, foot))
+            for v in t.verts:
+                k = 0.8 if v.co.z < 0 else 1.0
+                v.co.x *= k
+                v.co.y *= k
+            vm = {v: fb.verts.new(v.co + Vector((sx * (w / 2 - 0.11), sy * (d / 2 - 0.11), foot / 2))) for v in t.verts}
+            for fc in t.faces:
+                if fc.normal.z < -0.9:
+                    continue
+                fb.faces.new([vm[v] for v in fc.verts])
+            t.free()
+    base = common.mesh_object(f"{n}_Base", fb, col, black, root, smooth=False)
+    common.add_bevel(base, 0.003, segments=1)
     common.box_uv(base, 0.5)
     band = common.mesh_object(f"{n}_Band", common.box_bmesh((w - 0.05, d - 0.05, 0.012)), col, bronze, root, smooth=False)
     band.location = (0, 0, foot + 0.006)
@@ -43,6 +65,14 @@ def build(**overrides):
     top.location = (0, 0, foot + 0.012 + ct / 2)
     common.add_subsurf(top)
     common.box_uv(top, 0.2)
+    # leather welts round the top and bottom edges of the boxed cushion
+    wb = bmesh.new()
+    csz = (w, d, ct)
+    for sg in (1, -1):
+        living_sofa.face_welt(wb, top, csz, "z", sg, 0.045)
+    bmesh.ops.recalc_face_normals(wb, faces=wb.faces[:])
+    pipe = common.mesh_object(f"{n}_Piping", wb, col, leather, root)
+    common.box_uv(pipe, 0.2)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

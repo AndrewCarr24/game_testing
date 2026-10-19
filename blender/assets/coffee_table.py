@@ -36,18 +36,18 @@ def build(**overrides):
     steel = common.pbr_material("M_Steel_Polished", (0.85, 0.85, 0.86), roughness=0.08, metallic=1.0)
 
     w, d, t = p["top"]
-    top = common.mesh_object(f"{n}_Top", common.rounded_slab_bmesh(w, d, t, p["corner"]),
+    top = common.mesh_object(f"{n}_Top", common.rounded_slab_bmesh(w, d, t, p["corner"], segments=5),
                              col, marble, root)
     top.location = (0, 0, p["height"] - t / 2)
-    common.add_bevel(top, 0.004)
+    common.add_bevel(top, 0.004, segments=2)
     common.box_uv(top, tile=1.0)
 
     r = p["tube_r"]
     hd = d / 2 - p["frame_depth_inset"]
     for side, sx in (("L", -1), ("R", 1)):
         x = sx * (w / 2 - p["frame_inset"])
-        pts = common.sled_loop(x, -hd, hd, p["height"] - t - r, r, p["bend_r"])
-        common.tube_object(f"{n}_Frame_{side}", pts, r, col, steel, root)
+        pts = common.sled_loop(x, -hd, hd, p["height"] - t - r, r, p["bend_r"], segments=4)
+        common.tube_object(f"{n}_Frame_{side}", pts, r, col, steel, root, profile_res=2)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

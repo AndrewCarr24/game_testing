@@ -65,6 +65,7 @@
     import { Hand, Throwables } from './items.js';
     import { batchRooms, RoomCuller } from './batching.js';
     import { loadSky, applyOutdoor } from './sky.js';
+    import { Fire } from './fire.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -104,7 +105,10 @@
     const scene = new THREE.Scene();
     const envMap = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envMap;
-    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.01, 200);
+    // near plane 10 cm, not 1 cm: depth precision scales with it, and at 1 cm a picture's canvas
+    // and its backing 3.5 mm behind z-fought (flickered) from ~20 m away. 10 cm is still nearer
+    // than anything can get to the eye (held item ~0.4 m, walls >= 0.25 m, head clearance 0.15 m).
+    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 200);
     const loader = new GLTFLoader();
     // assets are exported with Draco-compressed geometry
     loader.setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
@@ -120,18 +124,35 @@
         const key = `${t.name}:${t.image?.width}x${t.image?.height}`;
         if (!textureCache.has(key)) {
           textureCache.set(key, t);
-          // floors and walls seen at a grazing angle stay sharp instead of smearing
-          t.anisotropy = ANISOTROPY;
+          // floors seen at a grazing angle stay sharp instead of smearing; the wall plaster's
+          // fine, low-contrast grain doesn't need it (and walls are a lot of pixels)
+          t.anisotropy = t.name.includes('Plaster') ? 1 : ANISOTROPY;
         } else if (textureCache.get(key) !== t) { t.dispose(); m[k] = textureCache.get(key); }
       }
     }
 
-    function prepare(root, envIntensity = 1) {
+    // Each prop file carries its own copy of the shared materials (M_Bronze, M_Walnut, ...);
+    // the batcher merges per material object, so identical copies are folded into one here:
+    // reusing a material across assets then really costs no extra draw call in a room.
+    const materialCache = new Map();
+    const hex = (c) => (c ? c.getHexString() : '-');
+    function shareMaterial(m) {
+      if (Array.isArray(m)) return m;
+      const maps = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap', 'alphaMap']
+        .map((k) => m[k]?.uuid ?? '-').join(',');
+      const key = [m.type, m.name, hex(m.color), hex(m.emissive), m.emissiveIntensity, m.roughness, m.metalness,
+        m.opacity, m.transparent, m.alphaTest, m.side, m.vertexColors, m.transmission, maps].join('|');
+      if (!materialCache.has(key)) materialCache.set(key, m);
+      return materialCache.get(key);
+    }
+
+    function prepare(root, envIntensity = 1, share = false) {
       let tris = 0, meshes = 0;
       root.traverse((o) => {
         if (!o.isMesh) return;
         meshes++;
         shareTextures(o.material);
+        if (share) o.material = shareMaterial(o.material);
         tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
         const m = o.material;
         m.envMapIntensity = envIntensity;
@@ -242,7 +263,7 @@
         scene.add(outdoor.scene);
       }
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
-      for (const n of names) prepare(proto[n], envIntensity);
+      for (const n of names) prepare(proto[n], envIntensity, true);
 
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
       const inventoryEl = document.getElementById('inventory');
@@ -262,6 +283,7 @@
       const interact = new Interactables(inventory, colliders);
       window.__interact = interact;
       window.__inventory = inventory;
+      const fire = new Fire();
       const placed = {};   // asset -> first placed object, for attachments
       const roomRoots = {};   // room -> placed prop roots (for batching and culling)
       for (const p of level.props) {
@@ -269,6 +291,7 @@
         obj.position.set(...p.position);
         obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
         if (baked) baked.applyRoom(obj, p.room, level.rooms[p.room]?.sun === false);
+        fire.collect(obj);
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
@@ -302,7 +325,7 @@
       const eyePos = vec('pos', level.spawn.position);
       camera.position.set(...eyePos);
       camera.lookAt(...vec('look', level.spawn.lookAt));
-      const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]]);
+      const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]], { ramps: level.ramps });
       window.__player = player;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
@@ -378,11 +401,12 @@
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
         const moved = interact.update(dt);
+        fire.update(dt, !!window.__bench);
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
-        if (culler.update(camera.position)) renderer.shadowMap.needsUpdate = true;
+        if (culler.update(camera.position, camera)) renderer.shadowMap.needsUpdate = true;
         if (inventory.open) camera.quaternion.copy(frozenLook);   // the inventory screen pauses looking and moving
         const on = controls.isLocked && !inventory.open;
         player.update(dt, {

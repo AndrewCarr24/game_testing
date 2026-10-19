@@ -17,6 +17,10 @@ from mathutils import Matrix  # noqa: E402
 importlib.reload(common)
 importlib.reload(materials)
 importlib.reload(textures)
+sys.path.insert(0, HERE)
+import dining_wine_rack as rack  # noqa: E402  (shared reeded-panel generator)
+
+importlib.reload(rack)
 
 NAME = "DiningSideboard"
 
@@ -58,7 +62,8 @@ def build(**overrides):
     plinth.location = (0, 0, ph / 2)
     common.box_uv(plinth, 0.5)
 
-    body_h = H - T - ph
+    gap_h = 0.012              # shadow gap between the carcass and the floating marble top
+    body_h = H - T - ph - gap_h
     body_d = D - 0.03          # leaves room for the doors on the front
     carcass = common.mesh_object(f"{n}_Carcass", common.box_bmesh((L - 0.02, body_d, body_h)),
                                  col, oak, root)
@@ -66,6 +71,9 @@ def build(**overrides):
     carcass.location = (0, y_back - body_d / 2, ph + body_h / 2)
     common.add_bevel(carcass, 0.005, 2)
     common.box_uv(carcass, 0.5)
+    shadow = common.mesh_object(f"{n}_ShadowGap", common.box_bmesh((L - 0.08, D - 0.08, gap_h + 0.004)), col, dark, root)
+    shadow.location = (0, 0.02, H - T - gap_h / 2)
+    common.box_uv(shadow, 0.5)
 
     top = common.mesh_object(f"{n}_Top",
                              common.box_bmesh((L + 2 * p["top_overhang"], D + p["top_overhang"], T)),
@@ -88,14 +96,13 @@ def build(**overrides):
         cx = -inner / 2 + p["gap"] + dw / 2 + i * (dw + p["gap"])
         bmesh.ops.create_cube(backs, size=1.0, matrix=Matrix.Translation((cx, front_y, dz0 + dh / 2)) @
                               Matrix.Diagonal((dw, p["door_t"], dh, 1)))
+        # half-round reeds across the door, stopping 15 mm short of its top and bottom edges
         pitch = p["rib_w"] + p["rib_gap"]
         k = int((dw - 0.02) // pitch)
-        x0 = cx - (k - 1) * pitch / 2
-        for j in range(k):
-            bmesh.ops.create_cube(ribs, size=1.0,
-                                  matrix=Matrix.Translation((x0 + j * pitch, front_y - p["door_t"] / 2 - rib_d / 2 + 0.002,
-                                                             dz0 + dh / 2)) @
-                                  Matrix.Diagonal((p["rib_w"], rib_d, dh - 0.03, 1)))
+        rw = k * pitch
+        yfb = front_y - p["door_t"] / 2 + 0.001          # door face
+        rack.reeded_panel(ribs, cx - rw / 2, cx + rw / 2, yfb, rib_d * 0.75, dz0 + 0.015, dz0 + dh - 0.015, pitch,
+                          segs=3, top_cap=True)
         # slim vertical bronze pull on the inside edge of each door pair
         side = 1 if i % 2 == 0 else -1
         px = cx + side * (dw / 2 - 0.035)
@@ -108,7 +115,8 @@ def build(**overrides):
                                   matrix=Matrix.Translation((px, front_y - p["door_t"] / 2 - rib_d - 0.008, dz0 + dh * 0.55 + dz)) @
                                   Matrix.Rotation(1.5708, 4, "X"))
     backs_ob = common.mesh_object(f"{n}_DoorPanels", backs, col, oak, root, smooth=False)
-    ribs_ob = common.mesh_object(f"{n}_Ribs", ribs, col, oak, root, smooth=False)
+    common.add_bevel(backs_ob, 0.0015, 1)
+    ribs_ob = common.mesh_object(f"{n}_Ribs", ribs, col, oak, root, smooth=True)
     pulls = common.mesh_object(f"{n}_Pulls", pull_bm, col, bronze, root)
     for ob in (backs_ob, ribs_ob, pulls):
         common.box_uv(ob, 0.5)

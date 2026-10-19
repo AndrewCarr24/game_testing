@@ -1,7 +1,7 @@
 """Bake a level's lighting with Cycles, room by room. Run headless on the saved level file:
 
   /Applications/Blender.app/Contents/MacOS/Blender -b blender/levels/mansion.blend \
-      --python blender/levels/bake.py -- mansion [samples]
+      --python blender/levels/bake.py -- mansion [samples] [--rooms a,b] [--outdoor-only]
 
 For every room (shell meshes carry a "room" property and a "Lightmap" UV layer),
 writes (never saves the .blend):
@@ -34,6 +34,11 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, textures  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+# options: --rooms a,b,c (bake only these rooms; the others keep their current bake) and
+# --outdoor-only (only the grounds' vertex lighting, ~10 s); see CLAUDE.md "When to bake"
+ONLY_ROOMS = set(args[args.index("--rooms") + 1].split(",")) if "--rooms" in args else None
+OUTDOOR_ONLY = "--outdoor-only" in args
+args = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] != "--rooms")]
 LEVEL = args[0] if args else "mansion"
 SAMPLES = int(args[1]) if len(args) > 1 else 1024
 NAME = LEVEL.capitalize()
@@ -259,8 +264,8 @@ def bake_outdoor(samples=256):
     root = bpy.data.objects[f"{NAME}_Outdoor"]
     common._export(root, os.path.join(PROJECT, "assets", "models", f"{LEVEL}_outdoor.gltf"),
                    export_format="GLTF_SEPARATE", export_texture_dir="textures", export_image_format="WEBP",
-                   export_image_quality=88, export_vertex_color="NAME", export_vertex_color_name="Bake",
-                   export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=6,
+                   export_image_quality=85, export_vertex_color="NAME", export_vertex_color_name="Bake",
+                   export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=10,
                    export_draco_position_quantization=14, export_draco_normal_quantization=10,
                    export_draco_texcoord_quantization=12, export_draco_color_quantization=10)
     # the export rewrote shared textures at full size; shrink prop textures again (as build_level does)
@@ -279,8 +284,13 @@ if __name__ == "__main__":
 
     shell = [o for o in bpy.data.collections[f"{NAME}_Shell"].all_objects
              if o.type == "MESH" and "Lightmap" in o.data.uv_layers]
-    rooms = {}
+    out = os.path.join(PROJECT, "assets", "levels", f"{LEVEL}_bake.json")
+    partial = ONLY_ROOMS is not None or OUTDOOR_ONLY
+    previous = json.load(open(out)) if partial and os.path.exists(out) else {}
+    rooms = dict(previous.get("rooms", {})) if partial else {}
     for room, info in level["rooms"].items():
+        if OUTDOOR_ONLY or (ONLY_ROOMS is not None and room not in ONLY_ROOMS):
+            continue
         objs = [o for o in shell if o.get("room") == room]
         if not objs:
             continue
@@ -303,11 +313,12 @@ if __name__ == "__main__":
             "environment": {"file": f"textures/T_{NAME}_{R}_Env.webp", "scale": ENV_CLAMP, "position": info["probe"]},
             "sh": sh,            # diffuse light for the room's props (three.js SH order, glTF axes)
         }
-    outdoor = bake_outdoor()
-    bake = {"rooms": rooms, "exposure": p.get("exposure", 1.0), "samples": SAMPLES}
+    outdoor = bake_outdoor() if (ONLY_ROOMS is None or OUTDOOR_ONLY) else previous.get("outdoor")
+    bake = {"rooms": rooms, "exposure": p.get("exposure", 1.0), "samples": SAMPLES if not partial else previous.get("samples", SAMPLES)}
+    if partial:
+        bake["partial"] = {"rooms": sorted(ONLY_ROOMS or []), "outdoor": OUTDOOR_ONLY, "samples": SAMPLES}
     if outdoor:
         bake["outdoor"] = outdoor      # vertex-colour scale per kind (flat: colour x light, textured: light)
-    out = os.path.join(PROJECT, "assets", "levels", f"{LEVEL}_bake.json")
     with open(out, "w") as f:
         json.dump(bake, f, indent=2)
     print("wrote", out, {r: v["lightmap"]["intensity"] for r, v in rooms.items()})

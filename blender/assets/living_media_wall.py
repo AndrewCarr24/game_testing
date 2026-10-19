@@ -12,6 +12,7 @@ import sys
 
 import bmesh
 import numpy as np
+from mathutils import Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
@@ -117,6 +118,8 @@ def build(**overrides):
         for v in b.verts:
             vmap[v] = bm.verts.new(v.co)
         for f in b.faces:
+            if f.normal.y > 0.9 or f.normal.z < -0.9:   # against the felt backing / on the floor
+                continue
             bm.faces.new([vmap[v] for v in f.verts])
         b.free()
     slats = common.mesh_object(f"{n}_Slats", bm, col, oak, root, smooth=False)
@@ -137,18 +140,35 @@ def build(**overrides):
     for li, uvc in zip(pic.data.polygons[0].loop_indices, ((0, 0), (1, 0), (1, 1), (0, 1))):
         uvl.data[li].uv = uvc
 
-    # --- credenza
+    # --- credenza: an oak carcass (top, sides, a dark recessed back face) with four
+    # separate door fronts in front of it, 3 mm reveals between them, bronze bar pulls
     cw, cd, ch = p["credenza"]
     cz = p["credenza_z"]
     cy = yb - cd / 2
-    box(col, root, f"{n}_Credenza", oak, (cw, cd, ch), (0, cy, cz + ch / 2), 0.006)
-    # door fronts: shadow gaps cut as thin black reveal strips, bronze finger pulls on 4 doors
+    ft = 0.019                       # door front thickness
+    gap = 0.003
+    case_d = cd - ft
+    box(col, root, f"{n}_Credenza", oak, (cw, case_d, ch), (0, cy + ft / 2, cz + ch / 2), 0.004)
     doors = 4
-    dw = cw / doors
-    for i in range(1, doors):
-        box(col, root, f"{n}_Reveal{i}", felt, (0.006, 0.004, ch - 0.02), (-cw / 2 + dw * i, cy - cd / 2 - 0.0005, cz + ch / 2), uv=1.0)
+    dw = (cw - 2 * 0.012 - (doors - 1) * gap) / doors
+    bm = bmesh.new()
     for i in range(doors):
-        x = -cw / 2 + dw * (i + 0.5)
+        x = -cw / 2 + 0.012 + dw / 2 + i * (dw + gap)
+        b = common.box_bmesh((dw, ft, ch - 0.024))
+        for v in b.verts:
+            bm.verts.new(v.co + Vector((x, cy - cd / 2 + ft / 2, cz + ch / 2)))
+        vm = list(bm.verts)[-8:]
+        idx = {v: k for k, v in enumerate(b.verts)}
+        for fc in b.faces:
+            bm.faces.new([vm[idx[v]] for v in fc.verts])
+        b.free()
+    fronts = common.mesh_object(f"{n}_Doors", bm, col, oak, root, smooth=False)
+    common.add_bevel(fronts, 0.0025, segments=1)
+    common.box_uv(fronts, 0.5)
+    # shadow-gap strip behind the reveals (the carcass front is in shadow there)
+    box(col, root, f"{n}_RevealShadow", felt, (cw - 0.03, 0.002, ch - 0.03), (0, cy - cd / 2 + ft + 0.001, cz + ch / 2), uv=1.0)
+    for i in range(doors):
+        x = -cw / 2 + 0.012 + dw / 2 + i * (dw + gap)
         box(col, root, f"{n}_Pull{i}", bronze, (0.30, 0.012, 0.012), (x, cy - cd / 2 - 0.006, cz + ch - 0.045), 0.003)
     # under-glow strip and a dark plinth recess
     glow = materials.emissive("M_Living_WarmGlow", (1.0, 0.62, 0.30), 2.2)
@@ -157,11 +177,14 @@ def build(**overrides):
     # wall-hung bronze reveal line above the picture and a slim cap on the slat wall
     box(col, root, f"{n}_SlatCap", bronze, (sz, 0.06, 0.012), (0, yb - 0.04, wh + 0.006), 0.002)
 
-    # --- speakers (slim floor columns)
+    # --- speakers: slim floor columns on a recessed bronze foot, with a top cap,
+    # a fabric grille set into the front, and bronze-ringed drivers
     for s, sx in (("L", -1), ("R", 1)):
         x = sx * (cw / 2 + 0.45)
-        box(col, root, f"{n}_Speaker{s}", black, (0.26, 0.30, 1.15), (x, yb - 0.18, 0.575), 0.012)
-        box(col, root, f"{n}_Grille{s}", felt, (0.22, 0.012, 1.05), (x, yb - 0.18 - 0.152, 0.575), uv=1.0)
+        box(col, root, f"{n}_SpeakerFoot{s}", bronze, (0.22, 0.26, 0.025), (x, yb - 0.18, 0.0125), 0.002)
+        box(col, root, f"{n}_Speaker{s}", black, (0.26, 0.30, 1.10), (x, yb - 0.18, 0.025 + 0.55), 0.012)
+        box(col, root, f"{n}_SpeakerCap{s}", oak, (0.262, 0.302, 0.02), (x, yb - 0.18, 1.125 + 0.01), 0.004)
+        box(col, root, f"{n}_Grille{s}", felt, (0.22, 0.012, 1.0), (x, yb - 0.18 - 0.148, 0.60), 0.003, uv=1.0)
         for k, zz in enumerate((0.95, 0.60)):
             r = common.mesh_object(f"{n}_Driver{s}{k}", _ring(0.065 - 0.012 * k, 0.012), col, bronze, root)
             r.location = (x, yb - 0.18 - 0.16, zz)

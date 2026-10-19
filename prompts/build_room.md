@@ -1,5 +1,7 @@
 # Dressing rooms of the mansion (instructions for a sub-agent)
 
+
+> **One Blender command at a time.** Several agents share this machine; never run Blender builds in parallel (no loops of rooms with `&`, no batches). The build tools queue themselves (at most 2 house builds and 4 asset builds machine-wide); `SLOT ... waiting` means wait.
 You are furnishing one or more rooms of a modern tech billionaire's mansion for a
 three.js game. The architecture already exists (walls, floors, ceilings, windows,
 doors, stairs are generated from `blender/levels/plan.py`); you supply the furniture

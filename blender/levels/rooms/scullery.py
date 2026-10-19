@@ -28,13 +28,29 @@ PLACEMENTS = [
     ("kitchen_coffee_station", (2.289, -3.1), -90),       # east wall, faces west
     ("kitchen_shelving", (0.0, -4.338), 180),             # south wall, faces north
     ("kitchen_prep_table", (0.0, -1.9), 90),
-    ("art_colorfield_b", (2.6, -0.2, 1.7), -90),          # east wall between the coffee station and the door
+    # lighting (see LIGHTS): a linear pendant over the prep table
+    ("light_g_pendant_linear", (0.0, -1.9, 4.2), 90),
 ]
 
+# Lighting: the back kitchen is a working room, so it keeps two slim ceiling lines (the only
+# room on this floor besides the garage that does); everything else is task light where the
+# work is: LEDs under each open shelf of the sink run, the pantries' glass cabinets lit from
+# inside, the coffee niche's soffit LED, and a linear pendant over the walnut prep table.
+_WORK = (1.0, 0.88, 0.74)
 LIGHTS = [
-    dict(kind="strip", pos=(-1.0, 0.0), size=(0.08, 7.5), power=200.0),
-    dict(kind="strip", pos=(1.0, 0.0), size=(0.08, 7.5), power=200.0),
-    dict(kind="strip", pos=(0.0, 3.4), size=(4.0, 0.08), power=120.0),
+    dict(kind="strip", pos=(-1.0, 0.0), size=(0.08, 7.5), power=160.0),
+    dict(kind="strip", pos=(1.0, 0.0), size=(0.08, 7.5), power=160.0),
+    # under the three open shelves of the sink run (LED 0.03 behind the shelf fronts)
+    *[dict(kind="area", pos=(0.0, 4.32, z - 0.03), size=(4.9, 0.03), aim=(0.0, 4.2, 0.0), power=28.0, color=_WORK)
+      for z in (1.50, 1.95, 2.40)],
+    # glass cabinets in the two pantries, lit from inside, out through the glass
+    dict(kind="area", pos=(-2.12, 2.45, 1.35), size=(0.8, 1.6), aim=(0.0, 2.45, 1.35), power=25.0, color=(1.0, 0.82, 0.6)),
+    dict(kind="area", pos=(-2.12, -3.1, 1.35), size=(0.8, 1.6), aim=(0.0, -3.1, 1.35), power=25.0, color=(1.0, 0.82, 0.6)),
+    # coffee niche soffit LED (niche top 2.05)
+    dict(kind="area", pos=(2.48, -3.1, 2.03), size=(0.05, 1.6), aim=(2.48, -3.1, 0.0), power=35.0, color=(1.0, 0.82, 0.6)),
+    # linear pendant over the prep table (underside 1.7 m)
+    dict(kind="area", pos=(0.0, -1.9, 1.69), size=(0.05, 1.5), aim=(0.0, -1.9, 0.0), power=120.0, color=(1.0, 0.8, 0.58)),
+    dict(kind="area", pos=(0.0, -1.9, 1.76), size=(0.05, 1.5), aim=(0.0, -1.9, 4.2), power=25.0, color=(1.0, 0.8, 0.58)),
 ]
 
 PROBE = (0.0, 0.0, 1.6)

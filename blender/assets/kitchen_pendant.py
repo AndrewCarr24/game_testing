@@ -32,14 +32,17 @@ def build(**overrides):
     glow = materials.emissive("M_Pendant_Glow", (1.0, 0.82, 0.58), p["emission"])
     z0, R, H = p["rim_z"], p["radius"], p["height"]
     w = 0.004
-    outer = [(R, 0.0), (R - 0.004, 0.035), (R * 0.84, 0.095), (R * 0.58, 0.155), (R * 0.28, 0.195), (0.026, H)]
-    outer = L.catmull([(R, 0.0), (R - 0.004, 0.03), (R * 0.85, 0.09), (R * 0.6, 0.15), (R * 0.3, 0.19), (0.03, H)], per=2)
-    inner = [(r - w, max(z - w, 0.0)) for r, z in reversed(outer)]
-    prof = outer + [(0.0, H)] if False else outer + inner
-    b.lathe("Shade", prof, bronze, loc=(0, 0, z0), segs=32, sharp=50, uv_tile=0.3)
-    # diffuser disc just inside the rim
-    b.lathe("Glow", [(0.0, 0.012), (R - 0.012, 0.012), (R - 0.012, 0.016), (0.0, 0.016)], glow, loc=(0, 0, z0), segs=32,
-            uv_tile=0)
+    # spun bronze dome: a rolled bead at the rim, the outer skin up to the cap; inside, only
+    # the lip below the diffuser is ever seen
+    outer = L.catmull([(R, 0.006), (R - 0.004, 0.03), (R * 0.85, 0.09), (R * 0.6, 0.15), (R * 0.3, 0.19), (0.03, H)], per=2)
+    prof = [(R - w, 0.016), (R - w, 0.0015), (R - w * 0.4, -0.001), (R + 0.0025, 0.0015), (R + 0.003, 0.004)] + outer
+    b.lathe("Shade", prof, bronze, loc=(0, 0, z0), segs=32, sharp=50, uv_tile=0.3, closed=False)
+    # opal diffuser just inside the rim (only its underside shows)
+    disc = b.lathe("Glow", [(R - w, 0.014), (0.0, 0.014)], glow, loc=(0, 0, z0), segs=32, uv_tile=0, closed=False)
+    for poly in disc.data.polygons:          # make sure it faces down, into the room
+        if poly.normal.z > 0:
+            poly.flip()
+    disc.data.update()
     # top cap and cord to the ceiling canopy
     b.lathe("Cap", [(0.0, H - 0.01), (0.03, H - 0.01), (0.03, H + 0.015), (0.012, H + 0.03), (0.0, H + 0.03)], dark,
             loc=(0, 0, z0), segs=16, uv_tile=0)

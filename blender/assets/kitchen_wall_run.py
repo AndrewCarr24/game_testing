@@ -27,7 +27,7 @@ P = dict(
     band_z=2.43,           # bottom of the upper band
     top_z=4.19,            # just below the 4.2 m ceiling
     upper_depth=0.38,
-    counter=[(0.9, "dr3"), (0.6, "dr1"), (0.9, "dr3"), (0.7, "d2")],
+    counter=[(0.9, "dr3"), (0.6, "dr1"), (0.9, "d2"), (0.7, "dr3")],   # sink over the 0.9 d2, dishwasher beside
     fridge_w=0.9,
     oven_w=0.8,
     pantry_w=1.0,
@@ -72,15 +72,26 @@ def build(**overrides):
         b.box(f"{k}_Body", (x1 - x0, yb - (yf + t), p["top_z"] - ph), ((x0 + x1) / 2, (yf + t + yb) / 2, (ph + p["top_z"]) / 2),
               black, bevel=0, tile=0)
 
-    # --- counter zone
+    # --- counter zone: drawers, an integrated dishwasher, the sink base and a Calacatta top
     x0, x1 = xs["counter"]
-    b.box("Counter_Body", (x1 - x0, yb - (yf + t), cz - ct - ph), ((x0 + x1) / 2, (yf + t + yb) / 2, (ph + cz - ct) / 2),
-          black, bevel=0, tile=0)
-    for i, (a, c, kind) in enumerate(L.span(x0, p["counter"])):
+    units = L.span(x0, p["counter"])
+    sa, sc, _ = units[2]
+    sx = (sa + sc) / 2
+    sw, sd = 0.76, 0.42
+    sy = yf + 0.06 + sd / 2
+    hxa, hxb, hya, hyb = sx - sw / 2, sx + sw / 2, sy - sd / 2, sy + sd / 2
+    zs = cz - ct - 0.25
+    for tag, a, c, z1_ in (("Counter_BodyL", x0, hxa - 0.03, cz - ct), ("Counter_BodyR", hxb + 0.03, x1, cz - ct),
+                           ("Counter_BodySink", hxa - 0.03, hxb + 0.03, zs)):
+        b.box(tag, (c - a, yb - (yf + t), z1_ - ph), ((a + c) / 2, (yf + t + yb) / 2, (ph + z1_) / 2),
+              black, bevel=0, tile=0)
+    for i, (a, c, kind) in enumerate(units):
         fr.unit(kind, a, c, ph, cz - ct, f"Base{i}")
-    # dishwasher-style steel handle on the 0.6 drawer is the bronze lip already
-    b.box("Counter_Top", (x1 - x0, D + 0.02, ct), ((x0 + x1) / 2, yf - 0.02 + (D + 0.02) / 2, cz - ct / 2),
-          marble, bevel=0.003, seg=2, tile=1.5, world_uv=True)
+    L.slab_with_holes(b, "Counter_Top", x0, x1, yf - 0.02, yb, cz - ct / 2, ct, [(hxa, hxb, hya, hyb)], marble,
+                      bevel=0.003, seg=2, tile=1.5)
+    L.undermount_sink(b, "Sink", sx, sy, sw, sd, 0.22, cz - ct, steel, materials.steel(), corner=0.035,
+                      drain=(0.18, 0.06))
+    L.gooseneck_tap(b, "Tap", sx, hyb + 0.065, cz, bronze, reach=0.34, rise=0.36, lever=1, toward=-1)
     b.box("Backsplash", (x1 - x0, 0.02, p["tall_z"] - cz), ((x0 + x1) / 2, yb - 0.01, (cz + p["tall_z"]) / 2),
           marble, bevel=0.001, tile=1.5, world_uv=True)
     b.box("Upper_Body", (x1 - x0, p["upper_depth"] - t, p["top_z"] - p["tall_z"]),
@@ -95,27 +106,30 @@ def build(**overrides):
     b.box("EndPanel", (0.03, D + 0.0, p["top_z"]), (x0 - 0.015 + 0.0, 0.0, p["top_z"] / 2),
           walnut, bevel=0.002, seg=1, shift=(0.5, 0.1))
 
-    # --- oven tower
-    tall_body("oven")
+    # --- oven tower: carcass above and below; between them a black fascia with the oven
+    #     cavities set into it, behind three steel doors with smoked windows
     x0, x1 = xs["oven"]
     xm = (x0 + x1) / 2
+    zlo, zhi = 0.53, 2.23
+    for tag, za_, zb_ in (("oven_BodyLow", ph, zlo), ("oven_BodyHigh", zhi, p["top_z"])):
+        b.box(tag, (x1 - x0, yb - (yf + t), zb_ - za_), (xm, (yf + t + yb) / 2, (za_ + zb_) / 2), black, bevel=0, tile=0)
+    b.box("oven_Back", (x1 - x0, 0.02, zhi - zlo), (xm, yb - 0.01, (zlo + zhi) / 2), black, bevel=0, tile=0)
+    b.box("oven_SideL", (0.02, yb - (yf + t), zhi - zlo), (x0 + 0.01, (yf + t + yb) / 2, (zlo + zhi) / 2), black,
+          bevel=0, tile=0)
     fr.unit("dr1", x0, x1, ph, 0.52, "OvenDrawer")
     ow = x1 - x0 - 0.04
-
-    def appliance(tag, z0, z1, window=True, handle=True):
-        b.box(f"{tag}_Plate", (ow, 0.02, z1 - z0), (xm, yf + 0.01, (z0 + z1) / 2), steel, bevel=0.002, tile=0)
-        if window:
-            b.box(f"{tag}_Glass", (ow - 0.08, 0.004, z1 - z0 - 0.17), (xm, yf - 0.001, (z0 + z1) / 2 - 0.045),
-                  glass, bevel=0.001, tile=0)
-        if handle:
-            zh = z1 - 0.055
-            pts = [(xm - ow / 2 + 0.06, yf, zh), (xm - ow / 2 + 0.06, yf - 0.04, zh),
-                   (xm + ow / 2 - 0.06, yf - 0.04, zh), (xm + ow / 2 - 0.06, yf, zh)]
-            b.tube(f"{tag}_Handle", pts, 0.0075, steel, closed=False, res=3)
-
-    appliance("OvenA", 0.54, 1.14)
-    appliance("OvenB", 1.16, 1.76)
-    appliance("Steam", 1.78, 2.22)
+    oglass = L.oven_glass()
+    band = L.black_glass()
+    cavity = L.dark_glaze()
+    polished = materials.steel()
+    holes = []
+    for tag, z0_, z1_, dep in (("OvenA", 0.54, 1.14, 0.42), ("OvenB", 1.16, 1.76, 0.42), ("Steam", 1.78, 2.22, 0.36)):
+        xa, xb, za, zb = L.oven_door(b, tag, xm - ow / 2, xm + ow / 2, z0_, z1_, yf, steel, oglass, band, led, steel,
+                                     band=0.08 if tag != "Steam" else 0.07)
+        holes.append((xa - 0.004, xb + 0.004, za - 0.004, zb + 0.004))
+        L.oven_cavity(b, tag, xa - 0.004, xb + 0.004, za - 0.004, zb + 0.004, yf + t + 0.012, dep, cavity, polished,
+                      racks=2 if tag != "Steam" else 1)
+    L.panel_with_holes(b, "oven_Fascia", x0, x1, zlo, zhi, yf + t, 0.012, holes, black, bevel=0, seg=1)
     fr.slab("OvenFiller", x0, x1, 2.24, p["tall_z"])
     fr_t = L.Fronts(b, walnut, bronze, yf)
     fr_t.unit("d1", x0, x1, p["band_z"], p["top_z"], "OvenUpper")

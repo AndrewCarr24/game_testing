@@ -17,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				6
 			]
 		}
 	],
@@ -36,21 +36,20 @@
 			"name":"BathVanity_Cabinet",
 			"translation":[
 				0,
-				0.4300000071525574,
-				-0.014999999664723873
+				0.42500001192092896,
+				-0.017999999225139618
 			]
 		},
 		{
 			"mesh":2,
-			"name":"BathVanity_PipingBrass",
-			"translation":[
-				-0.7599999904632568,
-				0.800000011920929,
-				-0.009999999776482582
-			]
+			"name":"BathVanity_PipingBrass"
 		},
 		{
 			"mesh":3,
+			"name":"BathVanity_PipingShadow"
+		},
+		{
+			"mesh":4,
 			"name":"BathVanity_Plinth",
 			"translation":[
 				0,
@@ -59,7 +58,7 @@
 			]
 		},
 		{
-			"mesh":4,
+			"mesh":5,
 			"name":"BathVanity_Top",
 			"translation":[
 				0,
@@ -73,7 +72,8 @@
 				1,
 				2,
 				3,
-				4
+				4,
+				5
 			],
 			"name":"BathVanity"
 		}
@@ -161,7 +161,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -169,11 +170,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -184,9 +186,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -194,11 +197,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -209,9 +213,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"COLOR_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -219,12 +223,37 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":11,
+					"indices":13,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathVanity_PipingShadow",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":14,
+						"NORMAL":15,
+						"COLOR_0":16
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":17,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -234,19 +263,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13
+						"POSITION":18,
+						"NORMAL":19,
+						"COLOR_0":20
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":21,
 					"material":3,
 					"mode":4
 				}
@@ -257,21 +288,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24,
+						"COLOR_0":25
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":4,
+							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":18,
+					"indices":26,
 					"material":4,
 					"mode":4
 				}
@@ -311,7 +344,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":1820,
+			"count":1952,
 			"max":[
 				1.7649999856948853,
 				0.11999999731779099,
@@ -326,13 +359,19 @@
 		},
 		{
 			"componentType":5126,
-			"count":1820,
+			"count":1952,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1820,
+			"count":1952,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1952,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -341,62 +380,100 @@
 		},
 		{
 			"componentType":5126,
-			"count":617,
+			"count":786,
 			"max":[
 				1.4299999475479126,
-				0.33000001311302185,
-				0.3050000071525574
+				0.32499998807907104,
+				0.30800002813339233
 			],
 			"min":[
 				-1.4299999475479126,
-				-0.33000001311302185,
-				-0.2750000059604645
+				-0.32499998807907104,
+				-0.2720000147819519
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":617,
+			"count":786,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":617,
+			"count":786,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1944,
+			"count":786,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2592,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":1166,
+			"count":1836,
 			"max":[
-				1.7999999523162842,
-				0.3500000238418579,
-				0.31199997663497925
+				1.0099999904632568,
+				1.1449999809265137,
+				0.3194999694824219
 			],
 			"min":[
-				-0.2799999713897705,
-				-0.49000000953674316,
-				-0.27332502603530884
+				-1.0099999904632568,
+				0.33500003814697266,
+				-0.28999999165534973
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1166,
+			"count":1836,
 			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":1166,
-			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":5052,
+			"count":1836,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":6732,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":100,
+			"max":[
+				1.4199999570846558,
+				1.0882999897003174,
+				0.26899999380111694
+			],
+			"min":[
+				-1.4199999570846558,
+				0.10199999809265137,
+				-0.28999999165534973
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":100,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":100,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":312,
 			"type":"SCALAR"
 		},
 		{
@@ -421,12 +498,18 @@
 		},
 		{
 			"componentType":5123,
+			"count":56,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"max":[
 				1.4500000476837158,
 				0.019999999552965164,
@@ -441,13 +524,19 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":104,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -458,28 +547,33 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":10490,
+			"byteLength":13167,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3402,
-			"byteOffset":10492
+			"byteLength":5792,
+			"byteOffset":13168
 		},
 		{
 			"buffer":0,
-			"byteLength":5647,
-			"byteOffset":13896
+			"byteLength":10534,
+			"byteOffset":18960
 		},
 		{
 			"buffer":0,
-			"byteLength":371,
-			"byteOffset":19544
+			"byteLength":843,
+			"byteOffset":29496
 		},
 		{
 			"buffer":0,
-			"byteLength":789,
-			"byteOffset":19916
+			"byteLength":563,
+			"byteOffset":30340
+		},
+		{
+			"buffer":0,
+			"byteLength":1154,
+			"byteOffset":30904
 		}
 	],
 	"samplers":[
@@ -490,7 +584,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20708,
+			"byteLength":32060,
 			"uri":"bath_vanity.bin"
 		}
 	]

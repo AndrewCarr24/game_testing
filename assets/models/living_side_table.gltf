@@ -71,7 +71,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -79,11 +80,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -94,9 +96,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -104,11 +107,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -135,10 +139,10 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":428,
+			"count":685,
 			"max":[
 				0.1899999976158142,
-				0.5149999856948853,
+				0.5220000147819519,
 				0.1899999976158142
 			],
 			"min":[
@@ -150,22 +154,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":428,
+			"count":685,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":428,
+			"count":685,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1536,
+			"count":685,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2400,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":422,
+			"count":392,
 			"max":[
 				0.27000001072883606,
 				0.550000011920929,
@@ -180,30 +190,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":422,
+			"count":392,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":422,
+			"count":392,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1152,
+			"count":392,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1728,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3522,
+			"byteLength":5961,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3061,
-			"byteOffset":3524
+			"byteLength":3067,
+			"byteOffset":5964
 		}
 	],
 	"samplers":[
@@ -214,7 +230,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":6588,
+			"byteLength":9032,
 			"uri":"living_side_table.bin"
 		}
 	]

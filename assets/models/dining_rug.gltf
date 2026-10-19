@@ -24,12 +24,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DiningRug_Body",
-			"translation":[
-				0,
-				0.007000000216066837,
-				0
-			]
+			"name":"DiningRug_Body"
 		},
 		{
 			"children":[
@@ -71,7 +66,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -79,11 +75,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -123,39 +120,45 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":388,
+			"count":216,
 			"max":[
 				3.5999999046325684,
-				0.007000000216066837,
+				0.017000000923871994,
 				1.9500000476837158
 			],
 			"min":[
 				-3.5999999046325684,
-				-0.007000000216066837,
+				0,
 				-1.9500000476837158
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":388,
+			"count":216,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":388,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1716,
+			"count":216,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1182,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2218,
+			"byteLength":1462,
 			"byteOffset":0
 		}
 	],
@@ -167,7 +170,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2220,
+			"byteLength":1464,
 			"uri":"dining_rug.bin"
 		}
 	]

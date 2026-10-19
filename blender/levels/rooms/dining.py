@@ -44,11 +44,13 @@ PLACEMENTS = [
     ("vase", (-7.55, TY, 0.84), 0),
     # south wall: second sideboard between the openings
     ("dining_sideboard", (3.0, -4.6 + 0.28), 180),
-    ("art_colorfield_a", (2.25, -4.6, 1.85), 180),
+    # a row of three on the 4 m of wall between the openings (0.9 + 0.8 + 0.9 m frames, 0.2 m
+    # gaps, centred on the sideboard; they were 0.75 m apart centre to centre and overlapped)
+    ("art_colorfield_a", (1.95, -4.6, 1.85), 180),
     ("art_geometric_a", (3.0, -4.6, 1.85), 180),
-    ("art_linework_a", (3.75, -4.6, 1.85), 180),
+    ("art_linework_a", (4.05, -4.6, 1.85), 180),
     # south-west wall segment and corner planting
-    ("art_colorfield_b", (-6.4, -4.6, 1.85), 180),
+    ("art_sweep_terracotta", (-6.4, -4.6, 1.6), 180),   # brush sweep on raw linen
     ("library_plant", (-6.35, -3.3), 0),
     ("library_plant", (6.55, 3.2), 40),
     # window nook (north-west): two cognac lounge chairs round a low table
@@ -56,15 +58,32 @@ PLACEMENTS = [
     ("coffee_table", (-5.75, 3.25), 90),
     ("lounge_chair", (-6.75, 3.25), 90),
     ("lounge_chair", (-4.75, 3.25), -90),
+    # lighting (see LIGHTS): a bronze ledge over the olive wall, a reading lamp in the nook,
+    # ceiling cans on the south-wall art
+    ("light_g_cove", (-7.85, TY, 3.75), 90),
+    ("library_floorlamp", (-7.35, 2.3), 0),
+    ("light_g_downlight", (2.4, -3.6, 4.2), 0),
+    ("light_g_downlight", (3.6, -3.6, 4.2), 0),
+    ("light_g_downlight", (-6.4, -3.6, 4.2), 0),
 ]
 
+# Lighting: the floating globe chandelier over the walnut table is the brightest thing; a
+# bronze ledge high on the olive wall washes down over the big canvas (and a little up onto
+# the ceiling); the lamps glow on the west sideboard; cans light the south-wall art over
+# the second sideboard; the window nook has its own lamp. No ceiling lines.
 LIGHTS = [
-    dict(kind="strip", pos=(TX, TY), size=(5.4, 0.08), power=170.0),
-    dict(kind="strip", pos=(-7.15, TY), size=(0.08, 4.6), power=110.0),       # washes the olive wall
-    dict(kind="strip", pos=(3.0, -3.9), size=(3.6, 0.08), power=80.0),
-    dict(kind="point", pos=(TX - 1.8, TY, 2.65), power=60.0, color=(1.0, 0.8, 0.55)),
-    dict(kind="point", pos=(TX, TY, 2.65), power=60.0, color=(1.0, 0.8, 0.55)),
-    dict(kind="point", pos=(TX + 1.8, TY, 2.65), power=60.0, color=(1.0, 0.8, 0.55)),
+    *[dict(kind="point", pos=(TX + dx, TY, 2.8), power=110.0, color=(1.0, 0.8, 0.55)) for dx in (-1.8, -0.9, 0.0, 0.9, 1.8)],
+    # olive-wall ledge (z 3.75): down over the canvas, a little up
+    dict(kind="area", pos=(-7.75, TY, 3.72), size=(3.9, 0.08), aim=(-7.1, TY, 1.0), power=280.0, color=(1.0, 0.82, 0.62)),
+    dict(kind="area", pos=(-7.77, TY, 3.82), size=(3.9, 0.08), aim=(-7.4, TY, 4.2), power=100.0, color=(1.0, 0.84, 0.66)),
+    # sideboard lamps (shade centres) and the nook lamp
+    dict(kind="point", pos=(-7.55, TY - 0.85, 1.29), power=60.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-7.55, TY + 0.85, 1.29), power=60.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-7.35, 2.3, 1.42), power=80.0, color=(1.0, 0.76, 0.5)),
+    # cans on the south-wall art
+    dict(kind="spot", pos=(2.4, -3.6, 4.08), aim=(2.4, -4.55, 1.85), power=150.0, angle=38, blend=0.5),
+    dict(kind="spot", pos=(3.6, -3.6, 4.08), aim=(3.6, -4.55, 1.85), power=150.0, angle=38, blend=0.5),
+    dict(kind="spot", pos=(-6.4, -3.6, 4.08), aim=(-6.4, -4.55, 1.6), power=130.0, angle=34, blend=0.5),
 ]
 
 PROBE = (TX, TY, 1.6)

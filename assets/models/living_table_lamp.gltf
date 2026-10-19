@@ -15,7 +15,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				5
 			]
 		}
 	],
@@ -26,14 +26,18 @@
 		},
 		{
 			"mesh":1,
-			"name":"LivingTableLamp_Foot"
+			"name":"LivingTableLamp_Fitting"
 		},
 		{
 			"mesh":2,
-			"name":"LivingTableLamp_Neck"
+			"name":"LivingTableLamp_Foot"
 		},
 		{
 			"mesh":3,
+			"name":"LivingTableLamp_Neck"
+		},
+		{
+			"mesh":4,
 			"name":"LivingTableLamp_Shade"
 		},
 		{
@@ -41,7 +45,8 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				4
 			],
 			"name":"LivingTableLamp"
 		}
@@ -107,7 +112,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -115,12 +121,40 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingTableLamp_Fitting",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -130,21 +164,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -155,21 +191,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":2,
+							"bufferView":3,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":19,
 					"material":1,
 					"mode":4
 				}
@@ -180,21 +218,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"TEXCOORD_0":14
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
+					"indices":24,
 					"material":2,
 					"mode":4
 				}
@@ -204,32 +244,74 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":232,
+			"count":332,
 			"max":[
-				0.09000000357627869,
+				0.08900000154972076,
 				0.3199999928474426,
-				0.09000000357627869
+				0.08900000154972076
 			],
 			"min":[
-				-0.09000000357627869,
+				-0.08900000154972076,
 				0.012000000104308128,
-				-0.09000000357627869
+				-0.08900000154972076
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":232,
+			"count":332,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":232,
+			"count":332,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1008,
+			"count":332,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1440,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":528,
+			"max":[
+				0.16699999570846558,
+				0.597000002861023,
+				0.16699999570846558
+			],
+			"min":[
+				-0.16699999570846558,
+				0.3580000102519989,
+				-0.16699999570846558
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":528,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":528,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":528,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1428,
 			"type":"SCALAR"
 		},
 		{
@@ -259,51 +341,63 @@
 		},
 		{
 			"componentType":5123,
+			"count":102,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":288,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":58,
+			"count":101,
 			"max":[
-				0.012000000104308128,
-				0.3700000047683716,
-				0.012000000104308128
+				0.017999999225139618,
+				0.44999998807907104,
+				0.017999999225139618
 			],
 			"min":[
-				-0.012000000104308128,
+				-0.017999999225139618,
 				0.3199999928474426,
-				-0.012000000104308128
+				-0.017999999225139618
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":58,
+			"count":101,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":58,
+			"count":101,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":101,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":252,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":200,
 			"max":[
-				0.17000000178813934,
+				0.16500000655651093,
 				0.5799999833106995,
-				0.17000000178813934
+				0.16500000655651093
 			],
 			"min":[
-				-0.17000000178813934,
+				-0.16500000655651093,
 				0.36000001430511475,
-				-0.17000000178813934
+				-0.16500000655651093
 			],
 			"type":"VEC3"
 		},
@@ -316,6 +410,12 @@
 			"componentType":5126,
 			"count":200,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":200,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -326,28 +426,33 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2215,
+			"byteLength":3521,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":967,
-			"byteOffset":2216
+			"byteLength":5233,
+			"byteOffset":3524
 		},
 		{
 			"buffer":0,
-			"byteLength":620,
-			"byteOffset":3184
+			"byteLength":1064,
+			"byteOffset":8760
 		},
 		{
 			"buffer":0,
-			"byteLength":1543,
-			"byteOffset":3804
+			"byteLength":1394,
+			"byteOffset":9824
+		},
+		{
+			"buffer":0,
+			"byteLength":1633,
+			"byteOffset":11220
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":5348,
+			"byteLength":12856,
 			"uri":"living_table_lamp.bin"
 		}
 	]

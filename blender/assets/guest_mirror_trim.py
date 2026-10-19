@@ -32,7 +32,8 @@ def build(**overrides):
     for i in range(np_ + 1):
         x = -L / 2 + i * L / np_
         x = max(-L / 2 + 0.02, min(L / 2 - 0.02, x))
-        A(own, f"Mullion{i}", common.box_bmesh((0.04, 0.022, H)), black, (x, -0.011, H / 2), 0.003)
+        m = A(own, f"Mullion{i}", common.box_bmesh((0.04, 0.022, H)), black, (x, -0.011, H / 2), 0)
+        common.add_bevel(m, 0.003, segments=1)
     # barre: oak round bar + brass brackets at the mullions
     bz = p["barre_z"]
     bar = common.mesh_object(f"{n}_Barre", guest_mats.cyl_bmesh(0.022, L - 0.1, seg=16, axis="x"), col, oak, root)
@@ -41,8 +42,15 @@ def build(**overrides):
     for i in range(np_ + 1):
         x = -L / 2 + i * L / np_
         x = max(-L / 2 + 0.2, min(L / 2 - 0.2, x)) if i in (0, np_) else x
-        A(own, f"Bracket{i}", common.box_bmesh((0.03, 0.10, 0.012)), brass, (x + (0.0 if 0 < i < np_ else 0.0), -0.065, bz - 0.022 - 0.006), 0.002)
-        A(own, f"BracketPlate{i}", common.box_bmesh((0.03, 0.006, 0.1)), brass, (x, -0.027, bz - 0.01), 0.002)
+        # ballet-barre bracket: a round brass arm from a wall rosette to a saddle under the bar
+        # (the rosette sits on its mullion's face; the two end brackets, set in from the
+        # corners, sit on the mirror itself)
+        on_mullion = 0 < i < np_
+        yw = -0.022 if on_mullion else 0.0
+        arm = -0.115 - yw
+        A(own, f"Bracket{i}", guest_mats.cyl_bmesh(0.009, -arm, seg=8, axis="y"), brass, (x, yw + arm / 2, bz - 0.03), 0)
+        A(own, f"BracketPlate{i}", guest_mats.cyl_bmesh(0.032, 0.008, r2=0.028, seg=12, axis="y"), brass, (x, yw - 0.004, bz - 0.03), 0)
+        A(own, f"BracketSaddle{i}", guest_mats.cyl_bmesh(0.011, 0.024, seg=8), brass, (x, -0.115, bz - 0.03 + 0.003), 0)
     parts = guest_mats.consolidate(root, max_dim=99)
     return root, parts
 

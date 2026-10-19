@@ -17,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				10
 			]
 		}
 	],
@@ -33,18 +33,36 @@
 		},
 		{
 			"mesh":1,
-			"name":"DiningChair_LegRear_L"
+			"name":"DiningChair_Back_PipingFront",
+			"translation":[
+				0,
+				0.7200000286102295,
+				-0.24935585260391235
+			]
 		},
 		{
 			"mesh":2,
-			"name":"DiningChair_LegRear_R"
+			"name":"DiningChair_Back_PipingRear",
+			"translation":[
+				0,
+				0.7200000286102295,
+				-0.24935585260391235
+			]
 		},
 		{
 			"mesh":3,
-			"name":"DiningChair_LegsFront"
+			"name":"DiningChair_LegRear_L"
 		},
 		{
 			"mesh":4,
+			"name":"DiningChair_LegRear_R"
+		},
+		{
+			"mesh":5,
+			"name":"DiningChair_LegsFront"
+		},
+		{
+			"mesh":6,
 			"name":"DiningChair_Rail",
 			"translation":[
 				0,
@@ -53,8 +71,26 @@
 			]
 		},
 		{
-			"mesh":5,
+			"mesh":7,
 			"name":"DiningChair_Seat",
+			"translation":[
+				0,
+				0.42250001430511475,
+				0.009999999776482582
+			]
+		},
+		{
+			"mesh":8,
+			"name":"DiningChair_Seat_PipingBottom",
+			"translation":[
+				0,
+				0.42250001430511475,
+				0.009999999776482582
+			]
+		},
+		{
+			"mesh":9,
+			"name":"DiningChair_Seat_PipingTop",
 			"translation":[
 				0,
 				0.42250001430511475,
@@ -68,7 +104,11 @@
 				2,
 				3,
 				4,
-				5
+				5,
+				6,
+				7,
+				8,
+				9
 			],
 			"name":"DiningChair"
 		}
@@ -130,7 +170,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -138,11 +179,66 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningChair_Back_PipingFront",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningChair_Back_PipingRear",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
 					"material":0,
 					"mode":4
 				}
@@ -153,21 +249,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16,
+						"COLOR_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":3,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":18,
 					"material":1,
 					"mode":4
 				}
@@ -178,21 +276,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21,
+						"COLOR_0":22
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":2,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":23,
 					"material":1,
 					"mode":4
 				}
@@ -203,21 +303,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"TEXCOORD_0":14
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26,
+						"COLOR_0":27
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
+					"indices":28,
 					"material":1,
 					"mode":4
 				}
@@ -228,21 +330,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":16,
-						"NORMAL":17,
-						"TEXCOORD_0":18
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31,
+						"COLOR_0":32
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":4,
+							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":19,
+					"indices":33,
 					"material":2,
 					"mode":4
 				}
@@ -253,21 +357,77 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22
+						"POSITION":34,
+						"NORMAL":35,
+						"TEXCOORD_0":36,
+						"COLOR_0":37
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":7,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":23,
+					"indices":38,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningChair_Seat_PipingBottom",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":39,
+						"NORMAL":40,
+						"TEXCOORD_0":41,
+						"COLOR_0":42
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":43,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningChair_Seat_PipingTop",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":44,
+						"NORMAL":45,
+						"TEXCOORD_0":46,
+						"COLOR_0":47
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":43,
 					"material":0,
 					"mode":4
 				}
@@ -307,92 +467,177 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":571,
+			"count":329,
 			"max":[
-				0.23900653421878815,
-				0.2084566205739975,
-				0.08225089311599731
+				0.23884885013103485,
+				0.20859350264072418,
+				0.08221080899238586
 			],
 			"min":[
-				-0.23900653421878815,
-				-0.2008388191461563,
-				-0.05263156071305275
+				-0.23884885013103485,
+				-0.19921541213989258,
+				-0.02466314285993576
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":571,
+			"count":329,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":571,
+			"count":329,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2304,
+			"count":329,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1296,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":147,
 			"max":[
-				-0.17921344935894012,
-				0.8418509364128113,
-				-0.18615275621414185
+				0.23832835257053375,
+				0.20872178673744202,
+				0.08316852897405624
+			],
+			"min":[
+				-0.23832835257053375,
+				-0.19181333482265472,
+				0.002792695304378867
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":147,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":147,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":147,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":720,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":147,
+			"max":[
+				0.23832835257053375,
+				0.1983032524585724,
+				0.0173884816467762
+			],
+			"min":[
+				-0.23832835257053375,
+				-0.20223186910152435,
+				-0.06298734992742538
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":147,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":147,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":147,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":214,
+			"max":[
+				-0.17921026051044464,
+				0.87101149559021,
+				-0.1863837093114853
 			],
 			"min":[
 				-0.2087184339761734,
 				0.006602098233997822,
-				-0.3151116967201233
+				-0.311435341835022
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":214,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":214,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1092,
+			"count":214,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1044,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":214,
 			"max":[
 				0.2087184339761734,
-				0.8418509364128113,
-				-0.18615275621414185
+				0.87101149559021,
+				-0.1863837093114853
 			],
 			"min":[
-				0.17921344935894012,
+				0.17921026051044464,
 				0.006602098233997822,
-				-0.3151116967201233
+				-0.311435341835022
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":214,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":223,
+			"count":214,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1092,
+			"count":214,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1044,
 			"type":"SCALAR"
 		},
 		{
@@ -419,6 +664,12 @@
 			"componentType":5126,
 			"count":96,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -452,6 +703,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":88,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
@@ -482,40 +739,133 @@
 		},
 		{
 			"componentType":5123,
+			"count":328,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1296,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"max":[
+				0.24996407330036163,
+				-0.03466269373893738,
+				0.24996407330036163
+			],
+			"min":[
+				-0.24996407330036163,
+				-0.04193730652332306,
+				-0.24996407330036163
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":119,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":576,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"max":[
+				0.24996407330036163,
+				0.04193730652332306,
+				0.24996407330036163
+			],
+			"min":[
+				-0.24996407330036163,
+				0.03466269373893738,
+				-0.24996407330036163
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":119,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":119,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4573,
+			"byteLength":4228,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1468,
-			"byteOffset":4576
+			"byteLength":2149,
+			"byteOffset":4228
 		},
 		{
 			"buffer":0,
-			"byteLength":1453,
-			"byteOffset":6044
+			"byteLength":2170,
+			"byteOffset":6380
 		},
 		{
 			"buffer":0,
-			"byteLength":1074,
-			"byteOffset":7500
+			"byteLength":2520,
+			"byteOffset":8552
 		},
 		{
 			"buffer":0,
-			"byteLength":727,
-			"byteOffset":8576
+			"byteLength":2565,
+			"byteOffset":11072
 		},
 		{
 			"buffer":0,
-			"byteLength":2534,
-			"byteOffset":9304
+			"byteLength":1276,
+			"byteOffset":13640
+		},
+		{
+			"buffer":0,
+			"byteLength":1164,
+			"byteOffset":14916
+		},
+		{
+			"buffer":0,
+			"byteLength":3908,
+			"byteOffset":16080
+		},
+		{
+			"buffer":0,
+			"byteLength":1585,
+			"byteOffset":19988
+		},
+		{
+			"buffer":0,
+			"byteLength":1667,
+			"byteOffset":21576
 		}
 	],
 	"samplers":[
@@ -526,7 +876,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":11840,
+			"byteLength":23244,
 			"uri":"dining_chair.bin"
 		}
 	]

@@ -18,7 +18,7 @@ importlib.reload(materials)
 
 NAME = "EntryRugRound"
 
-P = dict(name=NAME, radius=1.55, thickness=0.014, band=(1.30, 1.36), segments=96)
+P = dict(name=NAME, radius=1.55, thickness=0.014, band=(1.30, 1.36), segments=80)
 
 
 def build(**overrides):

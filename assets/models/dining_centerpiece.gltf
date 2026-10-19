@@ -14,7 +14,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				6
 			]
 		}
 	],
@@ -45,12 +45,17 @@
 			]
 		},
 		{
+			"mesh":5,
+			"name":"DiningCenterpiece_Wicks_NoCollide"
+		},
+		{
 			"children":[
 				0,
 				1,
 				2,
 				3,
-				4
+				4,
+				5
 			],
 			"name":"DiningCenterpiece"
 		}
@@ -110,6 +115,20 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
+			}
 		}
 	],
 	"meshes":[
@@ -120,7 +139,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -128,11 +148,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -143,9 +164,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -153,11 +175,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -168,9 +191,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -178,11 +202,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":2,
 					"mode":4
 				}
@@ -193,9 +218,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"TEXCOORD_0":14
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -203,11 +229,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
+					"indices":19,
 					"material":3,
 					"mode":4
 				}
@@ -218,9 +245,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":16,
-						"NORMAL":17,
-						"TEXCOORD_0":18
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -228,12 +256,40 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":19,
+					"indices":24,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningCenterpiece_Wicks_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27,
+						"COLOR_0":28
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":29,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -267,15 +323,21 @@
 		},
 		{
 			"componentType":5123,
+			"count":298,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1008,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":174,
+			"count":246,
 			"max":[
 				0.4945000112056732,
-				0.35199999809265137,
+				0.35350000858306885,
 				0.014499999582767487
 			],
 			"min":[
@@ -287,17 +349,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":174,
+			"count":246,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":174,
+			"count":246,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":432,
+			"count":246,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":864,
 			"type":"SCALAR"
 		},
 		{
@@ -324,6 +392,12 @@
 			"componentType":5126,
 			"count":678,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":678,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -357,6 +431,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":686,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":2520,
 			"type":"SCALAR"
 		},
@@ -387,40 +467,87 @@
 		},
 		{
 			"componentType":5123,
+			"count":416,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1284,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":66,
+			"max":[
+				0.48159998655319214,
+				0.36250001192092896,
+				0.0015216903993859887
+			],
+			"min":[
+				0.11870557069778442,
+				0.18799999356269836,
+				-0.0015216903993859887
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":66,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":66,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":66,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":135,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3020,
+			"byteLength":3987,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1382,
-			"byteOffset":3020
+			"byteLength":2593,
+			"byteOffset":3988
 		},
 		{
 			"buffer":0,
-			"byteLength":5009,
-			"byteOffset":4404
+			"byteLength":6060,
+			"byteOffset":6584
 		},
 		{
 			"buffer":0,
-			"byteLength":5062,
-			"byteOffset":9416
+			"byteLength":6233,
+			"byteOffset":12644
 		},
 		{
 			"buffer":0,
-			"byteLength":2885,
-			"byteOffset":14480
+			"byteLength":3062,
+			"byteOffset":18880
+		},
+		{
+			"buffer":0,
+			"byteLength":1080,
+			"byteOffset":21944
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":17368,
+			"byteLength":23024,
 			"uri":"dining_centerpiece.bin"
 		}
 	]

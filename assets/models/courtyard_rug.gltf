@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				6
 			]
 		}
 	],
@@ -40,9 +40,49 @@
 			]
 		},
 		{
+			"mesh":2,
+			"name":"CourtyardRug_Stripe0",
+			"translation":[
+				0,
+				0.01489999983459711,
+				1.9950000047683716
+			]
+		},
+		{
+			"mesh":3,
+			"name":"CourtyardRug_Stripe1",
+			"translation":[
+				0,
+				0.01489999983459711,
+				-1.9950000047683716
+			]
+		},
+		{
+			"mesh":4,
+			"name":"CourtyardRug_Stripe2",
+			"translation":[
+				-1.4950000047683716,
+				0.01489999983459711,
+				0
+			]
+		},
+		{
+			"mesh":5,
+			"name":"CourtyardRug_Stripe3",
+			"translation":[
+				1.4950000047683716,
+				0.01489999983459711,
+				0
+			]
+		},
+		{
 			"children":[
 				0,
-				1
+				1,
+				2,
+				3,
+				4,
+				5
 			],
 			"name":"CourtyardRug"
 		}
@@ -93,7 +133,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -101,11 +142,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -116,9 +158,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -126,11 +169,120 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardRug_Stripe0",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardRug_Stripe1",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardRug_Stripe2",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21,
+						"COLOR_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardRug_Stripe3",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25,
+						"COLOR_0":26
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -190,6 +342,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":76,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
 		},
@@ -220,20 +378,175 @@
 		},
 		{
 			"componentType":5123,
+			"count":72,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.5099999904632568,
+				0.0007999999797903001,
+				0.014999999664723873
+			],
+			"min":[
+				-1.5099999904632568,
+				-0.0007999999797903001,
+				-0.014999999664723873
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.5099999904632568,
+				0.0007999999797903001,
+				0.014999999664723873
+			],
+			"min":[
+				-1.5099999904632568,
+				-0.0007999999797903001,
+				-0.014999999664723873
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.014999999664723873,
+				0.0007999999797903001,
+				1.9800000190734863
+			],
+			"min":[
+				-0.014999999664723873,
+				-0.0007999999797903001,
+				-1.9800000190734863
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.014999999664723873,
+				0.0007999999797903001,
+				1.9800000190734863
+			],
+			"min":[
+				-0.014999999664723873,
+				-0.0007999999797903001,
+				-1.9800000190734863
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":519,
+			"byteLength":1055,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":522,
-			"byteOffset":520
+			"byteLength":663,
+			"byteOffset":1056
+		},
+		{
+			"buffer":0,
+			"byteLength":419,
+			"byteOffset":1720
+		},
+		{
+			"buffer":0,
+			"byteLength":417,
+			"byteOffset":2140
+		},
+		{
+			"buffer":0,
+			"byteLength":391,
+			"byteOffset":2560
+		},
+		{
+			"buffer":0,
+			"byteLength":391,
+			"byteOffset":2952
 		}
 	],
 	"samplers":[
@@ -244,7 +557,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1044,
+			"byteLength":3344,
 			"uri":"courtyard_rug.bin"
 		}
 	]

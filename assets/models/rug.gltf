@@ -23,12 +23,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Rug_Body",
-			"translation":[
-				0,
-				0.006000000052154064,
-				0
-			]
+			"name":"Rug_Body"
 		},
 		{
 			"children":[
@@ -58,7 +53,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -66,11 +62,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -97,39 +94,45 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":402,
+			"count":264,
 			"max":[
 				1.5,
-				0.006000000052154064,
+				0.014499999582767487,
 				1.100000023841858
 			],
 			"min":[
 				-1.5,
-				-0.006000000052154064,
+				0,
 				-1.100000023841858
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":402,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":402,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1284,
+			"count":264,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1182,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2593,
+			"byteLength":1827,
 			"byteOffset":0
 		}
 	],
@@ -141,7 +144,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2596,
+			"byteLength":1828,
 			"uri":"rug.bin"
 		}
 	]

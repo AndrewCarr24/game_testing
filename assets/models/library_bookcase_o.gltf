@@ -93,7 +93,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -101,11 +102,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -116,9 +118,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -126,11 +129,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -141,9 +145,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -151,11 +156,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":2,
 					"mode":4
 				}
@@ -195,67 +201,79 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":3488,
+			"count":3692,
 			"max":[
-				1.1636734008789062,
-				3.6029999256134033,
-				0.14423559606075287
+				1.1639801263809204,
+				3.5987765789031982,
+				0.14492224156856537
 			],
 			"min":[
 				-1.1634999513626099,
 				0.8399999737739563,
-				-0.13137942552566528
+				-0.14486101269721985
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3488,
+			"count":3692,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3488,
+			"count":3692,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":5232,
+			"count":3692,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":5538,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":960,
+			"count":552,
 			"max":[
 				0.640999972820282,
-				3.254518985748291,
+				1.8696516752243042,
 				0.1979999989271164
 			],
 			"min":[
-				-1.0965259075164795,
-				0.5789999961853027,
-				-0.057987213134765625
+				-1.1276541948318481,
+				0.445000022649765,
+				-0.061075806617736816
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":960,
+			"count":552,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":960,
+			"count":552,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1488,
+			"count":552,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":852,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":888,
 			"max":[
 				1.1800000667572021,
 				3.740000009536743,
@@ -270,35 +288,41 @@
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":888,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":888,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1116,
+			"count":888,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1332,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":15071,
+			"byteLength":24184,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4699,
-			"byteOffset":15072
+			"byteLength":3796,
+			"byteOffset":24184
 		},
 		{
 			"buffer":0,
-			"byteLength":2798,
-			"byteOffset":19772
+			"byteLength":5285,
+			"byteOffset":27980
 		}
 	],
 	"samplers":[
@@ -309,7 +333,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":22572,
+			"byteLength":33268,
 			"uri":"library_bookcase_o.bin"
 		}
 	]

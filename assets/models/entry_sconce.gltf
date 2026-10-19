@@ -15,7 +15,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				6
 			]
 		}
 	],
@@ -44,10 +44,19 @@
 		},
 		{
 			"mesh":3,
-			"name":"EntrySconce_Plate"
+			"name":"EntrySconce_Collar",
+			"translation":[
+				0,
+				0,
+				0.0949999988079071
+			]
 		},
 		{
 			"mesh":4,
+			"name":"EntrySconce_Plate"
+		},
+		{
+			"mesh":5,
 			"name":"EntrySconce_Tube",
 			"translation":[
 				0,
@@ -61,7 +70,8 @@
 				1,
 				2,
 				3,
-				4
+				4,
+				5
 			],
 			"name":"EntrySconce"
 		}
@@ -112,18 +122,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -134,19 +146,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
+						"POSITION":4,
+						"NORMAL":5,
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":5,
+					"indices":7,
 					"material":0,
 					"mode":4
 				}
@@ -157,38 +171,17 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":6,
-						"NORMAL":7
+						"POSITION":8,
+						"NORMAL":9,
+						"COLOR_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":8,
-					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"EntrySconce_Plate",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":9,
-						"NORMAL":10
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
@@ -199,23 +192,75 @@
 			]
 		},
 		{
-			"name":"EntrySconce_Tube",
+			"name":"EntrySconce_Collar",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":12,
-						"NORMAL":13
+						"NORMAL":13,
+						"COLOR_0":14
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":15,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"EntrySconce_Plate",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":16,
+						"NORMAL":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":19,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"EntrySconce_Tube",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"COLOR_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":23,
 					"material":1,
 					"mode":4
 				}
@@ -228,13 +273,13 @@
 			"count":24,
 			"max":[
 				0.00800000037997961,
-				0.008000001311302185,
-				0.09299999475479126
+				0.00800000037997961,
+				0.05299999564886093
 			],
 			"min":[
 				-0.00800000037997961,
-				-0.008000001311302185,
-				3.725290298461914e-09
+				-0.00800000037997961,
+				1.862645149230957e-09
 			],
 			"type":"VEC3"
 		},
@@ -242,6 +287,12 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -270,6 +321,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":142,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":504,
 			"type":"SCALAR"
 		},
@@ -295,7 +352,44 @@
 		},
 		{
 			"componentType":5123,
+			"count":142,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":504,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"max":[
+				0.04349999874830246,
+				0.012000000104308128,
+				0.04349999874830246
+			],
+			"min":[
+				-0.04349999874830246,
+				-0.012000000104308128,
+				-0.04349999874830246
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":280,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1008,
 			"type":"SCALAR"
 		},
 		{
@@ -317,6 +411,12 @@
 			"componentType":5126,
 			"count":182,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":182,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -345,6 +445,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":224,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":672,
 			"type":"SCALAR"
 		}
@@ -352,33 +458,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":275,
+			"byteLength":371,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":982,
-			"byteOffset":276
+			"byteLength":1186,
+			"byteOffset":372
 		},
 		{
 			"buffer":0,
-			"byteLength":979,
-			"byteOffset":1260
+			"byteLength":1215,
+			"byteOffset":1560
 		},
 		{
 			"buffer":0,
-			"byteLength":1204,
-			"byteOffset":2240
+			"byteLength":2356,
+			"byteOffset":2776
 		},
 		{
 			"buffer":0,
-			"byteLength":838,
-			"byteOffset":3444
+			"byteLength":1617,
+			"byteOffset":5132
+		},
+		{
+			"buffer":0,
+			"byteLength":946,
+			"byteOffset":6752
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":4284,
+			"byteLength":7700,
 			"uri":"entry_sconce.bin"
 		}
 	]

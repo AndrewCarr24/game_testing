@@ -1,5 +1,5 @@
 """Outdoor flat-weave rug for the courtyard lounge: a sand body with a darker woven
-border band (two thin slabs, weave normal map from the shared fabric texture).
+border band and an inset pinstripe (two thin slabs, weave normal map from the shared fabric texture).
 Origin: floor centre, top at 1.4 cm. Units are metres."""
 import importlib
 import os
@@ -36,6 +36,14 @@ def build(**overrides):
     b = p["border"]
     cc.rbox(f"{n}_Body", (w - 2 * b, d - 2 * b, t * 0.5), (0, 0, t + t * 0.25 - 0.0005), body, col, root, bevel=0.002,
             uv_tile=0.25, seg=1)
+    # a thin woven pinstripe in the border colour, inset inside the band
+    top = t + t * 0.5 - 0.0005
+    inset, sw = b + 0.12, 0.03
+    iw, idp = w - 2 * inset, d - 2 * inset
+    for k, (sz, loc) in enumerate((((iw, sw), (0, -idp / 2 + sw / 2)), ((iw, sw), (0, idp / 2 - sw / 2)),
+                                   ((sw, idp - 2 * sw), (-iw / 2 + sw / 2, 0)), ((sw, idp - 2 * sw), (iw / 2 - sw / 2, 0)))):
+        cc.rbox(f"{n}_Stripe{k}", (sz[0], sz[1], 0.0016), (loc[0], loc[1], top + 0.0004), edge, col, root, bevel=0,
+                uv_tile=0.25)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

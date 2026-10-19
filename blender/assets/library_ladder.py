@@ -7,6 +7,9 @@ import math
 import os
 import sys
 
+import bmesh
+from mathutils import Matrix
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import library_kit as kit  # noqa: E402
@@ -53,9 +56,17 @@ def build(**overrides):
     for sx in (-1, 1):
         wood.box((sx * hw, mid[0], mid[1]), (sd, sw, top), rot=(-ang, "x"), shift=(0.2 * sx, 0.1))
     n_rungs = int((length - 0.35) // p["rung_gap"]) + 1
+    # rungs: turned (octagonal) walnut rods set into the stiles, level when the ladder leans
+    rr = p["rung_r"]
+    rung_list = []
+    rungs = Mesh(0.5)
     for i in range(n_rungs):
         y, z = pt(0.32 + i * p["rung_gap"])
-        wood.box((0, y, z), (p["width"], 0.032, 0.032), rot=(-ang, "x"), shift=(0.3 * i, 0.2))
+        rung_list.append((y, z))
+        faces = rungs.lathe([(rr, -hw), (rr, hw)], segs=8)        # ends are buried in the stiles
+        vs = list({v for f in faces for v in f.verts})
+        bmesh.ops.rotate(rungs.bm, verts=vs, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 2, 3, "Y"))
+        bmesh.ops.translate(rungs.bm, vec=(0, y + 0.004, z), verts=vs)
     # the top rung is a wide handrail
     y, z = pt(length + 0.04)
     wood.box((0, y, z), (p["width"] + 0.04, 0.05, 0.04), rot=(-ang, "x"), shift=(0.7, 0.2))
@@ -65,10 +76,26 @@ def build(**overrides):
         brz.box((x, yh + 0.02, zh + 0.02), (0.03, 0.10, 0.012))         # hook plate over the rail
         brz.box((x, 0.014, rz + 0.032), (0.03, 0.012, 0.07))            # lip behind the rail
         brz.box((x, yh * 0.5, zh - 0.01), (0.034, 0.05, 0.05))          # collar on the stile
+        # top roller riding on the rail
+        wh = brz.lathe([(0, -0.008), (0.022, -0.008), (0.024, -0.004), (0.024, 0.004), (0.022, 0.008), (0, 0.008)], segs=10)
+        vs = list({v for f in wh for v in f.verts})
+        bmesh.ops.rotate(brz.bm, verts=vs, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 2, 3, "X"))
+        bmesh.ops.translate(brz.bm, vec=(x - sx * 0.03, 0.0, rz + 0.032), verts=vs)
+        # floor: a bronze shoe with a castor wheel so the ladder rolls along the shelves
         fy, fz = pt(0.0)
-        brz.box((x, fy - 0.012, 0.014), (0.036, 0.06, 0.028))           # foot cap
-    wood.to_object(f"{n}_Wood", col, walnut, root)
-    brz.to_object(f"{n}_Bronze", col, bronze, root)
+        brz.box((x, fy - 0.004, 0.05), (0.034, 0.05, 0.03))
+        wh = brz.lathe([(0, -0.009), (0.024, -0.009), (0.026, 0.0), (0.024, 0.009), (0, 0.009)], segs=12)
+        vs = list({v for f in wh for v in f.verts})
+        bmesh.ops.rotate(brz.bm, verts=vs, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 2, 3, "X"))
+        bmesh.ops.translate(brz.bm, vec=(x, fy - 0.004, 0.026), verts=vs)
+    w = wood.to_object(f"{n}_Wood", col, walnut, root)
+    for d in w.data.uv_layers["UVMap"].data:              # the walnut map's grain runs along v
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
+    common.add_bevel(w, 0.002, segments=1)
+    rg = rungs.to_object(f"{n}_Rungs", col, walnut, root, smooth=True)
+    for d in rg.data.uv_layers["UVMap"].data:
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
+    brz.to_object(f"{n}_Bronze", col, bronze, root, smooth=True)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

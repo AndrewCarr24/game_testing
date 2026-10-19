@@ -28,7 +28,7 @@ P = dict(
     plinth=(0.62, 0.62, 0.92),
     scale=0.205,            # trefoil units -> metres
     tube_r=0.034,
-    points=220,
+    points=168,
     steps=0.04,
 )
 
@@ -118,7 +118,15 @@ def build(**overrides):
     bm = bmesh.new()
     bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=0.016, radius2=0.016, depth=0.09,
                           matrix=__import__("mathutils").Matrix.Translation((low.x, low.y, ph + 0.045)))
+    # a turned bronze mounting disc where the pin meets the stone (a 1.5 mm chamfer catches light)
+    import table_lamp
+    rose = table_lamp.lathe([(0.0, ph + 0.006), (0.040, ph + 0.006), (0.0415, ph + 0.0045), (0.0415, ph),
+                             (0.0, ph)], 24, sharp=30)
+    for v in rose.verts:
+        v.co.x += low.x
+        v.co.y += low.y
     common.mesh_object(f"{n}_Pin", bm, col, bronze, root)
+    common.mesh_object(f"{n}_Rose", rose, col, bronze, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

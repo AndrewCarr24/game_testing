@@ -77,7 +77,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -85,11 +86,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -100,9 +102,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -110,11 +113,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -141,10 +145,10 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":428,
+			"count":659,
 			"max":[
 				0.3400000035762787,
-				0.3100000023841858,
+				0.3199999928474426,
 				0.3400000035762787
 			],
 			"min":[
@@ -156,22 +160,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":428,
+			"count":659,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":428,
+			"count":659,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1536,
+			"count":659,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2400,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":406,
+			"count":456,
 			"max":[
 				0.5600000023841858,
 				0.36000001430511475,
@@ -186,30 +196,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":406,
+			"count":456,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":406,
+			"count":456,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1152,
+			"count":456,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1728,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3756,
+			"byteLength":5856,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2881,
-			"byteOffset":3756
+			"byteLength":3408,
+			"byteOffset":5856
 		}
 	],
 	"samplers":[
@@ -220,7 +236,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":6640,
+			"byteLength":9264,
 			"uri":"living_coffee_round.bin"
 		}
 	]

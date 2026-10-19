@@ -36,7 +36,7 @@ P = dict(
     spread=1.05,             # strand anchor radius on the canopy
     z_low=3.55,              # lowest orb centre (the centre strand)
     z_high=6.3,              # shortest outer strand's orb
-    orb_segments=12,
+    orb_segments=14,         # big orbs (r >= 0.11 m); the small ones are 80-triangle icospheres
     orb_rings=7,
     halo=[(1.45, 5.25), (0.9, 4.45)],   # (radius, z) of the bronze rings
     halo_tube=0.014,
@@ -46,8 +46,22 @@ P = dict(
 
 
 def orb(bm, centre, radius, segs, rings):
-    bmesh.ops.create_uvsphere(bm, u_segments=segs, v_segments=rings, radius=radius,
-                              matrix=Matrix.Translation(centre))
+    """Glass orb. The orbs are flat emissive, so only the outline reads: small ones are a
+    twice-subdivided icosahedron (80 triangles, an even outline from every side), the
+    big ones (r >= 11 cm, where facets would show) a UV sphere of `segs` x `rings`."""
+    if radius < 0.11:
+        bmesh.ops.create_icosphere(bm, subdivisions=2, radius=radius, matrix=Matrix.Translation(centre))
+    else:
+        bmesh.ops.create_uvsphere(bm, u_segments=segs, v_segments=rings, radius=radius,
+                                  matrix=Matrix.Translation(centre))
+
+
+def ferrule(bm, top, radius, h=0.022, segs=5):
+    """Bronze cap where the cable enters an orb: a short cone, open underneath
+    (inside the orb), with a narrow neck for the cable."""
+    rot = Matrix.Translation((top[0], top[1], top[2] - h / 2))
+    bmesh.ops.create_cone(bm, cap_ends=False, segments=segs, radius1=radius, radius2=radius * 0.35,
+                          depth=h, matrix=rot)
 
 
 def build(**overrides):
@@ -83,6 +97,7 @@ def build(**overrides):
         anchors.append((r * math.cos(a), r * math.sin(a), r))
 
     orbs_a, orbs_b = bmesh.new(), bmesh.new()
+    caps = bmesh.new()
     cables = bmesh.new()
     z_top = zc - ct - 0.025
     for (ax, ay, r) in anchors:
@@ -108,16 +123,20 @@ def build(**overrides):
             size = rnd.choice((0.075, 0.095, 0.115, 0.14)) * (1.25 if z == low else 0.85)
             target = orbs_b if rnd.random() < 0.22 else orbs_a
             orb(target, Vector((px, py, z)), size, p["orb_segments"], p["orb_rings"])
+            # the cap sits on the orb's crown, its rim a touch inside the glass
+            ferrule(caps, (px, py, z + size + 0.012), min(0.026, size * 0.3), h=0.03)
 
     common.mesh_object(f"{n}_OrbsOpal", orbs_a, col, opal, root)
     common.mesh_object(f"{n}_OrbsGold", orbs_b, col, gold, root)
     common.mesh_object(f"{n}_Cables", cables, col, black, root, smooth=False)
+    common.mesh_object(f"{n}_OrbCaps", caps, col, bronze, root)
 
     # ---- two bronze halo rings hung on three cables each ------------------------------
     cab = bmesh.new()
     for (rr, hz) in p["halo"]:
-        pts = [(rr * math.cos(2 * math.pi * s / 72), rr * math.sin(2 * math.pi * s / 72), hz) for s in range(72)]
-        common.tube_object(f"{n}_Halo_{int(rr * 100)}", pts, p["halo_tube"], col, bronze, root, closed=True, profile_res=2)
+        seg = 56 if rr > 1.2 else 44
+        pts = [(rr * math.cos(2 * math.pi * s / seg), rr * math.sin(2 * math.pi * s / seg), hz) for s in range(seg)]
+        common.tube_object(f"{n}_Halo_{int(rr * 100)}", pts, p["halo_tube"], col, bronze, root, closed=True, profile_res=1)
         for k in range(3):
             a = math.radians(30 + 120 * k)
             table_lamp.cylinder_between(cab, (min(rr, cr - 0.1) * math.cos(a), min(rr, cr - 0.1) * math.sin(a), z_top),

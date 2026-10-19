@@ -26,7 +26,7 @@ NAME = "BathPendant"
 GLOBES = [(0.00, 0.00, 1.95, 0.135), (0.30, 0.10, 1.55, 0.105), (-0.26, 0.16, 1.30, 0.12),
           (0.10, -0.30, 1.10, 0.095), (-0.18, -0.20, 1.75, 0.10)]
 
-P = dict(name=NAME, emission=3.0, segs=32)
+P = dict(name=NAME, emission=3.0, segs=24)
 
 
 def build(**overrides):
@@ -37,21 +37,24 @@ def build(**overrides):
     brass = bc.brass()
     glow = materials.emissive("M_Bath_Alabaster", (1.0, 0.84, 0.62), 2.6)
 
-    canopy = bc.lathe([(0.0, 0.0), (0.16, 0.0), (0.16, -0.012), (0.12, -0.03), (0.0, -0.03)], 40)
+    canopy = bc.lathe([(0.0, 0.0), (0.16, 0.0), (0.16, -0.008), (0.155, -0.013), (0.12, -0.028), (0.11, -0.03),
+                       (0.0, -0.03)], 36)
     common.mesh_object(f"{n}_Canopy", canopy, col, brass, root)
     rods = bmesh.new()
     for dx, dy, drop, r in GLOBES:
-        bc.cylinder_between(rods, (dx * 0.4, dy * 0.4, -0.03), (dx, dy, -drop + r), 0.003, 8)
+        bc.cylinder_between(rods, (dx * 0.4, dy * 0.4, -0.03), (dx, dy, -drop + r + 0.02), 0.003, 6)
     common.mesh_object(f"{n}_PipingRods", rods, col, brass, root)
     for i, (dx, dy, drop, r) in enumerate(GLOBES):
         prof = [(0.0, -r)]
-        for k in range(1, 12):
-            a = -math.pi / 2 + math.pi * k / 12
+        for k in range(1, 10):
+            a = -math.pi / 2 + math.pi * k / 10
             prof.append((r * math.cos(a), r * math.sin(a)))
         prof.append((0.0, r))
         g = common.mesh_object(f"{n}_Globe_{i}", bc.lathe(prof, p["segs"]), col, glow, root)
         g.location = (dx, dy, -drop)
-        cap = bc.lathe([(0.0, 0.0), (0.02, 0.0), (0.02, 0.012), (0.0, 0.012)], 16)
+        # socket cup: a flared brass cup hugging the globe's neck, a collar and the rod grip
+        cap = bc.lathe([(0.0, -0.002), (0.026, -0.002), (0.027, 0.004), (0.017, 0.014), (0.016, 0.022),
+                        (0.0045, 0.026), (0.0, 0.034)], 12)
         c = common.mesh_object(f"{n}_Cap_{i}", cap, col, brass, root)
         c.location = (dx, dy, -drop + r - 0.004)
     bc.merge(root, bc.children(root, "_Globe_"), f"{n}_PipingGlobes")

@@ -65,35 +65,67 @@ PLACEMENTS = [
     ("living_floor_lamp", (-4.3, -4.0), 0),
     ("living_side_table", (-1.85, -8.2), 0),
     ("living_table_lamp", (-1.85, -8.2, 0.55), 0),
-    ("living_art_tall", (-4.3, -10.34, 2.5), 180),
-    ("art_linework_a", (-2.5, -10.34, 2.3), 180),
+    ("living_art_tall", (-4.3, -10.34, 2.5), 180),            # black brush bars, 1.5 x 2.3 canvas
+    ("art_pencil_grid", (-2.45, -10.34, 1.9), 180),          # pencil grid, bottoms aligned with the tall canvas
     # ---- south wall, east of the den door: console, art, plant ---------------------------
     ("living_console", (3.3, -10.14), 180),
-    ("living_art_large", (3.3, -10.34, 2.5), 180),
+    ("living_art_large", (3.3, -10.34, 2.0), 180),           # seascape photograph over the console
     ("library_plant", (1.6, -9.9), 0),
     ("vase", (2.6, -10.14, 0.82), 0),
     # ---- east wall, either side of the fireplace -----------------------------------------------
     ("living_console", (5.89, 8.2), -90),
-    ("living_art_large", (6.09, 8.2, 2.6), -90),
+    ("art_blocks_umber", (6.09, 8.2, 2.05), -90),           # painterly blocks, floater frame
     ("living_plant_olive", (5.4, 6.3), 0),
     ("living_console", (5.89, -7.9), -90),
-    ("art_colorfield_a", (6.09, -7.9, 2.4), -90),
+    ("art_curve_vermilion", (6.09, -7.9, 2.05), -90),       # one vermilion curve
     ("living_sculpture", (5.4, -5.95), 0),
     # ---- north wall flanks (the dining opening is x -3.25..2.75) -----------------------------
     ("living_console", (4.0, 10.14), 0),
-    ("art_colorfield_a", (4.0, 10.34, 2.4), 0),
+    ("art_mono_ultramarine", (4.0, 10.34, 2.15), 0),        # ultramarine monochrome
     ("living_console", (-4.45, 10.14), 0),
-    ("art_linework_a", (-4.45, 10.34, 2.4), 0),
+    ("art_weave_indigo", (-4.45, 10.34, 2.15), 0),          # woven blocks
     ("library_plant", (-5.55, 2.6), 0),
+    # ---- lighting (see LIGHTS): bronze ledges across the two end walls at 4.3 m, ceiling
+    #      cans grazing the chimney breast and lighting the east-wall art
+    ("light_g_cove", (-4.0, 10.35, 4.3), 0),
+    ("light_g_cove", (0.0, 10.35, 4.3), 0),
+    ("light_g_cove", (4.0, 10.35, 4.3), 0),
+    ("light_g_cove_down", (-4.0, -10.35, 4.45), 180),
+    ("light_g_cove_down", (0.0, -10.35, 4.45), 180),
+    ("light_g_cove_down", (4.0, -10.35, 4.45), 180),
+    ("light_g_downlight", (5.3, 0.9, 8.4), 0),
+    ("light_g_downlight", (5.3, -0.9, 8.4), 0),
+    ("light_g_downlight", (4.9, 8.2, 8.4), 0),
+    ("light_g_downlight", (4.9, -7.9, 8.4), 0),
 ]
 
+# Lighting: the fire and the cascade chandelier are the heart of the room; the stone chimney
+# breast is grazed from two ceiling cans so it glows to the top; every lamp is lit, so each
+# seating group sits in its own warm pool; bronze ledges across the north and south walls
+# wash them (the north one also throws light up the wall to the ceiling, the south one only
+# down: the clerestory is above it). No ceiling lines; the west glass brings the daylight.
 LIGHTS = [
-    dict(kind="strip", pos=(2.0, 0.0), size=(0.12, 16.0), power=1400.0),
-    dict(kind="strip", pos=(-3.6, 0.0), size=(0.12, 16.0), power=1400.0),
-    dict(kind="point", pos=(-1.0, 0.5, 5.6), power=350.0, color=(1.0, 0.82, 0.6)),      # chandelier
+    dict(kind="point", pos=(-1.0, 0.5, 6.3), power=450.0, color=(1.0, 0.82, 0.6)),      # chandelier, upper drops
+    dict(kind="point", pos=(-1.0, 0.5, 5.3), power=500.0, color=(1.0, 0.80, 0.56)),     # chandelier, lower drops
     dict(kind="point", pos=(5.2, 0.0, 1.0), power=180.0, color=(1.0, 0.55, 0.25)),      # fire
-    dict(kind="point", pos=(-2.55, 7.1, 1.8), power=120.0, color=(1.0, 0.75, 0.5)),     # arc lamp B
-    dict(kind="point", pos=(-4.3, -5.4, 1.8), power=120.0, color=(1.0, 0.75, 0.5)),     # arc lamp C
+    dict(kind="point", pos=(-2.55, 7.1, 1.8), power=150.0, color=(1.0, 0.75, 0.5)),     # arc lamp B
+    dict(kind="point", pos=(-4.3, -5.4, 1.8), power=150.0, color=(1.0, 0.75, 0.5)),     # arc lamp C
+    # table lamps (shade centres): sofa ends, the console behind the sofa, group C
+    dict(kind="point", pos=(-0.1, 1.75, 1.0), power=60.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-0.1, -1.75, 1.0), power=60.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-0.85, 0.6, 1.27), power=55.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-0.85, -0.6, 1.27), power=55.0, color=(1.0, 0.76, 0.5)),
+    dict(kind="point", pos=(-1.85, -8.2, 1.0), power=60.0, color=(1.0, 0.76, 0.5)),
+    # chimney breast grazers and the east-wall art (cans at 8.4 m)
+    dict(kind="spot", pos=(5.3, 0.9, 8.33), aim=(5.45, 0.9, 1.2), power=900.0, angle=24, blend=0.5),
+    dict(kind="spot", pos=(5.3, -0.9, 8.33), aim=(5.45, -0.9, 1.2), power=900.0, angle=24, blend=0.5),
+    dict(kind="spot", pos=(4.9, 8.2, 8.33), aim=(6.05, 8.2, 2.05), power=650.0, angle=18, blend=0.4),
+    dict(kind="spot", pos=(4.9, -7.9, 8.33), aim=(6.05, -7.9, 2.05), power=650.0, angle=18, blend=0.4),
+    # north ledge (z 4.3): up the wall to the ceiling, and down over the consoles and art
+    dict(kind="area", pos=(0.0, 10.27, 4.37), size=(11.8, 0.08), aim=(0.0, 9.6, 8.4), power=550.0, color=(1.0, 0.84, 0.66)),
+    dict(kind="area", pos=(0.0, 10.25, 4.27), size=(11.8, 0.08), aim=(0.0, 9.4, 1.0), power=450.0, color=(1.0, 0.82, 0.62)),
+    # south ledge (z 4.45, lip down): down the clay wall and its art
+    dict(kind="area", pos=(0.0, -10.27, 4.38), size=(11.8, 0.08), aim=(0.0, -9.4, 1.0), power=500.0, color=(1.0, 0.82, 0.62)),
 ]
 
 PROBE = (-3.0, 0.0, 1.6)

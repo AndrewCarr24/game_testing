@@ -53,7 +53,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -61,11 +62,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -92,7 +94,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"max":[
 				2.5,
 				0.012000000104308128,
@@ -107,24 +109,30 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":36,
+			"count":72,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":108,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":273,
+			"byteLength":785,
 			"byteOffset":0
 		}
 	],
@@ -136,7 +144,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":276,
+			"byteLength":788,
 			"uri":"library_rug.bin"
 		}
 	]

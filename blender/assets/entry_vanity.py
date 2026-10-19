@@ -22,10 +22,12 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 from lib import common, materials, textures  # noqa: E402
 import table_lamp  # noqa: E402
+import bath_vanity as bv  # noqa: E402  (fixture helpers: cone_between, axis_lathe, aerator_tip)
 
 importlib.reload(common)
 importlib.reload(materials)
 importlib.reload(textures)
+importlib.reload(bv)
 
 NAME = "EntryVanity"
 
@@ -141,15 +143,15 @@ def build(**overrides):
     r, h = p["basin_r"], p["basin_h"]
     cx = p["basin_x"]
     cy = -0.02
-    outer = table_lamp.catmull([(0.075, 0.0), (0.10, 0.006), (0.165, 0.045), (r, 0.10), (r - 0.004, h - 0.012)], per=6)
+    outer = table_lamp.catmull([(0.075, 0.0), (0.10, 0.006), (0.165, 0.045), (r, 0.10), (r - 0.004, h - 0.012)], per=3)
     inner = table_lamp.catmull([(r - 0.016, h - 0.006), (r - 0.026, h - 0.022), (r - 0.048, 0.085), (0.12, 0.05),
-                                (0.05, 0.026)], per=6)
+                                (0.05, 0.026)], per=3)
     rim = [(r - 0.010, h - 0.003)]
     prof = []
     for pt in [(0.0, 0.0)] + outer + rim + inner + [(0.0, 0.022)]:
         if not prof or abs(pt[0] - prof[-1][0]) + abs(pt[1] - prof[-1][1]) > 1e-4:
             prof.append(pt)
-    basin = common.mesh_object(f"{n}_Basin", table_lamp.lathe(prof, 56, sharp=55), col, ceramic, root)
+    basin = common.mesh_object(f"{n}_Basin", table_lamp.lathe(prof, 40, sharp=55), col, ceramic, root)
     basin.location = (cx, cy, top_z0 + tt)
     # drain
     drain = common.mesh_object(f"{n}_Drain", table_lamp.lathe([(0.0, 0.0), (0.022, 0.0), (0.022, 0.003), (0.0, 0.003)], 20),
@@ -160,21 +162,32 @@ def build(**overrides):
     fy = D / 2 - 0.09
     base_z = top_z0 + tt
     col_h = 0.30
-    spout_len = fy - cy + 0.02
-    pts = [(cx, fy, base_z), (cx, fy, base_z + col_h - 0.06), (cx, fy - 0.10, base_z + col_h + 0.02),
+    pts = [(cx, fy, base_z + 0.012), (cx, fy, base_z + col_h - 0.06), (cx, fy - 0.10, base_z + col_h + 0.02),
            (cx, cy + 0.07, base_z + col_h + 0.02), (cx, cy + 0.015, base_z + col_h - 0.08)]
-    path = common.fillet_polyline(pts, 0.07, segments=6, closed=False)
+    path = common.fillet_polyline(pts, 0.07, segments=5, closed=False)
     common.tube_object(f"{n}_Spout", [tuple(v) for v in path], 0.0115, col, bronze_p, root, closed=False, profile_res=3)
-    flange = common.mesh_object(f"{n}_Flange", table_lamp.lathe([(0.0, 0.0), (0.038, 0.0), (0.034, 0.012), (0.0, 0.012)], 28),
-                                col, bronze_p, root)
+    # deck flange with an eased edge, and a collar where the column leaves it
+    flange = common.mesh_object(f"{n}_Flange", table_lamp.lathe(
+        [(0.0, 0.0), (0.036, 0.0), (0.036, 0.006), (0.031, 0.012), (0.0, 0.012)], 28, sharp=35), col, bronze_p, root)
     flange.location = (cx, fy, base_z)
-    # a lever handle beside the column
-    hx = cx + 0.09
+    collar = common.mesh_object(f"{n}_Collar", table_lamp.lathe(
+        [(0.0, 0.0), (0.0155, 0.0), (0.0155, 0.032), (0.0128, 0.038), (0.0, 0.038)], 20, sharp=35), col, bronze_p, root)
+    collar.location = (cx, fy, base_z + 0.012)
+    # aerator at the spout end (the last path point), facing along the spout
+    tip, before = Vector(path[-1]), Vector(path[-2])
+    bv.aerator_tip(col, root, f"{n}_Aerator", bronze_p, black, tip + (tip - before).normalized() * 0.002,
+                   (tip - before), 0.0118)
+    # single-lever mixer beside the column: flange, body, tapered lever
+    hx = cx + 0.25                    # clear of the bowl, so the lever never pokes through it
+    hf = common.mesh_object(f"{n}_HandleFlange", table_lamp.lathe(
+        [(0.0, 0.0), (0.024, 0.0), (0.024, 0.005), (0.020, 0.009), (0.0, 0.009)], 20, sharp=35), col, bronze_p, root)
+    hf.location = (hx, fy, base_z)
     hb = bmesh.new()
-    table_lamp.cylinder_between(hb, (hx, fy, base_z), (hx, fy, base_z + 0.12), 0.011, segs=14)
+    bv.cone_between(hb, (hx, fy, base_z + 0.008), (hx, fy, base_z + 0.085), 0.0135, 0.0125, 16)
+    bv.cone_between(hb, (hx, fy, base_z + 0.085), (hx, fy, base_z + 0.092), 0.0125, 0.0095, 16)
     common.mesh_object(f"{n}_HandleStem", hb, col, bronze_p, root)
     hb2 = bmesh.new()
-    table_lamp.cylinder_between(hb2, (hx, fy, base_z + 0.12), (hx + 0.002, fy - 0.07, base_z + 0.13), 0.008, segs=12)
+    bv.cone_between(hb2, (hx, fy, base_z + 0.088), (hx + 0.004, fy - 0.075, base_z + 0.104), 0.0075, 0.0050, 10)
     common.mesh_object(f"{n}_HandleLever", hb2, col, bronze_p, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

@@ -31,6 +31,7 @@ def ring(n, name, col, mat, root, r, tube, centre, tilt_x, tilt_y, spin=0.0, seg
         pts.append((centre[0] + x, centre[1] + y, centre[2] + z))
     ob = common.tube_object(f"{n}_{name}", pts, tube, col, mat, root, closed=True, profile_res=4)
     common.box_uv(ob, 0.5)
+    ob["low"] = min(pts, key=lambda q: q[2])
     return ob
 
 
@@ -44,14 +45,31 @@ def build(**overrides):
     bronze = materials.bronze()
     steel = materials.steel()
     px, py, pz = p["plinth"]
-    plinth = common.mesh_object(f"{n}_Plinth", common.box_bmesh((px, py, pz)), col, marble, root, smooth=False)
-    plinth.location = (0, 0, pz / 2)
+    sg = 0.03     # the marble block sits on a recessed black shadow-gap base
+    plinth = common.mesh_object(f"{n}_Plinth", common.box_bmesh((px, py, pz - sg)), col, marble, root, smooth=False)
+    plinth.location = (0, 0, sg + (pz - sg) / 2)
+    foot = common.mesh_object(f"{n}_PlinthBase", common.box_bmesh((px - 0.04, py - 0.04, sg)), col,
+                              materials.black_metal(), root, smooth=False)
+    foot.location = (0, 0, sg / 2)
+    common.box_uv(foot, 0.5)
     common.add_bevel(plinth, 0.006, segments=2)
     common.box_uv(plinth, 1.0)
     r, t = p["ring_r"], p["tube_r"]
     zc = pz + r + 0.1
-    ring(n, "RingA", col, bronze, root, r, t, (0, 0, zc), math.radians(78), math.radians(18))
-    ring(n, "RingB", col, bronze, root, r * 0.9, t * 0.85, (0.05, 0, zc + 0.02), math.radians(20), math.radians(-72))
+    ra = ring(n, "RingA", col, bronze, root, r, t, (0, 0, zc), math.radians(78), math.radians(18))
+    rb = ring(n, "RingB", col, bronze, root, r * 0.9, t * 0.85, (0.05, 0, zc + 0.02), math.radians(20), math.radians(-72))
+    # spokes from the hub sphere out to the low point of each ring: the rings are carried
+    for k, rg in enumerate((ra, rb)):
+        lo = rg["low"]
+        common.tube_object(f"{n}_Spoke{k}", [(0.0, 0.0, zc), tuple(lo)], 0.008, col, bronze, root, closed=False,
+                           profile_res=1)
+        del rg["low"]
+    # armature: a bronze mounting disc on the plinth and a slim rod up to the sphere,
+    # which carries both rings
+    mount = common.mesh_object(f"{n}_Mount", lathe([(0.0, pz), (0.07, pz), (0.07, pz + 0.008), (0.064, pz + 0.014),
+                                                    (0.012, pz + 0.018), (0.012, zc), (0.0, zc)], 20, closed=False),
+                               col, bronze, root)
+    common.box_uv(mount, 0.5)
     ball = common.mesh_object(f"{n}_Sphere", lathe([(0, -0.07), (0.05, -0.05), (0.07, 0), (0.05, 0.05), (0, 0.07)], 24),
                               col, steel, root)
     ball.location = (0.0, 0.0, zc)

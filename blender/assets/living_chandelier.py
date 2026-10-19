@@ -53,6 +53,18 @@ def _rod(bm, p0, z1, r, segs=5):
         bm.faces.new((a[k], a[j], b[j], b[k]))
 
 
+def _cap(bm, c, r, h, segs=8):
+    """Socket cap: a short cylinder with a chamfered top (no underside: it sits on the globe)."""
+    rows = []
+    for rr, z in ((r, 0.0), (r, h * 0.7), (r * 0.45, h)):
+        rows.append([bm.verts.new((c.x + rr * math.cos(2 * math.pi * k / segs), c.y + rr * math.sin(2 * math.pi * k / segs),
+                                   c.z + z)) for k in range(segs)])
+    for a, b in zip(rows, rows[1:]):
+        for k in range(segs):
+            j = (k + 1) % segs
+            bm.faces.new((a[k], a[j], b[j], b[k]))
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -64,7 +76,7 @@ def build(**overrides):
 
     plate_bm = bmesh.new()
     segs = 40
-    for z0, z1, r in ((-0.03, 0.0, 1.05),):
+    for z0, z1, r in ((-0.03, 0.0, 1.05),):   # main disc
         rows = [[plate_bm.verts.new((rr * math.cos(2 * math.pi * k / segs), rr * math.sin(2 * math.pi * k / segs), z))
                  for k in range(segs)] for rr, z in ((0.0, z1), (r, z1), (r, z0), (0.0, z0))]
     # simple lid: fan
@@ -75,7 +87,19 @@ def build(**overrides):
         plate_bm.faces.new((top_c, rows[1][j], rows[1][k]))
         plate_bm.faces.new((rows[1][k], rows[1][j], rows[2][j], rows[2][k]))
         plate_bm.faces.new((bot_c, rows[2][k], rows[2][j]))
+    # a deeper canopy drum at the centre, where the fixture is fixed to the ceiling
+    crow = [[plate_bm.verts.new((rr * math.cos(2 * math.pi * k / 24), rr * math.sin(2 * math.pi * k / 24), z))
+             for k in range(24)] for rr, z in ((0.22, -0.03), (0.22, -0.075), (0.20, -0.085))]
+    cb = plate_bm.verts.new((0, 0, -0.085))
+    for a, b in zip(crow, crow[1:]):
+        for k in range(24):
+            j = (k + 1) % 24
+            plate_bm.faces.new((a[k], a[j], b[j], b[k]))
+    for k in range(24):
+        plate_bm.faces.new((cb, crow[-1][(k + 1) % 24], crow[-1][k]))
+    bmesh.ops.recalc_face_normals(plate_bm, faces=plate_bm.faces[:])
     plate = common.mesh_object(f"{n}_PlateNoCollide", plate_bm, col, bronze, root)
+    common.add_bevel(plate, 0.004, segments=1)
     common.box_uv(plate, 0.5)
 
     rods = bmesh.new()
@@ -88,8 +112,11 @@ def build(**overrides):
         x, y = rr * math.cos(ang), rr * math.sin(ang)
         t = rr / (p["radius"] * 0.9)
         L = p["bottom_len"] - (p["bottom_len"] - p["top_len"]) * (t ** 1.2) + rng.uniform(-0.12, 0.12)
-        _rod(rods, Vector((x, y, -0.03)), -L, 0.004)
-        _sphere(bulbs, Vector((x, y, -L - p["bulb_r"] * 0.6)), p["bulb_r"] * rng.uniform(0.85, 1.1))
+        _rod(rods, Vector((x, y, -0.03)), -L + 0.01, 0.004)
+        br = p["bulb_r"] * rng.uniform(0.85, 1.1)
+        # a small bronze socket cap where the drop meets the globe
+        _cap(rods, Vector((x, y, -L - p["bulb_r"] * 0.6 + br * 0.82)), 0.016, 0.03)
+        _sphere(bulbs, Vector((x, y, -L - p["bulb_r"] * 0.6)), br)
     for bmx in (rods, bulbs):
         bmesh.ops.recalc_face_normals(bmx, faces=bmx.faces[:])
     ro = common.mesh_object(f"{n}_RodsNoCollide", rods, col, bronze, root, smooth=False)

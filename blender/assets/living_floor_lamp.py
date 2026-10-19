@@ -43,8 +43,13 @@ def build(**overrides):
     glow = materials.emissive("M_Living_LampGlow", (1.0, 0.78, 0.50), p["glow"])
 
     bx, by, bz = p["base"]
-    base = common.mesh_object(f"{n}_Base", common.box_bmesh((bx, by, bz)), col, marble, root, smooth=False)
-    base.location = (0, 0, bz / 2)
+    pad = 0.006   # the block floats on a recessed black felt pad (a shadow line at the floor)
+    base = common.mesh_object(f"{n}_Base", common.box_bmesh((bx, by, bz - pad)), col, marble, root, smooth=False)
+    base.location = (0, 0, pad + (bz - pad) / 2)
+    felt = common.mesh_object(f"{n}_Pad", common.box_bmesh((bx - 0.03, by - 0.03, pad)), col, materials.black_metal(),
+                              root, smooth=False)
+    felt.location = (0, 0, pad / 2)
+    common.box_uv(felt, 0.5)
     common.add_bevel(base, 0.012, segments=3)
     common.box_uv(base, 1.0)
 
@@ -61,6 +66,12 @@ def build(**overrides):
     # the riser is solid, the arc / shade hang overhead and never block the player
     riser_ob = common.tube_object(f"{n}_Riser", riser, p["stem_r"], col, bronze, root, closed=False, profile_res=2)
     stem = common.tube_object(f"{n}_ArcNoCollide", pts, p["stem_r"], col, bronze, root, closed=False, profile_res=2)
+    # bronze collars: where the stem leaves the marble, and at the riser/arc joint
+    for k, (zc, h_, rr) in enumerate(((bz, 0.02, 0.022), (z1 - 0.03, 0.05, 0.017))):
+        cl = common.mesh_object(f"{n}_Collar{k}", lathe([(0.0, zc), (rr, zc), (rr, zc + h_ - 0.004),
+                                                          (rr - 0.004, zc + h_), (0.0, zc + h_)], 16),
+                                col, bronze, root)
+        common.box_uv(cl, 0.5)
     end = pts[-1]
     # shade hangs from the end of the arc on a short collar
     sh_top = end[2] - 0.015

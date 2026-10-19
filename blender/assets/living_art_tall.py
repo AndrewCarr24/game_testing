@@ -1,4 +1,5 @@
-"""Tall portrait canvas for the great room's wall flanks (picture_frame, larger)."""
+"""Art: 'kline_bars', gestural ink / brush work, 1.5 x 2.3 m, unframed canvas (great_room S wall, west).
+picture_frame variant (art_collection.PIECES); hangs on a wall, origin on the wall plane, faces -Y."""
 import importlib
 import os
 import sys
@@ -10,10 +11,8 @@ importlib.reload(picture_frame)
 common = picture_frame.common
 
 NAME = "LivingArtTall"
-VARIANT = dict(size=(1.5, 2.3), border=0.12, art="geometric_a", rough=0.78)
-P = dict(name=NAME, variant="living_tall")
+P = dict(name=NAME, variant="kline_bars")
 
 
 def build(**overrides):
-    picture_frame.VARIANTS["living_tall"] = VARIANT      # (picture_frame is reloaded by other art modules)
     return picture_frame.build(**{**P, **overrides})

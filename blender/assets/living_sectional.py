@@ -54,9 +54,9 @@ def build(**overrides):
     x0, x1 = -w / 2, w / 2
     living_sofa.module(p, col, root, mat, pmat, n, x0, x1 - cw, run_y0, y_back, back=True,
                        arms={"L": (run_y0, y_back)}, tag="Run", seat_w=1.15)
-    # chaise: low, no back, with the right arm running the full depth
+    # chaise: the corner seat plus the long chaise cushion, the right arm running the full depth
     living_sofa.module(p, col, root, mat, pmat, n, x1 - cw, x1, -total_d / 2, y_back, back=True,
-                       arms={"R": (-total_d / 2, y_back)}, tag="Chaise", seat_w=1.4)
+                       arms={"R": (-total_d / 2, y_back)}, tag="Chaise", seat_w=1.4, split_y=run_y0)
     z_seat = p["deck_z"][1] + p["seat_t"]
     for i, (px, rz) in enumerate(((x0 + p["arm_w"] + 0.32, -8), (x0 + p["arm_w"] + 0.95, 6),
                                   (x1 - cw - 0.38, -5))):

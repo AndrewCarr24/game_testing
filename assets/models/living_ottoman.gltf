@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				3
+				4
 			]
 		}
 	],
@@ -32,12 +32,7 @@
 		},
 		{
 			"mesh":1,
-			"name":"LivingOttoman_Base",
-			"translation":[
-				0,
-				0.029999999329447746,
-				0
-			]
+			"name":"LivingOttoman_Base"
 		},
 		{
 			"mesh":2,
@@ -49,10 +44,15 @@
 			]
 		},
 		{
+			"mesh":3,
+			"name":"LivingOttoman_Piping"
+		},
+		{
 			"children":[
 				0,
 				1,
-				2
+				2,
+				3
 			],
 			"name":"LivingOttoman"
 		}
@@ -112,7 +112,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -120,11 +121,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -135,9 +137,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -145,11 +148,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -160,9 +164,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -170,11 +175,39 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingOttoman_Piping",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":19,
 					"material":2,
 					"mode":4
 				}
@@ -226,37 +259,49 @@
 		},
 		{
 			"componentType":5123,
+			"count":172,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":246,
 			"max":[
-				0.5149999856948853,
-				0.029999999329447746,
-				0.5149999856948853
+				0.49965235590934753,
+				0.05999999865889549,
+				0.49965235590934753
 			],
 			"min":[
-				-0.5149999856948853,
-				-0.029999999329447746,
-				-0.5149999856948853
+				-0.49965235590934753,
+				-8.440110832452774e-10,
+				-0.49965235590934753
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":246,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":246,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":36,
+			"count":246,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":360,
 			"type":"SCALAR"
 		},
 		{
@@ -286,25 +331,72 @@
 		},
 		{
 			"componentType":5123,
+			"count":820,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":3600,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":160,
+			"max":[
+				0.5755997896194458,
+				0.420600026845932,
+				0.5755997896194458
+			],
+			"min":[
+				-0.5755997896194458,
+				0.0714000016450882,
+				-0.5755997896194458
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":160,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":160,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":160,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":576,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1026,
+			"byteLength":2135,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":283,
-			"byteOffset":1028
+			"byteLength":3358,
+			"byteOffset":2136
 		},
 		{
 			"buffer":0,
-			"byteLength":4025,
-			"byteOffset":1312
+			"byteLength":5983,
+			"byteOffset":5496
+		},
+		{
+			"buffer":0,
+			"byteLength":2056,
+			"byteOffset":11480
 		}
 	],
 	"samplers":[
@@ -315,7 +407,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":5340,
+			"byteLength":13536,
 			"uri":"living_ottoman.bin"
 		}
 	]

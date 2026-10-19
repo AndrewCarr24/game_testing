@@ -67,17 +67,55 @@ PLACEMENTS = [
     ("bath_toilet", (WW + 0.14, -3.60), 90),
     # --- south wall between: daybed under a large artwork
     ("bath_daybed", (-0.70, WS + 0.45), 180),
-    ("art_colorfield_b", (-0.70, WS, ART_Z), 180),
+    ("art_shoreline", (-0.70, WS, ART_Z), 180),
     ("bath_plant", (-2.35, -3.95), 150),
 ]
 
+# --- lighting --------------------------------------------------------------------------------
+# A spa at night: the dark Marquina wall behind the tub is the stage, grazed by two downlights
+# either side of the alabaster globe cluster, with the two wall sconces glowing on it. At the
+# vanity the pill mirrors are backlit (a halo on the marble round each) between the three
+# alabaster sconces, and the floating vanity has a toe-kick glow on the floor. Downlights wash
+# the art over the daybed and light the shower and the water closet. No ceiling strips.
+CEIL = 3.8
+_DL = [(4.4, 1.05), (4.4, 2.45),          # tub wall grazers
+       (-0.70, -3.85),                    # art over the daybed
+       (3.9, -3.5),                       # shower
+       (-3.95, -3.6),                     # water closet
+       (VX, 2.2),                         # the middle of the room, in front of the vanity
+       (1.3, -1.2)]                       # between the shower and the daybed
+PLACEMENTS += [("light_u_downlight", (x, y, CEIL), 0) for x, y in _DL]
+
+_WARM = (1.0, 0.76, 0.52)
 LIGHTS = [
-    dict(kind="strip", pos=(VX, 3.55), size=(4.2, 0.08), power=110.0),       # wash on the vanity wall
-    dict(kind="strip", pos=(2.2, 0.0), size=(0.08, 5.0), power=95.0),       # along the tub side
-    dict(kind="strip", pos=(-1.2, -1.2), size=(5.0, 0.08), power=90.0),     # general light
-    dict(kind="point", pos=(VX, 4.40, 2.10), power=45.0, color=(1.0, 0.74, 0.48)),     # vanity sconces
-    dict(kind="point", pos=(3.72, 1.75, 2.50), power=70.0, color=(1.0, 0.76, 0.52)),   # pendant over the tub
-    dict(kind="point", pos=(3.9, -3.5, 3.2), power=45.0, color=(1.0, 0.78, 0.55)),     # in the shower
+    # the five alabaster sconces (vanity trio, tub pair): a bulb in each light bar
+    *[dict(kind="point", pos=(x, WN - 0.06, 1.90), power=50.0, color=_WARM) for x in (VX, VX - 1.80, VX + 1.80)],
+    *[dict(kind="point", pos=(WE - 0.06, y, 1.70), power=50.0, color=_WARM) for y in (0.35, 3.15)],
+    # backlit mirrors: a soft source behind each, facing the wall
+    *[dict(kind="area", pos=(x, WN - 0.012, 1.90), size=(0.7, 1.05), aim=(x, WN, 1.90), power=100.0,
+           color=(1.0, 0.84, 0.66)) for x in (VX - 0.76, VX + 0.76)],
+    # toe-kick under the vanity (front of the plinth ~ y 4.09)
+    dict(kind="area", pos=(VX, WN - 0.53, 0.09), size=(2.75, 0.04), aim=(VX, WN - 0.9, 0.0), power=85.0,
+         color=(1.0, 0.84, 0.66)),
+    # tub wall grazers, down the dark marble
+    *[dict(kind="spot", pos=(4.4, y, CEIL - 0.03), aim=(WE, y, 0.8), power=370.0, angle=40.0, blend=0.7,
+           color=(1.0, 0.82, 0.62)) for y in (1.05, 2.45)],
+    # the alabaster pendant over the tub
+    dict(kind="point", pos=(3.72, 1.75, 2.50), power=140.0, color=(1.0, 0.76, 0.52)),
+    # art over the daybed, shower, water closet, the floor in front of the vanity
+    dict(kind="spot", pos=(-0.70, -3.85, CEIL - 0.03), aim=(-0.70, WS, 1.5), power=340.0, angle=55.0, blend=0.75,
+         color=(1.0, 0.82, 0.62)),
+    dict(kind="spot", pos=(3.9, -3.5, CEIL - 0.03), aim=(3.9, -3.5, 0.0), power=240.0, angle=70.0, blend=0.8,
+         color=(1.0, 0.84, 0.66)),
+    dict(kind="spot", pos=(-3.95, -3.6, CEIL - 0.03), aim=(-3.95, -3.6, 0.0), power=160.0, angle=70.0, blend=0.8,
+         color=(1.0, 0.84, 0.66)),
+    dict(kind="spot", pos=(1.3, -1.2, CEIL - 0.03), aim=(1.3, -1.2, 0.0), power=380.0, angle=70.0, blend=0.8,
+         color=(1.0, 0.84, 0.66)),
+    dict(kind="spot", pos=(VX, 2.2, CEIL - 0.03), aim=(VX, 2.6, 0.0), power=400.0, angle=70.0, blend=0.8,
+         color=(1.0, 0.84, 0.66)),
 ]
 
 PROBE = (-0.5, 0.0, 1.6)
+
+# the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
+LIGHTS = [dict(L, power=L["power"] * 1.35) for L in LIGHTS]

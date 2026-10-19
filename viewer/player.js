@@ -4,7 +4,8 @@ import * as THREE from 'three';
 // world of axis-aligned boxes. Gravity, jumping, sprinting, crouching,
 // automatic step-up onto low edges (rugs, thresholds), and landing on top of
 // anything (desks, chairs). Movement is substepped so fast falls can't tunnel
-// through thin parts like a desktop.
+// through thin parts like a desktop. Stairs carry an invisible ramp (level.ramps)
+// that the feet follow, so climbing them is a smooth glide, not a pop per tread.
 
 const DEFAULTS = {
   radius: 0.25,          // half-width of the player's footprint
@@ -12,13 +13,15 @@ const DEFAULTS = {
   crouchHeight: 1.1,
   eye: 1.65,             // eye height above the feet, standing
   crouchEye: 0.95,
-  walk: 2.6,             // m/s
-  run: 5.2,
+  walk: 3.4,             // m/s
+  run: 6.8,
   crouchSpeed: 1.2,
   gravity: 24,           // m/s² (snappier than 9.8, as in most games)
   jumpHeight: 1.05,      // apex in metres; clears a 0.74 m desk
   stepHeight: 0.3,       // edges this low are walked up without jumping
   airControl: 0.35,      // fraction of ground acceleration available mid-air
+  jumpBuffer: 0.15,      // s: a press this long before landing still jumps
+  coyoteTime: 0.1,       // s: a press this long after running off an edge still jumps
 };
 
 export const KEYS = {
@@ -32,10 +35,16 @@ export class Player {
     this.o = { ...DEFAULTS, ...opts };
     this.camera = camera;
     this.boxes = colliders;
+    // {x: [x0, x1], z: [z0, z1], y: [y0, y1]}: height y0 at x0 rising linearly to y1 at x1
+    this.ramps = opts.ramps || [];
+    this._onRamp = false;
     this.pos = new THREE.Vector3(...feetPosition);  // feet centre
     this.vel = new THREE.Vector3();
     this.grounded = false;
     this.crouching = false;
+    this._jumpHeld = false;
+    this._jumpBuffer = 0;     // time left on a remembered jump press
+    this._sinceGround = 1;    // time since last grounded
     this.height = this.o.height;
     this.eye = this.o.eye;
     this._box = new THREE.Box3();
@@ -83,10 +92,18 @@ export class Player {
     this.vel.x += (wish.x - this.vel.x) * Math.min(1, accel);
     this.vel.z += (wish.z - this.vel.z) * Math.min(1, accel);
 
-    if (input.jump && this.grounded) {
+    // jump on the press (not while held), remembered briefly, and still allowed just after
+    // running off an edge: a tap never gets lost to a single frame's state
+    if (input.jump && !this._jumpHeld) this._jumpBuffer = o.jumpBuffer;
+    this._jumpHeld = input.jump;
+    this._sinceGround = this.grounded ? 0 : this._sinceGround + dt;
+    if (this._jumpBuffer > 0 && this._sinceGround <= o.coyoteTime && this.vel.y <= 0.5) {
       this.vel.y = Math.sqrt(2 * o.gravity * o.jumpHeight);
       this.grounded = false;
+      this._jumpBuffer = 0;
+      this._sinceGround = o.coyoteTime + 1;
     }
+    this._jumpBuffer = Math.max(0, this._jumpBuffer - dt);
     this.vel.y -= o.gravity * dt;
 
     // substep so no single move exceeds 4 cm
@@ -98,6 +115,16 @@ export class Player {
       this.moveHorizontal('z', this.vel.z * h);
       this.moveVertical(this.vel.y * h);
       this.depenetrate();
+    }
+    // grounded = something solid right under the feet, decided once per frame. (Set per
+    // substep it flickered: after landing in the first substep, the later ones move 0 m
+    // vertically and touch nothing, so at a run the player read as airborne most frames.)
+    if (this.vel.y <= 0) {
+      const probe = this.pos.clone();
+      probe.y -= 0.03;
+      this.grounded = this._onRamp || this.overlapping(probe).some((c) => c.max.y <= this.pos.y + 0.01);
+    } else {
+      this.grounded = false;
     }
     this.syncCamera();
   }
@@ -130,7 +157,10 @@ export class Player {
   tryStepUp(c) {
     if (this.vel.y > 0) return false;
     const rise = c.max.y - this.pos.y;
-    if (rise <= 0 || rise > this.o.stepHeight) return false;
+    // full steps only on foot; in the air just enough to catch an edge when landing (more
+    // would let a jump off a table "climb" onto a 2 m shelf on the way down)
+    const max = this.grounded ? this.o.stepHeight : 0.1;
+    if (rise <= 0 || rise > max) return false;
     const up = this.pos.clone();
     up.y = c.max.y;
     if (this.overlapping(up).length) return false;
@@ -148,9 +178,7 @@ export class Player {
     const hits = this.overlapping(this.pos);
     if (!hits.length) {
       this.grounded = false;
-      return;
-    }
-    if (d < 0) {
+    } else if (d < 0) {
       const under = hits.filter((c) => c.max.y <= prev + 0.01);   // (sinking into a low ledge is depenetrate's job)
       if (under.length) {
         this.pos.y = Math.max(...under.map((c) => c.max.y));
@@ -164,6 +192,38 @@ export class Player {
         this.vel.y = 0;
       }
     }
+    this.followRamp();
+  }
+
+  // Height of the ramp surface under the footprint (at its uphill edge, so the box clears
+  // every tread below the slope), or -Infinity off the ramps.
+  rampHeight(p) {
+    const r = this.o.radius;
+    let best = -Infinity;
+    for (const { x: [x0, x1], z: [z0, z1], y: [y0, y1] } of this.ramps) {
+      if (p.x + r <= Math.min(x0, x1) || p.x - r >= Math.max(x0, x1) || p.z + r <= z0 || p.z - r >= z1) continue;
+      const up = (y1 - y0) * (x1 - x0) > 0 ? p.x + r : p.x - r;
+      const t = Math.min(1, Math.max(0, (up - x0) / (x1 - x0)));
+      best = Math.max(best, y0 + (y1 - y0) * t);
+    }
+    return best;
+  }
+
+  // Stand on a ramp: when the feet are up to a step below it (walking up), or just above it
+  // after walking down it (rather than falling 18 cm per tread).
+  followRamp() {
+    const g = this.rampHeight(this.pos);
+    const gap = g - this.pos.y;
+    const snapDown = this._onRamp ? this.o.stepHeight : 0.01;
+    this._onRamp = false;
+    if (this.vel.y > 0 || g === -Infinity || gap > this.o.stepHeight || gap < -snapDown) return;
+    const at = this.pos.clone();
+    at.y = g;
+    if (this.overlapping(at).length) return;
+    this.pos.y = g;
+    this.vel.y = 0;
+    this.grounded = true;
+    this._onRamp = true;
   }
 
   // Anything still overlapping after a move pushes the player out the shortest way
@@ -172,16 +232,29 @@ export class Player {
     for (let i = 0; i < 4; i++) {
       const hits = this.overlapping(this.pos);
       if (!hits.length) return;
-      if (!this.tryStepUp(hits[0])) this.pushOut(hits[0]);
+      // tall obstacles first: a rug under an ottoman must not be resolved by sliding the
+      // player sideways off the rug's far edge (and through the glass beyond it)
+      const step = (c) => c.max.y - this.pos.y <= this.o.stepHeight;
+      const c = hits.find((h) => !step(h)) ?? hits[0];
+      if (!this.tryStepUp(c)) this.pushOut(c);
     }
   }
 
+  // Out of `box` by the shortest exit that lands clear of everything: the plain shortest
+  // exit could push the player out of a sofa into the glass wall beside it, and then out of
+  // the glass on its far side, outside the house. Only if no exit is clear take the shortest.
   pushOut(box) {
     const r = this.o.radius;
     const moves = [
       ['x', box.min.x - r - 1e-3], ['x', box.max.x + r + 1e-3],
       ['z', box.min.z - r - 1e-3], ['z', box.max.z + r + 1e-3],
     ].sort((m, n) => Math.abs(m[1] - this.pos[m[0]]) - Math.abs(n[1] - this.pos[n[0]]));
+    const t = this.pos.clone();
+    for (const [axis, v] of moves) {
+      t.copy(this.pos);
+      t[axis] = v;
+      if (!this.overlapping(t).length) { this.pos.copy(t); return; }
+    }
     this.pos[moves[0][0]] = moves[0][1];
   }
 

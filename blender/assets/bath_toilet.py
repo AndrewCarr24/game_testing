@@ -63,22 +63,36 @@ def build(**overrides):
              ring(0.172, 0.09, 0.14, cy + 0.04), ring(0.20, 0.135, 0.21, cy + 0.02),
              ring(0.25, 0.168, 0.255, cy + 0.0), ring(0.32, 0.182, 0.275, cy), ring(0.375, A, B, cy),
              ring(zr - 0.012, A + 0.003, B + 0.003, cy), ring(zr, A - 0.004, B - 0.004, cy)]
-    pan = common.mesh_object(f"{n}_Pan", bc.loft(rings, segs), col, ceramic, root)
-    # seat ring + lid (closed): two slabs with rounded outline
-    seat_z0 = zr
-    for tag, t_, z_ in (("Seat", 0.022, seat_z0), ("Lid", 0.016, seat_z0 + 0.022)):
-        pts = bc.superellipse(A + 0.004, B + 0.008, 2.4, segs)
-        bm = bmesh.new()
-        lo = [bm.verts.new((x, y + cy - 0.004, z_)) for x, y in pts]
-        hi = [bm.verts.new((x, y + cy - 0.004, z_ + t_)) for x, y in pts]
-        for i in range(segs):
-            j = (i + 1) % segs
-            bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
-        bm.faces.new(lo[::-1])
-        bm.faces.new(hi)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-        ob = common.mesh_object(f"{n}_{tag}", bm, col, ceramic, root)
-        common.add_bevel(ob, 0.006, segments=2)
+    rings.append(("pole", 0, cy, zr))           # closed rim deck (the hinge area behind the seat shows)
+    common.mesh_object(f"{n}_Pan", bc.loft(rings, segs), col, ceramic, root)
+
+    # seat ring and closed lid, ending short of the wall so the hinges sit on the rear deck.
+    # The lid overhangs the seat slightly and has a soft domed top; a hairline shows between them.
+    back_gap = 0.045
+    sa, sb = A + 0.004, B + 0.004 - back_gap / 2
+    syc = cy - back_gap / 2 - 0.004
+
+    def ring_xy(a, b, z):
+        return (z, [(x, y + syc) for x, y in bc.superellipse(a, b, 2.4, segs)])
+
+    seat_z0 = zr + 0.003
+    seat = [ring_xy(sa - 0.006, sb - 0.006, seat_z0), ring_xy(sa, sb, seat_z0 + 0.005), ring_xy(sa, sb, seat_z0 + 0.016),
+            ring_xy(sa - 0.005, sb - 0.005, seat_z0 + 0.021), ("pole", 0, syc, seat_z0 + 0.021)]
+    seat_bm = bc.loft(seat, segs)
+    common.mesh_object(f"{n}_Seat", seat_bm, col, ceramic, root)
+    lz = seat_z0 + 0.023
+    lid = [ring_xy(sa - 0.002, sb - 0.002, lz), ring_xy(sa + 0.002, sb + 0.002, lz + 0.004),
+           ring_xy(sa + 0.002, sb + 0.002, lz + 0.011), ring_xy(sa - 0.008, sb - 0.008, lz + 0.019),
+           ring_xy(sa * 0.6, sb * 0.6, lz + 0.026), ("pole", 0, syc, lz + 0.028)]
+    common.mesh_object(f"{n}_Lid", bc.loft(lid, segs), col, ceramic, root)
+    # hinge: two brass bosses on the rear deck and the pivot bar through the seat's back
+    hb = bmesh.new()
+    hy = -back_gap / 2 + 0.002
+    for sx in (-1, 1):
+        bc.cylinder_between(hb, (sx * 0.085, hy, zr), (sx * 0.085, hy, zr + 0.026), 0.013, 14)
+        bc.cylinder_between(hb, (sx * 0.085, hy, zr + 0.026), (sx * 0.085, hy, zr + 0.029), 0.010, 14)
+    bc.cylinder_between(hb, (-0.085, hy - 0.004, zr + 0.017), (0.085, hy - 0.004, zr + 0.017), 0.0065, 10)
+    common.mesh_object(f"{n}_Hinge", hb, col, brass, root)
 
     # wall bracket block under the pan
     bc.box(col, root, f"{n}_Block", (0.26, 0.10, 0.22), (0, -0.05, 0.30), ceramic, bevel=0.01)

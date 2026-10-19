@@ -24,15 +24,15 @@ NAME = "Vase"
 
 P = dict(
     name=NAME,
-    segments=48,            # around the vase (multiple of flutes)
-    flutes=12,
-    flute_depth=0.0050,     # groove depth on the body
+    segments=24,            # around the vase (multiple of flutes; 4 per flute keeps them round)
+    flutes=6,
+    flute_depth=0.0090,     # groove depth on the body
     flute_z=(0.032, 0.20),  # flutes fade in above the base and out over the shoulder
     base_h=0.020,           # solid glass base height
     wall=0.0045,            # wall thickness
     lip_top=0.280,          # overall height
-    outer_rings=16,         # rings on the outer wall (above the base)
-    inner_rings=8,         # rings on the inner wall
+    outer_rings=12,         # rings on the outer wall (above the base)
+    inner_rings=4,          # rings on the inner wall (seen dimly through the glass)
     # outer profile control points (z, r): foot, swelling body, shoulder, neck, flared lip
     profile=[(0.020, 0.0505), (0.050, 0.0585), (0.095, 0.0650), (0.135, 0.0655),
              (0.170, 0.0560), (0.199, 0.0385), (0.222, 0.0285), (0.248, 0.0262),
@@ -121,7 +121,7 @@ def _lathe(bm, rings, segments, flute=None, close_poles=True):
         row = []
         for j in range(segments):
             th = 2 * math.pi * j / segments
-            rr = r - depth * (0.5 + 0.5 * math.cos(flute * th)) ** 1.5 if flute else r
+            rr = r - depth * (0.5 + 0.5 * math.cos(flute * th)) ** 4 if flute else r
             row.append(bm.verts.new((rr * math.cos(th), rr * math.sin(th), z)))
         verts.append(row)
     faces = []
@@ -194,8 +194,8 @@ def build(**overrides):
     rf = 0.0035      # bottom edge fillet
     # bottom edge arc from (z=0, r=R-rf) to (z=rf, r=R)
     puck = [(0.0, 0.0, 0.0)]
-    for k in range(3):
-        a_ = math.pi / 2 * k / 2
+    for k in range(2):
+        a_ = math.pi / 2 * k
         puck.append((rf - rf * math.cos(a_), R - rf + rf * math.sin(a_), 0.0))
     puck.append((z0, R, 0.0))
     puck.append((z0, 0.0, 0.0))

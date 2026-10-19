@@ -93,14 +93,38 @@ def build(**overrides):
         splay = math.atan2(reach, top_z - bot_z)
         mid = (reach * 0.5 * math.cos(a), reach * 0.5 * math.sin(a), (top_z + bot_z) / 2)
         # build the leg as a box leaning outward in direction a
-        leg = wood.box((0, 0, 0), (0.035, 0.035, h), rot=(-splay, "y"))
+        leg = wood.box((0, 0, 0), (0.038, 0.038, h), rot=(-splay, "y"), taper=(0.62, 0.62))
         # rotate about Z by a, then place
         bmesh.ops.rotate(wood.bm, verts=leg, cent=(0, 0, 0), matrix=Matrix.Rotation(a - 0.0, 3, "Z"))
         bmesh.ops.translate(wood.bm, vec=mid, verts=leg)
         brz.box((reach * math.cos(a), reach * math.sin(a), 0.01), (0.04, 0.04, 0.02))
-    # three stretchers: a ring of thin bars joining the legs part-way up
-    wood.to_object(f"{n}_Stand", col, walnut, root)
-    brz.to_object(f"{n}_Bronze", col, bronze, root)
+    # three stretchers: a ring of thin bars joining the legs part-way up, a turned
+    # bronze boss at their centre and a finial under it
+    zs = 0.30
+    top_z, bot_z, reach = cz - R - 0.11, 0.012, 0.27
+    rs = reach * (top_z - zs) / (top_z - bot_z)            # the legs' distance from the axis at zs
+    for i in range(3):
+        a0 = i * 2 * math.pi / 3 + math.pi / 2
+        a1 = a0 + 2 * math.pi / 3
+        p0 = (rs * math.cos(a0), rs * math.sin(a0))
+        p1 = (rs * math.cos(a1), rs * math.sin(a1))
+        mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+        length = math.hypot(p1[0] - p0[0], p1[1] - p0[1]) - 0.02
+        bar = wood.box((0, 0, 0), (length, 0.016, 0.022))
+        bmesh.ops.rotate(wood.bm, verts=bar, cent=(0, 0, 0), matrix=Matrix.Rotation(math.atan2(p1[1] - p0[1], p1[0] - p0[0]), 3, "Z"))
+        bmesh.ops.translate(wood.bm, vec=(mx, my, zs), verts=bar)
+    # bronze collar where the hub meets the meridian, and a finial below the hub
+    brz.lathe([(0, 0.0), (0.012, 0.0), (0.02, 0.012), (0.012, 0.03), (0.006, 0.05), (0, 0.06)], segs=10,
+              centre=(0, 0, cz - R - 0.22))
+    stand = wood.to_object(f"{n}_Stand", col, walnut, root)
+    for d in stand.data.uv_layers["UVMap"].data:          # the walnut map's grain runs along v
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
+    common.add_bevel(stand, 0.002, segments=1)
+    b = brz.to_object(f"{n}_Bronze", col, bronze, root, smooth=True)
+    for poly in b.data.polygons:                          # flat faces stay flat
+        n_ = poly.normal
+        if max(abs(n_.x), abs(n_.y), abs(n_.z)) > 0.999:
+            poly.use_smooth = False
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

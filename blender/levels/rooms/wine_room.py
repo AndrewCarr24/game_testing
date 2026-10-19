@@ -81,23 +81,59 @@ PLACEMENTS = [
     ("lounge_chair", (1.65, -2.9), 90),
     ("lounge_chair", (3.55, -2.9), -90),
     # south wall art
-    ("dining_artwork", (2.6, -4.6, 2.1), 180),
-    ("art_colorfield_b", (-1.2, -4.6, 1.8), 180),
-    ("art_geometric_b", (-2.6, -4.6, 1.8), 180),
+    ("art_vineyard", (2.6, -4.6, 1.85), 180),             # aerial vineyard photograph
+    ("art_wine_rings", (-1.35, -4.6, 1.7), 180),          # pair: wine rings on paper ...
+    ("art_oxblood_zip", (-2.35, -4.6, 1.7), 180),         # ... and an oxblood monochrome
     # south-west: two barrels as standing tables
     ("dining_barrel", (-5.0, -3.8), 0),
     ("dining_wine_set", (-5.0, -3.8, 0.92), 160),
     ("dining_stool", (-4.1, -3.9), 0),
+    # lighting (see LIGHTS): up/down sconces either side of the photograph, a reading lamp
+    # in the nook, ceiling cans on the art and the barrels
+    ("light_g_sconce_updown", (0.75, -4.6, 2.25), 180),
+    ("light_g_sconce_updown", (4.45, -4.6, 2.25), 180),
+    ("library_floorlamp", (4.5, -2.0), 0),
+    ("light_g_downlight", (2.0, -3.6, 4.2), 0),
+    ("light_g_downlight", (3.2, -3.6, 4.2), 0),
+    ("light_g_downlight", (-1.85, -3.7, 4.2), 0),
+    ("light_g_downlight", (-5.0, 3.67, 4.2), 0),
 ]
 
+# Lighting: the bottle walls are the room's display: each run of racking is washed from a
+# hidden LED where the racks meet the slatted bulkhead (2.6 m), and the climate wall glows
+# from inside; the three bronze cones pool light on the marble tasting table; bronze up/down
+# sconces flank the vineyard photograph over the leather nook, which has its own lamp; cans
+# pick out the pair of works and the barrels. Warm 2700 K throughout, no ceiling lines.
+_WARM = (1.0, 0.76, 0.5)
+
+
+def _updown(x, y, wx, wy, up=40.0, down=50.0):
+    """The two scallops of a light_g_sconce_updown at (x, y) on a wall, 0.13 m out along (wx, wy)."""
+    px, py = x + 0.13 * wx, y + 0.13 * wy
+    return [dict(kind="spot", pos=(px, py, 2.40), aim=(px, py, 4.2), power=up, angle=60, blend=0.7, color=_WARM),
+            dict(kind="spot", pos=(px, py, 2.10), aim=(px, py, 0.0), power=down, angle=60, blend=0.7, color=_WARM)]
+
+
 LIGHTS = [
-    dict(kind="strip", pos=(0.0, 3.7), size=(4.4, 0.08), power=198.0),                 # washes the climate wall
-    dict(kind="strip", pos=(0.0, T_Y), size=(3.4, 0.08), power=126.0),                  # tasting table
-    dict(kind="strip", pos=(5.2, 0.0), size=(0.08, 6.4), power=234.0),                 # east racking
-    dict(kind="strip", pos=(-5.2, -2.4), size=(0.08, 3.4), power=126.0),                # west racking
-    dict(kind="strip", pos=(2.6, -3.9), size=(3.4, 0.08), power=108.0),                 # nook / south wall
-    dict(kind="point", pos=(-0.9, T_Y, 2.0), power=35.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(0.9, T_Y, 2.0), power=35.0, color=(1.0, 0.72, 0.45)),
+    # rack washes (rack fronts: north y 4.2, east x 5.7, west x -5.7)
+    dict(kind="area", pos=(-4.05, 4.12, 2.55), size=(3.9, 0.05), aim=(-4.05, 4.3, 0.9), power=120.0, color=_WARM),
+    dict(kind="area", pos=(4.05, 4.12, 2.55), size=(3.9, 0.05), aim=(4.05, 4.3, 0.9), power=120.0, color=_WARM),
+    dict(kind="area", pos=(5.62, 0.0, 2.55), size=(5.9, 0.05), aim=(5.85, 0.0, 0.9), power=180.0, color=_WARM),
+    dict(kind="area", pos=(-5.62, -2.4, 2.55), size=(2.9, 0.05), aim=(-5.85, -2.4, 0.9), power=90.0, color=_WARM),
+    # the climate wall, from behind its glass
+    dict(kind="area", pos=(0.0, 4.06, 1.75), size=(3.8, 1.7), aim=(0.0, 0.0, 1.75), power=70.0, color=(1.0, 0.70, 0.45)),
+    # tasting pendants (bulbs inside the cones, rims at 1.9 m)
+    *[dict(kind="point", pos=(x, T_Y, 2.0), power=100.0, color=(1.0, 0.72, 0.45)) for x in (-0.9, 0.0, 0.9)],
+    # nook lamp, the photograph, the pair of works, the barrels
+    dict(kind="point", pos=(4.5, -2.0, 1.42), power=80.0, color=_WARM),
+    dict(kind="spot", pos=(2.0, -3.6, 4.08), aim=(2.0, -4.55, 1.85), power=140.0, angle=35, blend=0.5),
+    dict(kind="spot", pos=(3.2, -3.6, 4.08), aim=(3.2, -4.55, 1.85), power=140.0, angle=35, blend=0.5),
+    dict(kind="spot", pos=(-1.85, -3.7, 4.08), aim=(-1.85, -4.55, 1.7), power=150.0, angle=45, blend=0.5),
+    dict(kind="spot", pos=(-5.0, 3.67, 4.08), aim=(-5.0, 3.67, 0.0), power=150.0, angle=40, blend=0.6),
+    *_updown(0.75, -4.6, 0, 1), *_updown(4.45, -4.6, 0, 1),
 ]
 
 PROBE = (0.0, -1.0, 1.6)
+
+# the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
+LIGHTS = [dict(L, power=L["power"] * 1.15) for L in LIGHTS]

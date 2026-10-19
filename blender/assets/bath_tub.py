@@ -18,9 +18,12 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 from lib import common  # noqa: E402
 import bath_common as bc  # noqa: E402
+import bath_vanity as bv  # noqa: E402  (fixture helpers)
+from lib import materials  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(bc)
+importlib.reload(bv)
 
 NAME = "BathTub"
 
@@ -31,9 +34,9 @@ P = dict(
     segs=72,
     # outer wall profile: (z, inset d metres from the outline)
     outer=[(0.0, 0.17), (0.012, 0.155), (0.05, 0.105), (0.12, 0.05), (0.26, 0.012), (0.40, 0.0),
-           (0.50, 0.004), (0.55, 0.018), (0.572, 0.04), (0.58, 0.07)],
+           (0.50, 0.002), (0.552, 0.008), (0.571, 0.017), (0.58, 0.030)],
     # rim top and inner wall: down into the bowl
-    inner=[(0.58, 0.092), (0.572, 0.108), (0.55, 0.12), (0.47, 0.147), (0.34, 0.20),
+    inner=[(0.58, 0.046), (0.571, 0.058), (0.552, 0.068), (0.47, 0.098), (0.34, 0.17),
            (0.22, 0.262), (0.14, 0.31), (0.105, 0.35)],
     bowl_floor=0.095,
     head_shift=0.05,           # the bowl floor is pushed toward -X (sloped back end)
@@ -80,7 +83,15 @@ def build(**overrides):
     drain = common.mesh_object(f"{n}_Drain", bc_, col, brass, root)
     drain.location = (-p["head_shift"], 0, 0.0)
 
-    # overflow slot ring on the inner wall near the +X end (small brass disc)
+    # overflow: a small brass disc with a slot, set into the inner wall at the +X end
+    ov = (A - 0.115, 0.0, 0.45)
+    ax = (-0.875, 0.0, 0.485)
+    common.mesh_object(f"{n}_Overflow", bv.axis_lathe(
+        [(0.0, -0.002), (0.030, -0.002), (0.030, 0.0015), (0.026, 0.0035), (0.0, 0.0035)], 24, ov, ax), col, brass, root)
+    slot = common.mesh_object(f"{n}_OverflowSlot", common.box_bmesh((0.0016, 0.032, 0.006)), col,
+                              materials.black_metal(), root, smooth=False)
+    slot.location = (ov[0] - 0.0035 * 0.875, 0.0, ov[2] + 0.0035 * 0.485)
+    slot.rotation_euler = (0.0, math.radians(-29), 0.0)
     # ---- floor-mounted filler at the +X end -----------------------------------
     fx = A + p["filler_x"]
     foot = bc.lathe([(0.0, 0.0), (0.075, 0.0), (0.075, 0.012), (0.052, 0.016), (0.034, 0.022),
@@ -89,17 +100,18 @@ def build(**overrides):
     top_z = 0.92
     pts = [(fx, 0, 0.035), (fx, 0, top_z - 0.20)]
     # arched spout: up, over the rim toward -X, down
+    # arched spout: up, over the rim toward -X, down. The arc's ends are tangent to the
+    # vertical runs, so it needs no fillets (fillets on every arc point only add triangles).
     arc = []
     r = 0.16
     cx = fx - r
-    for k in range(0, 13):
-        a = math.pi * k / 12
-        arc.append((cx + r * math.cos(a), 0, top_z - 0.20 + r * 0.55 * math.sin(a) + 0.0))
-    pipe = [(fx, 0, 0.035), (fx, 0, top_z - 0.20 + 0.01)] + arc[1:]
-    pipe.append((cx - r, 0, top_z - 0.20 - 0.07))
-    # smoother: fillet corners
-    pts = common.fillet_polyline(pipe, 0.05, segments=5, closed=False)
-    common.tube_object(f"{n}_FillerPipe", pts, 0.0175, col, brass, root, closed=False, profile_res=4)
+    for k in range(0, 17):
+        a = math.pi * k / 16
+        arc.append((cx + r * math.cos(a), 0, top_z - 0.20 + r * 0.55 * math.sin(a)))
+    pts = [(fx, 0, 0.035)] + arc + [(cx - r, 0, top_z - 0.20 - 0.07)]
+    common.tube_object(f"{n}_FillerPipe", pts, 0.0175, col, brass, root, closed=False, profile_res=3)
+    # aerator at the spout mouth (facing down)
+    bv.aerator_tip(col, root, f"{n}_Aerator", brass, materials.black_metal(), (cx - r, 0, top_z - 0.27 - 0.001), (0, 0, -1), 0.0178)
     # lever handles on either side of the standpipe
     for sgn, nm in ((-1, "L"), (1, "R")):
         hb = bmesh.new()
@@ -113,6 +125,7 @@ def build(**overrides):
     # a slim brass strip around the footprint base (plinth shadow line is in the stone)
 
     bc.merge(root, bc.by_material(root, brass), f"{n}_PipingBrass")
+    bc.merge(root, bc.by_material(root, materials.black_metal()), f"{n}_PipingBlack")
     return root, bc.parts_of(root)
 
 

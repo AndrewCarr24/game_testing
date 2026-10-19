@@ -140,6 +140,92 @@ def taper(n, r0, r1, flare=0.0, flare_len=0.2):
     return out
 
 
+# ------------------------------------------------------------------ clumps and branching
+ICO_V = None
+
+
+def _ico_verts():
+    global ICO_V
+    if ICO_V is None:
+        t = (1 + 5 ** 0.5) / 2
+        raw = [(-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0), (0, -1, t), (0, 1, t), (0, -1, -t), (0, 1, -t),
+               (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1)]
+        ICO_V = [Vector(v).normalized() for v in raw]
+    return ICO_V
+
+
+ICO_F = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11), (1, 5, 9), (5, 11, 4), (11, 10, 2),
+         (10, 7, 6), (7, 1, 8), (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9), (4, 9, 5), (2, 4, 11),
+         (6, 2, 10), (8, 6, 7), (9, 8, 1)]
+
+
+def clump(bm, centre, r, rng, kind="ico", up=None, squash=0.6, flat=0.5, jitter=0.25):
+    """One leaf clump: an oblate, ragged, flat-bottomed lump (ico: 20 tris; pad: a hexagonal
+    lens, 12 tris). `up` tilts its axis (outer clumps droop). Returns nothing."""
+    rot = Matrix.Identity(3)
+    if up is not None and Vector(up).length > 1e-6:
+        rot = Vector((0, 0, 1)).rotation_difference(Vector(up).normalized()).to_matrix()
+    spin = Matrix.Rotation(rng.uniform(0, 6.28), 3, "Z")
+    c = Vector(centre)
+
+    def place(x, y, z):
+        return bm.verts.new(c + rot @ (spin @ Vector((x, y, z))))
+
+    if kind == "ico":
+        vs = []
+        for d in _ico_verts():
+            f = 1 + jitter * rng.uniform(-1, 1)
+            z = d.z * r * squash * f
+            if z < 0:
+                z *= flat
+            vs.append(place(d.x * r * f * rng.uniform(0.9, 1.1), d.y * r * f * rng.uniform(0.9, 1.1), z))
+        for a, b, cc in ICO_F:
+            bm.faces.new((vs[a], vs[b], vs[cc])).smooth = True
+    else:
+        top = place(rng.uniform(-0.1, 0.1) * r, rng.uniform(-0.1, 0.1) * r, r * squash * rng.uniform(0.8, 1.15))
+        bot = place(0, 0, -r * squash * flat * rng.uniform(0.6, 1.0))
+        rim = []
+        for k in range(6):
+            th = k * math.pi / 3 + rng.uniform(-0.3, 0.3)
+            rr = r * rng.uniform(0.75, 1.15)
+            rim.append(place(rr * math.cos(th), rr * math.sin(th), r * squash * rng.uniform(-0.12, 0.2)))
+        for k in range(6):
+            j = (k + 1) % 6
+            bm.faces.new((rim[k], rim[j], top)).smooth = True
+            bm.faces.new((rim[j], rim[k], bot)).smooth = True
+
+
+def fork_dirs(d, n, angle, rng, phase=None):
+    """n unit directions leaving parent direction d at `angle` degrees, spread around it."""
+    d = Vector(d).normalized()
+    ref = Vector((0, 0, 1)) if abs(d.z) < 0.9 else Vector((1, 0, 0))
+    a = d.cross(ref).normalized()
+    b = d.cross(a)
+    ph = rng.uniform(0, 6.28) if phase is None else phase
+    out = []
+    for i in range(n):
+        th = ph + i * 2 * math.pi / n + rng.uniform(-0.35, 0.35)
+        ang = math.radians(angle * rng.uniform(0.8, 1.2))
+        out.append((d * math.cos(ang) + (a * math.cos(th) + b * math.sin(th)) * math.sin(ang)).normalized())
+    return out
+
+
+def branch(bm, start, d, length, r0, r1, rng, sides=5, segs=2, bend=0.15, droop=0.0, **kw):
+    """Tapered limb from start along direction d, bowed sideways and drooping by `droop`
+    (fraction of its length at the tip). Returns (end point, end direction, points)."""
+    start, d = Vector(start), Vector(d).normalized()
+    side = Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), 0)) * bend * length
+    ctrl = []
+    for i in range(segs + 1):
+        t = i / segs
+        ctrl.append(start + d * length * t + side * math.sin(math.pi * t) + Vector((0, 0, -droop * length * t * t)))
+    pts = spline(ctrl, per=1)
+    rad = taper(len(pts), r0, r1)
+    sweep(bm, pts, rad, sides=sides, rng=rng, noise=0.05, **kw)
+    end = pts[-1]
+    return end, (pts[-1] - pts[-2]).normalized(), pts
+
+
 # ------------------------------------------------------------------ misc
 def new_asset(name):
     col = common.fresh_collection(name)

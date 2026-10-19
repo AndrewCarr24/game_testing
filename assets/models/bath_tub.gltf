@@ -14,7 +14,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				3
 			]
 		}
 	],
@@ -25,17 +25,17 @@
 		},
 		{
 			"mesh":1,
-			"name":"BathTub_PipingBrass",
-			"translation":[
-				-0.05000000074505806,
-				0,
-				0
-			]
+			"name":"BathTub_PipingBlack"
+		},
+		{
+			"mesh":2,
+			"name":"BathTub_PipingBrass"
 		},
 		{
 			"children":[
 				0,
-				1
+				1,
+				2
 			],
 			"name":"BathTub"
 		}
@@ -53,6 +53,20 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
 			}
 		},
 		{
@@ -77,7 +91,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -85,12 +100,38 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathTub_PipingBlack",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"COLOR_0":7
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":8,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -100,22 +141,24 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":9,
+						"NORMAL":10,
+						"TEXCOORD_0":11,
+						"COLOR_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
-					"material":1,
+					"indices":13,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -124,7 +167,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":1660,
+			"count":1672,
 			"max":[
 				0.8899999856948853,
 				0.5799999833106995,
@@ -139,13 +182,19 @@
 		},
 		{
 			"componentType":5126,
-			"count":1660,
+			"count":1672,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1660,
+			"count":1672,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1672,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -154,14 +203,45 @@
 		},
 		{
 			"componentType":5126,
-			"count":1796,
+			"count":66,
 			"max":[
-				1.1549999713897705,
-				0.8253620862960815,
+				0.7740916013717651,
+				0.6517999768257141,
+				0.01600000075995922
+			],
+			"min":[
+				0.6957599520683289,
+				0.44868579506874084,
+				-0.01600000075995922
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":66,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":66,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":156,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":1197,
+			"max":[
+				1.1050000190734863,
+				0.8255000114440918,
 				0.15186314284801483
 			],
 			"min":[
-				-0.02800000086426735,
+				-0.07800000160932541,
 				0,
 				-0.15186314284801483
 			],
@@ -169,35 +249,46 @@
 		},
 		{
 			"componentType":5126,
-			"count":1796,
+			"count":1197,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1796,
+			"count":1197,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":8604,
+			"count":1197,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4752,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":12665,
+			"byteLength":12598,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":9054,
-			"byteOffset":12668
+			"byteLength":686,
+			"byteOffset":12600
+		},
+		{
+			"buffer":0,
+			"byteLength":8597,
+			"byteOffset":13288
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":21724,
+			"byteLength":21888,
 			"uri":"bath_tub.bin"
 		}
 	]

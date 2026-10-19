@@ -112,12 +112,20 @@ def build(**overrides):
     mat = common.pbr_material("M_Library_Rug", (1, 1, 1), roughness=0.95)
     common.set_base_color_map(mat, textures.load(rug_texture(p["size"])))
     m = Mesh(0.25)
-    m.box((0, 0, t / 2), (W, D, t))
+    fr = 0.05                                   # fringe length (inside the overall size)
+    Wp = W - 2 * fr
+    m.box((0, 0, t / 2), (Wp, D, t), taper=(1 - 0.016 / Wp, 1 - 0.016 / D))    # bound edge, rolled over
+    # fringe: knotted warp ends on the short sides, ivory, lying on the floor
+    for sx in (-1, 1):
+        m.box((sx * (Wp / 2 + fr / 2 - 0.004), 0, 0.0015), (fr + 0.008, D - 0.06, 0.003), taper=(0.9, 1.0))
     uv = m.uv
     for f in m.bm.faces:
         for lp in f.loops:
             c = lp.vert.co
-            lp[uv].uv = (0.5 + c.x / W, 0.5 + c.y / D)
+            if abs(c.x) > Wp / 2 + 0.002:         # fringe: sample the ivory guard stripe
+                lp[uv].uv = (0.5 + (Wp / 2 - 0.006) / Wp * (1 if c.x > 0 else -1), 0.5 + c.y / D)
+            else:
+                lp[uv].uv = (0.5 + c.x / Wp, 0.5 + c.y / D)
     m.to_object(f"{n}_Pile", col, mat, root)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

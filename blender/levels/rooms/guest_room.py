@@ -19,7 +19,7 @@ def _floor():
 
 FINISHES = dict(
     floor=_floor,
-    floor_uv_tile=1.0,
+    floor_uv_tile=2.0,            # the scanned plank floor (polyhaven_textures) covers ~2 m per tile
     walls=lambda: common.pbr_material("M_Plaster_Linen", (0.52, 0.49, 0.43), roughness=0.92),
     ceiling=lambda: common.pbr_material("M_Ceiling_Warm", (0.48, 0.46, 0.43), roughness=0.9),
     walls_by_side={"W": lambda: common.pbr_material("M_Plaster_Sage", (0.17, 0.235, 0.15), roughness=0.92)},
@@ -34,16 +34,16 @@ PLACEMENTS = [
     ("table_lamp", (-5.88, 3.18, 0.52), 0),
     ("table_lamp", (-5.88, 0.42, 0.52), 0),
     ("guest_bench", (-3.5, 1.8), 90),
-    ("art_linework_a", (-6.09, 1.8, 1.95), 90),
+    ("art_clouds", (-6.09, 1.8, 1.8), 90),                 # cloud photograph over the bed
     # writing desk on the south wall
     ("guest_desk", (-1.6, -4.74), 180),
     ("guest_chair", (-1.6, -4.05), 0),
-    ("art_geometric_a", (-1.6, -5.09, 1.75), 180),
+    ("art_wash_circles", (-1.6, -5.09, 1.6), 180),         # small watercolour, oak frame
     ("library_plant", (-4.3, -4.4), 0),
     # dresser on the north wall, with a vase and art
     ("guest_dresser", (-2.2, 4.86), 0),
     ("vase", (-2.9, 4.86, 0.80), 0),
-    ("art_colorfield_a", (-2.2, 5.09, 1.7), 0),
+    ("art_bone_white", (-2.2, 5.09, 1.65), 0),             # white-on-white canvas
     # reeded wardrobe wall
     ("guest_wardrobe", (3.0, 4.78), 0),
     # reading corner by the glass
@@ -58,11 +58,38 @@ PLACEMENTS = [
     ("guest_curtain", (5.93, -4.4), -90),
 ]
 
-LIGHTS = [
-    dict(kind="strip", pos=(-3.0, 0.5), size=(0.08, 6.0), power=90.0),
-    dict(kind="strip", pos=(1.5, -4.0), size=(7.0, 0.08), power=90.0),
-    dict(kind="strip", pos=(3.5, 1.8), size=(4.0, 0.08), power=60.0),
-    dict(kind="point", pos=(-5.88, 3.18, 0.97), power=45.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(-5.88, 0.42, 0.97), power=45.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(2.45, 0.0, 1.4), power=40.0, color=(1.0, 0.76, 0.5)),
-]
+# --- lighting --------------------------------------------------------------------------------
+# Calm and residential: the sage headboard wall is the lit wall, with a hidden glow behind
+# the headboard, a picture light on the art above the bed and two downlights grazing the sage
+# either side of the nightstand lamps. The reeded wardrobe carries a hidden uplight on top
+# onto the ceiling; a lamp on the writing desk, a downlight washing the dresser's picture,
+# the reading corner's floor lamp by the glass. No ceiling strips.
+CEIL = 3.8
+_DL = [((-5.35, 1.8), (-6.1, 1.8, 1.95), 150.0, 34.0),      # picture light over the bed
+       ((-5.4, 4.2), (-6.1, 4.2, 1.0), 230.0, 50.0),        # sage wall grazers flanking the bed
+       ((-5.4, -0.6), (-6.1, -0.6, 1.0), 230.0, 50.0),
+       ((-3.6, 1.8), (-3.6, 1.8, 0.0), 200.0, 55.0),        # a pool on the bench at the foot of the bed
+       ((-2.2, 4.3), (-2.2, 5.1, 1.5), 170.0, 50.0),        # dresser and its picture
+       ((-1.6, -4.3), (-1.6, -5.1, 1.5), 150.0, 50.0)]      # desk and its picture
+PLACEMENTS += (
+    [("light_u_downlight", (x, y, CEIL), 0) for (x, y), *_ in _DL]
+    + [("table_lamp", (-2.05, -4.85, 0.74), 0)]               # on the writing desk
+)
+
+LIGHTS = (
+    [dict(kind="spot", pos=(x, y, CEIL - 0.03), aim=aim, power=pw, angle=ang, blend=0.7, color=(1.0, 0.82, 0.62))
+     for (x, y), aim, pw, ang in _DL]
+    + [
+        # behind the headboard (top at ~1.08 m), up the sage wall
+        dict(kind="area", pos=(-6.03, 1.8, 1.12), size=(1.9, 0.06), aim=(-6.1, 1.8, 3.8), power=190.0,
+             color=(1.0, 0.80, 0.58)),
+        # on top of the reeded wardrobe (2.7 m), onto the ceiling
+        dict(kind="area", pos=(3.0, 4.78, 2.73), size=(3.4, 0.3), aim=(3.0, 4.4, CEIL), power=260.0,
+             color=(1.0, 0.82, 0.62)),
+        # bedside lamps, desk lamp, reading floor lamp
+        dict(kind="point", pos=(-5.88, 3.18, 0.97), power=50.0, color=(1.0, 0.72, 0.45)),
+        dict(kind="point", pos=(-5.88, 0.42, 0.97), power=50.0, color=(1.0, 0.72, 0.45)),
+        dict(kind="point", pos=(-2.05, -4.85, 1.19), power=45.0, color=(1.0, 0.72, 0.45)),
+        dict(kind="point", pos=(2.45, 0.0, 1.38), power=55.0, color=(1.0, 0.76, 0.5)),
+    ]
+)

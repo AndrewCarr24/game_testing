@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				7
+				10
 			]
 		}
 	],
@@ -50,7 +50,7 @@
 			],
 			"translation":[
 				0,
-				0.6490591168403625,
+				0.6360591650009155,
 				-0.2161189466714859
 			]
 		},
@@ -74,6 +74,32 @@
 		},
 		{
 			"mesh":5,
+			"name":"LivingArmchair_Pillow0Piping"
+		},
+		{
+			"children":[
+				5
+			],
+			"mesh":6,
+			"name":"LivingArmchair_Pillow0",
+			"rotation":[
+				-0.13912540674209595,
+				0.025922197848558426,
+				0.0036431269254535437,
+				0.9899287819862366
+			],
+			"translation":[
+				0,
+				0.6100000143051147,
+				-0.09099999815225601
+			]
+		},
+		{
+			"mesh":7,
+			"name":"LivingArmchair_Piping"
+		},
+		{
+			"mesh":8,
 			"name":"LivingArmchair_Plinth",
 			"translation":[
 				0,
@@ -82,12 +108,12 @@
 			]
 		},
 		{
-			"mesh":6,
+			"mesh":9,
 			"name":"LivingArmchair_Seat0",
 			"translation":[
 				0,
 				0.36000001430511475,
-				0.08749999850988388
+				0.09000000357627869
 			]
 		},
 		{
@@ -97,8 +123,10 @@
 				2,
 				3,
 				4,
-				5,
-				6
+				6,
+				7,
+				8,
+				9
 			],
 			"name":"LivingArmchair"
 		}
@@ -116,6 +144,24 @@
 					0.5,
 					0.4399999976158142,
 					0.3499999940395355,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Ink",
+			"normalTexture":{
+				"index":1,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.03200000151991844,
+					0.05999999865889549,
 					1
 				],
 				"metallicFactor":0,
@@ -144,7 +190,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -152,11 +199,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -167,9 +215,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -177,11 +226,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -192,9 +242,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8,
-						"TEXCOORD_0":9
+						"POSITION":9,
+						"NORMAL":10,
+						"TEXCOORD_0":11,
+						"COLOR_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -202,11 +253,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":10,
+					"indices":13,
 					"material":0,
 					"mode":4
 				}
@@ -217,9 +269,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":11,
-						"NORMAL":12,
-						"TEXCOORD_0":13
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16,
+						"COLOR_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -227,32 +280,8 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":14,
-					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingArmchair_Deck",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
@@ -263,23 +292,54 @@
 			]
 		},
 		{
-			"name":"LivingArmchair_Plinth",
+			"name":"LivingArmchair_Deck",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":19,
-						"NORMAL":20
+						"NORMAL":20,
+						"TEXCOORD_0":21,
+						"COLOR_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":23,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingArmchair_Pillow0Piping",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26,
+						"COLOR_0":27
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":21,
+					"indices":28,
 					"material":1,
 					"mode":4
 				}
@@ -290,9 +350,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":22,
-						"NORMAL":23,
-						"TEXCOORD_0":24
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31,
+						"COLOR_0":32
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -300,11 +361,91 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":25,
+					"indices":33,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingArmchair_Piping",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":34,
+						"NORMAL":35,
+						"TEXCOORD_0":36,
+						"COLOR_0":37
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":38,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingArmchair_Plinth",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":39,
+						"NORMAL":40,
+						"COLOR_0":41
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":42,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mesh",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":43,
+						"NORMAL":44,
+						"TEXCOORD_0":45,
+						"COLOR_0":46
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":47,
 					"material":0,
 					"mode":4
 				}
@@ -312,6 +453,14 @@
 		}
 	],
 	"textures":[
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":0
+				}
+			},
+			"sampler":0
+		},
 		{
 			"extensions":{
 				"EXT_texture_webp":{
@@ -333,12 +482,12 @@
 			"componentType":5126,
 			"count":337,
 			"max":[
-				0.08524566888809204,
-				0.2662278115749359,
-				0.4800000488758087
+				0.08532753586769104,
+				0.26684170961380005,
+				0.4821455776691437
 			],
 			"min":[
-				-0.08524566888809204,
+				-0.08532753586769104,
 				-0.26500004529953003,
 				-0.4800000488758087
 			],
@@ -356,6 +505,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":337,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1296,
 			"type":"SCALAR"
 		},
@@ -363,12 +518,12 @@
 			"componentType":5126,
 			"count":337,
 			"max":[
-				0.08524566888809204,
-				0.2662278115749359,
-				0.4800000488758087
+				0.08532753586769104,
+				0.26684170961380005,
+				0.4821455776691437
 			],
 			"min":[
-				-0.08524566888809204,
+				-0.08532753586769104,
 				-0.26500004529953003,
 				-0.4800000488758087
 			],
@@ -385,29 +540,41 @@
 			"type":"VEC2"
 		},
 		{
+			"componentType":5123,
+			"count":337,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
 			"componentType":5126,
-			"count":558,
+			"count":568,
 			"max":[
-				0.3179515302181244,
-				0.2075320929288864,
-				0.1163933128118515
+				0.3195858895778656,
+				0.21632422506809235,
+				0.13064232468605042
 			],
 			"min":[
-				-0.3179515302181244,
+				-0.3195858895778656,
 				-0.20000003278255463,
-				-0.10727866739034653
+				-0.10727931559085846
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":558,
+			"count":568,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":558,
+			"count":568,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":568,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -419,8 +586,8 @@
 			"count":342,
 			"max":[
 				0.3200000822544098,
-				0.20603857934474945,
-				0.08000002056360245
+				0.20629824697971344,
+				0.08035589009523392
 			],
 			"min":[
 				-0.3200000822544098,
@@ -438,6 +605,12 @@
 			"componentType":5126,
 			"count":342,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":342,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -471,12 +644,126 @@
 		},
 		{
 			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":96,
+			"max":[
+				0.2582686245441437,
+				0.14479796588420868,
+				0.0044999998062849045
+			],
+			"min":[
+				-0.2582686245441437,
+				-0.14479796588420868,
+				-0.0044999998062849045
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":384,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":158,
+			"max":[
+				0.25231969356536865,
+				0.13877582550048828,
+				0.06786134839057922
+			],
+			"min":[
+				-0.25231969356536865,
+				-0.13877582550048828,
+				-0.06786134839057922
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":158,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":158,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":158,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":768,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":592,
+			"max":[
+				0.49059998989105225,
+				0.8549890518188477,
+				0.4955996870994568
+			],
+			"min":[
+				-0.49059998989105225,
+				0.06940022855997086,
+				-0.48059922456741333
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":592,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":592,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":592,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2016,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
 			"max":[
 				0.41999998688697815,
 				0.03500000014901161,
@@ -491,38 +778,50 @@
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":36,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":132,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":572,
+			"count":576,
 			"max":[
-				0.3176180422306061,
-				0.10435410588979721,
-				0.40863823890686035
+				0.3188221752643585,
+				0.11162290722131729,
+				0.4172764718532562
 			],
 			"min":[
-				-0.3176180422306061,
+				-0.3188221752643585,
 				-0.0950000211596489,
-				-0.40250006318092346
+				-0.40500006079673767
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":572,
+			"count":576,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":572,
+			"count":576,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":576,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -533,38 +832,53 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2625,
+			"byteLength":4158,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2625,
-			"byteOffset":2628
+			"byteLength":4135,
+			"byteOffset":4160
 		},
 		{
 			"buffer":0,
-			"byteLength":4318,
-			"byteOffset":5256
+			"byteLength":6042,
+			"byteOffset":8296
 		},
 		{
 			"buffer":0,
-			"byteLength":2667,
-			"byteOffset":9576
+			"byteLength":4044,
+			"byteOffset":14340
 		},
 		{
 			"buffer":0,
-			"byteLength":833,
-			"byteOffset":12244
+			"byteLength":1246,
+			"byteOffset":18384
 		},
 		{
 			"buffer":0,
-			"byteLength":161,
-			"byteOffset":13080
+			"byteLength":1617,
+			"byteOffset":19632
 		},
 		{
 			"buffer":0,
-			"byteLength":4081,
-			"byteOffset":13244
+			"byteLength":1711,
+			"byteOffset":21252
+		},
+		{
+			"buffer":0,
+			"byteLength":6436,
+			"byteOffset":22964
+		},
+		{
+			"buffer":0,
+			"byteLength":378,
+			"byteOffset":29400
+		},
+		{
+			"buffer":0,
+			"byteLength":5652,
+			"byteOffset":29780
 		}
 	],
 	"samplers":[
@@ -575,7 +889,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":17328,
+			"byteLength":35432,
 			"uri":"living_armchair.bin"
 		}
 	]

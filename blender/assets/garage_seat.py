@@ -15,6 +15,7 @@ import garage_cabinets as gk  # noqa: E402
 
 importlib.reload(gk)
 common, materials = gk.common, gk.materials
+from mathutils import Vector  # noqa: E402
 
 NAME = "GarageSeat"
 P = dict(name=NAME, width=4.2, depth=0.55, base_h=0.4)
@@ -45,7 +46,17 @@ def build(**overrides):
     b.lo_hi("Top", (-W / 2 - 0.01, yf - 0.01, bh - 0.03), (W / 2 + 0.01, yb, bh), oak, bevel=0.004)
     for i in range(2):   # two long seat cushions
         xa = -W / 2 + 0.04 + i * (W - 0.08) / 2
-        b.lo_hi(f"Cushion{i}", (xa + 0.01, yf + 0.03, bh), (xa + (W - 0.08) / 2 - 0.01, yb - 0.06, bh + 0.08), oat, bevel=0.03, seg=3, tile=0.25)
+        # piped, softly crowned seat cushion (the two meet with a soft gap in the middle)
+        x0c, x1c = xa + 0.01, xa + (W - 0.08) / 2 - 0.01
+        size = (x1c - x0c, yb - 0.06 - (yf + 0.03), 0.08)
+        loc = ((x0c + x1c) / 2, (yf + 0.03 + yb - 0.06) / 2, bh + 0.04)
+        e = 0.024
+        cush = b._add(f"Cushion{i}", common.cushion_bmesh(size, cuts=3, edge=e,
+                                                          crown={"+z": 0.012, "+x": 0.004, "-x": 0.004, "-y": 0.006}),
+                      oat, loc, 0.25, 0, 2, smooth=True)
+        common.add_subsurf(cush)
+        top_loop = common.piping_loop(size, "z", e / 6, e * 0.9)[0]
+        b.tube(f"Cushion{i}_Piping", [tuple(Vector(q) + Vector(loc)) for q in top_loop], 0.004, oat, closed=True, res=1)
     # bolster along the back and scatter cushions
     b.lo_hi("Bolster", (-W / 2 + 0.05, yb - 0.1, bh + 0.08), (W / 2 - 0.05, yb - 0.02, bh + 0.3), ink, bevel=0.035, seg=3, tile=0.25)
     for i, (x, col, tilt) in enumerate(((-1.5, clay, 0.1), (-1.15, oat, -0.1), (1.0, clay, -0.12), (1.4, ink, 0.12))):

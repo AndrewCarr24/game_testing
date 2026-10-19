@@ -35,11 +35,19 @@ def build(**overrides):
     top.location = (0, 0, h - t / 2)
     common.add_bevel(top, 0.005)
     common.box_uv(top, tile=0.9)
+    uv = top.data.uv_layers["UVMap"]          # the walnut grain runs along v: turn it down the length
+    for d_ in uv.data:
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
     for sx in (-1, 1):
         r = p["pier_r"]
-        prof = [(0.0, 0.0), (r * 1.05, 0.0), (r * 1.05, 0.02), (r * 0.8, 0.06), (r * 0.7, h - t - 0.1),
-                (r * 0.9, h - t - 0.02), (r * 0.9, h - t), (0.0, h - t)]
-        b.lathe(f"Pier{sx}", prof, marble, loc=(sx * p["pier_x"], 0, 0), segs=40, sharp=50, uv_tile=1.5)
+        # turned marble pier: a plinth ring, a soft cove into the waisted shaft, a flared
+        # capital under the top (floor and top contact faces aren't modelled)
+        prof = [(r * 1.05, 0.0), (r * 1.05, 0.016), (r * 1.0, 0.022), (r * 0.86, 0.045), (r * 0.8, 0.07),
+                (r * 0.72, 0.3), (r * 0.74, h - t - 0.16), (r * 0.82, h - t - 0.06), (r * 0.9, h - t - 0.02),
+                (r * 0.9, h - t)]
+        pier = b.lathe(f"Pier{sx}", prof, marble, loc=(sx * p["pier_x"], 0, 0), segs=28, sharp=50, uv_tile=0,
+                       closed=False)
+        L.cylindrical_uv(pier, 1.5)
     # slim black steel stretcher hidden in the shadow line under the top
     b.box("Stretcher", (2 * p["pier_x"], 0.05, 0.03), (0, 0, h - t - 0.015), black, bevel=0.002, tile=0)
     return b.finish()

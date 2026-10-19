@@ -10,8 +10,10 @@ from mathutils import Matrix
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import guest_mats  # noqa: E402
+import guest_wardrobe  # noqa: E402
 
 importlib.reload(guest_mats)
+importlib.reload(guest_wardrobe)
 common = guest_mats.common
 
 NAME = "GuestChair"
@@ -53,15 +55,33 @@ def build(**overrides):
     seat.location = (0, 0, SH - 0.035)
     common.add_subsurf(seat)
     common.box_uv(seat, 0.25)
+    # welt round the seat's top edge
+    pts = common.piping_loop((W - 0.01, D - 0.01, 0.07), "z", 0.02 / 6, 0.02 * 0.9)[0]
+    # (parented to the seat, so consolidate() leaves the seat whole and solid)
+    sp = common.tube_object(f"{n}_Seat_Piping", pts, 0.0035, col, linen, seat, closed=True, profile_res=0)
+    common.box_uv(sp, 0.25)
+    # side stretchers between the legs, low down
+    for s_, sx in (("L", -1), ("R", 1)):
+        A(own, f"Stretcher_{s_}", common.box_bmesh((0.018, D - 0.05, 0.022)), oak, (sx * hx, 0, 0.17), 0.002)
     # back panel: a gently curved sage cushion
-    bp = common.mesh_object(f"{n}_BackPanel", common.cushion_bmesh((W - 0.07, 0.04, 0.28), cuts=4, edge=0.016,
-                             crown={"-y": 0.012}), col, sage, root)
+    bsize = (W - 0.07, 0.04, 0.28)
+    bbm = common.cushion_bmesh(bsize, cuts=3, edge=0.016, crown={"-y": 0.012})
+    bend = 0.022                                   # the back wraps round the sitter
+    for v in bbm.verts:
+        v.co.y += bend * (1 - (2 * v.co.x / bsize[0]) ** 2) - bend
+    bp = common.mesh_object(f"{n}_BackPanel", bbm, col, sage, root)
     t = math.radians(-9)
     zc = SH - 0.06 + 0.42
     bp.rotation_euler = (t, 0, 0)
     bp.location = (0, hy + 0.012 - 0.03 + math.sin(math.radians(9)) * (zc - (SH - 0.06)) , zc)
     common.add_subsurf(bp)
     common.box_uv(bp, 0.25)
+    bpts = [v.copy() for v in common.piping_loop(bsize, "y", 0.016 / 6, 0.016 * 0.9)[1]]
+    for v in bpts:
+        v.y += bend * (1 - (2 * v.x / bsize[0]) ** 2) - bend
+    bpp = common.tube_object(f"{n}_BackPanel_Piping", bpts, 0.0032, col, sage, bp, closed=True, profile_res=0)
+    common.box_uv(bpp, 0.25)
+    guest_wardrobe.fix_oak(root)
     parts = guest_mats.consolidate(root, max_dim=0.55)
     return root, parts
 

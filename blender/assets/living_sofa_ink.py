@@ -10,7 +10,8 @@ importlib.reload(living_sofa)
 
 NAME = "LivingSofaInk"
 P = dict(name=NAME, width=2.3, fabric_name="M_Fabric_InkVelvet", fabric=(0.014, 0.022, 0.042),
-         pillow_name="M_Fabric_Oat", pillow=(0.50, 0.44, 0.35), leg="bronze")
+         pillow_name="M_Fabric_Oat", pillow=(0.50, 0.44, 0.35), leg="bronze",
+         throw=("M_Fabric_Oat", (0.50, 0.44, 0.35)))
 
 
 def build(**overrides):

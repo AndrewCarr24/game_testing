@@ -12,8 +12,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import guest_mats  # noqa: E402
+import guest_wardrobe  # noqa: E402
 
 importlib.reload(guest_mats)
+importlib.reload(guest_wardrobe)
 common = guest_mats.common
 
 NAME = "GuestNightstand"
@@ -165,6 +167,7 @@ def build(**overrides):
             # case sides: grain runs front to back, like the top, not up the panel
             for d in ob.data.uv_layers["UVMap"].data:
                 d.uv = (d.uv[1], d.uv[0])
+    guest_wardrobe.fix_oak(root)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

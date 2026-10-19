@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				5
 			]
 		}
 	],
@@ -48,11 +48,16 @@
 			]
 		},
 		{
+			"mesh":4,
+			"name":"EntrySculpture_Rose"
+		},
+		{
 			"children":[
 				0,
 				1,
 				2,
-				3
+				3,
+				4
 			],
 			"name":"EntrySculpture"
 		}
@@ -104,18 +109,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -126,9 +133,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4,
-						"TEXCOORD_0":5
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6,
+						"COLOR_0":7
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -136,11 +144,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -151,19 +160,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8
+						"POSITION":9,
+						"NORMAL":10,
+						"COLOR_0":11
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":12,
 					"material":1,
 					"mode":4
 				}
@@ -174,9 +185,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12
+						"POSITION":13,
+						"NORMAL":14,
+						"TEXCOORD_0":15,
+						"COLOR_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -184,12 +196,38 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":13,
+					"indices":17,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"EntrySculpture_Rose",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":18,
+						"NORMAL":19,
+						"COLOR_0":20
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":21,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -235,37 +273,49 @@
 		},
 		{
 			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":2431,
+			"count":1859,
 			"max":[
-				0.5946963429450989,
-				2.0746498107910156,
-				0.34149718284606934
+				0.5947309136390686,
+				2.0746748447418213,
+				0.3414994478225708
 			],
 			"min":[
-				-0.594748854637146,
-				0.9714237451553345,
-				-0.34143805503845215
+				-0.5948023200035095,
+				0.9713528752326965,
+				-0.341421514749527
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2431,
+			"count":1859,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2431,
+			"count":1859,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":13200,
+			"count":1859,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":10080,
 			"type":"SCALAR"
 		},
 		{
@@ -287,6 +337,12 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -320,30 +376,72 @@
 		},
 		{
 			"componentType":5123,
+			"count":152,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"max":[
+				0.04149999842047691,
+				0.9259999990463257,
+				0.04149999842047691
+			],
+			"min":[
+				-0.04149999842047691,
+				0.9200000166893005,
+				-0.04149999842047691
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":146,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":432,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":191,
+			"byteLength":332,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":13200,
-			"byteOffset":192
+			"byteLength":13944,
+			"byteOffset":332
 		},
 		{
 			"buffer":0,
-			"byteLength":284,
-			"byteOffset":13392
+			"byteLength":444,
+			"byteOffset":14276
 		},
 		{
 			"buffer":0,
-			"byteLength":1139,
-			"byteOffset":13676
+			"byteLength":1249,
+			"byteOffset":14720
+		},
+		{
+			"buffer":0,
+			"byteLength":1579,
+			"byteOffset":15972
 		}
 	],
 	"samplers":[
@@ -354,7 +452,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":14816,
+			"byteLength":17552,
 			"uri":"entry_sculpture.bin"
 		}
 	]

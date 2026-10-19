@@ -42,21 +42,25 @@
     ]
   },
   "T_Guest_Oak_BaseColor": {
-    "polyhaven": "laminate_floor_03",
-    "url": "https://polyhaven.com/a/laminate_floor_03",
-    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/laminate_floor_03/laminate_floor_03_diff_2k.jpg",
+    "polyhaven": "oak_veneer_01",
+    "mode": "replace",
+    "strength": 1.0,
+    "url": "https://polyhaven.com/a/oak_veneer_01",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/oak_veneer_01/oak_veneer_01_diff_2k.jpg",
     "license": "CC0",
-    "scan_metres": 2.08,
+    "scan_metres": 1.83,
     "repeats": 1,
-    "our_tile_metres": 1.0,
+    "our_tile_metres": 1.5,
     "gain": [
-      1.322,
-      1.736,
-      2.462
+      1.202,
+      1.39,
+      1.615
     ]
   },
   "T_Walnut_BaseColor": {
     "polyhaven": "walnut_veneer",
+    "mode": "replace",
+    "strength": 1.0,
     "url": "https://polyhaven.com/a/walnut_veneer",
     "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/walnut_veneer/walnut_veneer_diff_2k.jpg",
     "license": "CC0",
@@ -70,17 +74,19 @@
     ]
   },
   "T_Courtyard_Limestone_BaseColor": {
-    "polyhaven": "granite_tile_04",
-    "url": "https://polyhaven.com/a/granite_tile_04",
-    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/granite_tile_04/granite_tile_04_diff_2k.jpg",
+    "polyhaven": "beige_wall_001",
+    "mode": "overlay",
+    "strength": 0.8,
+    "url": "https://polyhaven.com/a/beige_wall_001",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/beige_wall_001/beige_wall_001_diff_2k.jpg",
     "license": "CC0",
-    "scan_metres": 2.0,
+    "scan_metres": 3.0,
     "repeats": 1,
     "our_tile_metres": 2.0,
     "gain": [
-      2.322,
-      2.289,
-      2.03
+      1.0,
+      1.0,
+      1.0
     ]
   },
   "T_Kitchen_Stone_BaseColor": {
@@ -113,6 +119,8 @@
   },
   "T_Courtyard_Teak_BaseColor": {
     "polyhaven": "teak_veneer",
+    "mode": "replace",
+    "strength": 1.0,
     "url": "https://polyhaven.com/a/teak_veneer",
     "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/teak_veneer/teak_veneer_diff_2k.jpg",
     "license": "CC0",
@@ -138,5 +146,109 @@
       1.668,
       1.733
     ]
+  },
+  "T_Entry_Limestone": {
+    "polyhaven": "beige_wall_001",
+    "mode": "overlay",
+    "strength": 0.9,
+    "url": "https://polyhaven.com/a/beige_wall_001",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/beige_wall_001/beige_wall_001_diff_2k.jpg",
+    "license": "CC0",
+    "scan_metres": 3.0,
+    "repeats": 1,
+    "our_tile_metres": 2.0,
+    "gain": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "T_Living_Limestone_BaseColor": {
+    "polyhaven": "beige_wall_001",
+    "mode": "overlay",
+    "strength": 0.9,
+    "url": "https://polyhaven.com/a/beige_wall_001",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/beige_wall_001/beige_wall_001_diff_2k.jpg",
+    "license": "CC0",
+    "scan_metres": 3.0,
+    "repeats": 1,
+    "our_tile_metres": 2.4,
+    "gain": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "T_Garage_Concrete_BaseColor": {
+    "polyhaven": "concrete_floor_02",
+    "mode": "overlay",
+    "strength": 0.3,
+    "url": "https://polyhaven.com/a/concrete_floor_02",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_02/concrete_floor_02_diff_2k.jpg",
+    "license": "CC0",
+    "scan_metres": 2.0,
+    "repeats": 3,
+    "our_tile_metres": 6.0,
+    "gain": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "T_Plaster_Wall_BaseColor": {
+    "polyhaven": "painted_plaster_wall",
+    "mode": "generate",
+    "url": "https://polyhaven.com/a/painted_plaster_wall",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_diff_2k.jpg",
+    "license": "CC0",
+    "scan_metres": 2.0,
+    "repeats": 1,
+    "our_tile_metres": 1.0,
+    "colour": [
+      0.72,
+      0.7,
+      0.66
+    ],
+    "contrast": 0.55
+  },
+  "T_Courtyard_Paving_BaseColor": {
+    "polyhaven": "large_grey_tiles",
+    "mode": "generate",
+    "url": "https://polyhaven.com/a/large_grey_tiles",
+    "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/large_grey_tiles/large_grey_tiles_diff_2k.jpg",
+    "license": "CC0",
+    "scan_metres": 3.0,
+    "repeats": 1,
+    "our_tile_metres": 3.0,
+    "colour": [
+      0.3,
+      0.275,
+      0.24
+    ],
+    "contrast": 0.95
+  },
+  "T_GarageLockers_Boots_BaseColor": {
+    "polyhaven": "rubber_boots",
+    "url": "https://polyhaven.com/a/rubber_boots",
+    "license": "CC0",
+    "kind": "model textures (1k glTF), used by garage_lockers via mud_common"
+  },
+  "T_GarageLockers_Boots_Normal": {
+    "polyhaven": "rubber_boots",
+    "url": "https://polyhaven.com/a/rubber_boots",
+    "license": "CC0",
+    "kind": "model textures (1k glTF), used by garage_lockers via mud_common"
+  },
+  "T_GarageLockers_Basket_BaseColor": {
+    "polyhaven": "wicker_basket_02",
+    "url": "https://polyhaven.com/a/wicker_basket_02",
+    "license": "CC0",
+    "kind": "model textures (1k glTF), used by garage_lockers via mud_common"
+  },
+  "T_GarageLockers_Basket_Normal": {
+    "polyhaven": "wicker_basket_02",
+    "url": "https://polyhaven.com/a/wicker_basket_02",
+    "license": "CC0",
+    "kind": "model textures (1k glTF), used by garage_lockers via mud_common"
   }
 }

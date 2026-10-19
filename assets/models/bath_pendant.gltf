@@ -87,18 +87,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -109,19 +111,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
+						"POSITION":4,
+						"NORMAL":5,
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":5,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -131,32 +135,38 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":612,
+			"count":864,
 			"max":[
-				0.320000022649765,
+				0.3270000219345093,
 				0,
-				0.320000022649765
+				0.3270000219345093
 			],
 			"min":[
-				-0.2800000011920929,
-				-1.819000005722046,
-				-0.17999999225139618
+				-0.28700000047683716,
+				-1.8209999799728394,
+				-0.18699999153614044
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":612,
+			"count":864,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":2100,
+			"count":864,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":3180,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":1770,
+			"count":1090,
 			"max":[
 				0.4050000011920929,
 				0.9450000524520874,
@@ -171,30 +181,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":1770,
+			"count":1090,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":10560,
+			"count":1090,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":6480,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3103,
+			"byteLength":5666,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":8757,
-			"byteOffset":3104
+			"byteLength":6111,
+			"byteOffset":5668
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":11864,
+			"byteLength":11780,
 			"uri":"bath_pendant.bin"
 		}
 	]

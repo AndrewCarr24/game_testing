@@ -13,6 +13,10 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, materials, textures  # noqa: E402
 
 importlib.reload(common)
+sys.path.insert(0, HERE)
+import dining_table  # noqa: E402  (profiled slab edge)
+
+importlib.reload(dining_table)
 importlib.reload(materials)
 importlib.reload(textures)
 
@@ -45,9 +49,12 @@ def build(**overrides):
     common.set_base_color_map(marble, textures.load(textures.marble()))
 
     L, W, H, T = p["length"], p["width"], p["height"], p["top_t"]
-    top = common.mesh_object(f"{n}_Top", common.rounded_slab_bmesh(L, W, T, p["corner"]), col, marble, root)
-    top.location = (0, 0, H - T / 2)
-    common.add_bevel(top, 0.005, 2)
+    # honed marble slab: eased top arris, a square 30 mm face, then a bevel back underneath so
+    # the slab reads thinner than it is
+    prof = [(0.004, 0.0), (0.0008, -0.0012), (0.0, -0.004), (0.0, -0.03), (0.003, -0.033), (0.02, -T)]
+    top = common.mesh_object(f"{n}_Top", dining_table.profiled_slab_bmesh(L, W, p["corner"], prof, segments=6),
+                             col, marble, root)
+    top.location = (0, 0, H)
     common.box_uv(top, 1.0)
 
     apron_t = 0.07
@@ -66,6 +73,7 @@ def build(**overrides):
         common.box_uv(leg, 0.5)
         foot = common.mesh_object(f"{n}_Foot_{side}", common.box_bmesh((lt + 0.05, lw + 0.06, 0.02)), col, bronze, root)
         foot.location = (x, 0, 0.01)
+        common.add_bevel(foot, 0.003, 1)
         common.box_uv(foot, 0.5)
 
     span = L - 2 * p["leg_inset"]

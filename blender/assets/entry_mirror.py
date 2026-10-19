@@ -60,7 +60,7 @@ def build(**overrides):
         R = p["radius"]
         Ri = R - fw
         # Rotating Z->-Y with +90 deg about X: +Z maps to -Y? (x, y, z) -> (x, -z, y): +z becomes -y. Good.
-        seg = 80
+        seg = 64
         glass_bm = table_lamp.lathe([(0.0, d * 0.45), (Ri + 0.002, d * 0.45), (Ri + 0.002, d * 0.35), (0.0, d * 0.35)], seg)
         # glass: the disc's visible face has normal +z in lathe space -> -Y after rotation
         _to_wall_plane(glass_bm)

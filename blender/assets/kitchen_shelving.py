@@ -95,9 +95,7 @@ def build(**overrides):
         b.lathe(f"Basket_{bx:.2f}", prof, wicker, loc=(bx, syc, bz + 0.0175), segs=14, sharp=70, uv_tile=0.3)
     for k, (lx, lz) in enumerate(((-1.7, 1.62), (-1.3, 1.62), (1.3, 1.62), (1.7, 1.62), (-0.1, 1.62), (0.15, 1.62))):
         n = 5 + k % 3
-        for j in range(n):
-            b.box(f"Linen{k}_{j}", (0.34, 0.24, 0.035), (lx, syc, lz + 0.0175 + 0.0175 + j * 0.036), linen if (k + j) % 3 else linen2,
-                  bevel=0.006, seg=1, tile=0.25)
+        L.folded_stack(b, f"Linen{k}", lx, syc, lz + 0.0175, 0.34, 0.24, n, 0.036, linen if k % 3 else linen2)
     return b.finish()
 
 

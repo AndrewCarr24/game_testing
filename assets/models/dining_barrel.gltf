@@ -28,7 +28,18 @@
 		},
 		{
 			"mesh":1,
-			"name":"DiningBarrel_Head"
+			"name":"DiningBarrel_Bung_NoCollide",
+			"rotation":[
+				0.7071068286895752,
+				0,
+				0,
+				0.7071068286895752
+			],
+			"translation":[
+				0,
+				0.46000000834465027,
+				0.3109999895095825
+			]
 		},
 		{
 			"mesh":2,
@@ -83,7 +94,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -91,24 +103,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningBarrel_Head",
+			"name":"DiningBarrel_Bung_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -116,11 +130,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":0,
 					"mode":4
 				}
@@ -131,9 +146,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -141,11 +157,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -172,7 +189,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":682,
+			"count":501,
 			"max":[
 				0.3149999976158142,
 				0.9200000166893005,
@@ -187,61 +204,73 @@
 		},
 		{
 			"componentType":5126,
-			"count":682,
+			"count":501,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":682,
+			"count":501,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1080,
+			"count":501,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1260,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":122,
+			"count":39,
 			"max":[
-				0.2529999911785126,
-				0.9279999732971191,
-				0.2529999911785126
+				0.02199999988079071,
+				0.006000000052154064,
+				0.020923243835568428
 			],
 			"min":[
-				-0.2529999911785126,
-				0.9179999828338623,
-				-0.2529999911785126
+				-0.02199999988079071,
+				0,
+				-0.020923243835568428
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":122,
+			"count":39,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":122,
+			"count":39,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":240,
+			"count":39,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":90,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":960,
 			"max":[
-				0.3164697587490082,
-				0.8500000238418579,
-				0.3164697587490082
+				0.31046974658966064,
+				0.8510000109672546,
+				0.31046974658966064
 			],
 			"min":[
-				-0.3164697587490082,
-				0.07000000029802322,
-				-0.3164697587490082
+				-0.31046974658966064,
+				0.0689999982714653,
+				-0.31046974658966064
 			],
 			"type":"VEC3"
 		},
@@ -257,25 +286,31 @@
 		},
 		{
 			"componentType":5123,
-			"count":1920,
+			"count":960,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1440,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3636,
+			"byteLength":4015,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":935,
-			"byteOffset":3636
+			"byteLength":809,
+			"byteOffset":4016
 		},
 		{
 			"buffer":0,
-			"byteLength":4418,
-			"byteOffset":4572
+			"byteLength":6427,
+			"byteOffset":4828
 		}
 	],
 	"samplers":[
@@ -286,7 +321,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":8992,
+			"byteLength":11256,
 			"uri":"dining_barrel.bin"
 		}
 	]

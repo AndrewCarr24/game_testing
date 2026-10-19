@@ -119,7 +119,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -127,11 +128,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -142,9 +144,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -152,11 +155,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -167,19 +171,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8
+						"POSITION":9,
+						"NORMAL":10,
+						"COLOR_0":11
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":12,
 					"material":1,
 					"mode":4
 				}
@@ -190,9 +196,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12
+						"POSITION":13,
+						"NORMAL":14,
+						"TEXCOORD_0":15,
+						"COLOR_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -200,11 +207,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":13,
+					"indices":17,
 					"material":2,
 					"mode":4
 				}
@@ -244,7 +252,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"max":[
 				0.20999999344348907,
 				0.7049999833106995,
@@ -259,22 +267,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1440,
+			"count":319,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1512,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"max":[
 				0.20999999344348907,
 				0.7049999833106995,
@@ -289,13 +303,19 @@
 		},
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":414,
+			"count":319,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":319,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
@@ -316,6 +336,12 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -349,6 +375,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":752,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":2868,
 			"type":"SCALAR"
 		}
@@ -356,23 +388,23 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3379,
+			"byteLength":3267,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3379,
-			"byteOffset":3380
+			"byteLength":3278,
+			"byteOffset":3268
 		},
 		{
 			"buffer":0,
-			"byteLength":196,
-			"byteOffset":6760
+			"byteLength":411,
+			"byteOffset":6548
 		},
 		{
 			"buffer":0,
-			"byteLength":5202,
-			"byteOffset":6956
+			"byteLength":5184,
+			"byteOffset":6960
 		}
 	],
 	"samplers":[
@@ -383,7 +415,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":12160,
+			"byteLength":12144,
 			"uri":"kitchen_table.bin"
 		}
 	]

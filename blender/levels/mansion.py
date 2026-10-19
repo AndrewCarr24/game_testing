@@ -14,8 +14,18 @@ Room modules (blender/levels/rooms/<module>.py) may define, all optional:
   PLACEMENTS [(asset, (x, y[, z]), rot_deg[, opts]), ...] in room-local metres:
              (0, 0) is the room's interior centre, z = 0 its floor; +y north, +x east.
              A module shared by several rooms uses {room: [...]} instead.
-  LIGHTS     [dict(kind="strip", pos=(x, y), size=(w, d), power=W),
-              dict(kind="point", pos=(x, y, z), power=W, color=(r, g, b))], room-local
+  LIGHTS     room-local, all baked (none reach the engine as real-time lights):
+             dict(kind="strip", pos=(x, y), size=(w, d), power=W)   glowing ceiling slot
+             dict(kind="point", pos=(x, y, z), power=W, color=(r, g, b))   bulb in a lamp,
+                 pendant, sconce, chandelier (the fixture itself is a prop)
+             dict(kind="spot", pos=(x, y, z), aim=(x, y, z), power=W, angle=deg, blend=0..1,
+                 color=...)   downlight, picture light, wall grazer, reading light
+             dict(kind="area", pos=(x, y, z), size=(w, d), aim=(x, y, z), power=W, color=...)
+                 hidden soft source: cove / valance wash, backlit headboard or shelf,
+                 under-cabinet, toe-kick; no glowing geometry of its own. size's axes follow
+                 the aim (to_track_quat("-Z", "Y")): aimed straight down it's (x, y); aimed
+                 sideways it's (along the wall, vertical); tilted towards +-x they swap
+             spot power counts like a bare bulb's: a narrow beam doesn't concentrate it
   PROBE      (x, y, z) room-local point for the room's environment panorama
 
 Each room has its own lightmap atlas and environment probe (bake.py), sized by area.
@@ -35,24 +45,55 @@ PROJECT = os.path.abspath(os.path.join(BLENDER_DIR, ".."))
 for d in (BLENDER_DIR, os.path.join(BLENDER_DIR, "assets"), HERE, os.path.join(HERE, "rooms")):
     if d not in sys.path:
         sys.path.insert(0, d)
-from lib import common, house, materials, outdoor, textures  # noqa: E402
+from lib import common, house, materials, outdoor, textures, vertex_ao  # noqa: E402
 import plan  # noqa: E402
 import grounds  # noqa: E402
+import sunlight  # noqa: E402
+import visibility  # noqa: E402
 
-for m in (common, textures, materials, outdoor, house, plan, grounds):
+for m in (common, textures, materials, outdoor, vertex_ao, house, plan, grounds, sunlight, visibility):
     importlib.reload(m)
 
 NAME = "Mansion"
 
-P = dict(
-    # lighting, shared by the Blender bake and the engine
-    sun_dir=(-0.35, -0.72, -0.6),   # direction the light travels (Blender coords)
-    sun_strength=4.0,               # W/m² in Blender = DirectionalLight intensity in three.js
-    sky=(0.55, 0.68, 0.85),
-    sky_strength=1.0,
-    lightmap_res=1024,              # upper limit per room; small rooms get 512
-    exposure=0.8,
-)
+# Times of day: everything that lights the level, shared by the bake (Cycles), the horizon
+# render (horizon.py) and the engine (sun, sky dome). Switch LOOK and rebuild + rebake.
+LOOKS = {
+    "day": dict(
+        sun_dir=(-0.35, -0.72, -0.6),     # direction the light travels (Blender coords)
+        sun_strength=4.0,                 # W/m² in Blender = DirectionalLight intensity in three.js
+        sun_color=(1.0, 0.96, 0.9),
+        sky=(0.55, 0.68, 0.85), sky_strength=1.0,       # the world light in the bake
+        sky_horizon=(0.80, 0.86, 0.95), sky_zenith=(0.28, 0.46, 0.85), haze=(0.62, 0.70, 0.84),
+        cove_color=(1.0, 0.92, 0.82),
+        exposure=0.8,
+    ),
+    # late afternoon: a low sun in the west, straight down the west garden's open axis (over the
+    # reflecting pool; nothing tall stands on it), pours through the great room's glass wall
+    "golden": dict(
+        sun_dir=(0.94, 0.12, -0.32),      # ~19 degrees up, from just south of west
+        sun_strength=6.0,                 # a low sun reaches floors at a grazing angle: it must
+                                          # clearly beat the ceiling strips to read as sunlight
+        sun_color=(1.0, 0.70, 0.45),
+        sky=(0.42, 0.52, 0.72), sky_strength=0.85,
+        sky_horizon=(0.98, 0.76, 0.56), sky_zenith=(0.20, 0.33, 0.66), haze=(0.82, 0.70, 0.60),
+        cove_color=(1.0, 0.86, 0.70), cove_scale=0.75,
+        exposure=0.95,
+    ),
+}
+LOOK = "golden"
+P = dict(LOOKS[LOOK], look=LOOK,
+         lightmap_res=1024)                # upper limit per room; small rooms get 512
+
+
+def plaster_walls():
+    """Warm-white painted plaster: a Poly Haven scan tinted to the house white (polyhaven_textures.py
+    GENERATE), falling back to the flat colour if it hasn't been made."""
+    m = common.pbr_material("M_Plaster_WarmWhite", (0.72, 0.70, 0.66), roughness=0.9)
+    path = os.path.join(textures.TEX_DIR, "T_Plaster_Wall_BaseColor.png")
+    if os.path.exists(path):
+        common.set_base_color_map(m, textures.load(path))
+    return m
 
 
 def default_finishes():
@@ -60,7 +101,7 @@ def default_finishes():
     common.set_base_color_map(oak, textures.load(textures.oak_floor()))
     return dict(
         floor=oak,
-        walls=common.pbr_material("M_Plaster_WarmWhite", (0.72, 0.70, 0.66), roughness=0.9),
+        walls=plaster_walls(),
         ceiling=common.pbr_material("M_Ceiling_White", (0.8, 0.8, 0.79), roughness=0.9),
         floor_uv_tile=2.0,
     )
@@ -112,8 +153,8 @@ def blender_lights(p, h):
         ld = bpy.data.lights.get(f"{NAME}_Cove_{i}") or bpy.data.lights.new(f"{NAME}_Cove_{i}", "AREA")
         ld.shape = "RECTANGLE"
         ld.size, ld.size_y = max(ls["size"][0], 0.25), max(ls["size"][1], 0.25)
-        ld.energy = ls["power"]
-        ld.color = (1.0, 0.92, 0.82)
+        ld.energy = ls["power"] * p.get("cove_scale", 1.0)
+        ld.color = p["cove_color"]
         ob = bpy.data.objects.new(f"{NAME}_Cove_{i}", ld)
         ob.location = (*ls["pos"], ls["z"] - 0.02)
         col.objects.link(ob)
@@ -123,9 +164,26 @@ def blender_lights(p, h):
         ob = bpy.data.objects.new(f"{NAME}_Lamp_{i}", ld)
         ob.location = pt["pos"]
         col.objects.link(ob)
+    for i, sp in enumerate(h.spots):
+        ld = bpy.data.lights.get(f"{NAME}_Spot_{i}") or bpy.data.lights.new(f"{NAME}_Spot_{i}", "SPOT")
+        ld.energy, ld.color, ld.shadow_soft_size = sp["power"], sp["color"], sp["radius"]
+        ld.spot_size, ld.spot_blend = math.radians(sp["angle"]), sp["blend"]
+        ob = bpy.data.objects.new(f"{NAME}_Spot_{i}", ld)
+        ob.location = sp["pos"]
+        ob.rotation_euler = (Vector(sp["aim"]) - Vector(sp["pos"])).to_track_quat("-Z", "Y").to_euler()
+        col.objects.link(ob)
+    for i, ar in enumerate(h.areas):
+        ld = bpy.data.lights.get(f"{NAME}_Area_{i}") or bpy.data.lights.new(f"{NAME}_Area_{i}", "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y = ar["size"]
+        ld.energy, ld.color = ar["power"], ar["color"]
+        ob = bpy.data.objects.new(f"{NAME}_Area_{i}", ld)
+        ob.location = ar["pos"]
+        ob.rotation_euler = (Vector(ar["aim"]) - Vector(ar["pos"])).to_track_quat("-Z", "Y").to_euler()
+        col.objects.link(ob)
     sd = bpy.data.lights.get(f"{NAME}_Sun") or bpy.data.lights.new(f"{NAME}_Sun", "SUN")
     sd.energy = p["sun_strength"]
-    sd.color = (1.0, 0.96, 0.9)
+    sd.color = p["sun_color"]
     sd.angle = math.radians(1.5)
     sun = bpy.data.objects.new(f"{NAME}_Sun", sd)
     sun.rotation_euler = Vector(p["sun_dir"]).to_track_quat("-Z", "Y").to_euler()
@@ -181,6 +239,14 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                 h.strip(room, (wx, wy), L["size"], z1, L["power"])
             elif L["kind"] == "point":
                 h.point(h.to_world(room, L["pos"]), L["power"], L.get("color", (1.0, 0.78, 0.55)))
+            elif L["kind"] == "spot":
+                h.spot(h.to_world(room, L["pos"]), h.to_world(room, L["aim"]), L["power"],
+                       L.get("angle", 40.0), L.get("blend", 0.6), L.get("color", (1.0, 0.82, 0.62)))
+            elif L["kind"] == "area":
+                h.area(h.to_world(room, L["pos"]), L["size"], h.to_world(room, L["aim"]), L["power"],
+                       L.get("color", (1.0, 0.84, 0.66)))
+            else:
+                raise ValueError(f"{room}: unknown light kind {L['kind']!r}")
         probe = per_room(mod, "PROBE", room, None)
         if probe:
             h.probes[room] = h.to_world(room, probe)
@@ -222,6 +288,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                              "colliders": common.part_colliders(parts),
                              "tris": common.triangle_count(parts)}
             if export:
+                vertex_ao.bake(root)          # the asset's own occlusion -> vertex colours
                 common.export_gltf(root, os.path.join(models, f"{asset}.gltf"))
             ob = root
         elif roots[asset] is None:
@@ -265,13 +332,26 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         "assets": assets,
         "props": placed,
         "colliders": h.colliders,
+        "ramps": h.ramps,
         "lights": h.lights + [
-            {"type": "sun", "direction": common.to_gltf(sun), "intensity": p["sun_strength"], "color": [1.0, 0.96, 0.9]},
+            {"type": "sun", "direction": common.to_gltf(sun), "intensity": p["sun_strength"], "color": list(p["sun_color"])},
             {"type": "ambient_env", "intensity": 0.6},
             {"type": "hemisphere", "sky": [0.85, 0.9, 1.0], "ground": [0.95, 0.8, 0.62], "intensity": 1.1},
         ],
         "spawn": {"position": common.to_gltf((sx, sy, 1.65)), "lookAt": common.to_gltf(plan.SPAWN["look"])},
+        "sky": {"look": p["look"], "horizon": list(p["sky_horizon"]), "zenith": list(p["sky_zenith"]),
+                "haze": list(p["haze"]), "light": list(p["sky"]), "light_strength": p["sky_strength"],
+                "sun_strength": p["sun_strength"], "sun_color": list(p["sun_color"])},
     }
+    # rooms direct sunlight never reaches: their props skip real-time sun (sunlight.py)
+    lit = sunlight.sunlit_rooms({r: h.interior(r) for r in rooms}, list(h.root.children_recursive), p["sun_dir"])
+    for r, v in lit.items():
+        rooms[r]["sun"] = v
+    # which rooms can see into which (doors closed): the engine's culler (visibility.py)
+    interiors, shell_obs = {r: h.interior(r) for r in rooms}, list(h.root.children_recursive)
+    for key, closed in (("sees", True), ("seesOpen", False)):
+        for r, v in visibility.room_visibility(interiors, shell_obs, plan, doors_closed=closed).items():
+            rooms[r][key] = v
     if write_json:
         with open(os.path.join(levels, "mansion.json"), "w") as f:
             json.dump(level, f, indent=2)

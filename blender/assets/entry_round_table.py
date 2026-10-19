@@ -65,15 +65,15 @@ def build(**overrides):
     z1 = z_top0 - g
     pts = [(p["stem_r_low"], z0), (p["stem_r_low"] - 0.02, z0 + 0.10), (p["stem_r_waist"] + 0.01, z0 + 0.26),
            (p["stem_r_waist"], (z0 + z1) / 2 - 0.02), (p["stem_r_waist"] + 0.02, z1 - 0.15), (p["stem_r_high"], z1)]
-    dense = table_lamp.catmull([(r, z) for r, z in pts], per=6)
+    dense = table_lamp.catmull([(r, z) for r, z in pts], per=3)
     prof = [(0.0, z0)] + dense + [(0.0, z1)]
-    stem = common.mesh_object(f"{n}_Stem", table_lamp.lathe(prof, seg, sharp=60), col, walnut, root)
+    stem = common.mesh_object(f"{n}_Stem", table_lamp.lathe(prof, 56, sharp=60), col, walnut, root)
     table_lamp.cylindrical_uv(stem, circumference_tiles=1.6, tile=0.5)
 
     # bronze plinth disc with a chamfer
     pr, ph = p["plinth_r"], p["plinth_h"]
     plinth = common.mesh_object(f"{n}_Plinth", table_lamp.lathe(
-        [(0.0, 0.0), (pr - 0.008, 0.0), (pr, 0.008), (pr, ph - 0.006), (pr - 0.01, ph), (0.0, ph)], 64, sharp=35),
+        [(0.0, 0.0), (pr - 0.008, 0.0), (pr, 0.008), (pr, ph - 0.006), (pr - 0.01, ph), (0.0, ph)], 56, sharp=35),
         col, bronze, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

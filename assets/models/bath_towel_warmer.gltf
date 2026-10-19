@@ -27,21 +27,11 @@
 		},
 		{
 			"mesh":1,
-			"name":"BathTowelWarmer_PipingSheet",
-			"translation":[
-				0,
-				0.4950000047683716,
-				0.05249999836087227
-			]
+			"name":"BathTowelWarmer_PipingSheet"
 		},
 		{
 			"mesh":2,
-			"name":"BathTowelWarmer_PipingTowel",
-			"translation":[
-				0,
-				-0.2562499940395355,
-				0.05249999836087227
-			]
+			"name":"BathTowelWarmer_PipingTowel"
 		},
 		{
 			"children":[
@@ -110,18 +100,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -132,9 +124,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4,
-						"TEXCOORD_0":5
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6,
+						"COLOR_0":7
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -142,11 +135,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -157,9 +151,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8,
-						"TEXCOORD_0":9
+						"POSITION":9,
+						"NORMAL":10,
+						"TEXCOORD_0":11,
+						"COLOR_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -167,11 +162,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":10,
+					"indices":13,
 					"material":2,
 					"mode":4
 				}
@@ -206,105 +202,123 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":564,
+			"count":1132,
 			"max":[
-				0.29750001430511475,
+				0.30799999833106995,
 				0.6850000023841858,
 				0.0925000011920929
 			],
 			"min":[
-				-0.29750001430511475,
+				-0.30399999022483826,
 				-0.6850000023841858,
-				3.725290298461914e-09
+				-8.214849911425404e-10
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":564,
+			"count":1132,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":2484,
+			"count":1132,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4368,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"max":[
 				0.23000000417232513,
-				0.12200003862380981,
-				0.06000000238418579
+				0.5996999740600586,
+				0.11969620734453201
 			],
 			"min":[
 				-0.23000000417232513,
-				-0.46000000834465027,
-				-0.00800000037997961
+				0.014711210504174232,
+				0.038300976157188416
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":804,
+			"count":200,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":660,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"max":[
 				0.2199999988079071,
-				0.16600002348423004,
-				0.058000002056360245
+				-0.10855000466108322,
+				0.11569622159004211
 			],
 			"min":[
 				-0.2199999988079071,
-				-0.3100000023841858,
-				-0.008999999612569809
+				-0.5615249872207642,
+				0.04030037671327591
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":256,
+			"count":200,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":804,
+			"count":200,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":660,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3126,
+			"byteLength":7215,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2108,
-			"byteOffset":3128
+			"byteLength":2666,
+			"byteOffset":7216
 		},
 		{
 			"buffer":0,
-			"byteLength":2171,
-			"byteOffset":5236
+			"byteLength":2749,
+			"byteOffset":9884
 		}
 	],
 	"samplers":[
@@ -315,7 +329,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7408,
+			"byteLength":12636,
 			"uri":"bath_towel_warmer.bin"
 		}
 	]

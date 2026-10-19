@@ -33,8 +33,9 @@ class House:
         self.baked = {}                   # room -> [objects]
         self.air = {}                     # room -> [(lo, hi)]
         self.probes = {}                  # room -> Blender point
-        self.strips, self.points = [], []
+        self.strips, self.points, self.spots, self.areas = [], [], [], []
         self.lights = []                  # engine fallback lights (when there's no bake)
+        self.ramps = []                   # invisible slopes over stairs (player.js walks them smoothly)
         self.doors = []                   # door placements generated from cuts
         self.glow = materials.emissive("M_LightStrip", (1.0, 0.92, 0.82), 4.0)
         self.frame = materials.black_metal()
@@ -161,6 +162,31 @@ class House:
                 else:
                     lo, hi = (d0, s0, kz0), (d1, s1, kz1)
                 self.box(room, f"{room}_Wall{side}_{i}_{j}", lo, hi, mat, bake=True, uv_tile=uv_tile)
+        self.trim(room, side, axis, slices, (a0 + T, a1 - T), (d0, d1), z0, z1, mat, uv_tile)
+
+    # ---------------------------------------------------------------- trim
+    def trim(self, room, side, axis, slices, span, depth, z0, z1, mat, uv_tile,
+             base_h=0.07, base_d=0.012, gap_h=0.012):
+        """Architectural trim along one wall's room face: a baseboard (the wall's own material,
+        so it merges into the wall mesh and is baked) wherever the wall reaches the floor, and a
+        shadow gap (a thin dark line, merged with the window frames) where it meets the ceiling."""
+        d0, d1 = depth
+        face, out = (d0, -1) if side in "NE" else (d1, 1)      # interior face, direction into the room
+
+        def run(name, s0, s1, za, zb, prot, material, bake):
+            s0, s1 = max(s0, span[0]), min(s1, span[1])
+            if s1 - s0 < 0.05:
+                return
+            f0, f1 = sorted((face, face + out * prot))
+            lo, hi = ((s0, f0, za), (s1, f1, zb)) if axis == "x" else ((f0, s0, za), (f1, s1, zb))
+            self.box(room if bake else None, name, lo, hi, material, collide=False, solid=False,
+                     bake=bake, uv_tile=uv_tile)
+
+        for i, (s0, s1, keep) in enumerate(slices):
+            if keep and keep[0][0] <= z0 + 1e-4 and keep[0][1] >= z0 + base_h:
+                run(f"{room}_Base{side}_{i}", s0, s1, z0, z0 + base_h, base_d, mat, True)
+            if keep and keep[-1][1] >= z1 - 1e-4 and keep[-1][0] <= z1 - gap_h:
+                run(f"{room}_Gap{side}_{i}", s0, s1, z1 - gap_h, z1, 0.003, self.frame, False)
 
     # ---------------------------------------------------------------- cuts
     def cut_fill(self, c):
@@ -175,6 +201,13 @@ class House:
         elif c["kind"] == "balustrade":
             self.rail(c, a0, a1, z0, L)
         elif c["kind"] == "opening" and c.get("door"):
+            # the opening's reveals (the cut through both linings) skinned dark, like the door's
+            # black stops; 3 mm, inside the slab's 4 mm clearance
+            T2, sk = 2 * self.plan.T, 0.003
+            for nm, (b0, b1, h0, h1) in (("L", (a0, a0 + sk, z0, z1)), ("R", (a1 - sk, a1, z0, z1)),
+                                         ("Head", (a0, a1, z1 - sk, z1))):
+                self.wall_box(None, f"DoorReveal_{int(a0 * 10)}_{int(L * 10)}_{nm}", c["axis"], L, b0, b1, h0, h1,
+                              T2, self.frame, collide=False)
             rot = self.door_rotation(c)
             pos = ((a0 + a1) / 2, L, z0) if c["axis"] == "x" else (L, (a0 + a1) / 2, z0)
             self.doors.append(dict(asset=c["door"], pos=pos, rot=rot, lock=c.get("lock"),
@@ -233,6 +266,10 @@ class House:
                      solid=False, bake=True)
             # rail collider per tread on the open side
             self.colliders.append(common.aabb_gltf((xa, y0 - 0.08, zt), (xa + run, y0, zt + 1.2)))
+        # an invisible ramp along the nosings (from the floor one run before the first tread to
+        # the landing): the player glides up and down instead of popping up 18 cm per tread
+        lo, hi = common.to_gltf((x0 - run, y1, 0.0)), common.to_gltf((x1, y0, top))
+        self.ramps.append({"x": [lo[0], hi[0]], "z": [lo[2], hi[2]], "y": [0.0, top]})
         lx0, lx1 = s["landing"]
         self.box(s["room"], "Stair_Landing", (lx0, y0, top - 0.2), (lx1, y1 + P.T, top), oak, uv_tile=0.5,
                  solid=False, bake=True)
@@ -243,6 +280,10 @@ class House:
                                    self.rail_glass, self.root, smooth=False)
         glass.location = ((x0 + x1) / 2, y0 - 0.04, top / 2 + 0.55)
         glass.rotation_euler = (0, -math.atan2(top, x1 - x0), 0)
+        # the landing's open side (its collider is above) gets the same glass, level
+        side = common.mesh_object(f"{self.name}_Stair_Glass_Landing", common.box_bmesh((lx1 - lx0 + 0.02, 0.02, 0.95)),
+                                  self.col, self.rail_glass, self.root, smooth=False)
+        side.location = ((lx0 + lx1) / 2 + 0.01, y0 - 0.04, top + 0.55)
         # the landing's far end overlooks the entry too: glass + rail collider across it
         end = common.mesh_object(f"{self.name}_Stair_Glass_End", common.box_bmesh((0.02, y1 + P.T - y0, 0.95)), self.col,
                                  self.rail_glass, self.root, smooth=False)
@@ -261,6 +302,16 @@ class House:
 
     def point(self, pos, power, color=(1.0, 0.78, 0.55), radius=0.1):
         self.points.append(dict(pos=pos, power=power, color=color, radius=radius))
+
+    def spot(self, pos, aim, power, angle=40.0, blend=0.6, color=(1.0, 0.82, 0.62), radius=0.03):
+        """A spot (downlight, picture light, wall grazer): pos -> aim are world points."""
+        self.spots.append(dict(pos=pos, aim=aim, power=power, angle=angle, blend=blend, color=color, radius=radius))
+
+    def area(self, pos, size, aim, power, color=(1.0, 0.84, 0.66)):
+        """A hidden soft area light, no glowing geometry of its own (a cove's wash out of a
+        slot, a backlit panel, under-cabinet light): the fixture that motivates it is a prop
+        or trim. pos, aim: world points; size (w, d) metres."""
+        self.areas.append(dict(pos=pos, size=size, aim=aim, power=power, color=color))
 
     # ---------------------------------------------------------------- helpers
     def interior(self, room):

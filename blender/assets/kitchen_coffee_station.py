@@ -36,15 +36,28 @@ P = dict(
 )
 
 
-def cups(b, name, x0, y, z, count, mat, gap=0.1, r=0.04, h=0.07):
+def cups(b, name, x0, y, z, count, mat, gap=0.1, r=0.04, h=0.07, handles=False):
+    """A row of cups (or mugs, with loop handles turned a little toward the room). The
+    foot ring sits on the shelf, so the underside isn't modelled."""
     bms = []
     for i in range(count):
-        prof = [(0.0, 0.0), (r * 0.6, 0.0), (r * 0.8, 0.004), (r, h), (r - 0.003, h), (r * 0.78 - 0.002, 0.008), (0.0, 0.008)]
-        bm = L.lathe(prof, 10, sharp=60)
+        prof = [(r * 0.62, 0.0), (r * 0.8, 0.004), (r, h), (r - 0.003, h), (r * 0.78 - 0.002, 0.008), (0.0, 0.008)]
+        bm = L.lathe(prof, 10, closed=False, sharp=60)
         bm.transform(Matrix.Translation((x0 + i * gap, y, z)))
         bms.append(bm)
     ob = common.mesh_object(f"{b.n}_{name}", L.merged(bms), b.col, mat, b.root)
     L.planar_uv(ob, 0.3)
+    if handles:
+        for i in range(count):
+            a = math.radians(-60 + 25 * (i % 3))
+            c, s_ = math.cos(a), math.sin(a)
+            cx, cy = x0 + i * gap, y
+            pts = []
+            for k in range(5):
+                t = k / 4
+                rr = r * 0.98 + 0.024 * math.sin(math.pi * t)
+                pts.append((cx + rr * c, cy + rr * s_, z + h * (0.82 - 0.6 * t)))
+            b.tube(f"{name}_Handle{i}_NoCollide", pts, 0.0045, mat, closed=False, res=1)
     return ob
 
 
@@ -101,7 +114,7 @@ def build(**overrides):
     b.box("Shelf_LED", (xb - xa - 0.2, 0.01, 0.008), ((xa + xb) / 2, yb - 0.17, sz - 0.022), led, bevel=0, tile=0)
     yc = yb - 0.11
     cups(b, "ShelfCups", xa + 0.16, yc, sz + 0.0175, 6, cer, gap=0.105)
-    cups(b, "ShelfMugs", xa + 0.9, yc, sz + 0.0175, 5, char, gap=0.105, r=0.042, h=0.09)
+    cups(b, "ShelfMugs", xa + 0.9, yc, sz + 0.0175, 5, char, gap=0.105, r=0.042, h=0.09, handles=True)
     L.stack_plates(b, "Saucers", (xb - 0.2, yc, sz + 0.0175), cer, r=0.075, count=8, step=0.012)
 
     # --- espresso machine (left of centre)
@@ -116,6 +129,14 @@ def build(**overrides):
         b.lathe(f"Group{i}", [(0, 0), (0.032, 0), (0.032, -0.05), (0.024, -0.055), (0, -0.055)], black,
                 loc=(gx, ey - md / 2 - 0.016, cz + mh - 0.22), segs=14, uv_tile=0)
         b.box(f"Portafilter{i}", (0.026, 0.12, 0.022), (gx, ey - md / 2 - 0.08, cz + mh - 0.255), bronze, bevel=0.004, tile=0)
+    # steam wand and hot-water spout either side of the groups, two pressure gauges in the panel
+    for k, sx in enumerate((-1, 1)):
+        wx = ex + sx * 0.19
+        b.tube(f"Machine_Wand{k}_NoCollide", [(wx, ey - md / 2 + 0.01, cz + mh - 0.12), (wx, ey - md / 2 - 0.04, cz + mh - 0.14),
+                                              (wx + sx * 0.01, ey - md / 2 - 0.05, cz + 0.1)], 0.005, polished, closed=False, res=2)
+        gxk = ex + sx * 0.09
+        b.lathe(f"Machine_Gauge{k}", [(0.0, 0.0), (0.024, 0.0), (0.024, 0.008), (0.02, 0.01), (0.0, 0.01)], polished,
+                loc=(gxk, ey - md / 2 - 0.004, cz + mh - 0.14), segs=14, sharp=30, uv_tile=0).rotation_euler = (math.radians(90), 0, 0)
     b.box("Machine_Cupwarmer", (mw - 0.02, md - 0.04, 0.012), (ex, ey, cz + mh + 0.006), black, bevel=0.002, tile=0)
     b.lathe("Machine_Dial", [(0, 0), (0.026, 0), (0.026, 0.022), (0, 0.022)], bronze, loc=(ex + 0.12, ey - md / 2 - 0.001, cz + mh - 0.28),
             segs=14, uv_tile=0).rotation_euler = (math.radians(-90), 0, 0)
@@ -130,7 +151,7 @@ def build(**overrides):
            gap=0.12, seed=7)
     cups(b, "CounterCups", mid - 0.05, yf + 0.14, cz, 4, cer, gap=0.1)
     b.box("Tray", (0.36, 0.2, 0.02), (mid + 0.4, yf + 0.18, cz + 0.01), walnut, bevel=0.004, tile=0.5, shift=(0.1, 0.5))
-    cups(b, "TrayCups", mid + 0.3, yf + 0.18, cz + 0.02, 3, char, gap=0.09, r=0.042, h=0.09)
+    cups(b, "TrayCups", mid + 0.3, yf + 0.18, cz + 0.02, 3, char, gap=0.09, r=0.042, h=0.09, handles=True)
 
     # --- end panels
     for k, sx in enumerate((-1, 1)):

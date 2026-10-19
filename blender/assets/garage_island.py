@@ -59,7 +59,7 @@ def build(**overrides):
                 w_ = (xb - xa) / n
                 for q in range(n):
                     b.lo_hi(f"Basket{side}{k}{lvl}{q}", (xa + q * w_ + 0.02, ya + 0.02, z + 0.005), (xa + (q + 1) * w_ - 0.02, yb2 - 0.0, z + 0.005 + min(hh, 0.3) * (0.8 if (q + lvl) % 2 else 1.0)),
-                           oat if (q + k + lvl) % 3 else ink, bevel=0.03, tile=0.25, seg=3)
+                           oat if (q + k + lvl) % 3 else ink, bevel=0.018, tile=0.25, seg=2)
     # worktop: oak with an overhang on the stool side
     b.lo_hi("Top", (-W / 2, yf - 0.03, bh), (W / 2, yb, H), oak, bevel=0.01, seg=3, tile=0.5)
     # bronze towel rail on the end
@@ -82,8 +82,8 @@ def build(**overrides):
     # --- two stools on the front
     for i, sx in enumerate((-0.6, 0.6)):
         sy = yf - 0.4
-        b.cyl(f"Stool{i}_Seat", 0.19, 0.05, (sx, sy, 0.66), oak, seg=20, bevel=0.0)
-        b.cyl(f"Stool{i}_Pad", 0.18, 0.03, (sx, sy, 0.705), oat, seg=20)
+        b.cyl(f"Stool{i}_Seat", 0.19, 0.05, (sx, sy, 0.66), oak, seg=20, bevel=0.004)
+        b.cyl(f"Stool{i}_Pad", 0.18, 0.035, (sx, sy, 0.7025), oat, seg=20, bevel=0.012)
         for k in range(4):
             a = k * math.pi / 2 + math.pi / 4
             b.cyl(f"Stool{i}_Leg{k}", 0.014, 0.64, (sx + 0.14 * math.cos(a), sy + 0.14 * math.sin(a), 0.32), bronze, seg=8)

@@ -135,7 +135,7 @@ def build(**overrides):
     e = p["cushion_edge"]
     cushion = common.mesh_object(
         f"{n}_Cushion",
-        common.cushion_bmesh(cush_size, edge=e,
+        common.cushion_bmesh(cush_size, cuts=4, edge=e,
                              crown={"+z": crown, "-z": 0.0, "+x": 0.004, "-x": 0.004,
                                     "+y": 0.004, "-y": 0.004}),
         col, ink, root)
@@ -145,7 +145,7 @@ def build(**overrides):
     loc = cushion.location
     for i, pts in enumerate(common.piping_loop(cush_size, "z", e / 6, e * 0.9)):
         pipe = common.tube_object(f"{n}_Cushion_Piping{i}", pts, p["piping_r"], col, ink,
-                                  root, closed=True, profile_res=2)
+                                  root, closed=True, profile_res=1)
         pipe.location = loc
         fabric_parts.append(pipe)
 

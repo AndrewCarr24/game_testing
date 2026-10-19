@@ -147,7 +147,7 @@ GROUNDS = dict(
         "south_lawn":     dict(rect=(-66, -60, -14, -25), tris=4000), # south-west: sculpture lawn
         "tennis":         dict(rect=(33, -22, 68, 25), tris=4000),    # east, below the guest room
         "kitchen_garden": dict(rect=(30, -60, 68, -25), tris=6000),   # south-east: greenhouse, beds, orchard
-        "planting":       dict(rect=(-70, -62, 70, 62), tris=12000),  # trees + shrubs estate-wide (see brief)
+        "planting":       dict(rect=(-70, -62, 70, 62), tris=16000),  # trees + shrubs estate-wide (see brief)
     },
 )
 LAWN_Z = -0.08            # world z of the lawn surface = z 0 in every zone

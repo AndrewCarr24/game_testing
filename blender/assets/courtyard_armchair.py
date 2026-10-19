@@ -16,7 +16,7 @@ P = dict(
     width=0.92,
     depth=0.92,
     seat_n=1,
-    pillows=1,
+    pillows=0,
 )
 
 

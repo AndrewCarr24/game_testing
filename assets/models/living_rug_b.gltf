@@ -91,7 +91,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -99,11 +100,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -114,9 +116,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -124,11 +127,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -163,7 +167,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":408,
+			"count":88,
 			"max":[
 				2.299999952316284,
 				0.007000000216066837,
@@ -178,22 +182,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":408,
+			"count":88,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":408,
+			"count":88,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1284,
+			"count":88,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":234,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":408,
+			"count":96,
 			"max":[
 				2.174999952316284,
 				0.007000000216066837,
@@ -208,30 +218,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":408,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":408,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1284,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":234,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2498,
+			"byteLength":851,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2438,
-			"byteOffset":2500
+			"byteLength":1274,
+			"byteOffset":852
 		}
 	],
 	"samplers":[
@@ -242,7 +258,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":4940,
+			"byteLength":2128,
 			"uri":"living_rug_b.bin"
 		}
 	]

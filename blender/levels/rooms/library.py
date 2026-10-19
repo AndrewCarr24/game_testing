@@ -78,11 +78,44 @@ PLACEMENTS = (
     ]
 )
 
-LIGHTS = [
-    dict(kind="strip", pos=(-0.5, -2.3), size=(15.0, 0.08), power=572.0),
-    dict(kind="strip", pos=(-2.0, 2.2), size=(10.0, 0.08), power=396.0),
-    dict(kind="point", pos=(0.5, 0.12, 1.08), power=45.0, color=(1.0, 0.8, 0.5)),    # banker's lamps
-    dict(kind="point", pos=(2.3, -0.12, 1.08), power=45.0, color=(1.0, 0.8, 0.5)),
-    dict(kind="point", pos=(-7.55, 0.0, 0.88), power=55.0, color=(1.0, 0.72, 0.45)),  # nook table lamp
-    dict(kind="point", pos=(-5.5, 2.3, 1.4), power=70.0, color=(1.0, 0.75, 0.48)),    # floor lamp
-]
+# --- lighting --------------------------------------------------------------------------------
+# A reading room lit by its books: every bookcase bay has its own small ceiling downlight
+# (light_u_downlight) 0.5 m out from the shelves, grazing down the spines in a scallop, so the
+# book walls read as a lit rhythm all the way round. The hero is a long bronze linear pendant
+# over the reading table (light down on the leather and an uplight that pools on the ceiling
+# above it); the banker's lamps, the nook's table lamp and the two reading floor lamps are
+# warm pools at hand height. No ceiling strips.
+CEIL = 3.8
+_bays = ([-8.85 + 1.18 * (i + 0.5) for i in range(15)],       # south wall, 15 bays
+         [-4.15 + 1.18 * (i + 0.5) for i in range(7)],         # east wall, 7 bays
+         [2.65 + 0.59, 2.65 + 1.77, 7.28])                     # north wall, either side of the door
+_BOOK = 0.36 + 0.5          # downlight distance from the wall: the shelf depth + 0.5 m
+PLACEMENTS += (
+    [("light_u_downlight", (x, -4.6 + _BOOK, CEIL), 0) for x in _bays[0]]
+    + [("light_u_downlight", (8.85 - _BOOK, y, CEIL), 0) for y in _bays[1]]
+    + [("light_u_downlight", (x, 4.6 - _BOOK, CEIL), 0) for x in _bays[2]]
+    + [("light_u_linear_pendant", (1.4, 0.0, CEIL - 2.15), 0)]          # bottom at 1.65 m over the table
+)
+
+_GRAZE = dict(kind="spot", power=240.0, angle=55.0, blend=0.75, color=(1.0, 0.80, 0.58))
+LIGHTS = (
+    [dict(_GRAZE, pos=(x, -4.6 + _BOOK, CEIL - 0.03), aim=(x, -4.24, 1.5)) for x in _bays[0]]
+    + [dict(_GRAZE, pos=(8.85 - _BOOK, y, CEIL - 0.03), aim=(8.49, y, 1.5)) for y in _bays[1]]
+    + [dict(_GRAZE, pos=(x, 4.6 - _BOOK, CEIL - 0.03), aim=(x, 4.24, 1.5)) for x in _bays[2]]
+    + [
+        # linear pendant: down onto the table and rug, up onto the ceiling
+        dict(kind="area", pos=(1.4, 0.0, 1.635), size=(2.3, 0.08), aim=(1.4, 0.0, 0.0), power=300.0,
+             color=(1.0, 0.82, 0.60)),
+        dict(kind="area", pos=(1.4, 0.0, 1.72), size=(2.3, 0.04), aim=(1.4, 0.0, CEIL), power=380.0,
+             color=(1.0, 0.84, 0.64)),
+        # banker's lamps on the table
+        dict(kind="point", pos=(0.5, 0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
+        dict(kind="point", pos=(2.3, -0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
+        # reading nook: table lamp and floor lamp
+        dict(kind="point", pos=(-7.55, 0.0, 0.88), power=65.0, color=(1.0, 0.72, 0.45)),
+        dict(kind="point", pos=(-5.5, 2.3, 1.42), power=85.0, color=(1.0, 0.75, 0.48)),
+        # the banker's lamp by the sofa, the collector's-corner floor lamp
+        dict(kind="point", pos=(-5.25, 4.0, 0.86), power=50.0, color=(1.0, 0.8, 0.5)),
+        dict(kind="point", pos=(7.8, -3.5, 1.42), power=85.0, color=(1.0, 0.75, 0.48)),
+    ]
+)

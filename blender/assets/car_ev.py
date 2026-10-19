@@ -118,11 +118,11 @@ TOP_D = (0.0, 0.012, 0.05, 0.055)
 TOP_G = (0.16, 0.36, 0.58, 0.8, 1.0)
 
 # wheel profiles (axial a, radius r); outer face at +a
-TYRE = [(-0.100, 0.262), (-0.122, 0.278), (-0.131, 0.305), (-0.128, 0.333), (-0.113, 0.352),
+TYRE = [(-0.100, 0.262), (-0.130, 0.300), (-0.113, 0.352),     # inner sidewall: only seen from under the car
         (-0.050, 0.360), (-0.047, 0.351), (-0.037, 0.351), (-0.034, 0.360),
         (0.034, 0.360), (0.037, 0.351), (0.047, 0.351), (0.050, 0.360),
         (0.113, 0.352), (0.128, 0.333), (0.1325, 0.305), (0.124, 0.278), (0.102, 0.262)]
-TYRE_GROOVE_RINGS = (5, 6, 7, 8, 9, 10, 11, 12)
+TYRE_GROOVE_RINGS = (3, 4, 5, 6, 7, 8, 9, 10)
 RIM = [(0.098, 0.266), (0.114, 0.270), (0.121, 0.264), (0.119, 0.256), (0.108, 0.249),
        (0.092, 0.246), (-0.110, 0.246)]
 HUB = [(0.060, 0.092), (0.090, 0.092), (0.098, 0.083), (0.101, 0.055), (0.104, 0.050), (0.106, 0.0)]
@@ -1029,7 +1029,7 @@ def _revolve(bm, prof, segs, centre, side, mat, sharp=(), flatten=None, phase=0.
 def _spokes(bm, centre, side, m_face, m_side, phase=0.0):
     cx, cy, cz = centre
     r0, r1 = 0.074, 0.250
-    rs = [r0, 0.115, 0.16, 0.205, r1]
+    rs = [r0, 0.13, 0.19, r1]
     for pair in range(5):
         base = phase + 2 * math.pi * pair / 5
         for sgn in (-1, 1):
@@ -1078,14 +1078,14 @@ def _caliper(bm, centre, side, mat, ang_c):
 def _wheels(p, col, root, n, mats):
     RUB, GRA, MAC, DISC_, CAL = range(5)
     bm = bmesh.new()
-    segs = 32
+    segs = 28
     for ya, ang in ((p["front_axle"], 0.35), (p["rear_axle"], 0.35)):
         for sx in (1, -1):
             c = (sx * p["track"], ya, p["wheel_z"])
             _revolve(bm, TYRE, segs, c, sx, RUB, sharp=TYRE_GROOVE_RINGS, flatten=0.0, phase=-math.pi / 2)
             _revolve(bm, RIM, segs, c, sx, [GRA, MAC, MAC, GRA, GRA, GRA], sharp=(2,))
-            _revolve(bm, HUB, 16, c, sx, [GRA, GRA, GRA, MAC, MAC])
-            _revolve(bm, DISC, 20, c, sx, DISC_)
+            _revolve(bm, HUB, 12, c, sx, [GRA, GRA, GRA, MAC, MAC])
+            _revolve(bm, DISC, 16, c, sx, DISC_)
             _spokes(bm, c, sx, MAC, GRA, phase=math.pi / 2)
             _caliper(bm, c, sx, CAL, math.pi - ang if sx > 0 else math.pi - ang)
     _new_mesh(f"{n}_Wheels", bm, mats, col, root)

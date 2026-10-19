@@ -10,7 +10,7 @@ import os
 import sys
 
 import bmesh
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
@@ -64,7 +64,7 @@ def build(**overrides):
         prof_o = [(sr, 0.0), (sr + 0.004, 0.006), (sr * 0.92, sh * 0.35), (sr * 0.5, sh * 0.78), (0.045, sh), (0.0, sh + 0.004)]
         lathe(outer, prof_o, 24, 0.0, x)
         # emissive inside
-        prof_i = [(0.04, sh - 0.006), (sr * 0.5 - t, sh * 0.78 - 0.003), (sr * 0.92 - t, sh * 0.35), (sr - t, 0.004)]
+        prof_i = [(0.0, sh - 0.005), (0.04, sh - 0.006), (sr * 0.5 - t, sh * 0.78 - 0.003), (sr * 0.92 - t, sh * 0.35), (sr - t, 0.004)]
         lathe(glow, prof_i, 24, 0.0, x)
         bmesh.ops.create_uvsphere(bulbs, u_segments=10, v_segments=6, radius=0.03,
                                   matrix=Matrix.Translation((x, 0, sh * 0.72)))
@@ -74,8 +74,17 @@ def build(**overrides):
                               depth=top - cz0, matrix=Matrix.Translation((x, 0, (top + cz0) / 2)))
         bmesh.ops.create_cone(cab, cap_ends=True, cap_tris=False, segments=14, radius1=0.04, radius2=0.04,
                               depth=0.014, matrix=Matrix.Translation((x, 0, top - 0.007)))
+    # orient the open shells: the bronze skin faces out, the glowing lining faces the bulb
+    xs = [(i - (p["count"] - 1) / 2) * p["spacing"] for i in range(p["count"])]
+    for bm_, sign in ((outer, -1), (glow, 1)):
+        for f in bm_.faces:
+            c = f.calc_center_median()
+            ax = min(xs, key=lambda q: abs(q - c.x))
+            to_axis = Vector((ax - c.x, -c.y, sh * 0.72 - c.z))      # toward the bulb
+            if f.normal.dot(to_axis) * sign < 0:
+                f.normal_flip()
     sh_ob = common.mesh_object(f"{n}_Shades", outer, col, bronze, root)
-    gl_ob = common.mesh_object(f"{n}_Inside", glow, col, inner, root, smooth=False)
+    gl_ob = common.mesh_object(f"{n}_Inside", glow, col, inner, root, smooth=True)
     ca_ob = common.mesh_object(f"{n}_Cables", cab, col, dark, root)
     bu_ob = common.mesh_object(f"{n}_Bulbs", bulbs, col, bulb, root)
     for ob in (sh_ob, gl_ob, ca_ob, bu_ob):

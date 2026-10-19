@@ -17,9 +17,11 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 from lib import common, materials  # noqa: E402
 import bath_common as bc  # noqa: E402
+import bath_vanity as bv  # noqa: E402  (soft_extrude, rosette)
 
 importlib.reload(common)
 importlib.reload(bc)
+importlib.reload(bv)
 
 NAME = "BathTowelWarmer"
 
@@ -63,34 +65,47 @@ def build(**overrides):
         bc.cylinder_between(rungs, (-w / 2, y, z), (w / 2, y, z), rr, 10)
     common.mesh_object(f"{n}_Rungs", rungs, col, brass, root)
 
-    # wall brackets (top and bottom, on both uprights)
+    # wall brackets (top and bottom, on both uprights) with wall rosettes, and the
+    # thermostat knob on the lower right bracket
     br = bmesh.new()
     for sx in (-1, 1):
         for z in (-h / 2 + 0.05, h / 2 - 0.05):
             bc.cylinder_between(br, (sx * w / 2, 0.0, z), (sx * w / 2, y, z), 0.013, 12)
+            bv.rosette(col, root, f"{n}_Rosette", brass, (sx * w / 2, 0.0, z), 0.024, t=0.007, segs=20)
+    kz = -h / 2 + 0.05
+    bv.cone_between(br, (w / 2 + ur * 0.6, -so * 0.5, kz), (w / 2 + 0.024, -so * 0.5, kz), 0.0105, 0.0105, 16)
+    bv.cone_between(br, (w / 2 + 0.024, -so * 0.5, kz), (w / 2 + 0.028, -so * 0.5, kz), 0.0105, 0.0085, 16)
+    bv.cone_between(br, (w / 2 + ur * 0.4, -so * 0.5, kz), (w / 2 + ur * 0.4, -so + 0.002, kz), 0.006, 0.006, 8)
     common.mesh_object(f"{n}_Brackets", br, col, brass, root)
 
+    def drape(zr, front, back, t, x0, x1, flare=0.008):
+        """Cloth hung over the rung at height zr: a front flap `front` m long, a back flap
+        `back` m long, thickness t; the front flap swings slightly away at its hem."""
+        R = rr + 0.0012 + t / 2
+        path = [(y - R - flare, zr - front), (y - R - flare * 0.35, zr - front * 0.55), (y - R, zr - 0.04)]
+        for k in range(9):
+            a = math.pi - math.pi * k / 8
+            path.append((y + R * math.cos(a), zr + R * math.sin(a)))
+        path += [(y + R, zr - 0.04), (y + R + 0.002, zr - back)]
+        a_side, b_side = [], []
+        from mathutils import Vector as V
+        P_ = [V(q) for q in path]
+        for i, q in enumerate(P_):
+            d = (P_[min(i + 1, len(P_) - 1)] - P_[max(i - 1, 0)]).normalized()
+            nrm = V((d.y, -d.x))          # points outward (away from the rung)
+            a_side.append(q + nrm * t / 2)
+            b_side.append(q - nrm * t / 2)
+        outline = [(q.x, q.y) for q in a_side] + [(q.x, q.y) for q in b_side[::-1]]
+        return bv.soft_extrude(outline, x0, x1, ease=0.010, inset=0.005)
+
     # folded hand towel over the 4th rung from the bottom: front flap long, back flap short
-    zr = zs[3]
     tw = w - 0.12
-    ty = y
-    front = bc.box(col, root, f"{n}_Towel_Front", (tw, 0.022, 0.46), (0, ty - rr - 0.013, zr + 0.035 - 0.23 + 0.0), oat,
-                   bevel=0.008, uv_tile=0.25)
-    back = bc.box(col, root, f"{n}_Towel_Back", (tw, 0.018, 0.30), (0, ty + rr + 0.011, zr + 0.035 - 0.15 + 0.0), oat,
-                  bevel=0.007, uv_tile=0.25)
-    # rolled top edge round the rung
-    roll = bmesh.new()
-    bc.cylinder_between(roll, (-tw / 2, ty, zr + rr + 0.012), (tw / 2, ty, zr + rr + 0.012), rr + 0.016, 14)
-    common.box_uv(common.mesh_object(f"{n}_Towel_Roll", roll, col, oat, root), tile=0.25)
+    ob = common.mesh_object(f"{n}_PipingTowel", drape(zs[3], 0.42, 0.27, 0.020, -tw / 2, tw / 2), col, oat, root)
+    common.box_uv(ob, tile=0.25)
     # bath sheet over the top rung
-    zb = zs[8]
-    bc.box(col, root, f"{n}_Sheet_Front", (w - 0.1, 0.024, 0.56), (0, ty - rr - 0.014, zb + 0.03 - 0.28), oat2,
-           bevel=0.009, uv_tile=0.25)
-    sheet_roll = bmesh.new()
-    bc.cylinder_between(sheet_roll, (-(w - 0.1) / 2, ty, zb + rr + 0.012), ((w - 0.1) / 2, ty, zb + rr + 0.012), rr + 0.017, 14)
-    common.box_uv(common.mesh_object(f"{n}_Sheet_Roll", sheet_roll, col, oat2, root), tile=0.25)
-    bc.box(col, root, f"{n}_Sheet_Back", (w - 0.1, 0.016, 0.20), (0, ty + rr + 0.011, zb + 0.03 - 0.10), oat2,
-           bevel=0.006, uv_tile=0.25)
+    sw = w - 0.10
+    ob = common.mesh_object(f"{n}_PipingSheet", drape(zs[8], 0.55, 0.19, 0.022, -sw / 2, sw / 2, flare=0.010), col, oat2, root)
+    common.box_uv(ob, tile=0.25)
     bc.merge(root, bc.by_material(root, brass), f"{n}_PipingBrass")
     bc.merge(root, bc.by_material(root, oat), f"{n}_PipingTowel")
     bc.merge(root, bc.by_material(root, oat2), f"{n}_PipingSheet")

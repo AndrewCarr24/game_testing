@@ -100,7 +100,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -108,11 +109,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -123,9 +125,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -133,11 +136,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -148,9 +152,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -158,11 +163,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":2,
 					"mode":4
 				}
@@ -202,88 +208,106 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":96,
+			"count":358,
 			"max":[
-				0.38200002908706665,
-				0.01600000075995922,
-				0.37199997901916504
+				0.37969303131103516,
+				0.017000000923871994,
+				0.36969301104545593
 			],
 			"min":[
-				-0.38200002908706665,
+				-0.37969303131103516,
 				0,
-				-0.37199997901916504
+				-0.36969301104545593
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":358,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":358,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":358,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":528,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":396,
 			"max":[
-				0.39750000834465027,
-				0.12999999523162842,
-				0.38749998807907104
+				0.42800000309944153,
+				0.17000000178813934,
+				0.4180000126361847
 			],
 			"min":[
-				-0.39750000834465027,
+				-0.42800000309944153,
 				0.020000003278255463,
-				-0.38749998807907104
+				-0.4180000126361847
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":396,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":396,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":396,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":660,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":2791,
+			"count":3146,
 			"max":[
-				0.4455641508102417,
-				0.9444304704666138,
-				0.4382719397544861
+				0.44437214732170105,
+				0.9312846660614014,
+				0.4487776756286621
 			],
 			"min":[
-				-0.4455641508102417,
-				0.12999996542930603,
-				-0.4738043546676636
+				-0.44437214732170105,
+				0.16999995708465576,
+				-0.4546250104904175
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2791,
+			"count":3146,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2791,
+			"count":3146,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":3146,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -294,18 +318,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":545,
+			"byteLength":4750,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":710,
-			"byteOffset":548
+			"byteLength":5315,
+			"byteOffset":4752
 		},
 		{
 			"buffer":0,
-			"byteLength":17063,
-			"byteOffset":1260
+			"byteLength":26075,
+			"byteOffset":10068
 		}
 	],
 	"samplers":[
@@ -316,7 +340,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":18324,
+			"byteLength":36144,
 			"uri":"library_armchair.bin"
 		}
 	]

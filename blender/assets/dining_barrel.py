@@ -58,13 +58,21 @@ def build(**overrides):
     steel = common.pbr_material("M_Hoop_Steel", (0.025, 0.025, 0.028), roughness=0.4, metallic=0.9)
     H, re_, rm, segs = p["height"], p["r_end"], p["r_mid"], p["staves"]
 
-    # body: a 40-sided prism approximating staves would be heavy; use 24 sides, flat shaded alternate faces
-    prof = [(0.0, 0.0)] + [(barrel_r(H * i / 8, H, re_, rm), H * i / 8) for i in range(9)] + [(0.0, H)]
+    # body: one flat stave per lathe segment (hard joints between staves, smooth along each
+    # stave's bulge), the staves running up past the sunk head as the chime
+    rows = [(barrel_r(H * i / 8, H, re_, rm), H * i / 8) for i in range(9)]
+    chime = 0.018
+    prof = rows + [(re_ - 0.016, H), (re_ - 0.016, H - chime), (0.0, H - chime)]
     body_bm = lathe(prof, segs)
     for f in body_bm.faces:
-        f.smooth = False
-    body = common.mesh_object(f"{n}_Body", body_bm, col, oak, root, smooth=False)
-    # staves read as flat facets; the lathe's flat faces give the hexadecagon-barrel look
+        f.smooth = True
+    for e in body_bm.edges:
+        a, b = e.verts
+        vertical = abs(a.co.z - b.co.z) > 1e-4 and abs(a.co.x * b.co.y - a.co.y * b.co.x) < 1e-6
+        if vertical or abs(a.co.z - b.co.z) < 1e-6 and min(a.co.z, b.co.z) > H - chime - 1e-4 and \
+                (a.co.xy.length > re_ - 0.03):
+            e.smooth = False
+    body = common.mesh_object(f"{n}_Body", body_bm, col, oak, root, smooth=True)
     me = body.data
     uv = me.uv_layers.new(name="UVMap")
     for poly in me.polygons:
@@ -73,20 +81,20 @@ def build(**overrides):
             a = math.atan2(co.y, co.x)
             uv.data[li].uv = (co.z / 0.5, a / (2 * math.pi) * 1.0 * 2.0) if abs(poly.normal.z) < 0.9 else (co.x / 0.5, co.y / 0.5)
 
+    # blackened steel hoops: flat bands standing just proud of the staves
     hoops = bmesh.new()
     for z in (0.09, 0.27, H - 0.27, H - 0.09):
-        r = barrel_r(z, H, re_, rm) + 0.004
-        lathe_prof = [(r - 0.004, z - 0.02), (r + 0.006, z - 0.02), (r + 0.006, z + 0.02), (r - 0.004, z + 0.02)]
-        h = lathe(lathe_prof + [lathe_prof[0]], segs)
+        r = barrel_r(z, H, re_, rm)
+        h = lathe([(r - 0.001, z - 0.021), (r + 0.004, z - 0.02), (r + 0.004, z + 0.02), (r - 0.001, z + 0.021)], segs)
         hoops.from_mesh(bpy_mesh(h))
     hp = common.mesh_object(f"{n}_Hoops", hoops, col, steel, root, smooth=False)
     common.box_uv(hp, 0.5)
-
-    # head: a slightly proud lid disc
-    lid = common.mesh_object(f"{n}_Head", lathe([(0.0, H), (re_ - 0.01, H), (re_ - 0.01, H + 0.004)] if False else
-                                                [(0.0, H + 0.008), (re_ - 0.012, H + 0.008), (re_ - 0.012, H - 0.002), (0.0, H - 0.002)], segs),
-                             col, oak, root, smooth=False)
-    common.box_uv(lid, 0.5)
+    # bung: a dark oak plug in the belly stave
+    bung = common.mesh_object(f"{n}_Bung_NoCollide", lathe([(0.0, 0.006), (0.019, 0.006), (0.022, 0.0)], 10),
+                              col, oak, root, smooth=True)
+    bung.location = (0.0, -(rm - 0.004), H / 2)
+    bung.rotation_euler = (math.radians(90), 0, 0)
+    common.box_uv(bung, 0.5)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

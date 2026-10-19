@@ -54,61 +54,39 @@ def build(**overrides):
     fr = L.Fronts(b, oak, bronze, yf)
 
     b.box("Plinth", (Lx - 0.04, D - 0.09, ph), (0, (yf + 0.07 + yb - 0.02) / 2, ph / 2), black, bevel=0, tile=0)
-    b.box("Body", (Lx, yb - (yf + t), cz - ct - ph), (0, (yf + t + yb) / 2, (ph + cz - ct) / 2), black, bevel=0, tile=0)
-    for i, (a, c, kind) in enumerate(units):
-        fr.unit(kind, a, c, ph, cz - ct, f"Base{i}")
-
-    # --- stainless worktop with the double sink cut into the d2 unit
+    # --- worktop: one stainless sheet with the double-bowl cut-out over the 1.7 m unit and a
+    #     pressed drainer to its east
     sa, sc, _ = units[2]
     sx = (sa + sc) / 2
     sw, sd = 1.3, 0.44
     sy = yf + 0.04 + (D - 0.04) / 2 - 0.02
-    xa, xb = sx - sw / 2, sx + sw / 2
-    ya, yb2 = sy - sd / 2, sy + sd / 2
     y_lo, y_hi = yf - 0.015, yb
     zc = cz - ct / 2
-
-    def top(name, a, c, d, e):
-        b.box(name, (c - a, e - d, ct), ((a + c) / 2, (d + e) / 2, zc), steel, bevel=0.002, seg=1, tile=0)
-
-    top("Top_Front", x0, x1, y_lo, ya)
-    top("Top_Back", x0, x1, yb2, y_hi)
-    top("Top_West", x0, xa, ya, yb2)
-    top("Top_East", xb, x1, ya, yb2)
-    # ribbed drainer on the east side (grooves = dark stripes)
+    bw = (sw - 0.05) / 2
+    cA, cB = sx - sw / 4 - 0.006, sx + sw / 4 + 0.006
+    holes = [(c - bw / 2, c + bw / 2, sy - sd / 2, sy + sd / 2) for c in (cA, cB)]
+    # carcass: solid either side, dropped under the bowls so they hang in a void
+    gx0, gx1 = sx - sw / 2 - 0.03, sx + sw / 2 + 0.03
+    zs = cz - ct - 0.25
+    for tag, a, c, z1_ in (("BodyW", x0, gx0, cz - ct), ("BodyE", gx1, x1, cz - ct), ("BodySink", gx0, gx1, zs)):
+        b.box(tag, (c - a, yb - (yf + t), z1_ - ph), ((a + c) / 2, (yf + t + yb) / 2, (ph + z1_) / 2),
+              black, bevel=0, tile=0)
+    for i, (a, c, kind) in enumerate(units):
+        fr.unit(kind, a, c, ph, cz - ct, f"Base{i}")
+    L.slab_with_holes(b, "Top", x0, x1, y_lo, y_hi, zc, ct, holes, steel, bevel=0.002, seg=1, tile=0)
+    for tag, cx in (("SinkA", cA), ("SinkB", cB)):
+        L.undermount_sink(b, tag, cx, sy, bw, sd, 0.21, cz - ct, steel, polished, corner=0.03, drain=(0.0, 0.1))
+    # pressed drainer: shallow grooves fanning to the bowl (dark lines)
+    xb = sx + sw / 2
     for k in range(9):
         gx = xb + 0.06 + k * 0.034
         if gx < x1 - 0.1 and gx < xb + 0.5:
-            b.box(f"Groove{k}", (0.008, 0.40, 0.002), (gx, sy + 0.0, cz + 0.0005), black, bevel=0, tile=0)
-    # basins
-    bh, th = 0.21, 0.003
-    bw = (sw - 0.02) / 2 - 0.02
-    for tag, cx in (("A", sx - sw / 4 - 0.005), ("B", sx + sw / 4 + 0.005)):
-        zb = cz - ct - bh + 0.04
-        b.box(f"Sink{tag}_Floor", (bw, sd - 0.02, th), (cx, sy, zb + th / 2), steel, bevel=0, tile=0)
-        for wn, size, c in (("W", (th, sd - 0.02, bh), (cx - bw / 2 + th / 2, sy, zb + bh / 2)),
-                            ("E", (th, sd - 0.02, bh), (cx + bw / 2 - th / 2, sy, zb + bh / 2)),
-                            ("S", (bw, th, bh), (cx, sy - (sd - 0.02) / 2 + th / 2, zb + bh / 2)),
-                            ("N", (bw, th, bh), (cx, sy + (sd - 0.02) / 2 - th / 2, zb + bh / 2))):
-            b.box(f"Sink{tag}_{wn}", size, c, steel, bevel=0, tile=0)
-        b.lathe(f"Drain{tag}", [(0, 0), (0.03, 0), (0.03, 0.003), (0, 0.003)], polished, loc=(cx, sy, zb + th),
-                segs=14, uv_tile=0)
-
-    # --- bronze gooseneck tap at the back, centred
+            b.box(f"Groove{k}_NoCollide", (0.008, 0.40, 0.002), (gx, sy + 0.0, cz + 0.0005), black, bevel=0, tile=0)
+    # --- bronze gooseneck tap at the back, centred, with a matching rinse spray beside it
     tx, ty = sx, y_hi - 0.075
-    b.lathe("Tap_Base", [(0, cz), (0.03, cz), (0.025, cz + 0.014), (0.017, cz + 0.06), (0, cz + 0.06)], bronze,
-            loc=(tx, ty, 0), segs=18, uv_tile=0)
-    R = 0.19
-    pts = [(tx, ty, cz + 0.05), (tx, ty, cz + 0.42)]
-    for i in range(0, 19):
-        a = math.pi * i / 18
-        pts.append((tx, ty - R + R * math.cos(a), cz + 0.42 + R * math.sin(a) * 0.85))
-    pts.append((tx, ty - 2 * R, cz + 0.42 - 0.04))
-    b.tube("Tap_Spout", pts, 0.0115, bronze, closed=False, res=4)
-    b.lathe("Tap_Head", [(0, 0), (0.015, 0), (0.015, -0.05), (0, -0.05)], bronze, loc=(tx, ty - 2 * R, cz + 0.42 - 0.04),
-            segs=12, uv_tile=0)
-    for k, sgn in enumerate((-1, 1)):
-        b.box(f"Tap_Lever{k}", (0.075, 0.012, 0.012), (tx + sgn * 0.075, ty - 0.005, cz + 0.06), bronze, bevel=0.002, tile=0)
+    L.gooseneck_tap(b, "Tap", tx, ty, cz, bronze, reach=0.38, rise=0.42, lever=1, toward=-1)
+    b.lathe("Rinse", [(0.0, cz), (0.02, cz), (0.016, cz + 0.012), (0.011, cz + 0.03), (0.011, cz + 0.11),
+                      (0.014, cz + 0.12), (0.0, cz + 0.12)], bronze, loc=(tx - 0.3, ty, 0), segs=12, sharp=30, uv_tile=0)
 
     # --- stainless splashback
     b.box("Splashback", (Lx, 0.012, 0.56), (0, yb - 0.006, cz + 0.28), steel, bevel=0.001, tile=0)

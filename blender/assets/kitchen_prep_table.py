@@ -70,9 +70,7 @@ def build(**overrides):
         prof = [(0.0, 0.0), (br * 0.85, 0.0), (br, 0.18), (br - 0.006, 0.18), (br * 0.85 - 0.006, 0.01), (0.0, 0.01)]
         b.lathe(f"Basket{i}", prof, wicker, loc=(bx, 0.0, sz + 0.01), segs=14, sharp=70, uv_tile=0.3)
     for k, (tx, ty) in enumerate(((0.35, 0.0), (0.8, 0.0))):
-        for j in range(6):
-            b.box(f"Towel{k}_{j}", (0.36, 0.26, 0.035), (tx, ty, sz + 0.01 + 0.0175 + j * 0.036), linen if (k + j) % 3 else linen2,
-                  bevel=0.006, seg=1, tile=0.25)
+        L.folded_stack(b, f"Towels{k}", tx, ty, sz + 0.01, 0.36, 0.26, 6, 0.036, linen if k == 0 else linen2)
 
     # on the block
     zt = h

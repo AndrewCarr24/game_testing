@@ -131,7 +131,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -139,11 +140,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -154,19 +156,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5
+						"POSITION":5,
+						"NORMAL":6,
+						"COLOR_0":7
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -177,19 +181,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8
+						"POSITION":9,
+						"NORMAL":10,
+						"COLOR_0":11
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":12,
 					"material":1,
 					"mode":4
 				}
@@ -200,19 +206,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11
+						"POSITION":13,
+						"NORMAL":14,
+						"COLOR_0":15
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":3,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":2,
 					"mode":4
 				}
@@ -223,19 +231,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13
+						"POSITION":16,
+						"NORMAL":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":19,
 					"material":3,
 					"mode":4
 				}
@@ -246,19 +256,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16
+						"POSITION":20,
+						"NORMAL":21,
+						"COLOR_0":22
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -310,6 +322,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":4,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":6,
 			"type":"SCALAR"
 		},
@@ -332,6 +350,12 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -360,6 +384,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":80,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":144,
 			"type":"SCALAR"
 		},
@@ -384,6 +414,12 @@
 			"type":"VEC3"
 		},
 		{
+			"componentType":5123,
+			"count":4,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
 			"componentType":5126,
 			"count":48,
 			"max":[
@@ -402,6 +438,12 @@
 			"componentType":5126,
 			"count":48,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":48,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -427,38 +469,44 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":176,
+			"byteLength":218,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":218,
-			"byteOffset":176
+			"byteLength":342,
+			"byteOffset":220
 		},
 		{
 			"buffer":0,
-			"byteLength":502,
-			"byteOffset":396
+			"byteLength":736,
+			"byteOffset":564
 		},
 		{
 			"buffer":0,
-			"byteLength":126,
-			"byteOffset":900
+			"byteLength":153,
+			"byteOffset":1300
 		},
 		{
 			"buffer":0,
-			"byteLength":388,
-			"byteOffset":1028
+			"byteLength":664,
+			"byteOffset":1456
 		},
 		{
 			"buffer":0,
-			"byteLength":216,
-			"byteOffset":1416
+			"byteLength":342,
+			"byteOffset":2120
 		}
 	],
 	"samplers":[
@@ -469,7 +517,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1632,
+			"byteLength":2464,
 			"uri":"art_colorfield_a.bin"
 		}
 	]

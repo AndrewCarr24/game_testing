@@ -58,24 +58,32 @@ def build(**overrides):
 
     sh, r, t = p["seat_h"], p["seat_r"], p["pad_t"]
     z0 = sh - t
-    prof = [(0.0, z0), (r - 0.012, z0), (r - 0.003, z0 + 0.007), (r, z0 + 0.02), (r, z0 + t - 0.022),
-            (r - 0.012, z0 + t - 0.007), (r - 0.04, z0 + t - 0.001), (r * 0.5, z0 + t + 0.004), (0.0, z0 + t + 0.006)]
-    pad = common.mesh_object(f"{n}_Pad", lathe(prof, 32), col, leather, root)
+    # leather pad with a piped welt round the top shoulder (a bead in the profile); its
+    # centre underside sits on the plate and isn't modelled
+    prof = [(r - 0.045, z0), (r - 0.012, z0), (r - 0.003, z0 + 0.007), (r, z0 + 0.02), (r, z0 + t - 0.028),
+            (r - 0.0035, z0 + t - 0.0175), (r + 0.0015, z0 + t - 0.013), (r - 0.0035, z0 + t - 0.0085),
+            (r - 0.016, z0 + t - 0.002), (r - 0.05, z0 + t + 0.002), (r * 0.45, z0 + t + 0.005), (0.0, z0 + t + 0.006)]
+    pad = common.mesh_object(f"{n}_Pad", lathe(prof, 30), col, leather, root)
     common.box_uv(pad, 0.2)
 
     # bronze plate under the pad and the four splayed legs
     plate = common.mesh_object(f"{n}_Plate", lathe([(0, z0 - 0.012), (r - 0.04, z0 - 0.012), (r - 0.04, z0), (0, z0)], 24),
                                col, bronze, root)
-    bm = bmesh.new()
+    bm, bm_g = bmesh.new(), bmesh.new()
     for k in range(4):
         a = math.pi / 4 + k * math.pi / 2
         top = Vector((p["legs_top_r"] * math.cos(a), p["legs_top_r"] * math.sin(a), z0 - 0.008))
-        bot = Vector((p["legs_bot_r"] * math.cos(a), p["legs_bot_r"] * math.sin(a), 0.0))
+        bot = Vector((p["legs_bot_r"] * math.cos(a), p["legs_bot_r"] * math.sin(a), 0.006))   # stands in its glide
         d = top - bot
         m = Matrix.Translation((top + bot) / 2) @ d.normalized().to_track_quat("Z", "Y").to_matrix().to_4x4()
         bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=8, radius1=0.011, radius2=0.015,
                               depth=d.length, matrix=m)
+        # a dark glide under each foot
+        bmesh.ops.create_cone(bm_g, cap_ends=True, cap_tris=False, segments=8, radius1=0.013, radius2=0.012,
+                              depth=0.008, matrix=Matrix.Translation((bot.x, bot.y, 0.004)))
     legs = common.mesh_object(f"{n}_Legs", bm, col, bronze, root)
+    glides = common.mesh_object(f"{n}_Glides", bm_g, col, materials.black_metal(), root)
+    common.box_uv(glides, 0.5)
 
     # foot ring at ring_z: radius of the splayed legs at that height
     rz = p["ring_z"]

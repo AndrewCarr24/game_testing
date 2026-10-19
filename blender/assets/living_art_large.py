@@ -1,4 +1,5 @@
-"""Large gallery-scale canvas for the great room: picture_frame with extra sizes."""
+"""Art: 'seascape', photograph, 2.2 x 1.45 m, black-metal frame (great_room S wall over the console).
+picture_frame variant (art_collection.PIECES); hangs on a wall, origin on the wall plane, faces -Y."""
 import importlib
 import os
 import sys
@@ -10,10 +11,8 @@ importlib.reload(picture_frame)
 common = picture_frame.common
 
 NAME = "LivingArtLarge"
-VARIANT = dict(size=(2.6, 1.7), border=0.12, art="colorfield_b", rough=0.8)
-P = dict(name=NAME, variant="living_large")
+P = dict(name=NAME, variant="seascape")
 
 
 def build(**overrides):
-    picture_frame.VARIANTS["living_large"] = VARIANT      # (picture_frame is reloaded by other art modules)
     return picture_frame.build(**{**P, **overrides})

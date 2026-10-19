@@ -93,7 +93,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -101,11 +102,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -116,9 +118,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -126,11 +129,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -141,9 +145,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -151,11 +156,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":2,
 					"mode":4
 				}
@@ -195,67 +201,79 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":3476,
+			"count":2980,
 			"max":[
 				1.1634999513626099,
-				3.5926706790924072,
-				0.14335985481739044
+				3.6029999256134033,
+				0.14303340017795563
 			],
 			"min":[
 				-1.1634999513626099,
-				0.8399999737739563,
-				-0.1288822591304779
+				0.8305299282073975,
+				-0.14223314821720123
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3476,
+			"count":2980,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3476,
+			"count":2980,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":5214,
+			"count":2980,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4470,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":948,
+			"count":672,
 			"max":[
 				1.1799999475479126,
-				3.5013349056243896,
+				3.4977734088897705,
 				0.2629999816417694
 			],
 			"min":[
 				-1.1799999475479126,
-				0.5789999961853027,
-				-0.04802718386054039
+				0.445000022649765,
+				-0.049453552812337875
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":948,
+			"count":672,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":948,
+			"count":672,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1440,
+			"count":672,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":972,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":840,
 			"max":[
 				1.1800000667572021,
 				3.740000009536743,
@@ -270,35 +288,41 @@
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":840,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":744,
+			"count":840,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1116,
+			"count":840,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1260,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":14920,
+			"byteLength":19949,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4699,
-			"byteOffset":14920
+			"byteLength":4425,
+			"byteOffset":19952
 		},
 		{
 			"buffer":0,
-			"byteLength":2798,
-			"byteOffset":19620
+			"byteLength":5066,
+			"byteOffset":24380
 		}
 	],
 	"samplers":[
@@ -309,7 +333,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":22420,
+			"byteLength":29448,
 			"uri":"library_bookcase_a.bin"
 		}
 	]

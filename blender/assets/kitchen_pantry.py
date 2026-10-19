@@ -80,6 +80,10 @@ def build(**overrides):
           bevel=0, tile=0, smooth=False)
     b.box("Glass_R", (gw / 2 - 0.03, 0.004, zhi - zlo - 0.05), (xa + 3 * gw / 4 + 0.005, yf + 0.014, (zlo + zhi) / 2), glass,
           bevel=0, tile=0, smooth=False)
+    # slim bronze bar pulls on the glass doors' meeting stiles
+    zc = (zlo + zhi) / 2
+    for k, sx in enumerate((-1, 1)):
+        fr.vbar(f"GlassPull{k}", (xa + xb) / 2 + sx * 0.045, zc - 0.3, zc + 0.3, r=0.006, stand=0.026)
     # interior shelves (walnut) with a warm LED under each
     shelf_z = [0.55, 0.95, 1.35, 1.75, 2.12]
     for i, z in enumerate(shelf_z):

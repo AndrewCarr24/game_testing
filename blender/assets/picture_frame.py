@@ -1,9 +1,15 @@
-"""Framed artwork for the hall: slim black-metal gallery frame, bright mat with a
-bevelled window, the artwork recessed behind it and a faint glass layer.
+"""Framed and unframed artworks for the whole house (one asset per piece: the small
+art_*.py / living_art_*.py wrappers pick a variant).
 
-One script, several pieces: `build(variant="geometric_a")` picks size and artwork
-from VARIANTS. The artworks are painted with numpy (no external images) and saved
-as `T_Art_<Variant>.png`; they are only regenerated when the file is missing.
+`build(variant=...)` picks size, frame treatment and painting from VARIANTS: the five
+original gallery pieces below plus the collection in art_collection.py (painted by
+art_painters.py). Frames: slim black metal or wood with a bevelled mat and glass, a
+white box frame with the sheet floated inside, an unframed canvas on a deep
+stretcher, or a black floater tray (see art_collection). Frames, mats and glass share
+materials across pieces; each piece's only unique material is its artwork.
+
+Paintings are numpy-generated (no external images) and saved as T_Art_<Variant>.png
+at the piece's own texture size; they are repainted only when missing or resized.
 
 Hangs on a wall. Origin: centre of the frame, on the wall plane. The picture faces
 -Y and extends +-w/2 in X and +-h/2 in Z. The frame's back sits 1 cm off the wall
@@ -22,19 +28,25 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, materials, textures  # noqa: E402
 
+sys.path.insert(0, HERE)
+import art_collection  # noqa: E402
+import art_painters  # noqa: E402
+
 importlib.reload(common)
 importlib.reload(textures)
 importlib.reload(materials)
+importlib.reload(art_painters)
+importlib.reload(art_collection)
 
 NAME = "PictureFrame"
 
 # size = outer frame (w, h) in metres; border = visible mat width, frame edge to window
 VARIANTS = {
-    "colorfield_a": dict(size=(0.9, 1.2), border=0.09, art="colorfield_a", rough=0.8),
-    "colorfield_b": dict(size=(1.2, 0.8), border=0.09, art="colorfield_b", rough=0.8),
-    "geometric_a": dict(size=(0.8, 0.8), border=0.09, art="geometric_a", rough=0.78),
-    "geometric_b": dict(size=(0.6, 0.8), border=0.08, art="geometric_b", rough=0.88),
-    "linework_a": dict(size=(0.9, 1.2), border=0.10, art="linework_a", rough=0.9),
+    "colorfield_a": dict(size=(0.9, 1.2), border=0.09, art="colorfield_a", rough=0.8, px=256),
+    "colorfield_b": dict(size=(1.2, 0.8), border=0.09, art="colorfield_b", rough=0.8, px=256),
+    "geometric_a": dict(size=(0.8, 0.8), border=0.09, art="geometric_a", rough=0.78, px=512),
+    "geometric_b": dict(size=(0.6, 0.8), border=0.08, art="geometric_b", rough=0.88, px=384),
+    "linework_a": dict(size=(0.9, 1.2), border=0.10, art="linework_a", rough=0.9, px=512),
 }
 
 P = dict(
@@ -345,20 +357,34 @@ ART = {
     "linework_a": _art_linework_a,
 }
 
+# the rest of the collection (art_collection.py): style + spec painted by art_painters
+VARIANTS.update(art_collection.PIECES)
 
-def art_texture(variant, art, size_m, force=False):
-    """Paint and save T_Art_<Variant>.png (only when missing). `size_m` is the
-    artwork's (width, height) in metres; the long side gets 1024 px."""
-    name = "T_Art_" + "".join(s.capitalize() for s in variant.split("_"))
+
+def _tex_name(variant):
+    return "T_Art_" + "".join(s.capitalize() for s in variant.split("_"))
+
+
+def art_texture(variant, v, force=False):
+    """Paint and save T_Art_<Variant>.png at the variant's texture size (long side
+    `px`); repainted only when the file is missing or has another size. Delete the
+    file after changing a piece's spec."""
+    name = _tex_name(variant)
     path = os.path.join(textures.TEX_DIR, name + ".png")
+    tw, th = art_collection.texture_px(v)
     if os.path.exists(path) and not force:
-        return path
-    aw, ah = size_m
-    if aw >= ah:
-        w, h = 1024, int(round(1024 * ah / aw / 4)) * 4
+        img = bpy.data.images.load(path, check_existing=False)
+        size = tuple(img.size)
+        bpy.data.images.remove(img)
+        if size == (tw, th):
+            return path
+    if v.get("art") in ART:
+        # the original pieces were tuned at 1024 px: paint them there and box-filter down
+        f = max(1, 1024 // max(tw, th))
+        rgb = art_painters.down(ART[v["art"]](tw * f, th * f), f)
     else:
-        w, h = int(round(1024 * aw / ah / 4)) * 4, 1024
-    return textures._save(name, ART[art](w, h))
+        rgb = art_painters.paint(v["style"], tw, th, v["spec"], art_collection.art_size(v))
+    return textures._save(name, np.clip(rgb, 0, 1))
 
 
 # =============================================================================
@@ -389,11 +415,26 @@ def _quad(bm, x, z, y):
 
 def _set_uv(ob, x, z):
     me = ob.data
-    uv = me.uv_layers.new(name="UVMap")
+    uv = me.uv_layers.get("UVMap") or me.uv_layers.new(name="UVMap")
     for poly in me.polygons:
         for li in poly.loop_indices:
             co = me.vertices[me.loops[li].vertex_index].co
             uv.data[li].uv = ((co.x + x) / (2 * x), (co.z + z) / (2 * z))
+
+
+def _art_material(variant, v):
+    tex = art_texture(variant, v)
+    m = common.pbr_material("M_Art_" + variant, (1, 1, 1), roughness=v.get("rough", 0.85),
+                            metallic=v.get("metal", 0.0))
+    common.set_base_color_map(m, textures.load(tex))
+    return m
+
+
+def _box(name, size, y_front, col, mat, root):
+    """Box of `size` (x, depth, z) whose front face sits at y = y_front."""
+    ob = common.mesh_object(name, common.box_bmesh(size), col, mat, root, smooth=False)
+    ob.location = (0, y_front + size[1] / 2, 0)
+    return ob
 
 
 def build(**overrides):
@@ -405,50 +446,88 @@ def build(**overrides):
 
     w, h = v["size"]
     hw, hh = w / 2, h / 2
-    face, depth = p["face"], p["depth"]
-    y0 = -p["spacer"]                        # y of the frame's back
+    fr = v.get("frame", "metal")
+    y0 = -p["spacer"]                        # y of the frame's / canvas's back
 
     def y_of(d):
         return y0 - d
 
     black = materials.black_metal()
     glass = materials.glass("M_Glass_Picture", alpha=0.06, roughness=0.02)
-    mat_m = common.pbr_material("M_Picture_Mat", p["mat"], roughness=0.92)
+    white = common.pbr_material("M_Picture_Mat", p["mat"], roughness=0.92)
+    art_m = _art_material(p["variant"], v)
+    aw, ah = art_collection.art_size(v)
+    c = 0.0012                               # tiny chamfers that catch the light
 
-    # --- frame: 2 cm face, 4 cm deep, tiny chamfers that catch the light
-    c = 0.0012
-    profile = [(0.0, 0.0), (0.0, depth - c), (c, depth), (face - c, depth),
-               (face, depth - c), (face, 0.0)]
-    frame = common.mesh_object(f"{n}_Frame", _ring_mesh(bmesh.new(), profile, hw, hh, y_of),
-                               col, black, root, smooth=False)
+    if fr in ("metal", "wood"):
+        f = art_collection.FRAMES[fr]
+        face, depth = (p["face"], p["depth"]) if fr == "metal" else (f["face"], f["depth"])
+        fmat = black if fr == "metal" else (materials.walnut() if v.get("wood") == "walnut" else materials.smoked_oak())
+        profile = [(0.0, 0.0), (0.0, depth - c), (c, depth), (face - c, depth), (face, depth - c), (face, 0.0)]
+        frame = common.mesh_object(f"{n}_Frame", _ring_mesh(bmesh.new(), profile, hw, hh, y_of),
+                                   col, fmat, root, smooth=False)
+        if fr == "wood":
+            common.box_uv(frame, 0.5)
+        ow, oh = hw - face - 0.0004, hh - face - 0.0004          # opening in the frame
+        border = v.get("border", 0.09)
+        art_at, glass_at = p["art_at"], p["glass_at"]
+        if border > 0:
+            bw, bh = hw - face - border, hh - face - border      # window at the mat's front face
+            t = p["mat_t"]
+            zf = p["mat_front"]
+            mat_profile = [(hw - ow, zf), (hw - bw, zf), (hw - bw + t, zf - t), (hw - ow, zf - t)]
+            common.mesh_object(f"{n}_Mat", _ring_mesh(bmesh.new(), mat_profile, hw, hh, y_of),
+                               col, white, root, smooth=False)
+        else:                                # photograph mounted right up to the frame
+            art_at, glass_at = depth - 0.008, depth - 0.005
+        art = common.mesh_object(f"{n}_Art", _quad(bmesh.new(), aw / 2, ah / 2, y_of(art_at)),
+                                 col, art_m, root, smooth=False)
+        _set_uv(art, aw / 2, ah / 2)
+        common.mesh_object(f"{n}_Glass", _quad(bmesh.new(), ow, oh, y_of(glass_at)), col, glass, root,
+                           smooth=False)
+        back = common.mesh_object(f"{n}_Backing", common.box_bmesh((2 * ow, 0.022, 2 * oh)), col, black, root,
+                                  smooth=False)
+        back.location = (0, y_of(0.011), 0)
 
-    # --- mat: bevelled window, white core
-    ow, oh = hw - face - 0.0004, hh - face - 0.0004          # opening in the frame
-    bw, bh = hw - face - v["border"], hh - face - v["border"]  # window at the mat's front face
-    t = p["mat_t"]
-    zf = p["mat_front"]
-    mat_profile = [(hw - ow, zf), (hw - bw, zf), (hw - bw + t, zf - t), (hw - ow, zf - t)]
-    mat = common.mesh_object(f"{n}_Mat", _ring_mesh(bmesh.new(), mat_profile, hw, hh, y_of),
-                             col, mat_m, root, smooth=False)
+    elif fr == "box":
+        f = art_collection.FRAMES["box"]
+        face, depth = f["face"], f["depth"]
+        profile = [(0.0, 0.0), (0.0, depth - c), (c, depth), (face - c, depth), (face, depth - c), (face, 0.0)]
+        common.mesh_object(f"{n}_Frame", _ring_mesh(bmesh.new(), profile, hw, hh, y_of), col, white, root,
+                           smooth=False)
+        ow, oh = hw - face - 0.0004, hh - face - 0.0004
+        _box(f"{n}_Backing", (2 * ow, 0.012, 2 * oh), y_of(0.012), col, white, root)
+        # the sheet floats 6 mm proud of the backing on a hidden riser, so it casts a shadow line
+        _box(f"{n}_Riser", (aw - 0.06, 0.006, ah - 0.06), y_of(0.018), col, white, root)
+        paper_ob = _box(f"{n}_Art", (aw, 0.0015, ah), y_of(0.0195), col, art_m, root)
+        _set_uv(paper_ob, aw / 2, ah / 2)
+        common.mesh_object(f"{n}_Glass", _quad(bmesh.new(), ow, oh, y_of(depth - 0.006)), col, glass, root,
+                           smooth=False)
 
-    # --- artwork recessed behind the mat, slightly larger than the window
-    ov = p["art_overlap"]
-    aw, ah = 2 * (bw - t + ov), 2 * (bh - t + ov)
-    tex = art_texture(p["variant"], v["art"], (aw, ah))
-    art_m = common.pbr_material("M_Art_" + p["variant"], (1, 1, 1), roughness=v["rough"])
-    common.set_base_color_map(art_m, textures.load(tex))
-    art = common.mesh_object(f"{n}_Art", _quad(bmesh.new(), aw / 2, ah / 2, y_of(p["art_at"])),
-                             col, art_m, root, smooth=False)
-    _set_uv(art, aw / 2, ah / 2)
+    elif fr == "canvas":
+        depth = v.get("depth", art_collection.FRAMES["canvas"]["depth"])
+        canvas = _box(f"{n}_Art", (w, depth, h), y_of(depth), col, art_m, root)
+        common.add_bevel(canvas, 0.003, segments=1)
+        _set_uv(canvas, w / 2, h / 2)          # front: the painting; sides: its edges, wrapped round
 
-    # --- glass, backing board and the hidden spacer
-    common.mesh_object(f"{n}_Glass", _quad(bmesh.new(), ow, oh, y_of(p["glass_at"])), col, glass, root,
-                       smooth=False)
-    back = common.mesh_object(f"{n}_Backing", common.box_bmesh((2 * ow, 0.022, 2 * oh)), col, black, root,
-                              smooth=False)
-    back.location = (0, y_of(0.011), 0)
-    sp = common.mesh_object(f"{n}_Spacer", common.box_bmesh((w - 0.16, p["spacer"], h - 0.16)), col, black,
-                            root, smooth=False)
+    elif fr == "floater":
+        f = art_collection.FRAMES["floater"]
+        face, gap, depth = f["face"], f["gap"], f["depth"]
+        profile = [(0.0, 0.0), (0.0, depth - c), (c, depth), (face - c, depth), (face, depth - c), (face, 0.0)]
+        common.mesh_object(f"{n}_Frame", _ring_mesh(bmesh.new(), profile, hw, hh, y_of), col, black, root,
+                           smooth=False)
+        ow, oh = hw - face - 0.0004, hh - face - 0.0004
+        _box(f"{n}_Tray", (2 * ow, 0.008, 2 * oh), y_of(0.008), col, black, root)
+        cd = depth - 0.008 - 0.004              # canvas face sits 4 mm behind the frame's lip
+        canvas = _box(f"{n}_Art", (aw, cd, ah), y_of(0.008 + cd), col, art_m, root)
+        common.add_bevel(canvas, 0.002, segments=1)
+        _set_uv(canvas, aw / 2, ah / 2)
+    else:
+        raise ValueError(fr)
+
+    # hidden spacer between the wall and the back, so nothing floats
+    sp = common.mesh_object(f"{n}_Spacer", common.box_bmesh((max(0.1, w - 0.16), p["spacer"], max(0.1, h - 0.16))),
+                            col, black, root, smooth=False)
     sp.location = (0, -p["spacer"] / 2, 0)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

@@ -190,6 +190,7 @@ class Mesh:
                 a, b = b, a
             for lp in f.loops:
                 co = lp.vert.co
+                # u along the board's length (the walnut scan's grain runs along u)
                 lp[self.uv].uv = (co[a] / TILE + shift[0], co[b] / TILE + shift[1])
         return faces
 
@@ -259,10 +260,12 @@ def build(**overrides):
                 xd = xc + d_ * (g / 2 + dw / 2)
                 box((xd, y0 + dt / 2 + 0.002, (dz0 + dz1) / 2), (dw, dt, dz1 - dz0),
                     shift=(0.37 * (d_ + 1) + k, 0.2 * (d_ + 1)))
-                # slim vertical bronze pull on the meeting edge
-                br.box((xc + d_ * 0.045, y0 - 0.012, (dz0 + dz1) / 2 + 0.28), (0.012, 0.012, 0.30))
-                for zz in (0.43, 0.13):
-                    br.box((xc + d_ * 0.045, y0 - 0.001, (dz0 + dz1) / 2 + zz), (0.01, 0.018, 0.012))
+                # slim vertical bronze pull on the meeting edge, in the door's upper part: its top
+                # 6 cm below the door's top edge (it used to run 9 cm past the door into the shelf)
+                pz = dz1 - 0.06 - 0.15
+                br.box((xc + d_ * 0.045, y0 - 0.012, pz), (0.012, 0.012, 0.30))
+                for zz in (0.13, -0.13):
+                    br.box((xc + d_ * 0.045, y0 - 0.001, pz + zz), (0.01, 0.018, 0.012))
         z = z_cab
         bay = []
         for i, h in enumerate(heights):
@@ -272,7 +275,6 @@ def build(**overrides):
                 box((xc, 0.0, z + sh / 2), (iw, D - 0.002, sh), shift=(0.17 * i, 0.4 * k))
                 z += sh
         comps.append(bay)
-    common.mesh_object(f"{n}_Carcass", wood.bm, col, walnut, root, smooth=False)
 
     if p["rail"]:
         rz, standoff = p["rail_z"], 0.075
@@ -339,15 +341,16 @@ def build(**overrides):
             deco, left = None, rnd.random() < 0.5
             if mode in ("gap", "stack"):
                 reserve = rnd.uniform(0.22, 0.34) if mode == "gap" else rnd.uniform(0.18, 0.28)
-                deco = "stack" if mode == "stack" else rnd.choice(["sphere", "vase", "stack"])
+                deco = "stack" if mode == "stack" else rnd.choice(["sphere", "vase", "stack", "bowl", "box"])
                 xa, xb = (lo, lo + reserve) if left else (hi - reserve, hi)
                 if left:
                     lo += reserve + 0.01
                 else:
                     hi -= reserve + 0.01
-            visible_top = zf < 1.9          # nobody sees the top of a book above head height
+            visible_top = zf + 0.62 * hc < 1.75   # nobody sees the top of a book above eye height
             books = []
             cx, base_h, run = lo, rnd.uniform(0.62, 0.8) * hc, rnd.randint(3, 9)
+            run_y = rnd.uniform(0.0, 0.02)       # books in a run line up at the front
             lean = None
             while cx < hi - 0.02:
                 w = rnd.choice([0.022, 0.026, 0.03, 0.034, 0.038, 0.044, 0.05, 0.058, 0.07])
@@ -356,6 +359,7 @@ def build(**overrides):
                     break
                 if run <= 0:
                     base_h, run = rnd.uniform(0.6, 0.88) * hc, rnd.randint(3, 9)
+                    run_y = rnd.uniform(0.0, 0.025) if rnd.random() < 0.6 else 0.0
                 run -= 1
                 h = min(hc - 0.03, max(0.17, base_h * rnd.uniform(0.9, 1.08)))
                 if w >= 0.058:
@@ -364,7 +368,7 @@ def build(**overrides):
                 if mode == "sparse" and len(books) > 4 and rnd.random() < 0.08:
                     lean = (w, h, d)
                     break
-                books.append((cx, w, h, yfront + (dmax - d) * rnd.uniform(0.0, 0.3), d))
+                books.append((cx, w, h, yfront + run_y, d))
                 cx += w
             for k, (bx, w, h, yf, d) in enumerate(books):
                 spine([(bx, yf, zf), (bx + w, yf, zf), (bx + w, yf, zf + h), (bx, yf, zf + h)], rnd.randrange(ncells))
@@ -376,6 +380,12 @@ def build(**overrides):
                         side(bx, zf + ph, zf + h, yf, yf + d, -1)
                     elif ph > h:
                         side(bx, zf + h, zf + ph, pyf, pyf + pd, +1)
+                    # where one run stands proud of the next, the side of the proud book
+                    hm = zf + min(h, ph)
+                    if yf < pyf - 0.001:
+                        side(bx, zf, hm, yf, pyf, -1)
+                    elif pyf < yf - 0.001:
+                        side(bx, zf, hm, pyf, yf, +1)
             if books and (deco or lean):      # exposed end of the row of upright books
                 bx, w, h, yf, d = books[0] if (deco and left) else books[-1]
                 if deco and left:
@@ -406,13 +416,30 @@ def build(**overrides):
                 zz = flat_stack(xa, xb, zf, yfront + 0.01, visible_top)
                 cxm, cym = (xa + xb) / 2, yfront + 0.13
                 if deco == "sphere":
-                    bmesh.ops.create_uvsphere(deco_bm, u_segments=14, v_segments=8, radius=0.062,
+                    bmesh.ops.create_uvsphere(deco_bm, u_segments=12, v_segments=7, radius=0.062,
                                               matrix=Matrix.Translation((cxm, cym, zz + 0.062)))
                 elif deco == "vase":
-                    bmesh.ops.create_cone(deco_bm, cap_ends=True, segments=14, radius1=0.045, radius2=0.024,
+                    bmesh.ops.create_cone(deco_bm, cap_ends=True, segments=12, radius1=0.045, radius2=0.024,
                                           depth=0.2, matrix=Matrix.Translation((cxm, cym, zz + 0.1)))
+                elif deco == "bowl":            # a shallow bronze bowl on the stack
+                    rows = [(0.03, 0.0), (0.055, 0.012), (0.075, 0.035), (0.071, 0.037), (0.05, 0.016), (0.014, 0.01)]
+                    ring = []
+                    for r_, z_ in rows:
+                        ring.append([deco_bm.verts.new((cxm + r_ * math.cos(2 * math.pi * k / 12),
+                                                        cym + r_ * math.sin(2 * math.pi * k / 12), zz + z_))
+                                     for k in range(12)])
+                    bowl = [deco_bm.faces.new(ring[0][::-1]), deco_bm.faces.new(ring[-1])]
+                    for ra, rb in zip(ring, ring[1:]):
+                        for k in range(12):
+                            bowl.append(deco_bm.faces.new((ra[k], ra[(k + 1) % 12], rb[(k + 1) % 12], rb[k])))
+                    bmesh.ops.recalc_face_normals(deco_bm, faces=bowl)
+                else:                           # "box": a lidded walnut keepsake box
+                    bw_, bd_, bh_ = min(0.2, xb - xa - 0.02), 0.13, 0.075
+                    wood.box((cxm, cym, zz + bh_ / 2), (bw_, bd_, bh_), shift=(0.3, 0.2))
+                    wood.box((cxm, cym, zz + bh_ + 0.006), (bw_ + 0.006, bd_ + 0.006, 0.012), shift=(0.1, 0.6))
         books_obj = common.mesh_object(f"{n}_Books", bk.bm, col, books_material(), root, smooth=False)
 
+    common.mesh_object(f"{n}_Carcass", wood.bm, col, walnut, root, smooth=False)
     br_obj = common.mesh_object(f"{n}_Bronze", br.bm, col, bronze, root, smooth=False)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

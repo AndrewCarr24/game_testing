@@ -77,7 +77,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -85,11 +86,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -100,9 +102,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -110,11 +113,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -141,7 +145,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":433,
+			"count":469,
 			"max":[
 				0.17000000178813934,
 				0.5249999761581421,
@@ -156,22 +160,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":433,
+			"count":469,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":433,
+			"count":469,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1344,
+			"count":469,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1152,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":404,
+			"count":194,
 			"max":[
 				0.25999999046325684,
 				0.5600000023841858,
@@ -186,30 +196,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":404,
+			"count":194,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":404,
+			"count":194,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":960,
+			"count":194,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":768,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3075,
+			"byteLength":4370,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2381,
-			"byteOffset":3076
+			"byteLength":1658,
+			"byteOffset":4372
 		}
 	],
 	"samplers":[
@@ -220,7 +236,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":5460,
+			"byteLength":6032,
 			"uri":"library_sidetable.bin"
 		}
 	]

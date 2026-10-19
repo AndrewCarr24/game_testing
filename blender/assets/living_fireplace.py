@@ -1,6 +1,6 @@
 """Feature fireplace wall: a floor-to-gallery-rail limestone slab wall with a long
-linear gas fire (black steel frame, glass front, glowing flames over a bed of glass
-stones), a floating limestone hearth bench and a walnut log niche. Mounted against a
+linear gas fire (black steel frame, glass front, live flames over a heaped bed of faceted
+glass stones), a floating limestone hearth bench with a stack of logs. Mounted against a
 wall; the back face is at +Y (rotate -90 for an east wall). Also provides
 `limestone()` (the shared large-format limestone material, 1.2 m slabs).
 
@@ -34,7 +34,7 @@ P = dict(
     hearth_h=0.40,
     fire=(2.0, 0.62),      # opening width, height
     fire_z=0.78,           # opening bottom
-    flame_strength=3.5,
+    flame_strength=1.2,    # the cards' glow in the bake (the engine animates them)
 )
 
 TILE = 2.4                 # metres per limestone texture tile (2 x 2 slabs of 1.2 m)
@@ -102,27 +102,102 @@ def box(col, root, name, mat, size, loc, bevel=0.0, uv="slab"):
     return ob
 
 
-def flames(col, root, name, mat, x0, x1, y, z, h, seed=4):
-    """Rows of tapering flame tongues (4-sided pyramids), emissive."""
+def flame_card(col, root, name, mat, x0, x1, y, z0, z1, seed):
+    """One layer of live fire: a flat card (UV 0..1 across and up) tagged fx="fire", which the
+    engine (viewer/fire.js) draws with an animated flame shader. In Blender, and in the bake,
+    it's a plain emissive panel standing in for the fire's average glow."""
+    bm = bmesh.new()
+    vs = [bm.verts.new(v) for v in ((x0, y, z0), (x1, y, z0), (x1, y, z1), (x0, y, z1))]
+    f = bm.faces.new(vs)
+    uv = bm.loops.layers.uv.new("UVMap")
+    for loop, c in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))):
+        loop[uv].uv = c
+    ob = common.mesh_object(name, bm, col, mat, root, smooth=False)
+    ob["fx"] = "fire"
+    ob["seed"] = seed
+    ob["aspect"] = round((x1 - x0) / (z1 - z0), 3)   # card width / height, so the flames aren't stretched
+    return ob
+
+
+def pebbles(col, root, name, mat, x0, x1, y0, y1, z, count, seed=8):
+    """Burner bed of faceted glass stones: squashed random octahedra, heaped."""
     rng = np.random.default_rng(seed)
     bm = bmesh.new()
-    x = x0
-    while x < x1:
-        w = rng.uniform(0.05, 0.11)
-        fh = h * rng.uniform(0.45, 1.0)
-        yy = y + rng.uniform(-0.03, 0.03)
-        lean = rng.uniform(-0.03, 0.03)
-        a = bm.verts.new((x - w, yy - 0.03, z))
-        b = bm.verts.new((x + w, yy - 0.03, z))
-        c = bm.verts.new((x + w, yy + 0.03, z))
-        d = bm.verts.new((x - w, yy + 0.03, z))
-        t = bm.verts.new((x + lean, yy, z + fh))
-        for f in ((a, b, t), (b, c, t), (c, d, t), (d, a, t)):
-            bm.faces.new(f)
-        x += w * 1.5
+    for _ in range(count):
+        c = Vector((rng.uniform(x0, x1), rng.uniform(y0, y1), 0))
+        r = rng.uniform(0.012, 0.022)
+        c.z = z + r * 0.35 + rng.uniform(0, 0.012)
+        rot = Vector(rng.uniform(0, 6.28, 3))
+        from mathutils import Euler
+        m = Euler(rot).to_matrix()
+        ax = [m @ Vector((r * rng.uniform(0.8, 1.2), 0, 0)), m @ Vector((0, r * rng.uniform(0.8, 1.2), 0)),
+              m @ Vector((0, 0, r * rng.uniform(0.45, 0.65)))]
+        v = [bm.verts.new(c + s * a) for a in ax for s in (1, -1)]
+        px, nx, py, ny, pz, nz = v
+        for a, b in ((px, py), (py, nx), (nx, ny), (ny, px)):
+            bm.faces.new((a, b, pz))
+            bm.faces.new((b, a, nz))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     ob = common.mesh_object(name, bm, col, mat, root, smooth=False)
-    ob.location = (0, 0, 0)
+    common.box_uv(ob, 0.5)
+    return ob
+
+
+def slab_box(col, root, name, mat, x0, x1, y0, y1, z0, z1, bevel=0.004):
+    """A stone box split into separate 1.2 m slabs along the painted joints (x and z
+    multiples of TILE / 2), each with an eased edge, so the joints are real V-grooves."""
+    J = TILE / 2
+    xs = [x0] + [k * J for k in range(-5, 6) if x0 + 0.05 < k * J < x1 - 0.05] + [x1]
+    zs = [z0] + [k * J for k in range(1, 6) if z0 + 0.05 < k * J < z1 - 0.05] + [z1]
+    bm = bmesh.new()
+    for a, b in zip(xs, xs[1:]):
+        for c, d in zip(zs, zs[1:]):
+            t = common.box_bmesh((b - a, y1 - y0, d - c))
+            vm = {v: bm.verts.new(v.co + Vector(((a + b) / 2, (y0 + y1) / 2, (c + d) / 2))) for v in t.verts}
+            for fc in t.faces:
+                bm.faces.new([vm[v] for v in fc.verts])
+            t.free()
+    ob = common.mesh_object(name, bm, col, mat, root, smooth=False)
+    if bevel:
+        common.add_bevel(ob, bevel, segments=1)
+    _uv_slabs(ob)
+    return ob
+
+
+def logs(col, root, name, mat, end_mat, x0, y, z, seed=6):
+    """A small pyramid stack of logs lying front-to-back: barked, slightly irregular
+    sides; the sawn ends are a separate walnut-grain mesh."""
+    rng = np.random.default_rng(seed)
+    bm = bmesh.new()
+    em = bmesh.new()
+    segs = 9
+    rows = [(4, 0.0), (3, 1), (2, 2)]
+    r0 = 0.052
+    for count, lvl in rows:
+        for k in range(count):
+            r = r0 * rng.uniform(0.85, 1.08)
+            cx = x0 + r0 + (k + lvl * 0.5) * 2 * r0 * 1.02
+            cz = z + r0 + lvl * r0 * 1.75
+            L = rng.uniform(0.36, 0.42)
+            ry = y + rng.uniform(-0.02, 0.02)
+            ends = []
+            rr = [r * rng.uniform(0.9, 1.06) for _ in range(segs)]
+            for sy in (-1, 1):
+                ends.append([(cx + rr[s] * math.cos(2 * math.pi * s / segs + k),
+                              ry + sy * L / 2, cz + rr[s] * math.sin(2 * math.pi * s / segs + k)) for s in range(segs)])
+            vb = [[bm.verts.new(c) for c in e] for e in ends]
+            for s in range(segs):
+                t = (s + 1) % segs
+                bm.faces.new((vb[0][s], vb[0][t], vb[1][t], vb[1][s]))
+            for e, sy in zip(ends, (-1, 1)):
+                fc = [em.verts.new((c[0], c[1] + sy * 0.0005, c[2])) for c in e]
+                em.faces.new(fc if sy < 0 else fc[::-1])
+    for b in (bm, em):
+        bmesh.ops.recalc_face_normals(b, faces=b.faces[:])
+    ob = common.mesh_object(name, bm, col, mat, root, smooth=True)
+    common.box_uv(ob, 0.5)
+    eo = common.mesh_object(name + "Ends", em, col, end_mat, root, smooth=False)
+    common.box_uv(eo, 0.5)
     return ob
 
 
@@ -138,53 +213,59 @@ def build(**overrides):
     flame = materials.emissive("M_Living_Flame", (1.0, 0.30, 0.03), p["flame_strength"])
     ember = materials.emissive("M_Living_Ember", (0.9, 0.12, 0.02), 2.0)
     pebble = common.pbr_material("M_Living_GlassStone", (0.012, 0.012, 0.014), roughness=0.15)
+    bark = common.pbr_material("M_Plant_Bark", (0.10, 0.07, 0.045), roughness=0.8)
 
     W, T, H = p["width"], p["wall_t"], p["height"]
     HD, HH = p["hearth_depth"], p["hearth_h"]
     D = T + HD
     yb = D / 2                       # back face of the slab wall
-    wy = yb - T / 2                  # centre of the slab wall
     fw, fh = p["fire"]
     fz = p["fire_z"]
+    y0 = yb - T
 
-    # slab wall around the opening
-    side = (W - fw) / 2
-    box(col, root, f"{n}_WallL", stone, (side, T, H), (-(fw / 2 + side / 2), wy, H / 2), 0.004)
-    box(col, root, f"{n}_WallR", stone, (side, T, H), ((fw / 2 + side / 2), wy, H / 2), 0.004)
-    box(col, root, f"{n}_WallBelow", stone, (fw, T, fz), (0, wy, fz / 2), 0.004)
-    box(col, root, f"{n}_WallAbove", stone, (fw, T, H - fz - fh), (0, wy, fz + fh + (H - fz - fh) / 2), 0.004)
+    # slab wall around the opening: separate 1.2 m limestone slabs with eased edges
+    slab_box(col, root, f"{n}_WallL", stone, -W / 2, -fw / 2, y0, yb, 0.0, H)
+    slab_box(col, root, f"{n}_WallR", stone, fw / 2, W / 2, y0, yb, 0.0, H)
+    slab_box(col, root, f"{n}_WallBelow", stone, -fw / 2, fw / 2, y0, yb, 0.0, fz)
+    slab_box(col, root, f"{n}_WallAbove", stone, -fw / 2, fw / 2, y0, yb, fz + fh, H)
 
     # firebox lining (black), recessed
     t = 0.02
-    by = yb - T + 0.02              # lining inner face at the front of the recess
     lin_d = T - 0.02
     box(col, root, f"{n}_FireBack", black, (fw, 0.01, fh), (0, yb - 0.005, fz + fh / 2), uv="box")
     box(col, root, f"{n}_FireFloor", black, (fw, lin_d, t), (0, yb - lin_d / 2, fz + t / 2), uv="box")
     box(col, root, f"{n}_FireRoof", black, (fw, lin_d, t), (0, yb - lin_d / 2, fz + fh - t / 2), uv="box")
     for s, sx in (("L", -1), ("R", 1)):
         box(col, root, f"{n}_FireSide{s}", black, (t, lin_d, fh), (sx * (fw / 2 - t / 2), yb - lin_d / 2, fz + fh / 2), uv="box")
-    # front steel frame (a slim black bezel) and glass
-    fy = yb - T - 0.006
+    # front steel frame: a slim black bezel with an eased edge, proud of the stone, and glass
+    fy = y0 - 0.006
     bz = 0.022
-    box(col, root, f"{n}_BezelTop", black, (fw + 2 * bz, 0.012, bz), (0, fy, fz + fh + bz / 2), uv="box")
-    box(col, root, f"{n}_BezelBot", black, (fw + 2 * bz, 0.012, bz), (0, fy, fz - bz / 2), uv="box")
+    box(col, root, f"{n}_BezelTop", black, (fw + 2 * bz, 0.012, bz), (0, fy, fz + fh + bz / 2), 0.002, uv="box")
+    box(col, root, f"{n}_BezelBot", black, (fw + 2 * bz, 0.012, bz), (0, fy, fz - bz / 2), 0.002, uv="box")
     for s, sx in (("L", -1), ("R", 1)):
-        box(col, root, f"{n}_Bezel{s}", black, (bz, 0.012, fh), (sx * (fw / 2 + bz / 2), fy, fz + fh / 2), uv="box")
-    pane = box(col, root, f"{n}_Glass", glass, (fw, 0.006, fh), (0, fy - 0.003, fz + fh / 2), uv="box")
-    # burner bed: glass stones strip + ember glow + flames
-    box(col, root, f"{n}_Stones", pebble, (fw - 0.1, 0.12, 0.05), (0, yb - 0.11, fz + 0.045), 0.02, uv="box")
-    box(col, root, f"{n}_EmberBed", ember, (fw - 0.2, 0.07, 0.012), (0, yb - 0.11, fz + 0.075), uv="box")
-    flames(col, root, f"{n}_Flames", flame, -fw / 2 + 0.14, fw / 2 - 0.14, yb - 0.11, fz + 0.075, fh * 0.65)
+        box(col, root, f"{n}_Bezel{s}", black, (bz, 0.012, fh), (sx * (fw / 2 + bz / 2), fy, fz + fh / 2), 0.002, uv="box")
+    box(col, root, f"{n}_Glass", glass, (fw, 0.006, fh), (0, fy - 0.003, fz + fh / 2), uv="box")
+    # burner: a steel tray with a lip, heaped with faceted black glass stones, a glowing
+    # ember line between them, two layers of live flame (a taller, redder one behind)
+    bed_z = fz + t
+    box(col, root, f"{n}_BurnerTray", black, (fw - 0.08, 0.15, 0.03), (0, yb - 0.11, bed_z + 0.015), 0.003, uv="box")
+    box(col, root, f"{n}_Stones", pebble, (fw - 0.1, 0.13, 0.02), (0, yb - 0.11, bed_z + 0.03), 0.006, uv="box")
+    pebbles(col, root, f"{n}_StonesTop", pebble, -fw / 2 + 0.07, fw / 2 - 0.07, yb - 0.17, yb - 0.05, bed_z + 0.04, 150)
+    box(col, root, f"{n}_EmberBed", ember, (fw - 0.24, 0.025, 0.012), (0, yb - 0.11, bed_z + 0.042), uv="box")
+    top = fz + fh - 0.03
+    flame_card(col, root, f"{n}_FireBack_NoCollide", flame, -fw / 2 + 0.12, fw / 2 - 0.12, yb - 0.085, bed_z + 0.035, top, 1)
+    flame_card(col, root, f"{n}_FireFront_NoCollide", flame, -fw / 2 + 0.10, fw / 2 - 0.10, yb - 0.125, bed_z + 0.035, top - 0.08, 2)
 
-    # hearth bench: floating limestone slab on a recessed black base
+    # hearth bench: a floating limestone slab (eased edges) on a recessed black base,
+    # with a stack of logs at the right-hand end
     hw = W
     base_h = 0.07
     box(col, root, f"{n}_HearthBase", black, (hw - 0.16, HD - 0.08, base_h), (0, yb - T - (HD - 0.08) / 2, base_h / 2), uv="box")
-    box(col, root, f"{n}_Hearth", stone, (hw, HD, HH - base_h), (0, yb - T - HD / 2, base_h + (HH - base_h) / 2), 0.006)
+    slab_box(col, root, f"{n}_Hearth", stone, -hw / 2, hw / 2, y0 - HD, y0, base_h, HH, bevel=0.006)
+    logs(col, root, f"{n}_Logs", bark, walnut, fw / 2 - 0.02 + 0.03, y0 - HD / 2, HH)
 
-    # slender walnut-framed log niche set into the right wall return? -> a walnut plinth
-    # strip along the top of the stone wall for a clean architectural finish
-    box(col, root, f"{n}_Cap", walnut, (W + 0.03, T + 0.03, 0.04), (0, wy, H + 0.02), 0.004, uv="box")
+    # walnut cap along the top of the stone wall for a clean architectural finish
+    box(col, root, f"{n}_Cap", walnut, (W + 0.03, T + 0.03, 0.04), (0, yb - T / 2, H + 0.02), 0.004, uv="box")
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

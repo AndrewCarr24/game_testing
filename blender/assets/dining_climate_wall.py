@@ -20,6 +20,10 @@ from lib import common, materials  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+sys.path.insert(0, HERE)
+import dining_wine_rack as rack  # noqa: E402  (shared reeded crown)
+
+importlib.reload(rack)
 
 NAME = "DiningClimateWall"
 
@@ -42,28 +46,28 @@ def _rand(i, j, k):
     return (math.sin(i * 12.9898 + j * 78.233 + k * 37.719) * 43758.5453) % 1.0
 
 
-def bottle_upright(bm, x, y, z, s=1.0, segs=8, foil=None):
-    prof = [(0.0, 0.0), (0.037, 0.0), (0.037, 0.17), (0.0145, 0.245), (0.0125, 0.292), (0.0, 0.292)]
-    rows = []
-    for r, h in prof:
-        if r < 1e-9:
-            rows.append([bm.verts.new((x, y, z + h * s))] * segs)
-        else:
-            rows.append([bm.verts.new((x + r * s * math.cos(2 * math.pi * k / segs),
-                                       y + r * s * math.sin(2 * math.pi * k / segs), z + h * s)) for k in range(segs)])
-    for a, b in zip(rows[:-1], rows[1:]):
-        for k in range(segs):
-            t = (k + 1) % segs
-            quad = []
-            for v in (a[k], b[k], b[t], a[t]):
-                if v not in quad:
-                    quad.append(v)
-            if len(quad) >= 3:
-                bm.faces.new(quad)
+def bottle_upright(bm, x, y, z, s=1.0, segs=8, foil=None, spin=0.0):
+    """A standing Bordeaux bottle: body, rounded shoulder and neck as one open lathe
+    (it stands on a shelf, so no base), the neck end under a foil capsule with a domed
+    top. 11 * segs triangles."""
+    def ring(r, h, bm_):
+        return [bm_.verts.new((x + r * s * math.cos(spin + 2 * math.pi * k / segs),
+                               y + r * s * math.sin(spin + 2 * math.pi * k / segs), z + h * s)) for k in range(segs)]
+
+    def skin(prof, bm_, cap=False):
+        rows = [ring(r, h, bm_) for r, h in prof]
+        for a, b in zip(rows[:-1], rows[1:]):
+            for k in range(segs):
+                t = (k + 1) % segs
+                bm_.faces.new((a[k], a[t], b[t], b[k]))
+        if cap:
+            c = bm_.verts.new((x, y, z + prof[-1][1] * s))
+            for k in range(segs):
+                bm_.faces.new((rows[-1][k], rows[-1][(k + 1) % segs], c))
+
+    skin([(0.0372, 0.0), (0.0372, 0.168), (0.030, 0.198), (0.0172, 0.222), (0.0128, 0.240)], bm)
     if foil is not None:
-        m = Matrix.Translation((x, y, z + 0.272 * s))
-        bmesh.ops.create_cone(foil, cap_ends=True, cap_tris=False, segments=6, radius1=0.0145 * s,
-                              radius2=0.0145 * s, depth=0.05 * s, matrix=m)
+        skin([(0.0142, 0.236), (0.0142, 0.292)], foil, cap=True)
 
 
 def build(**overrides):
@@ -146,51 +150,65 @@ def build(**overrides):
     pitch = p["pitch"]
     per = int((inner_w - 0.1) / pitch)
     for lvl, z in enumerate(z_levels):
-        zt = z + (0.0 if lvl > 0 else 0.0)
         for i in range(per):
             for row in range(2):
                 u = _rand(i, lvl * 2 + row, p["seed"])
-                if u < (0.12 if row == 0 else 0.72):
+                if u < (0.12 if row == 0 else 0.80):      # front row nearly full, a few behind
                     continue
                 x = -(per - 1) * pitch / 2 + i * pitch + (pitch / 2 if row else 0)
                 if row and i == per - 1:
                     continue
-                y = yb - 0.07 - 0.065 - (0.115 if row == 0 else 0.0) + (0.0 if row == 0 else 0.0)
-                y = yf + 0.12 + 0.09 * (0 if row == 0 else 1) + 0.0
                 y = yb - 0.20 - 0.11 * (1 - row)       # front row nearer the glass
                 v = _rand(i, lvl * 2 + row, p["seed"] + 4)
                 target = bg if v < 0.5 else (bk if v < 0.86 else bw_)
-                bottle_upright(target, x, y, zt, 0.97 + 0.06 * _rand(i, row, 8), foil=foil)
+                bottle_upright(target, x, y, z, 0.97 + 0.06 * _rand(i, row, 8), segs=8 if row == 0 else 6,
+                               foil=foil, spin=_rand(i, lvl, 3))
     for bm_, nm, mat in ((bg, "BottlesGreen", glass_g), (bk, "BottlesBlack", glass_k), (bw_, "BottlesGold", glass_w),
                          (foil, "Foil", bronze)):
         ob = common.mesh_object(f"{n}_{nm}", bm_, col, mat, root)
         common.box_uv(ob, 0.5)
 
-    # --- glass doors: black frames + glass panes + bronze handles
+    # --- glass doors: each a slim black-metal frame (3 mm reveal to its neighbour) holding
+    #     an inset pane, long bronze bar pulls on standoffs at the meeting stiles
     fb, gb, hb = bmesh.new(), bmesh.new(), bmesh.new()
     dwid = W / nd
     fz0, fz1 = bh + 0.04, ct
     gy = yf + 0.012
-    for i in range(nd + 1):
-        x = -W / 2 + i * dwid
-        bmesh.ops.create_cube(fb, size=1.0, matrix=Matrix.Translation((x, gy, (fz0 + fz1) / 2)) @
-                              Matrix.Diagonal((0.024 if 0 < i < nd else 0.03, 0.03, fz1 - fz0, 1)))
-    for z in (fz0, fz1 - 0.012):
-        bmesh.ops.create_cube(fb, size=1.0, matrix=Matrix.Translation((0, gy, z + 0.006)) @
-                              Matrix.Diagonal((W, 0.03, 0.026, 1)))
+    fw, fd, rv = 0.026, 0.028, 0.0015          # frame face width, depth, half reveal
+    fh = fz1 - fz0
     for i in range(nd):
         cx = -W / 2 + (i + 0.5) * dwid
-        bmesh.ops.create_cube(gb, size=1.0, matrix=Matrix.Translation((cx, gy, (fz0 + fz1) / 2)) @
-                              Matrix.Diagonal((dwid - 0.03, 0.006, fz1 - fz0 - 0.03, 1)))
-    for i in range(1, nd):
-        x = -W / 2 + i * dwid + (0.035 if i % 2 else -0.035)
-        bmesh.ops.create_cone(hb, cap_ends=True, cap_tris=False, segments=6, radius1=0.007, radius2=0.007, depth=0.55,
-                              matrix=Matrix.Translation((x, gy - 0.03, (fz0 + fz1) / 2)))
+        dw_ = dwid - 2 * rv
+        for size, c in (((fw, fd, fh), (cx - dw_ / 2 + fw / 2, gy, fz0 + fh / 2)),
+                        ((fw, fd, fh), (cx + dw_ / 2 - fw / 2, gy, fz0 + fh / 2)),
+                        ((dw_ - 2 * fw, fd, fw * 1.4), (cx, gy, fz0 + fw * 0.7)),
+                        ((dw_ - 2 * fw, fd, fw), (cx, gy, fz1 - fw / 2))):
+            bmesh.ops.create_cube(fb, size=1.0, matrix=Matrix.Translation(c) @ Matrix.Diagonal((*size, 1)))
+        bmesh.ops.create_cube(gb, size=1.0, matrix=Matrix.Translation((cx, gy + 0.004, fz0 + fh / 2)) @
+                              Matrix.Diagonal((dw_ - 2 * fw + 0.01, 0.006, fh - 2.4 * fw + 0.01, 1)))
+    for i in range(nd):
+        cx = -W / 2 + (i + 0.5) * dwid
+        side = 1 if i % 2 == 0 else -1                     # pulls pair up at the meeting stiles
+        x = cx + side * (dwid / 2 - rv - fw - 0.03)
+        zc, hl = fz0 + fh * 0.5, 0.62
+        bmesh.ops.create_cone(hb, cap_ends=True, cap_tris=False, segments=8, radius1=0.0075, radius2=0.0075,
+                              depth=hl, matrix=Matrix.Translation((x, gy - fd / 2 - 0.016, zc)))
+        for dz in (-hl / 2 + 0.05, hl / 2 - 0.05):
+            bmesh.ops.create_cone(hb, cap_ends=False, segments=6, radius1=0.0045, radius2=0.0045, depth=0.016,
+                                  matrix=Matrix.Translation((x, gy - fd / 2 - 0.008, zc + dz)) @
+                                  Matrix.Rotation(math.pi / 2, 4, "X"))
+    # the case's own black-metal jambs either side, just proud of the oak sides
+    for sx in (-1, 1):
+        bmesh.ops.create_cube(fb, size=1.0, matrix=Matrix.Translation((sx * W / 2, gy + 0.004, fz0 + fh / 2)) @
+                              Matrix.Diagonal((0.03, fd + 0.008, fh + 0.006, 1)))
     frames = common.mesh_object(f"{n}_Frames", fb, col, dark, root, smooth=False)
     panes = common.mesh_object(f"{n}_Glass", gb, col, glass, root, smooth=False)
     handles = common.mesh_object(f"{n}_Handles", hb, col, bronze, root)
     for ob in (frames, panes, handles):
         common.box_uv(ob, 0.5)
+    # a warm LED line in the case soffit, behind the door head
+    soff = common.mesh_object(f"{n}_SoffitLED", common.box_bmesh((inner_w - 0.04, 0.012, 0.006)), col, led, root)
+    soff.location = (0, gy + 0.05, ct - 0.003)
 
     # --- fluted crown to the ceiling (same language as the racking)
     zc0, zc1 = ct + 0.05, H
@@ -198,12 +216,8 @@ def build(**overrides):
     cb.location = (0, yb - 0.025, (zc0 + zc1) / 2)
     common.box_uv(cb, 1.0)
     rib = bmesh.new()
-    k = int(W / 0.075)
-    for i in range(k):
-        x = -W / 2 + (i + 0.5) * W / k
-        bmesh.ops.create_cube(rib, size=1.0, matrix=Matrix.Translation((x, yb - 0.07, (zc0 + zc1) / 2)) @
-                              Matrix.Diagonal((0.048, 0.04, zc1 - zc0 - 0.02, 1)))
-    ribs = common.mesh_object(f"{n}_CrownRibs", rib, col, oak, root, smooth=False)
+    rack.reeded_panel(rib, -W / 2, W / 2, yb - 0.05, 0.035, zc0 + 0.01, zc1, 0.075)
+    ribs = common.mesh_object(f"{n}_CrownRibs", rib, col, oak, root, smooth=True)
     common.box_uv(ribs, 0.5)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

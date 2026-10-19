@@ -1,5 +1,7 @@
 # Dressing an outdoor zone of the estate (instructions for a sub-agent)
 
+
+> **One Blender command at a time.** Several agents share this machine; never run Blender builds in parallel (no loops of rooms with `&`, no batches). The build tools queue themselves (at most 2 house builds and 4 asset builds machine-wide); `SLOT ... waiting` means wait.
 You are building one zone of the grounds around a modern tech billionaire's mansion
 (think a Bezos / Medina or Beverly Hills modern estate) for a three.js game. The lawn,
 the stone terrace around the house and the perimeter hedge already exist

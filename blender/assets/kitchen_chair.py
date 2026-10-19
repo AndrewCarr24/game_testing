@@ -47,16 +47,17 @@ def build(**overrides):
                           ("RailR", (0.03, yb - yf, rail_h), (hw, (yf + yb) / 2, sz - 0.045))):
         b.box(name, size, c, walnut, bevel=0.003, seg=1, tile=0.5)
     cw, cd, ch = 2 * hw + 0.04, yb - yf + 0.05, 0.075
-    bm = common.cushion_bmesh((cw, cd, ch), cuts=3, edge=0.02, crown={"+z": 0.012})
+    bm = common.cushion_bmesh((cw, cd, ch), cuts=2, edge=0.02, crown={"+z": 0.012})
     seat = common.mesh_object(f"{b.n}_Seat", bm, b.col, fabric, b.root)
     seat.location = (0, (yf + yb) / 2, sz - 0.02 + ch / 2)
+    L.cushion_welt(b, "Seat_Piping", (cw, cd, ch), seat.location, mat=fabric)
     common.add_subsurf(seat, 1, 1)
     common.box_uv(seat, tile=0.25)
     ang = math.atan2(p["rake"], p["back_top"] - sz)
     bz0, bz1 = 0.58, p["back_top"] - 0.02
     zc = (bz0 + bz1) / 2
     yc = yb + p["rake"] * (zc - sz) / (p["back_top"] - sz)
-    bm = common.cushion_bmesh((2 * hw - 0.03, 0.05, bz1 - bz0), cuts=3, edge=0.015, crown={"-y": 0.01, "+y": 0.006})
+    bm = common.cushion_bmesh((2 * hw - 0.03, 0.05, bz1 - bz0), cuts=2, edge=0.015, crown={"-y": 0.01, "+y": 0.006})
     pad = common.mesh_object(f"{b.n}_Back", bm, b.col, fabric, b.root)
     pad.location = (0, yc, zc)
     pad.rotation_euler = (-ang, 0, 0)

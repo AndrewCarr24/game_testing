@@ -100,18 +100,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -122,19 +124,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
+						"POSITION":4,
+						"NORMAL":5,
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":5,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -145,19 +149,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":6,
-						"NORMAL":7
+						"POSITION":8,
+						"NORMAL":9,
+						"COLOR_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":2,
 					"mode":4
 				}
@@ -187,6 +193,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":624,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1248,
 			"type":"SCALAR"
 		},
@@ -212,6 +224,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":312,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":612,
 			"type":"SCALAR"
 		},
@@ -234,28 +252,34 @@
 			"componentType":5126,
 			"count":624,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":624,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2154,
+			"byteLength":3180,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1120,
-			"byteOffset":2156
+			"byteLength":1195,
+			"byteOffset":3180
 		},
 		{
 			"buffer":0,
-			"byteLength":2098,
-			"byteOffset":3276
+			"byteLength":3281,
+			"byteOffset":4376
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":5376,
+			"byteLength":7660,
 			"uri":"bath_mirror.bin"
 		}
 	]

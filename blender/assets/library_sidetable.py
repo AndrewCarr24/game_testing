@@ -16,6 +16,14 @@ NAME = "LibrarySideTable"
 P = dict(name=NAME, radius=0.26, height=0.56, top_t=0.035)
 
 
+def flat_caps(ob):
+    """Flat discs and ledges shade flat; only the turned, curved faces stay smooth."""
+    for poly in ob.data.polygons:
+        if abs(poly.normal.z) > 0.999:
+            poly.use_smooth = False
+    return ob
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -24,11 +32,15 @@ def build(**overrides):
     walnut, bronze = materials.walnut(), materials.bronze()
     r, H, t = p["radius"], p["height"], p["top_t"]
     wood, brz = Mesh(0.5), Mesh(0.5)
-    wood.lathe([(0, H - t), (r - 0.012, H - t), (r, H - t + 0.008), (r, H - 0.008), (r - 0.012, H), (0, H)], segs=40)
+    wood.lathe([(0, H - t), (r - 0.012, H - t), (r, H - t + 0.008), (r, H - 0.008), (r - 0.012, H), (0, H)], segs=32)
     brz.lathe([(0, 0.0), (0.17, 0.0), (0.17, 0.016), (0.15, 0.024), (0.03, 0.03), (0.021, 0.06), (0.021, H - t - 0.02),
-               (0.05, H - t - 0.012), (0.12, H - t), (0, H - t)], segs=28)
-    wood.to_object(f"{n}_Top", col, walnut, root, smooth=True)
-    brz.to_object(f"{n}_Base", col, bronze, root, smooth=True)
+               (0.05, H - t - 0.012), (0.12, H - t), (0, H - t)], segs=24)
+    top = flat_caps(wood.to_object(f"{n}_Top", col, walnut, root, smooth=True))
+    me = top.data                                       # planar UVs: straight grain across the top
+    for loop, d in zip(me.loops, me.uv_layers["UVMap"].data):
+        co = me.vertices[loop.vertex_index].co
+        d.uv = (co.y / 0.5 + 0.3, co.x / 0.5 + 0.1)
+    flat_caps(brz.to_object(f"{n}_Base", col, bronze, root, smooth=True))
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

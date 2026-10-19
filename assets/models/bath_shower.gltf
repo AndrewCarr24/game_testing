@@ -64,17 +64,12 @@
 			"translation":[
 				-1.093000054359436,
 				1.2350000143051147,
-				0.02500000037252903
+				0.5
 			]
 		},
 		{
 			"mesh":5,
-			"name":"BathShower_PipingBlack",
-			"translation":[
-				-0.27799999713897705,
-				0.018200000748038292,
-				0.11999999731779099
-			]
+			"name":"BathShower_PipingBlack"
 		},
 		{
 			"mesh":6,
@@ -210,7 +205,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -218,11 +214,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -233,9 +230,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -243,11 +241,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -258,9 +257,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -268,11 +268,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -283,19 +284,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13
+						"POSITION":15,
+						"NORMAL":16,
+						"COLOR_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":3,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":18,
 					"material":2,
 					"mode":4
 				}
@@ -306,19 +309,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16
+						"POSITION":19,
+						"NORMAL":20,
+						"COLOR_0":21
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":18,
 					"material":2,
 					"mode":4
 				}
@@ -329,19 +334,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":17,
-						"NORMAL":18
+						"POSITION":22,
+						"NORMAL":23,
+						"COLOR_0":24
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":25,
 					"material":3,
 					"mode":4
 				}
@@ -352,19 +359,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21
+						"POSITION":26,
+						"NORMAL":27,
+						"TEXCOORD_0":28,
+						"COLOR_0":29
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":22,
+					"indices":30,
 					"material":4,
 					"mode":4
 				}
@@ -375,9 +386,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":23,
-						"NORMAL":24,
-						"TEXCOORD_0":25
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33,
+						"COLOR_0":34
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -385,11 +397,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -400,9 +413,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":26,
-						"NORMAL":27,
-						"TEXCOORD_0":28
+						"POSITION":35,
+						"NORMAL":36,
+						"TEXCOORD_0":37,
+						"COLOR_0":38
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -410,11 +424,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":29,
+					"indices":39,
 					"material":0,
 					"mode":4
 				}
@@ -425,9 +440,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42,
+						"COLOR_0":43
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -435,11 +451,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":33,
+					"indices":44,
 					"material":0,
 					"mode":4
 				}
@@ -491,6 +508,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":48,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":72,
 			"type":"SCALAR"
 		},
@@ -518,6 +541,12 @@
 			"componentType":5126,
 			"count":96,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -551,6 +580,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":104,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
@@ -576,6 +611,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
@@ -585,12 +626,12 @@
 			"max":[
 				0.004999999888241291,
 				1.225000023841858,
-				0.925000011920929
+				0.44999998807907104
 			],
 			"min":[
 				-0.004999999888241291,
 				-1.225000023841858,
-				-0.925000011920929
+				-0.44999998807907104
 			],
 			"type":"VEC3"
 		},
@@ -600,35 +641,47 @@
 			"type":"VEC3"
 		},
 		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
 			"componentType":5126,
-			"count":266,
+			"count":278,
 			"max":[
-				0.08999998867511749,
-				2.3358001708984375,
-				0.06499999761581421
+				-0.18800000846385956,
+				2.3540000915527344,
+				0.1850000023841858
 			],
 			"min":[
-				-0.3109999895095825,
-				-0.000699999975040555,
-				-0.6990000009536743
+				-0.5889999866485596,
+				0.017500000074505806,
+				-0.8774999976158142
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":266,
+			"count":278,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":852,
+			"count":278,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":912,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":1341,
+			"count":1847,
 			"max":[
-				1.0640000104904175,
+				1.1990001201629639,
 				1.2300000190734863,
 				0.015000008046627045
 			],
@@ -641,12 +694,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":1341,
+			"count":1847,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":1847,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":5676,
+			"count":1847,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":7848,
 			"type":"SCALAR"
 		},
 		{
@@ -675,6 +739,12 @@
 			"type":"VEC2"
 		},
 		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
 			"componentType":5126,
 			"count":24,
 			"max":[
@@ -701,12 +771,18 @@
 		},
 		{
 			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"max":[
 				1.059999942779541,
 				0.007000000216066837,
@@ -721,70 +797,76 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":36,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":468,
+			"byteLength":743,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":885,
-			"byteOffset":468
+			"byteLength":1431,
+			"byteOffset":744
 		},
 		{
 			"buffer":0,
-			"byteLength":932,
-			"byteOffset":1356
+			"byteLength":1419,
+			"byteOffset":2176
 		},
 		{
 			"buffer":0,
-			"byteLength":214,
-			"byteOffset":2288
+			"byteLength":327,
+			"byteOffset":3596
 		},
 		{
 			"buffer":0,
-			"byteLength":210,
-			"byteOffset":2504
+			"byteLength":374,
+			"byteOffset":3924
 		},
 		{
 			"buffer":0,
-			"byteLength":987,
-			"byteOffset":2716
+			"byteLength":1826,
+			"byteOffset":4300
 		},
 		{
 			"buffer":0,
-			"byteLength":6037,
-			"byteOffset":3704
+			"byteLength":11478,
+			"byteOffset":6128
 		},
 		{
 			"buffer":0,
-			"byteLength":799,
-			"byteOffset":9744
+			"byteLength":1345,
+			"byteOffset":17608
 		},
 		{
 			"buffer":0,
-			"byteLength":333,
-			"byteOffset":10544
+			"byteLength":394,
+			"byteOffset":18956
 		},
 		{
 			"buffer":0,
-			"byteLength":333,
-			"byteOffset":10880
+			"byteLength":1340,
+			"byteOffset":19352
 		}
 	],
 	"samplers":[
@@ -795,7 +877,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":11216,
+			"byteLength":20692,
 			"uri":"bath_shower.bin"
 		}
 	]

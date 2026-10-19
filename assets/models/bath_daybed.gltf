@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				11
 			]
 		}
 	],
@@ -83,13 +83,38 @@
 			]
 		},
 		{
+			"mesh":6,
+			"name":"BathDaybed_PipingBolster_0"
+		},
+		{
+			"mesh":7,
+			"name":"BathDaybed_PipingBolster_1"
+		},
+		{
+			"mesh":8,
+			"name":"BathDaybed_PipingThrow"
+		},
+		{
+			"mesh":9,
+			"name":"BathDaybed_PipingWelt_0"
+		},
+		{
+			"mesh":10,
+			"name":"BathDaybed_PipingWelt_1"
+		},
+		{
 			"children":[
 				0,
 				1,
 				2,
 				3,
 				4,
-				5
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
 			],
 			"name":"BathDaybed"
 		}
@@ -186,7 +211,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -194,11 +220,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -209,9 +236,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -219,11 +247,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -234,19 +263,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9
+						"POSITION":10,
+						"NORMAL":11,
+						"COLOR_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":10,
+					"indices":13,
 					"material":2,
 					"mode":4
 				}
@@ -257,9 +288,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":11,
-						"NORMAL":12,
-						"TEXCOORD_0":13
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16,
+						"COLOR_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -267,37 +299,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":14,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mesh",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
 					"indices":18,
-					"material":4,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -309,7 +317,35 @@
 					"attributes":{
 						"POSITION":19,
 						"NORMAL":20,
-						"TEXCOORD_0":21
+						"TEXCOORD_0":21,
+						"COLOR_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":23,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mesh",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26,
+						"COLOR_0":27
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -317,12 +353,148 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":22,
+					"indices":28,
 					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathDaybed_PipingBolster_0",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31,
+						"COLOR_0":32
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":33,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathDaybed_PipingBolster_1",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":34,
+						"NORMAL":35,
+						"TEXCOORD_0":36,
+						"COLOR_0":37
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":33,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathDaybed_PipingThrow",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":38,
+						"NORMAL":39,
+						"TEXCOORD_0":40,
+						"COLOR_0":41
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":42,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathDaybed_PipingWelt_0",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":43,
+						"NORMAL":44,
+						"TEXCOORD_0":45,
+						"COLOR_0":46
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":47,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"BathDaybed_PipingWelt_1",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":48,
+						"NORMAL":49,
+						"TEXCOORD_0":50,
+						"COLOR_0":51
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":52,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -389,37 +561,49 @@
 		},
 		{
 			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":202,
 			"max":[
 				0.8949999809265137,
 				0.6600000262260437,
-				0.26999998092651367
+				0.28200000524520874
 			],
 			"min":[
 				0.6649999618530273,
 				0.4300000071525574,
-				-0.26999998092651367
+				-0.28200000524520874
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":202,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":202,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":276,
+			"count":202,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":864,
 			"type":"SCALAR"
 		},
 		{
@@ -441,6 +625,12 @@
 			"componentType":5126,
 			"count":64,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":64,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -474,19 +664,25 @@
 		},
 		{
 			"componentType":5123,
+			"count":1558,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":7056,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":868,
+			"count":560,
 			"max":[
-				0.08434893190860748,
+				0.07811321318149567,
 				0.21000003814697266,
 				0.23000001907348633
 			],
 			"min":[
-				-0.08434893190860748,
+				-0.07811321318149567,
 				-0.21000003814697266,
 				-0.23000001907348633
 			],
@@ -494,29 +690,35 @@
 		},
 		{
 			"componentType":5126,
-			"count":868,
+			"count":560,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":868,
+			"count":560,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3600,
+			"count":560,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2304,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":852,
+			"count":574,
 			"max":[
-				0.07964812964200974,
+				0.07369695603847504,
 				0.1900000423192978,
 				0.20000003278255463
 			],
 			"min":[
-				-0.07964812964200974,
+				-0.07369695603847504,
 				-0.1900000423192978,
 				-0.20000003278255463
 			],
@@ -524,50 +726,256 @@
 		},
 		{
 			"componentType":5126,
-			"count":852,
+			"count":574,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":852,
+			"count":574,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3600,
+			"count":574,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2304,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"max":[
+				0.9013301134109497,
+				0.666330099105835,
+				0.2709999978542328
+			],
+			"min":[
+				0.6586698889732361,
+				0.42366987466812134,
+				0.26100000739097595
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":216,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":720,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"max":[
+				0.9013301134109497,
+				0.666330099105835,
+				-0.26100000739097595
+			],
+			"min":[
+				0.6586698889732361,
+				0.42366987466812134,
+				-0.2709999978542328
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":216,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":216,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"max":[
+				-0.3799999952316284,
+				0.47712790966033936,
+				0.42799997329711914
+			],
+			"min":[
+				-0.8999999761581421,
+				0.27450793981552124,
+				-0.3409615159034729
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":148,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":396,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"max":[
+				0.997988224029541,
+				0.4372631311416626,
+				0.40798822045326233
+			],
+			"min":[
+				-0.997988224029541,
+				0.42773687839508057,
+				-0.40798822045326233
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":304,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1008,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"max":[
+				0.997988224029541,
+				0.2522631287574768,
+				0.40798822045326233
+			],
+			"min":[
+				-0.997988224029541,
+				0.24273686110973358,
+				-0.40798822045326233
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":304,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":304,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1008,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":886,
+			"byteLength":1103,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1063,
-			"byteOffset":888
+			"byteLength":2216,
+			"byteOffset":1104
 		},
 		{
 			"buffer":0,
-			"byteLength":430,
-			"byteOffset":1952
+			"byteLength":781,
+			"byteOffset":3320
 		},
 		{
 			"buffer":0,
-			"byteLength":5516,
-			"byteOffset":2384
+			"byteLength":7940,
+			"byteOffset":4104
 		},
 		{
 			"buffer":0,
-			"byteLength":4914,
-			"byteOffset":7900
+			"byteLength":5300,
+			"byteOffset":12044
 		},
 		{
 			"buffer":0,
-			"byteLength":4838,
-			"byteOffset":12816
+			"byteLength":5599,
+			"byteOffset":17344
+		},
+		{
+			"buffer":0,
+			"byteLength":2923,
+			"byteOffset":22944
+		},
+		{
+			"buffer":0,
+			"byteLength":2856,
+			"byteOffset":25868
+		},
+		{
+			"buffer":0,
+			"byteLength":1802,
+			"byteOffset":28724
+		},
+		{
+			"buffer":0,
+			"byteLength":3286,
+			"byteOffset":30528
+		},
+		{
+			"buffer":0,
+			"byteLength":3296,
+			"byteOffset":33816
 		}
 	],
 	"samplers":[
@@ -578,7 +986,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":17656,
+			"byteLength":37112,
 			"uri":"bath_daybed.bin"
 		}
 	]

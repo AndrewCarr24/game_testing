@@ -87,18 +87,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -109,19 +111,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
+						"POSITION":4,
+						"NORMAL":5,
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":5,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -151,6 +155,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":146,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":576,
 			"type":"SCALAR"
 		},
@@ -176,6 +186,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":340,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":1404,
 			"type":"SCALAR"
 		}
@@ -183,18 +199,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":893,
+			"byteLength":1157,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1782,
-			"byteOffset":896
+			"byteLength":2689,
+			"byteOffset":1160
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":2680,
+			"byteLength":3852,
 			"uri":"bath_sconce.bin"
 		}
 	]

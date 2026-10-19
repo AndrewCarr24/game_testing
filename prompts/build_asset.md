@@ -1,5 +1,7 @@
 # Building one asset (instructions for a sub-agent)
 
+
+> **One Blender command at a time.** Several agents share this machine; never run Blender builds in parallel (no loops of rooms with `&`, no batches). The build tools queue themselves (at most 2 house builds and 4 asset builds machine-wide); `SLOT ... waiting` means wait.
 You are building ONE game asset for a three.js game set in a modern tech-billionaire's
 mansion. Read `CLAUDE.md` first for the project conventions. Your asset's spec is the
 entry in `specs.md` you were given. Build it to final, game-ready quality; it will be

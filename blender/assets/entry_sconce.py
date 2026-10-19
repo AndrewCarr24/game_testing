@@ -58,9 +58,12 @@ def build(**overrides):
         prof = [(0.0, z0 - sg * 0.014), (r + 0.006, z0 - sg * 0.014), (r + 0.006, z0 + sg * 0.012),
                 (r - 0.012, z0 + sg * 0.018), (0.0, z0 + sg * 0.018)]
         lathe_z(tag, prof if sg > 0 else prof, bronze)
+    # centre collar round the tube where the arm meets it (eased edges)
+    lathe_z("Collar", [(r + 0.0005, -0.012), (r + 0.0045, -0.011), (r + 0.0055, -0.008), (r + 0.0055, 0.008),
+                       (r + 0.0045, 0.011), (r + 0.0005, 0.012)], bronze)
     # arm and backplate
     arm = bmesh.new()
-    table_lamp.cylinder_between(arm, (0, 0.0, 0.0), (0, -s + 0.002, 0.0), 0.008, segs=12)
+    table_lamp.cylinder_between(arm, (0, 0.0, 0.0), (0, -s + r + 0.004, 0.0), 0.008, segs=12)
     common.mesh_object(f"{n}_Arm", arm, col, bronze, root)
     plate = table_lamp.lathe([(0.0, 0.0), (0.05, 0.0), (0.05, 0.008), (0.044, 0.016), (0.0, 0.016)], 36, sharp=40)
     import mathutils

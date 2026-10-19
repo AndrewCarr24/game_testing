@@ -51,14 +51,21 @@ def build(**overrides):
         bells.append((x, shelf_z[0], 0.125 - 0.0 * k + 0.006 * k))
         bells.append((x, shelf_z[1], 0.085 + 0.008 * k))
     for x, zz, rr in bells:
-        bmesh.ops.create_uvsphere(body, u_segments=20, v_segments=12, radius=rr,
-                                  matrix=Matrix.Translation((x, -0.01, zz + rr * 0.95)))
+        # cast ball with the flat base a real bell stands on (cut 0.1 r below the equator... at 0.9 r)
+        ret = bmesh.ops.create_uvsphere(body, u_segments=16, v_segments=10, radius=rr,
+                                        matrix=Matrix.Translation((x, -0.01, zz + rr * 0.9)))
+        for v in ret["verts"]:
+            v.co.z = max(v.co.z, zz)
     A(own, "Bells", body, iron, (0, 0, 0), 0)
     for i, (x, zz, rr) in enumerate(bells):
-        top = zz + rr * 1.95
-        pts = [(x - rr * 0.5, -0.01, zz + rr * 1.55), (x - rr * 0.55, -0.01, top + rr * 0.45), (x + rr * 0.55, -0.01, top + rr * 0.45), (x + rr * 0.5, -0.01, zz + rr * 1.55)]
-        pts = common.fillet_polyline(pts, rr * 0.35, segments=5, closed=False)
-        t = common.tube_object(f"{n}_Handle{i}", pts, 0.012, col, iron, root, closed=False, profile_res=2)
+        top = zz + rr * 1.9
+        hr = 0.011 + 0.05 * rr          # handle thickness grows with the bell (16 mm .. 17 mm radius)
+        # the horns rise out of the shoulders, flare out, and the grip runs across the top
+        pts = [(x - rr * 0.42, -0.01, zz + rr * 1.45), (x - rr * 0.62, -0.01, top + rr * 0.30),
+               (x - rr * 0.45, -0.01, top + rr * 0.58), (x + rr * 0.45, -0.01, top + rr * 0.58),
+               (x + rr * 0.62, -0.01, top + rr * 0.30), (x + rr * 0.42, -0.01, zz + rr * 1.45)]
+        pts = common.fillet_polyline(pts, rr * 0.22, segments=3, closed=False)
+        t = common.tube_object(f"{n}_Handle{i}", pts, hr, col, iron, root, closed=False, profile_res=1)
         common.box_uv(t, 0.5)
     parts = guest_mats.consolidate(root, max_dim=0.35)
     return root, parts

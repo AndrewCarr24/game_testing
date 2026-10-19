@@ -83,7 +83,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -91,11 +92,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -106,9 +108,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -116,11 +119,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -130,7 +134,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":759,
+			"count":1313,
 			"max":[
 				0.19200000166893005,
 				1.6299999952316284,
@@ -145,22 +149,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":759,
+			"count":1313,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":759,
+			"count":1313,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2676,
+			"count":1313,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":3060,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":246,
+			"count":264,
 			"max":[
 				0.1899999976158142,
 				1.600000023841858,
@@ -175,35 +185,41 @@
 		},
 		{
 			"componentType":5126,
-			"count":246,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":246,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":960,
+			"count":264,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":768,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4646,
+			"byteLength":9074,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1701,
-			"byteOffset":4648
+			"byteLength":2219,
+			"byteOffset":9076
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":6352,
+			"byteLength":11296,
 			"uri":"library_floorlamp.bin"
 		}
 	]

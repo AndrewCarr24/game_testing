@@ -11,11 +11,8 @@
 		"KHR_draco_mesh_compression",
 		"EXT_texture_webp"
 	],
-	"scene":1,
+	"scene":0,
 	"scenes":[
-		{
-			"name":"_Denoise"
-		},
 		{
 			"name":"Scene",
 			"nodes":[
@@ -475,38 +472,38 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":67051,
+			"count":75645,
 			"max":[
-				71.07087707519531,
-				7.94838285446167,
+				71.27143096923828,
+				12.753400802612305,
 				65.58999633789062
 			],
 			"min":[
-				-70.02405548095703,
+				-70.65309143066406,
 				-0.08153393119573593,
-				-61.74458694458008
+				-62.486873626708984
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":67051,
+			"count":75645,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":67051,
+			"count":75645,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":67051,
+			"count":75645,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
-			"componentType":5123,
-			"count":102600,
+			"componentType":5125,
+			"count":111858,
 			"type":"SCALAR"
 		},
 		{
@@ -578,43 +575,43 @@
 		},
 		{
 			"componentType":5126,
-			"count":31368,
+			"count":35341,
 			"max":[
-				70.69999694824219,
-				12.136441230773926,
-				63.710140228271484
+				71.02157592773438,
+				14.513749122619629,
+				66.10566711425781
 			],
 			"min":[
 				-70.69999694824219,
 				-0.43400001525878906,
-				-62.70000076293945
+				-63.54896545410156
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":31368,
+			"count":35341,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":31368,
+			"count":35341,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":31368,
+			"count":35341,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":41388,
+			"count":46680,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":9745,
+			"count":9757,
 			"max":[
 				90,
 				0.4700000286102295,
@@ -629,17 +626,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":9745,
+			"count":9757,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":9745,
+			"count":9757,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":9745,
+			"count":9757,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -760,43 +757,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":650492,
+			"byteLength":719945,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1624,
-			"byteOffset":650492
+			"byteLength":1511,
+			"byteOffset":719948
 		},
 		{
 			"buffer":0,
-			"byteLength":32307,
-			"byteOffset":652116
+			"byteLength":31337,
+			"byteOffset":721460
 		},
 		{
 			"buffer":0,
-			"byteLength":416678,
-			"byteOffset":684424
+			"byteLength":464606,
+			"byteOffset":752800
 		},
 		{
 			"buffer":0,
-			"byteLength":78037,
-			"byteOffset":1101104
+			"byteLength":76817,
+			"byteOffset":1217408
 		},
 		{
 			"buffer":0,
-			"byteLength":137910,
-			"byteOffset":1179144
+			"byteLength":134278,
+			"byteOffset":1294228
 		},
 		{
 			"buffer":0,
-			"byteLength":86788,
-			"byteOffset":1317056
+			"byteLength":85990,
+			"byteOffset":1428508
 		},
 		{
 			"buffer":0,
-			"byteLength":679,
-			"byteOffset":1403844
+			"byteLength":706,
+			"byteOffset":1514500
 		}
 	],
 	"samplers":[
@@ -807,7 +804,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1404524,
+			"byteLength":1515208,
 			"uri":"mansion_outdoor.bin"
 		}
 	]

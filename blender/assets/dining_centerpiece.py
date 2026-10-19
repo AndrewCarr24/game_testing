@@ -80,20 +80,23 @@ def build(**overrides):
     common.box_uv(fruit, 0.5)
 
     # candlesticks
-    cb, cw = bmesh.new(), bmesh.new()
+    cb, cw, wk = bmesh.new(), bmesh.new(), bmesh.new()
     for i, (x, h) in enumerate(((0.12, 0.11), (0.30, 0.17), (0.48, 0.23))):
         base_r = 0.035
         prof = [(0.0, 0.0), (base_r, 0.0), (base_r, 0.006), (0.014, 0.012), (0.0105, 0.03),
                 (0.0105, h - 0.05), (0.017, h - 0.035), (0.022, h - 0.02), (0.022, h), (0.0, h - 0.008)]
         lathe(cb, prof, 16, (x, 0, T))
         cwh = 0.08 + 0.02 * i
-        lathe(cw, [(0.0, h - 0.01), (0.0145, h - 0.01), (0.0145, h - 0.01 + cwh), (0.0, h - 0.01 + cwh)], 12, (x, 0, T))
+        # a slightly burnt-down top (a shallow well round the wick) and the wick itself
+        ct = h - 0.01 + cwh
+        lathe(cw, [(0.0, h - 0.01), (0.0145, h - 0.01), (0.0145, ct), (0.0125, ct + 0.0015), (0.004, ct - 0.003),
+                   (0.0, ct - 0.0035)], 12, (x, 0, T))
+        lathe(wk, [(0.0016, ct - 0.004), (0.0014, ct + 0.009), (0.0, ct + 0.0105)], 5, (x, 0, T))
     sticks = common.mesh_object(f"{n}_Candlesticks", cb, col, bronze, root)
     candles = common.mesh_object(f"{n}_Candles", cw, col, wax, root)
-    for ob in (sticks, candles):
+    wicks = common.mesh_object(f"{n}_Wicks_NoCollide", wk, col, materials.black_metal(), root)
+    for ob in (sticks, candles, wicks):
         common.box_uv(ob, 0.5)
-    for ob in (sticks, candles, bowl):
-        bmesh_flip = None
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

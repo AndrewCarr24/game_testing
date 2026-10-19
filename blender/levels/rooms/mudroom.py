@@ -52,6 +52,11 @@ FINISHES = dict(
     ceiling=lambda: common.pbr_material("M_Ceiling_Warm", (0.48, 0.46, 0.43), roughness=0.9),
 )
 
+# lighting: ceiling cans (x, y): four over the lockers, two over the laundry wall, then the
+# boot mat and the drawing (see LIGHTS)
+_CANS = ((-5.0, -3.75), (-2.9, -3.75), (2.9, -3.75), (5.0, -3.75), (-1.6, 3.95), (1.6, 3.95),
+         (0.0, -3.2), (5.0, 4.1))
+
 PLACEMENTS = [
     # lockers either side of the garage door (backs on the south wall)
     ("garage_lockers", (-3.95, -4.82), 180),
@@ -66,15 +71,44 @@ PLACEMENTS = [
     # window seat under the east window
     ("garage_seat", (5.82, 0.0), -90),
     # art
-    ("art_linework_a", (-6.1, 2.4, 1.6), 90),
-    ("art_geometric_a", (5.0, 5.1, 1.6), 0),
+    ("art_contour_map", (5.0, 5.1, 1.6), 0),             # topographic drawing, white box frame
+    # lighting (see LIGHTS): a linear pendant over the island, up/down sconces either side of
+    # the window seat, ceiling cans washing the lockers and the laundry wall
+    ("light_g_pendant_linear", (0.6, 0.9, 4.2), 0),
+    ("light_g_sconce_updown", (6.1, 2.75, 2.25), -90),
+    ("light_g_sconce_updown", (6.1, -2.75, 2.25), -90),
+    *[("light_g_downlight", (x, y, 4.2), 0) for x, y in _CANS],
 ]
 
+# Lighting: a crisp utility room without ceiling lines. The linear bronze pendant over the
+# oak island is the focus; the locker walls and the laundry wall are washed by cans (and the
+# worktop has its LED under the wall units); bronze sconces flank the window seat; a can
+# over the boot mat at the garage door and one on the drawing. Slightly cooler white.
+_WORK = (1.0, 0.88, 0.76)
+
+
+def _updown(x, y, wx, wy, up=40.0, down=50.0):
+    """The two scallops of a light_g_sconce_updown at (x, y) on a wall, 0.13 m out along (wx, wy)."""
+    px, py = x + 0.13 * wx, y + 0.13 * wy
+    return [dict(kind="spot", pos=(px, py, 2.40), aim=(px, py, 4.2), power=up, angle=60, blend=0.7),
+            dict(kind="spot", pos=(px, py, 2.10), aim=(px, py, 0.0), power=down, angle=60, blend=0.7)]
+
+
 LIGHTS = [
-    dict(kind="strip", pos=(0.0, 4.2), size=(6.0, 0.08), power=70.0),
-    dict(kind="strip", pos=(0.0, 0.3), size=(7.0, 0.08), power=80.0),
-    dict(kind="strip", pos=(0.0, -3.9), size=(11.0, 0.08), power=70.0),
-    dict(kind="point", pos=(5.4, 0.0, 2.0), power=25.0, color=(1.0, 0.8, 0.58)),
+    # linear pendant over the island (underside 1.7 m): down, and a glow on the ceiling
+    dict(kind="area", pos=(0.6, 0.9, 1.69), size=(1.5, 0.05), aim=(0.6, 0.9, 0.0), power=130.0, color=(1.0, 0.8, 0.58)),
+    dict(kind="area", pos=(0.6, 0.9, 1.76), size=(1.5, 0.05), aim=(0.6, 0.9, 4.2), power=30.0, color=(1.0, 0.8, 0.58)),
+    # LED under the laundry wall units (garage_laundry Under_LED, z 1.58)
+    dict(kind="area", pos=(0.0, 4.80, 1.56), size=(4.5, 0.04), aim=(0.0, 4.6, 0.92), power=60.0, color=_WORK),
+    # cans: lockers, laundry wall, boot mat, the drawing
+    *[dict(kind="spot", pos=(x, y, 4.08), aim=(x, y - 0.75 if y < 0 else y + 0.75, 1.2), power=170.0, angle=50, blend=0.6,
+           color=_WORK) for x, y in _CANS[:6]],
+    dict(kind="spot", pos=(0.0, -3.2, 4.08), aim=(0.0, -3.2, 0.0), power=200.0, angle=45, blend=0.6, color=_WORK),
+    dict(kind="spot", pos=(5.0, 4.1, 4.08), aim=(5.0, 5.05, 1.6), power=110.0, angle=32, blend=0.5),
+    *_updown(6.1, 2.75, -1, 0), *_updown(6.1, -2.75, -1, 0),
 ]
 
 PROBE = (0.0, 0.0, 1.6)
+
+# the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
+LIGHTS = [dict(L, power=L["power"] * 1.35) for L in LIGHTS]

@@ -44,14 +44,20 @@ def build(**overrides):
     sw = w - 2 * p["inset"] - pt
     box("Shelf", wood, (sw, d - 0.06, p["shelf_t"]), (0, 0, p["shelf_z"]), 0.003)
     if p["drawers"]:
-        # a drawer bank under the top: a recessed black reveal + three pulls
+        # a drawer bank under the top: three separate walnut fronts with 3 mm reveals
+        # in front of a dark drawer housing, a bronze bar pull centred on each
         dh = 0.17
-        box("DrawerFace", wood, (sw - 0.02, 0.02, dh), (0, -d / 2 + 0.05, h - tt - dh / 2 - 0.01), 0.004)
-        box("DrawerBack", black, (sw, d - 0.1, dh + 0.02), (0, 0.02, h - tt - dh / 2 - 0.01), 0.0, uv=1.0)
         n_p = 3
+        gap = 0.003
+        fw_ = (sw - 0.02 - (n_p - 1) * gap) / n_p
+        zc = h - tt - dh / 2 - 0.01
+        box("DrawerBack", black, (sw, d - 0.1, dh + 0.02), (0, 0.02, zc), 0.0, uv=1.0)
         for i in range(n_p):
-            x = (-sw / 2 + sw * (i + 0.5) / n_p)
+            x = -sw / 2 + 0.01 + fw_ / 2 + i * (fw_ + gap)
+            box(f"DrawerFace{i}", wood, (fw_, 0.02, dh), (x, -d / 2 + 0.05, zc), 0.002)
             box(f"Pull{i}", bronze, (0.22, 0.014, 0.014), (x, -d / 2 + 0.05 - 0.017, h - tt - 0.05), 0.004)
+        # a rear modesty rail between the panels, under the top
+        box("BackRail", wood, (sw, 0.02, 0.06), (0, d / 2 - 0.04, h - tt - 0.03), 0.002)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

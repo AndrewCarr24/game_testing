@@ -17,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				7
 			]
 		}
 	],
@@ -27,7 +27,7 @@
 			"name":"DiningSideboard_Carcass",
 			"translation":[
 				0,
-				0.45500001311302185,
+				0.4490000009536743,
 				-0.014999999664723873
 			]
 		},
@@ -54,6 +54,15 @@
 		},
 		{
 			"mesh":5,
+			"name":"DiningSideboard_ShadowGap",
+			"translation":[
+				0,
+				0.8040000200271606,
+				-0.019999999552965164
+			]
+		},
+		{
+			"mesh":6,
 			"name":"DiningSideboard_Top",
 			"translation":[
 				0,
@@ -68,7 +77,8 @@
 				2,
 				3,
 				4,
-				5
+				5,
+				6
 			],
 			"name":"DiningSideboard"
 		}
@@ -137,7 +147,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -145,11 +156,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -160,9 +172,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -170,11 +183,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":0,
 					"mode":4
 				}
@@ -185,9 +199,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -195,11 +210,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -210,9 +226,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"TEXCOORD_0":14
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -220,11 +237,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
+					"indices":19,
 					"material":2,
 					"mode":4
 				}
@@ -235,9 +253,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":16,
-						"NORMAL":17,
-						"TEXCOORD_0":18
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -245,12 +264,40 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":19,
+					"indices":24,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningSideboard_ShadowGap",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27,
+						"COLOR_0":28
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -260,21 +307,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31,
+						"COLOR_0":32
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":23,
+					"indices":33,
 					"material":3,
 					"mode":4
 				}
@@ -314,28 +363,34 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"max":[
 				1.2400000095367432,
-				0.35499998927116394,
+				0.3490000069141388,
 				0.24500000476837158
 			],
 			"min":[
 				-1.2400000095367432,
-				-0.35499998927116394,
+				-0.3490000069141388,
 				-0.24500000476837158
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":104,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":104,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -344,10 +399,10 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":316,
 			"max":[
 				1.2360000610351562,
-				0.8059999942779541,
+				0.7940000295639038,
 				0.25
 			],
 			"min":[
@@ -359,17 +414,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":316,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":316,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":316,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":528,
 			"type":"SCALAR"
 		},
 		{
@@ -399,6 +460,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
@@ -407,12 +474,12 @@
 			"count":416,
 			"max":[
 				0.6640000343322754,
-				0.7001000046730042,
+				0.6934999823570251,
 				0.2939999997615814
 			],
 			"min":[
 				-0.6640000343322754,
-				0.2800999879837036,
+				0.2735000252723694,
 				0.25999999046325684
 			],
 			"type":"VEC3"
@@ -429,38 +496,81 @@
 		},
 		{
 			"componentType":5123,
+			"count":416,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":816,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":2112,
+			"count":1592,
 			"max":[
-				1.222000002861023,
-				0.7910000085830688,
-				0.2619999945163727
+				1.2254999876022339,
+				0.7789999842643738,
+				0.2580932676792145
 			],
 			"min":[
-				-1.222000002861023,
-				0.11900001764297485,
-				0.24799999594688416
+				-1.2254999876022339,
+				0.11900000274181366,
+				0.24899999797344208
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2112,
+			"count":1592,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2112,
+			"count":1592,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3168,
+			"count":1592,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2640,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.2100000381469727,
+				0.00800000037997961,
+				0.2199999988079071
+			],
+			"min":[
+				-1.2100000381469727,
+				-0.00800000037997961,
+				-0.2199999988079071
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
@@ -489,6 +599,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":104,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
 			"type":"SCALAR"
 		}
@@ -496,33 +612,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":849,
+			"byteLength":935,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":631,
-			"byteOffset":852
+			"byteLength":3672,
+			"byteOffset":936
 		},
 		{
 			"buffer":0,
-			"byteLength":347,
-			"byteOffset":1484
+			"byteLength":407,
+			"byteOffset":4608
 		},
 		{
 			"buffer":0,
-			"byteLength":2603,
-			"byteOffset":1832
+			"byteLength":3855,
+			"byteOffset":5016
 		},
 		{
 			"buffer":0,
-			"byteLength":5407,
-			"byteOffset":4436
+			"byteLength":9244,
+			"byteOffset":8872
 		},
 		{
 			"buffer":0,
-			"byteLength":855,
-			"byteOffset":9844
+			"byteLength":476,
+			"byteOffset":18116
+		},
+		{
+			"buffer":0,
+			"byteLength":941,
+			"byteOffset":18592
 		}
 	],
 	"samplers":[
@@ -533,7 +654,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10700,
+			"byteLength":19536,
 			"uri":"dining_sideboard.bin"
 		}
 	]

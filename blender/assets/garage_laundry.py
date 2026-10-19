@@ -89,6 +89,7 @@ def build(**overrides):
             b.cyl(f"{kind}{i}_Ring", 0.225, 0.03, (xc, fy - 0.005, zc), al, axis="y", seg=24)
             b.cyl(f"{kind}{i}_Glass", 0.19, 0.04, (xc, fy - 0.012, zc), dark_glass, axis="y", seg=24)
             b.cyl(f"{kind}{i}_Drum", 0.15, 0.012, (xc, fy - 0.032, zc), grd, axis="y", seg=20, r2=0.13)
+            b.box(f"{kind}{i}_Handle", (0.025, 0.03, 0.11), (xc + 0.215, fy - 0.03, zc), al, bevel=0.006, seg=2)
             b.lo_hi(f"{kind}{i}_Panel", (xa + 0.03, fy - 0.006, bh - 0.12), (xb - 0.03, fy, bh - 0.03), grd, bevel=0.003, seg=1)
             b.cyl(f"{kind}{i}_Knob", 0.022, 0.02, (xb - 0.12, fy - 0.014, bh - 0.075), al, axis="y", seg=14)
             b.lo_hi(f"{kind}{i}_Display", (xa + 0.09, fy - 0.012, bh - 0.09), (xa + 0.19, fy - 0.006, bh - 0.065), display, bevel=0, tile=0.25)
@@ -127,6 +128,9 @@ def build(**overrides):
         b.lo_hi("Sink_W1", (sr - 0.006, sb, ch - 0.2), (sr, st_, ch - 0.002), steel, bevel=0, tile=1.0)
         b.lo_hi("Sink_W2", (sl, sb, ch - 0.2), (sr, sb + 0.006, ch - 0.002), steel, bevel=0, tile=1.0)
         b.lo_hi("Sink_W3", (sl, st_ - 0.006, ch - 0.2), (sr, st_, ch - 0.002), steel, bevel=0, tile=1.0)
+        # drain: a stainless flange with a dark grated centre, and a faint fall line toward it
+        b.cyl("Sink_Drain", 0.036, 0.004, (sink_x, sy, ch - 0.188), steel, seg=16)
+        b.cyl("Sink_DrainHole", 0.024, 0.004, (sink_x, sy, ch - 0.1865), grd, seg=12)
         # gooseneck tap
         ty = st_ + 0.06
         pts = common.fillet_polyline([(sink_x, ty, ch), (sink_x, ty, ch + 0.36), (sink_x, ty - 0.17, ch + 0.38),

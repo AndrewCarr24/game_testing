@@ -39,6 +39,8 @@ def build(**overrides):
     for sx in (-1, 1):
         A(own, f"Skid{sx}", common.box_bmesh((0.08, D, 0.06)), gr, (sx * (tx + 0.165), 0, 0.03), 0.008)
     A(own, "BaseBar", common.box_bmesh((W - 0.08, 0.08, 0.06)), gr, (0, -D / 2 + 0.04, 0.03), 0.008)
+    # rubber standing plate between the skids
+    A(own, "Platform", common.box_bmesh((W - 0.30, D - 0.10, 0.014)), rub, (0, 0.03, 0.007), 0.003)
     # tower uprights (front and rear posts)
     for sx in (-1, 1):
         for sy, nm in ((-1, "F"), (1, "B")):
@@ -59,6 +61,15 @@ def build(**overrides):
         for k in range(plates):
             bmesh.ops.create_cube(stack, size=1.0, matrix=Matrix.Translation((sx * tx, ty, 0.18 + k * (ph + 0.004) + ph / 2))
                                   @ Matrix.Diagonal((0.24, 0.17, ph, 1.0)))
+    # every plate gets a 4 mm chamfer (the stack reads as separate cast plates, not a block)
+    bmesh.ops.bevel(stack, geom=stack.edges[:], offset=0.004, segments=1, affect="EDGES")
+    # top plate with the lift rod's collar
+    for sx in (-1, 1):
+        zt = 0.18 + plates * (ph + 0.004)
+        bmesh.ops.create_cube(stack, size=1.0, matrix=Matrix.Translation((sx * tx, ty, zt + 0.015))
+                              @ Matrix.Diagonal((0.26, 0.18, 0.03, 1.0)))
+        bmesh.ops.create_cone(stack, cap_ends=True, cap_tris=False, segments=10, radius1=0.022, radius2=0.022,
+                              depth=0.05, matrix=Matrix.Translation((sx * tx, ty, zt + 0.055)))
     A(own, "Stack", stack, gr, (0, 0, 0), 0)
     # guide rods
     rods = bmesh.new()

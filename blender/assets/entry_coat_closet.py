@@ -1,6 +1,6 @@
 """Built-in walnut coat closet, 2.4 m wide: the left half is a pair of full-height closed
-doors, the right half an open bay with a bronze hanging rail and five coats on slim
-hangers, an LED-lit hat shelf above and two shoe drawers below; a row of upper cupboard
+doors, the right half an open bay with a bronze hanging rail and five coats hung edge-on on slim
+hangers (cloth-simulated, so they drape and fold; see mud_common.hanger_coat), an LED-lit hat shelf above and two shoe drawers below; a row of upper cupboard
 doors runs across the whole width. Walnut throughout, a recessed black plinth, bronze
 bar pulls.
 
@@ -12,6 +12,7 @@ import os
 import sys
 
 import bmesh
+import bpy
 from mathutils import Matrix, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -19,9 +20,11 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 from lib import common, materials  # noqa: E402
 import table_lamp  # noqa: E402
+import mud_common as mc  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+importlib.reload(mc)
 
 NAME = "EntryCoatCloset"
 
@@ -70,11 +73,11 @@ def build(**overrides):
     ph, st, tt, bk, dt, g = p["plinth_h"], p["side_t"], p["top_t"], p["back_t"], p["door_t"], p["reveal"]
     wood = []
 
-    def box(name, size, centre, mat=None, bevel=0.0025, uv=True, shift=(0, 0)):
+    def box(name, size, centre, mat=None, bevel=0.0025, uv=True, shift=(0, 0), seg=2):
         ob = common.mesh_object(f"{n}_{name}", common.box_bmesh(size), col, mat or walnut, root, smooth=False)
         ob.location = centre
         if bevel:
-            common.add_bevel(ob, bevel, segments=2)
+            common.add_bevel(ob, bevel, segments=seg)
         if uv and (mat is None or mat is walnut):
             common.box_uv(ob, tile=0.5)
             u = ob.data.uv_layers["UVMap"]
@@ -94,11 +97,11 @@ def build(**overrides):
     for side, sx in (("L", -1), ("R", 1)):
         box(f"Side_{side}", (st, y_back - y_front, z_top - ph), (sx * (cw - st) / 2, (y_front + y_back) / 2, (z_top + ph) / 2),
             shift=(0.3 * sx, 0.1))
-    box("Back", (cw - 2 * st, bk, z_top - ph), (0, y_back - bk / 2, (z_top + ph) / 2), shift=(0.5, 0.2))
+    box("Back", (cw - 2 * st, bk, z_top - ph), (0, y_back - bk / 2, (z_top + ph) / 2), bevel=0, shift=(0.5, 0.2))
     box("Floor", (cw - 2 * st, y_back - y_front - dt, 0.03), (0, (y_front + dt + y_back) / 2, ph + 0.015), shift=(0.2, 0.4))
     box("Divider", (0.03, y_back - y_front - dt, z_top - ph), (0, (y_front + dt + y_back) / 2, (z_top + ph) / 2), shift=(0.7, 0.3))
     box("Plinth", (cw - 0.08, y_back - 0.02 - (y_front + 0.05), ph), (0, ((y_front + 0.05) + y_back - 0.02) / 2, ph / 2), black,
-        bevel=0.001)
+        bevel=0)
     # shadow gap above the doors: a dark recess behind them
     box("Interior", ((cw - 2 * st) / 2 - 0.015, 0.006, z_top - ph), (-(cw - 2 * st) / 4 - 0.0075, y_front + dt + 0.03, (z_top + ph) / 2), black, bevel=0, uv=False)
 
@@ -118,7 +121,7 @@ def build(**overrides):
         xc = -iw / 2 + g + uw / 2 + i * (uw + g)
         box(f"Upper_{i}", (uw, dt, uh - g), (xc, y_front + dt / 2, z_top - uh / 2 - g / 2), bevel=0.002,
             shift=(0.11 * i, 0.43))
-        pull = box(f"UpperPull_{i}", (0.22, 0.012, 0.012), (xc, y_front - 0.003, z_top - uh + 0.05), bronze, bevel=0.002, uv=False)
+        pull = box(f"UpperPull_{i}", (0.22, 0.012, 0.012), (xc, y_front - 0.003, z_top - uh + 0.05), bronze, bevel=0.002, uv=False, seg=1)
     # ---- vertical bar pulls on the closed doors, at the meeting edge
     for i, xe in enumerate((-0.015 - g / 2 - 0.035, -0.015 - g / 2 - dw - g - 0.0 + 0.035 + 0.0)):
         pass
@@ -126,7 +129,7 @@ def build(**overrides):
     for i, px in enumerate(pxs):
         for sx in (-1, 1):
             box(f"Pull_{i}_{'a' if sx < 0 else 'b'}", (0.012, 0.016, 0.55), (px + sx * 0.04, y_front - 0.003, 1.15), bronze,
-                bevel=0.003, uv=False)
+                bevel=0.003, uv=False, seg=1)
 
     # ---- open bay (right): rail, shelf, LED, coat hangers, drawers
     bx0, bx1 = 0.015, iw / 2
@@ -154,29 +157,39 @@ def build(**overrides):
     for i in range(2):
         zc = ph + 0.03 + g + dh / 2 + i * (dh + g)
         box(f"Drawer_{i}", (bw - 2 * g, dt, dh), (bcx, y_front + dt / 2, zc), bevel=0.002, shift=(0.2 * i, 0.5))
-        box(f"DrawerPull_{i}", (bw * 0.5, 0.012, 0.012), (bcx, y_front - 0.003, zc + dh / 2 - 0.035), bronze, bevel=0.002, uv=False)
+        box(f"DrawerPull_{i}", (bw * 0.5, 0.012, 0.012), (bcx, y_front - 0.003, zc + dh / 2 - 0.035), bronze, bevel=0.002, uv=False, seg=1)
 
-    # ---- coats and hangers
+    # ---- coats and hangers: hung edge-on along the rail (shoulders run front to back). Each coat
+    # is cloth-simulated on its hanger (mud_common.hanger_coat: shoulders carried by the bar,
+    # sleeves and hem falling free), so they hang and fold like fabric.
     hang = bmesh.new()
     coat_bms = {}
-    for (cname, rgb, length, dx) in p["coats"]:
-        bm = coat_bms.setdefault(cname, (rgb, bmesh.new()))[1]
-        x = bcx + dx * 0.66
-        z_sh = rail_z - 0.17                     # shoulder line
-        y0 = 0.02
-        cube(bm, (0.38, 0.085, length * 0.72), (x, y0, z_sh - length * 0.36), bevel=0.02)        # body
-        for sx in (-1, 1):
-            cube(bm, (0.085, 0.09, length * 0.66), (x + sx * 0.232, y0, z_sh - length * 0.34), rot=(0, sx * 0.045, 0), bevel=0.02)
-            cube(bm, (0.20, 0.095, 0.07), (x + sx * 0.11, y0, z_sh + 0.01), rot=(0, sx * 0.20, 0), bevel=0.025)   # sloping shoulder
-        cube(bm, (0.14, 0.11, 0.06), (x, y0, z_sh + 0.045), bevel=0.02)                          # collar
-        # hanger: hook over the rail, two wires to the shoulders
-        table_lamp.cylinder_between(hang, (x, y0, rail_z + 0.015), (x, y0, z_sh + 0.03), 0.0025, segs=5)
-        for sx in (-1, 1):
-            table_lamp.cylinder_between(hang, (x, y0, z_sh + 0.03), (x + sx * 0.17, y0, z_sh - 0.005), 0.0025, segs=5)
+    for k, (cname, rgb, length, dx) in enumerate(p["coats"]):
+        x = bcx + dx * 0.55
+        top = rail_z + 0.03                        # the hanger's hook point, over the rail
+        cb = mc.hanger_coat(length=length * 0.78, width=0.215, depth=0.03, sleeve=0.56, tris=650,
+                            stiff=0.7 + 0.15 * (k % 3), pockets="flap" if k % 2 == 0 else None, seed=k % 3)
+        bmesh.ops.transform(cb, matrix=Matrix.Translation((x, 0.0, top)) @ Matrix.Rotation(math.pi / 2, 4, "Z"),
+                            verts=cb.verts)
+        rgb_bm = coat_bms.setdefault(cname, (rgb, bmesh.new()))[1]
+        me = bpy.data.meshes.new("tmp_coat")
+        cb.to_mesh(me)
+        cb.free()
+        rgb_bm.from_mesh(me)
+        bpy.data.meshes.remove(me)
+        # hanger: a hook over the rail, the neck, and the bar sloping into each shoulder
+        neck = (x, 0.0, top - 0.12)
+        table_lamp.cylinder_between(hang, (x, 0.02, rail_z + 0.016), (x, 0.004, rail_z + 0.028), 0.0025, segs=5)
+        table_lamp.cylinder_between(hang, (x, 0.004, rail_z + 0.028), neck, 0.0025, segs=5)
+        for sy in (-1, 1):
+            table_lamp.cylinder_between(hang, neck, (x, sy * 0.19, top - 0.12 - 0.066), 0.0035, segs=5)
     for cname, (rgb, bm) in coat_bms.items():
+        for f in bm.faces:
+            f.material_index = 0
         mat = materials.fabric(cname, rgb, roughness=0.95)
-        ob = common.mesh_object(f"{n}_{cname[2:]}", bm, col, mat, root, smooth=True)
+        ob = common.mesh_object(f"{n}_{cname[2:]}_NoCollide", bm, col, mat, root, smooth=True)
         common.box_uv(ob, tile=0.25)
+        ob.data.set_sharp_from_angle(angle=1.2)
     common.mesh_object(f"{n}_Hangers", hang, col, bronze, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

@@ -76,7 +76,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -84,11 +85,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -99,9 +101,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -109,11 +112,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -153,7 +157,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":776,
+			"count":648,
 			"max":[
 				1.3600000143051147,
 				0.017000000923871994,
@@ -168,22 +172,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":776,
+			"count":648,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":776,
+			"count":648,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2304,
+			"count":648,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1920,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":806,
+			"count":678,
 			"max":[
 				1.5499999523162842,
 				0.014000000432133675,
@@ -198,30 +208,36 @@
 		},
 		{
 			"componentType":5126,
-			"count":806,
+			"count":678,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":806,
+			"count":678,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2304,
+			"count":678,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1920,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3150,
+			"byteLength":3504,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4287,
-			"byteOffset":3152
+			"byteLength":3883,
+			"byteOffset":3504
 		}
 	],
 	"samplers":[
@@ -232,7 +248,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7440,
+			"byteLength":7388,
 			"uri":"entry_rug_round.bin"
 		}
 	]

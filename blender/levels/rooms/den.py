@@ -51,17 +51,57 @@ PLACEMENTS = [
     ("library_plant", (-4.9, -2.8), 0),
     # ---- north wall flanks (the door is at x = 0) ---------------------------------------------
     ("living_console", (-3.4, 4.39), 0),
-    ("living_art_tall", (-3.4, 4.59, 2.2), 0),
+    ("art_stain_tall", (-3.4, 4.59, 2.05), 0),           # soak-stain canvas over the console
     ("living_plant_olive", (3.6, 3.95), 0),
+    # ---- lighting (see LIGHTS): up/down sconces on the green walls, three ceiling cans
+    ("light_g_sconce_updown", (-1.2, 4.6, 2.25), 0),
+    ("light_g_sconce_updown", (1.2, 4.6, 2.25), 0),
+    ("light_g_sconce_updown", (6.1, -0.8, 2.25), -90),
+    ("light_g_sconce_updown", (6.1, -3.4, 2.25), -90),
+    ("light_g_downlight", (-3.4, 3.6, 4.2), 0),
+    ("light_g_downlight", (5.1, 3.0, 4.2), 0),
+    ("light_g_downlight", (-0.7, -1.9, 4.2), 0),
 ]
 
+# Lighting: a dark, cinematic room. The screen and the backlit bookshelves are the brightest
+# things; a hidden LED on top of the slat wall washes the ceiling over the screen; bronze
+# up/down sconces throw scallops on the green fabric either side of the door and along the
+# east wall; the lamps pool warm light round the sectional; cans pick out the two canvases
+# and the ottoman. No ceiling lines.
+_SHELF_LEDS = (0.86, 1.34, 1.82, 2.30, 2.665)     # under living_shelving's boards (and its top)
+
+
+def _updown(x, y, wx, wy, up=90.0, down=110.0):
+    """The two scallops of a light_g_sconce_updown at (x, y) on a wall, 0.13 m out along (wx, wy)."""
+    px, py = x + 0.13 * wx, y + 0.13 * wy
+    return [dict(kind="spot", pos=(px, py, 2.40), aim=(px, py, 4.2), power=up, angle=60, blend=0.7),
+            dict(kind="spot", pos=(px, py, 2.10), aim=(px, py, 0.0), power=down, angle=60, blend=0.7)]
+
+
 LIGHTS = [
-    dict(kind="strip", pos=(0.0, -1.0), size=(7.0, 0.08), power=340.0),
-    dict(kind="strip", pos=(0.0, 2.8), size=(7.0, 0.08), power=240.0),
-    dict(kind="point", pos=(0.0, -3.3, 1.7), power=70.0, color=(1.0, 0.75, 0.5)),
-    dict(kind="point", pos=(-3.3, 1.2, 1.2), power=40.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(2.2, 1.2, 1.2), power=40.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(-2.2, 0.7, 1.8), power=60.0, color=(1.0, 0.75, 0.5)),
+    # the screen (a 3.1 m picture) and the warm glow under the floating credenza
+    dict(kind="area", pos=(0.0, -4.12, 1.82), size=(3.0, 1.7), aim=(0.0, 0.0, 1.82), power=50.0, color=(1.0, 0.82, 0.66)),
+    dict(kind="area", pos=(0.0, -4.2, 0.12), size=(4.7, 0.05), aim=(0.0, -4.2, 0.0), power=20.0, color=(1.0, 0.62, 0.30)),
+    # cove on top of the 3.75 m slat wall, up onto the ceiling
+    dict(kind="area", pos=(0.0, -4.4, 3.8), size=(8.0, 0.15), aim=(0.0, -4.4, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
+    # table lamps and the arc lamp
+    dict(kind="point", pos=(-3.3, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),
+    dict(kind="point", pos=(2.2, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),
+    dict(kind="point", pos=(-2.2, 0.7, 1.8), power=120.0, color=(1.0, 0.75, 0.5)),
+    # cans: the two canvases and the ottoman
+    dict(kind="spot", pos=(-3.4, 3.6, 4.08), aim=(-3.4, 4.55, 2.0), power=160.0, angle=32, blend=0.5),
+    dict(kind="spot", pos=(5.1, 3.0, 4.08), aim=(6.05, 3.0, 1.8), power=130.0, angle=30, blend=0.5),
+    dict(kind="spot", pos=(-0.7, -1.9, 4.08), aim=(-0.7, -1.9, 0.0), power=220.0, angle=40, blend=0.6),
+    *_updown(-1.2, 4.6, 0, -1), *_updown(1.2, 4.6, 0, -1),
+    *_updown(6.1, -0.8, -1, 0), *_updown(6.1, -3.4, -1, 0),
+] + [
+    # backlit shelving: an LED under each board of the two west-wall units (fronts at x -5.72)
+    dict(kind="area", pos=(-5.78, y, z), size=(0.05, 3.2), aim=(-5.78, y, 0.0), power=30.0, color=(1.0, 0.82, 0.6))
+    for y in (-1.9, 1.9) for z in _SHELF_LEDS
+] + [
+    # and a soft glow off each unit's back panel, round the books
+    dict(kind="area", pos=(-6.03, y, 1.5), size=(3.2, 2.2), aim=(0.0, y, 1.5), power=90.0, color=(1.0, 0.82, 0.6))
+    for y in (-1.9, 1.9)
 ]
 
 PROBE = (0.0, -1.2, 1.6)

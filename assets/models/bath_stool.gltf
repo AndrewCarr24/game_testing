@@ -50,12 +50,7 @@
 		},
 		{
 			"mesh":4,
-			"name":"BathStool_Towels",
-			"translation":[
-				-0.07000000029802322,
-				0.48399999737739563,
-				0.019999999552965164
-			]
+			"name":"BathStool_Towels"
 		},
 		{
 			"children":[
@@ -158,7 +153,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -166,11 +162,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -181,19 +178,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5
+						"POSITION":5,
+						"NORMAL":6,
+						"COLOR_0":7
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -204,19 +203,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":7,
-						"NORMAL":8
+						"POSITION":9,
+						"NORMAL":10,
+						"COLOR_0":11
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":12,
 					"material":2,
 					"mode":4
 				}
@@ -227,9 +228,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12
+						"POSITION":13,
+						"NORMAL":14,
+						"TEXCOORD_0":15,
+						"COLOR_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -237,11 +239,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":13,
+					"indices":17,
 					"material":3,
 					"mode":4
 				}
@@ -252,9 +255,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20,
+						"COLOR_0":21
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -262,11 +266,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":17,
+					"indices":22,
 					"material":4,
 					"mode":4
 				}
@@ -306,32 +311,38 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":1344,
+			"count":852,
 			"max":[
-				0.22525781393051147,
-				0.43210938572883606,
-				0.22525781393051147
+				0.22633333504199982,
+				0.4322222173213959,
+				0.22633333504199982
 			],
 			"min":[
-				-0.22525781393051147,
+				-0.22633333504199982,
 				0,
-				-0.22525781393051147
+				-0.22633333504199982
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1344,
+			"count":852,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1344,
+			"count":852,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":7440,
+			"count":852,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4416,
 			"type":"SCALAR"
 		},
 		{
@@ -353,6 +364,12 @@
 			"componentType":5126,
 			"count":170,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":170,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -381,12 +398,18 @@
 		},
 		{
 			"componentType":5123,
+			"count":114,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":336,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":204,
+			"count":164,
 			"max":[
 				0.21199999749660492,
 				0.46149998903274536,
@@ -401,75 +424,87 @@
 		},
 		{
 			"componentType":5126,
-			"count":204,
+			"count":164,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":204,
+			"count":164,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":720,
+			"count":164,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":576,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":390,
 			"max":[
-				0.15700000524520874,
-				0.10049998760223389,
-				0.10000000149011612
+				0.08699999749660492,
+				0.5805000066757202,
+				0.11999999731779099
 			],
 			"min":[
-				-0.15000000596046448,
-				-0.02250000089406967,
-				-0.10000000149011612
+				-0.2199999988079071,
+				0.46149998903274536,
+				-0.07999999821186066
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":390,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":390,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":972,
+			"count":390,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1332,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":9229,
+			"byteLength":6301,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1242,
-			"byteOffset":9232
+			"byteLength":1754,
+			"byteOffset":6304
 		},
 		{
 			"buffer":0,
-			"byteLength":678,
-			"byteOffset":10476
+			"byteLength":1198,
+			"byteOffset":8060
 		},
 		{
 			"buffer":0,
-			"byteLength":1662,
-			"byteOffset":11156
+			"byteLength":1987,
+			"byteOffset":9260
 		},
 		{
 			"buffer":0,
-			"byteLength":1899,
-			"byteOffset":12820
+			"byteLength":4430,
+			"byteOffset":11248
 		}
 	],
 	"samplers":[
@@ -480,7 +515,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":14720,
+			"byteLength":15680,
 			"uri":"bath_stool.bin"
 		}
 	]

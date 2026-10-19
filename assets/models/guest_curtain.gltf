@@ -16,17 +16,21 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"GuestCurtain_Panel"
+			"name":"GuestCurtain_Carriers_Piping"
 		},
 		{
 			"mesh":1,
+			"name":"GuestCurtain_Panel"
+		},
+		{
+			"mesh":2,
 			"name":"GuestCurtain_Rod",
 			"translation":[
 				0,
@@ -37,12 +41,27 @@
 		{
 			"children":[
 				0,
-				1
+				1,
+				2
 			],
 			"name":"GuestCurtain"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Fabric_Curtain",
@@ -60,31 +79,18 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.949999988079071
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"GuestCurtain_Panel",
+			"name":"GuestCurtain_Carriers_Piping",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -92,12 +98,40 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GuestCurtain_Panel",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -107,20 +141,24 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":6,
-					"material":1,
+					"indices":14,
+					"material":0,
 					"mode":4
 				}
 			]
@@ -146,53 +184,106 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":1334,
+			"count":480,
 			"max":[
-				0.6625545620918274,
-				3.6500000953674316,
-				0.0903671383857727
+				0.75,
+				3.705000162124634,
+				-0.008500000461935997
 			],
 			"min":[
-				-0.6625545620918274,
-				0,
-				-0.006000000052154064
+				-0.75,
+				3.630000114440918,
+				-0.044999998062849045
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1334,
+			"count":480,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1334,
+			"count":480,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":4776,
+			"count":480,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1008,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":1434,
 			"max":[
-				0.75,
-				0.011000056751072407,
+				0.6624828577041626,
+				3.6500000953674316,
+				0.09366714209318161
+			],
+			"min":[
+				-0.6624828577041626,
+				0,
+				-0.010200000368058681
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":1434,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":1434,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1434,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4632,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":56,
+			"max":[
+				0.7200000286102295,
+				0.011000053957104683,
 				0.010999999940395355
 			],
 			"min":[
-				-0.75,
-				-0.011000056751072407,
+				-0.7200000286102295,
+				-0.011000053957104683,
 				-0.010999999940395355
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":56,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":56,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":56,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -203,13 +294,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":8462,
+			"byteLength":3936,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":245,
-			"byteOffset":8464
+			"byteLength":11497,
+			"byteOffset":3936
+		},
+		{
+			"buffer":0,
+			"byteLength":793,
+			"byteOffset":15436
 		}
 	],
 	"samplers":[
@@ -220,7 +316,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":8712,
+			"byteLength":16232,
 			"uri":"guest_curtain.bin"
 		}
 	]

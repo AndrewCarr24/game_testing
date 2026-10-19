@@ -67,7 +67,7 @@ def build(**overrides):
     # ---- tray, drain
     tw, td = W - 0.0, D - 0.0
     bc.box(col, root, f"{n}_Tray", (tw - 2 * t + 0.02, td - t, p["tray_t"]), (-0.0 + 0.0, -t / 2 + 0.0, p["tray_t"] / 2),
-           dark, bevel=0.0, uv_tile=2.4)
+           dark, bevel=0.003, uv_tile=2.4)
     zt = p["tray_t"]
     bc.box(col, root, f"{n}_Drain", (0.16, 0.16, 0.004), (-0.25, -0.12, zt + 0.0015), brass, bevel=0.0015)
     for k in range(-2, 3):
@@ -96,6 +96,18 @@ def build(**overrides):
     d = common.mesh_object(f"{n}_ValveDial", dial, col, brass, root)
     d.rotation_euler = (math.radians(90), 0, 0)
     d.location = (vx, yv - 0.008, 1.30)
+    # knurled-look grip ring on the dial and a small diverter knob below it
+    grip = bc.lathe([(0.0335, 0.006), (0.0345, 0.008), (0.0345, 0.018), (0.0335, 0.020)], 32)
+    g = common.mesh_object(f"{n}_ValveGrip", grip, col, brass, root)
+    g.rotation_euler = (math.radians(90), 0, 0)
+    g.location = (vx, yv - 0.008, 1.30)
+    knob = bc.lathe([(0.0, 0.0), (0.013, 0.0), (0.013, 0.014), (0.010, 0.018), (0.0, 0.018)], 20)
+    kb = common.mesh_object(f"{n}_Diverter", knob, col, brass, root)
+    kb.rotation_euler = (math.radians(90), 0, 0)
+    kb.location = (vx, yv - 0.006, 1.30 - 0.053)
+    pin = bmesh.new()
+    bc.cylinder_between(pin, (vx, yv - 0.0245, 1.30 - 0.053 + 0.002), (vx, yv - 0.0245, 1.30 - 0.053 + 0.011), 0.002, 6)
+    common.mesh_object(f"{n}_DiverterMark", pin, col, materials.black_metal(), root)
     # slide rail + handheld
     rail = bmesh.new()
     rx = -0.05
@@ -108,6 +120,24 @@ def build(**overrides):
     bc.cylinder_between(hh, (rx, yv - 0.056, 1.50), (rx, yv - 0.060, 1.58), 0.021, 16)       # head
     bc.cylinder_between(hh, (rx, yv - 0.040, 1.32), (rx, yv - 0.056, 1.32), 0.016, 12)       # slider
     common.mesh_object(f"{n}_Handheld", hh, col, brass, root)
+    # wall outlet elbow beside the rail and a hose hanging in a loose U from the handle
+    ox, oz = rx + 0.13, 0.98
+    outlet = bmesh.new()
+    bc.cylinder_between(outlet, (ox, yv, oz), (ox, yv - 0.032, oz), 0.013, 12)
+    bc.cylinder_between(outlet, (ox, yv - 0.032, oz + 0.004), (ox, yv - 0.032, oz - 0.03), 0.0095, 12)
+    common.mesh_object(f"{n}_Outlet", outlet, col, brass, root)
+    plate_o = bc.lathe([(0.0, 0.0), (0.026, 0.0), (0.026, 0.005), (0.022, 0.008), (0.0, 0.008)], 20)
+    po = common.mesh_object(f"{n}_OutletRosette", plate_o, col, brass, root)
+    po.rotation_euler = (math.radians(90), 0, 0)
+    po.location = (ox, yv, oz)
+    hose = []
+    a, b = (rx, yv - 0.056, 1.30), (ox, yv - 0.032, oz - 0.03)
+    for k in range(13):
+        t = k / 12
+        sag = 0.42 * math.sin(math.pi * t) ** 0.8
+        hose.append((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t - 0.02 * math.sin(math.pi * t),
+                     a[2] + (b[2] - a[2]) * t - sag))
+    common.tube_object(f"{n}_Hose", hose, 0.0065, col, brass, root, closed=False, profile_res=2)
     # rain head: arm out of the back wall, a flat disc with a rim
     ax = -0.45
     az = 2.42

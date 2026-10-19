@@ -32,7 +32,7 @@ PLACEMENTS = [
     ("table_lamp", (-7.6, 1.41, 0.55), 0),
     ("table_lamp", (-7.6, -1.41, 0.55), 0),
     ("bench", (-5.25, 0.0), 90),
-    ("art_linework_a", (-7.85, 0.0, 2.75), 90),          # above the headboard
+    ("art_colorfield_dawn", (-7.85, 0.0, 1.95), 90),     # above the headboard (1.15 m)
     ("library_plant", (-7.1, 3.9), 0),
     # sitting area by the glass
     ("living_rug_b", (3.4, 1.2), 0),
@@ -42,7 +42,7 @@ PLACEMENTS = [
     ("living_coffee_round", (3.4, 1.2), 0),
     ("living_floor_lamp", (5.6, -0.6), 180),
     ("library_plant", (7.1, 3.9), 0),
-    ("art_colorfield_b", (7.85, -2.4, 1.7), -90),        # east wall, south of the bath door
+    ("art_wash_horizon", (7.85, -2.4, 1.6), -90),        # east wall, south of the bath door
     # dressing along the south wall
     ("wardrobe", (-1.4, -4.29), 180),
     ("wardrobe", (0.45, -4.29), 180),
@@ -51,11 +51,41 @@ PLACEMENTS = [
     ("table_lamp", (2.85, -4.3, 0.74), 0),
 ]
 
+# --- lighting --------------------------------------------------------------------------------
+# The ink headboard wall glows: a hidden light behind the headboard washes up the dark plaster
+# in a soft halo, the picture above the bed gets its own tight downlight, and the bedside lamps
+# are the warm pools either side. Across the room the wardrobes carry a hidden uplight on top
+# (a cove on the joinery) that lights the ceiling over the dressing wall, the arc lamp hangs
+# over the sofa, the desk lamp marks the writing desk. No ceiling strips.
+CEIL = 3.8
+PLACEMENTS += [
+    ("light_u_downlight", (-7.0, 0.0, CEIL), 0),          # picture light over the bed
+    ("light_u_downlight", (7.05, -2.4, CEIL), 0),         # east wall art
+    ("light_u_downlight", (3.4, 1.2, CEIL), 0),           # a pool on the sitting area's round table
+    ("light_u_downlight", (-5.0, 0.0, CEIL), 0),          # a pool on the bench at the foot of the bed
+]
+
 LIGHTS = [
-    dict(kind="point", pos=(-7.6, 1.41, 0.97), power=65.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="point", pos=(-7.6, -1.41, 0.97), power=65.0, color=(1.0, 0.72, 0.45)),
-    dict(kind="strip", pos=(0.0, -3.9), size=(9.0, 0.08), power=180.0),   # wash on the wardrobe wall
-    dict(kind="strip", pos=(-1.0, 0.8), size=(10.0, 0.08), power=260.0),  # general, along the room
-    dict(kind="point", pos=(5.6, -0.6, 1.9), power=60.0, color=(1.0, 0.75, 0.48)),   # floor lamp
-    dict(kind="point", pos=(2.85, -4.3, 1.15), power=40.0, color=(1.0, 0.72, 0.45)), # desk lamp
+    # bedside lamps
+    dict(kind="point", pos=(-7.6, 1.41, 0.97), power=80.0, color=(1.0, 0.72, 0.45)),
+    dict(kind="point", pos=(-7.6, -1.41, 0.97), power=80.0, color=(1.0, 0.72, 0.45)),
+    # behind the headboard, washing up the ink wall (and onto the ceiling's edge)
+    dict(kind="area", pos=(-7.78, 0.0, 1.22), size=(2.0, 0.06), aim=(-7.85, 0.0, 3.8), power=240.0,
+         color=(1.0, 0.78, 0.56)),
+    # picture light on the art above the bed
+    dict(kind="spot", pos=(-7.0, 0.0, CEIL - 0.03), aim=(-7.85, 0.0, 2.75), power=160.0, angle=34.0, blend=0.6,
+         color=(1.0, 0.82, 0.62)),
+    # hidden uplight on top of the two wardrobes (x -2.3..1.35), onto the ceiling
+    dict(kind="area", pos=(-0.475, -4.3, 2.43), size=(3.5, 0.3), aim=(-0.475, -3.9, CEIL), power=320.0,
+         color=(1.0, 0.82, 0.62)),
+    # east wall art, the round table between the sofa and the armchairs
+    dict(kind="spot", pos=(7.05, -2.4, CEIL - 0.03), aim=(7.85, -2.4, 1.6), power=170.0, angle=50.0, blend=0.75,
+         color=(1.0, 0.82, 0.62)),
+    dict(kind="spot", pos=(3.4, 1.2, CEIL - 0.03), aim=(3.4, 1.2, 0.0), power=220.0, angle=45.0, blend=0.8,
+         color=(1.0, 0.82, 0.62)),
+    dict(kind="spot", pos=(-5.0, 0.0, CEIL - 0.03), aim=(-5.0, 0.0, 0.0), power=200.0, angle=55.0, blend=0.8,
+         color=(1.0, 0.82, 0.62)),
+    # arc floor lamp over the sofa, desk lamp
+    dict(kind="point", pos=(5.6, -0.6, 1.9), power=75.0, color=(1.0, 0.75, 0.48)),
+    dict(kind="point", pos=(2.85, -4.3, 1.15), power=45.0, color=(1.0, 0.72, 0.45)),
 ]

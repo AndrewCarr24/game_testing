@@ -1,5 +1,6 @@
-"""Library side chair for the reading table: walnut frame with raked rear legs and a
-curved top rail, cognac leather seat and back pads on a slim bronze-capped frame.
+"""Library side chair for the reading table: walnut frame with tapered front legs, raked
+rear legs, aprons and a low H-stretcher, a walnut back board carrying a cognac leather
+back pad, a welted leather seat pad, bronze shoes; every frame edge is chamfered.
 Origin: floor centre; faces -Y. About 0.5 x 0.55 x 0.92 m."""
 import importlib
 import math
@@ -18,6 +19,12 @@ NAME = "LibraryChair"
 P = dict(name=NAME, leather="cognac", seat_h=0.46, back_h=0.93, w=0.50, d=0.52, rake=8.0)
 
 
+def grain_uv(ob):
+    """The walnut map's grain runs along v; kit.Mesh puts u along a part's length."""
+    for d in ob.data.uv_layers["UVMap"].data:
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -30,42 +37,67 @@ def build(**overrides):
 
     wood, brz = Mesh(0.5), Mesh(0.5)
     t = 0.038
-    # front legs (tapered), rear legs raking back to the top rail
+    pad_t = 0.05
+    z_rail_top = SH - pad_t                       # the seat pad sits on the rails
+    rail_h = 0.075
+    # front legs: tapered toward the floor, up to the underside of the seat pad
     for sx in (-1, 1):
         x = sx * (W / 2 - t / 2)
-        wood.box((x, -D / 2 + t / 2, (SH - 0.04) / 2), (t, t, SH - 0.04), taper=(1.0, 1.0), shift=(0.1 * sx, 0))
-        brz.box((x, -D / 2 + t / 2, 0.007), (t * 0.8, t * 0.8, 0.014))
-        # rear leg: raked back so it meets the seat rail at seat height
-        h = BH - 0.05
+        h = z_rail_top
+        wood.box((x, -D / 2 + t / 2, h / 2), (t * 0.74, t * 0.74, h), taper=(1.35, 1.35), shift=(0.1 * sx, 0))
+        brz.box((x, -D / 2 + t / 2, 0.006), (t * 0.62, t * 0.62, 0.012))
+        # rear leg: raked back so it passes the seat rail at seat height and carries the back
+        h = BH - 0.02
         yb_ = D / 2 - t / 2 - SH * math.tan(rake)
         wood.box((x, yb_ + math.sin(rake) * h * 0.5, h / 2 * math.cos(rake) + 0.004),
                  (t, t, h), rot=(-rake, "x"), shift=(0.3 * sx, 0.4))
-        brz.box((x, yb_ - 0.002, 0.007), (t * 0.8, t * 0.8, 0.014))
-    # seat rails and back rails
-    za = SH - 0.07
-    wood.box((0, -D / 2 + t / 2, za), (W - 2 * t, 0.025, 0.09), shift=(0.2, 0.2))
-    wood.box((0, D / 2 - t / 2 + 0.01, za), (W - 2 * t, 0.025, 0.09), shift=(0.6, 0.2))
+        brz.box((x, yb_ - 0.002, 0.006), (t * 0.8, t * 0.8, 0.012))
+    # seat rails (aprons) and a low H-stretcher
+    za = z_rail_top - rail_h / 2
+    wood.box((0, -D / 2 + t / 2, za), (W - 2 * t, 0.022, rail_h), shift=(0.2, 0.2))
+    wood.box((0, D / 2 - t / 2, za), (W - 2 * t, 0.022, rail_h), shift=(0.6, 0.2))
     for sx in (-1, 1):
-        wood.box((sx * (W / 2 - t / 2), 0, za), (0.025, D - t, 0.09), shift=(0.1, 0.5))
-    # top rail across the rear legs
-    ytop = D / 2 - t / 2 + (BH - 0.075 - SH) * math.tan(rake)
-    wood.box((0, ytop, BH - 0.075), (W, 0.045, 0.1), rot=(-rake, "x"), shift=(0.1, 0.7))
-    wood.to_object(f"{n}_Frame", col, walnut, root)
-    brz.to_object(f"{n}_Caps", col, bronze, root)
+        wood.box((sx * (W / 2 - t / 2), 0, za), (0.022, D - t, rail_h), shift=(0.1, 0.5))
+        wood.box((sx * (W / 2 - t / 2), -0.01, 0.15), (0.018, D - t - 0.02, 0.026), shift=(0.3, 0.1))
+    wood.box((0, -0.01, 0.15), (W - 2 * t, 0.018, 0.022), shift=(0.5, 0.3))
+    # back board between the rear legs, raked with them; the leather pad is on its face
+    zb0, zb1 = SH + 0.14, BH - 0.015
+    zc_b = (zb0 + zb1) / 2
+    yb_c = D / 2 - t / 2 + (zc_b - SH) * math.tan(rake)
+    wood.box((0, yb_c, zc_b), (W - 2 * t + 0.004, 0.016, zb1 - zb0), rot=(-rake, "x"), shift=(0.1, 0.7))
+    frame = wood.to_object(f"{n}_Frame", col, walnut, root)
+    grain_uv(frame)
+    common.add_bevel(frame, 0.0025, segments=1)
+    caps = brz.to_object(f"{n}_Caps", col, bronze, root)
 
-    # leather: seat pad and back pad
-    def pad(name, size, centre, tilt=0.0, crown=None):
-        ob = common.mesh_object(name, common.cushion_bmesh(size, cuts=3, edge=0.02, crown=crown or {}), col, lea, root)
+    # leather: a welted seat pad (stops at the rear legs) and a back pad on the board
+    import library_armchair as la
+    pads = []
+
+    def pad(name, size, centre, cuts, drop, crown, tilt=0.0, welt=None):
+        ob = common.mesh_object(name, la.cushion_bm(size, cuts, 0.016, crown, drop), col, lea, root)
         ob.location = centre
         ob.rotation_euler = (tilt, 0, 0)
         common.add_subsurf(ob, levels=1, render_levels=1)
         common.box_uv(ob, tile=0.2)
-        return ob
+        pads.append(ob)
+        if welt:
+            w = common.tube_object(f"{name}_Welt", la.welt_points(size, welt, 0.016), 0.0035, col, lea, root,
+                                   closed=True, profile_res=1)
+            w.location = centre
+            w.rotation_euler = (tilt, 0, 0)
+            common.box_uv(w, tile=0.2)
+            pads.append(w)
 
-    pad(f"{n}_Seat", (W - 0.02, D - 0.02, 0.06), (0, 0.0, SH - 0.03), crown={"+z": 0.014})
-    yb = D / 2 - t / 2 + 0.3 * math.tan(rake) - 0.03
-    pad(f"{n}_Back", (W - 0.1, 0.035, 0.32), (0, yb + 0.01, SH + 0.3), tilt=-rake, crown={})
-    kit.merge_objects([o for o in root.children if o.name in (f"{n}_Seat", f"{n}_Back")], f"{n}_Leather", col, root)
+    y0, y1 = -D / 2 - 0.004, D / 2 - t - 0.002
+    pad(f"{n}_Seat", (W - 0.008, y1 - y0, pad_t), (0, (y0 + y1) / 2, SH - pad_t / 2), (3, 3, 2), ("-z",),
+        {"+z": 0.012, "-y": 0.004}, welt="+z")
+    bt = 0.03
+    yp = yb_c - (0.008 + bt / 2) * math.cos(rake)
+    zp = zc_b + 0.012 - (0.008 + bt / 2) * math.sin(rake) * 0
+    pad(f"{n}_Back", (W - 2 * t - 0.03, bt, zb1 - zb0 - 0.035), (0, yp, zp), (3, 2, 3), ("+y",),
+        {"-y": 0.01}, tilt=-rake)
+    kit.merge_objects(pads, f"{n}_Leather", col, root)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

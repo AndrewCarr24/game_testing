@@ -51,14 +51,14 @@ def build(**overrides):
     rx, ry, rz = p["rx"], p["ry"], p["rim_z"]
     k = ry / rx
     # ---- pan: swept from the underside up the outside, over the rim and down inside -------
-    outer = table_lamp.catmull([(0.045, 0.145), (0.10, 0.17), (0.155, 0.235), (rx, 0.31), (rx, rz - 0.015)], per=5)
+    outer = table_lamp.catmull([(0.045, 0.145), (0.10, 0.17), (0.155, 0.235), (rx, 0.31), (rx, rz - 0.015)], per=3)
     inner = table_lamp.catmull([(rx - 0.012, rz - 0.012), (rx - 0.035, 0.34), (rx - 0.08, 0.27), (0.07, 0.20),
-                                (0.03, 0.18)], per=5)
+                                (0.03, 0.18)], per=3)
     prof = [(0.0, 0.145)]
     for pt in outer + [(rx - 0.003, rz)] + inner + [(0.0, 0.178)]:
         if abs(pt[0] - prof[-1][0]) + abs(pt[1] - prof[-1][1]) > 1e-4:
             prof.append(pt)
-    pan = table_lamp.lathe(prof, 48, sharp=55)
+    pan = table_lamp.lathe(prof, 40, sharp=55)
     oval(pan, k)
     common.mesh_object(f"{n}_Pan", pan, col, ceramic, root)
 
@@ -70,26 +70,30 @@ def build(**overrides):
     rear = common.mesh_object(f"{n}_Rear", blk, col, ceramic, root, smooth=False)
     common.add_bevel(rear, 0.02, segments=3)
 
-    # ---- seat ring and closed lid -----------------------------------------------------------------
-    s_prof = [(0.0, 0.0), (rx + 0.012, 0.0), (rx + 0.012, 0.022), (0.0, 0.022)]
+    # ---- seat ring and closed lid: a touch shorter than the pan at the back so the hinges sit
+    # on the rim; eased seat edge, softly domed lid that overhangs the seat by a hair ---------------
     lt = p["lid_t"]
-    lid_prof = [(rx - 0.058, 0.0), (rx + 0.012, 0.0), (rx + 0.012, lt - 0.006), (rx + 0.006, lt), (0.0, lt),
-                (0.0, 0.004), (rx - 0.058, 0.004)]
-    lid = table_lamp.lathe([(0.0, 0.0)] + [(rx + 0.014, 0.0), (rx + 0.014, lt - 0.008), (rx + 0.008, lt),
-                                          (0.0, lt)], 48, sharp=50)
-    oval(lid, k * 1.0)
-    lid_ob = common.mesh_object(f"{n}_Lid", lid, col, ceramic, root)
-    lid_ob.location = (0, 0.0, rz + 0.022)
-    seat = table_lamp.lathe([(0.0, 0.0), (rx + 0.014, 0.0), (rx + 0.014, 0.022), (0.0, 0.022)], 48, sharp=50)
-    oval(seat, k)
+    sx_r = rx + 0.012
+    sy_r = ry - 0.014
+    syc = -0.022
+    seat = table_lamp.lathe([(0.0, 0.0), (sx_r - 0.006, 0.0), (sx_r, 0.006), (sx_r, 0.016), (sx_r - 0.005, 0.021),
+                             (0.0, 0.021)], 48, sharp=50)
+    oval(seat, sy_r / sx_r)
     seat_ob = common.mesh_object(f"{n}_Seat", seat, col, ceramic, root)
-    seat_ob.location = (0, 0.0, rz)
-    # hinges
+    seat_ob.location = (0, syc, rz + 0.002)
+    lr = sx_r + 0.003
+    lid = table_lamp.lathe([(0.0, 0.0), (lr - 0.004, 0.0), (lr, 0.004), (lr, lt - 0.014), (lr - 0.010, lt - 0.005),
+                            (lr * 0.55, lt - 0.001), (0.0, lt)], 48, sharp=50)
+    oval(lid, (sy_r + 0.003) / lr)
+    lid_ob = common.mesh_object(f"{n}_Lid", lid, col, ceramic, root)
+    lid_ob.location = (0, syc, rz + 0.025)
+    # hinges: two bronze bosses on the rear of the rim and the pivot bar into the seat
+    hy = syc + sy_r + 0.014
+    hinge = bmesh.new()
     for sx in (-1, 1):
-        hinge = bmesh.new()
-        table_lamp.cylinder_between(hinge, (sx * 0.10 - 0.02, ry - 0.02, rz + 0.04), (sx * 0.10 + 0.02, ry - 0.02, rz + 0.04),
-                                    0.012, segs=12)
-        common.mesh_object(f"{n}_Hinge_{'L' if sx < 0 else 'R'}", hinge, col, bronze_p, root)
+        table_lamp.cylinder_between(hinge, (sx * 0.085, hy, rz - 0.002), (sx * 0.085, hy, rz + 0.030), 0.012, segs=14)
+    table_lamp.cylinder_between(hinge, (-0.085, hy - 0.006, rz + 0.016), (0.085, hy - 0.006, rz + 0.016), 0.006, segs=10)
+    common.mesh_object(f"{n}_Hinge", hinge, col, bronze_p, root)
 
     # ---- flush plate on the wall -------------------------------------------------------------------
     pw, ph = 0.24, 0.16

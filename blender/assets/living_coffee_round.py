@@ -9,7 +9,7 @@ import living_side_table  # noqa: E402
 importlib.reload(living_side_table)
 
 NAME = "LivingCoffeeRound"
-P = dict(name=NAME, top_r=0.56, top_t=0.05, height=0.36, top="oak", foot_r=0.34, neck_r=0.15)
+P = dict(name=NAME, top_r=0.56, top_t=0.05, height=0.36, top="oak", foot_r=0.34, neck_r=0.12)
 
 
 def build(**overrides):

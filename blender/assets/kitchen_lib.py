@@ -153,8 +153,8 @@ class Builder:
                 shift_uv(ob, *shift)
         return ob
 
-    def lathe(self, name, profile, mat, loc=(0, 0, 0), segs=32, sharp=40.0, uv_tile=0.5, parent=None):
-        bm = lathe(profile, segs, sharp=sharp)
+    def lathe(self, name, profile, mat, loc=(0, 0, 0), segs=32, sharp=40.0, uv_tile=0.5, parent=None, closed=True):
+        bm = lathe(profile, segs, closed=closed, sharp=sharp)
         ob = common.mesh_object(f"{self.n}_{name}", bm, self.col, mat, parent or self.root)
         ob.location = loc
         if uv_tile:
@@ -295,14 +295,14 @@ def fruit_bowl(b, loc, mat_bowl, mat_fruit, mat_fruit2, r=0.17):
 
 def stack_plates(b, name, loc, mat, r=0.13, count=6, step=0.016, segs=12):
     """A stack of plates or bowls as one lathed solid with a notch per piece."""
-    prof = [(0.0, 0.0), (r * 0.72, 0.0)]
+    prof = [(r * 0.72, 0.0)]                 # the foot ring sits on the shelf: no underside
     for i in range(count):
         z = i * step
         prof.append((r, z + step * 0.7))
         prof.append((r * 0.84, z + step))
     prof.append((r * 0.84, count * step + 0.004))
     prof.append((0.0, count * step + 0.004))
-    ob = common.mesh_object(f"{b.n}_{name}", lathe(prof, segs, sharp=50), b.col, mat, b.root)
+    ob = common.mesh_object(f"{b.n}_{name}", lathe(prof, segs, closed=False, sharp=50), b.col, mat, b.root)
     ob.location = loc
     planar_uv(ob, 0.3)
     return ob
@@ -334,13 +334,14 @@ def jars(b, name, x0, y, z, count, mat_glass, mat_lid, mat_fill, gap=0.115, seed
         h = 0.14 + 0.04 * rng.integers(0, 3)
         fill = h * float(rng.uniform(0.45, 0.9))
         move = Matrix.Translation((x0 + i * gap, y, z))
-        gb = lathe([(r, 0), (r, h), (0, h)], segs, closed=False, sharp=60)
+        gb = lathe([(r, 0), (r, h)], segs, closed=False, sharp=60)          # its top is under the lid
         gb.transform(move)
         glass_bm.append(gb)
-        lb = lathe([(r + 0.001, h), (r + 0.001, h + 0.018), (0, h + 0.018)], segs, closed=False, sharp=60)
+        lb = lathe([(r + 0.001, h - 0.002), (r + 0.001, h + 0.015), (r - 0.003, h + 0.019), (0, h + 0.019)], segs,
+                   closed=False, sharp=60)
         lb.transform(move)
         lid_bm.append(lb)
-        fb = lathe([(0, 0.004), (r - 0.0035, 0.004), (r - 0.0035, fill), (0, fill)], segs, closed=False, sharp=60)
+        fb = lathe([(r - 0.0035, 0.004), (r - 0.0035, fill), (0, fill)], segs, closed=False, sharp=60)
         fb.transform(move)
         fill_bm.append(fb)
     out = []
@@ -424,3 +425,264 @@ def span(x_start, units):
         out.append((x, x + w, kind))
         x += w
     return out
+
+
+# ------------------------------------------------------------- worktops and sinks
+
+def slab_with_holes(b, name, x0, x1, y0, y1, zc, t, holes, mat, bevel=0.003, seg=2, tile=1.5, world_uv=True,
+                    bottom=True):
+    """One worktop slab from x0..x1, y0..y1 (thickness t, centred on zc) with rectangular
+    cut-outs `holes` [(xa, xb, ya, yb), ...]. One mesh, so the bevel only eases the real
+    outer and cut-out edges (no grooves where separate slabs would butt). The slab is
+    built from a grid of the hole lines; `bottom=False` leaves out the underside where
+    the slab sits on cabinets (the overhang strip outside y0+0.03..y1 is kept)."""
+    import bmesh as _bm
+    xs = sorted({x0, x1, *[h[0] for h in holes], *[h[1] for h in holes]})
+    ys = sorted({y0, y1, *[h[2] for h in holes], *[h[3] for h in holes]})
+
+    def solid(i, j):
+        cx, cy = (xs[i] + xs[i + 1]) / 2, (ys[j] + ys[j + 1]) / 2
+        return not any(h[0] < cx < h[1] and h[2] < cy < h[3] for h in holes)
+
+    bm = _bm.new()
+    vt, vb = {}, {}
+    for i, x in enumerate(xs):
+        for j, y in enumerate(ys):
+            vt[i, j] = bm.verts.new((x, y, zc + t / 2))
+            vb[i, j] = bm.verts.new((x, y, zc - t / 2))
+    cells = {(i, j) for i in range(len(xs) - 1) for j in range(len(ys) - 1) if solid(i, j)}
+    for i, j in cells:
+        bm.faces.new((vt[i, j], vt[i + 1, j], vt[i + 1, j + 1], vt[i, j + 1]))
+        bm.faces.new((vb[i, j + 1], vb[i + 1, j + 1], vb[i + 1, j], vb[i, j]))
+    # side walls on every grid edge that has a solid cell on one side only
+    for i, j in cells:
+        for (di, dj), (a, c) in (((0, -1), ((i, j), (i + 1, j))), ((1, 0), ((i + 1, j), (i + 1, j + 1))),
+                                 ((0, 1), ((i + 1, j + 1), (i, j + 1))), ((-1, 0), ((i, j + 1), (i, j)))):
+            if (i + di, j + dj) not in cells:
+                bm.faces.new((vb[a], vb[c], vt[c], vt[a]))
+    _bm.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-6)
+    # merge the coplanar grid cells back into as few faces as possible (cleaner bevel)
+    _bm.ops.dissolve_limit(bm, angle_limit=0.01, verts=bm.verts[:], edges=bm.edges[:])
+    _bm.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    ob = common.mesh_object(f"{b.n}_{name}", bm, b.col, mat, b.root, smooth=True)
+    if bevel:
+        common.add_bevel(ob, bevel, segments=seg)
+    if tile:
+        (world_box_uv if world_uv else common.box_uv)(ob, tile)
+    return ob
+
+
+def rounded_rect(cx, cy, hx, hy, r, z, k=3):
+    """Points of a rounded rectangle (corner radius r, k segments per corner), CCW from +X."""
+    pts = []
+    for q, (sx, sy) in enumerate(((1, 1), (-1, 1), (-1, -1), (1, -1))):
+        ox, oy = cx + sx * (hx - r), cy + sy * (hy - r)
+        for i in range(k + 1):
+            a = math.pi / 2 * (q + i / k)
+            pts.append((ox + r * math.cos(a), oy + r * math.sin(a), z))
+    return pts
+
+
+def undermount_sink(b, name, cx, cy, w, d, depth, z_top, mat, drain_mat, corner=0.035, drain=(0.0, 0.0)):
+    """An undermount basin hung under a worktop cut-out of w x d: the lip flares from the
+    square cut-out into tight rounded corners, straight walls, a coved floor falling to a
+    drain (offset `drain` from the centre) with a strainer basket. Inner surface only
+    (the outside is hidden in the cabinet). Returns the bowl object."""
+    import bmesh as _bm
+    k = 3
+    hx, hy = w / 2, d / 2
+    zb = z_top - depth
+    dx, dy = cx + drain[0], cy + drain[1]
+    loops = [
+        rounded_rect(cx, cy, hx + 0.002, hy + 0.002, 0.003, z_top + 0.001, k),   # under the stone edge
+        rounded_rect(cx, cy, hx - 0.004, hy - 0.004, corner, z_top - 0.012, k),
+        rounded_rect(cx, cy, hx - 0.004, hy - 0.004, corner, zb + 0.022, k),
+        rounded_rect(cx, cy, hx - 0.018, hy - 0.018, corner * 0.8, zb + 0.004, k),
+    ]
+    n = len(loops[0])
+    ring = [(dx + 0.045 * math.cos(2 * math.pi * i / n + math.pi / 4 * 0), dy + 0.045 * math.sin(2 * math.pi * i / n), zb)
+            for i in range(n)]
+    hole = [(dx + 0.034 * math.cos(2 * math.pi * i / n), dy + 0.034 * math.sin(2 * math.pi * i / n), zb - 0.006)
+            for i in range(n)]
+    loops += [ring, hole]
+    bm = _bm.new()
+    rows = [[bm.verts.new(p) for p in lp] for lp in loops]
+    for a, c in zip(rows[:-1], rows[1:]):
+        for i in range(n):
+            j = (i + 1) % n
+            bm.faces.new((a[i], a[j], c[j], c[i]))
+    centre = Vector((cx, cy, z_top))
+    for f in bm.faces:
+        if f.normal.dot(centre - f.calc_center_median()) < 0:
+            f.normal_flip()
+    # sharp lip, sharp drain edge; the cove and corners stay smooth
+    for ri in (1, 4):
+        for i in range(n):
+            e = bm.edges.get((rows[ri][i], rows[ri][(i + 1) % n]))
+            if e:
+                e.smooth = False
+    bowl = common.mesh_object(f"{b.n}_{name}_Bowl", bm, b.col, mat, b.root, smooth=True)
+    planar_uv(bowl, 0.5)
+    # strainer basket: a polished cup with a flat grated top
+    b.lathe(f"{name}_Strainer", [(0.0, zb - 0.004), (0.031, zb - 0.004), (0.033, zb - 0.0015), (0.0, zb - 0.0015)],
+            drain_mat, loc=(dx, dy, 0), segs=16, sharp=30, uv_tile=0)
+    return bowl
+
+
+def gooseneck_tap(b, name, x, y, z, mat, reach=0.20, rise=0.40, lever=1, toward=-1, segs=16):
+    """Deck-mounted gooseneck: a tapered base, a tube rising `rise` and arcing over by
+    `reach` toward `toward` (-1 = -Y), a pull-down spray head with a darker face and a
+    side lever with a round boss."""
+    b.lathe(f"{name}_Base", [(0.0, z), (0.029, z), (0.029, z + 0.004), (0.022, z + 0.016), (0.0175, z + 0.05),
+                             (0.0, z + 0.05)], mat, loc=(x, y, 0), segs=segs, sharp=30, uv_tile=0)
+    R = reach / 2
+    pts = [(x, y, z + 0.045), (x, y, z + rise)]
+    for i in range(1, 15):
+        a = math.pi * i / 14
+        pts.append((x, y + toward * (R - R * math.cos(a)), z + rise + R * math.sin(a) * 0.9))
+    pts.append((x, y + toward * 2 * R, z + rise - 0.03))
+    b.tube(f"{name}_Spout", pts, 0.0115, mat, closed=False, res=3)
+    hz = z + rise - 0.03
+    b.lathe(f"{name}_Head", [(0.0, hz + 0.004), (0.0135, hz + 0.004), (0.0155, hz - 0.012), (0.0155, hz - 0.058),
+                             (0.0125, hz - 0.064), (0.0, hz - 0.064)], mat, loc=(x, y + toward * 2 * R, 0),
+            segs=12, sharp=30, uv_tile=0)
+    # lever: boss on the base's side and a slim paddle sweeping back
+    bx = x + lever * 0.024
+    b.lathe(f"{name}_Boss", [(0.0, -0.001), (0.011, -0.001), (0.011, 0.018), (0.0085, 0.022), (0.0, 0.022)], mat,
+            loc=(bx, y, z + 0.033), segs=12, sharp=30, uv_tile=0).rotation_euler = (0, math.radians(90 * lever), 0)
+    b.box(f"{name}_Lever", (0.010, 0.075, 0.007), (bx + lever * 0.02, y - toward * 0.03, z + 0.038), mat,
+          bevel=0.0025, seg=1, tile=0).rotation_euler = (math.radians(-12 * toward), 0, 0)
+
+
+# ------------------------------------------------------------------- appliances
+
+def oven_glass():
+    """Smoked oven-door glass: dark, but the lit cavity and racks read through it."""
+    return materials.glass("M_Glass_Oven", tint=(0.03, 0.03, 0.035), alpha=0.6, roughness=0.04)
+
+
+def panel_with_holes(b, name, x0, x1, z0, z1, y_front, t, holes, mat, bevel=0.002, seg=1):
+    """A vertical panel in the XZ plane (front face at y_front, t deep toward +Y) with
+    rectangular openings `holes` [(xa, xb, za, zb)]: slab_with_holes stood up."""
+    ob = slab_with_holes(b, name, x0, x1, z0, z1, -(y_front + t / 2), t, holes, mat, bevel=bevel, seg=seg, tile=0)
+    ob.rotation_euler = (math.pi / 2, 0, 0)
+    return ob
+
+
+def oven_cavity(b, tag, xa, xb, za, zb, y0, depth, mat, rack_mat, racks=2):
+    """The inside of an oven seen through its door: an open enamel box (inner faces only)
+    from y0 back by `depth`, with wire shelves on side runners."""
+    import bmesh as _bm
+    bm = _bm.new()
+    y1 = y0 + depth
+    c = [bm.verts.new(v) for v in ((xa, y0, za), (xb, y0, za), (xb, y1, za), (xa, y1, za),
+                                    (xa, y0, zb), (xb, y0, zb), (xb, y1, zb), (xa, y1, zb))]
+    for q in ((0, 1, 2, 3), (7, 6, 5, 4), (3, 2, 6, 7), (0, 3, 7, 4), (2, 1, 5, 6)):
+        bm.faces.new([c[i] for i in q])
+    centre = Vector(((xa + xb) / 2, (y0 + y1) / 2, (za + zb) / 2))
+    for f in bm.faces:
+        if f.normal.dot(centre - f.calc_center_median()) < 0:
+            f.normal_flip()
+    ob = common.mesh_object(f"{b.n}_{tag}_Cavity", bm, b.col, mat, b.root, smooth=False)
+    planar_uv(ob, 0.5)
+    w, h = xb - xa, zb - za
+    for r in range(racks):
+        z = za + h * (r + 1) / (racks + 1)
+        b.box(f"{tag}_Rack{r}_NoCollide", (w - 0.01, 0.006, 0.006), ((xa + xb) / 2, y0 + 0.03, z), rack_mat, bevel=0, tile=0)
+        for k in range(4):
+            x = xa + 0.02 + k * (w - 0.04) / 3
+            b.box(f"{tag}_Rack{r}_{k}_NoCollide", (0.005, depth - 0.06, 0.005), (x, y0 + depth / 2, z), rack_mat,
+                  bevel=0, tile=0)
+    return ob
+
+
+def oven_door(b, tag, x0, x1, z0, z1, yf, frame_mat, glass_mat, band_mat, display_mat, handle_mat,
+              band=0.075, side=0.05, bottom=0.05, t=0.022, handle=True, cavity_mat=None, rack_mat=None,
+              depth=0.40, display=True):
+    """A built-in oven/steam-oven door (front face at yf, t deep): a steel frame round a
+    smoked window, a black-glass control band with a small warm display along the top, a
+    steel bar handle on standoffs and (with cavity_mat) the lit cavity behind the window."""
+    xa, xb, za, zb = x0 + side, x1 - side, z0 + bottom, z1 - band
+    panel_with_holes(b, f"{tag}_Door", x0, x1, z0, z1, yf, t, [(xa, xb, za, zb)], frame_mat, bevel=0.0025, seg=1)
+    b.box(f"{tag}_Window", (xb - xa + 0.012, 0.005, zb - za + 0.012), ((xa + xb) / 2, yf + 0.008, (za + zb) / 2),
+          glass_mat, bevel=0, tile=0)
+    b.box(f"{tag}_Band", (x1 - x0 - 0.024, 0.004, band - 0.022), ((x0 + x1) / 2, yf - 0.0015, z1 - band / 2 - 0.004),
+          band_mat, bevel=0.001, tile=0)
+    if display:
+        b.box(f"{tag}_Display_NoCollide", (0.07, 0.002, 0.016), ((x0 + x1) / 2, yf - 0.0035, z1 - band / 2 - 0.004),
+              display_mat, bevel=0, tile=0)
+    if handle:
+        zh = z1 - band - 0.035
+        hx0, hx1 = x0 + 0.06, x1 - 0.06
+        pts = [(hx0, yf, zh), (hx0, yf - 0.045, zh), (hx1, yf - 0.045, zh), (hx1, yf, zh)]
+        b.tube(f"{tag}_Handle", common.fillet_polyline(pts, 0.012, segments=3, closed=False), 0.008, handle_mat,
+               closed=False, res=2)
+    if cavity_mat is not None:
+        oven_cavity(b, tag, xa - 0.004, xb + 0.004, za - 0.004, zb + 0.004, yf + t, depth, cavity_mat, rack_mat)
+    return xa, xb, za, zb
+
+
+def folded_stack(b, name, x, y, z, w, d, n, t, mat, tile=0.25):
+    """A stack of n folded cloths (each t thick, w along x, d deep) as one extruded profile:
+    each fold bulges round at the front (-Y) with a tucked crease between folds, the back
+    is flat against the shelf's back. One mesh, ~4n + 8 triangles per side."""
+    import bmesh as _bm
+    prof = [(y + d / 2, z), (y - d / 2 + t * 0.5, z)]          # (y, z) round the section, start back-bottom
+    for i in range(n):
+        z0 = z + i * t
+        prof += [(y - d / 2 + t * 0.12, z0 + t * 0.18), (y - d / 2, z0 + t * 0.5),
+                 (y - d / 2 + t * 0.12, z0 + t * 0.82), (y - d / 2 + t * 0.45, z0 + t)]
+    prof[-1] = (y - d / 2 + t * 0.5, z + n * t)
+    prof.append((y + d / 2, z + n * t))
+    bm = _bm.new()
+    l = [bm.verts.new((x - w / 2, py, pz)) for py, pz in prof]
+    r = [bm.verts.new((x + w / 2, py, pz)) for py, pz in prof]
+    m = len(prof)
+    for i in range(m):
+        j = (i + 1) % m
+        f = bm.faces.new((l[i], l[j], r[j], r[i]))
+    bm.faces.new(l[::-1])
+    bm.faces.new(r)
+    _bm.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    for e in bm.edges:            # hard edges round the flat ends and the back; folds stay soft
+        if len(e.link_faces) == 2 and e.calc_face_angle(0) > math.radians(50):
+            e.smooth = False
+    ob = common.mesh_object(f"{b.n}_{name}", bm, b.col, mat, b.root, smooth=True)
+    common.box_uv(ob, tile)
+    return ob
+
+
+def cylindrical_uv(ob, tile, cx=0.0, cy=0.0):
+    """UVs for a lathed solid: u round the circumference (in metres, so the tile scale is
+    true), v up the axis. No seams twisting across faces the way a box projection does
+    on a round surface; flat caps get a planar projection."""
+    me = ob.data
+    uv = me.uv_layers.get("UVMap") or me.uv_layers.new(name="UVMap")
+    for poly in me.polygons:
+        if abs(poly.normal.z) > 0.95:
+            for li in poly.loop_indices:
+                co = me.vertices[me.loops[li].vertex_index].co
+                uv.data[li].uv = ((co.x - cx) / tile, (co.y - cy) / tile)
+            continue
+        angs = [math.atan2(me.vertices[me.loops[li].vertex_index].co.y - cy,
+                           me.vertices[me.loops[li].vertex_index].co.x - cx) for li in poly.loop_indices]
+        a0 = angs[0]
+        for li, a in zip(poly.loop_indices, angs):
+            d = a - a0
+            d -= 2 * math.pi * round(d / (2 * math.pi))
+            co = me.vertices[me.loops[li].vertex_index].co
+            r = math.hypot(co.x - cx, co.y - cy)
+            uv.data[li].uv = ((a0 + d) * max(r, 0.05) / tile, co.z / tile)
+
+
+def cushion_welt(b, name, size, loc, inset=0.0042, corner=0.03, radius=0.0042, mat=None, face="+z"):
+    """Piped welt round the top (or bottom, face='-z') edge of a subdivided cushion of
+    `size` centred at `loc`: a thin closed 4-sided tube (reads round when smooth-shaded)."""
+    sgn = 1 if face[0] == "+" else -1
+    hx, hy = size[0] / 2 - inset, size[1] / 2 - inset
+    z = sgn * (size[2] / 2 - inset)
+    rect = [(-hx, -hy, z), (hx, -hy, z), (hx, hy, z), (-hx, hy, z)]
+    pts = common.fillet_polyline(rect, corner, segments=3, closed=True)
+    ob = b.tube(name, [tuple(p) for p in pts], radius, mat, closed=True, res=1)
+    ob.location = loc
+    return ob

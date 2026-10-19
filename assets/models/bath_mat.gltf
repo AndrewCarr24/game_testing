@@ -23,12 +23,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"BathMat_Mat",
-			"translation":[
-				0,
-				0.010999999940395355,
-				0
-			]
+			"name":"BathMat_Mat"
 		},
 		{
 			"children":[
@@ -65,7 +60,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -73,11 +69,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -104,39 +101,45 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":320,
+			"count":366,
 			"max":[
 				0.6499999761581421,
-				0.010999999940395355,
+				0.023010704666376114,
 				0.3100000023841858
 			],
 			"min":[
 				-0.6499999761581421,
-				-0.010999999940395355,
+				0,
 				-0.3100000023841858
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":366,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":366,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":996,
+			"count":366,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1356,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2612,
+			"byteLength":4192,
 			"byteOffset":0
 		}
 	],
@@ -148,7 +151,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2612,
+			"byteLength":4192,
 			"uri":"bath_mat.bin"
 		}
 	]

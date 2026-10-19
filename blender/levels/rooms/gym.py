@@ -72,11 +72,26 @@ PLACEMENTS = [
     ("guest_bench", (-5.85, -1.6), 90),
     ("library_plant", (-4.4, 3.9), 0),
     ("library_plant", (4.4, 3.9), 0),
-    ("art_geometric_b", (-6.09, 3.5, 1.6), 90),
+    ("art_target", (-6.09, 3.45, 1.6), 90),               # stained target canvas
+]
+
+# --- lighting --------------------------------------------------------------------------------
+# A working room, so ceiling slots stay here (even, shadow-free light to train in), but placed
+# with intent: one over the lifting zone, one over the cardio row facing the glass, and a slot
+# tight to the oak east wall that grazes the wood from ceiling to floor behind the functional
+# trainer. Two downlights wash the art by the door and the mirror wall's barre zone.
+CEIL = 3.8
+PLACEMENTS += [
+    ("light_u_downlight", (-5.35, 3.5, CEIL), 0),          # art by the door
+    ("light_u_downlight", (2.6, -3.9, CEIL), 0),           # stretching mat by the mirror
 ]
 
 LIGHTS = [
-    dict(kind="strip", pos=(-1.0, -2.0), size=(9.0, 0.08), power=110.0),
-    dict(kind="strip", pos=(0.5, 1.0), size=(8.0, 0.08), power=100.0),
-    dict(kind="strip", pos=(4.8, -0.9), size=(0.08, 4.0), power=60.0),
+    dict(kind="strip", pos=(-1.7, -1.9), size=(6.0, 0.08), power=130.0),     # lifting
+    dict(kind="strip", pos=(2.0, 1.7), size=(5.0, 0.08), power=110.0),      # cardio row
+    dict(kind="strip", pos=(5.82, -0.4), size=(0.08, 7.6), power=150.0),    # oak wall grazer slot
+    dict(kind="spot", pos=(-5.35, 3.5, CEIL - 0.03), aim=(-6.1, 3.5, 1.5), power=160.0, angle=50.0, blend=0.75,
+         color=(1.0, 0.88, 0.74)),
+    dict(kind="spot", pos=(2.6, -3.9, CEIL - 0.03), aim=(2.6, -3.5, 0.0), power=170.0, angle=60.0, blend=0.8,
+         color=(1.0, 0.90, 0.78)),
 ]

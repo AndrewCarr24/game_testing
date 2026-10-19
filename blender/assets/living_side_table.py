@@ -27,7 +27,7 @@ P = dict(
     height=0.55,
     top="marble",            # "marble" or "oak"
     foot_r=0.19,
-    neck_r=0.075,
+    neck_r=0.058,
     skirt=0.0,               # >0: oak/marble drum skirt below the top (radius = top_r - skirt)
 )
 
@@ -94,12 +94,22 @@ def build(**overrides):
     seg = p["segments"]
     H, tt = p["height"], p["top_t"]
     r = p["top_r"]
-    top = common.mesh_object(f"{n}_Top", lathe(disc_profile(r, H - tt, H), seg), col, top_mat, root)
+    # top: eased upper edge, the underside chamfered back so the edge reads slimmer
+    c = 0.006
+    top_prof = [(0.0, H - tt), (r * 0.80, H - tt), (r - 0.004, H - tt * 0.45), (r, H - tt * 0.35),
+                (r, H - c), (r - c * 0.4, H - c * 0.25), (r - c, H), (0.0, H)]
+    top = common.mesh_object(f"{n}_Top", lathe(top_prof, seg, sharp=30.0), col, top_mat, root)
     common.box_uv(top, uvs)
     fr, nr = p["foot_r"], p["neck_r"]
-    ped = [(0.0, 0.0), (fr, 0.0), (fr, 0.012), (fr * 0.92, 0.02), (nr * 1.25, 0.05), (nr, 0.10),
-           (nr, H - tt - 0.04), (nr * 1.5, H - tt - 0.012), (nr * 1.7, H - tt), (0.0, H - tt)]
-    pedestal = common.mesh_object(f"{n}_Pedestal", lathe(ped, p["small_segments"] if "small_segments" in p else 32),
+    # pedestal (open underneath: it stands on the floor): a stepped foot plate with a
+    # felt-glide shadow line, a flared foot, a slim waisted column and a capital that
+    # spreads under the top
+    zt = H - tt * 0.80
+    ped = [(fr - 0.004, 0.0), (fr, 0.004), (fr, 0.014), (fr - 0.004, 0.018), (fr * 0.90, 0.020),
+           (nr * 1.6, 0.034), (nr * 1.15, 0.07), (nr, 0.12), (nr * 0.92, (H - tt) * 0.55), (nr, H - tt - 0.09),
+           (nr * 1.2, H - tt - 0.035), (nr * 1.75, zt - 0.01), (nr * 1.8, zt), (0.0, zt)]
+    pedestal = common.mesh_object(f"{n}_Pedestal", lathe(ped, p["small_segments"] if "small_segments" in p else 32,
+                                                         closed=False, sharp=35.0),
                                   col, bronze, root)
     common.box_uv(pedestal, 0.5)
     parts = [o for o in root.children_recursive if o.type == "MESH"]

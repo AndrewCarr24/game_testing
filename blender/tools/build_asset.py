@@ -169,6 +169,9 @@ def preview(lo, hi, path, tile):
 
 def main():
     a = args()
+    sys.path.insert(0, HERE)
+    import slots
+    slots.acquire("asset", 4)          # at most 4 asset builds at once on this machine
     t0 = time.time()
     bpy.ops.wm.read_factory_settings(use_empty=True)
     from lib import common

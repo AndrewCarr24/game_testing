@@ -23,8 +23,13 @@ def shell_textures():
     return {os.path.basename(i.get("uri", "")) for i in g.get("images", [])}
 
 
+# fine detail maps shrink even when the shell uses them (a 0.25 m fabric weave at 1024 was the
+# biggest single download and 5.6 MB of GPU memory, for no visible gain over 512)
+ALWAYS_SHRINK = {"T_Fabric_Normal.webp"}
+
+
 def main():
-    keep = shell_textures()
+    keep = shell_textures() - ALWAYS_SHRINK
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:
@@ -37,7 +42,7 @@ def main():
             img.scale(max(1, round(w * f)), max(1, round(h * f)))
             img.filepath_raw = path
             img.file_format = "WEBP" if name.endswith(".webp") else img.file_format
-            img.save(quality=88) if name.endswith(".webp") else img.save()
+            img.save(quality=85) if name.endswith(".webp") else img.save()
             shrunk += 1
         bpy.data.images.remove(img)
     print(f"TEXTURES shrunk {shrunk} to {MAX}px; kept {len(keep)} shell textures at full size")

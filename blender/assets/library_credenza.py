@@ -17,6 +17,12 @@ NAME = "LibraryCredenza"
 P = dict(name=NAME, size=(2.4, 0.5, 0.78), doors=4, top_t=0.04, plinth_h=0.09)
 
 
+def grain_uv(ob):
+    """The walnut map's grain runs along v; kit.Mesh puts u along a part's length."""
+    for d in ob.data.uv_layers["UVMap"].data:
+        pass  # the walnut scan is rotated so its grain runs along u (polyhaven_textures ROTATE): no swap
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -51,8 +57,12 @@ def build(**overrides):
         wood.box((x, -D / 2 + ins + dt / 2, ph + ch / 2), (dw, dt, ch - 2 * g - 0.002), shift=(0.37 * k, 0.17 * k))
         side = 1 if k % 2 == 0 else -1          # pull on the inner edge of each pair
         px = x + side * (dw / 2 - 0.04)
-        brz.box((px, -D / 2 + ins - 0.008, ph + ch / 2), (0.011, 0.014, 0.26))
+        yp = -D / 2 + ins - 0.016
+        brz.box((px, yp, ph + ch / 2), (0.011, 0.01, 0.26))                    # bar pull on two posts
+        for dz in (-0.1, 0.1):
+            brz.box((px, yp + 0.008, ph + ch / 2 + dz), (0.008, 0.012, 0.008))
     w = wood.to_object(f"{n}_Wood", col, walnut, root)
+    grain_uv(w)
     common.add_bevel(w, 0.003, segments=2)
     brz.to_object(f"{n}_Pulls", col, bronze, root)
     blk.to_object(f"{n}_Plinth", col, black, root)

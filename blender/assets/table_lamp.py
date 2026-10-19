@@ -24,9 +24,9 @@ NAME = "TableLamp"
 
 P = dict(
     name=NAME,
-    segments=48,             # around the shade and rims
-    base_segments=32,        # around the base
-    small_segments=20,       # around stem, socket, bulb
+    segments=32,             # around the shade and rims
+    base_segments=24,        # around the base
+    small_segments=12,       # around stem, socket, bulb
     height=0.62,
     # shade (drum): outer radius, wall thickness, z range
     shade_r=0.1778,
@@ -87,6 +87,15 @@ def lathe(profile, segs, closed=True, sharp=40.0):
     return bm
 
 
+def _tmp_mesh(bm):
+    """bmesh -> temporary mesh datablock (to merge one bmesh into another with from_mesh)."""
+    import bpy
+    me = bpy.data.meshes.new("_tmp_lathe")
+    bm.to_mesh(me)
+    bm.free()
+    return me
+
+
 def rounded_ring(r0, r1, z0, z1, radius, segments=3):
     """Rounded-rectangle cross-section (a ring of r0..r1, z0..z1) as a closed
     profile, with every corner filleted."""
@@ -97,7 +106,7 @@ def rounded_ring(r0, r1, z0, z1, radius, segments=3):
 
 def rim_profile(r0, r1, z0, z1, c=0.0016):
     """Small rim band with chamfered outer corners (reads rounded when lit)."""
-    return [(r0, z0), (r1 - c, z0), (r1, z0 + c), (r1, z1 - c), (r1 - c, z1), (r0, z1)]
+    return [(r0, z0), (r1, z0 + c), (r1, z1 - c), (r0, z1)]
 
 
 def catmull(pts, per=8):
@@ -165,27 +174,28 @@ def build(**overrides):
 
     # ---- recessed black foot (shadow gap under the base) -------------------
     fr, fh = p["foot_r"], p["foot_h"]
-    foot = common.mesh_object(f"{n}_Foot", lathe([(0, 0), (fr, 0), (fr, fh), (0, fh)], 24),
+    foot = common.mesh_object(f"{n}_Foot", lathe([(fr, 0), (fr, fh)], 16, closed=False),
                               col, dark, root, smooth=False)
 
     # ---- weighted oak base: soft pebble silhouette ------------------------
     br, bt = p["base_r"], p["base_top"]
-    prof = catmull([(0.0, fh), (br - 0.006, fh), (br, fh + 0.014),
+    prof = catmull([(fr - 0.004, fh), (br - 0.006, fh), (br, fh + 0.014),
                     (br, 0.046), (br - 0.007, 0.066), (br - 0.026, 0.083),
-                    (0.030, bt), (0.0, bt)], per=2)
+                    (0.030, bt), (0.0, bt)], per=1)
     # drop the duplicated tail points the spline adds, keep the axis ends
     dedup = []
     for pt in prof:
         if not dedup or abs(pt[0] - dedup[-1][0]) + abs(pt[1] - dedup[-1][1]) > 1e-6:
             dedup.append(pt)
-    dedup[0] = (0.0, fh)
+    dedup[0] = (fr - 0.004, fh)          # the underside's centre sits on the foot: not modelled
     dedup[-1] = (0.0, bt)
-    base = common.mesh_object(f"{n}_Base", lathe(dedup, bseg), col, oak, root)
+    base = common.mesh_object(f"{n}_Base", lathe(dedup, bseg, closed=False), col, oak, root)
     cylindrical_uv(base)
 
     # thin bronze inlay band round the waist of the base
     common.mesh_object(f"{n}_BaseBand",
-                       lathe([(br - 0.003, 0.031), (br + 0.0012, 0.031), (br + 0.0012, 0.035), (br - 0.003, 0.035)], bseg),
+                       lathe([(br - 0.003, 0.031), (br + 0.0012, 0.031), (br + 0.0012, 0.035), (br - 0.003, 0.035)], bseg,
+                             closed=False),
                        col, bronze, root)
 
     # ---- bronze collar and stem ----------------------------------------------
@@ -199,7 +209,7 @@ def build(**overrides):
     # a slim bead on the stem (rotationally symmetric, flattened sphere)
     bead_z, bead_r, bead_h = 0.215, 0.0185, 0.012
     bead_prof = [(0.0, bead_z - bead_h)]
-    steps = 8
+    steps = 6
     for i in range(1, steps):
         a = -math.pi / 2 + math.pi * i / steps
         bead_prof.append((bead_r * math.cos(a), bead_z + bead_h * math.sin(a)))
@@ -217,11 +227,18 @@ def build(**overrides):
         lathe([(0.0125, st + 0.020), (0.0172, st + 0.020), (0.0172, st + 0.027), (0.0125, st + 0.027)], sseg),
         col, dark, root)
 
+    # turn-key switch on the socket's side (a short bronze stalk and a flat paddle)
+    sw = bmesh.new()
+    cylinder_between(sw, (0.0, -0.016, st + 0.016), (0.0, -0.027, st + 0.016), 0.0028, segs=6)
+    bmesh.ops.create_cube(sw, size=1.0, matrix=Matrix.Translation((0.0, -0.030, st + 0.016)) @
+                          Matrix.Diagonal((0.014, 0.004, 0.008, 1)))
+    common.mesh_object(f"{n}_Switch_NoCollide", sw, col, bronze, root, smooth=False)
+
     # ---- bulb: a small globe with a neck ---------------------------------------
     bz, brad = p["bulb_z"], p["bulb_r"]
     neck_z = st + 0.036
     bulb_prof = [(0.0, neck_z), (0.0115, neck_z)]
-    steps = 9
+    steps = 6
     for i in range(steps + 1):
         a = -math.radians(62) + (math.pi + math.radians(62)) * i / steps
         r, z = brad * math.cos(a), bz + brad * math.sin(a)
@@ -237,8 +254,21 @@ def build(**overrides):
     ri = ro - p["shade_wall"]
     w = p["shade_wall"]
     tuck = 0.003   # the wall ends inside the rims, so no coplanar faces
-    wall_prof = [(ri, z0 + tuck), (ro, z0 + tuck), (ro, z1 - tuck), (ri, z1 - tuck)]
-    shade = common.mesh_object(f"{n}_Shade", lathe(wall_prof, seg), col, shade_mat, root)
+    # outer and inner skins only: the wall's cut edges are hidden inside the rims
+    shade_bm = lathe([(ro, z0 + tuck), (ro, z1 - tuck)], seg, closed=False)
+    inner_bm = lathe([(ri, z1 - tuck), (ri, z0 + tuck)], seg, closed=False)
+    for f in inner_bm.faces:          # a lone tube comes out facing away from the axis: the lining faces in
+        if f.normal.dot(-f.calc_center_median().to_2d().to_3d()) < 0:
+            f.normal_flip()
+    for f in shade_bm.faces:
+        if f.normal.dot(f.calc_center_median().to_2d().to_3d()) < 0:
+            f.normal_flip()
+    tmp = _tmp_mesh(inner_bm)
+    shade_bm.from_mesh(tmp)
+    tmp.user_clear()
+    import bpy
+    bpy.data.meshes.remove(tmp)
+    shade = common.mesh_object(f"{n}_Shade", shade_bm, col, shade_mat, root)
 
     # bronze rims straddle the wall at the open top and bottom
     rim_mid = (ri + ro) / 2

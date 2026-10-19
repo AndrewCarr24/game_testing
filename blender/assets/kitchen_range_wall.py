@@ -107,48 +107,87 @@ def build(**overrides):
         b.box(f"Counter_{k}", (x1 - x0, D + 0.02, ct), ((x0 + x1) / 2, yf - 0.02 + (D + 0.02) / 2, cz - ct / 2), marble,
               bevel=0.003, seg=2, tile=1.5, world_uv=True)
 
-    # --- the range
+    # --- the range: a steel pro range standing proud of the fronts; two ovens with smoked
+    #     windows (cavities and racks behind), a control rail of knobs, five sealed burners
+    #     under three cast-iron grates
     rx0, rx1 = xs["range"]
     rxm = (rx0 + rx1) / 2
     rw = rx1 - rx0
-    ry0 = yf - 0.04                      # stands proud of the cabinet fronts
-    b.box("Range_Body", (rw - 0.004, yb - ry0 - 0.02, cz - ph - 0.04), (rxm, (ry0 + yb - 0.02) / 2, (ph + cz - 0.04) / 2),
-          steel, bevel=0.004, seg=2, tile=0)
+    ry0 = yf - 0.04                      # front of the range body
+    zt_r = cz - 0.04                     # underside of the steel top
+    zh0 = cz - 0.125                     # bottom of the control rail
+    dep = 0.46                           # oven cavity depth
+    yd = ry0 - 0.02                      # oven door front face
+    b.box("Range_Body", (rw - 0.004, yb - 0.02 - (ry0 + 0.012 + dep), zt_r - ph),
+          (rxm, (ry0 + 0.012 + dep + yb - 0.02) / 2, (ph + zt_r) / 2), steel, bevel=0, tile=0)
+    b.box("Range_Head", (rw - 0.004, yb - 0.02 - ry0, zt_r - zh0), (rxm, (ry0 + yb - 0.02) / 2, (zh0 + zt_r) / 2),
+          steel, bevel=0.003, seg=1, tile=0)
     b.box("Range_Toe", (rw - 0.06, D - 0.1, ph), (rxm, (yf + 0.06 + yb) / 2, ph / 2), black, bevel=0, tile=0)
     b.box("Range_Top", (rw - 0.004, yb - ry0 - 0.02, 0.04), (rxm, (ry0 + yb - 0.02) / 2, cz - 0.02), steel, bevel=0.003,
           seg=2, tile=0)
-    # control strip with knobs
+    # control rail with six knobs on round bezels
     b.box("Range_Panel", (rw - 0.03, 0.012, 0.085), (rxm, ry0 - 0.004, cz - 0.075), black, bevel=0.002, tile=0)
     for i in range(6):
         kx = rx0 + 0.13 + i * (rw - 0.26) / 5
-        ob = b.lathe(f"Knob{i}", [(0, 0), (0.022, 0), (0.022, 0.03), (0.018, 0.035), (0, 0.035)], polished,
-                     loc=(kx, ry0 - 0.01, cz - 0.075), segs=14, uv_tile=0)
-        ob.rotation_euler = (math.radians(90) + math.pi, 0, 0)    # axis toward -Y
-    # two oven doors, black glass in a steel frame, one long steel bar handle
-    dw = (rw - 0.04) / 2
-    zc = (ph + 0.04 + cz - 0.16) / 2
+        ob = b.lathe(f"Knob{i}", [(0.0, 0.0), (0.027, 0.0), (0.027, 0.004), (0.021, 0.006), (0.021, 0.03),
+                                   (0.018, 0.036), (0.0, 0.036)], polished,
+                     loc=(kx, ry0 - 0.01, cz - 0.075), segs=14, sharp=30, uv_tile=0)
+        ob.rotation_euler = (math.radians(90), 0, 0)    # lathe axis (+Z) -> -Y, out of the rail
+        b.box(f"Knob{i}_Grip_NoCollide", (0.0055, 0.008, 0.034), (kx, ry0 - 0.048, cz - 0.075), polished,
+              bevel=0.0018, seg=1, tile=0)
+    # two oven doors (4 mm apart), a fascia behind them with the cavity openings
+    oglass = L.oven_glass()
+    dw = (rw - 0.03) / 2
+    holes = []
     for i, sx in enumerate((-1, 1)):
         xm = rxm + sx * (dw / 2 + 0.002)
-        b.box(f"Oven{i}_Frame", (dw - 0.004, 0.03, cz - ph - 0.2), (xm, ry0 - 0.006, zc), steel,
-              bevel=0.003, seg=1, tile=0)
-        b.box(f"Oven{i}_Glass", (dw - 0.07, 0.006, cz - ph - 0.32), (xm, ry0 - 0.022, zc - 0.03),
-              glass, bevel=0.002, tile=0)
-    zh = cz - 0.2
-    ys = ry0 - 0.075
-    b.tube("Range_Handle", [(rx0 + 0.06, ry0 - 0.01, zh), (rx0 + 0.06, ys, zh), (rx1 - 0.06, ys, zh), (rx1 - 0.06, ry0 - 0.01, zh)],
-           0.0125, polished, closed=False, res=4)
-    # glass cooktop with burners and a stockpot
+        xa, xb, za, zb = L.oven_door(b, f"Oven{i}", xm - dw / 2, xm + dw / 2, ph + 0.03, zh0 - 0.01, yd, steel, oglass,
+                                     glass, led, polished, band=0.06, side=0.055, bottom=0.06, display=False)
+        holes.append((xa - 0.004, xb + 0.004, za - 0.004, zb + 0.004))
+        L.oven_cavity(b, f"Oven{i}", xa - 0.004, xb + 0.004, za - 0.004, zb + 0.004, ry0 + 0.012, dep, char, polished)
+    L.panel_with_holes(b, "Range_Fascia", rx0 + 0.002, rx1 - 0.002, ph, zh0, ry0 + 0.002, 0.01, holes, steel, bevel=0)
+    # cooktop: black enamel spill tray, sealed burners, cast-iron grates
+    cy = (ry0 + yb) / 2
     b.box("Cooktop", (rw - 0.04, yb - ry0 - 0.06, 0.008), (rxm, (ry0 + 0.01 + yb - 0.05) / 2, cz + 0.004), glass,
           bevel=0.001, tile=0)
-    cy = (ry0 + yb) / 2
-    for i, (dx, dy, rr) in enumerate(((-0.4, -0.12, 0.1), (-0.4, 0.14, 0.085), (0.0, 0.0, 0.11), (0.4, -0.12, 0.09),
-                                      (0.4, 0.14, 0.11))):
-        b.lathe(f"Burner{i}", [(rr - 0.008, 0.0), (rr, 0.0), (rr, 0.003), (rr - 0.008, 0.003)], steel,
-                loc=(rxm + dx, cy + dy, cz + 0.008), segs=24, uv_tile=0)
-    pot = [(0.0, 0.0), (0.125, 0.0), (0.13, 0.01), (0.13, 0.20), (0.135, 0.205), (0.0, 0.205)]
-    b.lathe("Pot", pot, polished, loc=(rxm, cy, cz + 0.011), segs=28, uv_tile=0)
-    b.lathe("PotLid", [(0.0, 0.205), (0.138, 0.205), (0.138, 0.213), (0.1, 0.225), (0.02, 0.235), (0.0, 0.235)], steel,
-            loc=(rxm, cy, cz + 0.011), segs=28, uv_tile=0)
+    iron = materials.black_metal()
+    zc0 = cz + 0.008
+    burners = ((-0.4, -0.12, 0.085), (-0.4, 0.14, 0.07), (0.0, 0.0, 0.1), (0.4, -0.12, 0.075), (0.4, 0.14, 0.085))
+    for i, (dx, dy, rr) in enumerate(burners):
+        b.lathe(f"Burner{i}", [(rr, 0.0), (rr, 0.006), (rr * 0.82, 0.012), (rr * 0.6, 0.014), (rr * 0.58, 0.022),
+                               (0.0, 0.024)], iron, loc=(rxm + dx, cy + dy, zc0), segs=14, sharp=30, uv_tile=0)
+        b.lathe(f"Burner{i}_Ring", [(rr + 0.012, 0.0), (rr + 0.012, 0.002), (rr, 0.004)], steel,
+                loc=(rxm + dx, cy + dy, zc0), segs=14, sharp=30, uv_tile=0)
+    gz = zc0 + 0.03                     # grate top-bar centre height
+    gb_, gw = 0.012, rw - 0.06
+    ylo, yhi = ry0 + 0.04, yb - 0.08
+    sec = gw / 3
+    for k in range(3):
+        g0, g1 = rxm - gw / 2 + k * sec + 0.004, rxm - gw / 2 + (k + 1) * sec - 0.004
+        gm = (g0 + g1) / 2
+        fh_ = gz + gb_ / 2 - zc0            # the frame bars stand on the spill tray
+        fz_ = zc0 + fh_ / 2
+        for tag, size, c in ((f"F", (g1 - g0, gb_, fh_), (gm, ylo, fz_)), (f"B", (g1 - g0, gb_, fh_), (gm, yhi, fz_)),
+                             (f"L", (gb_, yhi - ylo, fh_), (g0 + gb_ / 2, (ylo + yhi) / 2, fz_)),
+                             (f"R", (gb_, yhi - ylo, fh_), (g1 - gb_ / 2, (ylo + yhi) / 2, fz_))):
+            b.box(f"Grate{k}{tag}", size, c, iron, bevel=0.002, seg=1, tile=0)
+        for dx, dy, rr in burners:
+            if abs(rxm + dx - gm) < sec / 2:
+                b.box(f"Grate{k}X{dy:+.2f}", (g1 - g0 - 0.01, gb_ * 0.8, gb_ * 0.8), (gm, cy + dy, gz + 0.001), iron,
+                      bevel=0.002, seg=1, tile=0)
+                b.box(f"Grate{k}Y{dy:+.2f}", (gb_ * 0.8, 0.2, gb_ * 0.8), (rxm + dx, cy + dy, gz + 0.001), iron,
+                      bevel=0.002, seg=1, tile=0)
+    # a stockpot with riveted loop handles on the centre burner
+    pz = gz + gb_ * 0.8 / 2 + 0.001
+    pot = [(0.0, 0.0), (0.122, 0.0), (0.13, 0.008), (0.13, 0.20), (0.135, 0.205), (0.129, 0.207), (0.0, 0.205)]
+    b.lathe("Pot", pot, polished, loc=(rxm, cy, pz), segs=24, sharp=30, uv_tile=0)
+    b.lathe("PotLid", [(0.0, 0.205), (0.133, 0.205), (0.133, 0.211), (0.1, 0.224), (0.02, 0.232), (0.012, 0.25),
+                       (0.0, 0.25)], steel, loc=(rxm, cy, pz), segs=24, sharp=30, uv_tile=0)
+    for sx in (-1, 1):
+        x_ = rxm + sx * 0.13
+        b.tube(f"Pot_Handle{'L' if sx < 0 else 'R'}_NoCollide",
+               [(x_, cy - 0.035, pz + 0.17), (x_ + sx * 0.03, cy - 0.03, pz + 0.175), (x_ + sx * 0.03, cy + 0.03, pz + 0.175),
+                (x_, cy + 0.035, pz + 0.17)], 0.005, polished, closed=False, res=2)
 
     # --- Calacatta slab wall behind the base and range, to the ceiling
     b.box("Slab", (bx1 - bx0, 0.025, p["top_z"] - cz), ((bx0 + bx1) / 2, yb - 0.0125, (cz + p["top_z"]) / 2), marble,

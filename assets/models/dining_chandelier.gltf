@@ -107,7 +107,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -115,11 +116,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -130,9 +132,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -140,11 +143,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":9,
 					"material":0,
 					"mode":4
 				}
@@ -155,9 +159,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -165,11 +170,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":11,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -180,9 +186,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"TEXCOORD_0":14
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -190,11 +197,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
+					"indices":19,
 					"material":2,
 					"mode":4
 				}
@@ -229,6 +237,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":480,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":900,
 			"type":"SCALAR"
 		},
@@ -256,6 +270,12 @@
 			"componentType":5126,
 			"count":1560,
 			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1560,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -289,6 +309,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":1975,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":7560,
 			"type":"SCALAR"
 		},
@@ -319,6 +345,12 @@
 		},
 		{
 			"componentType":5123,
+			"count":700,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":2724,
 			"type":"SCALAR"
 		}
@@ -326,28 +358,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2948,
+			"byteLength":4091,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":11556,
-			"byteOffset":2948
+			"byteLength":13661,
+			"byteOffset":4092
 		},
 		{
 			"buffer":0,
-			"byteLength":13366,
-			"byteOffset":14504
+			"byteLength":14516,
+			"byteOffset":17756
 		},
 		{
 			"buffer":0,
-			"byteLength":3380,
-			"byteOffset":27872
+			"byteLength":4232,
+			"byteOffset":32272
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":31252,
+			"byteLength":36504,
 			"uri":"dining_chandelier.bin"
 		}
 	]

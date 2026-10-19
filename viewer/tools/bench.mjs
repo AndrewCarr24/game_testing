@@ -7,6 +7,7 @@
 //   gpu  = this Mac's GPU (Metal), 1600x900 at DPR 2 (the game caps rendering at 1.5x)
 //   soft = SwiftShader (no GPU, CPU rendering) at 1280x720: a stand-in for weak hardware
 // Frames are uncapped (no vsync), so frame time is the real cost, not 1/60 s.
+// BENCH_QS="&tm=agx" appends to the page's query string (A/B tests of viewer switches).
 import { chromium } from 'playwright-core';
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -56,7 +57,7 @@ async function run(name, P) {
   // the browser keeps 250 resource timings by default; the house loads ~430 files
   await page.addInitScript(() => performance.setResourceTimingBufferSize(10000));
   const t0 = Date.now();
-  await page.goto(`${BASE}/viewer/index.html?level=mansion`);
+  await page.goto(`${BASE}/viewer/index.html?level=mansion${process.env.BENCH_QS || ''}`);
   await page.waitForFunction(() => window.__loaded, null, { timeout: 300000 });
   const loadSeconds = (Date.now() - t0) / 1000;
   await page.waitForTimeout(1000);

@@ -326,6 +326,12 @@ def main():
     col = scene.collection
     with open(os.path.join(PROJECT, "assets", "levels", "mansion.json")) as f:
         level = json.load(f)
+    # the level's time of day (mansion.py LOOKS), if it has one
+    global HORIZON, ZENITH, HAZE, SKY, SUN_STRENGTH
+    sky = level.get("sky")
+    if sky:
+        HORIZON, ZENITH, HAZE, SKY = (tuple(sky[k]) for k in ("horizon", "zenith", "haze", "light"))
+        SUN_STRENGTH = sky["sun_strength"]
     sun_gl = next(l for l in level["lights"] if l["type"] == "sun")
     gx, gy, gz = sun_gl["direction"]
     sun_dir = Vector((gx, -gz, gy)).normalized()            # glTF -> Blender, direction light travels
@@ -342,6 +348,8 @@ def main():
 
     sun_data = bpy.data.lights.new("Sun", "SUN")
     sun_data.energy = SUN_STRENGTH
+    if sky:
+        sun_data.color = sky["sun_color"]
     sun_data.angle = math.radians(0.6)
     sun = bpy.data.objects.new("Sun", sun_data)
     col.objects.link(sun)
@@ -350,6 +358,8 @@ def main():
     world.use_nodes = True
     bg = next(nd for nd in world.node_tree.nodes if nd.type == "BACKGROUND")
     bg.inputs["Color"].default_value = (*SKY, 1)
+    if sky:
+        bg.inputs["Strength"].default_value = sky["light_strength"]
     scene.world = world
 
     cam_data = bpy.data.cameras.new("Horizon")

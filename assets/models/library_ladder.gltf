@@ -17,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				3
 			]
 		}
 	],
@@ -28,12 +28,17 @@
 		},
 		{
 			"mesh":1,
+			"name":"LibraryLadder_Rungs"
+		},
+		{
+			"mesh":2,
 			"name":"LibraryLadder_Wood"
 		},
 		{
 			"children":[
 				0,
-				1
+				1,
+				2
 			],
 			"name":"LibraryLadder"
 		}
@@ -77,7 +82,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -85,12 +91,40 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LibraryLadder_Rungs",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -100,21 +134,23 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":2,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":7,
+					"indices":14,
 					"material":1,
 					"mode":4
 				}
@@ -141,14 +177,14 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":192,
+			"count":622,
 			"max":[
-				0.24799999594688416,
+				0.25600001215934753,
 				3.267000198364258,
-				1.031999945640564
+				1.0190000534057617
 			],
 			"min":[
-				-0.24799999594688416,
+				-0.25600001215934753,
 				0,
 				-0.024308035150170326
 			],
@@ -156,60 +192,113 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":622,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":622,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":288,
+			"count":622,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1200,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":312,
+			"count":180,
 			"max":[
-				0.25,
-				3.3022680282592773,
-				1.003031611442566
+				0.23000000417232513,
+				2.910113573074341,
+				0.909928560256958
 			],
 			"min":[
-				-0.25,
-				0.02235591411590576,
-				-0.010029345750808716
+				-0.23000000417232513,
+				0.2917669713497162,
+				0.1115131676197052
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":312,
+			"count":180,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":312,
+			"count":180,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":468,
+			"count":180,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":480,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":260,
+			"max":[
+				0.25,
+				3.301698923110962,
+				1.002462387084961
+			],
+			"min":[
+				-0.25,
+				0.022925108671188354,
+				-0.009460149332880974
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":260,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":260,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":260,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":396,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1048,
+			"byteLength":5028,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1713,
-			"byteOffset":1048
+			"byteLength":1271,
+			"byteOffset":5028
+		},
+		{
+			"buffer":0,
+			"byteLength":3625,
+			"byteOffset":6300
 		}
 	],
 	"samplers":[
@@ -220,7 +309,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2764,
+			"byteLength":9928,
 			"uri":"library_ladder.bin"
 		}
 	]

@@ -33,7 +33,7 @@ P = dict(
     seed=3,
     planter_r=0.50, planter_h=0.72, planter_wall=0.07,
     stems=4,
-    blob_segments=7, blob_rings=4,
+    blob_segments=7, blob_rings=4,     # the layout's foliage envelopes (the random stream depends on it)
 )
 
 
@@ -88,6 +88,83 @@ def blob(bm, c, r, segs, rings, rnd):
         v.co.z = c.z + (v.co.z - c.z) * 0.8             # slightly flattened masses
 
 
+def stem(bm, pts, radii, rnd, sides=10):
+    """One trunk as a continuous tube (rings shared, no seams between segments): a root
+    flare where it leaves the soil, a slight twist and an irregular, knobbly section, so
+    it reads as wood up close rather than a stack of cones."""
+    pts = [Vector(q) for q in pts]
+    d0 = (pts[1] - pts[0])
+    pts = [pts[0], pts[0] + d0 * 0.10, pts[0] + d0 * 0.28] + pts[1:]
+    radii = [radii[0] * 1.75, radii[0] * 1.22, radii[0] * 1.04] + radii[1:]
+    n = len(pts)
+    rings = []
+    ref = Vector((1, 0, 0))
+    bumps = [rnd.uniform(-1, 1) for _ in range(sides)]          # ridges running up the bark
+    for k, q in enumerate(pts):
+        d = (pts[min(k + 1, n - 1)] - pts[max(k - 1, 0)]).normalized()
+        u = (ref - d * ref.dot(d)).normalized()
+        w = d.cross(u)
+        twist = 0.06 * k
+        ring = []
+        for j in range(sides):
+            a = 2 * math.pi * j / sides + twist
+            rr = radii[k] * (1 + 0.07 * bumps[j] + 0.04 * rnd.uniform(-1, 1))
+            ring.append(bm.verts.new(q + (u * math.cos(a) + w * math.sin(a)) * rr))
+        rings.append(ring)
+    for k in range(n - 1):
+        A, B = rings[k], rings[k + 1]
+        for j in range(sides):
+            bm.faces.new((A[j], A[(j + 1) % sides], B[(j + 1) % sides], B[j]))
+
+
+def envelope(c, r, segs, rings, rnd):
+    """The foliage mass the layout was designed with (same random draws as blob()), built
+    in a scratch mesh: returns its bounding box, which the new core and sprigs stay inside."""
+    tmp = bmesh.new()
+    blob(tmp, c, r, segs, rings, rnd)
+    lo = Vector([min(v.co[a] for v in tmp.verts) for a in range(3)])
+    hi = Vector([max(v.co[a] for v in tmp.verts) for a in range(3)])
+    tmp.free()
+    return lo, hi
+
+
+def core(bm, c, r, rnd):
+    """Dense dark middle of a mass: a jittered, flattened icosahedron (20 triangles)."""
+    ret = bmesh.ops.create_icosphere(bm, subdivisions=1, radius=r, matrix=Matrix.Translation(c))
+    for v in ret["verts"]:
+        v.co += Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-1, 1))) * r * 0.15
+        v.co.z = c.z + (v.co.z - c.z) * 0.8
+
+
+def clamp(v, lo, hi):
+    return Vector([min(max(v[a], lo[a]), hi[a]) for a in range(3)])
+
+
+def leaf_cards(bm, c, r, count, rnd, lo, hi):
+    """Sprigs of leaves shingled over a foliage mass: broad pointed diamonds (two triangles
+    each) lying almost tangent to the mass, tips lifted outwards and drooping a little like
+    olive shoots. Their box-projected leaf texture reads as a cluster of leaves per card,
+    and they break up the mass's outline. Clamped into the mass's envelope (lo, hi)."""
+    for _ in range(count):
+        d = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), rnd.gauss(0, 1) * 0.7 + 0.35)).normalized()
+        base = c + d * r * rnd.uniform(0.62, 0.8)
+        # tangent direction, lifted outwards and pulled down a little
+        tan = d.cross(Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-1, 1)))).normalized()
+        t = (tan + d * rnd.uniform(0.35, 0.7) + Vector((0, 0, -0.25))).normalized()
+        side = t.cross(d).normalized()
+        L, W = r * rnd.uniform(0.75, 1.0), r * rnd.uniform(0.38, 0.5)
+        tip = base + t * L
+        reach = (tip - c).length
+        if reach > r * 1.3:                     # stay inside the old mass's envelope
+            L *= (r * 1.3 - (base - c).length) / max(reach - (base - c).length, 1e-6)
+            tip = base + t * L
+        mid = base + t * (L * 0.45) + d * (0.02 * r)
+        back = base - t * (L * 0.15)
+        vs = [bm.verts.new(clamp(q, lo, hi)) for q in
+              (back, mid + side * W / 2, tip, mid - side * W / 2)]
+        bm.faces.new(vs)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -123,6 +200,9 @@ def build(**overrides):
     trunk = bmesh.new()
     branches = bmesh.new()
     blobs = bmesh.new()
+    cards = bmesh.new()
+    rnd_c = random.Random(p["seed"] + 100)       # leaf sprigs: own stream, layout unchanged
+    rnd_b = random.Random(p["seed"] + 200)       # bark ridges
     top = p["height"]
     z0 = H - 0.05
     for s in range(p["stems"]):
@@ -140,8 +220,7 @@ def build(**overrides):
                                d.y * (0.07 + lean * H_s * t ** 1.7 + 0.05 * math.sin(t * 6 + s)),
                                z0 + H_s * t)))
         radii = [0.055 * (1 - 0.65 * k / segs) for k in range(segs + 1)]
-        for k in range(segs):
-            tapered(trunk, pts[k], pts[k + 1], radii[k], radii[k + 1])
+        stem(trunk, pts, radii, rnd_b)
         # branches off the upper half
         tips = [pts[-1]]
         for k in range(4, segs):
@@ -156,10 +235,27 @@ def build(**overrides):
         for tp in tips:
             for _ in range(rnd.randint(5, 7)):
                 off = Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-0.2, 0.9))) * 0.36
-                blob(blobs, tp + off, rnd.uniform(0.15, 0.27), p["blob_segments"], p["blob_rings"], rnd)
+                rr = rnd.uniform(0.15, 0.27)
+                # a small dense core (keeps the canopy from looking see-through) under a coat of
+                # leaf sprigs, all inside the envelope of the original mass
+                lo, hi = envelope(tp + off, rr, p["blob_segments"], p["blob_rings"], rnd)
+                core(blobs, tp + off, rr * 0.74, rnd_c)
+                leaf_cards(cards, tp + off, rr, int(6 + 30 * rr), rnd_c, lo, hi)
     common.mesh_object(f"{n}_Trunks", trunk, col, bark, root)
     common.mesh_object(f"{n}_Branches", branches, col, bark, root)
+    for f in cards.faces:
+        f.smooth = True
     fol = common.mesh_object(f"{n}_Foliage", blobs, col, foliage, root)
+    sprig = common.mesh_object(f"{n}_FoliageSprigs", cards, col, foliage, root)
+    # one mesh for the canopy (one draw call): join the sprigs into the masses
+    import bpy
+    vl = bpy.context.view_layer
+    for o in vl.objects.selected:
+        o.select_set(False)
+    fol.select_set(True)
+    sprig.select_set(True)
+    vl.objects.active = fol
+    bpy.ops.object.join()
     common.box_uv(fol, tile=0.5)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]

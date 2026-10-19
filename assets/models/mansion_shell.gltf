@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				114
+				92
 			]
 		}
 	],
@@ -27,9 +27,9 @@
 			"mesh":0,
 			"name":"Mansion___M_Aluminium_Black",
 			"translation":[
-				0,
-				0.02500000037252903,
-				20
+				2,
+				8.394000053405762,
+				10.65149974822998
 			]
 		},
 		{
@@ -76,18 +76,6 @@
 				"room":"cloak"
 			},
 			"mesh":5,
-			"name":"Mansion_cloak_M_LightStrip",
-			"translation":[
-				10.149999618530273,
-				4.196499824523926,
-				14.949999809265137
-			]
-		},
-		{
-			"extras":{
-				"room":"cloak"
-			},
-			"mesh":6,
 			"name":"Mansion_cloak_M_OakFloor_Smoked",
 			"translation":[
 				10.75,
@@ -99,7 +87,7 @@
 			"extras":{
 				"room":"cloak"
 			},
-			"mesh":7,
+			"mesh":6,
 			"name":"Mansion_cloak_M_Plaster_Cloak",
 			"translation":[
 				10.75,
@@ -111,8 +99,8 @@
 			"extras":{
 				"room":"courtyard"
 			},
-			"mesh":8,
-			"name":"Mansion_courtyard_M_Courtyard_Limestone",
+			"mesh":7,
+			"name":"Mansion_courtyard_M_Courtyard_Paving",
 			"translation":[
 				0,
 				-0.10000000149011612,
@@ -123,7 +111,7 @@
 			"extras":{
 				"room":"den"
 			},
-			"mesh":9,
+			"mesh":8,
 			"name":"Mansion_den_M_Ceiling_Den",
 			"translation":[
 				-19.75,
@@ -135,7 +123,7 @@
 			"extras":{
 				"room":"den"
 			},
-			"mesh":10,
+			"mesh":9,
 			"name":"Mansion_den_M_Fabric_DenGreen",
 			"translation":[
 				-23.149999618530273,
@@ -147,19 +135,7 @@
 			"extras":{
 				"room":"den"
 			},
-			"mesh":11,
-			"name":"Mansion_den_M_LightStrip",
-			"translation":[
-				-19.75,
-				4.196499824523926,
-				16.25
-			]
-		},
-		{
-			"extras":{
-				"room":"den"
-			},
-			"mesh":12,
+			"mesh":10,
 			"name":"Mansion_den_M_OakFloor_Smoked",
 			"translation":[
 				-19.75,
@@ -171,7 +147,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":13,
+			"mesh":11,
 			"name":"Mansion_dining_M_Ceiling_Warm",
 			"translation":[
 				-18,
@@ -183,19 +159,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":14,
-			"name":"Mansion_dining_M_LightStrip",
-			"translation":[
-				-18.5,
-				4.196499824523926,
-				-15.850000381469727
-			]
-		},
-		{
-			"extras":{
-				"room":"dining"
-			},
-			"mesh":15,
+			"mesh":12,
 			"name":"Mansion_dining_M_OakFloor",
 			"translation":[
 				-18,
@@ -207,7 +171,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":16,
+			"mesh":13,
 			"name":"Mansion_dining_M_Plaster_Dining",
 			"translation":[
 				-25,
@@ -219,7 +183,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":17,
+			"mesh":14,
 			"name":"Mansion_dining_M_Plaster_Olive",
 			"translation":[
 				-25.924999237060547,
@@ -231,7 +195,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":18,
+			"mesh":15,
 			"name":"Mansion_entry_M_Ceiling_Entry",
 			"translation":[
 				0,
@@ -243,7 +207,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":19,
+			"mesh":16,
 			"name":"Mansion_entry_M_Entry_Limestone",
 			"translation":[
 				0,
@@ -255,19 +219,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":20,
-			"name":"Mansion_entry_M_LightStrip",
-			"translation":[
-				0,
-				8.396499633789062,
-				16.850000381469727
-			]
-		},
-		{
-			"extras":{
-				"room":"entry"
-			},
-			"mesh":21,
+			"mesh":17,
 			"name":"Mansion_entry_M_Plaster_Entry",
 			"translation":[
 				-7,
@@ -279,7 +231,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":22,
+			"mesh":18,
 			"name":"Mansion_entry_M_Plaster_Entry_Greige",
 			"translation":[
 				-3.25,
@@ -291,7 +243,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":23,
+			"mesh":19,
 			"name":"Mansion_entry_M_Walnut",
 			"translation":[
 				-5.849999904632568,
@@ -303,7 +255,7 @@
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":24,
+			"mesh":20,
 			"name":"Mansion_gallery_e_M_Ceiling_White",
 			"translation":[
 				11.75,
@@ -315,19 +267,7 @@
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":25,
-			"name":"Mansion_gallery_e_M_LightStrip",
-			"translation":[
-				11.75,
-				4.196499824523926,
-				0
-			]
-		},
-		{
-			"extras":{
-				"room":"gallery_e"
-			},
-			"mesh":26,
+			"mesh":21,
 			"name":"Mansion_gallery_e_M_OakFloor",
 			"translation":[
 				11.75,
@@ -339,7 +279,7 @@
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":27,
+			"mesh":22,
 			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
 			"translation":[
 				13.425000190734863,
@@ -351,7 +291,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":28,
+			"mesh":23,
 			"name":"Mansion_gallery_n_M_Ceiling_White",
 			"translation":[
 				0,
@@ -363,19 +303,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":29,
-			"name":"Mansion_gallery_n_M_LightStrip",
-			"translation":[
-				0,
-				4.196499824523926,
-				-8.75
-			]
-		},
-		{
-			"extras":{
-				"room":"gallery_n"
-			},
-			"mesh":30,
+			"mesh":24,
 			"name":"Mansion_gallery_n_M_OakFloor",
 			"translation":[
 				0,
@@ -387,7 +315,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":31,
+			"mesh":25,
 			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
 			"translation":[
 				-13.25,
@@ -399,7 +327,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":32,
+			"mesh":26,
 			"name":"Mansion_gallery_s_M_Ceiling_White",
 			"translation":[
 				0,
@@ -411,19 +339,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":33,
-			"name":"Mansion_gallery_s_M_LightStrip",
-			"translation":[
-				0,
-				4.196499824523926,
-				8.75
-			]
-		},
-		{
-			"extras":{
-				"room":"gallery_s"
-			},
-			"mesh":34,
+			"mesh":27,
 			"name":"Mansion_gallery_s_M_OakFloor",
 			"translation":[
 				0,
@@ -435,7 +351,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":35,
+			"mesh":28,
 			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
 			"translation":[
 				0,
@@ -447,7 +363,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":36,
+			"mesh":29,
 			"name":"Mansion_gallery_w_M_Ceiling_White",
 			"translation":[
 				-11.75,
@@ -459,19 +375,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":37,
-			"name":"Mansion_gallery_w_M_LightStrip",
-			"translation":[
-				-11.75,
-				4.196499824523926,
-				0
-			]
-		},
-		{
-			"extras":{
-				"room":"gallery_w"
-			},
-			"mesh":38,
+			"mesh":30,
 			"name":"Mansion_gallery_w_M_OakFloor",
 			"translation":[
 				-11.75,
@@ -483,7 +387,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":39,
+			"mesh":31,
 			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
 			"translation":[
 				-13.425000190734863,
@@ -495,7 +399,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":40,
+			"mesh":32,
 			"name":"Mansion_garage_M_Garage_Ceiling",
 			"translation":[
 				19.75,
@@ -507,7 +411,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":41,
+			"mesh":33,
 			"name":"Mansion_garage_M_Garage_PolishedConcrete",
 			"translation":[
 				19.75,
@@ -519,7 +423,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":42,
+			"mesh":34,
 			"name":"Mansion_garage_M_Garage_Wall",
 			"translation":[
 				14.5,
@@ -531,7 +435,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":43,
+			"mesh":35,
 			"name":"Mansion_garage_M_Garage_WallDark",
 			"translation":[
 				16.350000381469727,
@@ -543,7 +447,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":44,
+			"mesh":36,
 			"name":"Mansion_garage_M_LightStrip",
 			"translation":[
 				15.25,
@@ -555,7 +459,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":45,
+			"mesh":37,
 			"name":"Mansion_great_room_M_Ceiling_Living",
 			"translation":[
 				-19.75,
@@ -567,19 +471,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":46,
-			"name":"Mansion_great_room_M_LightStrip",
-			"translation":[
-				-17.75,
-				8.396499633789062,
-				0
-			]
-		},
-		{
-			"extras":{
-				"room":"great_room"
-			},
-			"mesh":47,
+			"mesh":38,
 			"name":"Mansion_great_room_M_Living_Limestone",
 			"translation":[
 				-19.75,
@@ -591,7 +483,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":48,
+			"mesh":39,
 			"name":"Mansion_great_room_M_Plaster_Living",
 			"translation":[
 				-24.5,
@@ -603,7 +495,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":49,
+			"mesh":40,
 			"name":"Mansion_great_room_M_Plaster_LivingClay",
 			"translation":[
 				-25.5,
@@ -615,7 +507,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":50,
+			"mesh":41,
 			"name":"Mansion_guest_room_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -627,19 +519,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":51,
-			"name":"Mansion_guest_room_M_LightStrip",
-			"translation":[
-				16.75,
-				8.396499633789062,
-				-5.75
-			]
-		},
-		{
-			"extras":{
-				"room":"guest_room"
-			},
-			"mesh":52,
+			"mesh":42,
 			"name":"Mansion_guest_room_M_OakFloor_Pale",
 			"translation":[
 				19.75,
@@ -651,7 +531,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":53,
+			"mesh":43,
 			"name":"Mansion_guest_room_M_Plaster_Linen",
 			"translation":[
 				19.75,
@@ -663,7 +543,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":54,
+			"mesh":44,
 			"name":"Mansion_guest_room_M_Plaster_Sage",
 			"translation":[
 				13.574999809265137,
@@ -675,7 +555,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":55,
+			"mesh":45,
 			"name":"Mansion_gym_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -687,19 +567,19 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":56,
+			"mesh":46,
 			"name":"Mansion_gym_M_LightStrip",
 			"translation":[
-				18.75,
+				18.049999237060547,
 				8.396499633789062,
-				-13.25
+				-13.350000381469727
 			]
 		},
 		{
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":57,
+			"mesh":47,
 			"name":"Mansion_gym_M_Mirror",
 			"translation":[
 				19.75,
@@ -711,7 +591,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":58,
+			"mesh":48,
 			"name":"Mansion_gym_M_Oak_Light",
 			"translation":[
 				25.924999237060547,
@@ -723,7 +603,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":59,
+			"mesh":49,
 			"name":"Mansion_gym_M_Plaster_Greige",
 			"translation":[
 				14.25,
@@ -735,7 +615,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":60,
+			"mesh":50,
 			"name":"Mansion_gym_M_Rubber_Floor",
 			"translation":[
 				19.75,
@@ -747,7 +627,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":61,
+			"mesh":51,
 			"name":"Mansion_kitchen_M_Ceiling_White",
 			"translation":[
 				-1,
@@ -759,7 +639,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":62,
+			"mesh":52,
 			"name":"Mansion_kitchen_M_Kitchen_Stone",
 			"translation":[
 				-1,
@@ -771,19 +651,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":63,
-			"name":"Mansion_kitchen_M_LightStrip",
-			"translation":[
-				-0.5,
-				4.196499824523926,
-				-14.100000381469727
-			]
-		},
-		{
-			"extras":{
-				"room":"kitchen"
-			},
-			"mesh":64,
+			"mesh":53,
 			"name":"Mansion_kitchen_M_Plaster_Kitchen",
 			"translation":[
 				-9,
@@ -795,7 +663,7 @@
 			"extras":{
 				"room":"library"
 			},
-			"mesh":65,
+			"mesh":54,
 			"name":"Mansion_library_M_Ceiling_Warm",
 			"translation":[
 				-17,
@@ -807,19 +675,7 @@
 			"extras":{
 				"room":"library"
 			},
-			"mesh":66,
-			"name":"Mansion_library_M_LightStrip",
-			"translation":[
-				-17.5,
-				8.396499633789062,
-				17.549999237060547
-			]
-		},
-		{
-			"extras":{
-				"room":"library"
-			},
-			"mesh":67,
+			"mesh":55,
 			"name":"Mansion_library_M_OakFloor_Smoked",
 			"translation":[
 				-17,
@@ -831,7 +687,7 @@
 			"extras":{
 				"room":"library"
 			},
-			"mesh":68,
+			"mesh":56,
 			"name":"Mansion_library_M_Plaster_Library",
 			"translation":[
 				-25.5,
@@ -843,7 +699,7 @@
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":69,
+			"mesh":57,
 			"name":"Mansion_mudroom_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -855,19 +711,7 @@
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":70,
-			"name":"Mansion_mudroom_M_LightStrip",
-			"translation":[
-				19.75,
-				4.196499824523926,
-				-9.449999809265137
-			]
-		},
-		{
-			"extras":{
-				"room":"mudroom"
-			},
-			"mesh":71,
+			"mesh":58,
 			"name":"Mansion_mudroom_M_Mudroom_Tile",
 			"translation":[
 				19.75,
@@ -879,7 +723,7 @@
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":72,
+			"mesh":59,
 			"name":"Mansion_mudroom_M_Plaster_Cream",
 			"translation":[
 				19.75,
@@ -891,7 +735,7 @@
 			"extras":{
 				"room":"office"
 			},
-			"mesh":73,
+			"mesh":60,
 			"name":"Mansion_office_M_Ceiling_White",
 			"translation":[
 				6.75,
@@ -903,19 +747,7 @@
 			"extras":{
 				"room":"office"
 			},
-			"mesh":74,
-			"name":"Mansion_office_M_LightStrip",
-			"translation":[
-				3.3499999046325684,
-				8.396499633789062,
-				-15.25
-			]
-		},
-		{
-			"extras":{
-				"room":"office"
-			},
-			"mesh":75,
+			"mesh":61,
 			"name":"Mansion_office_M_OakFloor",
 			"translation":[
 				6.75,
@@ -927,7 +759,7 @@
 			"extras":{
 				"room":"office"
 			},
-			"mesh":76,
+			"mesh":62,
 			"name":"Mansion_office_M_Plaster_WarmWhite",
 			"translation":[
 				0.5,
@@ -939,7 +771,7 @@
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":77,
+			"mesh":63,
 			"name":"Mansion_powder_M_Ceiling_Powder",
 			"translation":[
 				-10.75,
@@ -951,7 +783,7 @@
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":78,
+			"mesh":64,
 			"name":"Mansion_powder_M_Entry_DarkMarble",
 			"translation":[
 				-10.75,
@@ -963,7 +795,7 @@
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":79,
+			"mesh":65,
 			"name":"Mansion_powder_M_Entry_Limestone",
 			"translation":[
 				-10.75,
@@ -973,21 +805,9 @@
 		},
 		{
 			"extras":{
-				"room":"powder"
-			},
-			"mesh":80,
-			"name":"Mansion_powder_M_LightStrip",
-			"translation":[
-				-10.75,
-				4.196499824523926,
-				11.850000381469727
-			]
-		},
-		{
-			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":81,
+			"mesh":66,
 			"name":"Mansion_primary_bath_M_Bath_Marble",
 			"translation":[
 				-5,
@@ -999,7 +819,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":82,
+			"mesh":67,
 			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
 			"translation":[
 				-0.07500000298023224,
@@ -1011,7 +831,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":83,
+			"mesh":68,
 			"name":"Mansion_primary_bath_M_Bath_MarbleFloor",
 			"translation":[
 				-5,
@@ -1023,7 +843,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":84,
+			"mesh":69,
 			"name":"Mansion_primary_bath_M_Ceiling_Bath",
 			"translation":[
 				-5,
@@ -1033,21 +853,9 @@
 		},
 		{
 			"extras":{
-				"room":"primary_bath"
-			},
-			"mesh":85,
-			"name":"Mansion_primary_bath_M_LightStrip",
-			"translation":[
-				-5.400000095367432,
-				8.396499633789062,
-				-18.799999237060547
-			]
-		},
-		{
-			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":86,
+			"mesh":70,
 			"name":"Mansion_primary_bedroom_M_Ceiling_Warm",
 			"translation":[
 				-18,
@@ -1059,19 +867,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":87,
-			"name":"Mansion_primary_bedroom_M_LightStrip",
-			"translation":[
-				-18,
-				8.396499633789062,
-				-11.350000381469727
-			]
-		},
-		{
-			"extras":{
-				"room":"primary_bedroom"
-			},
-			"mesh":88,
+			"mesh":71,
 			"name":"Mansion_primary_bedroom_M_OakFloor_Smoked",
 			"translation":[
 				-18,
@@ -1083,7 +879,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":89,
+			"mesh":72,
 			"name":"Mansion_primary_bedroom_M_Plaster_Ink",
 			"translation":[
 				-25.924999237060547,
@@ -1095,7 +891,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":90,
+			"mesh":73,
 			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
 			"translation":[
 				-25,
@@ -1107,7 +903,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":91,
+			"mesh":74,
 			"name":"Mansion_scullery_M_Ceiling_White",
 			"translation":[
 				10.75,
@@ -1119,7 +915,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":92,
+			"mesh":75,
 			"name":"Mansion_scullery_M_Kitchen_Stone",
 			"translation":[
 				10.75,
@@ -1131,7 +927,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":93,
+			"mesh":76,
 			"name":"Mansion_scullery_M_LightStrip",
 			"translation":[
 				9.75,
@@ -1143,7 +939,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":94,
+			"mesh":77,
 			"name":"Mansion_scullery_M_Plaster_Scullery",
 			"translation":[
 				10.75,
@@ -1155,7 +951,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":95,
+			"mesh":78,
 			"name":"Mansion_ugallery_e_M_Ceiling_White",
 			"translation":[
 				11.75,
@@ -1167,19 +963,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":96,
-			"name":"Mansion_ugallery_e_M_LightStrip",
-			"translation":[
-				11.75,
-				8.396499633789062,
-				0
-			]
-		},
-		{
-			"extras":{
-				"room":"ugallery_e"
-			},
-			"mesh":97,
+			"mesh":79,
 			"name":"Mansion_ugallery_e_M_OakFloor",
 			"translation":[
 				11.75,
@@ -1191,7 +975,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":98,
+			"mesh":80,
 			"name":"Mansion_ugallery_e_M_Plaster_WarmWhite",
 			"translation":[
 				13.425000190734863,
@@ -1203,7 +987,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":99,
+			"mesh":81,
 			"name":"Mansion_ugallery_n_M_Ceiling_White",
 			"translation":[
 				0,
@@ -1215,19 +999,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":100,
-			"name":"Mansion_ugallery_n_M_LightStrip",
-			"translation":[
-				0,
-				8.396499633789062,
-				-8.75
-			]
-		},
-		{
-			"extras":{
-				"room":"ugallery_n"
-			},
-			"mesh":101,
+			"mesh":82,
 			"name":"Mansion_ugallery_n_M_OakFloor",
 			"translation":[
 				0,
@@ -1239,7 +1011,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":102,
+			"mesh":83,
 			"name":"Mansion_ugallery_n_M_Plaster_WarmWhite",
 			"translation":[
 				-12.899999618530273,
@@ -1251,7 +1023,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":103,
+			"mesh":84,
 			"name":"Mansion_ugallery_s_M_Ceiling_White",
 			"translation":[
 				0,
@@ -1263,19 +1035,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":104,
-			"name":"Mansion_ugallery_s_M_LightStrip",
-			"translation":[
-				0,
-				8.396499633789062,
-				8.75
-			]
-		},
-		{
-			"extras":{
-				"room":"ugallery_s"
-			},
-			"mesh":105,
+			"mesh":85,
 			"name":"Mansion_ugallery_s_M_OakFloor",
 			"translation":[
 				0,
@@ -1287,7 +1047,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":106,
+			"mesh":86,
 			"name":"Mansion_ugallery_s_M_Plaster_WarmWhite",
 			"translation":[
 				-12.399999618530273,
@@ -1299,7 +1059,7 @@
 			"extras":{
 				"room":"ugallery_w"
 			},
-			"mesh":107,
+			"mesh":87,
 			"name":"Mansion_ugallery_w_M_Ceiling_White",
 			"translation":[
 				-11.75,
@@ -1311,19 +1071,7 @@
 			"extras":{
 				"room":"ugallery_w"
 			},
-			"mesh":108,
-			"name":"Mansion_ugallery_w_M_LightStrip",
-			"translation":[
-				-11.75,
-				8.396499633789062,
-				0
-			]
-		},
-		{
-			"extras":{
-				"room":"ugallery_w"
-			},
-			"mesh":109,
+			"mesh":88,
 			"name":"Mansion_ugallery_w_M_OakFloor",
 			"translation":[
 				-11.75,
@@ -1335,7 +1083,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":110,
+			"mesh":89,
 			"name":"Mansion_wine_room_M_Ceiling_Cellar",
 			"translation":[
 				19.75,
@@ -1347,19 +1095,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":111,
-			"name":"Mansion_wine_room_M_LightStrip",
-			"translation":[
-				19.75,
-				4.196499824523926,
-				-18.950000762939453
-			]
-		},
-		{
-			"extras":{
-				"room":"wine_room"
-			},
-			"mesh":112,
+			"mesh":90,
 			"name":"Mansion_wine_room_M_Plaster_Cellar",
 			"translation":[
 				19.75,
@@ -1371,7 +1107,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":113,
+			"mesh":91,
 			"name":"Mansion_wine_room_M_Slate_Dark",
 			"translation":[
 				19.75,
@@ -1472,29 +1208,7 @@
 				88,
 				89,
 				90,
-				91,
-				92,
-				93,
-				94,
-				95,
-				96,
-				97,
-				98,
-				99,
-				100,
-				101,
-				102,
-				103,
-				104,
-				105,
-				106,
-				107,
-				108,
-				109,
-				110,
-				111,
-				112,
-				113
+				91
 			],
 			"name":"Mansion_Shell"
 		}
@@ -1574,30 +1288,6 @@
 		},
 		{
 			"doubleSided":true,
-			"emissiveFactor":[
-				1,
-				0.9200000166893005,
-				0.8199999928474426
-			],
-			"extensions":{
-				"KHR_materials_emissive_strength":{
-					"emissiveStrength":4
-				}
-			},
-			"name":"M_LightStrip",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					1,
-					0.9200000166893005,
-					0.8199999928474426,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.6000000238418579
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_OakFloor_Smoked",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
@@ -1623,13 +1313,13 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Courtyard_Limestone",
+			"name":"M_Courtyard_Paving",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
 				},
 				"metallicFactor":0,
-				"roughnessFactor":0.8199999928474426
+				"roughnessFactor":0.8600000143051147
 			}
 		},
 		{
@@ -1795,12 +1485,9 @@
 			"doubleSided":true,
 			"name":"M_Plaster_WarmWhite",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.7200000286102295,
-					0.699999988079071,
-					0.6600000262260437,
-					1
-				],
+				"baseColorTexture":{
+					"index":6
+				},
 				"metallicFactor":0,
 				"roughnessFactor":0.8999999761581421
 			}
@@ -1829,7 +1516,7 @@
 			"name":"M_Garage_PolishedConcrete",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":6
+					"index":7
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.2199999988079071
@@ -1865,6 +1552,30 @@
 		},
 		{
 			"doubleSided":true,
+			"emissiveFactor":[
+				1,
+				0.9200000166893005,
+				0.8199999928474426
+			],
+			"extensions":{
+				"KHR_materials_emissive_strength":{
+					"emissiveStrength":4
+				}
+			},
+			"name":"M_LightStrip",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					1,
+					0.9200000166893005,
+					0.8199999928474426,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.6000000238418579
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Ceiling_Living",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1882,7 +1593,7 @@
 			"name":"M_Living_Limestone",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":7
+					"index":8
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.7200000286102295
@@ -1921,7 +1632,7 @@
 			"name":"M_OakFloor_Pale",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":8
+					"index":9
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.6000000238418579
@@ -1978,7 +1689,7 @@
 			"name":"M_Oak_Light",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":9
+					"index":10
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.550000011920929
@@ -2003,7 +1714,7 @@
 			"name":"M_Rubber_Floor",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":10
+					"index":11
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.8199999928474426
@@ -2014,7 +1725,7 @@
 			"name":"M_Kitchen_Stone",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":11
+					"index":12
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -2058,7 +1769,7 @@
 			"name":"M_Mudroom_Tile",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":12
+					"index":13
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.4000000059604645
@@ -2097,7 +1808,7 @@
 			"name":"M_Entry_DarkMarble",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":13
+					"index":14
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.30000001192092896
@@ -2113,7 +1824,7 @@
 			"name":"M_Bath_Marble",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":14
+					"index":15
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.2199999988079071
@@ -2129,7 +1840,7 @@
 			"name":"M_Bath_MarbleDark",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":15
+					"index":16
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.1599999964237213
@@ -2145,7 +1856,7 @@
 			"name":"M_Bath_MarbleFloor",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":16
+					"index":17
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.14000000059604645
@@ -2245,7 +1956,7 @@
 			"name":"M_Slate_Dark",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":17
+					"index":18
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -2381,13 +2092,14 @@
 			]
 		},
 		{
-			"name":"Mansion_cloak_M_LightStrip",
+			"name":"Mansion_cloak_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":20,
 						"NORMAL":21,
-						"TEXCOORD_0":22
+						"TEXCOORD_0":22,
+						"TEXCOORD_1":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2395,18 +2107,19 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
 							}
 						}
 					},
-					"indices":23,
+					"indices":7,
 					"material":5,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_cloak_M_OakFloor_Smoked",
+			"name":"Mansion_cloak_M_Plaster_Cloak",
 			"primitives":[
 				{
 					"attributes":{
@@ -2426,21 +2139,21 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":28,
 					"material":6,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_cloak_M_Plaster_Cloak",
+			"name":"Mansion_courtyard_M_Courtyard_Paving",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":28,
-						"NORMAL":29,
-						"TEXCOORD_0":30,
-						"TEXCOORD_1":31
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31,
+						"TEXCOORD_1":32
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2453,14 +2166,14 @@
 							}
 						}
 					},
-					"indices":32,
+					"indices":7,
 					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_courtyard_M_Courtyard_Limestone",
+			"name":"Mansion_den_M_Ceiling_Den",
 			"primitives":[
 				{
 					"attributes":{
@@ -2487,7 +2200,7 @@
 			]
 		},
 		{
-			"name":"Mansion_den_M_Ceiling_Den",
+			"name":"Mansion_den_M_Fabric_DenGreen",
 			"primitives":[
 				{
 					"attributes":{
@@ -2507,14 +2220,14 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":28,
 					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_den_M_Fabric_DenGreen",
+			"name":"Mansion_den_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
@@ -2534,20 +2247,21 @@
 							}
 						}
 					},
-					"indices":32,
-					"material":10,
+					"indices":7,
+					"material":5,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_den_M_LightStrip",
+			"name":"Mansion_dining_M_Ceiling_Warm",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":45,
 						"NORMAL":46,
-						"TEXCOORD_0":47
+						"TEXCOORD_0":47,
+						"TEXCOORD_1":48
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2555,18 +2269,19 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
 							}
 						}
 					},
-					"indices":48,
-					"material":5,
+					"indices":7,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_den_M_OakFloor_Smoked",
+			"name":"Mansion_dining_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
@@ -2587,13 +2302,13 @@
 						}
 					},
 					"indices":7,
-					"material":6,
+					"material":10,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_dining_M_Ceiling_Warm",
+			"name":"Mansion_dining_M_Plaster_Dining",
 			"primitives":[
 				{
 					"attributes":{
@@ -2613,87 +2328,8 @@
 							}
 						}
 					},
-					"indices":7,
-					"material":4,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_dining_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":57,
-						"NORMAL":58,
-						"TEXCOORD_0":59
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":14,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_dining_M_OakFloor",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":60,
-						"NORMAL":61,
-						"TEXCOORD_0":62,
-						"TEXCOORD_1":63
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":15,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":7,
+					"indices":57,
 					"material":11,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_dining_M_Plaster_Dining",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":64,
-						"NORMAL":65,
-						"TEXCOORD_0":66,
-						"TEXCOORD_1":67
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":16,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":68,
-					"material":12,
 					"mode":4
 				}
 			]
@@ -2703,14 +2339,41 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":69,
-						"NORMAL":70,
-						"TEXCOORD_0":71,
-						"TEXCOORD_1":72
+						"POSITION":58,
+						"NORMAL":59,
+						"TEXCOORD_0":60,
+						"TEXCOORD_1":61
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":17,
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":62,
+					"material":12,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_entry_M_Ceiling_Entry",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":63,
+						"NORMAL":64,
+						"TEXCOORD_0":65,
+						"TEXCOORD_1":66
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2726,18 +2389,18 @@
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Ceiling_Entry",
+			"name":"Mansion_entry_M_Entry_Limestone",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":73,
-						"NORMAL":74,
-						"TEXCOORD_0":75,
-						"TEXCOORD_1":76
+						"POSITION":67,
+						"NORMAL":68,
+						"TEXCOORD_0":69,
+						"TEXCOORD_1":70
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":18,
+							"bufferView":16,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2753,14 +2416,68 @@
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Entry_Limestone",
+			"name":"Mansion_entry_M_Plaster_Entry",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":77,
-						"NORMAL":78,
-						"TEXCOORD_0":79,
-						"TEXCOORD_1":80
+						"POSITION":71,
+						"NORMAL":72,
+						"TEXCOORD_0":73,
+						"TEXCOORD_1":74
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":17,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":75,
+					"material":15,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_entry_M_Plaster_Entry_Greige",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":76,
+						"NORMAL":77,
+						"TEXCOORD_0":78,
+						"TEXCOORD_1":79
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":18,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":80,
+					"material":16,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_entry_M_Walnut",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":81,
+						"NORMAL":82,
+						"TEXCOORD_0":83,
+						"TEXCOORD_1":84
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2773,20 +2490,21 @@
 							}
 						}
 					},
-					"indices":7,
-					"material":15,
+					"indices":85,
+					"material":17,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_LightStrip",
+			"name":"Mansion_gallery_e_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":81,
-						"NORMAL":82,
-						"TEXCOORD_0":83
+						"POSITION":86,
+						"NORMAL":87,
+						"TEXCOORD_0":88,
+						"TEXCOORD_1":89
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2794,25 +2512,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
 							}
 						}
 					},
-					"indices":48,
-					"material":5,
+					"indices":7,
+					"material":18,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Plaster_Entry",
+			"name":"Mansion_gallery_e_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":84,
-						"NORMAL":85,
-						"TEXCOORD_0":86,
-						"TEXCOORD_1":87
+						"POSITION":90,
+						"NORMAL":91,
+						"TEXCOORD_0":92,
+						"TEXCOORD_1":93
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2825,21 +2544,21 @@
 							}
 						}
 					},
-					"indices":88,
-					"material":16,
+					"indices":7,
+					"material":10,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Plaster_Entry_Greige",
+			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":89,
-						"NORMAL":90,
-						"TEXCOORD_0":91,
-						"TEXCOORD_1":92
+						"POSITION":94,
+						"NORMAL":95,
+						"TEXCOORD_0":96,
+						"TEXCOORD_1":97
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2852,21 +2571,21 @@
 							}
 						}
 					},
-					"indices":93,
-					"material":17,
+					"indices":98,
+					"material":19,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Walnut",
+			"name":"Mansion_gallery_n_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":94,
-						"NORMAL":95,
-						"TEXCOORD_0":96,
-						"TEXCOORD_1":97
+						"POSITION":99,
+						"NORMAL":100,
+						"TEXCOORD_0":101,
+						"TEXCOORD_1":102
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2879,21 +2598,21 @@
 							}
 						}
 					},
-					"indices":98,
+					"indices":7,
 					"material":18,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_e_M_Ceiling_White",
+			"name":"Mansion_gallery_n_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":99,
-						"NORMAL":100,
-						"TEXCOORD_0":101,
-						"TEXCOORD_1":102
+						"POSITION":103,
+						"NORMAL":104,
+						"TEXCOORD_0":105,
+						"TEXCOORD_1":106
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2907,19 +2626,20 @@
 						}
 					},
 					"indices":7,
-					"material":19,
+					"material":10,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_e_M_LightStrip",
+			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":103,
-						"NORMAL":104,
-						"TEXCOORD_0":105
+						"POSITION":107,
+						"NORMAL":108,
+						"TEXCOORD_0":109,
+						"TEXCOORD_1":110
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2927,25 +2647,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
 							}
 						}
 					},
-					"indices":7,
-					"material":5,
+					"indices":111,
+					"material":19,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_e_M_OakFloor",
+			"name":"Mansion_gallery_s_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":106,
-						"NORMAL":107,
-						"TEXCOORD_0":108,
-						"TEXCOORD_1":109
+						"POSITION":112,
+						"NORMAL":113,
+						"TEXCOORD_0":114,
+						"TEXCOORD_1":115
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2959,20 +2680,20 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":18,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
+			"name":"Mansion_gallery_s_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":110,
-						"NORMAL":111,
-						"TEXCOORD_0":112,
-						"TEXCOORD_1":113
+						"POSITION":116,
+						"NORMAL":117,
+						"TEXCOORD_0":118,
+						"TEXCOORD_1":119
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2985,21 +2706,21 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":20,
+					"indices":7,
+					"material":10,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_n_M_Ceiling_White",
+			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":114,
-						"NORMAL":115,
-						"TEXCOORD_0":116,
-						"TEXCOORD_1":117
+						"POSITION":120,
+						"NORMAL":121,
+						"TEXCOORD_0":122,
+						"TEXCOORD_1":123
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3012,20 +2733,21 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":80,
 					"material":19,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_n_M_LightStrip",
+			"name":"Mansion_gallery_w_M_Ceiling_White",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":118,
-						"NORMAL":119,
-						"TEXCOORD_0":120
+						"POSITION":124,
+						"NORMAL":125,
+						"TEXCOORD_0":126,
+						"TEXCOORD_1":127
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3033,25 +2755,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
 							}
 						}
 					},
 					"indices":7,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_n_M_OakFloor",
+			"name":"Mansion_gallery_w_M_OakFloor",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":121,
-						"NORMAL":122,
-						"TEXCOORD_0":123,
-						"TEXCOORD_1":124
+						"POSITION":128,
+						"NORMAL":129,
+						"TEXCOORD_0":130,
+						"TEXCOORD_1":131
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3065,20 +2788,20 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
+			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":125,
-						"NORMAL":126,
-						"TEXCOORD_0":127,
-						"TEXCOORD_1":128
+						"POSITION":132,
+						"NORMAL":133,
+						"TEXCOORD_0":134,
+						"TEXCOORD_1":135
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3091,21 +2814,21 @@
 							}
 						}
 					},
-					"indices":93,
-					"material":20,
+					"indices":136,
+					"material":19,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_s_M_Ceiling_White",
+			"name":"Mansion_garage_M_Garage_Ceiling",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":129,
-						"NORMAL":130,
-						"TEXCOORD_0":131,
-						"TEXCOORD_1":132
+						"POSITION":137,
+						"NORMAL":138,
+						"TEXCOORD_0":139,
+						"TEXCOORD_1":140
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3119,209 +2842,24 @@
 						}
 					},
 					"indices":7,
-					"material":19,
+					"material":20,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_gallery_s_M_LightStrip",
+			"name":"Mansion_garage_M_Garage_PolishedConcrete",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":133,
-						"NORMAL":134,
-						"TEXCOORD_0":135
+						"POSITION":141,
+						"NORMAL":142,
+						"TEXCOORD_0":143,
+						"TEXCOORD_1":144
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":33,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_s_M_OakFloor",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":136,
-						"NORMAL":137,
-						"TEXCOORD_0":138,
-						"TEXCOORD_1":139
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":34,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":7,
-					"material":11,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":140,
-						"NORMAL":141,
-						"TEXCOORD_0":142,
-						"TEXCOORD_1":143
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":35,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":32,
-					"material":20,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_w_M_Ceiling_White",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":144,
-						"NORMAL":145,
-						"TEXCOORD_0":146,
-						"TEXCOORD_1":147
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":36,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_w_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":148,
-						"NORMAL":149,
-						"TEXCOORD_0":150
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":37,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_w_M_OakFloor",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":151,
-						"NORMAL":152,
-						"TEXCOORD_0":153,
-						"TEXCOORD_1":154
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":38,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":7,
-					"material":11,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":155,
-						"NORMAL":156,
-						"TEXCOORD_0":157,
-						"TEXCOORD_1":158
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":39,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":159,
-					"material":20,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_garage_M_Garage_Ceiling",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":160,
-						"NORMAL":161,
-						"TEXCOORD_0":162,
-						"TEXCOORD_1":163
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":40,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3337,45 +2875,18 @@
 			]
 		},
 		{
-			"name":"Mansion_garage_M_Garage_PolishedConcrete",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":164,
-						"NORMAL":165,
-						"TEXCOORD_0":166,
-						"TEXCOORD_1":167
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":41,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":7,
-					"material":22,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_garage_M_Garage_Wall",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":168,
-						"NORMAL":169,
-						"TEXCOORD_0":170,
-						"TEXCOORD_1":171
+						"POSITION":145,
+						"NORMAL":146,
+						"TEXCOORD_0":147,
+						"TEXCOORD_1":148
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":42,
+							"bufferView":34,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3384,8 +2895,8 @@
 							}
 						}
 					},
-					"indices":159,
-					"material":23,
+					"indices":149,
+					"material":22,
 					"mode":4
 				}
 			]
@@ -3395,14 +2906,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":172,
-						"NORMAL":173,
-						"TEXCOORD_0":174,
-						"TEXCOORD_1":175
+						"POSITION":150,
+						"NORMAL":151,
+						"TEXCOORD_0":152,
+						"TEXCOORD_1":153
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":43,
+							"bufferView":35,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3411,8 +2922,8 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":24,
+					"indices":98,
+					"material":23,
 					"mode":4
 				}
 			]
@@ -3422,13 +2933,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":176,
-						"NORMAL":177,
-						"TEXCOORD_0":178
+						"POSITION":154,
+						"NORMAL":155,
+						"TEXCOORD_0":156
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":44,
+							"bufferView":36,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3436,8 +2947,8 @@
 							}
 						}
 					},
-					"indices":159,
-					"material":5,
+					"indices":98,
+					"material":24,
 					"mode":4
 				}
 			]
@@ -3447,14 +2958,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":179,
-						"NORMAL":180,
-						"TEXCOORD_0":181,
-						"TEXCOORD_1":182
+						"POSITION":157,
+						"NORMAL":158,
+						"TEXCOORD_0":159,
+						"TEXCOORD_1":160
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":45,
+							"bufferView":37,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3470,43 +2981,18 @@
 			]
 		},
 		{
-			"name":"Mansion_great_room_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":183,
-						"NORMAL":184,
-						"TEXCOORD_0":185
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":46,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":48,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_great_room_M_Living_Limestone",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":186,
-						"NORMAL":187,
-						"TEXCOORD_0":188,
-						"TEXCOORD_1":189
+						"POSITION":161,
+						"NORMAL":162,
+						"TEXCOORD_0":163,
+						"TEXCOORD_1":164
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":47,
+							"bufferView":38,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3526,14 +3012,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":190,
-						"NORMAL":191,
-						"TEXCOORD_0":192,
-						"TEXCOORD_1":193
+						"POSITION":165,
+						"NORMAL":166,
+						"TEXCOORD_0":167,
+						"TEXCOORD_1":168
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":48,
+							"bufferView":39,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3542,7 +3028,7 @@
 							}
 						}
 					},
-					"indices":194,
+					"indices":169,
 					"material":27,
 					"mode":4
 				}
@@ -3553,14 +3039,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":195,
-						"NORMAL":196,
-						"TEXCOORD_0":197,
-						"TEXCOORD_1":198
+						"POSITION":170,
+						"NORMAL":171,
+						"TEXCOORD_0":172,
+						"TEXCOORD_1":173
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":49,
+							"bufferView":40,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3569,7 +3055,7 @@
 							}
 						}
 					},
-					"indices":159,
+					"indices":149,
 					"material":28,
 					"mode":4
 				}
@@ -3580,14 +3066,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":199,
-						"NORMAL":200,
-						"TEXCOORD_0":201,
-						"TEXCOORD_1":202
+						"POSITION":174,
+						"NORMAL":175,
+						"TEXCOORD_0":176,
+						"TEXCOORD_1":177
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":50,
+							"bufferView":41,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3603,43 +3089,18 @@
 			]
 		},
 		{
-			"name":"Mansion_guest_room_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":203,
-						"NORMAL":204,
-						"TEXCOORD_0":205
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":51,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_guest_room_M_OakFloor_Pale",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":206,
-						"NORMAL":207,
-						"TEXCOORD_0":208,
-						"TEXCOORD_1":209
+						"POSITION":178,
+						"NORMAL":179,
+						"TEXCOORD_0":180,
+						"TEXCOORD_1":181
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":52,
+							"bufferView":42,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3659,14 +3120,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":210,
-						"NORMAL":211,
-						"TEXCOORD_0":212,
-						"TEXCOORD_1":213
+						"POSITION":182,
+						"NORMAL":183,
+						"TEXCOORD_0":184,
+						"TEXCOORD_1":185
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":53,
+							"bufferView":43,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3675,7 +3136,7 @@
 							}
 						}
 					},
-					"indices":214,
+					"indices":136,
 					"material":30,
 					"mode":4
 				}
@@ -3686,14 +3147,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":215,
-						"NORMAL":216,
-						"TEXCOORD_0":217,
-						"TEXCOORD_1":218
+						"POSITION":186,
+						"NORMAL":187,
+						"TEXCOORD_0":188,
+						"TEXCOORD_1":189
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":54,
+							"bufferView":44,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3702,7 +3163,7 @@
 							}
 						}
 					},
-					"indices":23,
+					"indices":98,
 					"material":31,
 					"mode":4
 				}
@@ -3713,14 +3174,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":219,
-						"NORMAL":220,
-						"TEXCOORD_0":221,
-						"TEXCOORD_1":222
+						"POSITION":190,
+						"NORMAL":191,
+						"TEXCOORD_0":192,
+						"TEXCOORD_1":193
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":55,
+							"bufferView":45,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3740,13 +3201,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":223,
-						"NORMAL":224,
-						"TEXCOORD_0":225
+						"POSITION":194,
+						"NORMAL":195,
+						"TEXCOORD_0":196
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":56,
+							"bufferView":46,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3754,8 +3215,8 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":5,
+					"indices":197,
+					"material":24,
 					"mode":4
 				}
 			]
@@ -3765,14 +3226,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":226,
-						"NORMAL":227,
-						"TEXCOORD_0":228,
-						"TEXCOORD_1":229
+						"POSITION":198,
+						"NORMAL":199,
+						"TEXCOORD_0":200,
+						"TEXCOORD_1":201
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":57,
+							"bufferView":47,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3781,7 +3242,7 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":62,
 					"material":32,
 					"mode":4
 				}
@@ -3792,14 +3253,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":230,
-						"NORMAL":231,
-						"TEXCOORD_0":232,
-						"TEXCOORD_1":233
+						"POSITION":202,
+						"NORMAL":203,
+						"TEXCOORD_0":204,
+						"TEXCOORD_1":205
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":58,
+							"bufferView":48,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3808,7 +3269,7 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":62,
 					"material":33,
 					"mode":4
 				}
@@ -3819,14 +3280,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":234,
-						"NORMAL":235,
-						"TEXCOORD_0":236,
-						"TEXCOORD_1":237
+						"POSITION":206,
+						"NORMAL":207,
+						"TEXCOORD_0":208,
+						"TEXCOORD_1":209
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":59,
+							"bufferView":49,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3835,7 +3296,7 @@
 							}
 						}
 					},
-					"indices":159,
+					"indices":149,
 					"material":34,
 					"mode":4
 				}
@@ -3846,14 +3307,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":238,
-						"NORMAL":239,
-						"TEXCOORD_0":240,
-						"TEXCOORD_1":241
+						"POSITION":210,
+						"NORMAL":211,
+						"TEXCOORD_0":212,
+						"TEXCOORD_1":213
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":60,
+							"bufferView":50,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3873,14 +3334,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":242,
-						"NORMAL":243,
-						"TEXCOORD_0":244,
-						"TEXCOORD_1":245
+						"POSITION":214,
+						"NORMAL":215,
+						"TEXCOORD_0":216,
+						"TEXCOORD_1":217
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":61,
+							"bufferView":51,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3890,7 +3351,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -3900,14 +3361,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":246,
-						"NORMAL":247,
-						"TEXCOORD_0":248,
-						"TEXCOORD_1":249
+						"POSITION":218,
+						"NORMAL":219,
+						"TEXCOORD_0":220,
+						"TEXCOORD_1":221
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":62,
+							"bufferView":52,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3923,43 +3384,18 @@
 			]
 		},
 		{
-			"name":"Mansion_kitchen_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":250,
-						"NORMAL":251,
-						"TEXCOORD_0":252
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":63,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_kitchen_M_Plaster_Kitchen",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":253,
-						"NORMAL":254,
-						"TEXCOORD_0":255,
-						"TEXCOORD_1":256
+						"POSITION":222,
+						"NORMAL":223,
+						"TEXCOORD_0":224,
+						"TEXCOORD_1":225
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":64,
+							"bufferView":53,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3968,7 +3404,7 @@
 							}
 						}
 					},
-					"indices":257,
+					"indices":226,
 					"material":37,
 					"mode":4
 				}
@@ -3979,14 +3415,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":258,
-						"NORMAL":259,
-						"TEXCOORD_0":260,
-						"TEXCOORD_1":261
+						"POSITION":227,
+						"NORMAL":228,
+						"TEXCOORD_0":229,
+						"TEXCOORD_1":230
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":65,
+							"bufferView":54,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4002,43 +3438,18 @@
 			]
 		},
 		{
-			"name":"Mansion_library_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":262,
-						"NORMAL":263,
-						"TEXCOORD_0":264
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":66,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":48,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_library_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":265,
-						"NORMAL":266,
-						"TEXCOORD_0":267,
-						"TEXCOORD_1":268
+						"POSITION":231,
+						"NORMAL":232,
+						"TEXCOORD_0":233,
+						"TEXCOORD_1":234
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":67,
+							"bufferView":55,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4048,7 +3459,7 @@
 						}
 					},
 					"indices":7,
-					"material":6,
+					"material":5,
 					"mode":4
 				}
 			]
@@ -4058,14 +3469,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":269,
-						"NORMAL":270,
-						"TEXCOORD_0":271,
-						"TEXCOORD_1":272
+						"POSITION":235,
+						"NORMAL":236,
+						"TEXCOORD_0":237,
+						"TEXCOORD_1":238
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":68,
+							"bufferView":56,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4074,7 +3485,7 @@
 							}
 						}
 					},
-					"indices":88,
+					"indices":239,
 					"material":38,
 					"mode":4
 				}
@@ -4085,14 +3496,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":273,
-						"NORMAL":274,
-						"TEXCOORD_0":275,
-						"TEXCOORD_1":276
+						"POSITION":240,
+						"NORMAL":241,
+						"TEXCOORD_0":242,
+						"TEXCOORD_1":243
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":69,
+							"bufferView":57,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4108,43 +3519,18 @@
 			]
 		},
 		{
-			"name":"Mansion_mudroom_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":277,
-						"NORMAL":278,
-						"TEXCOORD_0":279
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":70,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_mudroom_M_Mudroom_Tile",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":280,
-						"NORMAL":281,
-						"TEXCOORD_0":282,
-						"TEXCOORD_1":283
+						"POSITION":244,
+						"NORMAL":245,
+						"TEXCOORD_0":246,
+						"TEXCOORD_1":247
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":71,
+							"bufferView":58,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4164,14 +3550,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":284,
-						"NORMAL":285,
-						"TEXCOORD_0":286,
-						"TEXCOORD_1":287
+						"POSITION":248,
+						"NORMAL":249,
+						"TEXCOORD_0":250,
+						"TEXCOORD_1":251
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":72,
+							"bufferView":59,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4180,7 +3566,7 @@
 							}
 						}
 					},
-					"indices":257,
+					"indices":226,
 					"material":40,
 					"mode":4
 				}
@@ -4191,14 +3577,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":288,
-						"NORMAL":289,
-						"TEXCOORD_0":290,
-						"TEXCOORD_1":291
+						"POSITION":252,
+						"NORMAL":253,
+						"TEXCOORD_0":254,
+						"TEXCOORD_1":255
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":73,
+							"bufferView":60,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4208,32 +3594,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_office_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":292,
-						"NORMAL":293,
-						"TEXCOORD_0":294
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":74,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":214,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -4243,14 +3604,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":295,
-						"NORMAL":296,
-						"TEXCOORD_0":297,
-						"TEXCOORD_1":298
+						"POSITION":256,
+						"NORMAL":257,
+						"TEXCOORD_0":258,
+						"TEXCOORD_1":259
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":75,
+							"bufferView":61,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4260,7 +3621,7 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -4270,14 +3631,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":299,
-						"NORMAL":300,
-						"TEXCOORD_0":301,
-						"TEXCOORD_1":302
+						"POSITION":260,
+						"NORMAL":261,
+						"TEXCOORD_0":262,
+						"TEXCOORD_1":263
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":76,
+							"bufferView":62,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4286,8 +3647,8 @@
 							}
 						}
 					},
-					"indices":303,
-					"material":20,
+					"indices":264,
+					"material":19,
 					"mode":4
 				}
 			]
@@ -4297,14 +3658,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":304,
-						"NORMAL":305,
-						"TEXCOORD_0":306,
-						"TEXCOORD_1":307
+						"POSITION":265,
+						"NORMAL":266,
+						"TEXCOORD_0":267,
+						"TEXCOORD_1":268
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":77,
+							"bufferView":63,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4324,14 +3685,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":308,
-						"NORMAL":309,
-						"TEXCOORD_0":310,
-						"TEXCOORD_1":311
+						"POSITION":269,
+						"NORMAL":270,
+						"TEXCOORD_0":271,
+						"TEXCOORD_1":272
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":78,
+							"bufferView":64,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4340,7 +3701,7 @@
 							}
 						}
 					},
-					"indices":32,
+					"indices":28,
 					"material":42,
 					"mode":4
 				}
@@ -4351,14 +3712,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":312,
-						"NORMAL":313,
-						"TEXCOORD_0":314,
-						"TEXCOORD_1":315
+						"POSITION":273,
+						"NORMAL":274,
+						"TEXCOORD_0":275,
+						"TEXCOORD_1":276
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":79,
+							"bufferView":65,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4368,32 +3729,7 @@
 						}
 					},
 					"indices":7,
-					"material":15,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_powder_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":316,
-						"NORMAL":317,
-						"TEXCOORD_0":318
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":80,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":48,
-					"material":5,
+					"material":14,
 					"mode":4
 				}
 			]
@@ -4403,14 +3739,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":319,
-						"NORMAL":320,
-						"TEXCOORD_0":321,
-						"TEXCOORD_1":322
+						"POSITION":277,
+						"NORMAL":278,
+						"TEXCOORD_0":279,
+						"TEXCOORD_1":280
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":81,
+							"bufferView":66,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4419,7 +3755,7 @@
 							}
 						}
 					},
-					"indices":159,
+					"indices":149,
 					"material":43,
 					"mode":4
 				}
@@ -4430,14 +3766,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":323,
-						"NORMAL":324,
-						"TEXCOORD_0":325,
-						"TEXCOORD_1":326
+						"POSITION":281,
+						"NORMAL":282,
+						"TEXCOORD_0":283,
+						"TEXCOORD_1":284
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":82,
+							"bufferView":67,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4446,7 +3782,7 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":62,
 					"material":44,
 					"mode":4
 				}
@@ -4457,14 +3793,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":327,
-						"NORMAL":328,
-						"TEXCOORD_0":329,
-						"TEXCOORD_1":330
+						"POSITION":285,
+						"NORMAL":286,
+						"TEXCOORD_0":287,
+						"TEXCOORD_1":288
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":83,
+							"bufferView":68,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4484,14 +3820,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":331,
-						"NORMAL":332,
-						"TEXCOORD_0":333,
-						"TEXCOORD_1":334
+						"POSITION":289,
+						"NORMAL":290,
+						"TEXCOORD_0":291,
+						"TEXCOORD_1":292
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":84,
+							"bufferView":69,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4507,43 +3843,18 @@
 			]
 		},
 		{
-			"name":"Mansion_primary_bath_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":335,
-						"NORMAL":336,
-						"TEXCOORD_0":337
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":85,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_primary_bedroom_M_Ceiling_Warm",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":338,
-						"NORMAL":339,
-						"TEXCOORD_0":340,
-						"TEXCOORD_1":341
+						"POSITION":293,
+						"NORMAL":294,
+						"TEXCOORD_0":295,
+						"TEXCOORD_1":296
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":86,
+							"bufferView":70,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4559,43 +3870,18 @@
 			]
 		},
 		{
-			"name":"Mansion_primary_bedroom_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":342,
-						"NORMAL":343,
-						"TEXCOORD_0":344
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":87,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":48,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_primary_bedroom_M_OakFloor_Smoked",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":345,
-						"NORMAL":346,
-						"TEXCOORD_0":347,
-						"TEXCOORD_1":348
+						"POSITION":297,
+						"NORMAL":298,
+						"TEXCOORD_0":299,
+						"TEXCOORD_1":300
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":88,
+							"bufferView":71,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4605,7 +3891,7 @@
 						}
 					},
 					"indices":7,
-					"material":6,
+					"material":5,
 					"mode":4
 				}
 			]
@@ -4615,14 +3901,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":349,
-						"NORMAL":350,
-						"TEXCOORD_0":351,
-						"TEXCOORD_1":352
+						"POSITION":301,
+						"NORMAL":302,
+						"TEXCOORD_0":303,
+						"TEXCOORD_1":304
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":89,
+							"bufferView":72,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4631,7 +3917,7 @@
 							}
 						}
 					},
-					"indices":7,
+					"indices":62,
 					"material":47,
 					"mode":4
 				}
@@ -4642,14 +3928,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":353,
-						"NORMAL":354,
-						"TEXCOORD_0":355,
-						"TEXCOORD_1":356
+						"POSITION":305,
+						"NORMAL":306,
+						"TEXCOORD_0":307,
+						"TEXCOORD_1":308
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":90,
+							"bufferView":73,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4658,7 +3944,7 @@
 							}
 						}
 					},
-					"indices":88,
+					"indices":75,
 					"material":48,
 					"mode":4
 				}
@@ -4669,14 +3955,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":357,
-						"NORMAL":358,
-						"TEXCOORD_0":359,
-						"TEXCOORD_1":360
+						"POSITION":309,
+						"NORMAL":310,
+						"TEXCOORD_0":311,
+						"TEXCOORD_1":312
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":91,
+							"bufferView":74,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4686,7 +3972,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -4696,14 +3982,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":361,
-						"NORMAL":362,
-						"TEXCOORD_0":363,
-						"TEXCOORD_1":364
+						"POSITION":313,
+						"NORMAL":314,
+						"TEXCOORD_0":315,
+						"TEXCOORD_1":316
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":92,
+							"bufferView":75,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4723,13 +4009,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":365,
-						"NORMAL":366,
-						"TEXCOORD_0":367
+						"POSITION":317,
+						"NORMAL":318,
+						"TEXCOORD_0":319
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":93,
+							"bufferView":76,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4737,8 +4023,8 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":5,
+					"indices":62,
+					"material":24,
 					"mode":4
 				}
 			]
@@ -4748,14 +4034,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":368,
-						"NORMAL":369,
-						"TEXCOORD_0":370,
-						"TEXCOORD_1":371
+						"POSITION":320,
+						"NORMAL":321,
+						"TEXCOORD_0":322,
+						"TEXCOORD_1":323
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":94,
+							"bufferView":77,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4764,7 +4050,7 @@
 							}
 						}
 					},
-					"indices":88,
+					"indices":75,
 					"material":49,
 					"mode":4
 				}
@@ -4775,14 +4061,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":372,
-						"NORMAL":373,
-						"TEXCOORD_0":374,
-						"TEXCOORD_1":375
+						"POSITION":324,
+						"NORMAL":325,
+						"TEXCOORD_0":326,
+						"TEXCOORD_1":327
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":95,
+							"bufferView":78,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4792,32 +4078,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_ugallery_e_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":376,
-						"NORMAL":377,
-						"TEXCOORD_0":378
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":96,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -4827,14 +4088,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":379,
-						"NORMAL":380,
-						"TEXCOORD_0":381,
-						"TEXCOORD_1":382
+						"POSITION":328,
+						"NORMAL":329,
+						"TEXCOORD_0":330,
+						"TEXCOORD_1":331
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":97,
+							"bufferView":79,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4844,7 +4105,7 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -4854,14 +4115,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":383,
-						"NORMAL":384,
-						"TEXCOORD_0":385,
-						"TEXCOORD_1":386
+						"POSITION":332,
+						"NORMAL":333,
+						"TEXCOORD_0":334,
+						"TEXCOORD_1":335
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":98,
+							"bufferView":80,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4870,8 +4131,8 @@
 							}
 						}
 					},
-					"indices":214,
-					"material":20,
+					"indices":336,
+					"material":19,
 					"mode":4
 				}
 			]
@@ -4881,14 +4142,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":387,
-						"NORMAL":388,
-						"TEXCOORD_0":389,
-						"TEXCOORD_1":390
+						"POSITION":337,
+						"NORMAL":338,
+						"TEXCOORD_0":339,
+						"TEXCOORD_1":340
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":99,
+							"bufferView":81,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4898,32 +4159,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_ugallery_n_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":391,
-						"NORMAL":392,
-						"TEXCOORD_0":393
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":100,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -4933,14 +4169,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":394,
-						"NORMAL":395,
-						"TEXCOORD_0":396,
-						"TEXCOORD_1":397
+						"POSITION":341,
+						"NORMAL":342,
+						"TEXCOORD_0":343,
+						"TEXCOORD_1":344
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":101,
+							"bufferView":82,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4950,7 +4186,7 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -4960,14 +4196,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":398,
-						"NORMAL":399,
-						"TEXCOORD_0":400,
-						"TEXCOORD_1":401
+						"POSITION":345,
+						"NORMAL":346,
+						"TEXCOORD_0":347,
+						"TEXCOORD_1":348
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":102,
+							"bufferView":83,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4976,8 +4212,8 @@
 							}
 						}
 					},
-					"indices":93,
-					"material":20,
+					"indices":111,
+					"material":19,
 					"mode":4
 				}
 			]
@@ -4987,14 +4223,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":402,
-						"NORMAL":403,
-						"TEXCOORD_0":404,
-						"TEXCOORD_1":405
+						"POSITION":349,
+						"NORMAL":350,
+						"TEXCOORD_0":351,
+						"TEXCOORD_1":352
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":103,
+							"bufferView":84,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5004,32 +4240,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_ugallery_s_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":406,
-						"NORMAL":407,
-						"TEXCOORD_0":408
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":104,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -5039,14 +4250,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":409,
-						"NORMAL":410,
-						"TEXCOORD_0":411,
-						"TEXCOORD_1":412
+						"POSITION":353,
+						"NORMAL":354,
+						"TEXCOORD_0":355,
+						"TEXCOORD_1":356
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":105,
+							"bufferView":85,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5056,7 +4267,7 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -5066,14 +4277,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":413,
-						"NORMAL":414,
-						"TEXCOORD_0":415,
-						"TEXCOORD_1":416
+						"POSITION":357,
+						"NORMAL":358,
+						"TEXCOORD_0":359,
+						"TEXCOORD_1":360
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":106,
+							"bufferView":86,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5082,8 +4293,8 @@
 							}
 						}
 					},
-					"indices":88,
-					"material":20,
+					"indices":75,
+					"material":19,
 					"mode":4
 				}
 			]
@@ -5093,14 +4304,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":417,
-						"NORMAL":418,
-						"TEXCOORD_0":419,
-						"TEXCOORD_1":420
+						"POSITION":361,
+						"NORMAL":362,
+						"TEXCOORD_0":363,
+						"TEXCOORD_1":364
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":107,
+							"bufferView":87,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5110,32 +4321,7 @@
 						}
 					},
 					"indices":7,
-					"material":19,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_ugallery_w_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":421,
-						"NORMAL":422,
-						"TEXCOORD_0":423
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":108,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":5,
+					"material":18,
 					"mode":4
 				}
 			]
@@ -5145,14 +4331,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":424,
-						"NORMAL":425,
-						"TEXCOORD_0":426,
-						"TEXCOORD_1":427
+						"POSITION":365,
+						"NORMAL":366,
+						"TEXCOORD_0":367,
+						"TEXCOORD_1":368
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":109,
+							"bufferView":88,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5162,7 +4348,7 @@
 						}
 					},
 					"indices":7,
-					"material":11,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -5172,14 +4358,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":428,
-						"NORMAL":429,
-						"TEXCOORD_0":430,
-						"TEXCOORD_1":431
+						"POSITION":369,
+						"NORMAL":370,
+						"TEXCOORD_0":371,
+						"TEXCOORD_1":372
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":110,
+							"bufferView":89,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5195,43 +4381,18 @@
 			]
 		},
 		{
-			"name":"Mansion_wine_room_M_LightStrip",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":432,
-						"NORMAL":433,
-						"TEXCOORD_0":434
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":111,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":159,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
 			"name":"Mansion_wine_room_M_Plaster_Cellar",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":435,
-						"NORMAL":436,
-						"TEXCOORD_0":437,
-						"TEXCOORD_1":438
+						"POSITION":373,
+						"NORMAL":374,
+						"TEXCOORD_0":375,
+						"TEXCOORD_1":376
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":112,
+							"bufferView":90,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5240,7 +4401,7 @@
 							}
 						}
 					},
-					"indices":32,
+					"indices":28,
 					"material":51,
 					"mode":4
 				}
@@ -5251,14 +4412,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":439,
-						"NORMAL":440,
-						"TEXCOORD_0":441,
-						"TEXCOORD_1":442
+						"POSITION":377,
+						"NORMAL":378,
+						"TEXCOORD_0":379,
+						"TEXCOORD_1":380
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":113,
+							"bufferView":91,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5418,6 +4579,14 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":18
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
@@ -5428,8 +4597,8 @@
 		},
 		{
 			"mimeType":"image/webp",
-			"name":"T_Courtyard_Limestone_BaseColor",
-			"uri":"textures/T_Courtyard_Limestone_BaseColor.webp"
+			"name":"T_Courtyard_Paving_BaseColor",
+			"uri":"textures/T_Courtyard_Paving_BaseColor.webp"
 		},
 		{
 			"mimeType":"image/webp",
@@ -5450,6 +4619,11 @@
 			"mimeType":"image/webp",
 			"name":"T_Walnut_BaseColor",
 			"uri":"textures/T_Walnut_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Plaster_Wall_BaseColor",
+			"uri":"textures/T_Plaster_Wall_BaseColor.webp"
 		},
 		{
 			"mimeType":"image/webp",
@@ -5515,32 +4689,32 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":5784,
+			"count":10896,
 			"max":[
-				26.059999465942383,
-				8.375,
-				0.05999999865889549
+				24.059999465942383,
+				0.006000000052154064,
+				9.408500671386719
 			],
 			"min":[
-				-26.059999465942383,
-				-0.02500000037252903,
-				-40.060001373291016
+				-28.059999465942383,
+				-8.394000053405762,
+				-30.71150016784668
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":5784,
+			"count":10896,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":5784,
+			"count":10896,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":8676,
+			"count":16344,
 			"type":"SCALAR"
 		},
 		{
@@ -5605,7 +4779,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":144,
 			"max":[
 				11.25,
 				0.5250002145767212,
@@ -5620,112 +4794,82 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":144,
 			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":120,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":180,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2.75,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-2.75,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				2.8000004291534424,
-				0.0024999999441206455,
-				3.5400009155273438
-			],
-			"min":[
-				-1.5999996662139893,
-				-0.0024999999441206455,
-				-3.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":108,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				2.75,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-2.75,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
 			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":216,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				2.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-2.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":264,
 			"max":[
 				2.750000238418579,
 				2.0999999046325684,
@@ -5740,22 +4884,22 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":216,
+			"count":396,
 			"type":"SCALAR"
 		},
 		{
@@ -5820,7 +4964,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"max":[
 				9.649999618530273,
 				2.0999999046325684,
@@ -5835,48 +4979,18 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"max":[
-				3.5,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-3.5,
-				-0.0024999999441206455,
-				-3.8400001525878906
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
@@ -5940,27 +5054,132 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
 			"max":[
-				5.300000190734863,
-				0.0024999999441206455,
-				4.539999961853027
+				8,
+				0.10000000149011612,
+				4.75
 			],
 			"min":[
-				-6.689999580383301,
-				-0.0024999999441206455,
-				-2.299999952316284
+				-8,
+				-0.10000000149011612,
+				-4.75
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":408,
+			"max":[
+				15,
+				2.1000001430511475,
+				9.424999237060547
+			],
+			"min":[
+				-1,
+				-2.0999999046325684,
+				-0.07500076293945312
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":408,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":408,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":408,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":612,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.08699937164783478,
+				2.0999999046325684,
+				4.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-2.0999999046325684,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
 			"count":72,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				8,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-8,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
@@ -5995,16 +5214,51 @@
 		},
 		{
 			"componentType":5126,
-			"count":240,
+			"count":336,
 			"max":[
 				15,
-				2.1000001430511475,
-				9.424999237060547
+				4.199999809265137,
+				0.07500040531158447
 			],
 			"min":[
-				-1,
-				-2.0999999046325684,
-				-0.07500076293945312
+				-1.000000238418579,
+				-4.199999809265137,
+				-9.424999237060547
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":336,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":336,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":336,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":504,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"max":[
+				11.25,
+				6.09999942779541,
+				0.08700032532215118
+			],
+			"min":[
+				-4.75,
+				-2.299999952316284,
+				-0.07500000298023224
 			],
 			"type":"VEC3"
 		},
@@ -6026,191 +5280,6 @@
 		{
 			"componentType":5123,
 			"count":360,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.07500000298023224,
-				2.0999999046325684,
-				4.75
-			],
-			"min":[
-				-0.07500000298023224,
-				-2.0999999046325684,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				8,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-8,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				8,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-8,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"max":[
-				6,
-				0.0024999999441206455,
-				0.05000000074505806
-			],
-			"min":[
-				-6,
-				-0.0024999999441206455,
-				-2.8500001430511475
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"max":[
-				15,
-				4.199999809265137,
-				0.07500040531158447
-			],
-			"min":[
-				-1.000000238418579,
-				-4.199999809265137,
-				-9.424999237060547
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":288,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"max":[
-				11.25,
-				6.09999942779541,
-				0.07500000298023224
-			],
-			"min":[
-				-4.75,
-				-2.299999952316284,
-				-0.07500000298023224
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":252,
 			"type":"SCALAR"
 		},
 		{
@@ -6282,376 +5351,6 @@
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				5.5
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-5.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				1.75,
-				0.10000000149011612,
-				7
-			],
-			"min":[
-				-1.75,
-				-0.10000000149011612,
-				-7
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.07500000298023224,
-				2.0999999046325684,
-				4.974999904632568
-			],
-			"min":[
-				-0.07500000298023224,
-				-2.0999999046325684,
-				-9.02500057220459
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				12,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-12,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"max":[
-				26.75,
-				2.1000001430511475,
-				3.4250001907348633
-			],
-			"min":[
-				-0.2500001788139343,
-				-2.0999999046325684,
-				-0.07500000298023224
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":168,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				12,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-12,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":144,
-			"max":[
-				13.5,
-				0.6000002026557922,
-				3.4250004291534424
-			],
-			"min":[
-				-13.5,
-				-3.5999999046325684,
-				-0.07500000298023224
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":144,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":144,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":144,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				1.75,
-				0.10000000149011612,
-				7
-			],
-			"min":[
-				-1.75,
-				-0.10000000149011612,
-				-7
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				5.5
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-5.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
 				1.75,
 				0.10000000149011612,
 				7
@@ -6683,13 +5382,13 @@
 			"count":120,
 			"max":[
 				0.07500000298023224,
-				2.1000001430511475,
-				0.75
+				2.0999999046325684,
+				4.974999904632568
 			],
 			"min":[
-				-0.07500000298023224,
+				-0.08700032532215118,
 				-2.0999999046325684,
-				-13.25
+				-9.02500057220459
 			],
 			"type":"VEC3"
 		},
@@ -6711,6 +5410,286 @@
 		{
 			"componentType":5123,
 			"count":180,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"max":[
+				26.75,
+				2.1000001430511475,
+				3.4250001907348633
+			],
+			"min":[
+				-0.2500001788139343,
+				-2.0999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":288,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":432,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"max":[
+				13.5,
+				0.6000002026557922,
+				3.4250004291534424
+			],
+			"min":[
+				-13.5,
+				-3.5999999046325684,
+				-0.07500000298023224
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.75,
+				0.10000000149011612,
+				7
+			],
+			"min":[
+				-1.75,
+				-0.10000000149011612,
+				-7
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"max":[
+				0.08700032532215118,
+				2.1000001430511475,
+				0.75
+			],
+			"min":[
+				-0.07500000298023224,
+				-2.0999999046325684,
+				-13.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":288,
 			"type":"SCALAR"
 		},
 		{
@@ -6775,7 +5754,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"max":[
 				11.5,
 				2.1000001430511475,
@@ -6790,26 +5769,31 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"max":[
 				9.649999618530273,
 				2.0999999046325684,
-				0.07500000298023224
+				0.08699999749660492
 			],
 			"min":[
 				-2.8499999046325684,
@@ -6820,17 +5804,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
@@ -6890,31 +5874,6 @@
 		},
 		{
 			"componentType":5126,
-			"count":48,
-			"max":[
-				0.05999999865889549,
-				0.0024999999441206455,
-				8
-			],
-			"min":[
-				-5.660000324249268,
-				-0.0024999999441206455,
-				-8
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
 			"count":24,
 			"max":[
 				6.25,
@@ -6945,7 +5904,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":504,
 			"max":[
 				11,
 				4.200000286102295,
@@ -6960,27 +5919,27 @@
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":504,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":504,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":288,
+			"count":504,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":432,
+			"count":756,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"max":[
 				12,
 				4.199999809265137,
@@ -6989,78 +5948,23 @@
 			"min":[
 				-0.5,
 				-4.199999809265137,
-				-0.07500000298023224
+				-0.08700032532215118
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":120,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				6.25,
-				0.10000000149011612,
-				5.25
-			],
-			"min":[
-				-6.25,
-				-0.10000000149011612,
-				-5.25
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				8.5,
-				0.0024999999441206455,
-				4.539999961853027
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-3
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
@@ -7095,7 +5999,37 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":192,
 			"max":[
 				6.25,
 				1.899999976158142,
@@ -7110,29 +6044,24 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":192,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":192,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":192,
 			"type":"VEC2"
 		},
 		{
-			"componentType":5123,
-			"count":144,
-			"type":"SCALAR"
-		},
-		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"max":[
-				0.07500000298023224,
+				0.08700032532215118,
 				1.899999976158142,
 				1.475000023841858
 			],
@@ -7145,17 +6074,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
@@ -7192,14 +6121,14 @@
 			"componentType":5126,
 			"count":72,
 			"max":[
-				5.839999198913574,
+				7.560000419616699,
 				0.0024999999441206455,
-				0.8999996185302734
+				2.299999952316284
 			],
 			"min":[
-				-4.5,
+				-3,
 				-0.0024999999441206455,
-				-3.1000003814697266
+				-5.300000190734863
 			],
 			"type":"VEC3"
 		},
@@ -7214,8 +6143,13 @@
 			"type":"VEC2"
 		},
 		{
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"max":[
 				6.25,
 				1.899999976158142,
@@ -7224,35 +6158,35 @@
 			"min":[
 				-6.25,
 				-1.899999976158142,
-				-0.07500000298023224
+				-0.08700032532215118
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"max":[
 				0.07500000298023224,
 				1.899999976158142,
 				4.75
 			],
 			"min":[
-				-0.07500000298023224,
+				-0.08699937164783478,
 				-1.899999976158142,
 				-4.75
 			],
@@ -7260,22 +6194,22 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"max":[
 				11.75,
 				1.899999976158142,
@@ -7290,17 +6224,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
@@ -7395,32 +6329,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
-			"max":[
-				5.5,
-				0.0024999999441206455,
-				1.9900007247924805
-			],
-			"min":[
-				-7.5,
-				-0.0024999999441206455,
-				-3.089999198913574
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":264,
+			"count":456,
 			"max":[
 				17,
 				2.1000001430511475,
@@ -7435,22 +6344,22 @@
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":456,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":456,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":456,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":396,
+			"count":684,
 			"type":"SCALAR"
 		},
 		{
@@ -7485,31 +6394,6 @@
 		},
 		{
 			"componentType":5126,
-			"count":48,
-			"max":[
-				7.5,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-7.5,
-				-0.0024999999441206455,
-				-4.539999008178711
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
 			"count":24,
 			"max":[
 				9,
@@ -7540,7 +6424,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":360,
 			"max":[
 				17.5,
 				1.899999976158142,
@@ -7555,17 +6439,52 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":360,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":360,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":360,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":540,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				6.25,
+				0.10000000149011612,
+				5.25
+			],
+			"min":[
+				-6.25,
+				-0.10000000149011612,
+				-5.25
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
@@ -7600,62 +6519,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
-			"max":[
-				5.5,
-				0.0024999999441206455,
-				8.139999389648438
-			],
-			"min":[
-				-5.5,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				6.25,
-				0.10000000149011612,
-				5.25
-			],
-			"min":[
-				-6.25,
-				-0.10000000149011612,
-				-5.25
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":264,
+			"count":456,
 			"max":[
 				6.25,
 				2.1000001430511475,
@@ -7670,72 +6534,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":456,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":456,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":264,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				6.75,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-6.75,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"max":[
-				9.300000190734863,
-				0.0024999999441206455,
-				3.439999580383301
-			],
-			"min":[
-				-2.5,
-				-0.0024999999441206455,
-				-1.0399999618530273
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
+			"count":456,
 			"type":"VEC2"
 		},
 		{
@@ -7770,7 +6579,37 @@
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":24,
+			"max":[
+				6.75,
+				0.10000000149011612,
+				4.75
+			],
+			"min":[
+				-6.75,
+				-0.10000000149011612,
+				-4.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":384,
 			"max":[
 				13,
 				1.899999976158142,
@@ -7785,22 +6624,22 @@
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":384,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":384,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":384,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":324,
+			"count":576,
 			"type":"SCALAR"
 		},
 		{
@@ -7835,7 +6674,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"max":[
 				2.750000238418579,
 				2.0999999046325684,
@@ -7850,17 +6689,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
@@ -7895,32 +6734,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":48,
-			"max":[
-				1.7999999523162842,
-				0.0024999999441206455,
-				4.439999580383301
-			],
-			"min":[
-				-1.7999999523162842,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":120,
+			"count":216,
 			"max":[
 				5,
 				1.899999976158142,
@@ -7935,29 +6749,29 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":216,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"max":[
 				0.07500000298023224,
 				1.899999976158142,
 				4.75
 			],
 			"min":[
-				-0.07500000298023224,
+				-0.08699999749660492,
 				-1.899999976158142,
 				-4.75
 			],
@@ -7965,17 +6779,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
@@ -8040,27 +6854,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
 			"max":[
-				2.640000104904175,
-				0.0024999999441206455,
-				6.049999237060547
+				8,
+				0.10000000149011612,
+				4.75
 			],
 			"min":[
-				-3.299999713897705,
-				-0.0024999999441206455,
-				-0.03999999910593033
+				-8,
+				-0.10000000149011612,
+				-4.75
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
@@ -8097,62 +6916,7 @@
 			"componentType":5126,
 			"count":48,
 			"max":[
-				4.5,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-6,
-				-0.0024999999441206455,
-				-4.739998817443848
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				8,
-				0.10000000149011612,
-				4.75
-			],
-			"min":[
-				-8,
-				-0.10000000149011612,
-				-4.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.07500000298023224,
+				0.08699937164783478,
 				1.899999976158142,
 				4.75
 			],
@@ -8165,22 +6929,22 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"max":[
 				15,
 				1.899999976158142,
@@ -8195,17 +6959,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
@@ -8270,14 +7034,14 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"max":[
-				3,
+				2.0399999618530273,
 				0.0024999999441206455,
 				3.75
 			],
 			"min":[
-				-1,
+				-0.03999999910593033,
 				-0.0024999999441206455,
 				-3.75
 			],
@@ -8285,17 +7049,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"max":[
 				2.750000238418579,
 				2.0999999046325684,
@@ -8310,72 +7074,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				1.75,
-				0.10000000149011612,
-				7
-			],
-			"min":[
-				-1.75,
-				-0.10000000149011612,
-				-7
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				5.5
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-5.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
@@ -8410,101 +7119,16 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
-			"max":[
-				0.07500000298023224,
-				1.899999976158142,
-				0.25
-			],
-			"min":[
-				-0.07500000298023224,
-				-1.899999976158142,
-				-13.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
 			"count":24,
 			"max":[
-				13.5,
+				1.75,
 				0.10000000149011612,
-				1.75
+				7
 			],
 			"min":[
-				-13.5,
+				-1.75,
 				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				12,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-12,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
+				-7
 			],
 			"type":"VEC3"
 		},
@@ -8526,6 +7150,101 @@
 		{
 			"componentType":5126,
 			"count":168,
+			"max":[
+				0.07500000298023224,
+				1.899999976158142,
+				0.25
+			],
+			"min":[
+				-0.08700032532215118,
+				-1.899999976158142,
+				-13.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":168,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":252,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":288,
 			"max":[
 				26.400001525878906,
 				1.899999976158142,
@@ -8540,72 +7259,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":168,
+			"count":288,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":168,
+			"count":288,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":168,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				13.5,
-				0.10000000149011612,
-				1.75
-			],
-			"min":[
-				-13.5,
-				-0.10000000149011612,
-				-1.75
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				12,
-				0.0024999999441206455,
-				0.03999999910593033
-			],
-			"min":[
-				-12,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
+			"count":288,
 			"type":"VEC2"
 		},
 		{
@@ -8640,7 +7304,37 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":24,
+			"max":[
+				13.5,
+				0.10000000149011612,
+				1.75
+			],
+			"min":[
+				-13.5,
+				-0.10000000149011612,
+				-1.75
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":336,
 			"max":[
 				25.900001525878906,
 				1.899999976158142,
@@ -8655,17 +7349,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
@@ -8692,31 +7386,6 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.03999999910593033,
-				0.0024999999441206455,
-				5.5
-			],
-			"min":[
-				-0.03999999910593033,
-				-0.0024999999441206455,
-				-5.5
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
@@ -8785,32 +7454,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
-			"max":[
-				5.2400007247924805,
-				0.0024999999441206455,
-				7.800000190734863
-			],
-			"min":[
-				-5.239999771118164,
-				-0.0024999999441206455,
-				-0.03999999910593033
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":120,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":120,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5126,
-			"count":144,
+			"count":264,
 			"max":[
 				6.25,
 				2.0999999046325684,
@@ -8825,17 +7469,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
-			"count":144,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
@@ -8872,573 +7516,463 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":14067,
+			"byteLength":28023,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":337,
-			"byteOffset":14068
+			"byteLength":314,
+			"byteOffset":28024
 		},
 		{
 			"buffer":0,
-			"byteLength":1971,
-			"byteOffset":14408
+			"byteLength":1891,
+			"byteOffset":28340
 		},
 		{
 			"buffer":0,
-			"byteLength":868,
-			"byteOffset":16380
-		},
-		{
-			"buffer":0,
-			"byteLength":405,
-			"byteOffset":17248
-		},
-		{
-			"buffer":0,
-			"byteLength":578,
-			"byteOffset":17656
-		},
-		{
-			"buffer":0,
-			"byteLength":402,
-			"byteOffset":18236
-		},
-		{
-			"buffer":0,
-			"byteLength":1048,
-			"byteOffset":18640
+			"byteLength":873,
+			"byteOffset":30232
 		},
 		{
 			"buffer":0,
 			"byteLength":389,
-			"byteOffset":19688
+			"byteOffset":31108
 		},
 		{
 			"buffer":0,
-			"byteLength":397,
-			"byteOffset":20080
+			"byteLength":385,
+			"byteOffset":31500
 		},
 		{
 			"buffer":0,
-			"byteLength":1030,
-			"byteOffset":20480
+			"byteLength":1559,
+			"byteOffset":31888
 		},
 		{
 			"buffer":0,
-			"byteLength":387,
-			"byteOffset":21512
+			"byteLength":375,
+			"byteOffset":33448
+		},
+		{
+			"buffer":0,
+			"byteLength":384,
+			"byteOffset":33824
+		},
+		{
+			"buffer":0,
+			"byteLength":1516,
+			"byteOffset":34208
+		},
+		{
+			"buffer":0,
+			"byteLength":379,
+			"byteOffset":35724
+		},
+		{
+			"buffer":0,
+			"byteLength":383,
+			"byteOffset":36104
+		},
+		{
+			"buffer":0,
+			"byteLength":376,
+			"byteOffset":36488
+		},
+		{
+			"buffer":0,
+			"byteLength":2102,
+			"byteOffset":36864
+		},
+		{
+			"buffer":0,
+			"byteLength":564,
+			"byteOffset":38968
+		},
+		{
+			"buffer":0,
+			"byteLength":383,
+			"byteOffset":39532
+		},
+		{
+			"buffer":0,
+			"byteLength":376,
+			"byteOffset":39916
+		},
+		{
+			"buffer":0,
+			"byteLength":1805,
+			"byteOffset":40292
+		},
+		{
+			"buffer":0,
+			"byteLength":1389,
+			"byteOffset":42100
+		},
+		{
+			"buffer":0,
+			"byteLength":2755,
+			"byteOffset":43492
 		},
 		{
 			"buffer":0,
 			"byteLength":395,
-			"byteOffset":21900
+			"byteOffset":46248
 		},
 		{
 			"buffer":0,
-			"byteLength":395,
-			"byteOffset":22296
+			"byteLength":386,
+			"byteOffset":46644
 		},
 		{
 			"buffer":0,
-			"byteLength":577,
-			"byteOffset":22692
+			"byteLength":919,
+			"byteOffset":47032
 		},
 		{
 			"buffer":0,
-			"byteLength":389,
-			"byteOffset":23272
+			"byteLength":396,
+			"byteOffset":47952
 		},
 		{
 			"buffer":0,
-			"byteLength":1394,
-			"byteOffset":23664
+			"byteLength":376,
+			"byteOffset":48348
 		},
 		{
 			"buffer":0,
-			"byteLength":413,
-			"byteOffset":25060
+			"byteLength":1637,
+			"byteOffset":48724
 		},
 		{
 			"buffer":0,
-			"byteLength":394,
-			"byteOffset":25476
+			"byteLength":396,
+			"byteOffset":50364
 		},
 		{
 			"buffer":0,
-			"byteLength":389,
-			"byteOffset":25872
+			"byteLength":376,
+			"byteOffset":50760
+		},
+		{
+			"buffer":0,
+			"byteLength":1475,
+			"byteOffset":51136
+		},
+		{
+			"buffer":0,
+			"byteLength":396,
+			"byteOffset":52612
+		},
+		{
+			"buffer":0,
+			"byteLength":384,
+			"byteOffset":53008
+		},
+		{
+			"buffer":0,
+			"byteLength":1179,
+			"byteOffset":53392
+		},
+		{
+			"buffer":0,
+			"byteLength":385,
+			"byteOffset":54572
 		},
 		{
 			"buffer":0,
 			"byteLength":380,
-			"byteOffset":26264
+			"byteOffset":54960
 		},
 		{
 			"buffer":0,
-			"byteLength":1197,
-			"byteOffset":26644
+			"byteLength":1329,
+			"byteOffset":55340
 		},
 		{
 			"buffer":0,
-			"byteLength":1087,
-			"byteOffset":27844
+			"byteLength":986,
+			"byteOffset":56672
 		},
 		{
 			"buffer":0,
-			"byteLength":2712,
-			"byteOffset":28932
+			"byteLength":719,
+			"byteOffset":57660
 		},
 		{
 			"buffer":0,
-			"byteLength":412,
-			"byteOffset":31644
+			"byteLength":385,
+			"byteOffset":58380
 		},
 		{
 			"buffer":0,
-			"byteLength":263,
-			"byteOffset":32056
+			"byteLength":380,
+			"byteOffset":58768
 		},
 		{
 			"buffer":0,
-			"byteLength":400,
-			"byteOffset":32320
+			"byteLength":2441,
+			"byteOffset":59148
 		},
 		{
 			"buffer":0,
-			"byteLength":722,
-			"byteOffset":32720
+			"byteLength":1297,
+			"byteOffset":61592
 		},
 		{
 			"buffer":0,
-			"byteLength":403,
-			"byteOffset":33444
+			"byteLength":384,
+			"byteOffset":62892
 		},
 		{
 			"buffer":0,
-			"byteLength":253,
-			"byteOffset":33848
+			"byteLength":377,
+			"byteOffset":63276
 		},
 		{
 			"buffer":0,
-			"byteLength":386,
-			"byteOffset":34104
+			"byteLength":1231,
+			"byteOffset":63656
 		},
 		{
 			"buffer":0,
-			"byteLength":1117,
-			"byteOffset":34492
+			"byteLength":977,
+			"byteOffset":64888
 		},
 		{
 			"buffer":0,
-			"byteLength":404,
-			"byteOffset":35612
+			"byteLength":384,
+			"byteOffset":65868
 		},
 		{
 			"buffer":0,
-			"byteLength":253,
-			"byteOffset":36016
+			"byteLength":543,
+			"byteOffset":66252
 		},
 		{
 			"buffer":0,
-			"byteLength":386,
-			"byteOffset":36272
-		},
-		{
-			"buffer":0,
-			"byteLength":1061,
-			"byteOffset":36660
-		},
-		{
-			"buffer":0,
-			"byteLength":413,
-			"byteOffset":37724
-		},
-		{
-			"buffer":0,
-			"byteLength":263,
-			"byteOffset":38140
-		},
-		{
-			"buffer":0,
-			"byteLength":400,
-			"byteOffset":38404
-		},
-		{
-			"buffer":0,
-			"byteLength":857,
-			"byteOffset":38804
-		},
-		{
-			"buffer":0,
-			"byteLength":399,
-			"byteOffset":39664
-		},
-		{
-			"buffer":0,
-			"byteLength":396,
-			"byteOffset":40064
-		},
-		{
-			"buffer":0,
-			"byteLength":946,
-			"byteOffset":40460
-		},
-		{
-			"buffer":0,
-			"byteLength":773,
-			"byteOffset":41408
-		},
-		{
-			"buffer":0,
-			"byteLength":759,
-			"byteOffset":42184
-		},
-		{
-			"buffer":0,
-			"byteLength":399,
-			"byteOffset":42944
-		},
-		{
-			"buffer":0,
-			"byteLength":371,
-			"byteOffset":43344
-		},
-		{
-			"buffer":0,
-			"byteLength":396,
-			"byteOffset":43716
-		},
-		{
-			"buffer":0,
-			"byteLength":1539,
-			"byteOffset":44112
-		},
-		{
-			"buffer":0,
-			"byteLength":930,
-			"byteOffset":45652
-		},
-		{
-			"buffer":0,
-			"byteLength":397,
-			"byteOffset":46584
-		},
-		{
-			"buffer":0,
-			"byteLength":586,
-			"byteOffset":46984
-		},
-		{
-			"buffer":0,
-			"byteLength":392,
-			"byteOffset":47572
-		},
-		{
-			"buffer":0,
-			"byteLength":812,
-			"byteOffset":47964
-		},
-		{
-			"buffer":0,
-			"byteLength":769,
-			"byteOffset":48776
-		},
-		{
-			"buffer":0,
-			"byteLength":397,
-			"byteOffset":49548
-		},
-		{
-			"buffer":0,
-			"byteLength":572,
-			"byteOffset":49948
-		},
-		{
-			"buffer":0,
-			"byteLength":412,
-			"byteOffset":50520
-		},
-		{
-			"buffer":0,
-			"byteLength":415,
-			"byteOffset":50932
-		},
-		{
-			"buffer":0,
-			"byteLength":972,
-			"byteOffset":51348
-		},
-		{
-			"buffer":0,
-			"byteLength":395,
-			"byteOffset":52320
-		},
-		{
-			"buffer":0,
-			"byteLength":395,
-			"byteOffset":52716
-		},
-		{
-			"buffer":0,
-			"byteLength":389,
-			"byteOffset":53112
-		},
-		{
-			"buffer":0,
-			"byteLength":536,
-			"byteOffset":53504
-		},
-		{
-			"buffer":0,
-			"byteLength":1455,
-			"byteOffset":54040
-		},
-		{
-			"buffer":0,
-			"byteLength":395,
-			"byteOffset":55496
-		},
-		{
-			"buffer":0,
-			"byteLength":420,
-			"byteOffset":55892
-		},
-		{
-			"buffer":0,
-			"byteLength":389,
-			"byteOffset":56312
-		},
-		{
-			"buffer":0,
-			"byteLength":1224,
-			"byteOffset":56704
-		},
-		{
-			"buffer":0,
-			"byteLength":397,
-			"byteOffset":57928
-		},
-		{
-			"buffer":0,
-			"byteLength":540,
-			"byteOffset":58328
-		},
-		{
-			"buffer":0,
-			"byteLength":392,
-			"byteOffset":58868
-		},
-		{
-			"buffer":0,
-			"byteLength":1492,
-			"byteOffset":59260
-		},
-		{
-			"buffer":0,
-			"byteLength":393,
-			"byteOffset":60752
-		},
-		{
-			"buffer":0,
-			"byteLength":705,
-			"byteOffset":61148
-		},
-		{
-			"buffer":0,
-			"byteLength":389,
-			"byteOffset":61856
-		},
-		{
-			"buffer":0,
-			"byteLength":1284,
-			"byteOffset":62248
-		},
-		{
-			"buffer":0,
-			"byteLength":405,
-			"byteOffset":63532
-		},
-		{
-			"buffer":0,
-			"byteLength":1046,
-			"byteOffset":63940
-		},
-		{
-			"buffer":0,
-			"byteLength":402,
-			"byteOffset":64988
-		},
-		{
-			"buffer":0,
-			"byteLength":461,
-			"byteOffset":65392
-		},
-		{
-			"buffer":0,
-			"byteLength":940,
-			"byteOffset":65856
-		},
-		{
-			"buffer":0,
-			"byteLength":411,
+			"byteLength":553,
 			"byteOffset":66796
 		},
 		{
 			"buffer":0,
-			"byteLength":358,
-			"byteOffset":67208
+			"byteLength":562,
+			"byteOffset":67352
 		},
 		{
 			"buffer":0,
-			"byteLength":362,
-			"byteOffset":67568
+			"byteLength":1383,
+			"byteOffset":67916
 		},
 		{
 			"buffer":0,
-			"byteLength":585,
-			"byteOffset":67932
+			"byteLength":379,
+			"byteOffset":69300
 		},
 		{
 			"buffer":0,
-			"byteLength":395,
-			"byteOffset":68520
+			"byteLength":384,
+			"byteOffset":69680
 		},
 		{
 			"buffer":0,
-			"byteLength":436,
-			"byteOffset":68916
+			"byteLength":375,
+			"byteOffset":70064
+		},
+		{
+			"buffer":0,
+			"byteLength":2325,
+			"byteOffset":70440
+		},
+		{
+			"buffer":0,
+			"byteLength":385,
+			"byteOffset":72768
+		},
+		{
+			"buffer":0,
+			"byteLength":375,
+			"byteOffset":73156
+		},
+		{
+			"buffer":0,
+			"byteLength":1964,
+			"byteOffset":73532
+		},
+		{
+			"buffer":0,
+			"byteLength":384,
+			"byteOffset":75496
+		},
+		{
+			"buffer":0,
+			"byteLength":377,
+			"byteOffset":75880
+		},
+		{
+			"buffer":0,
+			"byteLength":2314,
+			"byteOffset":76260
+		},
+		{
+			"buffer":0,
+			"byteLength":382,
+			"byteOffset":78576
+		},
+		{
+			"buffer":0,
+			"byteLength":375,
+			"byteOffset":78960
+		},
+		{
+			"buffer":0,
+			"byteLength":2004,
+			"byteOffset":79336
 		},
 		{
 			"buffer":0,
 			"byteLength":389,
-			"byteOffset":69352
+			"byteOffset":81340
 		},
 		{
 			"buffer":0,
-			"byteLength":415,
-			"byteOffset":69744
+			"byteLength":1559,
+			"byteOffset":81732
 		},
 		{
 			"buffer":0,
-			"byteLength":1204,
-			"byteOffset":70160
+			"byteLength":386,
+			"byteOffset":83292
 		},
 		{
 			"buffer":0,
-			"byteLength":405,
-			"byteOffset":71364
+			"byteLength":1374,
+			"byteOffset":83680
 		},
 		{
 			"buffer":0,
-			"byteLength":402,
-			"byteOffset":71772
+			"byteLength":565,
+			"byteOffset":85056
 		},
 		{
 			"buffer":0,
-			"byteLength":533,
-			"byteOffset":72176
+			"byteLength":345,
+			"byteOffset":85624
 		},
 		{
 			"buffer":0,
-			"byteLength":1223,
-			"byteOffset":72712
+			"byteLength":351,
+			"byteOffset":85972
 		},
 		{
 			"buffer":0,
-			"byteLength":415,
-			"byteOffset":73936
+			"byteLength":383,
+			"byteOffset":86324
 		},
 		{
 			"buffer":0,
-			"byteLength":263,
-			"byteOffset":74352
+			"byteLength":375,
+			"byteOffset":86708
 		},
 		{
 			"buffer":0,
-			"byteLength":407,
-			"byteOffset":74616
+			"byteLength":566,
+			"byteOffset":87084
 		},
 		{
 			"buffer":0,
-			"byteLength":874,
-			"byteOffset":75024
+			"byteLength":1848,
+			"byteOffset":87652
 		},
 		{
 			"buffer":0,
-			"byteLength":403,
-			"byteOffset":75900
+			"byteLength":389,
+			"byteOffset":89500
 		},
 		{
 			"buffer":0,
-			"byteLength":253,
-			"byteOffset":76304
+			"byteLength":385,
+			"byteOffset":89892
 		},
 		{
 			"buffer":0,
-			"byteLength":401,
-			"byteOffset":76560
+			"byteLength":377,
+			"byteOffset":90280
 		},
 		{
 			"buffer":0,
-			"byteLength":1079,
-			"byteOffset":76964
-		},
-		{
-			"buffer":0,
-			"byteLength":404,
-			"byteOffset":78044
-		},
-		{
-			"buffer":0,
-			"byteLength":253,
-			"byteOffset":78448
-		},
-		{
-			"buffer":0,
-			"byteLength":401,
-			"byteOffset":78704
-		},
-		{
-			"buffer":0,
-			"byteLength":1159,
-			"byteOffset":79108
-		},
-		{
-			"buffer":0,
-			"byteLength":414,
-			"byteOffset":80268
-		},
-		{
-			"buffer":0,
-			"byteLength":263,
-			"byteOffset":80684
-		},
-		{
-			"buffer":0,
-			"byteLength":412,
-			"byteOffset":80948
-		},
-		{
-			"buffer":0,
-			"byteLength":397,
-			"byteOffset":81360
-		},
-		{
-			"buffer":0,
-			"byteLength":774,
-			"byteOffset":81760
-		},
-		{
-			"buffer":0,
-			"byteLength":1059,
-			"byteOffset":82536
+			"byteLength":1832,
+			"byteOffset":90660
 		},
 		{
 			"buffer":0,
 			"byteLength":395,
-			"byteOffset":83596
+			"byteOffset":92492
+		},
+		{
+			"buffer":0,
+			"byteLength":392,
+			"byteOffset":92888
+		},
+		{
+			"buffer":0,
+			"byteLength":1197,
+			"byteOffset":93280
+		},
+		{
+			"buffer":0,
+			"byteLength":396,
+			"byteOffset":94480
+		},
+		{
+			"buffer":0,
+			"byteLength":392,
+			"byteOffset":94876
+		},
+		{
+			"buffer":0,
+			"byteLength":1593,
+			"byteOffset":95268
+		},
+		{
+			"buffer":0,
+			"byteLength":396,
+			"byteOffset":96864
+		},
+		{
+			"buffer":0,
+			"byteLength":393,
+			"byteOffset":97260
+		},
+		{
+			"buffer":0,
+			"byteLength":1824,
+			"byteOffset":97656
+		},
+		{
+			"buffer":0,
+			"byteLength":397,
+			"byteOffset":99480
+		},
+		{
+			"buffer":0,
+			"byteLength":393,
+			"byteOffset":99880
+		},
+		{
+			"buffer":0,
+			"byteLength":384,
+			"byteOffset":100276
+		},
+		{
+			"buffer":0,
+			"byteLength":1566,
+			"byteOffset":100660
+		},
+		{
+			"buffer":0,
+			"byteLength":379,
+			"byteOffset":102228
 		}
 	],
 	"samplers":[
@@ -9449,7 +7983,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":83992,
+			"byteLength":102608,
 			"uri":"mansion_shell.bin"
 		}
 	]

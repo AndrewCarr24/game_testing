@@ -51,6 +51,34 @@ def cone_between(bm, a, b, r1, r2, segs=10):
                           radius1=r1, radius2=r2, depth=d.length, matrix=m)
 
 
+def welt(name, size, axis, sign, inset, corner, col, mat, parent, radius=0.0042, deform=None):
+    """A piped welt round the edge of the cushion face whose normal is sign*axis
+    (cushion of `size` centred on its origin), as a thin closed tube. `deform(Vector)`
+    bends the points like the cushion they follow."""
+    a = "xyz".index(axis)
+    o1, o2 = [b for b in range(3) if b != a]
+    h = [c / 2 - inset for c in size]
+    rect = []
+    for c1, c2 in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+        q = [0.0, 0.0, 0.0]
+        q[a] = sign * (size[a] / 2 - inset)
+        q[o1] = c1 * h[o1]
+        q[o2] = c2 * h[o2]
+        rect.append(q)
+    pts = common.fillet_polyline(rect, corner, segments=3, closed=True)
+    # subdivide the long straights a little so a deform (the back's wrap) can bend them
+    dense = []
+    for i, pa in enumerate(pts):
+        pb = pts[(i + 1) % len(pts)]
+        along_x = abs((pb - pa).x) > 0.9 * (pb - pa).length
+        steps = max(1, int((pb - pa).length / 0.11)) if deform and along_x else 1
+        for k in range(steps):
+            dense.append(pa.lerp(pb, k / steps))
+    if deform:
+        dense = [deform(v) for v in dense]
+    return common.tube_object(name, dense, radius, col, mat, parent, closed=True, profile_res=1)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -75,6 +103,9 @@ def build(**overrides):
         col, fabric, root)
     seat.location = (0, seat_y, cushion_z0 + sh / 2)
     common.add_subsurf(seat, 1, 1)
+    for tag, sgn in (("Top", 1), ("Bottom", -1)):
+        w = welt(f"{n}_Seat_Piping{tag}", (sw, sd, sh), "z", sgn, 0.0042, 0.03, col, fabric, root)
+        w.location = seat.location
 
     # --- oak seat rail, slightly inset under the cushion
     rail = common.mesh_object(
@@ -107,25 +138,33 @@ def build(**overrides):
         x = sx * (lx - 0.012)
         pts = [(x * 1.02, yb + 0.085, 0.0095), (x * 1.0, yb + 0.012, 0.30),
                (x, leg_y(rail_z0 + 0.06), rail_z0 + 0.06), (x, leg_y(p["back_z0"]), p["back_z0"]),
-               (x * 0.99, leg_y(zt), zt)]
-        pts = common.fillet_polyline(pts, 0.12, segments=6, closed=False)
+               (x * 0.99, leg_y(zt), zt), (x * 0.99, leg_y(zt) - 0.05, zt + 0.02)]   # ends inside the back
+        pts = common.fillet_polyline(pts, 0.12, segments=4, closed=False)
         common.tube_object(f"{n}_LegRear_{'L' if sx < 0 else 'R'}", pts, p["leg_top_r"] * 0.95,
                            col, bronze, root, closed=False, profile_res=2)
 
     # --- the back shell: a cushion box bent round the sitter and tilted back
-    bmb = common.cushion_bmesh((bw, bt, bh), cuts=3, edge=0.02,
+    bmb = common.cushion_bmesh((bw, bt, bh), cuts=2, edge=0.02,
                                crown={"-y": 0.016, "+y": 0.004, "+z": 0.006})
     for v in bmb.verts:
         u = v.co.x / (bw / 2)
         zr = (v.co.z + bh / 2) / bh       # 0 bottom .. 1 top
         v.co.y -= p["wrap"] * u * u * (0.35 + 0.65 * zr)       # sides curl forward
         v.co.x *= 1.0 - 0.07 * (1 - zr)                        # slightly narrower at the base
+    def bend(v):
+        u = v.x / (bw / 2)
+        zr = (v.z + bh / 2) / bh
+        v = Vector((v.x * (1.0 - 0.07 * (1 - zr)), v.y - p["wrap"] * u * u * (0.35 + 0.65 * zr), v.z))
+        return Matrix.Rotation(-tilt, 3, "X") @ v
     rot = Matrix.Rotation(-tilt, 4, "X")
     bmesh.ops.transform(bmb, matrix=rot, verts=bmb.verts)
     back = common.mesh_object(f"{n}_Back", bmb, col, fabric, root)
     # the rear face (centre height) rests on the leg lines
     back.location = (0, leg_y(back_zc) - 0.01 - bt / 2 * math.cos(tilt) + 0.012, back_zc)
     common.add_subsurf(back, 1, 1)
+    for tag, sgn in (("Front", -1), ("Rear", 1)):
+        w = welt(f"{n}_Back_Piping{tag}", (bw, bt, bh), "y", sgn, 0.0042, 0.026, col, fabric, root, deform=bend)
+        w.location = back.location
 
     for ob in (seat, back):
         common.box_uv(ob, tile=0.25)

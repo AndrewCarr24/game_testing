@@ -17,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				9
+				6
 			]
 		}
 	],
@@ -28,11 +28,28 @@
 			"translation":[
 				0,
 				1.3949999809265137,
-				-0.014999999664723873
+				-0.01600000075995922
 			]
 		},
 		{
 			"mesh":1,
+			"name":"GuestWardrobe_DetailPiping_Bronze"
+		},
+		{
+			"mesh":2,
+			"name":"GuestWardrobe_Doors"
+		},
+		{
+			"mesh":3,
+			"name":"GuestWardrobe_Interior",
+			"translation":[
+				0,
+				1.3949999809265137,
+				0.2800000011920929
+			]
+		},
+		{
+			"mesh":4,
 			"name":"GuestWardrobe_Plinth",
 			"translation":[
 				0,
@@ -41,62 +58,8 @@
 			]
 		},
 		{
-			"mesh":2,
-			"name":"GuestWardrobe_Pull_0",
-			"translation":[
-				-1.7300000190734863,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
-			"mesh":3,
-			"name":"GuestWardrobe_Pull_1",
-			"translation":[
-				-0.6700000166893005,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
-			"mesh":4,
-			"name":"GuestWardrobe_Pull_2",
-			"translation":[
-				-0.5299999713897705,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
 			"mesh":5,
-			"name":"GuestWardrobe_Pull_3",
-			"translation":[
-				0.5299999713897705,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
-			"mesh":6,
-			"name":"GuestWardrobe_Pull_4",
-			"translation":[
-				0.6700000166893005,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
-			"mesh":7,
-			"name":"GuestWardrobe_Pull_5",
-			"translation":[
-				1.7300000190734863,
-				1.149999976158142,
-				0.32199999690055847
-			]
-		},
-		{
-			"mesh":8,
-			"name":"GuestWardrobe_Slats"
+			"name":"GuestWardrobe_Reeds"
 		},
 		{
 			"children":[
@@ -105,10 +68,7 @@
 				2,
 				3,
 				4,
-				5,
-				6,
-				7,
-				8
+				5
 			],
 			"name":"GuestWardrobe"
 		}
@@ -130,20 +90,6 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
 			}
 		},
 		{
@@ -174,6 +120,20 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.550000011920929
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
+			}
 		}
 	],
 	"meshes":[
@@ -184,7 +144,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -192,12 +153,94 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GuestWardrobe_DetailPiping_Bronze",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":9,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GuestWardrobe_Doors",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GuestWardrobe_Interior",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":19,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -207,185 +250,51 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":1,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Pull_0",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":8,
-						"NORMAL":9
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":10,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Pull_1",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":11,
-						"NORMAL":12
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":10,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Pull_2",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":13,
-						"NORMAL":14
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":10,
-					"material":2,
+					"indices":24,
+					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"GuestWardrobe_Pull_3",
+			"name":"GuestWardrobe_Reeds",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27,
+						"COLOR_0":28
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":10,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Pull_4",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":17,
-						"NORMAL":18
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":6,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":10,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Pull_5",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":19,
-						"NORMAL":20
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":7,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":10,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"GuestWardrobe_Slats",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":21,
-						"NORMAL":22,
-						"TEXCOORD_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":8,
-							"attributes":{
-								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":24,
-					"material":3,
+					"indices":29,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -428,12 +337,12 @@
 			"max":[
 				1.7999999523162842,
 				1.3049999475479126,
-				0.29499998688697815
+				0.2939999997615814
 			],
 			"min":[
 				-1.7999999523162842,
 				-1.3049999475479126,
-				-0.29499998688697815
+				-0.2939999997615814
 			],
 			"type":"VEC3"
 		},
@@ -449,7 +358,121 @@
 		},
 		{
 			"componentType":5123,
+			"count":104,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":1032,
+			"max":[
+				1.2280000448226929,
+				1.4264999628067017,
+				0.33646872639656067
+			],
+			"min":[
+				-1.2280000448226929,
+				0.8134999871253967,
+				0.2980000078678131
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":1032,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":1032,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1032,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":3384,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":603,
+			"max":[
+				1.8000000715255737,
+				2.697000026702881,
+				0.2979999780654907
+			],
+			"min":[
+				-1.8000000715255737,
+				0.09299993515014648,
+				0.27799999713897705
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":603,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":603,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":603,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1944,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.7899999618530273,
+				1.2949999570846558,
+				0.0020000000949949026
+			],
+			"min":[
+				-1.7899999618530273,
+				-1.2949999570846558,
+				-0.0020000000949949026
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":36,
 			"type":"SCALAR"
 		},
 		{
@@ -479,210 +502,82 @@
 		},
 		{
 			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":56,
+			"count":2124,
 			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
+				1.7660000324249268,
+				2.6419999599456787,
+				0.3100000023841858
 			],
 			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
+				-1.7660000324249268,
+				0.14800000190734863,
+				0.2980000078678131
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":324,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
-			],
-			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
-			],
+			"count":2124,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
-			],
-			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
-			],
-			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
-			],
-			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"max":[
-				0.007000000216066837,
-				0.25,
-				0.007000000216066837
-			],
-			"min":[
-				-0.007000000216066837,
-				-0.25,
-				-0.007000000216066837
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":2016,
-			"max":[
-				1.7760000228881836,
-				2.694000005722046,
-				0.3135000169277191
-			],
-			"min":[
-				-1.7760000228881836,
-				0.09599995613098145,
-				0.2915000021457672
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":2016,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":2016,
+			"count":2124,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3024,
+			"count":2124,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":4032,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":894,
+			"byteLength":878,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":344,
-			"byteOffset":896
+			"byteLength":7653,
+			"byteOffset":880
 		},
 		{
 			"buffer":0,
-			"byteLength":352,
-			"byteOffset":1240
+			"byteLength":5698,
+			"byteOffset":8536
 		},
 		{
 			"buffer":0,
-			"byteLength":352,
-			"byteOffset":1592
+			"byteLength":486,
+			"byteOffset":14236
 		},
 		{
 			"buffer":0,
-			"byteLength":352,
-			"byteOffset":1944
+			"byteLength":404,
+			"byteOffset":14724
 		},
 		{
 			"buffer":0,
-			"byteLength":352,
-			"byteOffset":2296
-		},
-		{
-			"buffer":0,
-			"byteLength":352,
-			"byteOffset":2648
-		},
-		{
-			"buffer":0,
-			"byteLength":352,
-			"byteOffset":3000
-		},
-		{
-			"buffer":0,
-			"byteLength":6014,
-			"byteOffset":3352
+			"byteLength":9812,
+			"byteOffset":15128
 		}
 	],
 	"samplers":[
@@ -693,7 +588,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9368,
+			"byteLength":24940,
 			"uri":"guest_wardrobe.bin"
 		}
 	]

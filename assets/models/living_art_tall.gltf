@@ -16,38 +16,22 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				2
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"LivingArtTall_Art"
-		},
-		{
-			"mesh":1,
-			"name":"LivingArtTall_Backing",
+			"name":"LivingArtTall_Art",
 			"translation":[
 				0,
 				0,
-				0.020999999716877937
+				0.029999999329447746
 			]
 		},
 		{
-			"mesh":2,
-			"name":"LivingArtTall_Frame"
-		},
-		{
-			"mesh":3,
-			"name":"LivingArtTall_Glass"
-		},
-		{
-			"mesh":4,
-			"name":"LivingArtTall_Mat"
-		},
-		{
-			"mesh":5,
+			"mesh":1,
 			"name":"LivingArtTall_Spacer",
 			"translation":[
 				0,
@@ -58,11 +42,7 @@
 		{
 			"children":[
 				0,
-				1,
-				2,
-				3,
-				4,
-				5
+				1
 			],
 			"name":"LivingArtTall"
 		}
@@ -70,13 +50,13 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Art_living_tall",
+			"name":"M_Art_kline_bars",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":0
 				},
 				"metallicFactor":0,
-				"roughnessFactor":0.7799999713897705
+				"roughnessFactor":0.8500000238418579
 			}
 		},
 		{
@@ -92,35 +72,6 @@
 				"metallicFactor":0.699999988079071,
 				"roughnessFactor":0.3499999940395355
 			}
-		},
-		{
-			"alphaMode":"BLEND",
-			"doubleSided":true,
-			"name":"M_Glass_Picture",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.8500000238418579,
-					0.8999999761581421,
-					0.8999999761581421,
-					0.05999999865889549
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.019999999552965164
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Picture_Mat",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.8799999952316284,
-					0.8700000047683716,
-					0.8299999833106995,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.9200000166893005
-			}
 		}
 	],
 	"meshes":[
@@ -131,7 +82,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -139,104 +91,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingArtTall_Backing",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":4,
-						"NORMAL":5
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":1,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":6,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingArtTall_Frame",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":7,
-						"NORMAL":8
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":9,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingArtTall_Glass",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":10,
-						"NORMAL":11
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":3,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingArtTall_Mat",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":12,
-						"NORMAL":13
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1
-							}
-						}
-					},
-					"indices":14,
-					"material":3,
 					"mode":4
 				}
 			]
@@ -246,19 +107,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16
+						"POSITION":5,
+						"NORMAL":6,
+						"COLOR_0":7
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":6,
+					"indices":8,
 					"material":1,
 					"mode":4
 				}
@@ -278,134 +141,45 @@
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Art_LivingTall",
-			"uri":"textures/T_Art_LivingTall.webp"
+			"name":"T_Art_KlineBars",
+			"uri":"textures/T_Art_KlineBars.webp"
 		}
 	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":4,
-			"max":[
-				0.6184999942779541,
-				1.0184999704360962,
-				0.03550000116229057
-			],
-			"min":[
-				-0.6184999942779541,
-				-1.0184999704360962,
-				0.03550000116229057
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":4,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":4,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":6,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.7296000123023987,
-				1.1296000480651855,
-				0.010999999940395355
-			],
-			"min":[
-				-0.7296000123023987,
-				-1.1296000480651855,
-				-0.010999999940395355
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":80,
+			"count":64,
 			"max":[
 				0.75,
 				1.149999976158142,
-				0.05000000074505806
+				0.019999999552965164
 			],
 			"min":[
 				-0.75,
 				-1.149999976158142,
-				0.009999999776482582
+				-0.019999999552965164
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":80,
+			"count":64,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":4,
-			"max":[
-				0.7296000123023987,
-				1.1296000480651855,
-				0.04149999842047691
-			],
-			"min":[
-				-0.7296000123023987,
-				-1.1296000480651855,
-				0.04149999842047691
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":4,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"max":[
-				0.7296000123023987,
-				1.1296000480651855,
-				0.03999999910593033
-			],
-			"min":[
-				-0.7296000123023987,
-				-1.1296000480651855,
-				0.0364999994635582
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
+			"count":64,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":96,
+			"count":132,
 			"type":"SCALAR"
 		},
 		{
@@ -427,38 +201,29 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":176,
+			"byteLength":635,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":216,
-			"byteOffset":176
-		},
-		{
-			"buffer":0,
-			"byteLength":517,
-			"byteOffset":392
-		},
-		{
-			"buffer":0,
-			"byteLength":126,
-			"byteOffset":912
-		},
-		{
-			"buffer":0,
-			"byteLength":382,
-			"byteOffset":1040
-		},
-		{
-			"buffer":0,
-			"byteLength":214,
-			"byteOffset":1424
+			"byteLength":296,
+			"byteOffset":636
 		}
 	],
 	"samplers":[
@@ -469,7 +234,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1640,
+			"byteLength":932,
 			"uri":"living_art_tall.bin"
 		}
 	]

@@ -14,6 +14,7 @@ R, RB = "plant_tree_round", "plant_tree_round_b"
 O, OB, OC = "plant_tree_olive", "plant_tree_olive_b", "plant_tree_olive_c"
 M, MB = "plant_tree_multistem", "plant_tree_multistem_b"
 C, CB = "plant_tree_cypress", "plant_tree_cypress_b"
+F, FB = "plant_tree_fir", "plant_tree_fir_b"
 SR, SB = "plant_shrub_round", "plant_shrub_box"
 G, GB = "plant_shrub_grass", "plant_shrub_grass_b"
 L, LB = "plant_shrub_lavender", "plant_shrub_lavender_b"
@@ -28,20 +29,24 @@ PLACEMENTS = [
     # behind the pool house (x 24..66)
     (C, (29.5, 60.2), 200), (CB, (32.6, 59.6), 20), (O, (38.5, 59.4), 150),
     (C, (59.8, 59.5), 110),
+    # firs and a few more broadleaf trees to fill out the hedge groups
+    (FB, (-50.0, 59.8), 20), (FB, (-20.5, 60.3), 140), (F, (35.5, 60.8), 80), (OB, (-15.5, 59.2), 60),
+    (MB, (51.5, 59.3), 340),
     # ---- NW corner (x -66..-48, y 25..58) ------------------------------------------------------
     (RB, (-57.5, 41.0), 80), (OC, (-52.5, 31.5), 10), (MB, (-53.0, 52.5), 150), (C, (-65.0, 56.5), 300),
     # ---- west band (x -69..-66): frames the great room's view, centre kept open ------------------
     (C, (-68.3, -7.4), 15), (O, (-67.4, -14.0), 255),
     (CB, (-68.0, 11.8), 200), (M, (-67.3, 15.4), 20), (C, (-67.2, 20.2), 330),
     # ---- south-west: the south lawn's edge --------------------------------------------------------
-    (CB, (-68.1, -56.0), 140), (C, (-30.2, -60.6), 100),
+    (FB, (-67.8, -25.8), 60),
+    (F, (-62.0, 57.5), 250),
     # ---- south centre, in front of the entry glass: two groups, the axis kept open --------------
     (R, (-9.5, -57.0), 250), (CB, (-13.0, -59.0), 170),
     (OB, (9.0, -52.5), 130), (M, (6.0, -58.0), 300), (C, (11.0, -58.9), 60),
     # ---- south-east hedge (kitchen garden's edge) ------------------------------------------------
-    (CB, (40.0, -60.7), 70),
+    (CB, (40.0, -60.7), 70), (F, (48.0, -60.7), 150),
     # ---- east band behind the tennis court (x 68..69.3) --------------------------------------------
-    (C, (68.9, -10.0), 10), (CB, (68.9, 11.5), 300), (MB, (68.4, 2.5), 160),
+    (FB, (68.7, 18.5), 100), (C, (68.9, -10.0), 10), (CB, (68.9, 11.5), 300), (MB, (68.4, 2.5), 160),
     # ---- beds just outside the east terrace edge (x 31..33), low so the windows stay open --------
     (SB, (32.0, -17.5), 0), (G, (32.1, -14.6), 20), (L, (32.0, -12.9), 0),
     (SR, (32.0, 11.5), 0), (LB, (32.0, 13.3), 30), (G, (32.0, 15.4), 160),

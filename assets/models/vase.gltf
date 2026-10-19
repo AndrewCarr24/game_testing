@@ -84,18 +84,20 @@
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"NORMAL":1,
+						"COLOR_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":0,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":2,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -106,19 +108,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
+						"POSITION":4,
+						"NORMAL":5,
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
-								"NORMAL":1
+								"NORMAL":1,
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":5,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -128,7 +132,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":242,
+			"count":98,
 			"max":[
 				0.05050000175833702,
 				0.019999999552965164,
@@ -143,55 +147,67 @@
 		},
 		{
 			"componentType":5126,
-			"count":242,
+			"count":98,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":1152,
+			"count":98,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":432,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":1296,
+			"count":456,
 			"max":[
-				0.06401253491640091,
+				0.06349673867225647,
 				0.2807562053203583,
-				0.06401253491640091
+				0.06629916280508041
 			],
 			"min":[
-				-0.06401253491640091,
+				-0.06349673867225647,
 				0.019999999552965164,
-				-0.06401253491640091
+				-0.06629916280508041
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1296,
+			"count":456,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":7488,
+			"count":456,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":2592,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1557,
+			"byteLength":809,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":7472,
-			"byteOffset":1560
+			"byteLength":3496,
+			"byteOffset":812
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":9032,
+			"byteLength":4308,
 			"uri":"vase.bin"
 		}
 	]

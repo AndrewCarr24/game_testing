@@ -10,7 +10,7 @@ importlib.reload(dining_wine_rack)
 common = dining_wine_rack.common
 
 NAME = "DiningWineRackLong"
-P = dict(name=NAME, bays=6, seed=8)
+P = dict(name=NAME, bays=6, seed=8, bottle_segs=7, empty=0.10)
 
 
 def build(**overrides):

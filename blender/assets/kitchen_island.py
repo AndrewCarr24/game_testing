@@ -54,59 +54,37 @@ def build(**overrides):
         b.box(f"End_{side}", (et, D_total, zt - tt), (sx * (Lx / 2 - et / 2), (yf - 0.02 + yo) / 2, (zt - tt) / 2),
               marble, bevel=0.003, seg=2, tile=1.5, world_uv=True)
 
-    # ---- top: four slabs round the sink hole (veins continue by world UVs)
+    # ---- top: one slab with the sink cut-out (veins continue by world UVs)
     sx0, sy0, sw, sd = p["sink"]
     xa, xb = sx0 - sw / 2, sx0 + sw / 2
     ya, yb2 = sy0 - sd / 2, sy0 + sd / 2
     y_lo, y_hi = yf - 0.02, yo
-    x_lo, x_hi = -Lx / 2, Lx / 2
     zc = zt - tt / 2
+    L.slab_with_holes(b, "Top", -Lx / 2, Lx / 2, y_lo, y_hi, zc, tt, [(xa, xb, ya, yb2)], marble,
+                      bevel=0.003, seg=2, tile=1.5)
 
-    def slab(name, x0, x1, y0, y1):
-        b.box(name, (x1 - x0, y1 - y0, tt), ((x0 + x1) / 2, (y0 + y1) / 2, zc), marble, bevel=0.003, seg=2,
-              tile=1.5, world_uv=True)
+    # ---- undermount prep sink: brushed-steel bowl with a drain toward the back
+    L.undermount_sink(b, "Sink", sx0, sy0, sw, sd, 0.20, zt - tt, brushed, steel, corner=0.035,
+                      drain=(0.0, 0.08))
 
-    slab("Top_South", x_lo, x_hi, y_lo, ya)
-    slab("Top_North", x_lo, x_hi, yb2, y_hi)
-    slab("Top_West", x_lo, xa, ya, yb2)
-    slab("Top_East", xb, x_hi, ya, yb2)
-
-    # ---- sink basin (steel) under the hole
-    bw, bd, bh, th = sw - 0.02, sd - 0.02, 0.20, 0.003
-    zb = zt - tt - bh + 0.0
-    b.box("Sink_Floor", (bw, bd, th), (sx0, sy0, zb + th / 2), brushed, bevel=0, tile=0)
-    for tag, size, c in (("W", (th, bd, bh), (sx0 - bw / 2 + th / 2, sy0, zb + bh / 2)),
-                         ("E", (th, bd, bh), (sx0 + bw / 2 - th / 2, sy0, zb + bh / 2)),
-                         ("S", (bw, th, bh), (sx0, sy0 - bd / 2 + th / 2, zb + bh / 2)),
-                         ("N", (bw, th, bh), (sx0, sy0 + bd / 2 - th / 2, zb + bh / 2))):
-        b.box(f"Sink_{tag}", size, c, brushed, bevel=0, tile=0)
-    # drain
-    b.lathe("Drain", [(0, 0), (0.035, 0), (0.035, 0.003), (0, 0.003)], steel, loc=(sx0 - 0.15, sy0, zb + th), segs=16,
-            uv_tile=0)
-
-    # ---- tap: bronze gooseneck behind the sink
-    tx, ty = sx0, yb2 + 0.07
-    b.lathe("Tap_Base", [(0, zt), (0.030, zt), (0.026, zt + 0.012), (0.017, zt + 0.045), (0, zt + 0.045)], bronze,
-            loc=(tx, ty, 0), segs=20, uv_tile=0)
-    pts = [(tx, ty, zt + 0.04), (tx, ty, zt + 0.40)]
-    arc = []
-    R = 0.20
-    for i in range(0, 19):
-        a = math.pi * i / 18
-        arc.append((tx, ty - R + R * math.cos(a), zt + 0.40 + R * math.sin(a) * 0.9))
-    pts += arc
-    pts += [(tx, ty - 2 * R, zt + 0.40 - 0.05)]
-    b.tube("Tap_Spout", pts, 0.012, bronze, closed=False, res=4)
-    b.lathe("Tap_Head", [(0, 0), (0.016, 0), (0.016, -0.05), (0, -0.05)], bronze,
-            loc=(tx, ty - 2 * R, zt + 0.40 - 0.05), segs=14, uv_tile=0)
-    b.box("Tap_Lever", (0.012, 0.07, 0.012), (tx + 0.05, ty - 0.015, zt + 0.07), bronze, bevel=0.002, tile=0)
+    # ---- tap: bronze gooseneck behind the sink, lever on the right
+    L.gooseneck_tap(b, "Tap", sx0, yb2 + 0.07, zt, bronze, reach=0.40, rise=0.40, lever=1, toward=-1)
+    # soap / filtered-water lever beside it
+    b.lathe("Tap_Filter", [(0.0, zt), (0.02, zt), (0.016, zt + 0.012), (0.009, zt + 0.03), (0.009, zt + 0.17),
+                           (0.0, zt + 0.17)], bronze, loc=(sx0 + 0.24, yb2 + 0.07, 0), segs=12, sharp=30, uv_tile=0)
+    b.tube("Tap_FilterSpout", [(sx0 + 0.24, yb2 + 0.07, zt + 0.16), (sx0 + 0.24, yb2 + 0.07 - 0.07, zt + 0.19),
+                               (sx0 + 0.24, yb2 + 0.07 - 0.12, zt + 0.17)], 0.006, bronze, closed=False, res=2)
 
     # ---- cabinetry: black carcass, plinth, smoked-oak fronts
     x0 = -Lx / 2 + et
     x1 = Lx / 2 - et
     b.box("Plinth", (x1 - x0, yb - (yf + 0.07), ph), ((x0 + x1) / 2, (yf + 0.07 + yb) / 2, ph / 2), black, bevel=0, tile=0)
-    b.box("Body", (x1 - x0, yb - ybody0, zt - tt - ph), ((x0 + x1) / 2, (ybody0 + yb) / 2, (ph + zt - tt) / 2),
-          black, bevel=0, tile=0)
+    # carcass in three blocks so the sink bowl hangs in a real void (not under a lid)
+    zs = zt - tt - 0.23
+    gx0, gx1 = xa - 0.03, xb + 0.03
+    for tag, a, c, z1_ in (("BodyL", x0, gx0, zt - tt), ("BodyR", gx1, x1, zt - tt), ("BodySink", gx0, gx1, zs)):
+        b.box(tag, (c - a, yb - ybody0, z1_ - ph), ((a + c) / 2, (ybody0 + yb) / 2, (ph + z1_) / 2),
+              black, bevel=0, tile=0)
     fr = L.Fronts(b, oak, bronze, yf)
     for i, (a, c, kind) in enumerate(L.span(x0, p["units"])):
         fr.unit(kind, a, c, ph, zt - tt - 0.005, f"Unit{i}")
@@ -125,6 +103,21 @@ def build(**overrides):
     lemon = common.pbr_material("M_Lemon", (0.75, 0.55, 0.03), roughness=0.5)
     lime = common.pbr_material("M_Lime", (0.12, 0.30, 0.03), roughness=0.5)
     L.fruit_bowl(b, (-1.45, 0.20, zt), cer, lemon, lime, r=0.17)
+
+    # prep corner left of the sink: an end-grain walnut board with a chef's knife, and a pair
+    # of turned walnut pepper and salt mills
+    walnut = materials.walnut()
+    bx_, by_ = sx0 - 0.95, sy0 - 0.02
+    b.box("Board", (0.50, 0.34, 0.035), (bx_, by_, zt + 0.0175), walnut, bevel=0.006, seg=2, tile=0.5, shift=(0.3, 0.6))
+    knife = b.box("Knife_Blade_NoCollide", (0.21, 0.045, 0.002), (bx_ + 0.04, by_ - 0.06, zt + 0.036), steel, bevel=0, tile=0)
+    knife.rotation_euler = (0, 0, math.radians(12))
+    hnd = b.box("Knife_Handle_NoCollide", (0.12, 0.022, 0.018), (bx_ - 0.115, by_ - 0.083, zt + 0.044), black, bevel=0.005,
+                seg=2, tile=0)
+    hnd.rotation_euler = (0, 0, math.radians(12))
+    for k, (mx, mh) in enumerate(((bx_ + 0.42, 0.21), (bx_ + 0.50, 0.17))):
+        b.lathe(f"Mill{k}", [(0.024, 0.0), (0.026, 0.006), (0.022, 0.03), (0.019, mh * 0.55), (0.024, mh * 0.82),
+                             (0.02, mh - 0.008), (0.008, mh), (0.0, mh + 0.004)], walnut if k == 0 else black,
+                loc=(mx, by_ + 0.12, zt), segs=12, sharp=40, uv_tile=0.3, closed=False)
 
     return b.finish()
 

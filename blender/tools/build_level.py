@@ -203,6 +203,9 @@ def zone_views(zone, size):
 
 def main():
     a = args()
+    sys.path.insert(0, HERE)
+    import slots
+    slots.acquire("level", 2)          # at most 2 house builds at once on this machine
     t0 = time.time()
     os.makedirs(PREV, exist_ok=True)
     bpy.ops.wm.read_factory_settings(use_empty=True)

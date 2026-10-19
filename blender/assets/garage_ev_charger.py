@@ -46,8 +46,8 @@ def build(**overrides):
     y0 = yf + 0.02
     pts = common.fillet_polyline([(hx, y0, 0.76), (hx, y0, 0.46), (hx + 0.06, y0 - 0.17, 0.26),
                                   (hx + 0.02, y0 - 0.24, 0.10), (hx - 0.14, y0 - 0.12, 0.05),
-                                  (hx - 0.2, y0, 0.09), (W / 2 - 0.03, y0 + 0.01, 0.36)], 0.07, segments=6, closed=False)
-    b.tube("Cable", pts, p["cable_r"], cable, res=4)
+                                  (hx - 0.2, y0, 0.09), (W / 2 - 0.03, y0 + 0.01, 0.36)], 0.07, segments=5, closed=False)
+    b.tube("Cable", pts, p["cable_r"], cable, res=2)
     return b.finish()
 
 

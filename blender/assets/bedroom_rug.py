@@ -12,6 +12,10 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, textures  # noqa: E402
 
 importlib.reload(common)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rug as rug_mod  # noqa: E402  (shared bound-edge rug mesh)
+
+importlib.reload(rug_mod)
 importlib.reload(textures)
 
 NAME = "BedroomRug"
@@ -153,11 +157,8 @@ def build(**overrides):
     bsdf.inputs["Sheen Tint"].default_value = (0.75, 0.68, 0.55, 1)
 
     w, d = p["size"]
-    rug = common.mesh_object(f"{n}_Body",
-                             common.rounded_slab_bmesh(w, d, p["thickness"], p["corner"]),
-                             col, wool, root)
-    rug.location = (0, 0, p["thickness"] / 2)
-    common.add_bevel(rug, p["bevel"], segments=3)
+    rug = common.mesh_object(f"{n}_Body", rug_mod.rug_bmesh(w, d, p["thickness"], max(p["corner"], 0.03),
+                                                          roll=min(p["bevel"], 0.003)), col, wool, root)
     _planar_uv(rug, p["size"])
 
     parts = [rug]

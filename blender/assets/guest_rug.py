@@ -1,5 +1,5 @@
-"""Guest-room rug: low pile oat wool with a thin sage border line set in from the
-edge. Long side along X. Origin is the floor centre."""
+"""Guest-room rug: low pile oat wool with a linen-bound edge and a thin sage border
+line set in from the edge. Long side along X. Origin is the floor centre."""
 import importlib
 import os
 import sys
@@ -41,6 +41,15 @@ def build(**overrides):
         ob.location = loc
         common.box_uv(ob, tile=0.25)
         parts.append(ob)
+    # bound edge: a soft linen binding rolled round the perimeter
+    r_b = t / 2 + 0.002
+    loop = common.fillet_polyline([(-w / 2 + r_b * 0.6, -d / 2 + r_b * 0.6, 0), (w / 2 - r_b * 0.6, -d / 2 + r_b * 0.6, 0),
+                                   (w / 2 - r_b * 0.6, d / 2 - r_b * 0.6, 0), (-w / 2 + r_b * 0.6, d / 2 - r_b * 0.6, 0)],
+                                  p["corner"], segments=4, closed=True)
+    bind = common.tube_object(f"{n}_Binding_Piping", [(q.x, q.y, r_b) for q in loop], r_b, col,
+                              guest_mats.linen(), root, closed=True, profile_res=1)
+    common.box_uv(bind, tile=0.25)
+    parts.append(bind)
     return root, parts
 
 

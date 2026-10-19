@@ -53,9 +53,9 @@ P = dict(
     drape_r=0.07,
     drape_theta=1.45,
     drape_len=0.30,
-    duvet_end_y=0.41,
-    flap_start_y=0.12,
-    flap_end_y=0.43,
+    duvet_end_y=0.30,
+    flap_start_y=0.02,
+    flap_end_y=0.32,
 )
 
 
@@ -79,12 +79,15 @@ def surface_normal(S, x, y, e=1e-3):
     return n
 
 
-def sheet(hx, hy, r, S, H, step=0.1, m=4, rounding=0.0):
+def sheet(hx, hy, r, S, H, step=0.1, m=4, rounding=0.0, step_y=None, ys=None, back=True):
     """Closed, soft slab. S(x, y) -> neutral surface point, H(x, y) -> (top,
     bottom) half-thickness; thickness falls to zero at the border through a
     quarter circle of radius r, so the hem is round. rounding > 0 pulls the
-    corners in (pillows). Returns a bmesh."""
-    xs, ys = _coords(hx, r, step, m), _coords(hy, r, step, m)
+    corners in (pillows). step_y / ys: a different spacing (or explicit grid
+    lines) along y; back=False leaves out the bottom faces (a panel against a
+    board). Returns a bmesh."""
+    xs = _coords(hx, r, step, m)
+    ys = ys if ys is not None else _coords(hy, r, step_y or step, m)
     bm = bmesh.new()
     top, bot = {}, {}
     for i, x in enumerate(xs):
@@ -106,9 +109,13 @@ def sheet(hx, hy, r, S, H, step=0.1, m=4, rounding=0.0):
     for i in range(len(xs) - 1):
         for j in range(len(ys) - 1):
             bm.faces.new([top[i, j], top[i + 1, j], top[i + 1, j + 1], top[i, j + 1]])
-            bm.faces.new([bot[i, j + 1], bot[i + 1, j + 1], bot[i + 1, j], bot[i, j]])
+            if back:
+                bm.faces.new([bot[i, j + 1], bot[i + 1, j + 1], bot[i + 1, j], bot[i, j]])
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-6)
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    if not back:
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    else:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     return bm
 
 
@@ -162,7 +169,8 @@ def pillow_bmesh(hx, hy, thick, r, seed, slump=0.0, rounding=0.30, step=0.075, d
         # stuffing creases running in from the corners, and a centre dent
         for k, (cu, cw_) in enumerate(((0.9, 0.8), (-0.85, -0.7))):
             dd = ((u * cw_ - w * cu) / math.hypot(cu, cw_))
-            t *= 1 - 0.20 * math.exp(-(dd / 0.10) ** 2) * (abs(u * cu + w * cw_) > 0.35)
+            reach = min(1.0, max(0.0, (abs(u * cu + w * cw_) - 0.25) / 0.35))   # fades in, no step
+            t *= 1 - 0.20 * math.exp(-(dd / 0.10) ** 2) * reach * reach * (3 - 2 * reach)
         t *= 1 - dent * math.exp(-(u / 0.28) ** 2) * (0.4 + 0.6 * max(0.0, w))
         return t, t
 
@@ -250,7 +258,7 @@ def build(**overrides):
     xs = [px0 + (c + s) * cw for c in range(nch) for s in s_list] + [px0 + pw]
     end_offs = [0, 0.008, 0.02, 0.04, 0.065, 0.1]
     span = zhi - zlo
-    nmid = max(1, round((span - 0.2) / 0.1))
+    nmid = max(1, round((span - 0.2) / 0.19))
     zs = ([zlo + e for e in end_offs]
           + [zlo + 0.1 + (span - 0.2) * k / nmid for k in range(1, nmid)]
           + [zhi - e for e in reversed(end_offs)])
@@ -287,13 +295,8 @@ def build(**overrides):
     mat_bm = common.cushion_bmesh(msize, cuts=3, edge=0.05,
                                   crown={"+z": 0.012, "-z": 0.0, "+x": 0.004, "-x": 0.004,
                                          "+y": 0.004, "-y": 0.004})
-    mattress = soft("Mattress", mat_bm, oat, mloc)
+    mattress = soft("Mattress", mat_bm, oat, mloc)      # in a fitted sheet: no piping
     common.add_subsurf(mattress)
-    for i, pts in enumerate(common.piping_loop(msize, "z", 0.05 / 6, 0.05 * 0.9)):
-        pipe = common.tube_object(f"{n}_Mattress_Piping{i}", pts, 0.0045, col, oat, root,
-                                  closed=True, profile_res=1)
-        pipe.location = mloc
-        fabric_parts.append(pipe)
 
     # ---- duvet (draped over the mattress) ------------------------------------
     R, TH, DL = p["drape_r"], p["drape_theta"], p["drape_len"]
@@ -347,7 +350,7 @@ def build(**overrides):
     hy = (d_y1 - d_y0) / 2
     duvet_bm = sheet(dx_half, hy, 0.040,
                      lambda x, y: duvet_S(x, y + cy),
-                     lambda x, y: duvet_H(x, y + cy), step=0.09, rounding=0.45)
+                     lambda x, y: duvet_H(x, y + cy), step=0.11, rounding=0.45)
     soft("Duvet", duvet_bm, oat)
 
     # turned-back flap: the head end of the duvet folded over itself
@@ -355,59 +358,71 @@ def build(**overrides):
     fcy, fhy = (f_y0 + f_y1) / 2, (f_y1 - f_y0) / 2
 
     def flap_S(x, y):
-        return conform(x, y + fcy, 0.034 + 0.0015 + 0.004 * math.sin(4.0 * x))
+        return conform(x, y + fcy, 0.019 + 0.001 + 0.003 * math.sin(4.0 * x))
 
     def flap_H(x, y):
         t = (y + fcy - f_y0) / (f_y1 - f_y0)       # 0 at the free edge, 1 at the fold
-        return 0.026 + 0.010 * t * t, 0.026
+        return 0.019 + 0.009 * t * t, 0.019
 
-    soft("DuvetFlap", sheet(mhw + 0.115, fhy, 0.030, flap_S, flap_H, step=0.085), oat)
+    soft("DuvetFlap", sheet(mhw + 0.19, fhy, 0.028, flap_S, flap_H, step=0.10), oat)
 
-    # ---- throw, folded across the foot ---------------------------------------
+    # ---- throw: folded once (fold toward the foot), laid a little off-centre and
+    # askew so it hangs further over one side; the top layer stops short of the
+    # bottom one's open edge
     def throw_layer(name, hxl, hyl, cxl, cyl, ang, off, half_t, r):
         ca, sa = math.cos(ang), math.sin(ang)
 
         def S(x, y):
-            return conform(cxl + x * ca - y * sa, cyl + x * sa + y * ca, off + 0.0015 * math.sin(5 * x))
+            return conform(cxl + x * ca - y * sa, cyl + x * sa + y * ca,
+                           off + 0.002 * math.sin(5 * x + 0.6) + 0.0015 * math.sin(11 * x - 3 * y))
 
-        soft(name, sheet(hxl, hyl, r, S, lambda x, y: (half_t * (1 + 0.15 * math.sin(6 * x + 1)), half_t),
-                         step=0.12), stone)
+        soft(name, sheet(hxl, hyl, r, S, lambda x, y: (half_t * (1 + 0.18 * math.sin(6 * x + 1)), half_t),
+                         step=0.16), stone)
 
-    throw_layer("Throw_A", 1.00, 0.215, 0.0, -0.66, math.radians(1.2), 0.016, 0.016, 0.014)
-    throw_layer("Throw_B", 0.985, 0.17, 0.01, -0.705, math.radians(1.6), 0.016 * 2 + 0.014, 0.014, 0.012)
-    throw_layer("Throw_C", 0.975, 0.10, 0.015, -0.74, math.radians(2.2), 0.016 * 2 + 0.014 * 2 + 0.012, 0.012, 0.010)
+    t_ang, t_cx = math.radians(3.0), 0.10
+    hyA, hyB, cyA = 0.235, 0.205, -0.63
+    throw_layer("Throw_A", 1.05, hyA, t_cx, cyA, t_ang, 0.015, 0.015, 0.014)
+    throw_layer("Throw_B", 1.04, hyB, t_cx + 0.012, cyA - hyA + hyB + 0.004, t_ang + math.radians(0.5),
+                0.015 * 2 + 0.013, 0.013, 0.013)
 
-    # ---- pillows ----------------------------------------------------------------
+    # ---- pillows: euro shams against the headboard, sleeping pillows leaning on
+    # them, two ink cushions and a lumbar in front ------------------------------
     head_y = y_back - 0.034 - p["hb_bulge"] * 1.08   # crest of the headboard channels
-    pillows = [
-        # name, x, hx, hy, lean deg, yaw deg, seed, slump, roll deg
-        ("Pillow_L", -0.46, 0.34, 0.235, 18.0, 2.5, 1.0, 0.025, 2.0),
-        ("Pillow_R", 0.46, 0.34, 0.235, 22.0, -3.5, 2.3, 0.035, -3.0),
-    ]
     pil_info = []
-    for name, x, hx, hy_p, lean, yaw, seed, slump, roll in pillows:
-        bm = pillow_bmesh(hx, hy_p, 0.105, 0.06, seed, slump=slump, dent=0.22)
-        M = place(bm, math.radians(lean), math.radians(yaw), x, m_top - 0.006, max_y=head_y - 0.004, roll=math.radians(roll))
-        soft(name, bm, oat)
-        pil_info.append((name, hx, hy_p, seed, slump, M, 0.0035, oat))
 
-    # ---- ink cushions, leaning on the pillows -----------------------------------
-    cushions = [
-        ("Cushion_L", -0.33, 0.195, 0.185, 36.0, 6.0, 3.1, 0.02, 0.50, -7.0),
-        ("Cushion_R", 0.43, 0.195, 0.185, 31.0, -9.0, 4.4, 0.03, 0.48, 9.0),
-    ]
-    for name, x, hx, hy_c, lean, yaw, seed, slump, front_y, roll in cushions:
-        bm = pillow_bmesh(hx, hy_c, 0.070, 0.05, seed, slump=slump, rounding=0.22, step=0.06, dent=0.30, sag=0.25)
-        M = place(bm, math.radians(lean), math.radians(yaw), x, m_top - 0.004, min_y=front_y, roll=math.radians(roll))
-        soft(name, bm, ink)
-        pil_info.append((name, hx, hy_c, seed, slump, M, 0.0055, ink))
+    def pillow(name, mat, x, hx, hy_p, thick, lean, yaw, seed, slump, roll, piping, rounding=0.30,
+               step=0.085, dent=0.22, sag=1.0, max_y=None, min_y=None, lift=0.006):
+        bm = pillow_bmesh(hx, hy_p, thick, min(0.06, 0.3 * min(hx, hy_p)), seed, slump=slump,
+                          rounding=rounding, step=step, dent=dent, sag=sag)
+        M = place(bm, math.radians(lean), math.radians(yaw), x, m_top - lift, max_y=max_y, min_y=min_y,
+                  roll=math.radians(roll))
+        soft(name, bm, mat)
+        if piping:
+            pil_info.append((name, hx, hy_p, seed, slump, M, piping, mat, rounding, sag))
 
-    for name, hx, hy_p, seed, slump, M, rad, mat in pil_info:
-        S = pillow_surface(hx, hy_p, seed, slump, 1.0 if name.startswith("Pillow") else 0.25)
+    # euro shams (square, stone, piped), nearly upright
+    pillow("Sham_L", stone, -0.475, 0.29, 0.275, 0.095, 9.0, 2.0, 5.2, 0.02, 1.5, 0.004, rounding=0.26,
+           step=0.095, dent=0.12, max_y=head_y - 0.004, lift=0.008)
+    pillow("Sham_R", stone, 0.475, 0.29, 0.275, 0.095, 11.0, -2.5, 6.1, 0.03, -1.0, 0.004, rounding=0.26,
+           step=0.095, dent=0.12, max_y=head_y - 0.004, lift=0.008)
+    # sleeping pillows (oat, plain edge), leaning on the shams
+    pillow("Pillow_L", oat, -0.45, 0.34, 0.215, 0.100, 24.0, 3.0, 1.0, 0.025, 2.0, 0.0,
+           max_y=head_y - 0.19)
+    pillow("Pillow_R", oat, 0.46, 0.34, 0.215, 0.100, 27.0, -4.0, 2.3, 0.035, -3.0, 0.0,
+           max_y=head_y - 0.16)
+    # ink cushions, leaning on the pillows
+    pillow("Cushion_L", ink, -0.31, 0.20, 0.19, 0.068, 30.0, 7.0, 3.1, 0.02, -7.0, 0.0055, rounding=0.34,
+           step=0.075, dent=0.18, sag=0.2, min_y=0.42, lift=0.004)
+    pillow("Cushion_R", ink, 0.38, 0.20, 0.19, 0.068, 27.0, -9.0, 4.4, 0.03, 9.0, 0.0055, rounding=0.34,
+           step=0.075, dent=0.18, sag=0.2, min_y=0.42, lift=0.004)
+    # lumbar in front, centred
+    pillow("Lumbar", stone, 0.03, 0.29, 0.15, 0.064, 18.0, 3.0, 7.7, 0.01, 1.0, 0.0045, rounding=0.2,
+           step=0.085, dent=0.18, sag=0.2, min_y=0.335, lift=0.004)
 
-        rounding = 0.30 if name.startswith("Pillow") else 0.22
+    for name, hx, hy_p, seed, slump, M, rad, mat, rounding, sag in pil_info:
+        S = pillow_surface(hx, hy_p, seed, slump, sag)
         pts = [M @ q for q in border_loop(hx, hy_p, S, rounding)]
-        pipe = common.tube_object(f"{n}_{name}_Piping", pts, rad, col, mat, root, closed=True, profile_res=1)
+        pipe = common.tube_object(f"{n}_{name}_Piping", pts, rad, col, mat, root, closed=True, profile_res=0)
         fabric_parts.append(pipe)
 
     # ---- finishing -------------------------------------------------------------

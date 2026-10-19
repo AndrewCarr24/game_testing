@@ -64,7 +64,9 @@ def build(**overrides):
                                       matrix=Matrix.Translation((x, sy * (hlen / 2 + hl / 2), z + hr - 0.02)) @ Matrix.Rotation(math.pi / 2, 4, "X"))
             bmesh.ops.create_cone(handles_bm, cap_ends=True, cap_tris=False, segments=8, radius1=0.0145, radius2=0.0145, depth=hlen + 0.02,
                                   matrix=Matrix.Translation((x, 0, z + hr - 0.02)) @ Matrix.Rotation(math.pi / 2, 4, "X"))
-    A(own, "Heads", heads_bm, rub, (0, 0, 0), 0)
+    heads = A(own, "Heads", heads_bm, rub, (0, 0, 0), 0)
+    for poly in heads.data.polygons:      # hex heads are cast flats: no smoothing across the corners
+        poly.use_smooth = False
     A(own, "Handles", handles_bm, steel, (0, 0, 0), 0)
     parts = guest_mats.consolidate(root, max_dim=0.35)
     return root, parts
