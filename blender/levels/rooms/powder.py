@@ -60,6 +60,11 @@ PLACEMENTS = [
     ("light_g_cove_down", (2.6, -2.0, 3.9), -90),
     ("light_g_cove_down", (2.6, 2.0, 3.9), -90),
     *[("light_g_downlight", (x, y, 4.2), 0) for x, y, _ in _CANS],
+    # --- set dressing (decor_a_*)
+    ("decor_a_soft_vanity", (0.0, 4.32, 0.805), 0),             # hand towels, soap, bud vase
+    ("decor_a_table_round_powder", (-0.5, -2.1, 0.80), 90),     # books + candle, bronze dish
+    ("decor_a_soft_bench_powder", (-0.5, -4.37, 0.46), 180),    # rolled towels on a tray, candle
+    ("decor_a_floor", (2.05, 3.95), 0),                         # branches in a floor vase (NE corner)
 ]
 
 # Lighting: a jewel box. The halo mirror between its two glass sconces is the brightest

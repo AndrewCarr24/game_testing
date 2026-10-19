@@ -200,6 +200,76 @@ def blender_lights(p, h):
     bg.inputs["Strength"].default_value = p["sky_strength"]
 
 
+def baked_prop(asset):
+    """Flat, static props drawn as part of the room's shell, lit by the floor's lightmap right
+    under them (baked with them hidden), so the furniture's contact shadows land on them (as
+    props they were lit by the room probe alone, so a sofa floated on its rug). Baking a rug
+    itself failed: a few mm above the floor, most of its texels came out black."""
+    return "rug" in asset
+
+
+def bake_into_shell(h, room, asset, loc, rot):
+    """Build `asset` and copy its meshes into the shell at a placement, transforms applied,
+    tagged ob["lm_borrow"] (see borrow_floor_lightmap); returns False if there's no asset."""
+    from mathutils import Matrix
+    try:
+        mod = importlib.import_module(asset)
+    except ModuleNotFoundError:
+        return False
+    importlib.reload(mod)
+    root, parts = mod.build()
+    import bmesh
+    floor = h.to_world(room, loc)[2]
+    place = Matrix.Translation(h.to_world(room, loc)) @ Matrix.Rotation(math.radians(rot), 4, "Z")
+    for part in parts:
+        me = part.data.copy()
+        me.transform(place @ part.matrix_world)
+        # keep only what faces up above the floor (it borrows the floor's light from above;
+        # its 7 mm edge isn't seen from eye height)
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z < 0.3 or f.calc_center_median().z < floor + 0.001],
+                         context="FACES")
+        bm.to_mesh(me)
+        bm.free()
+        if not me.polygons:
+            continue
+        ob = bpy.data.objects.new(f"{NAME}_{room}_{part.name}", me)
+        h.col.objects.link(ob)
+        ob.parent = h.root
+        ob["room"], ob["lm_borrow"] = room, True
+        h.borrowed.setdefault(room, []).append(ob)
+        if not any(t in part.name for t in common.COLLIDER_SKIP):
+            vs = [v.co for v in me.vertices]
+            h.colliders.append(common.aabb_gltf(tuple(min(v[i] for v in vs) for i in range(3)),
+                                                tuple(max(v[i] for v in vs) for i in range(3))))
+    col = root.users_collection[0]
+    for ob in [root] + list(root.children_recursive):
+        bpy.data.objects.remove(ob, do_unlink=True)
+    if col.name != "Scene Collection" and not col.objects:
+        bpy.data.collections.remove(col)
+    return True
+
+
+def borrow_floor_lightmap(h):
+    """Give each rug the floor lightmap's UVs at the same x, y (the floor's top face is one
+    axis-aligned rectangle in its room's atlas, so the mapping is affine)."""
+    for room, obs in h.borrowed.items():
+        floor = bpy.data.objects[f"{NAME}_{room}_Floor"]
+        me = floor.data
+        top = max(me.polygons, key=lambda f: f.normal.z)
+        pts = [(floor.matrix_world @ me.vertices[me.loops[li].vertex_index].co, me.uv_layers["Lightmap"].data[li].uv)
+               for li in top.loop_indices]
+        (xa, ua), (xb, ub) = min(((p.x, uv.x) for p, uv in pts)), max(((p.x, uv.x) for p, uv in pts))
+        (ya, va), (yb, vb) = min(((p.y, uv.y) for p, uv in pts)), max(((p.y, uv.y) for p, uv in pts))
+        for ob in obs:
+            layer = ob.data.uv_layers.get("Lightmap") or ob.data.uv_layers.new(name="Lightmap")
+            ob.data.uv_layers.active_index = 0
+            for li, loop in enumerate(ob.data.loops):
+                co = ob.matrix_world @ ob.data.vertices[loop.vertex_index].co
+                layer.data[li].uv = (ua + (co.x - xa) * (ub - ua) / (xb - xa), va + (co.y - ya) * (vb - va) / (yb - ya))
+
+
 def default_lights(h, room):
     """An undressed room gets one soft ceiling strip along its long axis so it isn't black."""
     if plan.ROOMS[room].get("kind") == "courtyard":
@@ -251,11 +321,22 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         if probe:
             h.probes[room] = h.to_world(room, probe)
 
+    # rugs become part of the shell, lit by the floor's lightmap under them
+    in_shell = set()
+    h.borrowed = {}
+    for room in plan.ROOMS:
+        if rooms_only and room not in rooms_only:
+            continue
+        for i, (asset, loc, rot, *rest) in enumerate(per_room(mods[room], "PLACEMENTS", room, []) or []):
+            if baked_prop(asset) and "attach" not in (rest[0] if rest else {}) and bake_into_shell(h, room, asset, loc, rot):
+                in_shell.add((room, i))
+
     air_all = [box for boxes in h.air.values() for box in boxes]
     lm_res = {}
     for room, objs in h.baked.items():
         lm_res[room] = min(p["lightmap_res"], h.lightmap_resolution(room))
         common.lightmap_uv(objs, h.solids, air_all, resolution=lm_res[room])
+    borrow_floor_lightmap(h)
     h.merge()
     blender_lights(p, h)
 
@@ -266,7 +347,9 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     for room in plan.ROOMS:
         if rooms_only and room not in rooms_only:
             continue
-        for asset, loc, rot, *rest in per_room(mods[room], "PLACEMENTS", room, []) or []:
+        for i, (asset, loc, rot, *rest) in enumerate(per_room(mods[room], "PLACEMENTS", room, []) or []):
+            if (room, i) in in_shell:
+                continue
             opts = rest[0] if rest else {}
             pos = loc if "attach" in opts else h.to_world(room, loc)
             entries.append((room, asset, pos, rot, opts))

@@ -1345,73 +1345,73 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3770,
+			"byteLength":3854,
 			"byteOffset":10540
 		},
 		{
 			"buffer":0,
 			"byteLength":699,
-			"byteOffset":14312
+			"byteOffset":14396
 		},
 		{
 			"buffer":0,
 			"byteLength":1578,
-			"byteOffset":15012
+			"byteOffset":15096
 		},
 		{
 			"buffer":0,
 			"byteLength":1633,
-			"byteOffset":16592
+			"byteOffset":16676
 		},
 		{
 			"buffer":0,
 			"byteLength":1733,
-			"byteOffset":18228
+			"byteOffset":18312
 		},
 		{
 			"buffer":0,
 			"byteLength":1423,
-			"byteOffset":19964
+			"byteOffset":20048
 		},
 		{
 			"buffer":0,
 			"byteLength":405,
-			"byteOffset":21388
+			"byteOffset":21472
 		},
 		{
 			"buffer":0,
 			"byteLength":906,
-			"byteOffset":21796
+			"byteOffset":21880
 		},
 		{
 			"buffer":0,
 			"byteLength":1361,
-			"byteOffset":22704
+			"byteOffset":22788
 		},
 		{
 			"buffer":0,
 			"byteLength":1431,
-			"byteOffset":24068
+			"byteOffset":24152
 		},
 		{
 			"buffer":0,
 			"byteLength":322,
-			"byteOffset":25500
+			"byteOffset":25584
 		},
 		{
 			"buffer":0,
 			"byteLength":1872,
-			"byteOffset":25824
+			"byteOffset":25908
 		},
 		{
 			"buffer":0,
 			"byteLength":1961,
-			"byteOffset":27696
+			"byteOffset":27780
 		},
 		{
 			"buffer":0,
 			"byteLength":2660,
-			"byteOffset":29660
+			"byteOffset":29744
 		}
 	],
 	"samplers":[
@@ -1422,7 +1422,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":32320,
+			"byteLength":32404,
 			"uri":"entry_vanity.bin"
 		}
 	]

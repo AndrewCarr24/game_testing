@@ -119,3 +119,34 @@ LIGHTS = (
         dict(kind="point", pos=(7.8, -3.5, 1.42), power=85.0, color=(1.0, 0.75, 0.48)),
     ]
 )
+
+# --- set dressing (decor_c_*): life on the surfaces -------------------------------------------
+# The reading table gets a composed vignette (folios with a bronze sphere, an open book and
+# glasses, a notebook, a forgotten mug); the cognac chair a coffee, two books and glasses on
+# its side table and an oat throw over its arm; the navy sofa a throw and two oat cushions; a
+# nook armchair a cushion; a snake plant fills the solid north-west corner by the glass.
+import math as _m
+
+
+def _rel(host, local, z=None, rot=0.0):
+    """A point in a host's local frame (host = (x, y, rot_deg)) -> room placement fields."""
+    hx, hy, hr = host
+    c, s = _m.cos(_m.radians(hr)), _m.sin(_m.radians(hr))
+    x, y = local
+    xy = (round(hx + x * c - y * s, 3), round(hy + x * s + y * c, 3))
+    return (xy + ((z,) if z is not None else ()), hr + rot)
+
+
+_SOFA = (-3.6, 3.85, 180)          # library_sofa_navy: arms at local x = +-1.05, seat 0.45
+_COGNAC = (5.2, -1.6, -135)        # library_armchair_cognac: arms at local x = +-0.355
+_NOOK = (-6.5, 1.45, -65)          # library_armchair (navy)
+PLACEMENTS = list(PLACEMENTS) + [
+    ("decor_c_vignette_table", (1.4, 0.0, 0.76), 0),
+    ("decor_c_cup_book", (6.6, -1.9, 0.56), -100),
+    ("decor_c_throw_chair", *_rel(_COGNAC, (0.355, 0.02), 0.22)),
+    ("decor_c_throw", *_rel(_SOFA, (1.05, 0.0), 0.22)),
+    ("decor_c_cushion", *_rel(_SOFA, (-0.68, -0.05), 0.455, rot=6)),
+    ("decor_c_cushion_lumbar", *_rel(_SOFA, (-0.27, -0.07), 0.455, rot=-3)),
+    ("decor_c_cushion_small", *_rel(_NOOK, (0.03, -0.07), 0.445, rot=4)),
+    ("decor_c_plant_snake_tall", (-8.4, 4.15), 20),
+]

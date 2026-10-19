@@ -18,6 +18,39 @@ PLACEMENTS = {
     ],
 }
 
+# --- set dressing (decor_c_*): a few pauses along the ring, on the solid outer walls only, so
+# the 3.2 m walkway stays clear (each gallery uses at most three materials: walnut, charcoal
+# ceramic, and leaves or books). Walnut benches under the big pieces, walnut consoles with
+# books and charcoal vessels on bare stretches, snake plants in charcoal planters.
+DECOR = {
+    "gallery_s": [
+        ("decor_c_gallery_bench", (-6.0, -1.37), 180),            # under the red zip painting
+        ("decor_c_plant_snake", (-3.5, -1.3), 40),                # between the two pieces
+    ],
+    "gallery_n": [
+        ("decor_c_vignette_gallery", (-6.75, 1.415), 0),          # bare wall west of the great-room opening
+    ],
+    "gallery_w": [
+        ("decor_c_gallery_bench", (-1.37, 0.0), 90),              # between the two great-room openings
+    ],
+    "gallery_e": [
+        ("decor_c_vignette_gallery", (1.415, -2.6), -90, ),       # south of the door
+    ],
+    "ugallery_n": [
+        ("decor_c_gallery_bench", (-8.0, 1.37), 0),               # under the dune photograph
+        ("decor_c_vignette_gallery", (-0.9, 1.415), 0),           # between the ochre squares and the chart
+    ],
+    "ugallery_e": [
+        ("decor_c_gallery_bench", (1.37, 1.2), -90),
+        ("decor_c_plant_snake", (1.3, 5.75), 10),
+    ],
+    "ugallery_s": [
+        ("decor_c_plant_snake", (-8.7, -1.3), 70),                # the solid stretch by the door
+    ],
+}
+for _room, _items in DECOR.items():
+    PLACEMENTS.setdefault(_room, []).extend(_items)
+
 # --- lighting: a downlight on the line of every mullion of the courtyard glass ---------------
 # The glass bays set the rhythm: across from each mullion, a small recessed downlight
 # (light_u_downlight) sits 0.75 m off the outer wall and washes it in a soft scallop, so

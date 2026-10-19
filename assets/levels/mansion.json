@@ -1320,48 +1320,6 @@
       ],
       "tris": 976
     },
-    "entry_rug_round": {
-      "file": "models/entry_rug_round.gltf",
-      "aabb": {
-        "min": [
-          -1.55,
-          0.0,
-          -1.55
-        ],
-        "max": [
-          1.55,
-          0.017,
-          1.55
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -1.36,
-            0.012,
-            -1.36
-          ],
-          "max": [
-            1.36,
-            0.017,
-            1.36
-          ]
-        },
-        {
-          "min": [
-            -1.55,
-            0.0,
-            -1.55
-          ],
-          "max": [
-            1.55,
-            0.014,
-            1.55
-          ]
-        }
-      ],
-      "tris": 1280
-    },
     "entry_round_table": {
       "file": "models/entry_round_table.gltf",
       "aabb": {
@@ -1974,36 +1932,6 @@
       ],
       "tris": 120
     },
-    "rug": {
-      "file": "models/rug.gltf",
-      "aabb": {
-        "min": [
-          -1.5,
-          0.0,
-          -1.1
-        ],
-        "max": [
-          1.5,
-          0.0145,
-          1.1
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -1.5,
-            0.0,
-            -1.1
-          ],
-          "max": [
-            1.5,
-            0.0145,
-            1.1
-          ]
-        }
-      ],
-      "tris": 394
-    },
     "coffee_table": {
       "file": "models/coffee_table.gltf",
       "aabb": {
@@ -2356,6 +2284,57 @@
         }
       ],
       "tris": 1276
+    },
+    "decor_a_table": {
+      "file": "models/decor_a_table.gltf",
+      "aabb": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.5825
+        ],
+        "max": [
+          0.6419,
+          0.2587,
+          0.4393
+        ]
+      },
+      "colliders": [],
+      "tris": 1014
+    },
+    "decor_a_table_coffee_rect": {
+      "file": "models/decor_a_table_coffee_rect.gltf",
+      "aabb": {
+        "min": [
+          -0.4993,
+          0.0,
+          -0.1955
+        ],
+        "max": [
+          0.4017,
+          0.1107,
+          0.2317
+        ]
+      },
+      "colliders": [],
+      "tris": 1010
+    },
+    "decor_a_soft": {
+      "file": "models/decor_a_soft.gltf",
+      "aabb": {
+        "min": [
+          -0.8975,
+          -0.004,
+          -0.1849
+        ],
+        "max": [
+          0.9313,
+          0.0903,
+          0.1849
+        ]
+      },
+      "colliders": [],
+      "tris": 928
     },
     "entry_vanity": {
       "file": "models/entry_vanity.gltf",
@@ -3399,6 +3378,87 @@
       "colliders": [],
       "tris": 126
     },
+    "decor_a_soft_vanity": {
+      "file": "models/decor_a_soft_vanity.gltf",
+      "aabb": {
+        "min": [
+          -0.7148,
+          0.0,
+          -0.1331
+        ],
+        "max": [
+          0.7142,
+          0.354,
+          0.1217
+        ]
+      },
+      "colliders": [],
+      "tris": 2040
+    },
+    "decor_a_table_round_powder": {
+      "file": "models/decor_a_table_round_powder.gltf",
+      "aabb": {
+        "min": [
+          -0.51,
+          0.0,
+          0.0672
+        ],
+        "max": [
+          0.554,
+          0.1662,
+          0.4211
+        ]
+      },
+      "colliders": [],
+      "tris": 668
+    },
+    "decor_a_soft_bench_powder": {
+      "file": "models/decor_a_soft_bench_powder.gltf",
+      "aabb": {
+        "min": [
+          -0.6,
+          -0.003,
+          -0.12
+        ],
+        "max": [
+          0.042,
+          0.0934,
+          0.12
+        ]
+      },
+      "colliders": [],
+      "tris": 682
+    },
+    "decor_a_floor": {
+      "file": "models/decor_a_floor.gltf",
+      "aabb": {
+        "min": [
+          -0.4629,
+          0.0,
+          -0.2936
+        ],
+        "max": [
+          0.3549,
+          1.5986,
+          0.4248
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.16,
+            0.0,
+            -0.1576
+          ],
+          "max": [
+            0.16,
+            0.6242,
+            0.1576
+          ]
+        }
+      ],
+      "tris": 2093
+    },
     "entry_coat_closet": {
       "file": "models/entry_coat_closet.gltf",
       "aabb": {
@@ -3927,6 +3987,117 @@
       ],
       "tris": 120
     },
+    "decor_a_soft_bench_cloak": {
+      "file": "models/decor_a_soft_bench_cloak.gltf",
+      "aabb": {
+        "min": [
+          -0.7406,
+          -0.004,
+          -0.1791
+        ],
+        "max": [
+          0.6239,
+          0.112,
+          0.1452
+        ]
+      },
+      "colliders": [],
+      "tris": 1204
+    },
+    "decor_a_floor_shoes": {
+      "file": "models/decor_a_floor_shoes.gltf",
+      "aabb": {
+        "min": [
+          -0.1347,
+          0.0,
+          -0.1127
+        ],
+        "max": [
+          0.1536,
+          0.068,
+          0.1005
+        ]
+      },
+      "colliders": [],
+      "tris": 300
+    },
+    "decor_a_soft_bench_hatboxes": {
+      "file": "models/decor_a_soft_bench_hatboxes.gltf",
+      "aabb": {
+        "min": [
+          -0.6082,
+          -0.004,
+          -0.1853
+        ],
+        "max": [
+          0.6176,
+          0.32,
+          0.1853
+        ]
+      },
+      "colliders": [],
+      "tris": 900
+    },
+    "decor_a_floor_umbrella_stand": {
+      "file": "models/decor_a_floor_umbrella_stand.gltf",
+      "aabb": {
+        "min": [
+          -0.1492,
+          0.0,
+          -0.11
+        ],
+        "max": [
+          0.2267,
+          0.8883,
+          0.11
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.11,
+            0.0,
+            -0.11
+          ],
+          "max": [
+            0.11,
+            0.48,
+            0.11
+          ]
+        }
+      ],
+      "tris": 728
+    },
+    "decor_a_floor_b": {
+      "file": "models/decor_a_floor_b.gltf",
+      "aabb": {
+        "min": [
+          -0.16,
+          0.0,
+          -0.4966
+        ],
+        "max": [
+          0.6052,
+          1.6406,
+          0.3106
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.16,
+            0.0,
+            -0.1576
+          ],
+          "max": [
+            0.16,
+            0.6242,
+            0.1576
+          ]
+        }
+      ],
+      "tris": 2093
+    },
     "living_media_wall": {
       "file": "models/living_media_wall.gltf",
       "aabb": {
@@ -4304,48 +4475,6 @@
         }
       ],
       "tris": 6078
-    },
-    "living_rug_den": {
-      "file": "models/living_rug_den.gltf",
-      "aabb": {
-        "min": [
-          -3.1,
-          0.0,
-          -2.3
-        ],
-        "max": [
-          3.1,
-          0.017,
-          2.3
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -3.1,
-            0.0,
-            -2.3
-          ],
-          "max": [
-            3.1,
-            0.014,
-            2.3
-          ]
-        },
-        {
-          "min": [
-            -2.955,
-            0.003,
-            -2.155
-          ],
-          "max": [
-            2.955,
-            0.017,
-            2.155
-          ]
-        }
-      ],
-      "tris": 156
     },
     "living_sectional": {
       "file": "models/living_sectional.gltf",
@@ -5893,6 +6022,142 @@
       "colliders": [],
       "tris": 528
     },
+    "decor_a_console_den": {
+      "file": "models/decor_a_console_den.gltf",
+      "aabb": {
+        "min": [
+          -0.8441,
+          0.255,
+          -0.17
+        ],
+        "max": [
+          0.93,
+          1.2021,
+          0.17
+        ]
+      },
+      "colliders": [],
+      "tris": 1934
+    },
+    "decor_a_console_bar": {
+      "file": "models/decor_a_console_bar.gltf",
+      "aabb": {
+        "min": [
+          -0.796,
+          0.255,
+          -0.15
+        ],
+        "max": [
+          1.01,
+          1.068,
+          0.15
+        ]
+      },
+      "colliders": [],
+      "tris": 1928
+    },
+    "decor_a_table_ottoman_den": {
+      "file": "models/decor_a_table_ottoman_den.gltf",
+      "aabb": {
+        "min": [
+          -0.4992,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.435,
+          0.0874,
+          0.3913
+        ]
+      },
+      "colliders": [],
+      "tris": 584
+    },
+    "decor_a_table_side_glass": {
+      "file": "models/decor_a_table_side_glass.gltf",
+      "aabb": {
+        "min": [
+          -0.2324,
+          0.0,
+          0.0256
+        ],
+        "max": [
+          0.186,
+          0.085,
+          0.2221
+        ]
+      },
+      "colliders": [],
+      "tris": 204
+    },
+    "decor_a_table_side_cup": {
+      "file": "models/decor_a_table_side_cup.gltf",
+      "aabb": {
+        "min": [
+          0.0586,
+          0.0,
+          0.0586
+        ],
+        "max": [
+          0.2014,
+          0.0701,
+          0.2014
+        ]
+      },
+      "colliders": [],
+      "tris": 530
+    },
+    "decor_a_table_side_plant_den": {
+      "file": "models/decor_a_table_side_plant_den.gltf",
+      "aabb": {
+        "min": [
+          -0.1767,
+          0.0,
+          -0.1213
+        ],
+        "max": [
+          0.1481,
+          0.3004,
+          0.1962
+        ]
+      },
+      "colliders": [],
+      "tris": 524
+    },
+    "decor_a_table_credenza": {
+      "file": "models/decor_a_table_credenza.gltf",
+      "aabb": {
+        "min": [
+          -2.1973,
+          0.0,
+          -0.14
+        ],
+        "max": [
+          2.22,
+          0.2424,
+          0.1359
+        ]
+      },
+      "colliders": [],
+      "tris": 1348
+    },
+    "decor_a_soft_sectional_throw": {
+      "file": "models/decor_a_soft_sectional_throw.gltf",
+      "aabb": {
+        "min": [
+          -2.3157,
+          0.272,
+          -0.6853
+        ],
+        "max": [
+          -2.0603,
+          0.618,
+          -0.196
+        ]
+      },
+      "colliders": [],
+      "tris": 308
+    },
     "living_fireplace": {
       "file": "models/living_fireplace.gltf",
       "aabb": {
@@ -6204,48 +6469,6 @@
       "colliders": [],
       "tris": 4748
     },
-    "living_rug": {
-      "file": "models/living_rug.gltf",
-      "aabb": {
-        "min": [
-          -2.6,
-          0.0,
-          -1.9
-        ],
-        "max": [
-          2.6,
-          0.017,
-          1.9
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -2.6,
-            0.0,
-            -1.9
-          ],
-          "max": [
-            2.6,
-            0.014,
-            1.9
-          ]
-        },
-        {
-          "min": [
-            -2.415,
-            0.003,
-            -1.715
-          ],
-          "max": [
-            2.415,
-            0.017,
-            1.715
-          ]
-        }
-      ],
-      "tris": 156
-    },
     "living_sofa": {
       "file": "models/living_sofa.gltf",
       "aabb": {
@@ -6437,48 +6660,6 @@
         }
       ],
       "tris": 1376
-    },
-    "living_rug_b": {
-      "file": "models/living_rug_b.gltf",
-      "aabb": {
-        "min": [
-          -2.3,
-          0.0,
-          -1.8
-        ],
-        "max": [
-          2.3,
-          0.017,
-          1.8
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -2.3,
-            0.0,
-            -1.8
-          ],
-          "max": [
-            2.3,
-            0.014,
-            1.8
-          ]
-        },
-        {
-          "min": [
-            -2.175,
-            0.003,
-            -1.675
-          ],
-          "max": [
-            2.175,
-            0.017,
-            1.675
-          ]
-        }
-      ],
-      "tris": 156
     },
     "living_sofa_ink": {
       "file": "models/living_sofa_ink.gltf",
@@ -7212,35 +7393,192 @@
       ],
       "tris": 56
     },
-    "dining_rug": {
-      "file": "models/dining_rug.gltf",
+    "decor_a_console_sofa": {
+      "file": "models/decor_a_console_sofa.gltf",
       "aabb": {
         "min": [
-          -3.6,
-          0.0,
-          -1.95
+          -0.352,
+          0.82,
+          -0.1306
         ],
         "max": [
-          3.6,
-          0.017,
-          1.95
+          0.33,
+          0.9992,
+          0.1314
         ]
       },
-      "colliders": [
-        {
-          "min": [
-            -3.6,
-            0.0,
-            -1.95
-          ],
-          "max": [
-            3.6,
-            0.017,
-            1.95
-          ]
-        }
-      ],
-      "tris": 394
+      "colliders": [],
+      "tris": 700
+    },
+    "decor_a_console_south": {
+      "file": "models/decor_a_console_south.gltf",
+      "aabb": {
+        "min": [
+          -0.7911,
+          0.255,
+          -0.142
+        ],
+        "max": [
+          0.6474,
+          1.162,
+          0.133
+        ]
+      },
+      "colliders": [],
+      "tris": 1382
+    },
+    "decor_a_console": {
+      "file": "models/decor_a_console.gltf",
+      "aabb": {
+        "min": [
+          -0.895,
+          0.255,
+          -0.19
+        ],
+        "max": [
+          0.97,
+          1.3227,
+          0.1646
+        ]
+      },
+      "colliders": [],
+      "tris": 1520
+    },
+    "decor_a_console_b": {
+      "file": "models/decor_a_console_b.gltf",
+      "aabb": {
+        "min": [
+          -0.8424,
+          0.255,
+          -0.17
+        ],
+        "max": [
+          0.93,
+          1.2021,
+          0.17
+        ]
+      },
+      "colliders": [],
+      "tris": 1934
+    },
+    "decor_a_console_c": {
+      "file": "models/decor_a_console_c.gltf",
+      "aabb": {
+        "min": [
+          -0.81,
+          0.255,
+          -0.1619
+        ],
+        "max": [
+          0.86,
+          1.2422,
+          0.1505
+        ]
+      },
+      "colliders": [],
+      "tris": 2160
+    },
+    "decor_a_console_d": {
+      "file": "models/decor_a_console_d.gltf",
+      "aabb": {
+        "min": [
+          -0.92,
+          0.255,
+          -0.1457
+        ],
+        "max": [
+          0.747,
+          1.1617,
+          0.1491
+        ]
+      },
+      "colliders": [],
+      "tris": 1394
+    },
+    "decor_a_table_coffee_round_a": {
+      "file": "models/decor_a_table_coffee_round_a.gltf",
+      "aabb": {
+        "min": [
+          -0.3995,
+          0.0,
+          -0.03
+        ],
+        "max": [
+          0.38,
+          0.2194,
+          0.3774
+        ]
+      },
+      "colliders": [],
+      "tris": 626
+    },
+    "decor_a_table_coffee_round_c": {
+      "file": "models/decor_a_table_coffee_round_c.gltf",
+      "aabb": {
+        "min": [
+          -0.3635,
+          0.0,
+          -0.3317
+        ],
+        "max": [
+          0.3658,
+          0.2482,
+          0.343
+        ]
+      },
+      "colliders": [],
+      "tris": 1602
+    },
+    "decor_a_table_coffee_rect_b": {
+      "file": "models/decor_a_table_coffee_rect_b.gltf",
+      "aabb": {
+        "min": [
+          -0.37,
+          0.0,
+          -0.2262
+        ],
+        "max": [
+          0.5153,
+          0.2426,
+          0.2214
+        ]
+      },
+      "colliders": [],
+      "tris": 1244
+    },
+    "decor_a_table_ottoman": {
+      "file": "models/decor_a_table_ottoman.gltf",
+      "aabb": {
+        "min": [
+          -0.332,
+          0.0,
+          -0.2469
+        ],
+        "max": [
+          0.332,
+          0.1665,
+          0.2469
+        ]
+      },
+      "colliders": [],
+      "tris": 818
+    },
+    "decor_a_table_side_plant": {
+      "file": "models/decor_a_table_side_plant.gltf",
+      "aabb": {
+        "min": [
+          -0.1556,
+          0.0,
+          -0.1386
+        ],
+        "max": [
+          0.137,
+          0.2787,
+          0.1996
+        ]
+      },
+      "colliders": [],
+      "tris": 524
     },
     "dining_table": {
       "file": "models/dining_table.gltf",
@@ -8280,35 +8618,73 @@
       ],
       "tris": 56
     },
-    "bedroom_rug": {
-      "file": "models/bedroom_rug.gltf",
+    "decor_b_vignette_sideboard": {
+      "file": "models/decor_b_vignette_sideboard.gltf",
       "aabb": {
         "min": [
-          -1.6,
+          -1.0554,
           0.0,
-          -1.3
+          -0.2144
         ],
         "max": [
-          1.6,
-          0.018,
-          1.3
+          1.0068,
+          0.7587,
+          0.1987
         ]
       },
-      "colliders": [
-        {
-          "min": [
-            -1.6,
-            0.0,
-            -1.3
-          ],
-          "max": [
-            1.6,
-            0.018,
-            1.3
-          ]
-        }
-      ],
-      "tris": 394
+      "colliders": [],
+      "tris": 3180
+    },
+    "decor_b_vignette_console": {
+      "file": "models/decor_b_vignette_console.gltf",
+      "aabb": {
+        "min": [
+          -0.598,
+          0.0,
+          -0.148
+        ],
+        "max": [
+          0.5825,
+          0.271,
+          0.137
+        ]
+      },
+      "colliders": [],
+      "tris": 1204
+    },
+    "decor_b_vignette_coffee": {
+      "file": "models/decor_b_vignette_coffee.gltf",
+      "aabb": {
+        "min": [
+          -0.253,
+          0.0,
+          -0.2252
+        ],
+        "max": [
+          0.2979,
+          0.2241,
+          0.1648
+        ]
+      },
+      "colliders": [],
+      "tris": 1266
+    },
+    "decor_b_table_buds": {
+      "file": "models/decor_b_table_buds.gltf",
+      "aabb": {
+        "min": [
+          -0.152,
+          0.0,
+          -0.08
+        ],
+        "max": [
+          0.1898,
+          0.5394,
+          0.0768
+        ]
+      },
+      "colliders": [],
+      "tris": 1152
     },
     "kitchen_wall_run": {
       "file": "models/kitchen_wall_run.gltf",
@@ -11826,6 +12202,155 @@
       ],
       "tris": 566
     },
+    "decor_b_vignette_island": {
+      "file": "models/decor_b_vignette_island.gltf",
+      "aabb": {
+        "min": [
+          -0.6533,
+          0.0,
+          -0.2961
+        ],
+        "max": [
+          0.6344,
+          0.6554,
+          0.1514
+        ]
+      },
+      "colliders": [],
+      "tris": 2822
+    },
+    "decor_b_vignette_range_l": {
+      "file": "models/decor_b_vignette_range_l.gltf",
+      "aabb": {
+        "min": [
+          -0.35,
+          0.0,
+          -0.3
+        ],
+        "max": [
+          0.2859,
+          0.3127,
+          0.0647
+        ]
+      },
+      "colliders": [],
+      "tris": 1016
+    },
+    "decor_b_vignette_range_r": {
+      "file": "models/decor_b_vignette_range_r.gltf",
+      "aabb": {
+        "min": [
+          -0.2827,
+          0.0,
+          -0.2262
+        ],
+        "max": [
+          0.3746,
+          0.3464,
+          0.0336
+        ]
+      },
+      "colliders": [],
+      "tris": 1380
+    },
+    "decor_b_bread_board": {
+      "file": "models/decor_b_bread_board.gltf",
+      "aabb": {
+        "min": [
+          -0.2282,
+          0.0,
+          -0.2232
+        ],
+        "max": [
+          0.4488,
+          0.1115,
+          0.1632
+        ]
+      },
+      "colliders": [],
+      "tris": 492
+    },
+    "decor_b_sink_set": {
+      "file": "models/decor_b_sink_set.gltf",
+      "aabb": {
+        "min": [
+          -0.1025,
+          0.0,
+          -0.0642
+        ],
+        "max": [
+          0.1661,
+          0.2055,
+          0.1066
+        ]
+      },
+      "colliders": [],
+      "tris": 480
+    },
+    "decor_b_vignette_breakfast": {
+      "file": "models/decor_b_vignette_breakfast.gltf",
+      "aabb": {
+        "min": [
+          -0.9169,
+          0.0,
+          -0.2077
+        ],
+        "max": [
+          0.81,
+          0.1327,
+          0.4426
+        ]
+      },
+      "colliders": [],
+      "tris": 1828
+    },
+    "decor_b_vignette_coffee_k": {
+      "file": "models/decor_b_vignette_coffee_k.gltf",
+      "aabb": {
+        "min": [
+          -0.2367,
+          0.0,
+          -0.2206
+        ],
+        "max": [
+          0.2777,
+          0.205,
+          0.1648
+        ]
+      },
+      "colliders": [],
+      "tris": 1186
+    },
+    "decor_b_plant_floor": {
+      "file": "models/decor_b_plant_floor.gltf",
+      "aabb": {
+        "min": [
+          -0.7733,
+          0.0,
+          -0.8067
+        ],
+        "max": [
+          0.6926,
+          1.668,
+          0.725
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.24,
+            0.0,
+            -0.24
+          ],
+          "max": [
+            0.24,
+            0.44,
+            0.24
+          ]
+        }
+      ],
+      "tris": 740
+    },
     "kitchen_scullery_run": {
       "file": "models/kitchen_scullery_run.gltf",
       "aabb": {
@@ -15228,6 +15753,40 @@
       ],
       "tris": 2768
     },
+    "decor_b_vignette_bread": {
+      "file": "models/decor_b_vignette_bread.gltf",
+      "aabb": {
+        "min": [
+          -1.1213,
+          0.0,
+          -0.2031
+        ],
+        "max": [
+          1.13,
+          0.3267,
+          0.1631
+        ]
+      },
+      "colliders": [],
+      "tris": 3224
+    },
+    "decor_b_dish_rack": {
+      "file": "models/decor_b_dish_rack.gltf",
+      "aabb": {
+        "min": [
+          -0.18,
+          0.0,
+          -0.13
+        ],
+        "max": [
+          0.18,
+          0.2605,
+          0.13
+        ]
+      },
+      "colliders": [],
+      "tris": 1648
+    },
     "dining_wine_rack": {
       "file": "models/dining_wine_rack.gltf",
       "aabb": {
@@ -16644,6 +17203,70 @@
       ],
       "tris": 116
     },
+    "decor_b_vignette_cheese": {
+      "file": "models/decor_b_vignette_cheese.gltf",
+      "aabb": {
+        "min": [
+          -0.3252,
+          0.0,
+          -0.1417
+        ],
+        "max": [
+          0.5234,
+          0.3229,
+          0.162
+        ]
+      },
+      "colliders": [],
+      "tris": 1354
+    },
+    "decor_b_vignette_cellar_table": {
+      "file": "models/decor_b_vignette_cellar_table.gltf",
+      "aabb": {
+        "min": [
+          -0.3813,
+          0.0,
+          -0.1482
+        ],
+        "max": [
+          0.34,
+          0.1333,
+          0.1692
+        ]
+      },
+      "colliders": [],
+      "tris": 1238
+    },
+    "decor_b_wine_crates": {
+      "file": "models/decor_b_wine_crates.gltf",
+      "aabb": {
+        "min": [
+          -0.26,
+          0.0,
+          -0.1877
+        ],
+        "max": [
+          0.2869,
+          0.546,
+          0.2077
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.26,
+            0.0,
+            -0.18
+          ],
+          "max": [
+            0.26,
+            0.232,
+            0.18
+          ]
+        }
+      ],
+      "tris": 1632
+    },
     "garage_lockers": {
       "file": "models/garage_lockers.gltf",
       "aabb": {
@@ -17099,6 +17722,100 @@
         }
       ],
       "tris": 98
+    },
+    "decor_b_vignette_keys": {
+      "file": "models/decor_b_vignette_keys.gltf",
+      "aabb": {
+        "min": [
+          -0.4498,
+          0.0,
+          -0.15
+        ],
+        "max": [
+          0.1545,
+          0.0534,
+          0.1692
+        ]
+      },
+      "colliders": [],
+      "tris": 782
+    },
+    "decor_b_throw_folded": {
+      "file": "models/decor_b_throw_folded.gltf",
+      "aabb": {
+        "min": [
+          -0.23,
+          -0.22,
+          -0.17
+        ],
+        "max": [
+          0.23,
+          0.0706,
+          0.2
+        ]
+      },
+      "colliders": [],
+      "tris": 348
+    },
+    "decor_b_basket_blankets": {
+      "file": "models/decor_b_basket_blankets.gltf",
+      "aabb": {
+        "min": [
+          -0.222,
+          0.0,
+          -0.222
+        ],
+        "max": [
+          0.222,
+          0.5876,
+          0.222
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.222,
+            0.0,
+            -0.222
+          ],
+          "max": [
+            0.222,
+            0.3674,
+            0.222
+          ]
+        }
+      ],
+      "tris": 976
+    },
+    "decor_b_plant_floor_b": {
+      "file": "models/decor_b_plant_floor_b.gltf",
+      "aabb": {
+        "min": [
+          -0.6709,
+          0.0,
+          -0.5821
+        ],
+        "max": [
+          0.824,
+          1.504,
+          0.7728
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.24,
+            0.0,
+            -0.24
+          ],
+          "max": [
+            0.24,
+            0.44,
+            0.24
+          ]
+        }
+      ],
+      "tris": 696
     },
     "garage_bay": {
       "file": "models/garage_bay.gltf",
@@ -17657,6 +18374,53 @@
       ],
       "tris": 22554
     },
+    "decor_b_vignette_garage": {
+      "file": "models/decor_b_vignette_garage.gltf",
+      "aabb": {
+        "min": [
+          -1.05,
+          0.0,
+          -0.335
+        ],
+        "max": [
+          0.8168,
+          0.6613,
+          0.1509
+        ]
+      },
+      "colliders": [],
+      "tris": 1980
+    },
+    "decor_b_plant_floor_c": {
+      "file": "models/decor_b_plant_floor_c.gltf",
+      "aabb": {
+        "min": [
+          -0.7361,
+          0.0,
+          -0.821
+        ],
+        "max": [
+          0.8918,
+          1.8639,
+          0.8001
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.27,
+            0.0,
+            -0.27
+          ],
+          "max": [
+            0.27,
+            0.5,
+            0.27
+          ]
+        }
+      ],
+      "tris": 784
+    },
     "art_zip_red": {
       "file": "models/art_zip_red.gltf",
       "aabb": {
@@ -17789,6 +18553,66 @@
       ],
       "tris": 108
     },
+    "decor_c_gallery_bench": {
+      "file": "models/decor_c_gallery_bench.gltf",
+      "aabb": {
+        "min": [
+          -0.8,
+          0.0,
+          -0.2
+        ],
+        "max": [
+          0.8,
+          0.45,
+          0.2
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.8,
+            0.0,
+            -0.2
+          ],
+          "max": [
+            0.8,
+            0.45,
+            0.2
+          ]
+        }
+      ],
+      "tris": 256
+    },
+    "decor_c_plant_snake": {
+      "file": "models/decor_c_plant_snake.gltf",
+      "aabb": {
+        "min": [
+          -0.2332,
+          0.0,
+          -0.3344
+        ],
+        "max": [
+          0.2976,
+          1.1462,
+          0.2004
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.17,
+            0.0,
+            -0.1674
+          ],
+          "max": [
+            0.17,
+            0.42,
+            0.1674
+          ]
+        }
+      ],
+      "tris": 592
+    },
     "light_u_downlight": {
       "file": "models/light_u_downlight.gltf",
       "aabb": {
@@ -17805,6 +18629,36 @@
       },
       "colliders": [],
       "tris": 60
+    },
+    "decor_c_vignette_gallery": {
+      "file": "models/decor_c_vignette_gallery.gltf",
+      "aabb": {
+        "min": [
+          -0.8,
+          0.0,
+          -0.206
+        ],
+        "max": [
+          0.8,
+          1.3453,
+          0.18
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.8,
+            0.0,
+            -0.18
+          ],
+          "max": [
+            0.8,
+            0.8,
+            0.18
+          ]
+        }
+      ],
+      "tris": 2370
     },
     "courtyard_bed_north": {
       "file": "models/courtyard_bed_north.gltf",
@@ -18142,96 +18996,6 @@
       ],
       "tris": 2229
     },
-    "courtyard_rug_dining": {
-      "file": "models/courtyard_rug_dining.gltf",
-      "aabb": {
-        "min": [
-          -2.9,
-          0.0,
-          -1.75
-        ],
-        "max": [
-          2.9,
-          0.0157,
-          1.75
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -2.66,
-            0.0095,
-            -1.51
-          ],
-          "max": [
-            2.66,
-            0.0145,
-            1.51
-          ]
-        },
-        {
-          "min": [
-            -2.9,
-            0.0,
-            -1.75
-          ],
-          "max": [
-            2.9,
-            0.01,
-            1.75
-          ]
-        },
-        {
-          "min": [
-            -2.54,
-            0.0141,
-            1.36
-          ],
-          "max": [
-            2.54,
-            0.0157,
-            1.39
-          ]
-        },
-        {
-          "min": [
-            -2.54,
-            0.0141,
-            -1.39
-          ],
-          "max": [
-            2.54,
-            0.0157,
-            -1.36
-          ]
-        },
-        {
-          "min": [
-            -2.54,
-            0.0141,
-            -1.36
-          ],
-          "max": [
-            -2.51,
-            0.0157,
-            1.36
-          ]
-        },
-        {
-          "min": [
-            2.51,
-            0.0141,
-            -1.36
-          ],
-          "max": [
-            2.54,
-            0.0157,
-            1.36
-          ]
-        }
-      ],
-      "tris": 136
-    },
     "courtyard_dining_table": {
       "file": "models/courtyard_dining_table.gltf",
       "aabb": {
@@ -18507,96 +19271,6 @@
         }
       ],
       "tris": 6629
-    },
-    "courtyard_rug": {
-      "file": "models/courtyard_rug.gltf",
-      "aabb": {
-        "min": [
-          -1.85,
-          0.0,
-          -2.35
-        ],
-        "max": [
-          1.85,
-          0.0157,
-          2.35
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -1.63,
-            0.0095,
-            -2.13
-          ],
-          "max": [
-            1.63,
-            0.0145,
-            2.13
-          ]
-        },
-        {
-          "min": [
-            -1.85,
-            0.0,
-            -2.35
-          ],
-          "max": [
-            1.85,
-            0.01,
-            2.35
-          ]
-        },
-        {
-          "min": [
-            -1.51,
-            0.0141,
-            1.98
-          ],
-          "max": [
-            1.51,
-            0.0157,
-            2.01
-          ]
-        },
-        {
-          "min": [
-            -1.51,
-            0.0141,
-            -2.01
-          ],
-          "max": [
-            1.51,
-            0.0157,
-            -1.98
-          ]
-        },
-        {
-          "min": [
-            -1.51,
-            0.0141,
-            -1.98
-          ],
-          "max": [
-            -1.48,
-            0.0157,
-            1.98
-          ]
-        },
-        {
-          "min": [
-            1.48,
-            0.0141,
-            -1.98
-          ],
-          "max": [
-            1.51,
-            0.0157,
-            1.98
-          ]
-        }
-      ],
-      "tris": 136
     },
     "courtyard_sofa": {
       "file": "models/courtyard_sofa.gltf",
@@ -20428,36 +21102,6 @@
       ],
       "tris": 1230
     },
-    "library_rug": {
-      "file": "models/library_rug.gltf",
-      "aabb": {
-        "min": [
-          -2.5,
-          0.0,
-          -1.7
-        ],
-        "max": [
-          2.5,
-          0.012,
-          1.7
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -2.5,
-            0.0,
-            -1.7
-          ],
-          "max": [
-            2.5,
-            0.012,
-            1.7
-          ]
-        }
-      ],
-      "tris": 36
-    },
     "library_table": {
       "file": "models/library_table.gltf",
       "aabb": {
@@ -20960,6 +21604,155 @@
       },
       "colliders": [],
       "tris": 516
+    },
+    "decor_c_vignette_table": {
+      "file": "models/decor_c_vignette_table.gltf",
+      "aabb": {
+        "min": [
+          -0.5828,
+          -0.001,
+          -0.4153
+        ],
+        "max": [
+          1.4229,
+          0.2313,
+          0.4465
+        ]
+      },
+      "colliders": [],
+      "tris": 1178
+    },
+    "decor_c_cup_book": {
+      "file": "models/decor_c_cup_book.gltf",
+      "aabb": {
+        "min": [
+          -0.1623,
+          0.0,
+          -0.1714
+        ],
+        "max": [
+          0.188,
+          0.1051,
+          0.169
+        ]
+      },
+      "colliders": [],
+      "tris": 770
+    },
+    "decor_c_throw_chair": {
+      "file": "models/decor_c_throw_chair.gltf",
+      "aabb": {
+        "min": [
+          -0.2872,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.164,
+          0.4432,
+          0.25
+        ]
+      },
+      "colliders": [],
+      "tris": 916
+    },
+    "decor_c_throw": {
+      "file": "models/decor_c_throw.gltf",
+      "aabb": {
+        "min": [
+          -0.3022,
+          0.0,
+          -0.275
+        ],
+        "max": [
+          0.177,
+          0.439,
+          0.275
+        ]
+      },
+      "colliders": [],
+      "tris": 916
+    },
+    "decor_c_cushion": {
+      "file": "models/decor_c_cushion.gltf",
+      "aabb": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.1555
+        ],
+        "max": [
+          0.25,
+          0.4924,
+          0.0678
+        ]
+      },
+      "colliders": [],
+      "tris": 256
+    },
+    "decor_c_cushion_lumbar": {
+      "file": "models/decor_c_cushion_lumbar.gltf",
+      "aabb": {
+        "min": [
+          -0.3,
+          0.0,
+          -0.1125
+        ],
+        "max": [
+          0.3,
+          0.3367,
+          0.0643
+        ]
+      },
+      "colliders": [],
+      "tris": 256
+    },
+    "decor_c_cushion_small": {
+      "file": "models/decor_c_cushion_small.gltf",
+      "aabb": {
+        "min": [
+          -0.21,
+          0.0,
+          -0.1281
+        ],
+        "max": [
+          0.21,
+          0.4148,
+          0.0611
+        ]
+      },
+      "colliders": [],
+      "tris": 256
+    },
+    "decor_c_plant_snake_tall": {
+      "file": "models/decor_c_plant_snake_tall.gltf",
+      "aabb": {
+        "min": [
+          -0.342,
+          0.0,
+          -0.3699
+        ],
+        "max": [
+          0.3264,
+          1.4773,
+          0.3178
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.2,
+            0.0,
+            -0.197
+          ],
+          "max": [
+            0.2,
+            0.5,
+            0.197
+          ]
+        }
+      ],
+      "tris": 680
     },
     "bed": {
       "file": "models/bed.gltf",
@@ -21867,6 +22660,138 @@
       ],
       "tris": 3280
     },
+    "decor_d_nightstand_a": {
+      "file": "models/decor_d_nightstand_a.gltf",
+      "aabb": {
+        "min": [
+          -0.2716,
+          0.0,
+          -0.1127
+        ],
+        "max": [
+          0.2986,
+          0.4077,
+          0.1294
+        ]
+      },
+      "colliders": [],
+      "tris": 850
+    },
+    "decor_d_nightstand_b": {
+      "file": "models/decor_d_nightstand_b.gltf",
+      "aabb": {
+        "min": [
+          -0.255,
+          0.0,
+          -0.1234
+        ],
+        "max": [
+          0.2738,
+          0.252,
+          0.1232
+        ]
+      },
+      "colliders": [],
+      "tris": 1012
+    },
+    "decor_d_books_bench": {
+      "file": "models/decor_d_books_bench.gltf",
+      "aabb": {
+        "min": [
+          -0.2011,
+          0.0,
+          -0.1585
+        ],
+        "max": [
+          0.2024,
+          0.1216,
+          0.1686
+        ]
+      },
+      "colliders": [],
+      "tris": 520
+    },
+    "decor_d_slippers": {
+      "file": "models/decor_d_slippers.gltf",
+      "aabb": {
+        "min": [
+          -0.1299,
+          0.0,
+          -0.1591
+        ],
+        "max": [
+          0.1192,
+          0.0769,
+          0.1347
+        ]
+      },
+      "colliders": [],
+      "tris": 744
+    },
+    "decor_d_vignette_coffee": {
+      "file": "models/decor_d_vignette_coffee.gltf",
+      "aabb": {
+        "min": [
+          -0.3827,
+          0.0,
+          -0.2937
+        ],
+        "max": [
+          0.4339,
+          0.3415,
+          0.39
+        ]
+      },
+      "colliders": [],
+      "tris": 1938
+    },
+    "decor_d_vignette_vanity_desk": {
+      "file": "models/decor_d_vignette_vanity_desk.gltf",
+      "aabb": {
+        "min": [
+          -0.5529,
+          -0.0001,
+          -0.2324
+        ],
+        "max": [
+          0.3911,
+          0.4144,
+          0.2056
+        ]
+      },
+      "colliders": [],
+      "tris": 1458
+    },
+    "decor_d_floor_vase": {
+      "file": "models/decor_d_floor_vase.gltf",
+      "aabb": {
+        "min": [
+          -0.5605,
+          0.0,
+          -0.1925
+        ],
+        "max": [
+          0.4504,
+          1.3503,
+          0.5174
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.1692,
+            0.0,
+            -0.1666
+          ],
+          "max": [
+            0.1692,
+            0.5815,
+            0.1666
+          ]
+        }
+      ],
+      "tris": 2268
+    },
     "bath_vanity": {
       "file": "models/bath_vanity.gltf",
       "aabb": {
@@ -22578,6 +23503,121 @@
         }
       ],
       "tris": 76
+    },
+    "decor_d_vanity_tray": {
+      "file": "models/decor_d_vanity_tray.gltf",
+      "aabb": {
+        "min": [
+          -0.15,
+          0.0,
+          -0.075
+        ],
+        "max": [
+          0.15,
+          0.199,
+          0.075
+        ]
+      },
+      "colliders": [],
+      "tris": 1072
+    },
+    "decor_d_vanity_towels": {
+      "file": "models/decor_d_vanity_towels.gltf",
+      "aabb": {
+        "min": [
+          -0.173,
+          0.0,
+          -0.153
+        ],
+        "max": [
+          0.146,
+          0.097,
+          0.1691
+        ]
+      },
+      "colliders": [],
+      "tris": 812
+    },
+    "decor_d_vanity_plant": {
+      "file": "models/decor_d_vanity_plant.gltf",
+      "aabb": {
+        "min": [
+          -0.1263,
+          0.0,
+          -0.1646
+        ],
+        "max": [
+          0.155,
+          0.2259,
+          0.135
+        ]
+      },
+      "colliders": [],
+      "tris": 818
+    },
+    "decor_d_tub_caddy": {
+      "file": "models/decor_d_tub_caddy.gltf",
+      "aabb": {
+        "min": [
+          -0.4,
+          -0.016,
+          -0.105
+        ],
+        "max": [
+          0.4,
+          0.222,
+          0.105
+        ]
+      },
+      "colliders": [],
+      "tris": 840
+    },
+    "decor_d_tub_towel": {
+      "file": "models/decor_d_tub_towel.gltf",
+      "aabb": {
+        "min": [
+          -0.21,
+          -0.3599,
+          -0.0907
+        ],
+        "max": [
+          0.21,
+          0.014,
+          0.0505
+        ]
+      },
+      "colliders": [],
+      "tris": 300
+    },
+    "decor_d_basket": {
+      "file": "models/decor_d_basket.gltf",
+      "aabb": {
+        "min": [
+          -0.2126,
+          0.0,
+          -0.195
+        ],
+        "max": [
+          0.2126,
+          0.3722,
+          0.195
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.2,
+            0.0,
+            -0.195
+          ],
+          "max": [
+            0.2,
+            0.32,
+            0.195
+          ]
+        }
+      ],
+      "tris": 1604
     },
     "desk": {
       "file": "models/desk.gltf",
@@ -23512,6 +24552,125 @@
       },
       "colliders": [],
       "tris": 1628
+    },
+    "decor_c_vignette_desk": {
+      "file": "models/decor_c_vignette_desk.gltf",
+      "aabb": {
+        "min": [
+          -0.4006,
+          0.0,
+          -0.3122
+        ],
+        "max": [
+          1.0429,
+          0.2435,
+          0.4146
+        ]
+      },
+      "colliders": [],
+      "tris": 1522
+    },
+    "decor_c_books_b": {
+      "file": "models/decor_c_books_b.gltf",
+      "aabb": {
+        "min": [
+          -0.1442,
+          0.0,
+          -0.1722
+        ],
+        "max": [
+          0.1309,
+          0.1824,
+          0.1748
+        ]
+      },
+      "colliders": [],
+      "tris": 288
+    },
+    "decor_c_vignette_coffee": {
+      "file": "models/decor_c_vignette_coffee.gltf",
+      "aabb": {
+        "min": [
+          -0.385,
+          0.0,
+          -0.2262
+        ],
+        "max": [
+          0.39,
+          0.1103,
+          0.1875
+        ]
+      },
+      "colliders": [],
+      "tris": 1402
+    },
+    "decor_c_vignette_console": {
+      "file": "models/decor_c_vignette_console.gltf",
+      "aabb": {
+        "min": [
+          -0.4456,
+          0.0,
+          -0.1885
+        ],
+        "max": [
+          0.4426,
+          0.399,
+          0.1788
+        ]
+      },
+      "colliders": [],
+      "tris": 1788
+    },
+    "decor_c_books": {
+      "file": "models/decor_c_books.gltf",
+      "aabb": {
+        "min": [
+          -0.1621,
+          0.0,
+          -0.189
+        ],
+        "max": [
+          0.1655,
+          0.2994,
+          0.1818
+        ]
+      },
+      "colliders": [],
+      "tris": 492
+    },
+    "decor_c_throw_navy": {
+      "file": "models/decor_c_throw_navy.gltf",
+      "aabb": {
+        "min": [
+          -0.3024,
+          0.0,
+          -0.275
+        ],
+        "max": [
+          0.1801,
+          0.4389,
+          0.275
+        ]
+      },
+      "colliders": [],
+      "tris": 916
+    },
+    "decor_c_cushion_navy": {
+      "file": "models/decor_c_cushion_navy.gltf",
+      "aabb": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.1552
+        ],
+        "max": [
+          0.25,
+          0.4924,
+          0.0684
+        ]
+      },
+      "colliders": [],
+      "tris": 256
     },
     "guest_mirror_trim": {
       "file": "models/guest_mirror_trim.gltf",
@@ -24881,83 +26040,116 @@
       ],
       "tris": 56
     },
-    "guest_rug": {
-      "file": "models/guest_rug.gltf",
+    "decor_c_towels": {
+      "file": "models/decor_c_towels.gltf",
       "aabb": {
         "min": [
-          -1.7036,
-          0.0,
-          -1.2536
+          -0.252,
+          -0.0,
+          -0.1692
         ],
         "max": [
-          1.7036,
-          0.017,
-          1.2536
+          0.1811,
+          0.1058,
+          0.1735
+        ]
+      },
+      "colliders": [],
+      "tris": 884
+    },
+    "decor_c_tray_carafe_oak": {
+      "file": "models/decor_c_tray_carafe_oak.gltf",
+      "aabb": {
+        "min": [
+          -0.2,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.2,
+          0.264,
+          0.125
+        ]
+      },
+      "colliders": [],
+      "tris": 904
+    },
+    "decor_c_yoga_blocks": {
+      "file": "models/decor_c_yoga_blocks.gltf",
+      "aabb": {
+        "min": [
+          -0.1791,
+          0.0,
+          -0.082
+        ],
+        "max": [
+          0.1975,
+          0.15,
+          0.082
+        ]
+      },
+      "colliders": [],
+      "tris": 216
+    },
+    "decor_c_towel_basket": {
+      "file": "models/decor_c_towel_basket.gltf",
+      "aabb": {
+        "min": [
+          -0.212,
+          0.0,
+          -0.212
+        ],
+        "max": [
+          0.212,
+          0.3764,
+          0.212
         ]
       },
       "colliders": [
         {
           "min": [
-            -1.7,
+            -0.212,
             0.0,
-            -1.25
+            -0.212
           ],
           "max": [
-            1.7,
-            0.014,
-            1.25
-          ]
-        },
-        {
-          "min": [
-            -1.551,
-            0.014,
-            -1.101
-          ],
-          "max": [
-            1.551,
-            0.017,
-            -1.079
-          ]
-        },
-        {
-          "min": [
-            -1.551,
-            0.014,
-            1.079
-          ],
-          "max": [
-            1.551,
-            0.017,
-            1.101
-          ]
-        },
-        {
-          "min": [
-            1.529,
-            0.014,
-            -1.079
-          ],
-          "max": [
-            1.551,
-            0.017,
-            1.079
-          ]
-        },
-        {
-          "min": [
-            -1.551,
-            0.014,
-            -1.079
-          ],
-          "max": [
-            -1.529,
-            0.017,
-            1.079
+            0.212,
+            0.304,
+            0.212
           ]
         }
       ],
-      "tris": 716
+      "tris": 1616
+    },
+    "decor_c_plant_snake_basket": {
+      "file": "models/decor_c_plant_snake_basket.gltf",
+      "aabb": {
+        "min": [
+          -0.271,
+          0.0,
+          -0.3201
+        ],
+        "max": [
+          0.3134,
+          1.065,
+          0.2223
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.202,
+            0.0,
+            -0.202
+          ],
+          "max": [
+            0.202,
+            0.344,
+            0.202
+          ]
+        }
+      ],
+      "tris": 862
     },
     "guest_bed": {
       "file": "models/guest_bed.gltf",
@@ -25709,84 +26901,6 @@
       ],
       "tris": 3252
     },
-    "guest_rug_small": {
-      "file": "models/guest_rug_small.gltf",
-      "aabb": {
-        "min": [
-          -1.2036,
-          0.0,
-          -0.9536
-        ],
-        "max": [
-          1.2036,
-          0.017,
-          0.9536
-        ]
-      },
-      "colliders": [
-        {
-          "min": [
-            -1.2,
-            0.0,
-            -0.95
-          ],
-          "max": [
-            1.2,
-            0.014,
-            0.95
-          ]
-        },
-        {
-          "min": [
-            -1.091,
-            0.014,
-            -0.841
-          ],
-          "max": [
-            1.091,
-            0.017,
-            -0.819
-          ]
-        },
-        {
-          "min": [
-            -1.091,
-            0.014,
-            0.819
-          ],
-          "max": [
-            1.091,
-            0.017,
-            0.841
-          ]
-        },
-        {
-          "min": [
-            1.069,
-            0.014,
-            -0.819
-          ],
-          "max": [
-            1.091,
-            0.017,
-            0.819
-          ]
-        },
-        {
-          "min": [
-            -1.091,
-            0.014,
-            -0.819
-          ],
-          "max": [
-            -1.069,
-            0.017,
-            0.819
-          ]
-        }
-      ],
-      "tris": 716
-    },
     "guest_armchair": {
       "file": "models/guest_armchair.gltf",
       "aabb": {
@@ -26110,6 +27224,168 @@
         }
       ],
       "tris": 1924
+    },
+    "decor_d_nightstand_guest_a": {
+      "file": "models/decor_d_nightstand_guest_a.gltf",
+      "aabb": {
+        "min": [
+          -0.2471,
+          0.0,
+          -0.1143
+        ],
+        "max": [
+          0.2837,
+          0.4043,
+          0.1256
+        ]
+      },
+      "colliders": [],
+      "tris": 850
+    },
+    "decor_d_nightstand_guest_b": {
+      "file": "models/decor_d_nightstand_guest_b.gltf",
+      "aabb": {
+        "min": [
+          -0.2555,
+          0.0,
+          -0.1363
+        ],
+        "max": [
+          0.24,
+          0.252,
+          0.1103
+        ]
+      },
+      "colliders": [],
+      "tris": 1012
+    },
+    "decor_d_towels_guest": {
+      "file": "models/decor_d_towels_guest.gltf",
+      "aabb": {
+        "min": [
+          -0.2021,
+          0.0,
+          -0.1391
+        ],
+        "max": [
+          0.2037,
+          0.1243,
+          0.1411
+        ]
+      },
+      "colliders": [],
+      "tris": 498
+    },
+    "decor_d_vignette_dresser": {
+      "file": "models/decor_d_vignette_dresser.gltf",
+      "aabb": {
+        "min": [
+          -0.3385,
+          0.0,
+          -0.1888
+        ],
+        "max": [
+          0.6048,
+          0.222,
+          0.1335
+        ]
+      },
+      "colliders": [],
+      "tris": 1528
+    },
+    "decor_d_vignette_guest_desk": {
+      "file": "models/decor_d_vignette_guest_desk.gltf",
+      "aabb": {
+        "min": [
+          -0.566,
+          -0.0001,
+          -0.2586
+        ],
+        "max": [
+          0.3022,
+          0.2589,
+          0.1898
+        ]
+      },
+      "colliders": [],
+      "tris": 876
+    },
+    "decor_d_side_reading": {
+      "file": "models/decor_d_side_reading.gltf",
+      "aabb": {
+        "min": [
+          -0.2231,
+          -0.0001,
+          -0.2253
+        ],
+        "max": [
+          0.1994,
+          0.062,
+          0.1894
+        ]
+      },
+      "colliders": [],
+      "tris": 1056
+    },
+    "decor_d_basket_guest": {
+      "file": "models/decor_d_basket_guest.gltf",
+      "aabb": {
+        "min": [
+          -0.2426,
+          0.0,
+          -0.2242
+        ],
+        "max": [
+          0.2426,
+          0.4927,
+          0.2242
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.23,
+            0.0,
+            -0.2242
+          ],
+          "max": [
+            0.23,
+            0.36,
+            0.2242
+          ]
+        }
+      ],
+      "tris": 1604
+    },
+    "decor_d_floor_vase_guest": {
+      "file": "models/decor_d_floor_vase_guest.gltf",
+      "aabb": {
+        "min": [
+          -0.3897,
+          0.0,
+          -0.1779
+        ],
+        "max": [
+          0.4063,
+          1.2568,
+          0.4567
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.1542,
+            0.0,
+            -0.1519
+          ],
+          "max": [
+            0.1542,
+            0.5215,
+            0.1519
+          ]
+        }
+      ],
+      "tris": 2148
     },
     "art_dune": {
       "file": "models/art_dune.gltf",
@@ -26469,16 +27745,6 @@
       "rotationY": -90
     },
     {
-      "asset": "entry_rug_round",
-      "room": "entry",
-      "position": [
-        0.0,
-        0.0,
-        15.55
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "entry_round_table",
       "room": "entry",
       "position": [
@@ -26567,16 +27833,6 @@
         12.65
       ],
       "rotationY": -90
-    },
-    {
-      "asset": "rug",
-      "room": "entry",
-      "position": [
-        -4.3,
-        0.0,
-        17.6
-      ],
-      "rotationY": 0
     },
     {
       "asset": "coffee_table",
@@ -26699,6 +27955,36 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_a_table",
+      "room": "entry",
+      "position": [
+        0.0,
+        0.8,
+        15.55
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_coffee_rect",
+      "room": "entry",
+      "position": [
+        -4.3,
+        0.38,
+        17.6
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_soft",
+      "room": "entry",
+      "position": [
+        -7.6,
+        0.47,
+        14.45
+      ],
+      "rotationY": 90
+    },
+    {
       "asset": "entry_vanity",
       "room": "powder",
       "position": [
@@ -26777,16 +28063,6 @@
         11.85
       ],
       "rotationY": 90
-    },
-    {
-      "asset": "entry_rug_round",
-      "room": "powder",
-      "position": [
-        -11.25,
-        0.0,
-        17.35
-      ],
-      "rotationY": 0
     },
     {
       "asset": "entry_round_table",
@@ -26919,6 +28195,46 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_a_soft_vanity",
+      "room": "powder",
+      "position": [
+        -10.75,
+        0.805,
+        10.93
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_round_powder",
+      "room": "powder",
+      "position": [
+        -11.25,
+        0.8,
+        17.35
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_a_soft_bench_powder",
+      "room": "powder",
+      "position": [
+        -11.25,
+        0.46,
+        19.62
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_a_floor",
+      "room": "powder",
+      "position": [
+        -8.7,
+        0.0,
+        11.3
+      ],
+      "rotationY": 0
+    },
+    {
       "asset": "entry_coat_closet",
       "room": "cloak",
       "position": [
@@ -26985,16 +28301,6 @@
         8.15,
         1.75,
         13.05
-      ],
-      "rotationY": 90
-    },
-    {
-      "asset": "rug",
-      "room": "cloak",
-      "position": [
-        10.45,
-        0.0,
-        14.55
       ],
       "rotationY": 90
     },
@@ -27069,6 +28375,56 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_a_soft_bench_cloak",
+      "room": "cloak",
+      "position": [
+        10.45,
+        0.47,
+        14.55
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_a_floor_shoes",
+      "room": "cloak",
+      "position": [
+        11.07,
+        0.012,
+        15.4
+      ],
+      "rotationY": 75
+    },
+    {
+      "asset": "decor_a_soft_bench_hatboxes",
+      "room": "cloak",
+      "position": [
+        11.15,
+        0.46,
+        19.62
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_a_floor_umbrella_stand",
+      "room": "cloak",
+      "position": [
+        8.39,
+        0.0,
+        18.65
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_floor_b",
+      "room": "cloak",
+      "position": [
+        12.87,
+        0.0,
+        19.37
+      ],
+      "rotationY": 0
+    },
+    {
       "asset": "living_media_wall",
       "room": "den",
       "position": [
@@ -27077,16 +28433,6 @@
         19.59
       ],
       "rotationY": 180
-    },
-    {
-      "asset": "living_rug_den",
-      "room": "den",
-      "position": [
-        -19.75,
-        0.0,
-        16.05
-      ],
-      "rotationY": 0
     },
     {
       "asset": "living_sectional",
@@ -27369,6 +28715,86 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_a_console_den",
+      "room": "den",
+      "position": [
+        -23.15,
+        0.0,
+        10.86
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_console_bar",
+      "room": "den",
+      "position": [
+        -13.9,
+        0.0,
+        12.25
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_a_table_ottoman_den",
+      "room": "den",
+      "position": [
+        -20.45,
+        0.435,
+        17.15
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_side_glass",
+      "room": "den",
+      "position": [
+        -23.05,
+        0.55,
+        14.05
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_side_cup",
+      "room": "den",
+      "position": [
+        -17.55,
+        0.55,
+        14.05
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_side_plant_den",
+      "room": "den",
+      "position": [
+        -15.45,
+        0.55,
+        14.7
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_credenza",
+      "room": "den",
+      "position": [
+        -19.75,
+        0.54,
+        19.62
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_a_soft_sectional_throw",
+      "room": "den",
+      "position": [
+        -20.35,
+        0.0,
+        14.65
+      ],
+      "rotationY": 0
+    },
+    {
       "asset": "living_fireplace",
       "room": "great_room",
       "position": [
@@ -27385,16 +28811,6 @@
         -20.75,
         8.4,
         -0.5
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "living_rug",
-      "room": "great_room",
-      "position": [
-        -17.75,
-        0.0,
-        -0.0
       ],
       "rotationY": 0
     },
@@ -27519,16 +28935,6 @@
       "rotationY": 0
     },
     {
-      "asset": "living_rug_b",
-      "room": "great_room",
-      "position": [
-        -23.15,
-        0.0,
-        -6.3
-      ],
-      "rotationY": 90
-    },
-    {
       "asset": "living_sofa_ink",
       "room": "great_room",
       "position": [
@@ -27585,16 +28991,6 @@
         -21.7,
         0.0,
         -7.95
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "living_rug",
-      "room": "great_room",
-      "position": [
-        -23.15,
-        0.0,
-        6.5
       ],
       "rotationY": 0
     },
@@ -27949,12 +29345,122 @@
       "rotationY": 0
     },
     {
-      "asset": "dining_rug",
-      "room": "dining",
+      "asset": "decor_a_console_sofa",
+      "room": "great_room",
       "position": [
-        -18.5,
+        -20.6,
         0.0,
-        -15.85
+        -0.0
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_a_console_south",
+      "room": "great_room",
+      "position": [
+        -16.45,
+        0.0,
+        10.14
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_a_console",
+      "room": "great_room",
+      "position": [
+        -13.86,
+        0.0,
+        -8.2
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_a_console_b",
+      "room": "great_room",
+      "position": [
+        -13.86,
+        0.0,
+        7.9
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_a_console_c",
+      "room": "great_room",
+      "position": [
+        -15.75,
+        0.0,
+        -10.14
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_console_d",
+      "room": "great_room",
+      "position": [
+        -24.2,
+        0.0,
+        -10.14
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_coffee_round_a",
+      "room": "great_room",
+      "position": [
+        -17.85,
+        0.36,
+        -0.0
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_coffee_round_c",
+      "room": "great_room",
+      "position": [
+        -23.15,
+        0.36,
+        6.65
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_coffee_rect_b",
+      "room": "great_room",
+      "position": [
+        -23.35,
+        0.38,
+        -6.3
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_a_table_ottoman",
+      "room": "great_room",
+      "position": [
+        -25.1,
+        0.435,
+        6.65
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_a_table_side_cup",
+      "room": "great_room",
+      "position": [
+        -19.85,
+        0.55,
+        -1.75
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_a_table_side_plant",
+      "room": "great_room",
+      "position": [
+        -21.7,
+        0.55,
+        -7.95
       ],
       "rotationY": 0
     },
@@ -28249,16 +29755,6 @@
       "rotationY": 40
     },
     {
-      "asset": "bedroom_rug",
-      "room": "dining",
-      "position": [
-        -23.75,
-        0.0,
-        -18.5
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "coffee_table",
       "room": "dining",
       "position": [
@@ -28337,6 +29833,56 @@
         -11.65
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_b_vignette_sideboard",
+      "room": "dining",
+      "position": [
+        -15.0,
+        0.84,
+        -10.93
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_vignette_console",
+      "room": "dining",
+      "position": [
+        -25.57,
+        0.84,
+        -15.85
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_b_vignette_coffee",
+      "room": "dining",
+      "position": [
+        -23.75,
+        0.38,
+        -18.65
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_b_table_buds",
+      "room": "dining",
+      "position": [
+        -20.25,
+        0.76,
+        -15.85
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_table_buds",
+      "room": "dining",
+      "position": [
+        -16.75,
+        0.76,
+        -15.85
+      ],
+      "rotationY": 180
     },
     {
       "asset": "kitchen_wall_run",
@@ -28529,16 +30075,6 @@
       "rotationY": 0
     },
     {
-      "asset": "rug",
-      "room": "kitchen",
-      "position": [
-        3.5,
-        0.0,
-        -18.25
-      ],
-      "rotationY": 90
-    },
-    {
       "asset": "coffee_table",
       "room": "kitchen",
       "position": [
@@ -28689,6 +30225,96 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_b_vignette_island",
+      "room": "kitchen",
+      "position": [
+        1.1,
+        0.93,
+        -14.1
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_vignette_range_l",
+      "room": "kitchen",
+      "position": [
+        4.5,
+        0.92,
+        -10.99
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_vignette_range_r",
+      "room": "kitchen",
+      "position": [
+        6.6,
+        0.92,
+        -10.99
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_bread_board",
+      "room": "kitchen",
+      "position": [
+        -3.75,
+        0.92,
+        -11.03
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_sink_set",
+      "room": "kitchen",
+      "position": [
+        -5.82,
+        0.92,
+        -10.89
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_vignette_breakfast",
+      "room": "kitchen",
+      "position": [
+        -5.5,
+        0.75,
+        -18.25
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_vignette_coffee_k",
+      "room": "kitchen",
+      "position": [
+        3.5,
+        0.38,
+        -18.03
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_b_plant_floor",
+      "room": "kitchen",
+      "position": [
+        7.2,
+        0.0,
+        -19.25
+      ],
+      "rotationY": 30
+    },
+    {
+      "asset": "decor_b_plant_floor",
+      "room": "kitchen",
+      "position": [
+        -9.2,
+        0.0,
+        -19.3
+      ],
+      "rotationY": 200
+    },
+    {
       "asset": "kitchen_scullery_run",
       "room": "scullery",
       "position": [
@@ -28757,6 +30383,36 @@
         -13.35
       ],
       "rotationY": 90
+    },
+    {
+      "asset": "decor_b_vignette_bread",
+      "room": "scullery",
+      "position": [
+        10.75,
+        0.92,
+        -10.95
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_b_dish_rack",
+      "room": "scullery",
+      "position": [
+        11.39,
+        0.92,
+        -19.53
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_sink_set",
+      "room": "scullery",
+      "position": [
+        9.5,
+        0.92,
+        -19.63
+      ],
+      "rotationY": 0
     },
     {
       "asset": "dining_wine_rack",
@@ -28929,16 +30585,6 @@
       "rotationY": 0
     },
     {
-      "asset": "bedroom_rug",
-      "room": "wine_room",
-      "position": [
-        22.35,
-        0.0,
-        -12.35
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "coffee_table",
       "room": "wine_room",
       "position": [
@@ -29099,6 +30745,36 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_b_vignette_cheese",
+      "room": "wine_room",
+      "position": [
+        20.3,
+        0.92,
+        -15.45
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_vignette_cellar_table",
+      "room": "wine_room",
+      "position": [
+        22.35,
+        0.38,
+        -12.35
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_b_wine_crates",
+      "room": "wine_room",
+      "position": [
+        25.07,
+        0.0,
+        -11.15
+      ],
+      "rotationY": -6
+    },
+    {
       "asset": "garage_lockers",
       "room": "mudroom",
       "position": [
@@ -29137,26 +30813,6 @@
         -6.15
       ],
       "rotationY": 0
-    },
-    {
-      "asset": "bedroom_rug",
-      "room": "mudroom",
-      "position": [
-        20.35,
-        0.0,
-        -5.75
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "rug",
-      "room": "mudroom",
-      "position": [
-        19.75,
-        0.0,
-        -1.85
-      ],
-      "rotationY": 90
     },
     {
       "asset": "garage_seat",
@@ -29287,6 +30943,46 @@
         -9.35
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_b_vignette_keys",
+      "room": "mudroom",
+      "position": [
+        21.35,
+        0.92,
+        -6.07
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_b_throw_folded",
+      "room": "mudroom",
+      "position": [
+        25.53,
+        0.49,
+        -3.42
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_b_basket_blankets",
+      "room": "mudroom",
+      "position": [
+        25.4,
+        0.0,
+        -2.67
+      ],
+      "rotationY": 15
+    },
+    {
+      "asset": "decor_b_plant_floor_b",
+      "room": "mudroom",
+      "position": [
+        14.2,
+        0.0,
+        -9.8
+      ],
+      "rotationY": 120
     },
     {
       "asset": "garage_bay",
@@ -29499,6 +31195,36 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_b_vignette_garage",
+      "room": "garage",
+      "position": [
+        15.85,
+        0.9,
+        0.52
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_plant_floor_c",
+      "room": "garage",
+      "position": [
+        14.25,
+        0.0,
+        19.25
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_b_plant_floor_c",
+      "room": "garage",
+      "position": [
+        25.25,
+        0.0,
+        19.25
+      ],
+      "rotationY": 140
+    },
+    {
       "asset": "art_zip_red",
       "room": "gallery_s",
       "position": [
@@ -29517,6 +31243,26 @@
         10.35
       ],
       "rotationY": 180
+    },
+    {
+      "asset": "decor_c_gallery_bench",
+      "room": "gallery_s",
+      "position": [
+        -6.0,
+        0.0,
+        10.12
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_c_plant_snake",
+      "room": "gallery_s",
+      "position": [
+        -3.5,
+        0.0,
+        10.05
+      ],
+      "rotationY": 40
     },
     {
       "asset": "light_u_downlight",
@@ -29675,6 +31421,16 @@
         11.75,
         4.2,
         8.75
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_vignette_gallery",
+      "room": "gallery_n",
+      "position": [
+        -6.75,
+        0.0,
+        -10.165
       ],
       "rotationY": 0
     },
@@ -29839,6 +31595,16 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_c_gallery_bench",
+      "room": "gallery_w",
+      "position": [
+        -13.12,
+        0.0,
+        -0.0
+      ],
+      "rotationY": 90
+    },
+    {
       "asset": "light_u_downlight",
       "room": "gallery_w",
       "position": [
@@ -29917,6 +31683,16 @@
         -5.444
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_c_vignette_gallery",
+      "room": "gallery_e",
+      "position": [
+        13.165,
+        0.0,
+        2.6
+      ],
+      "rotationY": -90
     },
     {
       "asset": "light_u_downlight",
@@ -30059,16 +31835,6 @@
       "rotationY": 90
     },
     {
-      "asset": "courtyard_rug_dining",
-      "room": "courtyard",
-      "position": [
-        -3.75,
-        0.0,
-        -1.55
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "courtyard_dining_table",
       "room": "courtyard",
       "position": [
@@ -30107,16 +31873,6 @@
         -3.7
       ],
       "rotationY": 137
-    },
-    {
-      "asset": "courtyard_rug",
-      "room": "courtyard",
-      "position": [
-        7.4,
-        0.0,
-        2.4
-      ],
-      "rotationY": 0
     },
     {
       "asset": "courtyard_sofa",
@@ -30449,16 +32205,6 @@
       "rotationY": 0
     },
     {
-      "asset": "library_rug",
-      "room": "library",
-      "position": [
-        -15.6,
-        4.6,
-        15.25
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "library_table",
       "room": "library",
       "position": [
@@ -30547,16 +32293,6 @@
         15.37
       ],
       "rotationY": 180
-    },
-    {
-      "asset": "rug",
-      "room": "library",
-      "position": [
-        -23.8,
-        4.6,
-        15.25
-      ],
-      "rotationY": 90
     },
     {
       "asset": "library_armchair",
@@ -30959,14 +32695,84 @@
       "rotationY": 0
     },
     {
-      "asset": "bedroom_rug",
-      "room": "primary_bedroom",
+      "asset": "decor_c_vignette_table",
+      "room": "library",
       "position": [
-        -23.6,
-        4.6,
-        -15.25
+        -15.6,
+        5.36,
+        15.25
       ],
-      "rotationY": 90
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_cup_book",
+      "room": "library",
+      "position": [
+        -10.4,
+        5.16,
+        17.15
+      ],
+      "rotationY": -100
+    },
+    {
+      "asset": "decor_c_throw_chair",
+      "room": "library",
+      "position": [
+        -12.037,
+        4.82,
+        17.115
+      ],
+      "rotationY": -135.0
+    },
+    {
+      "asset": "decor_c_throw",
+      "room": "library",
+      "position": [
+        -21.65,
+        4.82,
+        11.4
+      ],
+      "rotationY": 180.0
+    },
+    {
+      "asset": "decor_c_cushion",
+      "room": "library",
+      "position": [
+        -19.92,
+        5.055,
+        11.35
+      ],
+      "rotationY": 186
+    },
+    {
+      "asset": "decor_c_cushion_lumbar",
+      "room": "library",
+      "position": [
+        -20.33,
+        5.055,
+        11.33
+      ],
+      "rotationY": 177
+    },
+    {
+      "asset": "decor_c_cushion_small",
+      "room": "library",
+      "position": [
+        -23.551,
+        5.045,
+        13.857
+      ],
+      "rotationY": -61
+    },
+    {
+      "asset": "decor_c_plant_snake_tall",
+      "room": "library",
+      "position": [
+        -25.4,
+        4.6,
+        11.1
+      ],
+      "rotationY": 20
     },
     {
       "asset": "bed",
@@ -31045,16 +32851,6 @@
         -25.1,
         4.6,
         -19.15
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "living_rug_b",
-      "room": "primary_bedroom",
-      "position": [
-        -14.6,
-        4.6,
-        -16.45
       ],
       "rotationY": 0
     },
@@ -31217,6 +33013,76 @@
         -15.25
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_d_nightstand_a",
+      "room": "primary_bedroom",
+      "position": [
+        -25.6,
+        5.15,
+        -16.66
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_d_nightstand_b",
+      "room": "primary_bedroom",
+      "position": [
+        -25.6,
+        5.15,
+        -13.84
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_d_books_bench",
+      "room": "primary_bedroom",
+      "position": [
+        -23.25,
+        5.052,
+        -15.65
+      ],
+      "rotationY": 97
+    },
+    {
+      "asset": "decor_d_slippers",
+      "room": "primary_bedroom",
+      "position": [
+        -24.5,
+        4.615,
+        -14.01
+      ],
+      "rotationY": 172
+    },
+    {
+      "asset": "decor_d_vignette_coffee",
+      "room": "primary_bedroom",
+      "position": [
+        -14.6,
+        4.96,
+        -16.45
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_vignette_vanity_desk",
+      "room": "primary_bedroom",
+      "position": [
+        -14.6,
+        5.34,
+        -11.0
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_d_floor_vase",
+      "room": "primary_bedroom",
+      "position": [
+        -16.0,
+        4.6,
+        -11.05
+      ],
+      "rotationY": 180
     },
     {
       "asset": "bath_vanity",
@@ -31499,6 +33365,66 @@
       "rotationY": 0
     },
     {
+      "asset": "decor_d_vanity_tray",
+      "room": "primary_bath",
+      "position": [
+        -5.69,
+        5.4,
+        -19.65
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_vanity_towels",
+      "room": "primary_bath",
+      "position": [
+        -4.18,
+        5.4,
+        -19.55
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_vanity_plant",
+      "room": "primary_bath",
+      "position": [
+        -6.62,
+        5.4,
+        -19.57
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_tub_caddy",
+      "room": "primary_bath",
+      "position": [
+        -1.28,
+        5.18,
+        -17.33
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_tub_towel",
+      "room": "primary_bath",
+      "position": [
+        -1.67,
+        5.18,
+        -16.95
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_d_basket",
+      "room": "primary_bath",
+      "position": [
+        -4.15,
+        4.6,
+        -11.0
+      ],
+      "rotationY": 0
+    },
+    {
       "asset": "desk",
       "room": "office",
       "position": [
@@ -31515,16 +33441,6 @@
         8.75,
         4.6,
         -18.65
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "rug",
-      "room": "office",
-      "position": [
-        3.35,
-        4.6,
-        -14.65
       ],
       "rotationY": 0
     },
@@ -31651,16 +33567,6 @@
         -16.1
       ],
       "rotationY": 90
-    },
-    {
-      "asset": "rug",
-      "room": "office",
-      "position": [
-        10.85,
-        4.6,
-        -12.05
-      ],
-      "rotationY": 0
     },
     {
       "asset": "library_sofa",
@@ -31913,6 +33819,86 @@
       "rotationY": 180
     },
     {
+      "asset": "decor_c_vignette_desk",
+      "room": "office",
+      "position": [
+        8.75,
+        5.34,
+        -17.65
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_books_b",
+      "room": "office",
+      "position": [
+        3.37,
+        4.98,
+        -14.41
+      ],
+      "rotationY": 95
+    },
+    {
+      "asset": "decor_c_vignette_coffee",
+      "room": "office",
+      "position": [
+        10.85,
+        4.98,
+        -12.4
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_vignette_console",
+      "room": "office",
+      "position": [
+        0.38,
+        5.38,
+        -15.25
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_c_books",
+      "room": "office",
+      "position": [
+        3.5,
+        5.38,
+        -10.86
+      ],
+      "rotationY": 188
+    },
+    {
+      "asset": "decor_c_throw_navy",
+      "room": "office",
+      "position": [
+        9.8,
+        4.82,
+        -11.15
+      ],
+      "rotationY": 180.0
+    },
+    {
+      "asset": "decor_c_cushion_navy",
+      "room": "office",
+      "position": [
+        11.53,
+        5.055,
+        -11.2
+      ],
+      "rotationY": 186
+    },
+    {
+      "asset": "decor_c_cushion_navy",
+      "room": "office",
+      "position": [
+        11.15,
+        5.055,
+        -11.21
+      ],
+      "rotationY": 175
+    },
+    {
       "asset": "guest_mirror_trim",
       "room": "gym",
       "position": [
@@ -32083,14 +34069,54 @@
       "rotationY": 0
     },
     {
-      "asset": "guest_rug",
-      "room": "guest_room",
+      "asset": "decor_c_towels",
+      "room": "gym",
       "position": [
-        16.45,
+        13.9,
+        5.045,
+        -13.25
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_c_tray_carafe_oak",
+      "room": "gym",
+      "position": [
+        13.9,
+        5.045,
+        -14.1
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_c_yoga_blocks",
+      "room": "gym",
+      "position": [
+        23.72,
         4.6,
-        -7.05
+        -10.95
+      ],
+      "rotationY": 4
+    },
+    {
+      "asset": "decor_c_towel_basket",
+      "room": "gym",
+      "position": [
+        24.3,
+        4.6,
+        -11.08
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_c_plant_snake_basket",
+      "room": "gym",
+      "position": [
+        25.4,
+        4.6,
+        -11.08
+      ],
+      "rotationY": 30
     },
     {
       "asset": "guest_bed",
@@ -32243,16 +34269,6 @@
       "rotationY": 0
     },
     {
-      "asset": "guest_rug_small",
-      "room": "guest_room",
-      "position": [
-        23.65,
-        4.6,
-        -7.05
-      ],
-      "rotationY": 0
-    },
-    {
       "asset": "guest_armchair",
       "room": "guest_room",
       "position": [
@@ -32391,6 +34407,96 @@
         -0.4
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_d_nightstand_guest_a",
+      "room": "guest_room",
+      "position": [
+        13.87,
+        5.12,
+        -8.43
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_d_nightstand_guest_b",
+      "room": "guest_room",
+      "position": [
+        13.87,
+        5.12,
+        -5.67
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "decor_d_towels_guest",
+      "room": "guest_room",
+      "position": [
+        16.25,
+        5.037,
+        -7.37
+      ],
+      "rotationY": 93
+    },
+    {
+      "asset": "decor_d_vignette_dresser",
+      "room": "guest_room",
+      "position": [
+        17.55,
+        5.4,
+        -10.11
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_d_vignette_guest_desk",
+      "room": "guest_room",
+      "position": [
+        18.15,
+        5.34,
+        -0.51
+      ],
+      "rotationY": 180
+    },
+    {
+      "asset": "decor_d_side_reading",
+      "room": "guest_room",
+      "position": [
+        24.1,
+        5.1,
+        -7.05
+      ],
+      "rotationY": -60
+    },
+    {
+      "asset": "decor_d_basket_guest",
+      "room": "guest_room",
+      "position": [
+        22.4,
+        4.6,
+        -9.0
+      ],
+      "rotationY": 20
+    },
+    {
+      "asset": "decor_d_floor_vase_guest",
+      "room": "guest_room",
+      "position": [
+        16.05,
+        4.6,
+        -9.99
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_plant_snake",
+      "room": "ugallery_s",
+      "position": [
+        -8.7,
+        4.6,
+        10.05
+      ],
+      "rotationY": 70
     },
     {
       "asset": "light_u_downlight",
@@ -32579,6 +34685,26 @@
         1.6,
         6.2,
         -10.35
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_gallery_bench",
+      "room": "ugallery_n",
+      "position": [
+        -8.0,
+        4.6,
+        -10.12
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "decor_c_vignette_gallery",
+      "room": "ugallery_n",
+      "position": [
+        -0.9,
+        4.6,
+        -10.165
       ],
       "rotationY": 0
     },
@@ -32821,6 +34947,26 @@
         -5.444
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "decor_c_gallery_bench",
+      "room": "ugallery_e",
+      "position": [
+        13.12,
+        4.6,
+        -1.2
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "decor_c_plant_snake",
+      "room": "ugallery_e",
+      "position": [
+        13.05,
+        4.6,
+        -5.75
+      ],
+      "rotationY": 10
     },
     {
       "asset": "light_u_downlight",
@@ -36754,6 +38900,498 @@
         4.58,
         5.8,
         13.13
+      ]
+    },
+    {
+      "min": [
+        -1.36,
+        0.017,
+        14.19
+      ],
+      "max": [
+        1.36,
+        0.017,
+        16.91
+      ]
+    },
+    {
+      "min": [
+        -1.55,
+        0.01,
+        14.0
+      ],
+      "max": [
+        1.55,
+        0.014,
+        17.1
+      ]
+    },
+    {
+      "min": [
+        -5.7985,
+        0.0072,
+        16.5015
+      ],
+      "max": [
+        -2.8015,
+        0.0145,
+        18.6985
+      ]
+    },
+    {
+      "min": [
+        -12.61,
+        0.017,
+        15.99
+      ],
+      "max": [
+        -9.89,
+        0.017,
+        18.71
+      ]
+    },
+    {
+      "min": [
+        -12.8,
+        0.01,
+        15.8
+      ],
+      "max": [
+        -9.7,
+        0.014,
+        18.9
+      ]
+    },
+    {
+      "min": [
+        9.3515,
+        0.0072,
+        13.0515
+      ],
+      "max": [
+        11.5485,
+        0.0145,
+        16.0485
+      ]
+    },
+    {
+      "min": [
+        -22.85,
+        0.003,
+        13.75
+      ],
+      "max": [
+        -16.65,
+        0.007,
+        18.35
+      ]
+    },
+    {
+      "min": [
+        -22.705,
+        0.004,
+        13.895
+      ],
+      "max": [
+        -16.795,
+        0.007,
+        18.205
+      ]
+    },
+    {
+      "min": [
+        -20.35,
+        0.003,
+        -1.9
+      ],
+      "max": [
+        -15.15,
+        0.007,
+        1.9
+      ]
+    },
+    {
+      "min": [
+        -20.165,
+        0.004,
+        -1.715
+      ],
+      "max": [
+        -15.335,
+        0.007,
+        1.715
+      ]
+    },
+    {
+      "min": [
+        -24.95,
+        0.003,
+        -8.6
+      ],
+      "max": [
+        -21.35,
+        0.007,
+        -4.0
+      ]
+    },
+    {
+      "min": [
+        -24.825,
+        0.004,
+        -8.475
+      ],
+      "max": [
+        -21.475,
+        0.007,
+        -4.125
+      ]
+    },
+    {
+      "min": [
+        -25.75,
+        0.003,
+        4.6
+      ],
+      "max": [
+        -20.55,
+        0.007,
+        8.4
+      ]
+    },
+    {
+      "min": [
+        -25.565,
+        0.004,
+        4.785
+      ],
+      "max": [
+        -20.735,
+        0.007,
+        8.215
+      ]
+    },
+    {
+      "min": [
+        -22.0985,
+        0.0084,
+        -17.7985
+      ],
+      "max": [
+        -14.9015,
+        0.017,
+        -13.9015
+      ]
+    },
+    {
+      "min": [
+        -25.3485,
+        0.009,
+        -19.7985
+      ],
+      "max": [
+        -22.1515,
+        0.018,
+        -17.2015
+      ]
+    },
+    {
+      "min": [
+        2.4015,
+        0.0072,
+        -19.7485
+      ],
+      "max": [
+        4.5985,
+        0.0145,
+        -16.7515
+      ]
+    },
+    {
+      "min": [
+        20.7515,
+        0.009,
+        -13.6485
+      ],
+      "max": [
+        23.9485,
+        0.018,
+        -11.0515
+      ]
+    },
+    {
+      "min": [
+        18.7515,
+        0.009,
+        -7.0485
+      ],
+      "max": [
+        21.9485,
+        0.018,
+        -4.4515
+      ]
+    },
+    {
+      "min": [
+        18.6515,
+        0.0072,
+        -3.3485
+      ],
+      "max": [
+        20.8485,
+        0.0145,
+        -0.3515
+      ]
+    },
+    {
+      "min": [
+        -6.41,
+        0.0025,
+        -3.06
+      ],
+      "max": [
+        -1.09,
+        0.0025,
+        -0.04
+      ]
+    },
+    {
+      "min": [
+        -6.65,
+        0.005,
+        -3.3
+      ],
+      "max": [
+        -0.85,
+        0.005,
+        0.2
+      ]
+    },
+    {
+      "min": [
+        5.77,
+        0.0025,
+        0.27
+      ],
+      "max": [
+        9.03,
+        0.0025,
+        4.53
+      ]
+    },
+    {
+      "min": [
+        5.55,
+        0.005,
+        0.05
+      ],
+      "max": [
+        9.25,
+        0.005,
+        4.75
+      ]
+    },
+    {
+      "min": [
+        -18.1,
+        4.6,
+        13.55
+      ],
+      "max": [
+        -13.1,
+        4.612,
+        16.95
+      ]
+    },
+    {
+      "min": [
+        -24.8985,
+        4.6072,
+        13.7515
+      ],
+      "max": [
+        -22.7015,
+        4.6145,
+        16.7485
+      ]
+    },
+    {
+      "min": [
+        -24.8985,
+        4.609,
+        -16.8485
+      ],
+      "max": [
+        -22.3015,
+        4.618,
+        -13.6515
+      ]
+    },
+    {
+      "min": [
+        -16.9,
+        4.603,
+        -18.25
+      ],
+      "max": [
+        -12.3,
+        4.607,
+        -14.65
+      ]
+    },
+    {
+      "min": [
+        -16.775,
+        4.604,
+        -18.125
+      ],
+      "max": [
+        -12.425,
+        4.607,
+        -14.775
+      ]
+    },
+    {
+      "min": [
+        1.8515,
+        4.6072,
+        -15.7485
+      ],
+      "max": [
+        4.8485,
+        4.6145,
+        -13.5515
+      ]
+    },
+    {
+      "min": [
+        9.3515,
+        4.6072,
+        -13.1485
+      ],
+      "max": [
+        12.3485,
+        4.6145,
+        -10.9515
+      ]
+    },
+    {
+      "min": [
+        14.75,
+        4.614,
+        -8.3
+      ],
+      "max": [
+        18.15,
+        4.614,
+        -5.8
+      ]
+    },
+    {
+      "min": [
+        14.899,
+        4.617,
+        -8.151
+      ],
+      "max": [
+        18.001,
+        4.617,
+        -8.129
+      ]
+    },
+    {
+      "min": [
+        14.899,
+        4.617,
+        -5.971
+      ],
+      "max": [
+        18.001,
+        4.617,
+        -5.949
+      ]
+    },
+    {
+      "min": [
+        17.979,
+        4.617,
+        -8.129
+      ],
+      "max": [
+        18.001,
+        4.617,
+        -5.971
+      ]
+    },
+    {
+      "min": [
+        14.899,
+        4.617,
+        -8.129
+      ],
+      "max": [
+        14.921,
+        4.617,
+        -5.971
+      ]
+    },
+    {
+      "min": [
+        22.45,
+        4.614,
+        -8.0
+      ],
+      "max": [
+        24.85,
+        4.614,
+        -6.1
+      ]
+    },
+    {
+      "min": [
+        22.559,
+        4.617,
+        -7.891
+      ],
+      "max": [
+        24.741,
+        4.617,
+        -7.869
+      ]
+    },
+    {
+      "min": [
+        22.559,
+        4.617,
+        -6.231
+      ],
+      "max": [
+        24.741,
+        4.617,
+        -6.209
+      ]
+    },
+    {
+      "min": [
+        24.719,
+        4.617,
+        -7.869
+      ],
+      "max": [
+        24.741,
+        4.617,
+        -6.231
+      ]
+    },
+    {
+      "min": [
+        22.559,
+        4.617,
+        -7.869
+      ],
+      "max": [
+        22.581,
+        4.617,
+        -6.231
       ]
     }
   ],

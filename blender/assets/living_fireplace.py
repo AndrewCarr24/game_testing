@@ -67,7 +67,7 @@ def limestone_texture(n=1024, seed=41):
 
 
 def limestone():
-    m = common.pbr_material("M_Living_Limestone", (0.55, 0.50, 0.42), roughness=0.72)
+    m = common.pbr_material("M_Living_Limestone", (0.55, 0.50, 0.42), roughness=0.5)   # honed, with a soft sheen
     common.set_base_color_map(m, textures.load(limestone_texture()))
     return m
 

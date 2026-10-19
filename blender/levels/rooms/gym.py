@@ -95,3 +95,15 @@ LIGHTS = [
     dict(kind="spot", pos=(2.6, -3.9, CEIL - 0.03), aim=(2.6, -3.5, 0.0), power=170.0, angle=60.0, blend=0.8,
          color=(1.0, 0.90, 0.78)),
 ]
+
+# --- set dressing (decor_c_*): spa touches, floor kept clear for training ---------------------
+# On the bench by the door: a stack of folded linen towels with two rolls, and an oak tray with
+# a carafe and two glasses. By the stretching mat: sage yoga blocks and a basket of rolled
+# towels; a snake plant in a woven basket in the south-east corner, doubled by the mirror.
+PLACEMENTS += [
+    ("decor_c_towels", (-5.85, -2.0, 0.445), 90),
+    ("decor_c_tray_carafe_oak", (-5.85, -1.15, 0.445), 90),
+    ("decor_c_yoga_blocks", (3.97, -4.3), 4),
+    ("decor_c_towel_basket", (4.55, -4.17), 0),
+    ("decor_c_plant_snake_basket", (5.65, -4.17), 30),
+]

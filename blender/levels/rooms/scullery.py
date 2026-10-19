@@ -54,3 +54,11 @@ LIGHTS = [
 ]
 
 PROBE = (0.0, 0.0, 1.6)
+
+# set dressing (decor_b_*): bread, spoons, bowls and lemons on the butcher-block run, a dish
+# rack on the drainer, soap and brush by the sink
+PLACEMENTS += [
+    ("decor_b_vignette_bread", (0.0, -4.30, 0.92), 180),
+    ("decor_b_dish_rack", (0.64, 4.28, 0.92), 0),
+    ("decor_b_sink_set", (-1.25, 4.38, 0.92), 0),
+]

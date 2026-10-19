@@ -87,3 +87,13 @@ LIGHTS = [
 ]
 
 PROBE = (TX, TY, 1.6)
+
+# set dressing (decor_b_*): composed vignettes on the sideboards, the nook's coffee table and
+# either end of the dining table (all NoCollide)
+PLACEMENTS += [
+    ("decor_b_vignette_sideboard", (3.0, -4.32, 0.84), 180),      # ceramics + branches, books, carafe tray
+    ("decor_b_vignette_console", (-7.57, TY, 0.84), 90),          # either side of the vase, between the lamps
+    ("decor_b_vignette_coffee", (-5.75, 3.4, 0.38), 90),
+    ("decor_b_table_buds", (TX - 1.75, TY, 0.76), 0),
+    ("decor_b_table_buds", (TX + 1.75, TY, 0.76), 180),
+]

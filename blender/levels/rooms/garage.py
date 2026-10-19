@@ -103,3 +103,11 @@ PLACEMENTS += [
     ("car_ev", (-3.0, -5.5), 0),
     ("car_ev_ink", (3.0, -5.5), 0),
 ]
+
+# set dressing (decor_b_*): detailing kit, motoring books, a mug and a plant on the cabinet
+# worktop; tall birds of paradise either side of the garage door
+PLACEMENTS += [
+    ("decor_b_vignette_garage", (-3.9, 9.48, 0.90), 0),
+    ("decor_b_plant_floor_c", (-5.5, -9.25), 0),
+    ("decor_b_plant_floor_c", (5.5, -9.25), 140),
+]

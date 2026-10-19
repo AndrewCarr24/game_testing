@@ -708,18 +708,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":5996,
+			"byteLength":6067,
 			"byteOffset":25004
 		},
 		{
 			"buffer":0,
-			"byteLength":16029,
-			"byteOffset":31000
+			"byteLength":15965,
+			"byteOffset":31072
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":47032,
+			"byteLength":47040,
 			"uri":"entry_chandelier.bin"
 		}
 	]

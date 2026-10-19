@@ -347,20 +347,21 @@ class House:
         for ob in list(self.col.objects):
             if ob.type != "MESH" or not ob.data.materials:
                 continue
-            key = (ob.get("room", "_"), ob.data.materials[0].name)
+            # rugs (lm_borrow: lit by the floor's lightmap, hidden from the bake) merge apart
+            key = (ob.get("room", "_"), ob.data.materials[0].name, bool(ob.get("lm_borrow")))
             groups.setdefault(key, []).append(ob)
         merged = {}
-        for (room, mat), obs in groups.items():
+        for (room, mat, rug), obs in groups.items():
             if len(obs) > 1:
                 with bpy.context.temp_override(active_object=obs[0], selected_editable_objects=obs,
                                                selected_objects=obs, object=obs[0]):
                     bpy.ops.object.join()
             ob = obs[0]
-            ob.name = f"{self.name}_{room}_{mat}"
+            ob.name = f"{self.name}_{room}_{mat}" + ("_Rug" if rug else "")
             ob.data.name = ob.name
-            merged[(room, mat)] = ob
+            merged[(room, mat, rug)] = ob
         self.baked = {}
-        for (room, mat), ob in merged.items():
+        for (room, mat, rug), ob in merged.items():
             if room != "_" and "Lightmap" in ob.data.uv_layers:
                 self.baked.setdefault(room, []).append(ob)
         return merged

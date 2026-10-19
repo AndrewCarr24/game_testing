@@ -20,7 +20,7 @@ const stop = await ensureServer();
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const page = await b.newPage({ viewport: { width: 1600, height: 900 } });
 page.on('pageerror', (e) => console.log('pageerror:', e.message));
-await page.goto(`${BASE}/viewer/index.html?level=mansion`);
+await page.goto(`${BASE}/viewer/index.html?level=mansion${process.env.BENCH_QS || ''}`);
 await page.waitForFunction(() => window.__loaded, null, { timeout: 120000 });
 await page.addStyleTag({ content: 'body > *:not(canvas) { display: none !important; }' });
 const frames = (n) => page.evaluate((n) => new Promise((ok) => {

@@ -66,6 +66,7 @@
     import { batchRooms, RoomCuller } from './batching.js';
     import { loadSky, applyOutdoor } from './sky.js';
     import { Fire } from './fire.js';
+    import { createFx, governor } from './fx.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -205,7 +206,7 @@
       RectAreaLightUniformsLib.init();
 
       // baked lighting replaces the stand-in fill lights; the sun stays real-time
-      const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer);
+      const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer, level.rooms, params.get('box') !== '0', params.get('so') !== '0', params.get('sheen') !== '0');
       if (baked) {
         scene.environment = baked.defaultEnv;
         renderer.toneMappingExposure = baked.bake.exposure;
@@ -425,12 +426,28 @@
     }
 
     const ready = params.get('level') ? viewLevel(params.get('level')) : viewAsset(params.get('asset') || 'lounge_chair');
-    ready.then(() => { renderer.shadowMap.needsUpdate = true; window.__loaded = true; }).catch((e) => (stats.textContent = 'load error: ' + e));
+    // screen-space contact shadows + glow (viewer/fx.js), on unless ?fx=0 or there's no real
+    // GPU (software rendering: SwiftShader, llvmpipe; ?fx=1 forces it on anyway); ?q=2|1|0|-1
+    // fixes the quality level, otherwise the governor steps it down while the frame rate is low
+    let fx = null, govern = () => {};
+    const gl = renderer.getContext(), dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    const gpuName = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+    const softwareGPU = /swiftshader|llvmpipe|software/i.test(gpuName);
+    ready.then(() => {
+      if (params.get('fx') === '1' || (params.get('fx') !== '0' && !softwareGPU)) fx = createFx(renderer, scene, camera, {
+        ao: params.get('ao') !== '0', bloom: params.get('glow') !== '0',
+        aoScale: +(params.get('aoscale') ?? 4), aoSamples: +(params.get('aosamples') ?? 4), msaa: +(params.get('msaa') ?? 0) });
+      if (fx && params.get('q') !== null) fx.setLevel(+params.get('q'));
+      else if (fx) govern = governor(fx);
+      window.__fx = fx;
+      renderer.shadowMap.needsUpdate = true; window.__loaded = true;
+    }).catch((e) => (stats.textContent = 'load error: ' + e));
 
     addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight);
+      fx?.setSize();
     });
     // window.__bench (set by viewer/tools/bench.mjs and shots.mjs) can time each frame and
     // drive the camera after the game's own update; the game never sets it
@@ -443,7 +460,8 @@
       update();
       b?.drive();
       b?.renderStart();
-      renderer.render(scene, camera);
+      govern(performance.now());
+      if (fx) fx.render(); else renderer.render(scene, camera);
       b?.frameEnd();
     });
   </script>

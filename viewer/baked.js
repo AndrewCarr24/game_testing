@@ -40,7 +40,62 @@ export async function loadEnvironment(url, scale = 1) {
   return tex;
 }
 
-export async function loadBake(base, levelName, renderer) {
+// Box-projected (parallax-corrected) reflections: a room is a box, so a reflection ray is
+// traced to the room's walls and the panorama is looked up in the direction from the probe
+// (where it was rendered) to that hit point. Floors and counters then reflect the real
+// windows and walls in the right place instead of a panorama at infinity. A few ALU ops.
+const BOX_PARS = /* glsl */ `
+uniform vec3 envBoxMin, envBoxMax, envProbe;
+varying vec3 vWorldPos;
+vec3 boxProject( vec3 dir ) {
+  vec3 p = clamp( vWorldPos, envBoxMin + 0.01, envBoxMax - 0.01 );
+  vec3 t = max( ( envBoxMax - p ) / dir, ( envBoxMin - p ) / dir );
+  float d = min( min( t.x, t.y ), t.z );
+  return normalize( p + dir * d - envProbe );
+}`;
+const boxRadiance = THREE.ShaderChunk.envmap_physical_pars_fragment.replace(
+  'reflectVec = inverseTransformDirection( reflectVec, viewMatrix );',
+  'reflectVec = boxProject( inverseTransformDirection( reflectVec, viewMatrix ) );');
+
+// Uneven sheen on the shell (floors, walls, counters): real polished surfaces are smudged
+// and worn, so their reflections break up. Roughness varies with low-frequency world-space
+// noise (footpaths, wipes) and with the texture's own grain (dark grain and joints a little
+// rougher). Glossy materials only; a few ALU ops, no textures.
+const SHEEN_PARS = /* glsl */ `
+float sheenHash( vec2 p ) { p = fract( p * vec2( 123.34, 456.21 ) ); p += dot( p, p + 45.32 ); return fract( p.x * p.y ); }
+float sheenNoise( vec2 p ) {
+  vec2 i = floor( p ), f = fract( p ), u = f * f * ( 3.0 - 2.0 * f );
+  return mix( mix( sheenHash( i ), sheenHash( i + vec2( 1, 0 ) ), u.x ), mix( sheenHash( i + vec2( 0, 1 ) ), sheenHash( i + vec2( 1, 1 ) ), u.x ), u.y );
+}`;
+const SHEEN = /* glsl */ `
+if ( roughnessFactor < 0.75 ) {
+  vec2 sp = vWorldPos.xz + vWorldPos.y * 0.37;
+  float smudge = sheenNoise( sp * 0.9 ) * 0.65 + sheenNoise( sp * 3.7 ) * 0.35;
+  float grain = clamp( 1.0 - dot( diffuseColor.rgb, vec3( 0.333 ) ) * 1.6, 0.0, 1.0 );
+  roughnessFactor = clamp( roughnessFactor * ( 0.72 + 0.5 * smudge + 0.25 * grain ), 0.04, 1.0 );
+}`;
+
+function addSheen(shader) {
+  shader.fragmentShader = shader.fragmentShader
+    .replace('#include <roughnessmap_pars_fragment>', '#include <roughnessmap_pars_fragment>\n' + SHEEN_PARS)
+    .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n' + SHEEN);
+}
+
+function addBoxProjection(shader, box) {
+  if (!box) return;
+  Object.assign(shader.uniforms, { envBoxMin: { value: box.min }, envBoxMax: { value: box.max }, envProbe: { value: box.probe } });
+  shader.vertexShader = shader.vertexShader
+    .replace('#include <common>', '#include <common>\nvarying vec3 vWorldPos;')
+    .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWorldPos = worldPosition.xyz;');
+  shader.fragmentShader = shader.fragmentShader
+    .replace('#include <envmap_physical_pars_fragment>', BOX_PARS + '\n' + boxRadiance);
+}
+
+// levelRooms: mansion.json rooms (rect, floor, height, probe) for the reflection boxes;
+// box = false turns box projection off (?box=0, for comparison)
+// specOcc = false turns the lightmap specular occlusion off (?so=0)
+// sheen = false turns the roughness variation off (?sheen=0)
+export async function loadBake(base, levelName, renderer, levelRooms = {}, box = true, specOcc = true, sheen = true) {
   const res = await fetch(`${base}levels/${levelName}_bake.json`);
   if (!res.ok) return null;
   const bake = await res.json();
@@ -57,8 +112,13 @@ export async function loadBake(base, levelName, renderer) {
     envHdr.mapping = THREE.EquirectangularReflectionMapping;
     const envMap = pmrem.fromEquirectangular(envHdr).texture;
     envHdr.dispose();
+    const L = levelRooms[room], T = 0.15;   // T: wall lining, the rect is the room's outer edge
     rooms[room] = { lightTex, envMap, intensity: r.lightmap.intensity, objects: new Set(r.lightmap.objects),
-                    sh: r.sh ? r.sh.map((c) => new THREE.Vector3(...c)) : null };
+                    sh: r.sh ? r.sh.map((c) => new THREE.Vector3(...c)) : null,
+                    box: box && L?.probe && room !== 'courtyard' ? {   // (open to the sky: no box)
+                      min: new THREE.Vector3(L.rect[0] + T, L.floor, L.rect[1] + T),
+                      max: new THREE.Vector3(L.rect[2] - T, L.floor + L.height, L.rect[3] - T),
+                      probe: new THREE.Vector3(...L.probe) } : null };
   }));
   pmrem.dispose();
 
@@ -75,7 +135,11 @@ export async function loadBake(base, levelName, renderer) {
     m.lightMapIntensity = r.intensity;
     m.envMap = r.envMap;
     m.onBeforeCompile = (shader) => {
+      addBoxProjection(shader, r.box);
+      if (r.box && sheen) addSheen(shader);           // (needs vWorldPos from the box projection)
+      if (r.sh) shader.uniforms.roomSH = { value: r.sh };
       shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <lights_pars_begin>', '#include <lights_pars_begin>\n' + (r.sh ? 'uniform vec3 roomSH[ 9 ];' : '')).replace(
         '#include <lights_fragment_maps>',
         [
           // all direct light is in the bake; without shadows a real-time sun glint
@@ -85,9 +149,17 @@ export async function loadBake(base, levelName, renderer) {
           'irradiance = vec3( 0.0 );',
           '#include <lights_fragment_maps>',
           'iblIrradiance = vec3( 0.0 );',
+          // specular occlusion from the bake: where the lightmap is much darker than the
+          // room's average light from that side (under a table, behind a sofa), the
+          // panorama's reflection can't reach either
+          ...(r.sh && specOcc ? [
+            'float lmL = dot( lightMapIrradiance, vec3( 0.2126, 0.7152, 0.0722 ) );',
+            'float shL = dot( shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH ), vec3( 0.2126, 0.7152, 0.0722 ) );',
+            'radiance *= smoothstep( 0.1, 0.8, lmL / max( shL, 1e-4 ) );',
+          ] : []),
         ].join('\n'));
     };
-    m.customProgramCacheKey = () => 'baked-diffuse';
+    m.customProgramCacheKey = () => 'baked-diffuse' + (r.box ? '-box' : '') + (r.sh && specOcc ? '-so' : '') + (r.box && sheen ? '-sheen' : '');
     clones.set(key, m);
     return m;
   }
@@ -105,6 +177,7 @@ export async function loadBake(base, levelName, renderer) {
     m.envMap = r.envMap;
     if (r.sh) {
       m.onBeforeCompile = (shader) => {
+        addBoxProjection(shader, r.box);
         shader.uniforms.roomSH = { value: r.sh };
         shader.fragmentShader = shader.fragmentShader
           .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 roomSH[ 9 ];')
@@ -115,7 +188,7 @@ export async function loadBake(base, levelName, renderer) {
             ...(sunless ? ['reflectedLight.directDiffuse = vec3( 0.0 );', 'reflectedLight.directSpecular = vec3( 0.0 );'] : []),
           ].join('\n'));
       };
-      m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun' : 'room-sh');
+      m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun' : 'room-sh') + (r.box ? '-box' : '');
     }
     clones.set(key, m);
     return m;

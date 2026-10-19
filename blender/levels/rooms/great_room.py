@@ -97,6 +97,19 @@ PLACEMENTS = [
     ("light_g_downlight", (5.3, -0.9, 8.4), 0),
     ("light_g_downlight", (4.9, 8.2, 8.4), 0),
     ("light_g_downlight", (4.9, -7.9, 8.4), 0),
+    # ---- set dressing (decor_a_*): a composed vignette on every console and table -----------------
+    ("decor_a_console_sofa", (-0.85, 0.0), -90),             # behind the sofa, between its lamps
+    ("decor_a_console_south", (3.3, -10.14), 180),           # beside the existing vase
+    ("decor_a_console", (5.89, 8.2), -90),
+    ("decor_a_console_b", (5.89, -7.9), -90),
+    ("decor_a_console_c", (4.0, 10.14), 0),
+    ("decor_a_console_d", (-4.45, 10.14), 0),
+    ("decor_a_table_coffee_round_a", (1.9, 0.0, 0.36), 0),   # round the vase at (1.9, 0.15)
+    ("decor_a_table_coffee_round_c", (-3.4, -6.65, 0.36), 0),
+    ("decor_a_table_coffee_rect_b", (-3.6, 6.3, 0.38), 90),
+    ("decor_a_table_ottoman", (-5.35, -6.65, 0.435), 0),
+    ("decor_a_table_side_cup", (-0.1, 1.75, 0.55), 180),
+    ("decor_a_table_side_plant", (-1.95, 7.95, 0.55), 0),
 ]
 
 # Lighting: the fire and the cascade chandelier are the heart of the room; the stone chimney

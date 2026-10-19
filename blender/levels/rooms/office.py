@@ -88,3 +88,33 @@ LIGHTS = (
         dict(kind="point", pos=(2.35, -4.2, 0.86), power=45.0, color=(1.0, 0.75, 0.48)),     # sofa side lamp
     ]
 )
+
+# --- set dressing (decor_c_*): a working desk and composed surfaces ----------------------------
+# Desk: closed laptop on the pad, notebook and pen, a mug, books and a small plant on the far
+# corner (all on the top, clear of the drawer under the sitter's edge). The marble coffee
+# tables get art books (with a bronze sphere; with glasses beside a bowl of lemons), the west
+# credenza books and a ceramic trio between its lamps, the south credenza a stack crowned by a
+# bronze ring opposite the glass vase; the oat sofa a navy throw and two navy cushions.
+import math as _m
+
+
+def _rel(host, local, z=None, rot=0.0):
+    """A point in a host's local frame (host = (x, y, rot_deg)) -> room placement fields."""
+    hx, hy, hr = host
+    c, s = _m.cos(_m.radians(hr)), _m.sin(_m.radians(hr))
+    x, y = local
+    xy = (round(hx + x * c - y * s, 3), round(hy + x * s + y * c, 3))
+    return (xy + ((z,) if z is not None else ()), hr + rot)
+
+
+_SOFA = (4.1, -4.1, 180)           # library_sofa (oat): arms at local x = +-1.05, seat 0.45
+PLACEMENTS += [
+    ("decor_c_vignette_desk", (2.0, 2.4, 0.74), 0),
+    ("decor_c_books_b", (-3.38, -0.84, 0.38), 95),
+    ("decor_c_vignette_coffee", (4.1, -2.85, 0.38), 0),
+    ("decor_c_vignette_console", (-6.37, 0.0, 0.78), 90),
+    ("decor_c_books", *_rel((-4.0, -4.35, 180), (-0.75, 0.04), 0.78, rot=8)),
+    ("decor_c_throw_navy", *_rel(_SOFA, (1.05, 0.0), 0.22)),
+    ("decor_c_cushion_navy", *_rel(_SOFA, (-0.68, -0.05), 0.455, rot=6)),
+    ("decor_c_cushion_navy", *_rel(_SOFA, (-0.3, -0.06), 0.455, rot=-5)),
+]

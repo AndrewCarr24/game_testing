@@ -65,6 +65,13 @@ def use_gpu():
 
 
 def bake_lightmap(room, objs, res):
+    """Returns the names of the room's lightmapped meshes (rugs included: they borrow the
+    floor's texels, so they're hidden from the bake rather than baked) and the scale."""
+    names = [o.name for o in objs]
+    rugs = [o for o in objs if o.get("lm_borrow")]
+    objs = [o for o in objs if not o.get("lm_borrow")]
+    for o in rugs:
+        o.hide_render = True
     img = bpy.data.images.new(f"{NAME}_{room}_LightmapBake", res, res, alpha=False, float_buffer=True)
     added = []
     for mat in {m for o in objs for m in o.data.materials}:
@@ -99,7 +106,9 @@ def bake_lightmap(room, objs, res):
     textures._save(f"T_{NAME}_{room.capitalize()}_Lightmap", textures._to_srgb(lin / scale), fmt="WEBP", quality=92)
     for o in objs:
         o.select_set(False)
-    return [o.name for o in objs], scale
+    for o in rugs:
+        o.hide_render = False
+    return names, scale
 
 
 def dilate(lin, mask, steps=12):

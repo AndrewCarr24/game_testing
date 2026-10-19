@@ -61,6 +61,15 @@ PLACEMENTS = [
     ("light_g_downlight", (-3.4, 3.6, 4.2), 0),
     ("light_g_downlight", (5.1, 3.0, 4.2), 0),
     ("light_g_downlight", (-0.7, -1.9, 4.2), 0),
+    # ---- set dressing (decor_a_*) ------------------------------------------------------------------
+    ("decor_a_console_den", (-3.4, 4.39), 0),
+    ("decor_a_console_bar", (5.85, 3.0), -90),               # the vase stays at its north end
+    ("decor_a_table_ottoman_den", (-0.7, -1.9, 0.435), 0),    # round the vase
+    ("decor_a_table_side_glass", (-3.3, 1.2, 0.55), 0),
+    ("decor_a_table_side_cup", (2.2, 1.2, 0.55), 0),
+    ("decor_a_table_side_plant_den", (4.3, 0.55, 0.55), 0),
+    ("decor_a_table_credenza", (0.0, -4.37, 0.54), 180),     # low groups at both ends of the credenza
+    ("decor_a_soft_sectional_throw", (-0.6, 0.6), 0),        # over the sectional's left arm
 ]
 
 # Lighting: a dark, cinematic room. The screen and the backlit bookshelves are the brightest

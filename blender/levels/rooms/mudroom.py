@@ -112,3 +112,13 @@ PROBE = (0.0, 0.0, 1.6)
 
 # the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
 LIGHTS = [dict(L, power=L["power"] * 1.35) for L in LIGHTS]
+
+# set dressing (decor_b_*; the lockers are dressed already): keys and post on the island by
+# the garage door, a folded throw on the window seat with a basket of blankets beside it, a
+# bird of paradise in the north-west corner
+PLACEMENTS += [
+    ("decor_b_vignette_keys", (1.6, 0.82, 0.92), 90),
+    ("decor_b_throw_folded", (5.78, -1.83, 0.49), -90),
+    ("decor_b_basket_blankets", (5.65, -2.58), 15),
+    ("decor_b_plant_floor_b", (-5.55, 4.55), 120),
+]

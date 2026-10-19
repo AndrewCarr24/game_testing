@@ -94,7 +94,7 @@ def calacatta_mat():
 
 
 def stone_floor_mat():
-    m = common.pbr_material("M_Kitchen_Stone", (0.4, 0.36, 0.30), roughness=0.5)
+    m = common.pbr_material("M_Kitchen_Stone", (0.4, 0.36, 0.30), roughness=0.38)   # polished
     common.set_base_color_map(m, textures.load(stone_floor()))
     return m
 

@@ -291,7 +291,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2726,
+			"byteLength":2540,
 			"byteOffset":4816
 		}
 	],
@@ -303,7 +303,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7544,
+			"byteLength":7356,
 			"uri":"coffee_table.bin"
 		}
 	]

@@ -69,7 +69,7 @@ def limestone(n=1024, seed=19, force=False):
 
 
 def limestone_material():
-    m = common.pbr_material("M_Entry_Limestone", (0.80, 0.765, 0.69), roughness=0.78)
+    m = common.pbr_material("M_Entry_Limestone", (0.80, 0.765, 0.69), roughness=0.5)   # honed, with a soft sheen
     common.set_base_color_map(m, textures.load(limestone()))
     return m
 

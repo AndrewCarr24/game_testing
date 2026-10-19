@@ -64,6 +64,10 @@ PLACEMENTS = [
     ("entry_sconce", (7.85, -3.3, 2.35), -90),
     ("entry_sconce", (7.85, -1.25, 2.35), -90),
     ("library_floorlamp", (-5.4, -3.75), 0),
+    # --- set dressing (decor_a_*): vignettes on the round table, the nook's coffee table, the bench
+    ("decor_a_table", (0.0, -0.3, 0.80), 0),                      # art books + cairn, bowl of keys, walnut box
+    ("decor_a_table_coffee_rect", (-4.3, -2.35, 0.38), 0),       # magazines, books + bowl, a cup
+    ("decor_a_soft", (-7.60, 0.8, 0.47), 90),                     # folded throw, books + bowl
 ]
 
 # Lighting: the orb cascade is the brightest thing in the hall; the floating stair is lit

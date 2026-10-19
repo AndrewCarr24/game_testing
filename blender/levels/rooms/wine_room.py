@@ -137,3 +137,11 @@ PROBE = (0.0, -1.0, 1.6)
 
 # the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
 LIGHTS = [dict(L, power=L["power"] * 1.15) for L in LIGHTS]
+
+# set dressing (decor_b_*): a cheese board and wine books on the tasting table, atlases and a
+# bowl of corks in the leather nook, a stack of crates in the south-east corner
+PLACEMENTS += [
+    ("decor_b_vignette_cheese", (0.55, T_Y, 0.92), 0),
+    ("decor_b_vignette_cellar_table", (2.6, -2.9, 0.38), 90),
+    ("decor_b_wine_crates", (5.32, -4.1), -6),
+]

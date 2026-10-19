@@ -102,3 +102,18 @@ PROBE = (1.0, 1.0, 1.6)
 
 # the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
 LIGHTS = [dict(L, power=L["power"] * 1.45) for L in LIGHTS]
+
+# set dressing (decor_b_*): the island's free east end, the counters either side of the range
+# and by the sink, the breakfast table (its glass vase stays in the middle), the nook's coffee
+# table, and a bird of paradise in each glass corner
+PLACEMENTS += [
+    ("decor_b_vignette_island", (2.1, -1.15, 0.93), 0),           # herbs, cookbooks + mortar, jug of olive
+    ("decor_b_vignette_range_l", (5.5, -4.26, 0.92), 180),        # leaning boards, utensil crock
+    ("decor_b_vignette_range_r", (7.6, -4.26, 0.92), 180),        # oil, cruet, mill, salt, rosemary
+    ("decor_b_bread_board", (-2.75, -4.22, 0.92), 180),
+    ("decor_b_sink_set", (-4.82, -4.36, 0.92), 180),
+    ("decor_b_vignette_breakfast", (-4.5, 3.0, 0.75), 0),
+    ("decor_b_vignette_coffee_k", (4.5, 2.78, 0.38), 90),
+    ("decor_b_plant_floor", (8.2, 4.0), 30),
+    ("decor_b_plant_floor", (-8.2, 4.05), 200),
+]

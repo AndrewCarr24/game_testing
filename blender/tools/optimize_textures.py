@@ -26,10 +26,12 @@ def shell_textures():
 # fine detail maps shrink even when the shell uses them (a 0.25 m fabric weave at 1024 was the
 # biggest single download and 5.6 MB of GPU memory, for no visible gain over 512)
 ALWAYS_SHRINK = {"T_Fabric_Normal.webp"}
+# rugs are drawn with the shell (to get the bake's contact shadows) but are still prop-sized detail
+ALWAYS_SHRINK_IF = lambda name: "Rug" in name
 
 
 def main():
-    keep = shell_textures() - ALWAYS_SHRINK
+    keep = {n for n in shell_textures() - ALWAYS_SHRINK if not ALWAYS_SHRINK_IF(n)}
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:

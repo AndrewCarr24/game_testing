@@ -119,3 +119,13 @@ PROBE = (-0.5, 0.0, 1.6)
 
 # the real bake came out darker than the EEVEE previews the lights were tuned on: lift them all
 LIGHTS = [dict(L, power=L["power"] * 1.35) for L in LIGHTS]
+
+# --- set dressing (decor_d_* assets; z = the surface each group stands on) --------------------
+PLACEMENTS += [
+    ("decor_d_vanity_tray", (VX - 0.29, WN - 0.20, 0.80), 0),    # walnut tray: pump, bottle, soap
+    ("decor_d_vanity_towels", (VX + 1.22, WN - 0.30, 0.80), 0),  # hand towels + candle jar, right end
+    ("decor_d_vanity_plant", (VX - 1.22, WN - 0.28, 0.80), 0),   # small plant + candle, left end
+    ("decor_d_tub_caddy", (3.72, 2.08, 0.58), 0),                # walnut caddy across both rims (rim_inner at 0.33 m off centre)
+    ("decor_d_tub_towel", (3.33, 1.70, 0.58), -90),              # towel over the rim near mid-length, toward the door
+    ("decor_d_basket", (0.85, -4.25, 0.0), 0),                   # rolled towels by the towel warmer
+]

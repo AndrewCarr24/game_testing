@@ -89,3 +89,14 @@ LIGHTS = [
     dict(kind="point", pos=(5.6, -0.6, 1.9), power=75.0, color=(1.0, 0.75, 0.48)),
     dict(kind="point", pos=(2.85, -4.3, 1.15), power=45.0, color=(1.0, 0.72, 0.45)),
 ]
+
+# --- set dressing (decor_d_* assets; z = the surface each group stands on) --------------------
+PLACEMENTS += [
+    ("decor_d_nightstand_a", (-7.6, 1.41, 0.55), 90),           # novels + glasses on the bed side, bud vase
+    ("decor_d_nightstand_b", (-7.6, -1.41, 0.55), 90),          # carafe on a bronze tray, two books
+    ("decor_d_books_bench", (-5.25, 0.40, 0.452), 97),          # art books + stones on the bench end
+    ("decor_d_slippers", (-6.5, -1.24, 0.015), 172),            # on the rug by the bed, toes out
+    ("decor_d_vignette_coffee", (3.4, 1.2, 0.36), 0),           # books + bronze ring, vase pair, oak bowl
+    ("decor_d_vignette_vanity_desk", (3.4, -4.25, 0.74), 180),  # scent tray, notebook + pen, books
+    ("decor_d_floor_vase", (2.0, -4.2, 0.0), 180),              # olive branches between wardrobe and desk
+]

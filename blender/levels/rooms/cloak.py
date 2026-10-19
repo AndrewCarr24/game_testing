@@ -45,6 +45,12 @@ PLACEMENTS = [
     ("light_g_downlight", (-0.3, 0.7, 4.2), 0),
     ("light_g_downlight", (0.4, -3.7, 4.2), 0),
     ("light_g_downlight", (-1.0, -2.3, 4.2), 0),
+    # --- set dressing (decor_a_*)
+    ("decor_a_soft_bench_cloak", (-0.3, 0.7, 0.47), 90),        # felt hat, folded scarf
+    ("decor_a_floor_shoes", (0.32, -0.15, 0.012), 75),          # loafers on the rug by the bench
+    ("decor_a_soft_bench_hatboxes", (0.4, -4.37, 0.46), 180),   # hat boxes, folded throw
+    ("decor_a_floor_umbrella_stand", (-2.36, -3.4), 0),         # by the door, outside its swing
+    ("decor_a_floor_b", (2.12, -4.12), 0),                      # branches in a floor vase (SE corner)
 ]
 
 # Lighting: a boutique dressing room. The walnut closets glow from inside (the LED under
