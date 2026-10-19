@@ -1077,18 +1077,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4501,
+			"byteLength":4672,
 			"byteOffset":35036
 		},
 		{
 			"buffer":0,
 			"byteLength":5237,
-			"byteOffset":39540
+			"byteOffset":39708
 		},
 		{
 			"buffer":0,
 			"byteLength":1213,
-			"byteOffset":44780
+			"byteOffset":44948
 		}
 	],
 	"samplers":[
@@ -1099,7 +1099,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":45996,
+			"byteLength":46164,
 			"uri":"garage_island.bin"
 		}
 	]

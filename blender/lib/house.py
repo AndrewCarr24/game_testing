@@ -274,21 +274,40 @@ class House:
         self.box(s["room"], "Stair_Landing", (lx0, y0, top - 0.2), (lx1, y1 + P.T, top), oak, uv_tile=0.5,
                  solid=False, bake=True)
         self.colliders.append(common.aabb_gltf((lx0, y0 - 0.08, top), (lx1, y0, top + 1.2)))
-        # glass balustrade along the stair's open side, following the slope
-        length = math.hypot(x1 - x0, top)
-        glass = common.mesh_object(f"{self.name}_Stair_Glass", common.box_bmesh((length, 0.02, 0.95)), self.col,
-                                   self.rail_glass, self.root, smooth=False)
-        glass.location = ((x0 + x1) / 2, y0 - 0.04, top / 2 + 0.55)
-        glass.rotation_euler = (0, -math.atan2(top, x1 - x0), 0)
-        # the landing's open side (its collider is above) gets the same glass, level
-        side = common.mesh_object(f"{self.name}_Stair_Glass_Landing", common.box_bmesh((lx1 - lx0 + 0.02, 0.02, 0.95)),
-                                  self.col, self.rail_glass, self.root, smooth=False)
-        side.location = ((lx0 + lx1) / 2 + 0.01, y0 - 0.04, top + 0.55)
-        # the landing's far end overlooks the entry too: glass + rail collider across it
-        end = common.mesh_object(f"{self.name}_Stair_Glass_End", common.box_bmesh((0.02, y1 + P.T - y0, 0.95)), self.col,
-                                 self.rail_glass, self.root, smooth=False)
-        end.location = (lx1 + 0.04, (y0 + y1 + P.T) / 2, top + 0.55)
+        # glass balustrade: a run of separate panels with 12 mm gaps, as it's built: on the
+        # flight, parallelograms (vertical ends, top and bottom parallel to the pitch), then
+        # level panels along the landing and one across its far end
+        H, gap, yg = 0.95, 0.012, y0 - 0.04
+        pitch = lambda x: top * (x - x0) / (x1 - x0) + 0.075          # bottom edge, 7.5 cm over the nosings
+        n = math.ceil((x1 - x0) / 1.3)
+        for i in range(n):
+            xa, xb = x0 + (x1 - x0) * i / n, x0 + (x1 - x0) * (i + 1) / n - gap
+            self.glass_panel(f"Stair_Glass_{i}", (xa, yg, pitch(xa)), (xb, yg, pitch(xb)), H)
+        n = math.ceil((lx1 + 0.03 - lx0) / 1.6)
+        for i in range(n):
+            xa = lx0 + gap + (lx1 + 0.03 - lx0 - gap) * i / n
+            xb = lx0 + gap + (lx1 + 0.03 - lx0 - gap) * (i + 1) / n - (gap if i < n - 1 else 0)
+            self.glass_panel(f"Stair_Glass_Landing_{i}", (xa, yg, top + 0.075), (xb, yg, top + 0.075), H)
+        self.glass_panel("Stair_Glass_End", (lx1 + 0.04, y0 - 0.03 + gap, top + 0.075), (lx1 + 0.04, y1 + P.T, top + 0.075), H, along="y")
         self.colliders.append(common.aabb_gltf((lx1, y0 - 0.08, top), (lx1 + 0.08, y1 + P.T, top + 1.2)))
+
+    def glass_panel(self, name, a, b, height, along="x", t=0.02):
+        """A glass panel `t` thick from a to b (bottom corners, world), `height` tall
+        measured vertically: a parallelogram when a and b differ in z."""
+        import bmesh
+        bm = bmesh.new()
+        off = (0, t / 2, 0) if along == "x" else (t / 2, 0, 0)
+        rings = []
+        for s_ in (-1, 1):
+            o = [s_ * c for c in off]
+            rings.append([bm.verts.new((p[0] + o[0], p[1] + o[1], p[2] + dz)) for p, dz in
+                          ((a, 0), (b, 0), (b, height), (a, height))])
+        f, k = rings
+        for q in ((f[0], f[1], f[2], f[3]), (k[3], k[2], k[1], k[0]), (f[0], k[0], k[1], f[1]),
+                  (f[1], k[1], k[2], f[2]), (f[2], k[2], k[3], f[3]), (f[3], k[3], k[0], f[0])):
+            bm.faces.new(q)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+        return common.mesh_object(f"{self.name}_{name}", bm, self.col, self.rail_glass, self.root, smooth=False)
 
     # ---------------------------------------------------------------- lights
     def strip(self, room, pos, size, z, power):

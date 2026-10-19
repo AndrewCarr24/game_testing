@@ -864,7 +864,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":7956,
+			"byteLength":7898,
 			"byteOffset":12848
 		}
 	],
@@ -876,7 +876,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20804,
+			"byteLength":20748,
 			"uri":"decor_b_vignette_cheese.bin"
 		}
 	]

@@ -382,28 +382,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2895,
+			"byteLength":2975,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":2200,
-			"byteOffset":2896
+			"byteOffset":2976
 		},
 		{
 			"buffer":0,
 			"byteLength":3913,
-			"byteOffset":5096
+			"byteOffset":5176
 		},
 		{
 			"buffer":0,
 			"byteLength":3941,
-			"byteOffset":9012
+			"byteOffset":9092
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":12956,
+			"byteLength":13036,
 			"uri":"dining_pendants.bin"
 		}
 	]

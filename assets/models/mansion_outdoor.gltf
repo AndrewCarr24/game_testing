@@ -472,7 +472,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":75650,
+			"count":75647,
 			"max":[
 				71.27143096923828,
 				12.753400802612305,
@@ -487,17 +487,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":75650,
+			"count":75647,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":75650,
+			"count":75647,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":75650,
+			"count":75647,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -757,43 +757,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":719990,
+			"byteLength":719547,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":1511,
-			"byteOffset":719992
+			"byteOffset":719548
 		},
 		{
 			"buffer":0,
-			"byteLength":31310,
-			"byteOffset":721504
+			"byteLength":31316,
+			"byteOffset":721060
 		},
 		{
 			"buffer":0,
-			"byteLength":464696,
-			"byteOffset":752816
+			"byteLength":464677,
+			"byteOffset":752376
 		},
 		{
 			"buffer":0,
-			"byteLength":76806,
-			"byteOffset":1217512
+			"byteLength":76815,
+			"byteOffset":1217056
 		},
 		{
 			"buffer":0,
-			"byteLength":134340,
-			"byteOffset":1294320
+			"byteLength":134268,
+			"byteOffset":1293872
 		},
 		{
 			"buffer":0,
-			"byteLength":85983,
-			"byteOffset":1428660
+			"byteLength":85973,
+			"byteOffset":1428140
 		},
 		{
 			"buffer":0,
 			"byteLength":706,
-			"byteOffset":1514644
+			"byteOffset":1514116
 		}
 	],
 	"samplers":[
@@ -804,7 +804,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1515352,
+			"byteLength":1514824,
 			"uri":"mansion_outdoor.bin"
 		}
 	]
