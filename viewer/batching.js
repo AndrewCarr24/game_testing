@@ -56,7 +56,9 @@ export function batchRooms(roomRoots, skip) {
 }
 
 export class RoomCuller {
-  constructor(level, roomRoots, batches, { near = 14, far = 36 } = {}) {
+  // shared: [{ obj, rooms }] drawn when any of its rooms is (doors join two rooms)
+  constructor(level, roomRoots, batches, { near = 14, far = 36, shared = [] } = {}) {
+    this.shared = shared;
     this.near = near;
     this.far = far;
     this._frustum = new THREE.Frustum();
@@ -121,6 +123,10 @@ export class RoomCuller {
         changed = true;
       }
       if (show) n++;
+    }
+    for (const s of this.shared) {
+      const show = s.rooms.some((name) => this.rooms.find((r) => r.name === name)?.shown);
+      if (show !== s.obj.visible) { s.obj.visible = show; changed = true; }
     }
     this.visible = n;
     return changed;

@@ -287,6 +287,11 @@
       const fire = new Fire();
       const placed = {};   // asset -> first placed object, for attachments
       const roomRoots = {};   // room -> placed prop roots (for batching and culling)
+      // doors (a swinging part) belong to both rooms they join: drawn when either one is
+      const shared = [];
+      const roomsAt = ([x, y, z]) => Object.entries(level.rooms).filter(([, r]) =>
+        y >= r.floor - 0.1 && y <= r.floor + r.height && x >= r.rect[0] - 0.4 && x <= r.rect[2] + 0.4 &&
+        z >= r.rect[1] - 0.4 && z <= r.rect[3] + 0.4).map(([name]) => name);
       for (const p of level.props) {
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
@@ -302,9 +307,12 @@
         }
         scene.add(obj);
         placed[p.asset] ??= obj;
-        (roomRoots[p.room] ??= []).push(obj);
         obj.updateMatrixWorld(true);
         interact.collect(obj, { lock: p.lock });
+        let door = false;
+        obj.traverse((o) => { if (o.userData.interact?.type === 'rotate') door = true; });
+        if (door) shared.push({ obj, rooms: roomsAt(p.position) });
+        else (roomRoots[p.room] ??= []).push(obj);
         total += level.assets[p.asset].tris;
         // one box per part (seat, desktop, ...) so the player can stand on them
         const a = level.assets[p.asset];
@@ -314,9 +322,10 @@
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
       for (const it of interact.items) it.node.traverse((o) => moving.add(o));
+      for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
       const { batches, before, after } = batchRooms(roomRoots, moving);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
-      const culler = new RoomCuller(level, roomRoots, batches);
+      const culler = new RoomCuller(level, roomRoots, batches, { shared });
       window.__culler = culler;
       stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders · ${before}→${after} meshes`;
 
