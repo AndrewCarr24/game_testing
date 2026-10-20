@@ -90,17 +90,22 @@ P = dict(
     open_brim=0.08,                # a hood brim this far in front of the face still counts as the opening
     foot_subdiv=4, foot_z=0.2,
     # cloak: robe + hood grids projected onto the sculpt's cloak, then given thickness
-    robe_rows=48, robe_cols=90, robe_z=(0.02, 6.5), robe_smooth=0, robe_tuck=0.07,
+    robe_rows=40, robe_cols=62, robe_z=(0.02, 6.5), robe_smooth=0, robe_tuck=0.07,
     hem_toe_h=0.26, hem_toe_w=0.32,      # the hem rises this much (m) over each foot, over this angle (rad)
     open_pct=97.0,                 # the face opening: this percentile of the fur patch's angle per direction
     robe_front_w=1.5, robe_chin=-0.55, robe_band=4, robe_top_band=6,  # in front the robe stops just above the chin's bottom
     hood_rows=22, hood_cols=60, hood_margin=0.08, hood_elev=-32.0, hood_th_max=3.13,
     hood_smooth=1, hood_clear=0.07, hood_lip=0.02, hood_lip_rows=5,
-    core_subdiv=3, core_z=4.5, core_back=0.25, core_rmax=2.5, core_inset=0.05,   # the dark core inside neck and chest
+    hood_brim_rows=4, hood_brim=(0.28, 0.18),   # the cowl: rows forward of the opening (rad), its flare (m)
+    core_subdiv=2, gorget_rows=12, gorget_cols=16, gorget_r=(0.3, 0.75), gorget_inset=0.08, core_z=4.5, core_back=0.25, core_rmax=2.5, core_inset=0.05,   # the dark core inside neck and chest
     fringe_seed=4, fringe_hood=60, fringe_arc=115.0, fringe_len=0.10,
     cloth_thick=0.09,              # solidify thickness at the rolled edges (m) ...
     cloth_thin=0.38,               # ... and this fraction of it elsewhere (~3.4 cm)
-    sleeve_rows=8, sleeve_cols=20, sleeve_len=(0.12, 0.45), sleeve_r=(0.25, 0.30),   # the wide sleeve cuffs
+    sleeve_rows=26, sleeve_cols=14,          # full sleeves (shoulder .. cuff; rows clustered at the elbow)
+    sleeve_prof=(0.36, 0.28, 0.25, 0.29),    # radius at the shoulder, elbow, wrist, cuff opening (m)
+    sleeve_over=0.1,                         # the cuff reaches this far past the wrist
+    sleeve_free=0.35,                        # ... and is free (not shrink-wrapped inside the robe) this far up
+    sleeve_rmin=0.18,                        # the shrink-wrapped radius never goes below this
     # landmarks (source frame, metres). Eyes: (x, z) of the socket centre seen from the
     # front; +x is the creature's left.
     eye_l=(0.835, 5.675),
@@ -794,6 +799,58 @@ def _uv_node(mat, image_node, layer):
     nt.links.new(uvn.outputs["UV"], image_node.inputs["Vector"])
 
 
+def _chain_weights(ob, curve, arc, stops):
+    """Skin weights by arc position along a centre line: stops [(bone, fraction of the
+    length)], blended smoothly between neighbours. Stored as "_w_<bone>" groups (read by
+    grimble_rig.skin())."""
+    co = np.zeros(len(ob.data.vertices) * 3)
+    ob.data.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    s = np.array([arc[np.argmin(np.linalg.norm(curve - q, axis=1))] for q in co]) / arc[-1]
+    xs = [f for _, f in stops]
+    W = np.zeros((len(co), len(stops)))
+    for k in range(len(stops)):
+        e = np.zeros(len(stops))
+        e[k] = 1
+        W[:, k] = np.interp(s, xs, e)
+    for k, (bone, _) in enumerate(stops):
+        g = ob.vertex_groups.new(name="_w_" + bone)
+        q = np.round(W[:, k] * 200).astype(int)
+        for val in np.unique(q[q > 0]):
+            g.add(np.nonzero(q == val)[0].tolist(), val / 200.0, "REPLACE")
+
+
+def _sleeve_weights(ob, sinfo, side):
+    """Skin weights for a sleeve, by each vertex's arc position along the arm: the shoulder end
+    blends into the shoulder / spine, the elbow blends upper arm -> forearm over ~0.45 m (no
+    hard segment), the forearm and the cuff ride the forearm. Stored as "_w_<bone>" vertex
+    groups; grimble_rig.skin() reads (and removes) them."""
+    co = np.zeros(len(ob.data.vertices) * 3)
+    ob.data.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    curve, arc = sinfo["curve"], sinfo["arc"]
+    s = np.array([arc[np.argmin(np.linalg.norm(curve - q, axis=1))] for q in co])
+
+    def sm(a, b, x):
+        t = np.clip((x - a) / (b - a), 0, 1)
+        return t * t * (3 - 2 * t)
+    k_sh = 1 - sm(sinfo["s_sh"] - 0.05, sinfo["s_sh"] + 0.5, s)
+    # the elbow: upper arm -> the half-rotation helper (rigid with it at the joint) -> forearm;
+    # linear blending of two bones a right angle apart pinched and folded the inside of the elbow
+    se = sinfo["s_el"]
+    up_ = 1 - sm(se - 0.4, se, s)
+    fo_ = sm(se, se + 0.4, s)
+    arm_ = 1 - 0.8 * k_sh
+    w = {"Spine3": 0.35 * k_sh, "Shoulder." + side: 0.45 * k_sh,
+         "UpperArm." + side: arm_ * up_, "Elbow." + side: arm_ * (1 - up_ - fo_), "Forearm." + side: arm_ * fo_}
+    tot = sum(w.values())
+    for bone, ww in w.items():
+        g = ob.vertex_groups.new(name="_w_" + bone)
+        q = np.round(ww / tot * 200).astype(int)
+        for val in np.unique(q[q > 0]):
+            g.add(np.nonzero(q == val)[0].tolist(), val / 200.0, "REPLACE")
+
+
 def _cloak_materials(p):
     """The three cloak materials (see MATERIALS in the module docstring)."""
     alb, dnrm = grimble_paint.cloak_textures(p["tex_cloak"], force=p["force"])
@@ -1277,14 +1334,21 @@ def _build(p):
     def staff_grip_point(h_):
         sl_line, sl_s = _staff_line(p)
         return sl_line[np.argmin(np.abs(sl_s - h_["s"]))]
-    sleeve_g = [grimble_cloth.sleeve(h_["wrist"], staff_grip_point(h_), p) for h_ in hands]
+    # full sleeves round the arms as the skeleton will build them (the hands are listed
+    # upper = right first; the rig works in the shifted frame: origin between the feet)
+    mid = np.array([p["feet_mid"][0], p["feet_mid"][1], 0.0])
+    sleeve_g = []
+    for side, h_ in zip("RL", hands):
+        sh_, el_, wr_ = (x + mid for x in grimble_rig.arm_chain(side, np.asarray(h_["wrist"], float) - mid))
+        sv_, sW, sref, sinfo = grimble_cloth.sleeve_arm(sh_, el_, wr_, robe_axis(sh_), cloak_tree, p)
+        sleeve_g.append((sv_, sW, sref, sinfo, side))
 
     # ================= STAGE 3: UV layout ============================================
     # UVMap: one unique atlas for the cloak's outside (each grid unwrapped by arc length:
     # no overlaps, seams at the robe's back centre, under the chin inside the collar,
     # under each sleeve), packed at one texel density with padding. UVDetail: world scale.
     metric = {"robe": grimble_cloth.metric_uv(rv), "hood": grimble_cloth.metric_uv(hvz)}
-    for k_, (sv_, _, _) in enumerate(sleeve_g):
+    for k_, (sv_, *_) in enumerate(sleeve_g):
         metric[f"sleeve{k_}"] = grimble_cloth.metric_uv(sv_)
     atlas, cloak_density = grimble_cloth.pack_atlas(metric, p["tex_cloak_unique"], p["uv_pad_px"])
     tile = p["cloak_tile"]
@@ -1299,19 +1363,17 @@ def _build(p):
     mats = _cloak_materials(p)
     lining_mat = mats[1]
     hood_ob = grimble_cloth.grid_object(n + "_Hood", hvz, uvsets("hood"), hW, lambda q: c_head, col, mats, p)
-    kb = p["robe_band"]
-    kt = len(rv) - 1 - p["robe_top_band"]
-    band_ob = grimble_cloth.grid_object(n + "_RobeHem", rv[:kb + 1], uvsets("robe", slice(0, kb + 1)), rW[:kb + 1],
-                                        robe_axis, col, mats, p)
-    robe_ob = grimble_cloth.grid_object(n + "_Robe", rv[kb:kt + 1], uvsets("robe", slice(kb, kt + 1)),
-                                        rW[kb:kt + 1] * 0, robe_axis, col, mats, p, solid=False)
-    tw = np.zeros_like(rW[kt:])
-    tw[-1], tw[-2] = 1.0, 0.5
-    top_ob = grimble_cloth.grid_object(n + "_RobeTop", rv[kt:], uvsets("robe", slice(kt, None)), tw, robe_axis,
-                                       col, mats, p)
-    sleeves = [grimble_cloth.grid_object(n + f"_Sleeve{k_}", sv_, uvsets(f"sleeve{k_}"), sW,
-                                         lambda q, sref=sref: sref(q), col, mats, p)
-               for k_, (sv_, sW, sref) in enumerate(sleeve_g)]
+    # the robe: one solid grid (outside, lining, rims; thick at the hem and the collar), so
+    # wherever the crouch shows its inside it is the dark lining, never a hole
+    rw_ = rW.copy()
+    rw_[-1], rw_[-2] = np.maximum(rw_[-1], 1.0), np.maximum(rw_[-2], 0.5)
+    robe_ob = grimble_cloth.grid_object(n + "_Robe", rv, uvsets("robe"), rw_, robe_axis, col, mats, p)
+    sleeves = []
+    for k_, (sv_, sW, sref, sinfo, side) in enumerate(sleeve_g):
+        ob_ = grimble_cloth.grid_object(n + f"_Sleeve{k_}", sv_, uvsets(f"sleeve{k_}"), sW,
+                                        lambda q, sref=sref: sref(q), col, mats, p)
+        _sleeve_weights(ob_, sinfo, side)
+        sleeves.append(ob_)
     # fringe off the hood's rim (round the top and sides): edge material
     frng = np.random.default_rng(p["fringe_seed"])
     keep_rim = np.abs(psis_h) < math.radians(p["fringe_arc"])
@@ -1320,17 +1382,25 @@ def _build(p):
     rim_out /= np.linalg.norm(rim_out, axis=1, keepdims=True) + 1e-9
     fv1, ft1 = grimble_cloth.fringe(rim, rim_out, np.array([0, 0, -1.0]), p["fringe_hood"], p["fringe_len"], frng)
     fringe_ob = _small_part(n + "_Fringe", fv1, ft1, col, mats, 2)
-    # the dark core inside the neck / chest: any gap shows shadowed lining
-    trees_ = [grimble_cloth._tree(*_mesh_arrays(ob.data)) for ob in (robe_ob, band_ob, top_ob, hood_ob)]
+    # the gorget: a dark tube along the neck chain (chest -> neck -> into the head), rigid
+    # in turn with Spine3, Neck and Head; wherever the collar and the hood's base part in a
+    # pose it shows instead of a gap (it replaces the old star-shaped core, whose blended
+    # weights tore into shards under the chin)
+    trees_ = [grimble_cloth._tree(*_mesh_arrays(ob.data)) for ob in (robe_ob, hood_ob)]
     trees_.append(head_tree)
-    cc = np.array([c_head[0], c_head[1] + p["core_back"], p["core_z"]])
-    kv, kt_ = grimble_cloth.inner_core(trees_, cc, p)
-    core_ob = _small_part(n + "_Core", kv, kt_, col, mats, 1)
+    ctrl = [np.array(q) + mid for q in grimble_rig.NECK_CHAIN]
+    gv, gref, gcurve, garc = grimble_cloth.gorget(ctrl, trees_, p)
+    gm = grimble_cloth.metric_uv(gv)
+    core_ob = grimble_cloth.grid_object(n + "_Core", gv, [("UVMap", gm[0] * 0.0, gm[1] * 0.0),
+                                                           ("UVDetail", gm[0] / tile, gm[1] / tile)],
+                                        np.zeros(gv.shape[:2]), gref, col, mats, p, solid=False)
+    core_ob.data.polygons.foreach_set("material_index", np.full(len(core_ob.data.polygons), 1, np.int32))
+    _chain_weights(core_ob, gcurve, garc, [("Spine3", 0.0), ("Neck", 0.42), ("Head", 0.8)])
     # one cloak object
     vl = bpy.context.view_layer
     for o in vl.objects.selected:
         o.select_set(False)
-    for ob in [robe_ob, band_ob, top_ob, hood_ob, fringe_ob, core_ob] + sleeves:
+    for ob in [robe_ob, hood_ob, fringe_ob, core_ob] + sleeves:
         ob.select_set(True)
     vl.objects.active = robe_ob
     bpy.ops.object.join()
@@ -1350,7 +1420,7 @@ def _build(p):
     # cloak: the sculpt's folds -> a unique tangent-space normal map (outside only)
     flat_rects = []
     Ua, Va = atlas["hood"]
-    kl = p["hood_lip_rows"] + 2
+    kl = p["hood_lip_rows"] + 2 + p["hood_brim_rows"]          # the lip and the brim: no sculpt cloth there
     flat_rects.append((Ua[:kl].min(), Ua[:kl].max(), Va[:kl].min(), Va[:kl].max()))
     for k_ in range(len(sleeve_g)):
         Ua, Va = atlas[f"sleeve{k_}"]

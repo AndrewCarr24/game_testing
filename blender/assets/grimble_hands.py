@@ -156,7 +156,7 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
                   (L1 * 0.36 + rf * 1.5, n_f * pitch * 0.62, rf * 1.55), tile, segs=(18, 11))
         # wrist: a thick tube from inside the pad deep into the sleeve (its end is hidden)
         tube(bm, uvl, np.array([pc - ax1 * rf, (pc + w) / 2, w, w + ax1 * 0.45]),
-             [rf * 2.6, rf * 2.4, rf * 2.6, rf * 2.8], 10, tile, cap_end=True)
+             [rf * 2.6, rf * 2.4, rf * 2.6, rf * 2.8], 10, tile, cap_end=True, cap_start=True)
         # fingers, index (top) to little finger; each is recorded for the rig (its centre
         # line, the inward direction at each sample, its tube's and claw's vertex ranges)
         fingers = []
@@ -182,7 +182,7 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
                 rad.append(rt)
                 inward.append(-d)
             v0 = len(bm.verts)
-            tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True, phase=0.3 * k)
+            tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True, cap_start=True, phase=0.3 * k)
             v1 = len(bm.verts)
             _claw(bm, uvl, np.array(pts), rad[-1], d, tile, p)
             fingers.append(dict(name=("Index", "Middle", "Ring", "Pinky")[k], ts=ts, pts=np.array(pts),
@@ -202,7 +202,7 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
             rad.append(rt)
             inward.append(-d)
         v0 = len(bm.verts)
-        tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True)
+        tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True, cap_start=True)
         v1 = len(bm.verts)
         _claw(bm, uvl, np.array(pts), rad[-1], d, tile, p)
         fingers.append(dict(name="Thumb", ts=ts, pts=np.array(pts), inward=np.array(inward),
@@ -227,7 +227,7 @@ def _claw(bm, uvl, finger, r_tip, radial, tile, p):
         pts.append(base + tg * (L * 0.55 * math.sin(ang)) + out * (L * 0.55 * (1 - math.cos(ang)) * -0.6
                                                                   + L * 0.25 * math.sin(ang)))
         rad.append(r_tip * 0.62 * (1 - t) ** 1.1 + 0.003)
-    tube(bm, uvl, np.array(pts), rad, 7, tile, mat=1, cap_end=True)
+    tube(bm, uvl, np.array(pts), rad, 7, tile, mat=1, cap_end=True, cap_start=True)
 
 
 def build_toes(bm, uvl, feet, hem_pts, p):

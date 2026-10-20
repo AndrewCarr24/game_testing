@@ -284,7 +284,18 @@ def hood(hood_tree, head_r_fn, frame, open_psis, open_th, p):
     # the opening's rolled lip: a little proud
     rh[0] += p["hood_lip"]
     verts = c + D * rh[..., None]
-    edge_w = np.zeros((n_th, n_psi))
+    nb = p["hood_brim_rows"]
+    if nb:
+        # the cowl: rows running forward from the opening, standing off the face and flaring
+        # out a little, so from the side (or level with the face, as in the crawl) the face sits
+        # inside the hood; from the front the brim is seen edge-on, the face's size unchanged
+        k = np.linspace(1, 0, nb, endpoint=False)[:, None]          # 1 = the front edge
+        THb = th_open[None, :] - k * p["hood_brim"][0]
+        Db = direction(np.tile(psis, (nb, 1)), THb)
+        hb = head_r_fn(Db.reshape(-1, 3)).reshape(nb, n_psi)
+        rb = hb + p["hood_clear"] + p["hood_lip"] + k * p["hood_brim"][1]
+        verts = np.concatenate([c + Db * rb[..., None], verts])
+    edge_w = np.zeros((len(verts), n_psi))
     edge_w[0] = 1.0
     edge_w[1] = 0.5
     return verts, edge_w, D
@@ -511,3 +522,126 @@ def inner_core(trees, centre, p):
         r = np.minimum(r, nb)
     r = np.maximum(r - p["core_inset"], 0.05)
     return centre + d * r[:, None], t
+
+
+def _catmull_pts(ctrl, n=200):
+    """A dense Catmull-Rom polyline through the control points."""
+    P = [np.asarray(c, float) for c in ctrl]
+    P = [2 * P[0] - P[1]] + P + [2 * P[-1] - P[-2]]
+    out = []
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[i + 1], P[i + 2]
+        for u in np.linspace(0, 1, n // (len(P) - 3), endpoint=False):
+            out.append(0.5 * (2 * p1 + (p2 - p0) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u
+                              + (-p0 + 3 * p1 - 3 * p2 + p3) * u ** 3))
+    out.append(P[-2])
+    return np.array(out)
+
+
+def _transport(pts):
+    T = np.gradient(pts, axis=0)
+    T /= np.linalg.norm(T, axis=1, keepdims=True) + 1e-12
+    down = np.array([0, 0, -1.0])
+    N = np.zeros_like(T)
+    n0 = down - (down @ T[0]) * T[0]
+    if np.linalg.norm(n0) < 1e-6:
+        n0 = np.cross(T[0], [1.0, 0, 0])
+    N[0] = n0 / np.linalg.norm(n0)
+    for i in range(1, len(T)):
+        v = N[i - 1] - (N[i - 1] @ T[i]) * T[i]
+        N[i] = v / (np.linalg.norm(v) + 1e-12)
+    return T, N, np.cross(T, N)
+
+
+def sleeve_arm(sh, el, wr, inside, cloak_tree, p):
+    """A full sleeve along the arm (model frame at rest): from inside the robe at the shoulder,
+    past the elbow (rows clustered there so it bends smoothly), tapering to a soft rolled cuff
+    a little past the wrist. At rest it is shrink-wrapped just inside the robe's surface (the
+    standing silhouette stays the sculpt's) except over the forearm where the arm leaves the
+    robe. Rows run from the cuff (row 0, the thick rolled edge) to the shoulder end.
+    Returns verts (rows x cols), edge_w, outward ref fn, and the arc positions (row s, shoulder,
+    elbow, wrist) for the skin weights."""
+    sh, el, wr, inside = (np.asarray(x, float) for x in (sh, el, wr, inside))
+    fore = (wr - el) / np.linalg.norm(wr - el)
+    start = sh + (inside - sh) * 0.35
+    end = wr + fore * p["sleeve_over"]
+    curve = _catmull_pts([start, sh, el, wr, end], 400)
+    seg = np.linalg.norm(np.diff(curve, axis=0), axis=1)
+    arc = np.concatenate([[0], np.cumsum(seg)])
+    L = arc[-1]
+
+    def arc_of(q):
+        return arc[np.argmin(np.linalg.norm(curve - q, axis=1))]
+    s_sh, s_el, s_wr = arc_of(sh), arc_of(el), arc_of(wr)
+    # rows: uniform plus a cluster round the elbow
+    rows = np.unique(np.round(np.concatenate([np.linspace(0, L, p["sleeve_rows"] - 10),
+                                              s_el + np.linspace(-0.45, 0.45, 10)]), 4))
+    rows = np.clip(rows, 0, L)[::-1]                     # cuff first
+    idx = np.searchsorted(arc, rows).clip(0, len(curve) - 1)
+    C = curve[idx]
+    T, N, B = _transport(curve)
+    T, N, B = T[idx], N[idx], B[idx]
+    n_c = p["sleeve_cols"]
+    th = np.linspace(0, 2 * math.pi, n_c, endpoint=False)
+    dirs = np.cos(th)[None, :, None] * N[:, None, :] + np.sin(th)[None, :, None] * B[:, None, :]
+    # radius profile: wide at the shoulder, tapering past the elbow to the wrist, a little flare
+    # at the cuff and a rolled lip at the opening
+    r_sh, r_el, r_wr, r_cuff = p["sleeve_prof"]
+    prof = np.interp(rows, [0, s_sh, s_el, s_wr, L], [r_sh, r_sh, r_el, r_wr, r_cuff])
+    prof[0] *= 0.94                                     # the opening rolls in a little
+    R = np.repeat(prof[:, None], n_c, 1)
+    # shrink-wrap inside the robe at rest (where the robe is round the arm)
+    origins = np.repeat(C[:, None, :], n_c, 1).reshape(-1, 3)
+    d = _outermost_from(cloak_tree, origins, dirs.reshape(-1, 3), 2.0).reshape(len(rows), n_c)
+    free = np.clip((rows - (s_wr - p["sleeve_free"])) / 0.15, 0, 1)[:, None]      # the cuff end: free
+    wrap = np.where(np.isnan(d) | (d < 0.2), R, np.minimum(R, d - 0.045))
+    wrap = np.maximum(wrap, p["sleeve_rmin"])
+    R = wrap * (1 - free) + R * free
+    for _ in range(3):                                  # no lumps: smooth round and along
+        R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))
+        R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
+    # the cuff's opening droops a little (gravity) and its lip rolls back
+    sag = np.zeros_like(R)
+    sag[:3] = (np.array([0.06, 0.035, 0.015])[:, None] * (0.5 - 0.5 * np.cos(th))[None, :])
+    verts = C[:, None, :] + dirs * R[..., None] + np.array([0, 0, -1.0]) * sag[..., None]
+    verts[0] -= T[0] * 0.03
+    edge_w = np.zeros((len(rows), n_c))
+    edge_w[0], edge_w[1], edge_w[-1] = 1.0, 0.6, 0.6
+
+    def ref(q):
+        return curve[np.argmin(np.linalg.norm(curve - q, axis=1))]
+    return verts, edge_w, ref, dict(rows=rows, curve=curve, arc=arc, s_sh=s_sh, s_el=s_el, s_wr=s_wr)
+
+
+def gorget(ctrl, trees, p):
+    """A dark tube (the lining's cloth) along the neck chain, from inside the chest up into
+    the head: wherever the robe's collar and the hood's base part in a pose, it shows instead
+    of a gap. Its radius is shrink-wrapped just inside the robe, the hood and the head round
+    it (clamped). Returns verts (rows x cols), the dense centre line and its arc lengths (for
+    the skin weights)."""
+    curve = _catmull_pts(ctrl, 200)
+    seg = np.linalg.norm(np.diff(curve, axis=0), axis=1)
+    arc = np.concatenate([[0], np.cumsum(seg)])
+    n_r, n_c = p["gorget_rows"], p["gorget_cols"]
+    rows = np.linspace(0, arc[-1], n_r)
+    idx = np.searchsorted(arc, rows).clip(0, len(curve) - 1)
+    C = curve[idx]
+    T, N, B = _transport(curve)
+    T, N, B = T[idx], N[idx], B[idx]
+    th = np.linspace(0, 2 * math.pi, n_c, endpoint=False)
+    dirs = np.cos(th)[None, :, None] * N[:, None, :] + np.sin(th)[None, :, None] * B[:, None, :]
+    origins = np.repeat(C[:, None, :], n_c, 1).reshape(-1, 3)
+    D = np.full(len(origins), np.inf)
+    for tr in trees:
+        d = _outermost_from(tr, origins, dirs.reshape(-1, 3), 2.0)
+        D = np.fmin(D, np.where(np.isnan(d), np.inf, d))
+    R = np.where(np.isinf(D), p["gorget_r"][1], D - p["gorget_inset"]).reshape(n_r, n_c)
+    R = np.clip(R, *p["gorget_r"])
+    for _ in range(3):
+        R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))
+        R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
+    verts = C[:, None, :] + dirs * R[..., None]
+
+    def ref(q):
+        return curve[np.argmin(np.linalg.norm(curve - q, axis=1))]
+    return verts, ref, curve, arc

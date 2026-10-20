@@ -56,16 +56,16 @@ REACH_UP = (5.6, 1.6)   # world (height, forward) of the left wrist at the Reach
 # crawl rest pose (design metres, front -Y): belly low, the spine running forward and a little
 # up to high shoulders, the neck dropping forward, the head out in front and low
 HIPS_OFF = (0.0, 0.75, -1.1)
-PITCH = dict(hips=-66.0, Spine1=-8.0, Spine2=-4.0, Spine3=0.0, Neck=-50.0)
-HEAD_PITCH = 6.0        # the head's absolute pitch in the crawl (+ = face tipped up)
-HAND_L = (1.1, -1.6)                    # planted left wrist (x, y)
-FIST_R = (-1.05, -1.6)                   # the right fist's grip on the staff (x, y)
+PITCH = dict(hips=-70.0, Spine1=-10.0, Spine2=-5.0, Spine3=0.0, Neck=18.0)
+HEAD_PITCH = -8.0        # the head's absolute pitch in the crawl (+ = face tipped up)
+HAND_L = (1.03, -1.6)                    # planted left wrist (x, y)
+FIST_R = (-1.05, -1.85)                   # the right fist's grip on the staff (x, y)
 FIST_Z = 0.36                            # ... the staff's axis height there
 FOOT = {"L": (0.95, 0.85), "R": (-1.0, 0.9)}        # planted ankles (x, y)
-POLE_ARM = {"L": (0.1, 0.3, 1.0), "R": (-0.1, 0.3, 1.0)}     # elbows high (inside the width)
+POLE_ARM = {"L": (-0.25, 0.3, 1.0), "R": (0.0, 0.3, 1.0)}     # elbows high (inside the width)
 POLE_KNEE = {"L": (0.55, -0.5, 1.0), "R": (-0.55, -0.5, 1.0)}     # knees up (inside the width)
 SHRUG = 36.0            # deg: the shoulders hunched up (high shoulders; it also draws the arms in)
-SLIDE = 1.0             # the right hand holds the staff this far up the shaft from its modelled grip
+SLIDE = 0.5             # the right hand holds the staff this far up the shaft from its modelled grip
 DRAG = (-0.07, 1.0)     # the staff's tip trails this way (xy) from the fist
 
 
@@ -180,15 +180,19 @@ def base(sv, bob=0.0, roll=0.0, yaw=0.0, lift=0.0, look=(0.0, 0.0, 0.0), hips=(0
 
 
 def hem(c, drag=0.0, sway=0.0, swing=(0.0, 0.0)):
-    """The robe hangs from the low hips to the floor and drags behind (design m)."""
-    c["hem_tgt"] = {
-        "Hem.F1": (-0.15, 1.0, 0.4), "Hem.F2": (-0.15, 2.2, 0.32),       # the front panel drags back under
-        "Hem.B1": (-0.12 + sway * 0.3, 2.0 + 0.3 * drag, 0.85),
-        "Hem.B2": (-0.1 + sway, 3.05 + 0.6 * drag, 0.35),
-        # (the side panels' cloth sits in front of / outside their bones: aimed low, it would
-        # swing through the floor)
-        "Hem.L1": (0.85, 1.05 + swing[0] * 0.5, 0.95), "Hem.L2": (0.85, 1.6 + swing[0], 0.7),
-        "Hem.R1": (-0.5, 1.05 + swing[1] * 0.5, 0.95), "Hem.R2": (-0.4, 1.6 + swing[1], 0.7),
+    """The robe hangs from the low hips toward the floor wherever its bones' roots are (so the
+    cloth is not stretched), pulled in a little (width) and trailing back (design m):
+    per hem bone (pull in, trail back, tail height)."""
+    # (each tail's target is reached along the bone's fixed length, so a target closer than the
+    # bone overshoots: the lower bones aim well back, along the floor; the back panel stays
+    # above the front one's end, so the skirt's mouth stays open instead of crossing itself)
+    c["hem_drop"] = {
+        "Hem.F1": (0.0, 1.1, 0.6), "Hem.F2": (0.0, 1.0, 0.18),           # under the belly, back along the floor
+        # the back panel trails and lies down on the floor over the front one: the skirt's rear
+        # opening is closed (no view up inside it)
+        "Hem.B1": (0.0, 0.75 + 0.2 * drag, 0.75), "Hem.B2": (0.0, 1.0 + 0.4 * drag, 0.45),
+        "Hem.L1": (0.15, 0.6 + swing[0] * 0.5, 0.4), "Hem.L2": (0.0, 1.0 + swing[0], 0.18),
+        "Hem.R1": (0.2, 0.6 + swing[1] * 0.5, 0.4), "Hem.R2": (0.0, 1.0 + swing[1], 0.18),
     }
     return c
 
@@ -257,7 +261,7 @@ def crawl(sv, t):
 def crawl_fast(sv, t):
     ph = (t / FAST_T) % 1.0
     w = 2 * math.pi * ph
-    c = base(sv, bob=-0.12 + 0.09 * math.cos(2 * w - 0.6), roll=2.5 * math.sin(w), yaw=3 * math.sin(w + 0.4),
+    c = base(sv, bob=-0.12 + 0.09 * math.cos(2 * w - 0.6), roll=1.5 * math.sin(w), yaw=2 * math.sin(w + 0.4),
              look=(-4 + 3 * math.sin(2 * w), 0, 0), hips=(0, 0.1, 0))
     phases = {"foot.L": 0.0, "hand.R": 0.06, "foot.R": 0.5, "hand.L": 0.56}     # trot (diagonal pairs)
     feet, _ = _gait(sv, c, t, FAST_T, FAST_S, 0.55, phases, 0.38, 0.42)
@@ -272,7 +276,7 @@ def crawl_idle(sv, t):
     """6 s: lifts its head and looks left, sniffs low, looks right, pauses, back; weight
     shifts; the left claw lifts and taps."""
     ph = t / CIDLE_T
-    key = [(0.0, 0.0, 0.0), (0.12, 1.0, 10.0), (0.3, 1.0, -9.0), (0.42, 0.0, -4.0), (0.5, -1.0, 8.0),
+    key = [(0.0, 0.0, 0.0), (0.12, 1.0, 2.0), (0.3, 1.0, -9.0), (0.42, 0.0, -4.0), (0.5, -1.0, 2.0),
            (0.7, -1.0, -8.0), (0.82, 0.0, 3.0), (1.0, 0.0, 0.0)]
     for (t0, y0, p0), (t1, y1, p1) in zip(key, key[1:]):
         if t0 <= ph <= t1:
@@ -320,7 +324,7 @@ def swipe(sv, t):
     lunge = smooth(0.45, SWIPE_HIT, t) * (1 - smooth(1.0, SWIPE_T, t))
     up = smooth(0.1, 0.5, t) * (1 - smooth(1.15, SWIPE_T, t))
     duck = smooth(0.3, 0.6, t) * (1 - smooth(0.95, 1.4, t))      # the head drops and turns away
-    c = base(sv, lift=0.2 * up, hips=(0, 0.25 * wind - 0.4 * lunge, 0.05 * up),
+    c = base(sv, lift=0.08 * up, hips=(0, 0.25 * wind - 0.4 * lunge, 0.0),
              roll=-5 * wind + 4 * lunge, yaw=10 * wind - 12 * lunge,
              look=(-14 * duck, 0, -16 * duck))
     c = hem(c, drag=0.1 * up)
@@ -371,7 +375,8 @@ def reach_up(sv, t):
     tor = PITCH["hips"] + PITCH["Spine1"] + PITCH["Spine2"] + PITCH["Spine3"] + PITCH["Neck"]
     c["Head"] = euler_q((HEAD_PITCH - tor) * (1 - up) + 10 * up, 0, 0)
     c = hem(c)
-    c["hem_tgt"] = _blend_hem(c["hem_tgt"], up)
+    c["hem_tgt"] = dict(REST_HEM)                     # the robe falls back around the legs
+    c["hem_mix"] = 1 - up
     for s in "LR":
         c["foot_" + s] = place_foot(sv, s, (FOOT[s][0] * (1 - 0.15 * up), FOOT[s][1] - 0.35 * up))
         c["kpole_abs_" + s] = (POLE_KNEE[s][0], -1.0, 0.1 * (1 - up))
@@ -447,12 +452,14 @@ def smash(sv, t, idle_c):
     c["root_scale"] = sc
     # the robe: the standing drape -> pooling as the hips come down -> the crawl's drag
     pool = smooth(1.25, 2.1, t)
-    tgt = _blend_hem(cr["hem_tgt"], 1 - smooth(1.6, 2.8, t))
+    tgt = dict(REST_HEM)
     for b in ("Hem.L2", "Hem.R2", "Hem.F2", "Hem.B2"):       # the hem spreads a little on the floor
         x, y, z = tgt[b]
-        spread = 0.25 * pool * (1 - smooth(2.2, 2.9, t))
+        spread = 0.25 * pool
         tgt[b] = (x * (1 + spread), y * (1 + spread), z)
     c["hem_tgt"] = tgt
+    c["hem_drop"] = cr["hem_drop"]
+    c["hem_mix"] = smooth(1.6, 2.8, t)
     # legs: from the rest stance to the crawl's (the feet step back and out as it crouches)
     for s in "LR":
         a = _np(sv.R["Foot." + s].translation)
@@ -535,7 +542,7 @@ def actions(sv):
 # measured off the deformed claws (grimble_qa.motion_checks re-measures them on every build and
 # fails if they drift): Smash's claw tips cross the glass plane; Swipe's cross the front centre
 # line (reach = distance in front of the origin); ReachUp's come over the top
-MEASURED = dict(smashHit=0.93, swipeHit=0.70, swipeReach=3.45, reachHit=1.55, reachUpHeight=6.4, reachUpReach=2.2)
+MEASURED = dict(smashHit=0.93, swipeHit=0.70, swipeReach=3.6, reachHit=1.55, reachUpHeight=6.4, reachUpReach=2.2)
 
 
 def metadata(sv):

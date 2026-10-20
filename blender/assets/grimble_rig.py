@@ -18,6 +18,7 @@ import bmesh
 import bpy
 import numpy as np
 from mathutils import Matrix, Quaternion, Vector
+from mathutils.kdtree import KDTree
 
 FPS = 30
 FINGERS = ("Index", "Middle", "Ring", "Pinky", "Thumb")
@@ -97,6 +98,24 @@ def euler_q(x=0.0, y=0.0, z=0.0):
 
 # ---------------------------------------------------------------- skeleton
 
+# the arms (model frame): the shoulder bone's root and tip, the elbows' pole, the bone lengths
+ARMS = dict(L=dict(root=(0.2, -0.1, 4.45), sh=(0.95, 0.05, 4.6), pole=(1.0, 0.3, -0.6)),
+            R=dict(root=(-0.1, -0.1, 4.45), sh=(-0.9, 0.0, 4.65), pole=(-0.8, 0.5, -1.0)))
+ARM_LEN = (1.15, 1.15)
+# the neck chain's centre line (model frame), for the gorget tube
+NECK_CHAIN = [(-0.1, 0.05, 3.85), (-0.05, -0.05, 4.15), (0.1, -0.1, 4.55), (0.25, -0.12, 4.9), (0.35, -0.25, 5.3)]
+ROBE_ARM = 0.1          # how much the robe (not the sleeves) follows the arm bones
+ROBE_LEG = 0.1          # ... and the thigh / shin bones
+ROBE_SHOULDER = 0.3     # ... and the shoulder bones
+
+
+def arm_chain(side, wrist):
+    """Shoulder, elbow, wrist of an arm at rest (model frame), as the skeleton builds it."""
+    a = ARMS[side]
+    e, _ = ik(a["sh"], wrist, ARM_LEN[0], ARM_LEN[1], a["pole"])
+    return np.asarray(a["sh"], float), e, np.asarray(wrist, float)
+
+
 def skeleton(lm):
     """Bone list [(name, parent, head, tail, up)] in the model's final frame."""
     B = []
@@ -112,14 +131,16 @@ def skeleton(lm):
     add("Neck", "Spine3", (0.1, -0.1, 4.55), (0.25, -0.12, 4.9))
     hc = (lm["eye_L"] + lm["eye_R"]) / 2 + np.array([0, 0.6, 0])
     add("Head", "Neck", (0.25, -0.12, 4.9), (hc[0], hc[1], 6.7))
-    arms = dict(L=dict(root=(0.2, -0.1, 4.45), sh=(0.95, 0.05, 4.6), pole=(1.0, 0.3, -0.6)),
-                R=dict(root=(-0.1, -0.1, 4.45), sh=(-0.9, 0.0, 4.65), pole=(-0.8, 0.5, -1.0)))
+    arms = {k: dict(v) for k, v in ARMS.items()}
     for s, a in arms.items():
         w = lm["wrist_" + s]
-        e, _ = ik(a["sh"], w, 1.15, 1.15, a["pole"])
+        e, _ = ik(a["sh"], w, ARM_LEN[0], ARM_LEN[1], a["pole"])
         add("Shoulder." + s, "Spine3", a["root"], a["sh"])
         add("UpperArm." + s, "Shoulder." + s, a["sh"], e, a["pole"])
         add("Forearm." + s, "UpperArm." + s, e, w, a["pole"])
+        # the elbow helper: at the joint, turned half way between the upper arm and the forearm
+        # (the sleeve's elbow rides it: the joint keeps its volume)
+        add("Elbow." + s, "UpperArm." + s, e, e + (np.asarray(w) - e) * 0.15, a["pole"])
         add("Hand." + s, "Forearm." + s, w, lm["pad_" + s], (0, 0, 1))
         for f in lm["fingers_" + s]:                 # 3 bones per finger, along its centre line
             for j in range(3):
@@ -237,6 +258,34 @@ def skin(arm, objs, bones, hand_info, lm):
         fade = 1 - np.clip((d - 0.7 * cut) / (0.3 * cut), 0, 1) if cut < 9 else 1.0
         W[:, bi[b]] = g / (d + 0.1) ** 4 * fade
     W /= W.sum(1, keepdims=True) + 1e-12
+    # the sleeves carry their own weights (grimble._sleeve_weights: "_w_<bone>" groups, by
+    # their position along the arm); read them and drop the tags
+    cl = objs["Cloak"]
+    tags = {g.index: bi[g.name[3:]] for g in cl.vertex_groups if g.name.startswith("_w_")}
+    TW = np.zeros((len(cloak_v), nb))
+    if tags:
+        for v in cl.data.vertices:
+            for gr in v.groups:
+                if gr.group in tags:
+                    TW[v.index, tags[gr.group]] = gr.weight
+        for g in [g for g in cl.vertex_groups if g.name.startswith("_w_")]:
+            cl.vertex_groups.remove(g)
+    on_sleeve = TW.sum(1) > 0
+    # the robe itself barely follows the arms (they come out of it in their sleeves): an arm
+    # that reaches out used to drag whole panels of robe along as flat sheets
+    arm_cols = [bi[f"{k}.{s}"] for k in ("UpperArm", "Forearm") for s in "LR"]
+    robe_u = np.zeros(n, bool)
+    robe_u[ic[~on_sleeve]] = True
+    sub = W[np.ix_(robe_u, arm_cols)] * ROBE_ARM
+    W[np.ix_(robe_u, arm_cols)] = sub
+    # ... nor the legs (there are no leg meshes inside: the robe hangs from the hips and the
+    # hem bones; following the folded thighs in the crouch turned it inside out)
+    leg_cols = [bi[f"{k}.{s}"] for k in ("Thigh", "Shin") for s in "LR"]
+    W[np.ix_(robe_u, leg_cols)] *= ROBE_LEG
+    # ... and the shoulders only a little (the crouch hunches them up: the chest's cloth between
+    # them crumpled)
+    W[np.ix_(robe_u, [bi["Shoulder.L"], bi["Shoulder.R"]])] *= ROBE_SHOULDER
+    W[robe_u] /= W[robe_u].sum(1, keepdims=True) + 1e-12
     # the hood and the face are rigid with the head (except right by the sleeves)
     d_arm = np.min([D[f"{k}.{s}"] for k in ("UpperArm", "Forearm") for s in "LR"], axis=0)
     armness = 1 - np.clip((d_arm - 0.45) / 0.3, 0, 1)
@@ -307,7 +356,39 @@ def skin(arm, objs, bones, hand_info, lm):
         ob.parent = arm
 
     assign(objs["Body"], W[ib])
-    assign(objs["Cloak"], W[ic])
+    Wc = W[ic].copy()
+    if on_sleeve.any():
+        Ts = TW[on_sleeve]
+        order = np.argsort(-Ts, axis=1)
+        keep = np.zeros_like(Ts, bool)
+        np.put_along_axis(keep, order[:, :4], True, axis=1)
+        Ts = np.where(keep, Ts, 0)
+        Wc[on_sleeve] = Ts / (Ts.sum(1, keepdims=True) + 1e-12)
+    # the lining rides exactly with the outside: each lining vertex copies the weights of the
+    # nearest outside vertex. (Weighted on their own, the two layers 3-9 cm apart drifted by
+    # more than that in the crouch and crossed: sawtooth patches of lining and back faces.)
+    me_ = cl.data
+    mi_ = np.zeros(len(me_.polygons), np.int64)
+    me_.polygons.foreach_get("material_index", mi_)
+    outer = np.zeros(len(cloak_v), bool)
+    lining = np.zeros(len(cloak_v), bool)
+    for poly in me_.polygons:
+        if mi_[poly.index] == 0:
+            outer[list(poly.vertices)] = True
+        elif mi_[poly.index] == 1:
+            lining[list(poly.vertices)] = True
+    lining &= ~outer
+    lining &= ~on_sleeve
+    kd = KDTree(int(outer.sum()))
+    oi = np.nonzero(outer)[0]
+    for k, i in enumerate(oi):
+        kd.insert(cloak_v[i], k)
+    kd.balance()
+    for i in np.nonzero(lining)[0]:
+        co, k, dist = kd.find(cloak_v[i])
+        if dist < 0.15:
+            Wc[i] = Wc[oi[k]]
+    assign(objs["Cloak"], Wc)
 
     def rigid(ob, groups):
         rows = np.zeros((len(ob.data.vertices), nb))
@@ -327,7 +408,9 @@ def skin(arm, objs, bones, hand_info, lm):
             v0, v1 = f["tube"]
             k = np.arange(v0, v1)
             ring = np.minimum((k - v0) // f["sides"], len(f["ts"]) - 1)
-            t = np.where(k - v0 >= len(f["ts"]) * f["sides"], 1.0, f["ts"][ring])
+            # after the rings: the root cap's centre (at the root), then the tip cap's
+            nr = len(f["ts"]) * f["sides"]
+            t = np.where(k - v0 > nr, 1.0, np.where(k - v0 == nr, f["ts"][0], f["ts"][ring]))
             wb = np.zeros((len(k), 4))
             J = f["joints"]
             wdt = 0.07
@@ -451,6 +534,13 @@ class Solver:
             HMr = HM.copy()
             HMr.translation = _v(Wr)
             PM["Hand." + s] = HMr
+        for s in "LR":
+            if "Elbow." + s in self.R:
+                qU = (PM["UpperArm." + s] @ self.R["UpperArm." + s].inverted()).to_quaternion()
+                qF = (PM["Forearm." + s] @ self.R["Forearm." + s].inverted()).to_quaternion()
+                M = qU.slerp(qF, 0.5).to_matrix().to_4x4() @ self.R["Elbow." + s]
+                M.translation = PM["Forearm." + s].translation
+                PM["Elbow." + s] = M
         PM["Staff"] = PM["Hand.R"] @ self.rel["Staff"]
         if c.get("staff_held") is not None:      # held, but not where the grip was modelled
             PM["Staff"] = c["staff_held"].copy()   # (the hand slid along the shaft)
@@ -482,6 +572,13 @@ class Solver:
                 d = c.get(b, (0, 0, 0))
                 tail = M @ Vector((0, self.len[b], 0))
                 tgt = c.get("hem_tgt", {}).get(b)
+                drop = c.get("hem_drop", {}).get(b)
+                if drop is not None:              # crawl family: hangs from wherever its root is
+                    pin, back, z = drop           # (pulled in toward the middle, trailing back)
+                    h_ = M.translation
+                    t2 = Vector((h_.x * (1 - pin), h_.y + back, z))
+                    k_ = c.get("hem_mix", 1.0)    # blended with hem_tgt (Smash / ReachUp)
+                    tgt = t2 if tgt is None or k_ >= 1 else _v(tgt).lerp(t2, k_)
                 if tgt is not None:               # crawl family: the tail aims at a point
                     q = (tail - M.translation).rotation_difference(_v(tgt) - M.translation)
                 else:
