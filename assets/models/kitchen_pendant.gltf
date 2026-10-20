@@ -33,6 +33,17 @@
 			"name":"KitchenPendant_Cord_Piping"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":3,
 			"name":"KitchenPendant_Glow"
 		},

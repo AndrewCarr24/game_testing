@@ -34,6 +34,12 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -68,6 +74,7 @@ def build(**overrides):
                                     (0.0, zt + 0.02)], bronze, loc=(x, y, 0), segs=8, uv_tile=0.3)
     b.lathe("Canopy", [(0.0, top - 0.035), (0.075, top - 0.035), (0.09, top - 0.02), (0.09, top + 0.002),
                        (0.0, top + 0.002)], bronze, segs=24, sharp=30, uv_tile=0.3)
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

@@ -410,6 +410,10 @@ class Solver:
         for b in ("Spine1", "Spine2", "Spine3", "Neck", "Head"):
             M = self.default(PM, b)
             PM[b] = rot_about(M, M.translation, c.get(b, Quaternion()))
+        if c.get("head_abs") is not None:     # crawl family: the head held at an absolute orientation
+            M = (c["head_abs"].to_matrix().to_4x4() @ self.R["Head"])
+            M.translation = PM["Head"].translation
+            PM["Head"] = M
         torso = (PM["Spine3"] @ self.R["Spine3"].inverted()).to_quaternion()
         for s in "LR":
             M = self.default(PM, "Shoulder." + s)
@@ -417,6 +421,8 @@ class Solver:
             HM = c["hand_" + s]
             S = _np(self.default(PM, "UpperArm." + s).translation)
             pole = _np(torso @ _v(self.arms[s]["pole"]) + _v(c.get("pole_" + s, (0, 0, 0))))
+            if "pole_abs_" + s in c:              # crawl family: the elbows' direction, absolute
+                pole = np.asarray(c["pole_abs_" + s], float)
             W = _np(HM.translation)
             ax = c.get("slide_" + s)
             if ax is not None:          # a hand on the staff may slide along it to stay in reach
@@ -442,6 +448,8 @@ class Solver:
             HMr.translation = _v(Wr)
             PM["Hand." + s] = HMr
         PM["Staff"] = PM["Hand.R"] @ self.rel["Staff"]
+        if c.get("staff_world") is not None:     # dropped: wherever the action puts it
+            PM["Staff"] = c["staff_world"].copy()
         for s in "LR":
             self._fingers(PM, s, c.get("open_" + s, 0.0), c.get("flutter_" + s, (0, 0, 0, 0, 0)))
         yaw = c.get("hips_rot", Quaternion())
@@ -450,6 +458,8 @@ class Solver:
             FM = c["foot_" + s]
             A = _np(FM.translation)
             pole = _np(yaw @ Vector((0.15 if s == "L" else -0.15, -1, 0)))
+            if "kpole_abs_" + s in c:             # crawl family: the knees' direction, absolute
+                pole = np.asarray(c["kpole_abs_" + s], float)
             K, Ar = ik(hip, A, self.len["Thigh." + s], self.len["Shin." + s], pole)
             g = float(np.linalg.norm(Ar - A))
             self.gaps["leg_" + s] = max(self.gaps.get("leg_" + s, 0), g)
@@ -465,8 +475,18 @@ class Solver:
                 M = self.default(PM, b)
                 d = c.get(b, (0, 0, 0))
                 tail = M @ Vector((0, self.len[b], 0))
-                q = (tail - M.translation).rotation_difference(tail + _v(d) - M.translation)
+                tgt = c.get("hem_tgt", {}).get(b)
+                if tgt is not None:               # crawl family: the tail aims at a point
+                    q = (tail - M.translation).rotation_difference(_v(tgt) - M.translation)
+                else:
+                    q = (tail - M.translation).rotation_difference(tail + _v(d) - M.translation)
                 PM[b] = rot_about(M, M.translation, q)
+        sc = c.get("root_scale")
+        if sc is not None and abs(sc - 1.0) > 1e-6:    # the whole creature scaled about its origin
+            S = Matrix.Diagonal((sc, sc, sc, 1.0))
+            for b in PM:
+                if not (b == "Staff" and c.get("staff_world") is not None):
+                    PM[b] = S @ PM[b]
         return PM
 
     def _fingers(self, PM, s, o, flutter):
@@ -702,7 +722,8 @@ def idle(sv, t):
 ACTIONS = (("Walk", walk, WALK_T), ("Knock", knock, KNOCK_T), ("Wave", wave, WAVE_T), ("Idle", idle, IDLE_T))
 
 
-def bake_actions(sv, scene):
+def bake_actions(sv, scene, extra=()):
+    """ACTIONS plus `extra` ((name, fn, T, opts): opts.oneshot -> no wrap)."""
     arm = sv.arm
     scene.render.fps = FPS
     arm.animation_data_create()
@@ -710,7 +731,10 @@ def bake_actions(sv, scene):
     old = prefs.keyframe_new_interpolation_type
     prefs.keyframe_new_interpolation_type = "LINEAR"
     made = []
-    for name, fn, T in ACTIONS:
+    for entry in tuple(ACTIONS) + tuple(extra):
+        name, fn, T = entry[:3]
+        opts = entry[3] if len(entry) > 3 else {}
+        oneshot = name == "Knock" or opts.get("oneshot", False)
         act = bpy.data.actions.get(name)
         if act is not None:
             bpy.data.actions.remove(act)
@@ -721,11 +745,11 @@ def bake_actions(sv, scene):
         sv.gap = 0.0
         sv.gaps = {}
         for f in range(nf + 1):
-            t = (f % nf) / FPS if name != "Knock" else f / FPS
+            t = f / FPS if oneshot else (f % nf) / FPS
             PM = sv.solve(fn(sv, t))
             for bn, B in sv.basis(PM).items():
                 pb = arm.pose.bones[bn]
-                loc, q, _ = B.decompose()
+                loc, q, scl = B.decompose()
                 if bn in prev and prev[bn].dot(q) < 0:
                     q.negate()
                 prev[bn] = q
@@ -733,6 +757,10 @@ def bake_actions(sv, scene):
                 pb.rotation_quaternion = q
                 pb.keyframe_insert("location", frame=f, group=bn)
                 pb.keyframe_insert("rotation_quaternion", frame=f, group=bn)
+                # scale keyed in every action (1 in all but the crawl family's Root / dropped
+                # staff), so no clip inherits a stale scale from another one
+                pb.scale = scl
+                pb.keyframe_insert("scale", frame=f, group=bn)
         log(f"action {name}: {nf} frames ({T:.2f} s), max IK gap {sv.gap * 100:.1f} cm "
             + " ".join(f"{k} {v * 100:.0f}" for k, v in sv.gaps.items() if v > 0.005))
         arm.animation_data.action = None
@@ -746,6 +774,7 @@ def bake_actions(sv, scene):
     for pb in arm.pose.bones:
         pb.location = (0, 0, 0)
         pb.rotation_quaternion = (1, 0, 0, 0)
+        pb.scale = (1, 1, 1)
     return made
 
 

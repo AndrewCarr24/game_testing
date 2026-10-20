@@ -150,3 +150,17 @@ PLACEMENTS = list(PLACEMENTS) + [
     ("decor_c_cushion_small", *_rel(_NOOK, (0.03, -0.07), 0.445, rot=4)),
     ("decor_c_plant_snake_tall", (-8.4, 4.15), 20),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (N wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_library (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (5.53, 4.6, 1.1), 0, {'signal': 'lights_library', 'state': True}),
+    ('ix_book', (1.95, 0.18, 0.76), 10),
+    ('ix_book_b', (0.95, -0.22, 0.76), -15),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "library")

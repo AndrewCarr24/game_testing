@@ -111,3 +111,19 @@ PLACEMENTS += [
     ("decor_b_plant_floor_c", (-5.5, -9.25), 0),
     ("decor_b_plant_floor_c", (5.5, -9.25), 140),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the mudroom door (N wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_garage (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-0.72, 9.85, 1.1), 0, {'signal': 'lights_garage', 'state': True}),
+    ('ix_switch_garage', (-0.82, 9.85, 1.1), 0),
+    ('ix_breaker_panel', (-6.1, -0.95, 1.45), 90),
+    ('ix_fuse', (-2.25, 6.36, 0.95), 30),
+    ('ix_battery', (-2.55, 6.34, 0.95), -15),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "garage")

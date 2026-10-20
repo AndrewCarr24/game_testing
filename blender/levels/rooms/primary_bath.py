@@ -129,3 +129,15 @@ PLACEMENTS += [
     ("decor_d_tub_towel", (3.33, 1.70, 0.58), -90),              # towel over the rim near mid-length, toward the door
     ("decor_d_basket", (0.85, -4.25, 0.0), 0),                   # rolled towels by the towel warmer
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (W wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_primary_bath (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-4.85, 1.03, 1.1), 90, {'signal': 'lights_primary_bath', 'state': True}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "primary_bath")

@@ -57,6 +57,12 @@ def frustum(w0, d0, w1, d1, z0, z1, y_back, off=0.0):
     return bm
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -221,6 +227,7 @@ def build(**overrides):
     # --- end panel on the visible (right) end
     xr = xs["tall_r"][1]
     b.box("EndPanel", (0.03, D, p["top_z"]), (xr + 0.015, 0.0, p["top_z"] / 2), oak, bevel=0.002, seg=1, shift=(0.5, 0.1))
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

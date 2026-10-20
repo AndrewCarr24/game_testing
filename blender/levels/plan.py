@@ -75,7 +75,7 @@ CUTS = [
     dict(kind="opening", axis="y", line=-13.5, span=(1.5, 5.5), z=(0, 3.6)),
     dict(kind="opening", axis="x", line=-10.5, span=(-20.3, -19.2), z=(0, 2.5), door="door_plain", swing="den"),
     dict(kind="opening", axis="x", line=10.5, span=(-23, -17), z=(0, 3.6)),                  # -> dining
-    dict(kind="window", axis="y", line=-26, span=(-8, 8), z=(0, TOP)),                         # west glass wall
+    dict(kind="window", axis="y", line=-26, span=(-8, 8), z=(0, TOP), breakable=(4, 7)),       # west glass wall (the Grimble smashes bays 4-7)
     # dining, kitchen, scullery, wine
     dict(kind="opening", axis="y", line=-10, span=(12.75, 17.75), z=(0, 3.6)),               # dining <-> kitchen
     dict(kind="opening", axis="x", line=10.5, span=(-13, -10.5), z=(0, 3.0)),                # dining -> gallery

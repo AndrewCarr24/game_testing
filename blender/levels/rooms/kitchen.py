@@ -31,7 +31,7 @@ PLACEMENTS = [
     ("kitchen_range_wall", (6.5, WALL_Y), 180),
 
     # --- island: working side (drawers, sink) faces the south wall, stools on the north side
-    ("kitchen_island", (0.5, -1.14), 0),
+    ("kitchen_island", (0.5, -1.14), 0, {"signal": {"tap": "tap_kitchen"}}),
     ("kitchen_stool", (-0.6, -0.30), 0),
     ("kitchen_stool", (0.1, -0.30), 0),
     ("kitchen_stool", (0.8, -0.30), 0),
@@ -117,3 +117,20 @@ PLACEMENTS += [
     ("decor_b_plant_floor", (8.2, 4.0), 30),
     ("decor_b_plant_floor", (-8.2, 4.05), 200),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch north of the dining opening (W wall),
+# interactive props, and this room's light fixtures wired to lights_kitchen (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-8.85, 2.67, 1.1), 90, {'signal': 'lights_kitchen', 'state': True}),
+    ('ix_switch_blinds', (-8.85, 2.77, 1.1), 90, {'signal': 'blinds_kitchen'}),
+    ('ix_blind_kitchen', (0.0, 4.75), 0, {'signal': 'blinds_kitchen'}),
+    ('ix_tablet_dock', (-1.4, -1.35, 0.93), 0),
+    ('ix_wine_bottle', (2.68, -1.62, 0.93), 0),
+    ('ix_battery', (-2.5, -4.05, 0.92), 75),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "kitchen")

@@ -37,6 +37,17 @@
 			"name":"LightUHalo_Canopy"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":4,
 			"name":"LightUHalo_Diffuser_NoCollide"
 		},
@@ -72,6 +83,17 @@
 			"name":"LightUHalo_Ring_NoCollide"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":9,
 			"name":"LightUHalo_Uplight_NoCollide"
 		},

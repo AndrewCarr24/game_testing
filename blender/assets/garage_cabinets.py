@@ -208,6 +208,12 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -323,6 +329,7 @@ def build(**overrides):
     # LED line under the wall units
     b.lo_hi("Under_LED", (x0 + tw + 0.03, wy0 + 0.03, wz0 - 0.008), (x0 + tw + M * mw - 0.03, wy0 + 0.05, wz0), glow, bevel=0, tile=1.0)
 
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

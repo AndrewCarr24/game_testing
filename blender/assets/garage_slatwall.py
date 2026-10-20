@@ -20,6 +20,12 @@ NAME = "GarageSlatwall"
 P = dict(name=NAME, width=6.4, depth=0.09, z0=0.12, z1=3.5, slat_w=0.035, pitch=0.07, slat_depth=0.05)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = gk.Builder(p["name"])
@@ -38,6 +44,7 @@ def build(**overrides):
     b.lo_hi("LED_Top", (-W / 2 + 0.05, yb - 0.075, z1 - 0.1), (W / 2 - 0.05, yb - 0.02, z1 - 0.09), glow, bevel=0, solid=False)
     b.lo_hi("LED_Bottom", (-W / 2 + 0.05, yb - 0.075, z0 + 0.01), (W / 2 - 0.05, yb - 0.02, z0 + 0.02), glow, bevel=0, solid=False)
     b.lo_hi("Cap", (-W / 2, yb - D + 0.02, z1), (W / 2, yb, z1 + 0.04), grd, bevel=0, solid=True)
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

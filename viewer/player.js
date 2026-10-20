@@ -24,6 +24,9 @@ const DEFAULTS = {
   coyoteTime: 0.1,       // s: a press this long after running off an edge still jumps
 };
 
+const NO_INPUT = {};
+const smooth = (t) => t * t * (3 - 2 * t);
+
 export const KEYS = {
   forward: ['KeyW', 'ArrowUp'], back: ['KeyS', 'ArrowDown'],
   left: ['KeyA', 'ArrowLeft'], right: ['KeyD', 'ArrowRight'],
@@ -67,8 +70,56 @@ export class Player {
       b.max.z > c.min.z + e && b.min.z < c.max.z - e);
   }
 
+  // Knocked down (the Grimble's swipe): shoved away from `from`, the view drops to the floor and
+  // rolls ~70 degrees, input is ignored for `duration` s, then the player gets up. `from` is the
+  // world point the blow comes from (the attacker: a Vector3 or [x, y, z]), or {dir} = the
+  // direction it comes from (pointing from the player toward the attacker). Returns false if
+  // already down.
+  knockDown(from, { duration = 2.5, shove = 4.5, roll = 70 } = {}) {
+    if (this.down) return false;
+    let dx, dz;
+    if (from?.dir) { dx = -from.dir.x; dz = -from.dir.z; }
+    else if (from) {
+      const p = Array.isArray(from) ? { x: from[0], z: from[2] } : from;
+      dx = this.pos.x - p.x; dz = this.pos.z - p.z;
+    }
+    const fwd = new THREE.Vector3();
+    this.camera.getWorldDirection(fwd);
+    let len = Math.hypot(dx || 0, dz || 0);
+    if (!(len > 1e-4)) { dx = -fwd.x; dz = -fwd.z; len = Math.hypot(dx, dz) || 1; }   // no direction: backwards
+    dx /= len; dz /= len;
+    this.vel.set(dx * shove, 2.5, dz * shove);
+    this.grounded = false;
+    this._jumpBuffer = 0;
+    // fall toward the side the shove goes (seen from the player's view)
+    const side = Math.sign(dx * -fwd.z + dz * fwd.x) || 1;
+    this.down = { t: 0, duration, look: this.camera.quaternion.clone(), roll: THREE.MathUtils.degToRad(roll) * -side, eye0: this.eye };
+    return true;
+  }
+
+  get isDown() { return !!this.down; }
+  get knocked() { return !!this.down; }
+
+  // the knocked-down view: the eye near the floor, the view rolled over; restored at the end
+  updateDown(dt) {
+    const d = this.down;
+    d.t += dt;
+    const fall = 0.45, rise = 0.6;
+    const k = d.t < fall ? smooth(d.t / fall) : d.t > d.duration - rise ? 1 - smooth(Math.min(1, (d.t - d.duration + rise) / rise)) : 1;
+    this.eye = d.eye0 + (0.3 - d.eye0) * k;
+    const q = this.camera.quaternion.copy(d.look);
+    q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), 0.3 * k));   // a little up, toward it
+    q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), d.roll * k));
+    if (d.t >= d.duration) {
+      this.camera.quaternion.copy(d.look);
+      this.eye = d.eye0;
+      this.down = null;
+    }
+  }
+
   update(dt, input) {
     const o = this.o;
+    if (this.down) input = NO_INPUT;        // lying on the floor: no moving, jumping or crouching
     // crouch: shrink now, stand up only when there's headroom
     const wantCrouch = input.crouch;
     if (wantCrouch && !this.crouching) this.crouching = true;
@@ -88,7 +139,8 @@ export class Player {
     if (wish.lengthSq() > 0) wish.normalize();
     const speed = this.crouching ? o.crouchSpeed : input.run ? o.run : o.walk;
     wish.multiplyScalar(speed);
-    const accel = (this.grounded ? 14 : 14 * o.airControl) * dt;
+    // (knocked down: the shove slides out instead of stopping dead)
+    const accel = (this.down ? (this.grounded ? 3 : 0) : this.grounded ? 14 : 14 * o.airControl) * dt;
     this.vel.x += (wish.x - this.vel.x) * Math.min(1, accel);
     this.vel.z += (wish.z - this.vel.z) * Math.min(1, accel);
 
@@ -126,6 +178,7 @@ export class Player {
     } else {
       this.grounded = false;
     }
+    if (this.down) this.updateDown(dt);
     this.syncCamera();
   }
 

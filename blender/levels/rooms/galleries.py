@@ -117,3 +117,12 @@ for _room in _RUNS:
     _p, _l = _gallery_lighting(_room)
     PLACEMENTS.setdefault(_room, []).extend(_p)
     LIGHTS[_room] = _l
+
+
+# --- interactivity (prompts/interactivity.md): no doors, so no switch: the ring's fixtures share
+# lights_galleries, on at the start (the tablet can switch it)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = {_r: ix_common.wire(_v, "galleries", state=True) for _r, _v in PLACEMENTS.items()}

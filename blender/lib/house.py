@@ -36,6 +36,7 @@ class House:
         self.strips, self.points, self.spots, self.areas = [], [], [], []
         self.lights = []                  # engine fallback lights (when there's no bake)
         self.ramps = []                   # invisible slopes over stairs (player.js walks them smoothly)
+        self.breakables = []              # glass the engine can shatter (glazing(breakable=...))
         self.doors = []                   # door placements generated from cuts
         self.glow = materials.emissive("M_LightStrip", (1.0, 0.92, 0.82), 4.0)
         self.frame = materials.black_metal()
@@ -231,11 +232,27 @@ class House:
         self.wall_box(None, f"{n}_Sill", c["axis"], L, a0, a1, z0, z0 + 0.05, md, self.frame, collide=False)
         self.wall_box(None, f"{n}_Head", c["axis"], L, a0, a1, z1 - 0.05, z1, md, self.frame, collide=False)
         count = max(1, int(round((a1 - a0) / pitch)))
+        at = lambda i: a0 + i * (a1 - a0) / count
+        # breakable=(i, j): bays i..j are their own mesh (glass + the mullions inside them), not
+        # merged, listed in level["breakables"]: the engine shatters them (the Grimble's way in)
+        bi, bj = c.get("breakable", (None, None))
+        brk = f"{self.name}_Breakable_{len(self.breakables)}" if bi is not None else None
         for i in range(count + 1):
-            m = a0 + i * (a1 - a0) / count
-            self.wall_box(None, f"{n}_Mullion_{i}", c["axis"], L, max(a0, m - mw / 2), min(a1, m + mw / 2),
-                          z0 + 0.05, z1 - 0.05, md, self.frame, collide=False)
-        self.wall_box(None, f"{n}_Glass", c["axis"], L, a0, a1, z0 + 0.05, z1 - 0.05, 0.012, self.glass, collide=False)
+            m = at(i)
+            ob = self.wall_box(None, f"{n}_Mullion_{i}", c["axis"], L, max(a0, m - mw / 2), min(a1, m + mw / 2),
+                               z0 + 0.05, z1 - 0.05, md, self.frame, collide=False)
+            if brk and bi < i < bj:
+                ob["breakable"] = brk
+        spans = [(a0, a1, None)] if not brk else [(a0, at(bi), None), (at(bi), at(bj), brk), (at(bj), a1, None)]
+        for s0, s1, tag in spans:
+            ob = self.wall_box(None, f"{n}_Glass{'_B' if tag else ''}_{int(s0 * 10)}", c["axis"], L, s0, s1,
+                               z0 + 0.05, z1 - 0.05, 0.012, self.glass, collide=False)
+            if tag:
+                ob["breakable"] = tag
+        if brk:
+            lo_b, hi_b = ((at(bi), L - md / 2, z0), (at(bj), L + md / 2, z1)) if c["axis"] == "x" else \
+                         ((L - md / 2, at(bi), z0), (L + md / 2, at(bj), z1))
+            self.breakables.append({"name": brk, "min": common.to_gltf(lo_b), "max": common.to_gltf(hi_b)})
         lo, hi = ((a0, L - md / 2, z0), (a1, L + md / 2, z1)) if c["axis"] == "x" else \
                  ((L - md / 2, a0, z0), (L + md / 2, a1, z1))
         self.colliders.append(common.aabb_gltf(lo, hi))
@@ -367,6 +384,10 @@ class House:
             if ob.type != "MESH" or not ob.data.materials:
                 continue
             # rugs (lm_borrow: lit by the floor's lightmap, hidden from the bake) merge apart
+            if ob.get("breakable"):
+                key = (ob["breakable"], ob.data.materials[0].name, False)      # its own mesh, by name
+                groups.setdefault(key, []).append(ob)
+                continue
             key = (ob.get("room", "_"), ob.data.materials[0].name, bool(ob.get("lm_borrow")))
             groups.setdefault(key, []).append(ob)
         merged = {}
@@ -376,7 +397,8 @@ class House:
                                                selected_objects=obs, object=obs[0]):
                     bpy.ops.object.join()
             ob = obs[0]
-            ob.name = f"{self.name}_{room}_{mat}" + ("_Rug" if rug else "")
+            ob.name = (f"{room}_{mat}" if room.startswith(f"{self.name}_Breakable") else
+                       f"{self.name}_{room}_{mat}" + ("_Rug" if rug else ""))
             ob.data.name = ob.name
             merged[(room, mat, rug)] = ob
         self.baked = {}

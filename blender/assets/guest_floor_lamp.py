@@ -42,6 +42,12 @@ def circle(r, z, seg=40):
     return [(r * math.cos(2 * math.pi * k / seg), r * math.sin(2 * math.pi * k / seg), z) for k in range(seg)]
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -95,6 +101,7 @@ def build(**overrides):
         if ob.type == "MESH" and not ob.data.uv_layers:
             common.box_uv(ob, 0.5)
     parts = guest_mats.consolidate(root, max_dim=0.2)
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 

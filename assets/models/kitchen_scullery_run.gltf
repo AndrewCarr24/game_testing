@@ -513,6 +513,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":61,
 			"name":"KitchenScullery_ShelfLED0",
 			"translation":[
@@ -522,6 +533,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":62,
 			"name":"KitchenScullery_ShelfLED1",
 			"translation":[
@@ -531,6 +553,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":63,
 			"name":"KitchenScullery_ShelfLED2",
 			"translation":[

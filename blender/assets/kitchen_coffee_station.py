@@ -61,6 +61,12 @@ def cups(b, name, x0, y, z, count, mat, gap=0.1, r=0.04, h=0.07, handles=False):
     return ob
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -156,6 +162,7 @@ def build(**overrides):
     # --- end panels
     for k, sx in enumerate((-1, 1)):
         b.box(f"EndPanel{k}", (0.025, D, top), (sx * (Lx / 2 + 0.0125), 0.0, top / 2), oak, bevel=0.002, seg=1, shift=(0.4 * k, 0.1))
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

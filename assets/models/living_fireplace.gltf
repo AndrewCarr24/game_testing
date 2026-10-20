@@ -78,6 +78,19 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"fire",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					},
+					"power":false,
+					"duration":1.5
+				}
+			},
 			"mesh":6,
 			"name":"LivingFireplace_EmberBed",
 			"translation":[
@@ -99,7 +112,13 @@
 			"extras":{
 				"fx":"fire",
 				"seed":1,
-				"aspect":3.29
+				"aspect":3.29,
+				"react":{
+					"signal":"fire",
+					"on":"show",
+					"off":"hide",
+					"power":false
+				}
 			},
 			"mesh":8,
 			"name":"LivingFireplace_FireBack_NoCollide"
@@ -117,7 +136,13 @@
 			"extras":{
 				"fx":"fire",
 				"seed":2,
-				"aspect":3.956
+				"aspect":3.956,
+				"react":{
+					"signal":"fire",
+					"on":"show",
+					"off":"hide",
+					"power":false
+				}
 			},
 			"mesh":10,
 			"name":"LivingFireplace_FireFront_NoCollide"

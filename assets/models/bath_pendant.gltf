@@ -25,6 +25,17 @@
 			"name":"BathPendant_PipingBrass"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":1,
 			"name":"BathPendant_PipingGlobes",
 			"translation":[

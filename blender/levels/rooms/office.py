@@ -118,3 +118,18 @@ PLACEMENTS += [
     ("decor_c_cushion_navy", *_rel(_SOFA, (-0.68, -0.05), 0.455, rot=6)),
     ("decor_c_cushion_navy", *_rel(_SOFA, (-0.3, -0.06), 0.455, rot=-5)),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (S wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_office (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (0.72, -4.6, 1.1), 180, {'signal': 'lights_office', 'state': True}),
+    ('ix_switch_blinds', (0.82, -4.6, 1.1), 180, {'signal': 'blinds_office'}),
+    ('ix_blind_office', (0.0, 4.75), 0, {'signal': 'blinds_office'}),
+    ('ix_book_b', (-3.56, -0.62, 0.38), 84),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "office")

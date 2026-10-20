@@ -284,6 +284,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":35,
 			"name":"KitchenPantry_ShelfLED0",
 			"translation":[
@@ -293,6 +304,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":36,
 			"name":"KitchenPantry_ShelfLED1",
 			"translation":[
@@ -302,6 +324,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":37,
 			"name":"KitchenPantry_ShelfLED2",
 			"translation":[
@@ -311,6 +344,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":38,
 			"name":"KitchenPantry_ShelfLED3",
 			"translation":[
@@ -320,6 +364,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":39,
 			"name":"KitchenPantry_ShelfLED4",
 			"translation":[

@@ -17,6 +17,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import kitchen_lib as L  # noqa: E402
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
 
 importlib.reload(L)
 common, materials = L.common, L.materials
@@ -42,6 +43,7 @@ def build(**overrides):
         if poly.normal.dot(poly.center - up) < 0:
             poly.flip()
     ob.data.update()
+    ix_common.tag_emissive(b.root)   # interactivity: the lens follows the room's light switch
     return b.finish()
 
 

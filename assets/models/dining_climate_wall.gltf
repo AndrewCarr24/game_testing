@@ -96,6 +96,17 @@
 			"name":"DiningClimateWall_Glass"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":13,
 			"name":"DiningClimateWall_Glow",
 			"translation":[
@@ -109,6 +120,17 @@
 			"name":"DiningClimateWall_Handles"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":15,
 			"name":"DiningClimateWall_LEDs"
 		},
@@ -144,6 +166,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":20,
 			"name":"DiningClimateWall_SoffitLED",
 			"translation":[

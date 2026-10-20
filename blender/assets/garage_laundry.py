@@ -36,6 +36,12 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = gk.Builder(p["name"])
@@ -184,6 +190,7 @@ def build(**overrides):
     for k, sx in enumerate((-1, 1)):
         b.cyl(f"Bottle{k}", 0.04, 0.2, (sink_x + sx * 0.5 if sink_x else cl + 1, yb - 0.1, ch + 0.1), bottle, seg=10)
         b.cyl(f"Bottle{k}_Cap", 0.022, 0.05, (sink_x + sx * 0.5 if sink_x else cl + 1, yb - 0.1, ch + 0.225), bronze, seg=8)
+    ix_common.tag_emissive(b.root, "power")   # interactivity: the display goes dark without power
     return b.finish()
 
 

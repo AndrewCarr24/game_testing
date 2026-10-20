@@ -107,3 +107,15 @@ PLACEMENTS += [
     ("decor_c_towel_basket", (4.55, -4.17), 0),
     ("decor_c_plant_snake_basket", (5.65, -4.17), 30),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (W wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_gym (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-6.1, 1.03, 1.1), 90, {'signal': 'lights_gym', 'state': True}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "gym")

@@ -62,3 +62,16 @@ PLACEMENTS += [
     ("decor_b_dish_rack", (0.64, 4.28, 0.92), 0),
     ("decor_b_sink_set", (-1.25, 4.38, 0.92), 0),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the wine-room door (E wall, latch
+# side; the west wall either side of the kitchen opening is pantry),
+# interactive props, and this room's light fixtures wired to lights_scullery (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (2.6, 1.03, 1.1), -90, {'signal': 'lights_scullery', 'state': True}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "scullery")

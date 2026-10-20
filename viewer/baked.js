@@ -6,8 +6,9 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 //
 // Static shell meshes get their room's lightmap on the second UV set, holding all
 // diffuse lighting (sun, sky, ceiling lights, lamps, bounce, soft contact shadows).
-// On those materials real-time direct light is switched off so nothing is counted
-// twice; reflections come from the room's environment panorama.
+// On those materials real-time directional light is switched off so nothing is counted
+// twice (point and spot lights, i.e. the flashlight, still light them); reflections come
+// from the room's environment panorama.
 // Props (anything that moves) are lit by the real-time sun plus their room's baked
 // panorama as environment map. Materials are cloned per room where rooms share them.
 
@@ -75,6 +76,16 @@ if ( roughnessFactor < 0.75 ) {
   roughnessFactor = clamp( roughnessFactor * ( 0.72 + 0.5 * smudge + 0.25 * grain ), 0.04, 1.0 );
 }`;
 
+// Point and spot lights (the flashlight, a hero lamp's react light) still light baked surfaces:
+// only the sun and the stand-in fills are in the bake. Their direct light is summed before the
+// directional loop in r160's chunk, so it's saved there and put back after the rest is zeroed.
+const LOCAL_LIGHTS = THREE.ShaderChunk.lights_fragment_begin.replace(
+  '#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )',
+  'vec3 localDiffuse = reflectedLight.directDiffuse, localSpecular = reflectedLight.directSpecular;\n#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )');
+if (!LOCAL_LIGHTS.includes('localDiffuse')) console.warn('baked.js: lights_fragment_begin changed; point/spot lights will not light baked surfaces');
+const keepLocal = (fs) => fs.replace('#include <lights_fragment_begin>', LOCAL_LIGHTS.includes('localDiffuse') ? LOCAL_LIGHTS
+  : '#include <lights_fragment_begin>\nvec3 localDiffuse = vec3( 0.0 ), localSpecular = vec3( 0.0 );');
+
 function addSheen(shader) {
   shader.fragmentShader = shader.fragmentShader
     .replace('#include <roughnessmap_pars_fragment>', '#include <roughnessmap_pars_fragment>\n' + SHEEN_PARS)
@@ -138,14 +149,14 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
       addBoxProjection(shader, r.box);
       if (r.box && sheen) addSheen(shader);           // (needs vWorldPos from the box projection)
       if (r.sh) shader.uniforms.roomSH = { value: r.sh };
-      shader.fragmentShader = shader.fragmentShader.replace(
+      shader.fragmentShader = keepLocal(shader.fragmentShader).replace(
         '#include <lights_pars_begin>', '#include <lights_pars_begin>\n' + (r.sh ? 'uniform vec3 roomSH[ 9 ];' : '')).replace(
         '#include <lights_fragment_maps>',
         [
           // all direct light is in the bake; without shadows a real-time sun glint
           // would appear even where the sun can't reach (windowless rooms)
-          'reflectedLight.directDiffuse = vec3( 0.0 );',
-          'reflectedLight.directSpecular = vec3( 0.0 );',
+          'reflectedLight.directDiffuse = localDiffuse;',
+          'reflectedLight.directSpecular = localSpecular;',
           'irradiance = vec3( 0.0 );',
           '#include <lights_fragment_maps>',
           'iblIrradiance = vec3( 0.0 );',
@@ -159,7 +170,7 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
           ] : []),
         ].join('\n'));
     };
-    m.customProgramCacheKey = () => 'baked-diffuse' + (r.box ? '-box' : '') + (r.sh && specOcc ? '-so' : '') + (r.box && sheen ? '-sheen' : '');
+    m.customProgramCacheKey = () => 'baked-local' + (r.box ? '-box' : '') + (r.sh && specOcc ? '-so' : '') + (r.box && sheen ? '-sheen' : '');
     clones.set(key, m);
     return m;
   }
@@ -179,16 +190,16 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
       m.onBeforeCompile = (shader) => {
         addBoxProjection(shader, r.box);
         shader.uniforms.roomSH = { value: r.sh };
-        shader.fragmentShader = shader.fragmentShader
+        shader.fragmentShader = (sunless ? keepLocal(shader.fragmentShader) : shader.fragmentShader)
           .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 roomSH[ 9 ];')
           .replace('#include <lights_fragment_maps>', [
             '#include <lights_fragment_maps>',
             'iblIrradiance = vec3( 0.0 );',
             'irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH );',
-            ...(sunless ? ['reflectedLight.directDiffuse = vec3( 0.0 );', 'reflectedLight.directSpecular = vec3( 0.0 );'] : []),
+            ...(sunless ? ['reflectedLight.directDiffuse = localDiffuse;', 'reflectedLight.directSpecular = localSpecular;'] : []),
           ].join('\n'));
       };
-      m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun' : 'room-sh') + (r.box ? '-box' : '');
+      m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun-local' : 'room-sh') + (r.box ? '-box' : '');
     }
     clones.set(key, m);
     return m;

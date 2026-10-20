@@ -1180,53 +1180,53 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3397,
+			"byteLength":3336,
 			"byteOffset":6084
 		},
 		{
 			"buffer":0,
 			"byteLength":760,
-			"byteOffset":9484
+			"byteOffset":9420
 		},
 		{
 			"buffer":0,
 			"byteLength":1162,
-			"byteOffset":10244
+			"byteOffset":10180
 		},
 		{
 			"buffer":0,
 			"byteLength":1106,
-			"byteOffset":11408
+			"byteOffset":11344
 		},
 		{
 			"buffer":0,
 			"byteLength":577,
-			"byteOffset":12516
+			"byteOffset":12452
 		},
 		{
 			"buffer":0,
 			"byteLength":718,
-			"byteOffset":13096
+			"byteOffset":13032
 		},
 		{
 			"buffer":0,
 			"byteLength":736,
-			"byteOffset":13816
+			"byteOffset":13752
 		},
 		{
 			"buffer":0,
 			"byteLength":1264,
-			"byteOffset":14552
+			"byteOffset":14488
 		},
 		{
 			"buffer":0,
 			"byteLength":1314,
-			"byteOffset":15816
+			"byteOffset":15752
 		},
 		{
 			"buffer":0,
 			"byteLength":882,
-			"byteOffset":17132
+			"byteOffset":17068
 		}
 	],
 	"samplers":[
@@ -1237,7 +1237,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":18016,
+			"byteLength":17952,
 			"uri":"guest_nightstand.bin"
 		}
 	]

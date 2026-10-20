@@ -84,6 +84,12 @@ def box(col, root, name, mat, size, loc, bevel=0.0, uv=0.5):
     return ob
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -203,6 +209,26 @@ def build(**overrides):
             ob.location = (sx * (x0 + w / 2), yb - 0.04, 0.12 + ph / 2)
             common.add_subsurf(ob)
             common.box_uv(ob, 0.25)
+
+    # --- interactivity: a push button on the credenza top (right end) switches the TV
+    # (signal "tv", renamed per placement {"signal": {"tv": "tv_den"}}); the picture follows
+    # it, the under-glow follows the room's lights
+    bx, by, bz = cw / 2 - 0.14, cy - cd / 2 + 0.09, cz + ch
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=0.022, radius2=0.022, depth=0.003)
+    seat = common.mesh_object(f"{n}_TVButtonSeat", bm, col, black, root)
+    seat.location = (bx, by, bz + 0.0015)
+    btn = common.empty(f"{n}_TVButton", col, (bx, by, bz + 0.003))
+    btn.parent = root
+    btn["interact"] = {"type": "switch", "signal": "tv", "state": False, "prompt": "Turn on TV",
+                       "promptActive": "Turn off TV", "range": 1.3, "duration": 0.12,
+                       "travel": {"axis": "y", "distance": -0.002}}
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=0.015, radius2=0.014, depth=0.006)
+    cap = common.mesh_object(f"{n}_TVButton_Cap", bm, col, bronze, btn)
+    cap.location = (0, 0, 0.003)
+    pic["react"] = ix_common.glow("tv")
+    ix_common.tag_emissive(root, names=("UnderGlow",))
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

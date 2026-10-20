@@ -84,3 +84,15 @@ LIGHTS = [
     dict(kind="area", pos=(2.5, 0.0, 3.84), size=(7.8, 0.06), aim=(2.1, 0.0, 0.5), power=300.0, color=(1.0, 0.82, 0.6)),
     *[dict(kind="spot", pos=(x, y, 4.08), aim=aim, power=pw, angle=ang, blend=0.5) for (x, y, (aim, pw, ang)) in _CANS],
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (E wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_powder (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (2.6, -1.53, 1.1), -90, {'signal': 'lights_powder', 'state': True}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "powder")

@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				114
+				118
 			]
 		}
 	],
@@ -222,6 +222,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":22,
 			"name":"KitchenWallRun_Counter_LED",
 			"translation":[
@@ -247,27 +258,95 @@
 			"mesh":25,
 			"name":"KitchenWallRun_Fridge0_Door",
 			"translation":[
-				1,
+				0.44999998807907104,
 				1.25,
-				0.31700000166893005
+				-0.013000011444091797
 			]
 		},
 		{
 			"mesh":26,
-			"name":"KitchenWallRun_Fridge0_Handle"
+			"name":"KitchenWallRun_Fridge0_Handle",
+			"translation":[
+				-0.550000011920929,
+				0,
+				-0.33000001311302185
+			]
+		},
+		{
+			"children":[
+				25,
+				26
+			],
+			"extras":{
+				"interact":{
+					"type":"rotate",
+					"axis":[
+						0,
+						1,
+						0
+					],
+					"angle":-90,
+					"duration":0.9,
+					"range":1.6,
+					"side":"both",
+					"collide":true,
+					"prompt":"Open fridge",
+					"promptActive":"Close fridge"
+				}
+			},
+			"name":"KitchenWallRun_Fridge0_Hinge",
+			"translation":[
+				0.550000011920929,
+				0,
+				0.33000001311302185
+			]
 		},
 		{
 			"mesh":27,
 			"name":"KitchenWallRun_Fridge1_Door",
 			"translation":[
-				1.899999976158142,
+				-0.44999992847442627,
 				1.25,
-				0.31700000166893005
+				-0.013000011444091797
 			]
 		},
 		{
 			"mesh":28,
-			"name":"KitchenWallRun_Fridge1_Handle"
+			"name":"KitchenWallRun_Fridge1_Handle",
+			"translation":[
+				-2.3499999046325684,
+				0,
+				-0.33000001311302185
+			]
+		},
+		{
+			"children":[
+				28,
+				29
+			],
+			"extras":{
+				"interact":{
+					"type":"rotate",
+					"axis":[
+						0,
+						1,
+						0
+					],
+					"angle":90,
+					"duration":0.9,
+					"range":1.6,
+					"side":"both",
+					"collide":true,
+					"prompt":"Open fridge",
+					"promptActive":"Close fridge"
+				}
+			},
+			"name":"KitchenWallRun_Fridge1_Hinge",
+			"translation":[
+				2.3499999046325684,
+				0,
+				0.33000001311302185
+			]
 		},
 		{
 			"mesh":29,
@@ -361,24 +440,35 @@
 		},
 		{
 			"mesh":40,
-			"name":"KitchenWallRun_OvenA_Band",
-			"translation":[
-				0.15000000596046448,
-				1.0959999561309814,
-				0.33149999380111694
-			]
-		},
-		{
-			"mesh":41,
 			"name":"KitchenWallRun_OvenA_Cavity"
 		},
 		{
+			"mesh":41,
+			"name":"KitchenWallRun_OvenA_Band",
+			"translation":[
+				0,
+				0.5559999346733093,
+				0.0014999806880950928
+			]
+		},
+		{
+			"extras":{
+				"react":{
+					"signal":"power",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":42,
 			"name":"KitchenWallRun_OvenA_Display_NoCollide",
 			"translation":[
-				0.15000000596046448,
-				1.0959999561309814,
-				0.3334999978542328
+				0,
+				0.5559999346733093,
+				0.0034999847412109375
 			]
 		},
 		{
@@ -389,14 +479,65 @@
 				0,
 				0,
 				0.7071068286895752
+			],
+			"translation":[
+				-0.15000000596046448,
+				-0.5400000214576721,
+				-0.33000001311302185
 			]
 		},
 		{
 			"mesh":44,
-			"name":"KitchenWallRun_OvenA_Handle"
+			"name":"KitchenWallRun_OvenA_Handle",
+			"translation":[
+				-0.15000000596046448,
+				-0.5400000214576721,
+				-0.33000001311302185
+			]
 		},
 		{
 			"mesh":45,
+			"name":"KitchenWallRun_OvenA_Window",
+			"translation":[
+				0,
+				0.2849999666213989,
+				-0.008000016212463379
+			]
+		},
+		{
+			"children":[
+				43,
+				44,
+				45,
+				46,
+				47
+			],
+			"extras":{
+				"interact":{
+					"type":"rotate",
+					"axis":[
+						1,
+						0,
+						0
+					],
+					"angle":85,
+					"duration":0.7,
+					"range":1.5,
+					"side":"both",
+					"collide":true,
+					"prompt":"Open oven",
+					"promptActive":"Close oven"
+				}
+			},
+			"name":"KitchenWallRun_OvenA_Hinge",
+			"translation":[
+				0.15000000596046448,
+				0.5400000214576721,
+				0.33000001311302185
+			]
+		},
+		{
+			"mesh":46,
 			"name":"KitchenWallRun_OvenA_Rack0_0_NoCollide",
 			"translation":[
 				-0.164000004529953,
@@ -405,7 +546,7 @@
 			]
 		},
 		{
-			"mesh":46,
+			"mesh":47,
 			"name":"KitchenWallRun_OvenA_Rack0_1_NoCollide",
 			"translation":[
 				0.04533333331346512,
@@ -414,7 +555,7 @@
 			]
 		},
 		{
-			"mesh":47,
+			"mesh":48,
 			"name":"KitchenWallRun_OvenA_Rack0_2_NoCollide",
 			"translation":[
 				0.25466665625572205,
@@ -423,7 +564,7 @@
 			]
 		},
 		{
-			"mesh":48,
+			"mesh":49,
 			"name":"KitchenWallRun_OvenA_Rack0_3_NoCollide",
 			"translation":[
 				0.46399998664855957,
@@ -432,7 +573,7 @@
 			]
 		},
 		{
-			"mesh":49,
+			"mesh":50,
 			"name":"KitchenWallRun_OvenA_Rack0_NoCollide",
 			"translation":[
 				0.15000000596046448,
@@ -441,7 +582,7 @@
 			]
 		},
 		{
-			"mesh":50,
+			"mesh":51,
 			"name":"KitchenWallRun_OvenA_Rack1_0_NoCollide",
 			"translation":[
 				-0.164000004529953,
@@ -450,7 +591,7 @@
 			]
 		},
 		{
-			"mesh":51,
+			"mesh":52,
 			"name":"KitchenWallRun_OvenA_Rack1_1_NoCollide",
 			"translation":[
 				0.04533333331346512,
@@ -459,7 +600,7 @@
 			]
 		},
 		{
-			"mesh":52,
+			"mesh":53,
 			"name":"KitchenWallRun_OvenA_Rack1_2_NoCollide",
 			"translation":[
 				0.25466665625572205,
@@ -468,7 +609,7 @@
 			]
 		},
 		{
-			"mesh":53,
+			"mesh":54,
 			"name":"KitchenWallRun_OvenA_Rack1_3_NoCollide",
 			"translation":[
 				0.46399998664855957,
@@ -477,7 +618,7 @@
 			]
 		},
 		{
-			"mesh":54,
+			"mesh":55,
 			"name":"KitchenWallRun_OvenA_Rack1_NoCollide",
 			"translation":[
 				0.15000000596046448,
@@ -486,34 +627,36 @@
 			]
 		},
 		{
-			"mesh":55,
-			"name":"KitchenWallRun_OvenA_Window",
-			"translation":[
-				0.15000000596046448,
-				0.824999988079071,
-				0.32199999690055847
-			]
-		},
-		{
 			"mesh":56,
-			"name":"KitchenWallRun_OvenB_Band",
-			"translation":[
-				0.15000000596046448,
-				1.715999960899353,
-				0.33149999380111694
-			]
-		},
-		{
-			"mesh":57,
 			"name":"KitchenWallRun_OvenB_Cavity"
 		},
 		{
+			"mesh":57,
+			"name":"KitchenWallRun_OvenB_Band",
+			"translation":[
+				0,
+				0.5559999942779541,
+				0.0014999806880950928
+			]
+		},
+		{
+			"extras":{
+				"react":{
+					"signal":"power",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":58,
 			"name":"KitchenWallRun_OvenB_Display_NoCollide",
 			"translation":[
-				0.15000000596046448,
-				1.715999960899353,
-				0.3334999978542328
+				0,
+				0.5559999942779541,
+				0.0034999847412109375
 			]
 		},
 		{
@@ -524,14 +667,65 @@
 				0,
 				0,
 				0.7071068286895752
+			],
+			"translation":[
+				-0.15000000596046448,
+				-1.159999966621399,
+				-0.33000001311302185
 			]
 		},
 		{
 			"mesh":60,
-			"name":"KitchenWallRun_OvenB_Handle"
+			"name":"KitchenWallRun_OvenB_Handle",
+			"translation":[
+				-0.15000000596046448,
+				-1.159999966621399,
+				-0.33000001311302185
+			]
 		},
 		{
 			"mesh":61,
+			"name":"KitchenWallRun_OvenB_Window",
+			"translation":[
+				0,
+				0.2850000858306885,
+				-0.008000016212463379
+			]
+		},
+		{
+			"children":[
+				60,
+				61,
+				62,
+				63,
+				64
+			],
+			"extras":{
+				"interact":{
+					"type":"rotate",
+					"axis":[
+						1,
+						0,
+						0
+					],
+					"angle":85,
+					"duration":0.7,
+					"range":1.5,
+					"side":"both",
+					"collide":true,
+					"prompt":"Open oven",
+					"promptActive":"Close oven"
+				}
+			},
+			"name":"KitchenWallRun_OvenB_Hinge",
+			"translation":[
+				0.15000000596046448,
+				1.159999966621399,
+				0.33000001311302185
+			]
+		},
+		{
+			"mesh":62,
 			"name":"KitchenWallRun_OvenB_Rack0_0_NoCollide",
 			"translation":[
 				-0.164000004529953,
@@ -540,7 +734,7 @@
 			]
 		},
 		{
-			"mesh":62,
+			"mesh":63,
 			"name":"KitchenWallRun_OvenB_Rack0_1_NoCollide",
 			"translation":[
 				0.04533333331346512,
@@ -549,7 +743,7 @@
 			]
 		},
 		{
-			"mesh":63,
+			"mesh":64,
 			"name":"KitchenWallRun_OvenB_Rack0_2_NoCollide",
 			"translation":[
 				0.25466665625572205,
@@ -558,7 +752,7 @@
 			]
 		},
 		{
-			"mesh":64,
+			"mesh":65,
 			"name":"KitchenWallRun_OvenB_Rack0_3_NoCollide",
 			"translation":[
 				0.46399998664855957,
@@ -567,7 +761,7 @@
 			]
 		},
 		{
-			"mesh":65,
+			"mesh":66,
 			"name":"KitchenWallRun_OvenB_Rack0_NoCollide",
 			"translation":[
 				0.15000000596046448,
@@ -576,7 +770,7 @@
 			]
 		},
 		{
-			"mesh":66,
+			"mesh":67,
 			"name":"KitchenWallRun_OvenB_Rack1_0_NoCollide",
 			"translation":[
 				-0.164000004529953,
@@ -585,7 +779,7 @@
 			]
 		},
 		{
-			"mesh":67,
+			"mesh":68,
 			"name":"KitchenWallRun_OvenB_Rack1_1_NoCollide",
 			"translation":[
 				0.04533333331346512,
@@ -594,7 +788,7 @@
 			]
 		},
 		{
-			"mesh":68,
+			"mesh":69,
 			"name":"KitchenWallRun_OvenB_Rack1_2_NoCollide",
 			"translation":[
 				0.25466665625572205,
@@ -603,7 +797,7 @@
 			]
 		},
 		{
-			"mesh":69,
+			"mesh":70,
 			"name":"KitchenWallRun_OvenB_Rack1_3_NoCollide",
 			"translation":[
 				0.46399998664855957,
@@ -612,21 +806,12 @@
 			]
 		},
 		{
-			"mesh":70,
+			"mesh":71,
 			"name":"KitchenWallRun_OvenB_Rack1_NoCollide",
 			"translation":[
 				0.15000000596046448,
 				1.524666666984558,
 				0.2680000066757202
-			]
-		},
-		{
-			"mesh":71,
-			"name":"KitchenWallRun_OvenB_Window",
-			"translation":[
-				0.15000000596046448,
-				1.4450000524520874,
-				0.32199999690055847
 			]
 		},
 		{
@@ -766,6 +951,17 @@
 			"name":"KitchenWallRun_Steam_Cavity"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"power",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":91,
 			"name":"KitchenWallRun_Steam_Display_NoCollide",
 			"translation":[
@@ -982,11 +1178,7 @@
 				22,
 				23,
 				24,
-				25,
-				26,
 				27,
-				28,
-				29,
 				30,
 				31,
 				32,
@@ -1000,11 +1192,6 @@
 				40,
 				41,
 				42,
-				43,
-				44,
-				45,
-				46,
-				47,
 				48,
 				49,
 				50,
@@ -1017,11 +1204,6 @@
 				57,
 				58,
 				59,
-				60,
-				61,
-				62,
-				63,
-				64,
 				65,
 				66,
 				67,
@@ -1070,7 +1252,11 @@
 				110,
 				111,
 				112,
-				113
+				113,
+				114,
+				115,
+				116,
+				117
 			],
 			"name":"KitchenWallRun"
 		}
@@ -1169,20 +1355,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Appliance_Glass",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.012000000104308128,
-					0.012000000104308128,
-					0.014999999664723873,
-					1
-				],
-				"metallicFactor":0.4000000059604645,
-				"roughnessFactor":0.05999999865889549
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Ceramic_Charcoal",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1197,15 +1369,16 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Steel_Polished",
+			"name":"M_Appliance_Glass",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.8500000238418579,
-					0.8500000238418579,
-					0.8600000143051147,
+					0.012000000104308128,
+					0.012000000104308128,
+					0.014999999664723873,
 					1
 				],
-				"roughnessFactor":0.07999999821186066
+				"metallicFactor":0.4000000059604645,
+				"roughnessFactor":0.05999999865889549
 			}
 		},
 		{
@@ -1221,6 +1394,19 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.03999999910593033
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Steel_Polished",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.8500000238418579,
+					0.8500000238418579,
+					0.8600000143051147,
+					1
+				],
+				"roughnessFactor":0.07999999821186066
 			}
 		}
 	],
@@ -2262,43 +2448,18 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Band",
+			"name":"KitchenWallRun_OvenA_Cavity",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":157,
 						"NORMAL":158,
-						"COLOR_0":159
+						"TEXCOORD_0":159,
+						"COLOR_0":160
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":40,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":6,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"KitchenWallRun_OvenA_Cavity",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":160,
-						"NORMAL":161,
-						"TEXCOORD_0":162,
-						"COLOR_0":163
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":41,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2307,7 +2468,32 @@
 							}
 						}
 					},
-					"indices":164,
+					"indices":161,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"KitchenWallRun_OvenA_Band",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":162,
+						"NORMAL":163,
+						"COLOR_0":164
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":41,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":23,
 					"material":7,
 					"mode":4
 				}
@@ -2391,7 +2577,7 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack0_0_NoCollide",
+			"name":"KitchenWallRun_OvenA_Window",
 			"primitives":[
 				{
 					"attributes":{
@@ -2416,7 +2602,7 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack0_1_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack0_0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2435,13 +2621,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack0_2_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack0_1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2460,13 +2646,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack0_3_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack0_2_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2485,13 +2671,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack0_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack0_3_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2510,13 +2696,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack1_0_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2535,13 +2721,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack1_1_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack1_0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2560,13 +2746,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack1_2_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack1_1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2585,13 +2771,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack1_3_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack1_2_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2610,13 +2796,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Rack1_NoCollide",
+			"name":"KitchenWallRun_OvenA_Rack1_3_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2635,13 +2821,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenA_Window",
+			"name":"KitchenWallRun_OvenA_Rack1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2666,43 +2852,18 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Band",
+			"name":"KitchenWallRun_OvenB_Cavity",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":210,
 						"NORMAL":211,
-						"COLOR_0":212
+						"TEXCOORD_0":212,
+						"COLOR_0":213
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":56,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":23,
-					"material":6,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"KitchenWallRun_OvenB_Cavity",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":213,
-						"NORMAL":214,
-						"TEXCOORD_0":215,
-						"COLOR_0":216
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":57,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2711,7 +2872,32 @@
 							}
 						}
 					},
-					"indices":164,
+					"indices":161,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"KitchenWallRun_OvenB_Band",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":214,
+						"NORMAL":215,
+						"COLOR_0":216
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":57,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":23,
 					"material":7,
 					"mode":4
 				}
@@ -2795,7 +2981,7 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack0_0_NoCollide",
+			"name":"KitchenWallRun_OvenB_Window",
 			"primitives":[
 				{
 					"attributes":{
@@ -2820,7 +3006,7 @@
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack0_1_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack0_0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2839,13 +3025,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack0_2_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack0_1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2864,13 +3050,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack0_3_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack0_2_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2889,13 +3075,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack0_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack0_3_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2914,13 +3100,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack1_0_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2939,13 +3125,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack1_1_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack1_0_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2964,13 +3150,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack1_2_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack1_1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -2989,13 +3175,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack1_3_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack1_2_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -3014,13 +3200,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Rack1_NoCollide",
+			"name":"KitchenWallRun_OvenB_Rack1_3_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -3039,13 +3225,13 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"KitchenWallRun_OvenB_Window",
+			"name":"KitchenWallRun_OvenB_Rack1_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -3515,7 +3701,7 @@
 						}
 					},
 					"indices":331,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3540,7 +3726,7 @@
 						}
 					},
 					"indices":23,
-					"material":6,
+					"material":7,
 					"mode":4
 				}
 			]
@@ -3566,8 +3752,8 @@
 							}
 						}
 					},
-					"indices":164,
-					"material":7,
+					"indices":161,
+					"material":6,
 					"mode":4
 				}
 			]
@@ -3669,7 +3855,7 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3694,7 +3880,7 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3719,7 +3905,7 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3744,7 +3930,7 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3769,7 +3955,7 @@
 						}
 					},
 					"indices":81,
-					"material":8,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -3794,7 +3980,7 @@
 						}
 					},
 					"indices":81,
-					"material":9,
+					"material":8,
 					"mode":4
 				}
 			]
@@ -5426,32 +5612,6 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
-			"max":[
-				0.36800000071525574,
-				0.028999999165534973,
-				0.0020000000949949026
-			],
-			"min":[
-				-0.36800000071525574,
-				-0.028999999165534973,
-				-0.0020000000949949026
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
 			"count":20,
 			"max":[
 				0.48399999737739563,
@@ -5485,6 +5645,32 @@
 			"componentType":5123,
 			"count":30,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.36800000071525574,
+				0.028999999165534973,
+				0.0020000000949949026
+			],
+			"min":[
+				-0.36800000071525574,
+				-0.028999999165534973,
+				-0.0020000000949949026
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
@@ -5583,266 +5769,6 @@
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.32899999618530273,
-				0.003000000026077032,
-				0.003000000026077032
-			],
-			"min":[
-				-0.32899999618530273,
-				-0.003000000026077032,
-				-0.003000000026077032
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.32899999618530273,
-				0.003000000026077032,
-				0.003000000026077032
-			],
-			"min":[
-				-0.32899999618530273,
-				-0.003000000026077032,
-				-0.003000000026077032
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
 				0.335999995470047,
 				0.2409999966621399,
 				0.0024999999441206455
@@ -5869,14 +5795,248 @@
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.36800000071525574,
-				0.028999999165534973,
-				0.0020000000949949026
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
 			],
 			"min":[
-				-0.36800000071525574,
-				-0.028999999165534973,
-				-0.0020000000949949026
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.32899999618530273,
+				0.003000000026077032,
+				0.003000000026077032
+			],
+			"min":[
+				-0.32899999618530273,
+				-0.003000000026077032,
+				-0.003000000026077032
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.32899999618530273,
+				0.003000000026077032,
+				0.003000000026077032
+			],
+			"min":[
+				-0.32899999618530273,
+				-0.003000000026077032,
+				-0.003000000026077032
 			],
 			"type":"VEC3"
 		},
@@ -5919,6 +6079,32 @@
 		{
 			"componentType":5123,
 			"count":20,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.36800000071525574,
+				0.028999999165534973,
+				0.0020000000949949026
+			],
+			"min":[
+				-0.36800000071525574,
+				-0.028999999165534973,
+				-0.0020000000949949026
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -6014,266 +6200,6 @@
 			"componentType":5126,
 			"count":24,
 			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.32899999618530273,
-				0.003000000026077032,
-				0.003000000026077032
-			],
-			"min":[
-				-0.32899999618530273,
-				-0.003000000026077032,
-				-0.003000000026077032
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.0024999999441206455,
-				0.0024999999441206455,
-				0.18000000715255737
-			],
-			"min":[
-				-0.0024999999441206455,
-				-0.0024999999441206455,
-				-0.18000000715255737
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.32899999618530273,
-				0.003000000026077032,
-				0.003000000026077032
-			],
-			"min":[
-				-0.32899999618530273,
-				-0.003000000026077032,
-				-0.003000000026077032
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
 				0.335999995470047,
 				0.2409999966621399,
 				0.0024999999441206455
@@ -6282,6 +6208,266 @@
 				-0.335999995470047,
 				-0.2409999966621399,
 				-0.0024999999441206455
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.32899999618530273,
+				0.003000000026077032,
+				0.003000000026077032
+			],
+			"min":[
+				-0.32899999618530273,
+				-0.003000000026077032,
+				-0.003000000026077032
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0024999999441206455,
+				0.0024999999441206455,
+				0.18000000715255737
+			],
+			"min":[
+				-0.0024999999441206455,
+				-0.0024999999441206455,
+				-0.18000000715255737
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.32899999618530273,
+				0.003000000026077032,
+				0.003000000026077032
+			],
+			"min":[
+				-0.32899999618530273,
+				-0.003000000026077032,
+				-0.003000000026077032
 			],
 			"type":"VEC3"
 		},
@@ -7797,67 +7983,67 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":315,
+			"byteLength":241,
 			"byteOffset":31244
 		},
 		{
 			"buffer":0,
+			"byteLength":315,
+			"byteOffset":31488
+		},
+		{
+			"buffer":0,
 			"byteLength":313,
-			"byteOffset":31560
+			"byteOffset":31804
 		},
 		{
 			"buffer":0,
 			"byteLength":299,
-			"byteOffset":31876
+			"byteOffset":32120
 		},
 		{
 			"buffer":0,
 			"byteLength":303,
-			"byteOffset":32176
+			"byteOffset":32420
 		},
 		{
 			"buffer":0,
 			"byteLength":286,
-			"byteOffset":32480
+			"byteOffset":32724
 		},
 		{
 			"buffer":0,
 			"byteLength":298,
-			"byteOffset":32768
+			"byteOffset":33012
 		},
 		{
 			"buffer":0,
 			"byteLength":307,
-			"byteOffset":33068
+			"byteOffset":33312
 		},
 		{
 			"buffer":0,
 			"byteLength":307,
-			"byteOffset":33376
+			"byteOffset":33620
 		},
 		{
 			"buffer":0,
 			"byteLength":298,
-			"byteOffset":33684
+			"byteOffset":33928
 		},
 		{
 			"buffer":0,
 			"byteLength":291,
-			"byteOffset":33984
-		},
-		{
-			"buffer":0,
-			"byteLength":241,
-			"byteOffset":34276
-		},
-		{
-			"buffer":0,
-			"byteLength":368,
-			"byteOffset":34520
+			"byteOffset":34228
 		},
 		{
 			"buffer":0,
 			"byteLength":367,
+			"byteOffset":34520
+		},
+		{
+			"buffer":0,
+			"byteLength":368,
 			"byteOffset":34888
 		},
 		{
@@ -7877,58 +8063,58 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":315,
+			"byteLength":241,
 			"byteOffset":38292
 		},
 		{
 			"buffer":0,
+			"byteLength":315,
+			"byteOffset":38536
+		},
+		{
+			"buffer":0,
 			"byteLength":313,
-			"byteOffset":38608
+			"byteOffset":38852
 		},
 		{
 			"buffer":0,
 			"byteLength":299,
-			"byteOffset":38924
+			"byteOffset":39168
 		},
 		{
 			"buffer":0,
 			"byteLength":303,
-			"byteOffset":39224
+			"byteOffset":39468
 		},
 		{
 			"buffer":0,
 			"byteLength":286,
-			"byteOffset":39528
+			"byteOffset":39772
 		},
 		{
 			"buffer":0,
 			"byteLength":298,
-			"byteOffset":39816
+			"byteOffset":40060
 		},
 		{
 			"buffer":0,
 			"byteLength":307,
-			"byteOffset":40116
+			"byteOffset":40360
 		},
 		{
 			"buffer":0,
 			"byteLength":307,
-			"byteOffset":40424
+			"byteOffset":40668
 		},
 		{
 			"buffer":0,
 			"byteLength":298,
-			"byteOffset":40732
+			"byteOffset":40976
 		},
 		{
 			"buffer":0,
 			"byteLength":291,
-			"byteOffset":41032
-		},
-		{
-			"buffer":0,
-			"byteLength":241,
-			"byteOffset":41324
+			"byteOffset":41276
 		},
 		{
 			"buffer":0,

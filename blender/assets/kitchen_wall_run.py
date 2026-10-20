@@ -34,6 +34,38 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
+def hinge(b, tag, parts, pivot, interact):
+    """Interactivity: hang an appliance door's meshes (`<n>_<tag>_<part>`) under an empty at its
+    hinge line, carrying the `interact`; the geometry and the closed pose are unchanged."""
+    e = common.empty(f"{b.n}_{tag}_Hinge", b.col, pivot)
+    e.parent = b.root
+    for ob in list(b.root.children):
+        if ob.type == "MESH" and any(ob.name == f"{b.n}_{tag}_{k}" for k in parts):
+            ob.parent = e
+            ob.location = ob.location - e.location
+    e["interact"] = interact
+    return e
+
+
+def doors(b, p, ovens, fridge):
+    """The two ovens drop open (hinged along the bottom front edge), the two fridge columns
+    swing open as a French pair (hinged on their outer edges), all from the -Y fronts."""
+    for tag, xm, z0 in ovens:
+        hinge(b, tag, ("Door", "Window", "Band", "Display_NoCollide", "Handle"), (xm, fridge["yf"], z0), {
+            "type": "rotate", "axis": common.to_gltf((1, 0, 0)), "angle": 85, "duration": 0.7, "range": 1.5,
+            "side": "both", "collide": True, "prompt": "Open oven", "promptActive": "Close oven"})
+    for i, (hx, angle) in enumerate(fridge["hinges"]):
+        hinge(b, f"Fridge{i}", ("Door", "Handle"), (hx, fridge["yf"], 0.0), {
+            "type": "rotate", "axis": common.to_gltf((0, 0, 1)), "angle": angle, "duration": 0.9, "range": 1.6,
+            "side": "both", "collide": True, "prompt": "Open fridge", "promptActive": "Close fridge"})
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -154,6 +186,14 @@ def build(**overrides):
     fr.unit("d2", x0, x1, ph, p["tall_z"], "Pantry")
     fr_t.unit("d2", x0, x1, p["band_z"], p["top_z"], "PantryUpper")
 
+    # interactivity: ovens and fridge doors open; the under-cabinet LED follows the lights,
+    # the oven displays the power
+    xo = (xs["oven"][0] + xs["oven"][1]) / 2
+    x0f, x1f = xs["fridge"]
+    doors(b, p, [("OvenA", xo, 0.54), ("OvenB", xo, 1.16)],
+          dict(yf=yf, hinges=[(x0f, -90), (x1f, 90)]))
+    ix_common.tag_emissive(b.root)
+    ix_common.tag_emissive(b.root, "power", names=("Display",))
     return b.finish()
 
 

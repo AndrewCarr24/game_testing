@@ -103,3 +103,18 @@ LIGHTS = [
 ]
 
 PROBE = (0.0, -0.5, 3.0)
+
+
+# --- interactivity (prompts/interactivity.md): the light switch east of the gallery opening (N wall),
+# interactive props, and this room's light fixtures wired to lights_entry (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (7.17, 4.6, 1.1), 0, {'signal': 'lights_entry', 'state': True}),
+    ('ix_switch_blinds', (7.27, 4.6, 1.1), 0, {'signal': 'blinds_entry'}),
+    ('ix_control_panel', (7.85, 3.9, 1.45), -90),
+    ('ix_blind_entry', (0.0, -4.75), 180, {'signal': 'blinds_entry'}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "entry")

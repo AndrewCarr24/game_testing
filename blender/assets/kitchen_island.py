@@ -32,6 +32,36 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
+def running_tap(b, x, y, z, z_sink, reach, rise, signal="tap"):
+    """Interactivity: the gooseneck's lever is a `switch` (signal "tap", renamed per placement
+    e.g. {"signal": {"tap": "tap_kitchen"}}) and a water stream from the spray head down into
+    the bowl shows while it's on. Same geometry as before; the lever just gets a pivot."""
+    import bmesh
+    lever = next(o for o in b.root.children_recursive if o.name == f"{b.n}_Tap_Lever")
+    pivot = common.empty(f"{b.n}_Tap_Handle", b.col, (x + 0.044, y, z + 0.036))
+    pivot.parent = b.root
+    lever.parent = pivot
+    lever.location = lever.location - pivot.location
+    pivot["interact"] = {"type": "switch", "signal": signal, "state": False, "prompt": "Turn on tap",
+                         "promptActive": "Turn off tap", "range": 1.2, "duration": 0.2,
+                         "travel": {"axis": "x", "angle": 28}}
+    water = materials.glass("M_Water_Stream", tint=(0.78, 0.86, 0.9), alpha=0.42, roughness=0.02)
+    top, bottom = z + rise - 0.03 - 0.064, z_sink + 0.005
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=False, segments=8, radius1=0.0042, radius2=0.0058, depth=top - bottom)
+    stream = common.mesh_object(f"{b.n}_Tap_Water_NoCollide", bm, b.col, water, b.root)
+    stream.location = (x, y - reach, (top + bottom) / 2)
+    stream.hide_render = True          # off in the bake and the previews; the engine shows it
+    stream["react"] = {"signal": signal, "on": "show", "off": "hide", "power": False}
+    return pivot
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -74,6 +104,7 @@ def build(**overrides):
                            (0.0, zt + 0.17)], bronze, loc=(sx0 + 0.24, yb2 + 0.07, 0), segs=12, sharp=30, uv_tile=0)
     b.tube("Tap_FilterSpout", [(sx0 + 0.24, yb2 + 0.07, zt + 0.16), (sx0 + 0.24, yb2 + 0.07 - 0.07, zt + 0.19),
                                (sx0 + 0.24, yb2 + 0.07 - 0.12, zt + 0.17)], 0.006, bronze, closed=False, res=2)
+    running_tap(b, sx0, yb2 + 0.07, zt, zt - tt - 0.20, reach=0.40, rise=0.40)
 
     # ---- cabinetry: black carcass, plinth, smoked-oak fronts
     x0 = -Lx / 2 + et
@@ -119,6 +150,7 @@ def build(**overrides):
                              (0.02, mh - 0.008), (0.008, mh), (0.0, mh + 0.004)], walnut if k == 0 else black,
                 loc=(mx, by_ + 0.12, zt), segs=12, sharp=40, uv_tile=0.3, closed=False)
 
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

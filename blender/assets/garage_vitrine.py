@@ -23,6 +23,12 @@ NAME = "GarageVitrine"
 P = dict(name=NAME, width=3.6, depth=0.42, height=2.5, plinth_h=0.22, frame=0.04)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = gk.Builder(p["name"])
@@ -93,6 +99,7 @@ def build(**overrides):
     # shelf 3: trophies
     for i, x in enumerate((-1.0, -0.35, 0.35, 1.0)):
         trophy(f"Trophy{i}", x, shelves[3] + 0.012, 1.0 if i % 2 else 1.3)
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

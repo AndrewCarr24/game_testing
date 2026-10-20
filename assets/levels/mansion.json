@@ -2336,6 +2336,137 @@
       "colliders": [],
       "tris": 928
     },
+    "ix_switch": {
+      "file": "models/ix_switch.gltf",
+      "aabb": {
+        "min": [
+          -0.043,
+          -0.043,
+          -0.0
+        ],
+        "max": [
+          0.043,
+          0.043,
+          0.0137
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.043,
+            -0.043,
+            -0.0
+          ],
+          "max": [
+            0.043,
+            0.043,
+            0.008
+          ]
+        }
+      ],
+      "tris": 296
+    },
+    "ix_switch_blinds": {
+      "file": "models/ix_switch_blinds.gltf",
+      "aabb": {
+        "min": [
+          -0.043,
+          -0.043,
+          -0.0
+        ],
+        "max": [
+          0.043,
+          0.043,
+          0.0137
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.043,
+            -0.043,
+            -0.0
+          ],
+          "max": [
+            0.043,
+            0.043,
+            0.008
+          ]
+        }
+      ],
+      "tris": 320
+    },
+    "ix_control_panel": {
+      "file": "models/ix_control_panel.gltf",
+      "aabb": {
+        "min": [
+          -0.123,
+          -0.083,
+          -0.0
+        ],
+        "max": [
+          0.123,
+          0.083,
+          0.0132
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.123,
+            -0.083,
+            -0.0
+          ],
+          "max": [
+            0.123,
+            0.083,
+            0.012
+          ]
+        },
+        {
+          "min": [
+            -0.12,
+            -0.08,
+            0.0118
+          ],
+          "max": [
+            0.12,
+            0.08,
+            0.013
+          ]
+        },
+        {
+          "min": [
+            -0.111,
+            -0.071,
+            0.0132
+          ],
+          "max": [
+            0.111,
+            0.071,
+            0.0132
+          ]
+        }
+      ],
+      "tris": 218
+    },
+    "ix_blind_entry": {
+      "file": "models/ix_blind_entry.gltf",
+      "aabb": {
+        "min": [
+          -5.998,
+          8.283,
+          0.07
+        ],
+        "max": [
+          5.998,
+          8.397,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 720
+    },
     "entry_vanity": {
       "file": "models/entry_vanity.gltf",
       "aabb": {
@@ -4463,6 +4594,18 @@
         },
         {
           "min": [
+            2.288,
+            0.54,
+            0.088
+          ],
+          "max": [
+            2.332,
+            0.543,
+            0.132
+          ]
+        },
+        {
+          "min": [
             -2.4,
             0.128,
             0.115
@@ -4474,7 +4617,7 @@
           ]
         }
       ],
-      "tris": 6078
+      "tris": 6198
     },
     "living_sectional": {
       "file": "models/living_sectional.gltf",
@@ -7580,6 +7723,53 @@
       "colliders": [],
       "tris": 524
     },
+    "ix_switch_fire": {
+      "file": "models/ix_switch_fire.gltf",
+      "aabb": {
+        "min": [
+          -0.043,
+          -0.043,
+          -0.0
+        ],
+        "max": [
+          0.043,
+          0.043,
+          0.0137
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.043,
+            -0.043,
+            -0.0
+          ],
+          "max": [
+            0.043,
+            0.043,
+            0.008
+          ]
+        }
+      ],
+      "tris": 308
+    },
+    "ix_blind_great_room": {
+      "file": "models/ix_blind_great_room.gltf",
+      "aabb": {
+        "min": [
+          -2.9071,
+          8.283,
+          0.07
+        ],
+        "max": [
+          2.9071,
+          8.397,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 360
+    },
     "dining_table": {
       "file": "models/dining_table.gltf",
       "aabb": {
@@ -8686,6 +8876,23 @@
       "colliders": [],
       "tris": 1152
     },
+    "ix_blind_dining": {
+      "file": "models/ix_blind_dining.gltf",
+      "aabb": {
+        "min": [
+          -5.998,
+          4.083,
+          0.07
+        ],
+        "max": [
+          5.998,
+          4.197,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 720
+    },
     "kitchen_wall_run": {
       "file": "models/kitchen_wall_run.gltf",
       "aabb": {
@@ -9003,54 +9210,6 @@
         },
         {
           "min": [
-            0.552,
-            0.102,
-            0.304
-          ],
-          "max": [
-            1.448,
-            2.398,
-            0.33
-          ]
-        },
-        {
-          "min": [
-            1.394,
-            0.7395,
-            0.33
-          ],
-          "max": [
-            1.416,
-            1.9105,
-            0.3774
-          ]
-        },
-        {
-          "min": [
-            1.452,
-            0.102,
-            0.304
-          ],
-          "max": [
-            2.348,
-            2.398,
-            0.33
-          ]
-        },
-        {
-          "min": [
-            1.484,
-            0.8395,
-            0.33
-          ],
-          "max": [
-            1.506,
-            1.9105,
-            0.3774
-          ]
-        },
-        {
-          "min": [
             0.55,
             0.1,
             -0.33
@@ -9183,18 +9342,6 @@
         },
         {
           "min": [
-            -0.218,
-            1.067,
-            0.3295
-          ],
-          "max": [
-            0.518,
-            1.125,
-            0.3335
-          ]
-        },
-        {
-          "min": [
             -0.184,
             0.586,
             -0.122
@@ -9207,54 +9354,6 @@
         },
         {
           "min": [
-            -0.23,
-            0.54,
-            0.308
-          ],
-          "max": [
-            0.53,
-            1.14,
-            0.33
-          ]
-        },
-        {
-          "min": [
-            -0.178,
-            1.017,
-            0.33
-          ],
-          "max": [
-            0.478,
-            1.033,
-            0.3829
-          ]
-        },
-        {
-          "min": [
-            -0.186,
-            0.584,
-            0.3195
-          ],
-          "max": [
-            0.486,
-            1.066,
-            0.3245
-          ]
-        },
-        {
-          "min": [
-            -0.218,
-            1.687,
-            0.3295
-          ],
-          "max": [
-            0.518,
-            1.745,
-            0.3335
-          ]
-        },
-        {
-          "min": [
             -0.184,
             1.206,
             -0.122
@@ -9263,42 +9362,6 @@
             0.484,
             1.684,
             0.298
-          ]
-        },
-        {
-          "min": [
-            -0.23,
-            1.16,
-            0.308
-          ],
-          "max": [
-            0.53,
-            1.76,
-            0.33
-          ]
-        },
-        {
-          "min": [
-            -0.178,
-            1.637,
-            0.33
-          ],
-          "max": [
-            0.478,
-            1.653,
-            0.3829
-          ]
-        },
-        {
-          "min": [
-            -0.186,
-            1.204,
-            0.3195
-          ],
-          "max": [
-            0.486,
-            1.686,
-            0.3245
           ]
         },
         {
@@ -11259,18 +11322,6 @@
         },
         {
           "min": [
-            0.209,
-            0.9568,
-            -0.0574
-          ],
-          "max": [
-            0.219,
-            0.9792,
-            0.0174
-          ]
-        },
-        {
-          "min": [
             0.1585,
             0.975,
             -0.0009
@@ -11630,7 +11681,7 @@
           ]
         }
       ],
-      "tris": 4628
+      "tris": 4644
     },
     "kitchen_stool": {
       "file": "models/kitchen_stool.gltf",
@@ -12350,6 +12401,123 @@
         }
       ],
       "tris": 740
+    },
+    "ix_blind_kitchen": {
+      "file": "models/ix_blind_kitchen.gltf",
+      "aabb": {
+        "min": [
+          -6.998,
+          4.083,
+          0.07
+        ],
+        "max": [
+          6.998,
+          4.197,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 810
+    },
+    "ix_tablet_dock": {
+      "file": "models/ix_tablet_dock.gltf",
+      "aabb": {
+        "min": [
+          -0.124,
+          0.0,
+          -0.0633
+        ],
+        "max": [
+          0.124,
+          0.1907,
+          0.0425
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.075,
+            0.0,
+            -0.0425
+          ],
+          "max": [
+            0.075,
+            0.022,
+            0.0425
+          ]
+        },
+        {
+          "min": [
+            -0.07,
+            0.0,
+            -0.0375
+          ],
+          "max": [
+            0.07,
+            0.001,
+            0.0375
+          ]
+        },
+        {
+          "min": [
+            -0.075,
+            0.022,
+            0.011
+          ],
+          "max": [
+            0.075,
+            0.03,
+            0.017
+          ]
+        },
+        {
+          "min": [
+            -0.0525,
+            0.0166,
+            -0.0397
+          ],
+          "max": [
+            0.0525,
+            0.0851,
+            -0.0082
+          ]
+        }
+      ],
+      "tris": 490
+    },
+    "ix_wine_bottle": {
+      "file": "models/ix_wine_bottle.gltf",
+      "aabb": {
+        "min": [
+          -0.0374,
+          0.0,
+          -0.0374
+        ],
+        "max": [
+          0.0374,
+          0.3005,
+          0.0374
+        ]
+      },
+      "colliders": [],
+      "tris": 660
+    },
+    "ix_battery": {
+      "file": "models/ix_battery.gltf",
+      "aabb": {
+        "min": [
+          -0.035,
+          -0.0001,
+          -0.0104
+        ],
+        "max": [
+          0.0362,
+          0.0211,
+          0.0104
+        ]
+      },
+      "colliders": [],
+      "tris": 288
     },
     "kitchen_scullery_run": {
       "file": "models/kitchen_scullery_run.gltf",
@@ -17817,6 +17985,40 @@
       ],
       "tris": 696
     },
+    "ix_flashlight": {
+      "file": "models/ix_flashlight.gltf",
+      "aabb": {
+        "min": [
+          -0.0825,
+          0.0,
+          -0.0193
+        ],
+        "max": [
+          0.0825,
+          0.0386,
+          0.0193
+        ]
+      },
+      "colliders": [],
+      "tris": 1868
+    },
+    "ix_car_key": {
+      "file": "models/ix_car_key.gltf",
+      "aabb": {
+        "min": [
+          -0.0364,
+          0.0,
+          -0.0174
+        ],
+        "max": [
+          0.0492,
+          0.0125,
+          0.0174
+        ]
+      },
+      "colliders": [],
+      "tris": 940
+    },
     "garage_bay": {
       "file": "models/garage_bay.gltf",
       "aabb": {
@@ -18420,6 +18622,179 @@
         }
       ],
       "tris": 784
+    },
+    "ix_switch_garage": {
+      "file": "models/ix_switch_garage.gltf",
+      "aabb": {
+        "min": [
+          -0.043,
+          -0.043,
+          -0.0
+        ],
+        "max": [
+          0.043,
+          0.043,
+          0.0137
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.043,
+            -0.043,
+            -0.0
+          ],
+          "max": [
+            0.043,
+            0.043,
+            0.008
+          ]
+        }
+      ],
+      "tris": 332
+    },
+    "ix_breaker_panel": {
+      "file": "models/ix_breaker_panel.gltf",
+      "aabb": {
+        "min": [
+          -0.28,
+          -0.36,
+          -0.0
+        ],
+        "max": [
+          0.28,
+          0.36,
+          0.11
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.255,
+            -0.335,
+            0.003
+          ],
+          "max": [
+            0.255,
+            0.335,
+            0.007
+          ]
+        },
+        {
+          "min": [
+            -0.1257,
+            -0.1725,
+            0.016
+          ],
+          "max": [
+            0.1257,
+            0.2125,
+            0.078
+          ]
+        },
+        {
+          "min": [
+            -0.28,
+            -0.36,
+            -0.0
+          ],
+          "max": [
+            0.28,
+            0.36,
+            0.11
+          ]
+        },
+        {
+          "min": [
+            -0.055,
+            -0.2725,
+            0.005
+          ],
+          "max": [
+            0.055,
+            -0.2275,
+            0.055
+          ]
+        },
+        {
+          "min": [
+            -0.032,
+            -0.26,
+            0.053
+          ],
+          "max": [
+            0.032,
+            -0.24,
+            0.063
+          ]
+        },
+        {
+          "min": [
+            -0.055,
+            0.23,
+            0.02
+          ],
+          "max": [
+            0.055,
+            0.32,
+            0.05
+          ]
+        },
+        {
+          "min": [
+            0.0712,
+            0.296,
+            0.034
+          ],
+          "max": [
+            0.0788,
+            0.304,
+            0.038
+          ]
+        },
+        {
+          "min": [
+            -0.24,
+            -0.1475,
+            0.008
+          ],
+          "max": [
+            0.24,
+            0.1875,
+            0.016
+          ]
+        },
+        {
+          "min": [
+            -0.116,
+            -0.131,
+            0.078
+          ],
+          "max": [
+            0.1209,
+            0.183,
+            0.09
+          ]
+        }
+      ],
+      "tris": 3100
+    },
+    "ix_fuse": {
+      "file": "models/ix_fuse.gltf",
+      "aabb": {
+        "min": [
+          -0.0255,
+          0.0,
+          -0.0074
+        ],
+        "max": [
+          0.0255,
+          0.0148,
+          0.0074
+        ]
+      },
+      "colliders": [],
+      "tris": 460
     },
     "art_zip_red": {
       "file": "models/art_zip_red.gltf",
@@ -21754,6 +22129,40 @@
       ],
       "tris": 680
     },
+    "ix_book": {
+      "file": "models/ix_book.gltf",
+      "aabb": {
+        "min": [
+          -0.1221,
+          -0.0,
+          -0.08
+        ],
+        "max": [
+          0.1175,
+          0.032,
+          0.08
+        ]
+      },
+      "colliders": [],
+      "tris": 156
+    },
+    "ix_book_b": {
+      "file": "models/ix_book_b.gltf",
+      "aabb": {
+        "min": [
+          -0.1111,
+          -0.0,
+          -0.0725
+        ],
+        "max": [
+          0.1075,
+          0.026,
+          0.0725
+        ]
+      },
+      "colliders": [],
+      "tris": 156
+    },
     "bed": {
       "file": "models/bed.gltf",
       "aabb": {
@@ -22791,6 +23200,23 @@
         }
       ],
       "tris": 2268
+    },
+    "ix_blind_bedroom": {
+      "file": "models/ix_blind_bedroom.gltf",
+      "aabb": {
+        "min": [
+          -5.998,
+          3.683,
+          0.07
+        ],
+        "max": [
+          5.998,
+          3.797,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 720
     },
     "bath_vanity": {
       "file": "models/bath_vanity.gltf",
@@ -24671,6 +25097,23 @@
       },
       "colliders": [],
       "tris": 256
+    },
+    "ix_blind_office": {
+      "file": "models/ix_blind_office.gltf",
+      "aabb": {
+        "min": [
+          -5.748,
+          3.683,
+          0.07
+        ],
+        "max": [
+          5.748,
+          3.797,
+          0.145
+        ]
+      },
+      "colliders": [],
+      "tris": 720
     },
     "guest_mirror_trim": {
       "file": "models/guest_mirror_trim.gltf",
@@ -27772,7 +28215,10 @@
         0.0,
         15.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "entry_bench",
@@ -27912,7 +28358,10 @@
         2.35,
         18.55
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -27922,7 +28371,10 @@
         2.35,
         16.5
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -27932,7 +28384,10 @@
         2.35,
         18.55
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -27942,7 +28397,10 @@
         2.35,
         16.5
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "library_floorlamp",
@@ -27952,7 +28410,10 @@
         0.0,
         19.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_entry"
+      }
     },
     {
       "asset": "decor_a_table",
@@ -27985,6 +28446,50 @@
       "rotationY": 90
     },
     {
+      "asset": "ix_switch",
+      "room": "entry",
+      "position": [
+        7.17,
+        1.1,
+        10.65
+      ],
+      "rotationY": 0,
+      "signal": "lights_entry",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "entry",
+      "position": [
+        7.27,
+        1.1,
+        10.65
+      ],
+      "rotationY": 0,
+      "signal": "blinds_entry"
+    },
+    {
+      "asset": "ix_control_panel",
+      "room": "entry",
+      "position": [
+        7.85,
+        1.45,
+        11.35
+      ],
+      "rotationY": -90
+    },
+    {
+      "asset": "ix_blind_entry",
+      "room": "entry",
+      "position": [
+        0.0,
+        0.0,
+        20.0
+      ],
+      "rotationY": 180,
+      "signal": "blinds_entry"
+    },
+    {
       "asset": "entry_vanity",
       "room": "powder",
       "position": [
@@ -28002,7 +28507,10 @@
         1.72,
         10.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -28012,7 +28520,10 @@
         1.72,
         10.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -28022,7 +28533,10 @@
         1.72,
         10.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "entry_wc",
@@ -28062,7 +28576,10 @@
         1.72,
         11.85
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "entry_round_table",
@@ -28152,7 +28669,10 @@
         4.2,
         13.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28162,7 +28682,10 @@
         4.2,
         18.95
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28172,7 +28695,10 @@
         4.2,
         17.35
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28182,7 +28708,10 @@
         4.2,
         13.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28192,7 +28721,10 @@
         4.2,
         16.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_powder"
+      }
     },
     {
       "asset": "decor_a_soft_vanity",
@@ -28235,6 +28767,18 @@
       "rotationY": 0
     },
     {
+      "asset": "ix_switch",
+      "room": "powder",
+      "position": [
+        -8.15,
+        1.1,
+        16.78
+      ],
+      "rotationY": -90,
+      "signal": "lights_powder",
+      "state": true
+    },
+    {
       "asset": "entry_coat_closet",
       "room": "cloak",
       "position": [
@@ -28242,7 +28786,10 @@
         0.0,
         10.96
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_coat_closet",
@@ -28252,7 +28799,10 @@
         0.0,
         10.96
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_coat_closet",
@@ -28262,7 +28812,10 @@
         0.0,
         12.6
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_coat_closet",
@@ -28272,7 +28825,10 @@
         0.0,
         15.05
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_mirror_tall",
@@ -28282,7 +28838,10 @@
         1.25,
         14.05
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -28292,7 +28851,10 @@
         1.75,
         15.05
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_sconce",
@@ -28302,7 +28864,10 @@
         1.75,
         13.05
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "entry_bench",
@@ -28352,7 +28917,10 @@
         4.2,
         14.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28362,7 +28930,10 @@
         4.2,
         18.95
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28372,7 +28943,10 @@
         4.2,
         17.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_cloak"
+      }
     },
     {
       "asset": "decor_a_soft_bench_cloak",
@@ -28425,6 +28999,18 @@
       "rotationY": 0
     },
     {
+      "asset": "ix_switch",
+      "room": "cloak",
+      "position": [
+        8.15,
+        1.1,
+        18.22
+      ],
+      "rotationY": 90,
+      "signal": "lights_cloak",
+      "state": true
+    },
+    {
       "asset": "living_media_wall",
       "room": "den",
       "position": [
@@ -28432,7 +29018,11 @@
         0.0,
         19.59
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "tv": "tv_den",
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "living_sectional",
@@ -28482,7 +29072,10 @@
         0.55,
         14.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "living_side_table",
@@ -28502,7 +29095,10 @@
         0.55,
         14.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "living_floor_lamp",
@@ -28512,7 +29108,10 @@
         0.0,
         13.15
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "living_armchair_cognac",
@@ -28652,7 +29251,10 @@
         2.25,
         10.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -28662,7 +29264,10 @@
         2.25,
         10.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -28672,7 +29277,10 @@
         2.25,
         16.05
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -28682,7 +29290,10 @@
         2.25,
         18.65
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28692,7 +29303,10 @@
         4.2,
         11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28702,7 +29316,10 @@
         4.2,
         12.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -28712,7 +29329,10 @@
         4.2,
         17.15
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_den"
+      }
     },
     {
       "asset": "decor_a_console_den",
@@ -28795,6 +29415,18 @@
       "rotationY": 0
     },
     {
+      "asset": "ix_switch",
+      "room": "den",
+      "position": [
+        -20.47,
+        1.1,
+        10.65
+      ],
+      "rotationY": 0,
+      "signal": "lights_den",
+      "state": true
+    },
+    {
       "asset": "living_fireplace",
       "room": "great_room",
       "position": [
@@ -28802,7 +29434,10 @@
         0.0,
         -0.0
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "fire": "fire_great_room"
+      }
     },
     {
       "asset": "living_chandelier",
@@ -28812,7 +29447,10 @@
         8.4,
         -0.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_sofa",
@@ -28892,7 +29530,10 @@
         0.55,
         -1.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_table_lamp",
@@ -28902,7 +29543,10 @@
         0.55,
         1.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_console",
@@ -28922,7 +29566,10 @@
         0.82,
         0.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_table_lamp",
@@ -28932,7 +29579,10 @@
         0.82,
         -0.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_sofa_ink",
@@ -28982,7 +29632,10 @@
         0.0,
         -7.1
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_side_table",
@@ -29052,7 +29705,10 @@
         0.0,
         4.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_side_table",
@@ -29072,7 +29728,10 @@
         0.55,
         8.2
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "living_art_tall",
@@ -29312,7 +29971,10 @@
         8.4,
         -0.9
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29322,7 +29984,10 @@
         8.4,
         0.9
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29332,7 +29997,10 @@
         8.4,
         -8.2
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29342,7 +30010,10 @@
         8.4,
         7.9
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_great_room"
+      }
     },
     {
       "asset": "decor_a_console_sofa",
@@ -29463,6 +30134,63 @@
         -7.95
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "ix_switch",
+      "room": "great_room",
+      "position": [
+        -20.47,
+        1.1,
+        10.35
+      ],
+      "rotationY": 180,
+      "signal": "lights_great_room",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "great_room",
+      "position": [
+        -20.57,
+        1.1,
+        10.35
+      ],
+      "rotationY": 180,
+      "signal": "blinds_great_room"
+    },
+    {
+      "asset": "ix_switch_fire",
+      "room": "great_room",
+      "position": [
+        -13.87,
+        1.1,
+        -1.25
+      ],
+      "rotationY": -90,
+      "signal": "fire_great_room",
+      "state": true
+    },
+    {
+      "asset": "ix_blind_great_room",
+      "room": "great_room",
+      "position": [
+        -26.0,
+        0.0,
+        5.091
+      ],
+      "rotationY": 90,
+      "signal": "blinds_great_room"
+    },
+    {
+      "asset": "ix_blind_great_room",
+      "room": "great_room",
+      "position": [
+        -26.0,
+        0.0,
+        -5.091
+      ],
+      "rotationY": 90,
+      "signal": "blinds_great_room"
     },
     {
       "asset": "dining_table",
@@ -29632,7 +30360,10 @@
         2.376,
         -15.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "dining_sideboard",
@@ -29662,7 +30393,10 @@
         0.84,
         -15.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "table_lamp",
@@ -29672,7 +30406,10 @@
         0.84,
         -16.7
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "vase",
@@ -29802,7 +30539,10 @@
         0.0,
         -17.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29812,7 +30552,10 @@
         4.2,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29822,7 +30565,10 @@
         4.2,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -29832,7 +30578,10 @@
         4.2,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_dining"
+      }
     },
     {
       "asset": "decor_b_vignette_sideboard",
@@ -29885,6 +30634,40 @@
       "rotationY": 180
     },
     {
+      "asset": "ix_switch",
+      "room": "dining",
+      "position": [
+        -16.83,
+        1.1,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "lights_dining",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "dining",
+      "position": [
+        -16.73,
+        1.1,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "blinds_dining"
+    },
+    {
+      "asset": "ix_blind_dining",
+      "room": "dining",
+      "position": [
+        -18.0,
+        0.0,
+        -20.0
+      ],
+      "rotationY": 0,
+      "signal": "blinds_dining"
+    },
+    {
       "asset": "kitchen_wall_run",
       "room": "kitchen",
       "position": [
@@ -29892,7 +30675,10 @@
         0.0,
         -10.98
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_range_wall",
@@ -29902,7 +30688,10 @@
         0.0,
         -10.98
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_island",
@@ -29912,7 +30701,11 @@
         0.0,
         -14.11
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "tap": "tap_kitchen",
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_stool",
@@ -29972,7 +30765,10 @@
         1.95,
         -14.09
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_pendant",
@@ -29982,7 +30778,10 @@
         1.95,
         -14.09
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_pendant",
@@ -29992,7 +30791,10 @@
         1.95,
         -14.09
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "kitchen_table",
@@ -30142,7 +30944,10 @@
         4.2,
         -18.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "library_floorlamp",
@@ -30152,7 +30957,10 @@
         0.0,
         -17.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30162,7 +30970,10 @@
         4.2,
         -12.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30172,7 +30983,10 @@
         4.2,
         -12.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30182,7 +30996,10 @@
         4.2,
         -12.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30192,7 +31009,10 @@
         4.2,
         -12.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30202,7 +31022,10 @@
         4.2,
         -12.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30212,7 +31035,10 @@
         4.2,
         -18.8
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30222,7 +31048,10 @@
         4.2,
         -18.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_kitchen"
+      }
     },
     {
       "asset": "decor_b_vignette_island",
@@ -30315,6 +31144,70 @@
       "rotationY": 200
     },
     {
+      "asset": "ix_switch",
+      "room": "kitchen",
+      "position": [
+        -9.85,
+        1.1,
+        -17.92
+      ],
+      "rotationY": 90,
+      "signal": "lights_kitchen",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "kitchen",
+      "position": [
+        -9.85,
+        1.1,
+        -18.02
+      ],
+      "rotationY": 90,
+      "signal": "blinds_kitchen"
+    },
+    {
+      "asset": "ix_blind_kitchen",
+      "room": "kitchen",
+      "position": [
+        -1.0,
+        0.0,
+        -20.0
+      ],
+      "rotationY": 0,
+      "signal": "blinds_kitchen"
+    },
+    {
+      "asset": "ix_tablet_dock",
+      "room": "kitchen",
+      "position": [
+        -2.4,
+        0.93,
+        -13.9
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "ix_wine_bottle",
+      "room": "kitchen",
+      "position": [
+        1.68,
+        0.93,
+        -13.63
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "ix_battery",
+      "room": "kitchen",
+      "position": [
+        -3.5,
+        0.92,
+        -11.2
+      ],
+      "rotationY": 75
+    },
+    {
       "asset": "kitchen_scullery_run",
       "room": "scullery",
       "position": [
@@ -30322,7 +31215,10 @@
         0.0,
         -19.528
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_scullery"
+      }
     },
     {
       "asset": "kitchen_pantry",
@@ -30332,7 +31228,10 @@
         0.0,
         -17.7
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_scullery"
+      }
     },
     {
       "asset": "kitchen_pantry",
@@ -30342,7 +31241,10 @@
         0.0,
         -12.15
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_scullery"
+      }
     },
     {
       "asset": "kitchen_coffee_station",
@@ -30352,7 +31254,10 @@
         0.0,
         -12.15
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_scullery"
+      }
     },
     {
       "asset": "kitchen_shelving",
@@ -30382,7 +31287,10 @@
         4.2,
         -13.35
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_scullery"
+      }
     },
     {
       "asset": "decor_b_vignette_bread",
@@ -30415,6 +31323,18 @@
       "rotationY": 0
     },
     {
+      "asset": "ix_switch",
+      "room": "scullery",
+      "position": [
+        13.35,
+        1.1,
+        -16.28
+      ],
+      "rotationY": -90,
+      "signal": "lights_scullery",
+      "state": true
+    },
+    {
       "asset": "dining_wine_rack",
       "room": "wine_room",
       "position": [
@@ -30442,7 +31362,10 @@
         0.0,
         -19.575
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "dining_wine_rack_long",
@@ -30552,7 +31475,10 @@
         1.9,
         -15.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "dining_barrel",
@@ -30682,7 +31608,10 @@
         2.25,
         -10.65
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -30692,7 +31621,10 @@
         2.25,
         -10.65
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "library_floorlamp",
@@ -30702,7 +31634,10 @@
         0.0,
         -13.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30712,7 +31647,10 @@
         4.2,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30722,7 +31660,10 @@
         4.2,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30732,7 +31673,10 @@
         4.2,
         -11.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30742,7 +31686,10 @@
         4.2,
         -18.92
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_wine_room"
+      }
     },
     {
       "asset": "decor_b_vignette_cheese",
@@ -30773,6 +31720,38 @@
         -11.15
       ],
       "rotationY": -6
+    },
+    {
+      "asset": "ix_switch",
+      "room": "wine_room",
+      "position": [
+        13.65,
+        1.1,
+        -16.28
+      ],
+      "rotationY": 90,
+      "signal": "lights_wine_room",
+      "state": true
+    },
+    {
+      "asset": "ix_wine_bottle",
+      "room": "wine_room",
+      "position": [
+        21.05,
+        0.92,
+        -15.7
+      ],
+      "rotationY": 15
+    },
+    {
+      "asset": "ix_wine_bottle",
+      "room": "wine_room",
+      "position": [
+        15.2,
+        0.92,
+        -18.87
+      ],
+      "rotationY": 40
     },
     {
       "asset": "garage_lockers",
@@ -30842,7 +31821,10 @@
         4.2,
         -6.15
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -30852,7 +31834,10 @@
         2.25,
         -8.0
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_sconce_updown",
@@ -30862,7 +31847,10 @@
         2.25,
         -2.5
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30872,7 +31860,10 @@
         4.2,
         -1.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30882,7 +31873,10 @@
         4.2,
         -1.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30892,7 +31886,10 @@
         4.2,
         -1.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30902,7 +31899,10 @@
         4.2,
         -1.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30912,7 +31912,10 @@
         4.2,
         -9.2
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30922,7 +31925,10 @@
         4.2,
         -9.2
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30932,7 +31938,10 @@
         4.2,
         -2.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -30942,7 +31951,10 @@
         4.2,
         -9.35
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_mudroom"
+      }
     },
     {
       "asset": "decor_b_vignette_keys",
@@ -30983,6 +31995,38 @@
         -9.8
       ],
       "rotationY": 120
+    },
+    {
+      "asset": "ix_switch",
+      "room": "mudroom",
+      "position": [
+        13.65,
+        1.1,
+        -2.78
+      ],
+      "rotationY": 90,
+      "signal": "lights_mudroom",
+      "state": true
+    },
+    {
+      "asset": "ix_flashlight",
+      "room": "mudroom",
+      "position": [
+        20.5,
+        0.92,
+        -5.8
+      ],
+      "rotationY": 12
+    },
+    {
+      "asset": "ix_car_key",
+      "room": "mudroom",
+      "position": [
+        21.3,
+        0.927,
+        -5.75
+      ],
+      "rotationY": -20
     },
     {
       "asset": "garage_bay",
@@ -31032,7 +32076,10 @@
         0.0,
         16.5
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "garage_vitrine",
@@ -31042,7 +32089,10 @@
         0.0,
         16.5
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "garage_slatwall",
@@ -31052,7 +32102,10 @@
         0.0,
         4.4
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "garage_slatwall",
@@ -31062,7 +32115,10 @@
         0.0,
         4.4
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "garage_ev_charger",
@@ -31112,7 +32168,10 @@
         0.0,
         0.47
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "garage_toolwall",
@@ -31142,7 +32201,10 @@
         4.2,
         14.3
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -31152,7 +32214,10 @@
         4.2,
         16.7
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -31162,7 +32227,10 @@
         4.2,
         14.3
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "light_g_downlight",
@@ -31172,7 +32240,10 @@
         4.2,
         16.7
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_garage"
+      }
     },
     {
       "asset": "car_ev",
@@ -31225,6 +32296,58 @@
       "rotationY": 140
     },
     {
+      "asset": "ix_switch",
+      "room": "garage",
+      "position": [
+        19.03,
+        1.1,
+        0.15
+      ],
+      "rotationY": 0,
+      "signal": "lights_garage",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_garage",
+      "room": "garage",
+      "position": [
+        18.93,
+        1.1,
+        0.15
+      ],
+      "rotationY": 0
+    },
+    {
+      "asset": "ix_breaker_panel",
+      "room": "garage",
+      "position": [
+        13.65,
+        1.45,
+        10.95
+      ],
+      "rotationY": 90
+    },
+    {
+      "asset": "ix_fuse",
+      "room": "garage",
+      "position": [
+        17.5,
+        0.95,
+        3.64
+      ],
+      "rotationY": 30
+    },
+    {
+      "asset": "ix_battery",
+      "room": "garage",
+      "position": [
+        17.2,
+        0.95,
+        3.66
+      ],
+      "rotationY": -15
+    },
+    {
       "asset": "art_zip_red",
       "room": "gallery_s",
       "position": [
@@ -31272,7 +32395,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31282,7 +32409,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31292,7 +32423,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31302,7 +32437,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31312,7 +32451,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31322,7 +32465,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31332,7 +32479,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31342,7 +32493,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31352,7 +32507,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31362,7 +32521,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31372,7 +32535,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31382,7 +32549,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31392,7 +32563,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31402,7 +32577,11 @@
         4.2,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31412,7 +32591,11 @@
         4.2,
         8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31422,7 +32605,11 @@
         4.2,
         8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "decor_c_vignette_gallery",
@@ -31442,7 +32629,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31452,7 +32643,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31462,7 +32657,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31472,7 +32671,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31482,7 +32685,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31492,7 +32699,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31502,7 +32713,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31512,7 +32727,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31522,7 +32741,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31532,7 +32755,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31542,7 +32769,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31552,7 +32783,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31562,7 +32797,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31572,7 +32811,11 @@
         4.2,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31582,7 +32825,11 @@
         4.2,
         -8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31592,7 +32839,11 @@
         4.2,
         -8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "decor_c_gallery_bench",
@@ -31612,7 +32863,11 @@
         4.2,
         5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31622,7 +32877,11 @@
         4.2,
         3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31632,7 +32891,11 @@
         4.2,
         2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31642,7 +32905,11 @@
         4.2,
         0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31652,7 +32919,11 @@
         4.2,
         -0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31662,7 +32933,11 @@
         4.2,
         -2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31672,7 +32947,11 @@
         4.2,
         -3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31682,7 +32961,11 @@
         4.2,
         -5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "decor_c_vignette_gallery",
@@ -31702,7 +32985,11 @@
         4.2,
         5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31712,7 +32999,11 @@
         4.2,
         3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31722,7 +33013,11 @@
         4.2,
         2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31732,7 +33027,11 @@
         4.2,
         0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31742,7 +33041,11 @@
         4.2,
         -0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31752,7 +33055,11 @@
         4.2,
         -2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31762,7 +33069,11 @@
         4.2,
         -3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -31772,7 +33083,11 @@
         4.2,
         -5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "courtyard_bed_north",
@@ -32282,7 +33597,10 @@
         5.364,
         15.13
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_lamp",
@@ -32292,7 +33610,10 @@
         5.364,
         15.37
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_armchair",
@@ -32332,7 +33653,10 @@
         5.16,
         15.25
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_floorlamp",
@@ -32342,7 +33666,10 @@
         4.6,
         12.95
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_sofa_navy",
@@ -32372,7 +33699,10 @@
         5.164,
         11.25
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_plant",
@@ -32422,7 +33752,10 @@
         4.6,
         18.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "library_ladder",
@@ -32442,7 +33775,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32452,7 +33788,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32462,7 +33801,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32472,7 +33814,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32482,7 +33827,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32492,7 +33840,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32502,7 +33853,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32512,7 +33866,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32522,7 +33879,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32532,7 +33892,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32542,7 +33905,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32552,7 +33918,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32562,7 +33931,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32572,7 +33944,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32582,7 +33957,10 @@
         8.4,
         18.99
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32592,7 +33970,10 @@
         8.4,
         18.81
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32602,7 +33983,10 @@
         8.4,
         17.63
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32612,7 +33996,10 @@
         8.4,
         16.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32622,7 +34009,10 @@
         8.4,
         15.27
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32632,7 +34022,10 @@
         8.4,
         14.09
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32642,7 +34035,10 @@
         8.4,
         12.91
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32652,7 +34048,10 @@
         8.4,
         11.73
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32662,7 +34061,10 @@
         8.4,
         11.51
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32672,7 +34074,10 @@
         8.4,
         11.51
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32682,7 +34087,10 @@
         8.4,
         11.51
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "light_u_linear_pendant",
@@ -32692,7 +34100,10 @@
         6.25,
         15.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_library"
+      }
     },
     {
       "asset": "decor_c_vignette_table",
@@ -32775,6 +34186,38 @@
       "rotationY": 20
     },
     {
+      "asset": "ix_switch",
+      "room": "library",
+      "position": [
+        -11.47,
+        5.7,
+        10.65
+      ],
+      "rotationY": 0,
+      "signal": "lights_library",
+      "state": true
+    },
+    {
+      "asset": "ix_book",
+      "room": "library",
+      "position": [
+        -15.05,
+        5.36,
+        15.07
+      ],
+      "rotationY": 10
+    },
+    {
+      "asset": "ix_book_b",
+      "room": "library",
+      "position": [
+        -16.05,
+        5.36,
+        15.47
+      ],
+      "rotationY": -15
+    },
+    {
       "asset": "bed",
       "room": "primary_bedroom",
       "position": [
@@ -32812,7 +34255,10 @@
         5.15,
         -16.66
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "table_lamp",
@@ -32822,7 +34268,10 @@
         5.15,
         -13.84
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "bench",
@@ -32902,7 +34351,10 @@
         4.6,
         -14.65
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "library_plant",
@@ -32972,7 +34424,10 @@
         5.34,
         -10.95
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32982,7 +34437,10 @@
         8.4,
         -15.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -32992,7 +34450,10 @@
         8.4,
         -12.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33002,7 +34463,10 @@
         8.4,
         -16.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33012,7 +34476,10 @@
         8.4,
         -15.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bedroom"
+      }
     },
     {
       "asset": "decor_d_nightstand_a",
@@ -33085,6 +34552,40 @@
       "rotationY": 180
     },
     {
+      "asset": "ix_switch",
+      "room": "primary_bedroom",
+      "position": [
+        -12.47,
+        5.7,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "lights_primary_bedroom",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "primary_bedroom",
+      "position": [
+        -12.57,
+        5.7,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "blinds_primary_bedroom"
+    },
+    {
+      "asset": "ix_blind_bedroom",
+      "room": "primary_bedroom",
+      "position": [
+        -18.0,
+        4.6,
+        -20.0
+      ],
+      "rotationY": 0,
+      "signal": "blinds_primary_bedroom"
+    },
+    {
       "asset": "bath_vanity",
       "room": "primary_bath",
       "position": [
@@ -33102,7 +34603,10 @@
         6.5,
         -19.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_mirror",
@@ -33112,7 +34616,10 @@
         6.5,
         -19.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_sconce",
@@ -33122,7 +34629,10 @@
         6.5,
         -19.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_sconce",
@@ -33132,7 +34642,10 @@
         6.5,
         -19.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_sconce",
@@ -33142,7 +34655,10 @@
         6.5,
         -19.85
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "vase",
@@ -33202,7 +34718,10 @@
         6.3,
         -15.6
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_sconce",
@@ -33212,7 +34731,10 @@
         6.3,
         -18.4
       ],
-      "rotationY": -90
+      "rotationY": -90,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_pendant",
@@ -33222,7 +34744,10 @@
         8.4,
         -17.0
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "bath_plant",
@@ -33302,7 +34827,10 @@
         8.4,
         -16.3
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33312,7 +34840,10 @@
         8.4,
         -17.7
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33322,7 +34853,10 @@
         8.4,
         -11.4
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33332,7 +34866,10 @@
         8.4,
         -11.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33342,7 +34879,10 @@
         8.4,
         -11.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33352,7 +34892,10 @@
         8.4,
         -17.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33362,7 +34905,10 @@
         8.4,
         -14.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_primary_bath"
+      }
     },
     {
       "asset": "decor_d_vanity_tray",
@@ -33423,6 +34969,18 @@
         -11.0
       ],
       "rotationY": 0
+    },
+    {
+      "asset": "ix_switch",
+      "room": "primary_bath",
+      "position": [
+        -9.85,
+        5.7,
+        -16.28
+      ],
+      "rotationY": 90,
+      "signal": "lights_primary_bath",
+      "state": true
     },
     {
       "asset": "desk",
@@ -33556,7 +35114,10 @@
         5.38,
         -14.4
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "library_lamp",
@@ -33566,7 +35127,10 @@
         5.38,
         -16.1
       ],
-      "rotationY": 90
+      "rotationY": 90,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "library_sofa",
@@ -33616,7 +35180,10 @@
         5.16,
         -11.05
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "art_calligraphy",
@@ -33716,7 +35283,10 @@
         8.4,
         -12.28
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33726,7 +35296,10 @@
         8.4,
         -13.46
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33736,7 +35309,10 @@
         8.4,
         -17.04
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33746,7 +35322,10 @@
         8.4,
         -18.22
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33756,7 +35335,10 @@
         8.4,
         -15.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33766,7 +35348,10 @@
         8.4,
         -11.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33776,7 +35361,10 @@
         8.4,
         -11.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -33786,7 +35374,10 @@
         8.4,
         -14.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_halo",
@@ -33796,7 +35387,10 @@
         7.0,
         -14.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "light_u_halo",
@@ -33806,7 +35400,10 @@
         7.0,
         -12.2
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "library_lamp",
@@ -33816,7 +35413,10 @@
         5.34,
         -17.45
       ],
-      "rotationY": 180
+      "rotationY": 180,
+      "signal": {
+        "lights": "lights_office"
+      }
     },
     {
       "asset": "decor_c_vignette_desk",
@@ -33897,6 +35497,50 @@
         -11.21
       ],
       "rotationY": 175
+    },
+    {
+      "asset": "ix_switch",
+      "room": "office",
+      "position": [
+        7.47,
+        5.7,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "lights_office",
+      "state": true
+    },
+    {
+      "asset": "ix_switch_blinds",
+      "room": "office",
+      "position": [
+        7.57,
+        5.7,
+        -10.65
+      ],
+      "rotationY": 180,
+      "signal": "blinds_office"
+    },
+    {
+      "asset": "ix_blind_office",
+      "room": "office",
+      "position": [
+        6.75,
+        4.6,
+        -20.0
+      ],
+      "rotationY": 0,
+      "signal": "blinds_office"
+    },
+    {
+      "asset": "ix_book_b",
+      "room": "office",
+      "position": [
+        3.19,
+        4.98,
+        -14.63
+      ],
+      "rotationY": 84
     },
     {
       "asset": "guest_mirror_trim",
@@ -34056,7 +35700,10 @@
         8.4,
         -18.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_gym"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34066,7 +35713,10 @@
         8.4,
         -11.35
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_gym"
+      }
     },
     {
       "asset": "decor_c_towels",
@@ -34119,6 +35769,18 @@
       "rotationY": 30
     },
     {
+      "asset": "ix_switch",
+      "room": "gym",
+      "position": [
+        13.65,
+        5.7,
+        -16.28
+      ],
+      "rotationY": 90,
+      "signal": "lights_gym",
+      "state": true
+    },
+    {
       "asset": "guest_bed",
       "room": "guest_room",
       "position": [
@@ -34156,7 +35818,10 @@
         5.12,
         -8.43
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "table_lamp",
@@ -34166,7 +35831,10 @@
         5.12,
         -5.67
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "guest_bench",
@@ -34306,7 +35974,10 @@
         4.6,
         -5.25
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "library_plant",
@@ -34346,7 +36017,10 @@
         8.4,
         -7.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34356,7 +36030,10 @@
         8.4,
         -9.45
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34366,7 +36043,10 @@
         8.4,
         -4.65
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34376,7 +36056,10 @@
         8.4,
         -7.05
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34386,7 +36069,10 @@
         8.4,
         -9.55
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "light_u_downlight",
@@ -34396,7 +36082,10 @@
         8.4,
         -0.95
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "table_lamp",
@@ -34406,7 +36095,10 @@
         5.34,
         -0.4
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_guest_room"
+      }
     },
     {
       "asset": "decor_d_nightstand_guest_a",
@@ -34489,6 +36181,18 @@
       "rotationY": 0
     },
     {
+      "asset": "ix_switch",
+      "room": "guest_room",
+      "position": [
+        13.65,
+        5.7,
+        -2.78
+      ],
+      "rotationY": 90,
+      "signal": "lights_guest_room",
+      "state": true
+    },
+    {
       "asset": "decor_c_plant_snake",
       "room": "ugallery_s",
       "position": [
@@ -34506,7 +36210,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34516,7 +36224,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34526,7 +36238,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34536,7 +36252,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34546,7 +36266,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34556,7 +36280,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34566,7 +36294,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34576,7 +36308,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34586,7 +36322,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34596,7 +36336,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34606,7 +36350,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34616,7 +36364,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34626,7 +36378,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34636,7 +36392,11 @@
         8.4,
         9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34646,7 +36406,11 @@
         8.4,
         8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34656,7 +36420,11 @@
         8.4,
         8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "art_dune",
@@ -34716,7 +36484,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34726,7 +36498,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34736,7 +36512,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34746,7 +36526,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34756,7 +36540,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34766,7 +36554,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34776,7 +36568,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34786,7 +36582,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34796,7 +36596,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34806,7 +36610,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34816,7 +36624,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34826,7 +36638,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34836,7 +36652,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34846,7 +36666,11 @@
         8.4,
         -9.6
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34856,7 +36680,11 @@
         8.4,
         -8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34866,7 +36694,11 @@
         8.4,
         -8.75
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34876,7 +36708,11 @@
         8.4,
         5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34886,7 +36722,11 @@
         8.4,
         3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34896,7 +36736,11 @@
         8.4,
         2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34906,7 +36750,11 @@
         8.4,
         0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34916,7 +36764,11 @@
         8.4,
         -0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34926,7 +36778,11 @@
         8.4,
         -2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34936,7 +36792,11 @@
         8.4,
         -3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34946,7 +36806,11 @@
         8.4,
         -5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "decor_c_gallery_bench",
@@ -34976,7 +36840,11 @@
         8.4,
         5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34986,7 +36854,11 @@
         8.4,
         3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -34996,7 +36868,11 @@
         8.4,
         2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -35006,7 +36882,11 @@
         8.4,
         0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -35016,7 +36896,11 @@
         8.4,
         -0.778
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -35026,7 +36910,11 @@
         8.4,
         -2.333
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -35036,7 +36924,11 @@
         8.4,
         -3.889
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     },
     {
       "asset": "light_u_downlight",
@@ -35046,7 +36938,11 @@
         8.4,
         -5.444
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "signal": {
+        "lights": "lights_galleries"
+      },
+      "state": true
     }
   ],
   "colliders": [
@@ -39408,6 +41304,21 @@
       "y": [
         0.0,
         4.6
+      ]
+    }
+  ],
+  "breakables": [
+    {
+      "name": "Mansion_Breakable_0",
+      "min": [
+        -26.06,
+        0,
+        2.1818
+      ],
+      "max": [
+        -25.94,
+        8.4,
+        -2.1818
       ]
     }
   ],

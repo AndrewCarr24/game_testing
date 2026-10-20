@@ -14,6 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 from lib import common, materials  # noqa: E402
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
 import table_lamp  # noqa: E402  (lathe)
 
 importlib.reload(common)
@@ -57,6 +58,7 @@ def build(**overrides):
             poly.flip()
     ob.data.update()
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: the lens follows the room's light switch
     return root, parts
 
 

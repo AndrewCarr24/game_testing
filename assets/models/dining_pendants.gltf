@@ -21,6 +21,17 @@
 	],
 	"nodes":[
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":0,
 			"name":"DiningPendants_Bulbs"
 		},
@@ -29,6 +40,17 @@
 			"name":"DiningPendants_Cables"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":2,
 			"name":"DiningPendants_Inside"
 		},
@@ -382,28 +404,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2975,
+			"byteLength":2839,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":2200,
-			"byteOffset":2976
+			"byteOffset":2840
 		},
 		{
 			"buffer":0,
 			"byteLength":3913,
-			"byteOffset":5176
+			"byteOffset":5040
 		},
 		{
 			"buffer":0,
 			"byteLength":3941,
-			"byteOffset":9092
+			"byteOffset":8956
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":13036,
+			"byteLength":12900,
 			"uri":"dining_pendants.bin"
 		}
 	]

@@ -56,6 +56,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":5,
 			"name":"LightULinearPendant_Diffuser_NoCollide",
 			"translation":[
@@ -83,6 +94,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":8,
 			"name":"LightULinearPendant_Uplight_NoCollide",
 			"translation":[

@@ -32,8 +32,9 @@ ALWAYS_SHRINK_IF = lambda name: "Rug" in name
 
 def main():
     keep = {n for n in shell_textures() - ALWAYS_SHRINK if not ALWAYS_SHRINK_IF(n)}
-    # the Grimble is 7.3 m tall and seen from 2 m away: its textures keep their full size
-    keep |= {n for n in os.listdir(TEX) if n.startswith("T_Grimble_")}
+    # the Grimble is 7.3 m tall and seen from 2 m away: its colour maps keep their full size;
+    # its normal maps (broad folds and fur grain) stop at 1024 (~33 MB of GPU memory saved)
+    keep |= {n for n in os.listdir(TEX) if n.startswith("T_Grimble_") and "Normal" not in n}
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:
@@ -41,8 +42,9 @@ def main():
         path = os.path.join(TEX, name)
         img = bpy.data.images.load(path)
         w, h = img.size
-        if max(w, h) > MAX:
-            f = MAX / max(w, h)
+        cap = 1024 if name.startswith("T_Grimble_") else MAX
+        if max(w, h) > cap:
+            f = cap / max(w, h)
             img.scale(max(1, round(w * f)), max(1, round(h * f)))
             img.filepath_raw = path
             img.file_format = "WEBP" if name.endswith(".webp") else img.file_format

@@ -31,6 +31,12 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -127,6 +133,7 @@ def build(**overrides):
            common.pbr_material("M_Water", (0.8, 0.85, 0.85), roughness=0.1), gap=0.10, seed=3)
     L.stack_plates(b, "PlatesR2", (x1 - 1.5, yc, z0), cer, r=0.14, count=10)
     L.stack_plates(b, "BowlsR2", (x1 - 0.95, yc, z0), char, r=0.1, count=5, step=0.035)
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

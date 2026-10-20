@@ -25,7 +25,7 @@ FINISHES = dict(
 
 PLACEMENTS = [
     # ---- screen wall (south) ----------------------------------------------------------
-    ("living_media_wall", (0.0, -4.34), 180),
+    ("living_media_wall", (0.0, -4.34), 180, {"signal": {"tv": "tv_den"}}),
     # ---- seating: the sectional faces the screen -----------------------------------------
     ("living_rug_den", (0.0, -0.8), 0),
     ("living_sectional", (-0.6, 0.6), 0),
@@ -114,3 +114,15 @@ LIGHTS = [
 ]
 
 PROBE = (0.0, -1.2, 1.6)
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (N wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_den (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-0.72, 4.6, 1.1), 0, {'signal': 'lights_den', 'state': True}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "den")

@@ -75,6 +75,17 @@
 			"name":"LivingFloorLamp_Riser"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":8,
 			"name":"LivingFloorLamp_ShadeNoCollide",
 			"translation":[

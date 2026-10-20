@@ -32,7 +32,7 @@ FINISHES = dict(
 
 PLACEMENTS = [
     # ---- A: fireplace group, facing the east feature wall -------------------------
-    ("living_fireplace", (5.74, 0.0), -90),
+    ("living_fireplace", (5.74, 0.0), -90, {"signal": {"fire": "fire_great_room"}}),
     ("living_chandelier", (-1.0, 0.5, 8.4), 0),
     ("living_rug", (2.0, 0.0), 0),
     ("living_sofa", (-0.1, 0.0), 90),
@@ -142,3 +142,19 @@ LIGHTS = [
 ]
 
 PROBE = (-3.0, 0.0, 1.6)
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the den door (S wall, latch side); the fire switch on the chimney breast,
+# interactive props, and this room's light fixtures wired to lights_great_room (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-0.72, -10.35, 1.1), 180, {'signal': 'lights_great_room', 'state': True}),
+    ('ix_switch_blinds', (-0.82, -10.35, 1.1), 180, {'signal': 'blinds_great_room'}),
+    ('ix_switch_fire', (5.88, 1.25, 1.1), -90, {'signal': 'fire_great_room', 'state': True}),
+    ('ix_blind_great_room', (-6.25, -5.091), 90, {'signal': 'blinds_great_room'}),
+    ('ix_blind_great_room', (-6.25, 5.091), 90, {'signal': 'blinds_great_room'}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "great_room")

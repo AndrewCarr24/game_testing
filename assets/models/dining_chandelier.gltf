@@ -29,6 +29,17 @@
 			"name":"DiningChandelier_Caps"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":2,
 			"name":"DiningChandelier_Globes"
 		},
@@ -368,18 +379,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":14383,
+			"byteLength":14533,
 			"byteOffset":17756
 		},
 		{
 			"buffer":0,
 			"byteLength":4232,
-			"byteOffset":32140
+			"byteOffset":32292
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":36372,
+			"byteLength":36524,
 			"uri":"dining_chandelier.bin"
 		}
 	]

@@ -21,6 +21,12 @@ NAME = "BathSconce"
 P = dict(name=NAME, height=0.34, radius=0.026, stand_off=0.05, plate=(0.05, 0.40, 0.010), emission=2.6)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -51,6 +57,7 @@ def build(**overrides):
         bc.cylinder_between(arm, (0, -pd, sgn * (h / 2 - 0.03)), (0, cy, sgn * (h / 2 - 0.03)), 0.006, 10)
         common.mesh_object(f"{n}_Arm{tag}", arm, col, brass, root)
     bc.merge(root, bc.by_material(root, brass), f"{n}_PipingBrass")
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, bc.parts_of(root)
 
 

@@ -29,6 +29,12 @@ GLOBES = [(0.00, 0.00, 1.95, 0.135), (0.30, 0.10, 1.55, 0.105), (-0.26, 0.16, 1.
 P = dict(name=NAME, emission=3.0, segs=24)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -59,6 +65,7 @@ def build(**overrides):
         c.location = (dx, dy, -drop + r - 0.004)
     bc.merge(root, bc.children(root, "_Globe_"), f"{n}_PipingGlobes")
     bc.merge(root, bc.by_material(root, brass), f"{n}_PipingBrass")
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, bc.parts_of(root)
 
 

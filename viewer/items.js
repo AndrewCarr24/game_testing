@@ -3,7 +3,12 @@ import * as THREE from 'three';
 // What the player holds and throws.
 //   Hand        shows the armed item in the lower right of the view
 //   Throwables  flies a thrown item in an arc; glass shatters on impact into
-//               shards (one instanced mesh, so a shattered vase is one draw call)
+//               shards (one instanced mesh, so a shattered vase is one draw call); the
+//               impact is a noise ({position, loudness = the item's `noise`, default 1}).
+//               `shatter: false` items (books) thud, bounce off walls and come to rest whole
+//               (onRest gets them back, to be picked up again)
+//   Flashlight  one SpotLight on the camera (created once, then only its intensity changes:
+//               adding a light recompiles every material); a battery that drains while on
 
 export class Hand {
   constructor(camera) {
@@ -46,16 +51,17 @@ export class Hand {
 const GRAVITY = 12;
 
 export class Throwables {
-  constructor(scene, colliders, onShatter) {
+  constructor(scene, colliders, onShatter, onRest = null) {
     this.scene = scene;
     this.colliders = colliders;
     this.flying = [];
     this.shards = [];      // { mesh, parts: [{p, v, r, w, s, resting}] }
-    this.onShatter = onShatter;
+    this.onShatter = onShatter;   // (at, {loudness, item, thud}) on every first impact
+    this.onRest = onRest;         // (obj, def) when a whole item has landed
   }
 
-  // throw `node` from `origin` along `dir` (unit vector, world space)
-  throw(node, origin, dir) {
+  // throw `node` from `origin` along `dir` (unit vector, world space); def = its pickup definition
+  throw(node, origin, dir, def = {}) {
     const obj = node.clone(true);
     obj.position.copy(origin);
     obj.rotation.set(0, 0, 0);
@@ -64,7 +70,8 @@ export class Throwables {
     const spin = new THREE.Vector3(Math.random() * 6 - 3, Math.random() * 4 - 2, Math.random() * 6 - 3);
     const box = new THREE.Box3().setFromObject(obj);
     const radius = box.getSize(new THREE.Vector3()).length() * 0.25;
-    this.flying.push({ obj, vel, spin, radius, material: firstMaterial(obj) });
+    const whole = def.shatter === false || def.shatter === 0;
+    this.flying.push({ obj, vel, spin, radius, material: firstMaterial(obj), item: def.item, loudness: +(def.noise ?? 1), whole, def, bounces: 0 });
   }
 
   hit(p, r) {
@@ -80,6 +87,7 @@ export class Throwables {
       const steps = Math.max(1, Math.ceil((f.vel.length() * dt) / 0.03));
       const h = dt / steps;
       for (let s = 0; s < steps; s++) {
+        const prev = f.obj.position.clone();
         f.vel.y -= GRAVITY * h;
         f.obj.position.addScaledVector(f.vel, h);
         f.obj.rotation.x += f.spin.x * h;
@@ -87,12 +95,26 @@ export class Throwables {
         f.obj.rotation.z += f.spin.z * h;
         const centre = new THREE.Box3().setFromObject(f.obj).getCenter(new THREE.Vector3());
         const box = this.hit(centre, f.radius);
-        if (box) {
-          this.shatter(centre, f.vel, f.material, box);
+        if (box && f.whole) {
+          if (!f.heard) { f.heard = true; this.onShatter?.(centre, { loudness: f.loudness, item: f.item, thud: true }); }
+          const before = centre.y - (f.obj.position.y - prev.y);
+          if ((f.vel.y <= 0 && before >= box.max.y) || ++f.bounces > 12) {   // came down on top of it: rest there
+            this.rest(f, box);
+            this.flying.splice(i, 1);
+            break;
+          }
+          // hit a side or an underside: back out and bounce off, slower
+          f.obj.position.copy(prev);
+          f.vel.x *= -0.3; f.vel.z *= -0.3;
+          if (f.vel.y > 0) f.vel.y *= -0.3;
+          f.spin.multiplyScalar(0.5);
+        } else if (box) {
+          this.shatter(centre, f.vel, f.material, box, f);
           this.scene.remove(f.obj);
           this.flying.splice(i, 1);
           break;
         }
+        if (f.obj.position.y < -5) { this.scene.remove(f.obj); this.flying.splice(i, 1); break; }   // never fall forever
       }
       changed = true;
     }
@@ -100,7 +122,18 @@ export class Throwables {
     return changed;
   }
 
-  shatter(at, vel, material, box) {
+  // a whole item lands: flat on the surface it came down on
+  rest(f, box) {
+    const o = f.obj;
+    o.rotation.set(0, o.rotation.y, 0);
+    o.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(o);
+    o.position.y += box.max.y - b.min.y + 0.001;
+    o.updateMatrixWorld(true);
+    this.onRest?.(o, f.def);
+  }
+
+  shatter(at, vel, material, box, info = {}) {
     const count = 36;
     const geo = new THREE.TetrahedronGeometry(1, 0);
     const mat = material.clone();
@@ -129,7 +162,7 @@ export class Throwables {
     this.shards.push(group);
     this.scene.add(mesh);
     this.updateShards(group, 0);
-    this.onShatter?.(at);
+    this.onShatter?.(at, { loudness: info.loudness ?? 1, item: info.item });
   }
 
   updateShards(group, dt) {
@@ -164,6 +197,54 @@ export class Throwables {
     });
     group.mesh.instanceMatrix.needsUpdate = true;
     return moving;
+  }
+}
+
+export class Flashlight {
+  constructor(camera, { drain = 240, intensity = 40, distance = 20, cone = 35 } = {}) {
+    this.camera = camera;
+    this.o = { drain, intensity, distance, cone };   // drain: seconds of light per battery
+    this.spot = null;
+    this.on = false;
+    this.battery = 1;
+    this._t = 0;
+  }
+
+  // the light itself: made once (when the level has a flashlight, or one is first picked up)
+  ensure() {
+    if (this.spot) return this.spot;
+    const o = this.o;
+    const spot = new THREE.SpotLight(0xfff0dc, 0, o.distance, THREE.MathUtils.degToRad(o.cone / 2), 0.35, 2);
+    spot.castShadow = false;
+    spot.name = 'Flashlight';
+    spot.position.set(0.12, -0.1, 0.05);        // held low and to the right
+    spot.target.position.set(0, -0.02, -1);     // along the view
+    this.camera.add(spot, spot.target);
+    this.spot = spot;
+    return spot;
+  }
+
+  // returns false when the battery is flat
+  toggle() {
+    if (!this.on && this.battery <= 0) return false;
+    this.on = !this.on;
+    this.ensure();
+    return true;
+  }
+  refill() { this.battery = 1; }
+
+  update(dt) {
+    if (!this.spot) return;
+    if (this.on) {
+      this.battery = Math.max(0, this.battery - dt / this.o.drain);
+      if (this.battery === 0) this.on = false;
+    }
+    this._t += dt;
+    // a weak battery dims the beam and makes it stutter
+    const b = this.battery;
+    let k = b > 0.15 ? 1 : 0.35 + 0.65 * (b / 0.15);
+    if (b < 0.1 && Math.sin(this._t * 23) * Math.sin(this._t * 7.3) > 0.55) k *= 0.25;
+    this.spot.intensity = this.on ? this.o.intensity * k : 0;
   }
 }
 

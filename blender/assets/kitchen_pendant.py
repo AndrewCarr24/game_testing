@@ -24,6 +24,12 @@ P = dict(
 )
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = L.Builder(p["name"])
@@ -50,6 +56,7 @@ def build(**overrides):
     b.tube("Cord_Piping", [(0, 0, zt), (0, 0, p["ceiling"] - 0.03)], 0.0035, dark, closed=False, res=3)
     b.lathe("Canopy_Piping", [(0, p["ceiling"] - 0.035), (0.055, p["ceiling"] - 0.035), (0.055, p["ceiling"]),
                               (0, p["ceiling"])], dark, segs=24, uv_tile=0)
+    ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 
 

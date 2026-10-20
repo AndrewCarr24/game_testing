@@ -29,6 +29,16 @@ await p.keyboard.press('ArrowUp'); await p.waitForTimeout(80);   // back to item
 await p.keyboard.press('ArrowDown'); await p.waitForTimeout(80);
 await p.keyboard.press('Enter'); await p.waitForTimeout(200);
 check('Enter arms the highlighted item', (await p.evaluate(() => window.__inventory.armed)) === 'c');
+// several of one kind stack: three vases are one row, "x3", and using one leaves two
+const stack = await p.evaluate(() => {
+  const inv = window.__inventory, T = window.__three.scene.constructor;
+  for (let i = 0; i < 3; i++) inv.add('jar', 'Jar', new T());
+  const rows = inv.ids().filter((id) => id === 'jar').length, label = inv.label('jar');
+  inv.remove('jar');
+  return { rows, label, after: inv.count('jar'), html: document.getElementById('inv-list').textContent };
+});
+check('several of one item stack in one row with a count', stack.rows === 1 && stack.label === 'Jar ×3' && stack.after === 2,
+  JSON.stringify(stack));
 await b.close();
 console.log(fails ? `${fails} failed` : 'all passed');
 process.exit(fails ? 1 : 0);

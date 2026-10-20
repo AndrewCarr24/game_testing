@@ -24,6 +24,12 @@ def flat_caps(ob):
     return ob
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -55,6 +61,7 @@ def build(**overrides):
     shade.lathe([(R - 0.004, zs), (R, zs), (R, H), (R - 0.004, H), (R - 0.004, zs)], segs=32)
     flat_caps(shade.to_object(f"{n}_Shade", col, glow, root, smooth=True))
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 

@@ -58,10 +58,12 @@ from lib import common, textures, vertex_ao  # noqa: E402
 import grimble_hands  # noqa: E402
 import grimble_paint  # noqa: E402
 import grimble_rig  # noqa: E402
+import grimble_crawl  # noqa: E402
 import grimble_cloth  # noqa: E402
 import grimble_qa  # noqa: E402
 
-for _m in (common, textures, vertex_ao, grimble_hands, grimble_paint, grimble_rig, grimble_cloth, grimble_qa):
+for _m in (common, textures, vertex_ao, grimble_hands, grimble_paint, grimble_rig, grimble_crawl, grimble_cloth,
+           grimble_qa):
     importlib.reload(_m)
 
 NAME = "Grimble"
@@ -160,6 +162,8 @@ P = dict(
     face_texel_boost=1.25,         # face island scale relative to hands / feet before packing
     ao=True,
     rig=True,                      # skeleton, skin weights and the actions (grimble_rig.py)
+    crawl_scale=0.65,              # the crawl family's uniform scale (grimble_crawl.py): the house's
+                                   # openings are 3.0 m; at full size the hood alone is ~3.6 m wide
     qa=True, qa_strict=True,       # run grimble_qa at the end; fail the build on errors
     lining_ao=0.35,                # occlusion floor of the cloak's lining (it's in shadow)
     force=False,                   # regenerate cached base mesh / textures
@@ -1075,7 +1079,7 @@ def _material(name, color, roughness, base=None, normal=None, normal_strength=1.
 
 # --------------------------------------------------------------------- rig
 
-def _rig(n, col, root, objs, hand_info, shift, toe_info=()):
+def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.65):
     """Skeleton from the model's landmarks, skin weights, the four actions."""
     t0 = time.time()
     sh = np.array(shift)
@@ -1130,7 +1134,13 @@ def _rig(n, col, root, objs, hand_info, shift, toe_info=()):
         if e > 1e-3:
             log(f"  rest mismatch {bn}: {e:.3f}")
     grimble_rig.prepare(sv)
-    grimble_rig.bake_actions(sv, bpy.context.scene)
+    grimble_crawl.prepare(sv, crawl_scale)
+    grimble_rig.bake_actions(sv, bpy.context.scene, extra=grimble_crawl.actions(sv))
+    grimble_rig.LAST_SOLVER = sv            # for probes / QA
+    # numbers the engine needs (glTF extras on the root node and the scene)
+    for k, v in grimble_crawl.metadata(sv).items():
+        root[k] = v
+        bpy.context.scene[k] = v
     log(f"rig + actions {time.time() - t0:.1f}s")
     return arm
 
@@ -1472,7 +1482,7 @@ def _build(p):
                 attr.data.foreach_set("color", np.ones(len(attr.data) * 4, np.float32))
     if p["rig"]:
         _rig(n, col, root, dict(Body=body, Cloak=cloak, Staff=staff, Sockets=sockets, Hands=hands_ob,
-                                Eyes=eye_objs), hand_info, Vector((-fx, -fy, 0)), toe_info)
+                                Eyes=eye_objs), hand_info, Vector((-fx, -fy, 0)), toe_info, p["crawl_scale"])
     # ================= STAGE 7: QA ===================================================
     if p["qa"]:
         errs = grimble_qa.run(root, parts, dict(tex_body=p["tex_body"], tex_cloak_unique=p["tex_cloak_unique"],

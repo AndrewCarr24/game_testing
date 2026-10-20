@@ -472,7 +472,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":75647,
+			"count":75616,
 			"max":[
 				71.27143096923828,
 				12.753400802612305,
@@ -487,17 +487,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":75647,
+			"count":75616,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":75647,
+			"count":75616,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":75647,
+			"count":75616,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -611,7 +611,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":9757,
+			"count":9755,
 			"max":[
 				90,
 				0.4700000286102295,
@@ -626,17 +626,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":9757,
+			"count":9755,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":9757,
+			"count":9755,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":9757,
+			"count":9755,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -757,43 +757,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":719547,
+			"byteLength":719670,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":1511,
-			"byteOffset":719548
+			"byteOffset":719672
 		},
 		{
 			"buffer":0,
-			"byteLength":31316,
-			"byteOffset":721060
+			"byteLength":31347,
+			"byteOffset":721184
 		},
 		{
 			"buffer":0,
-			"byteLength":464677,
-			"byteOffset":752376
+			"byteLength":464745,
+			"byteOffset":752532
 		},
 		{
 			"buffer":0,
-			"byteLength":76815,
-			"byteOffset":1217056
+			"byteLength":76821,
+			"byteOffset":1217280
 		},
 		{
 			"buffer":0,
-			"byteLength":134268,
-			"byteOffset":1293872
+			"byteLength":134318,
+			"byteOffset":1294104
 		},
 		{
 			"buffer":0,
-			"byteLength":85973,
-			"byteOffset":1428140
+			"byteLength":86015,
+			"byteOffset":1428424
 		},
 		{
 			"buffer":0,
 			"byteLength":706,
-			"byteOffset":1514116
+			"byteOffset":1514440
 		}
 	],
 	"samplers":[
@@ -804,7 +804,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1514824,
+			"byteLength":1515148,
 			"uri":"mansion_outdoor.bin"
 		}
 	]

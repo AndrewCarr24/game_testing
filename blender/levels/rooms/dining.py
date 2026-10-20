@@ -97,3 +97,17 @@ PLACEMENTS += [
     ("decor_b_table_buds", (TX - 1.75, TY, 0.76), 0),
     ("decor_b_table_buds", (TX + 1.75, TY, 0.76), 180),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch east of the gallery opening (S wall),
+# interactive props, and this room's light fixtures wired to lights_dining (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (1.17, -4.6, 1.1), 180, {'signal': 'lights_dining', 'state': True}),
+    ('ix_switch_blinds', (1.27, -4.6, 1.1), 180, {'signal': 'blinds_dining'}),
+    ('ix_blind_dining', (0.0, 4.75), 0, {'signal': 'blinds_dining'}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "dining")

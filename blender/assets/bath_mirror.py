@@ -81,6 +81,12 @@ def ring_plate(outer, inner, y0, y1):
     return bm
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -106,6 +112,7 @@ def build(**overrides):
         f"{n}_Halo",
         ring_plate(outline(w + 2 * hw, h + 2 * hw, r + hw, segs), outline(w - 0.004, h - 0.004, r, segs),
                    -p["halo_d"], -0.002), col, glow, root, smooth=False)
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, bc.parts_of(root)
 
 

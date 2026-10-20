@@ -175,8 +175,14 @@ export class Grimble {
         this.stareFor = o.stare[0] + Math.random() * (o.stare[1] - o.stare[0]);
       }
     } else if (this.state === 'watch') {
-      // ... and again: knock, wave, stare, for as long as the player is there
-      if (this.t >= this.stareFor) { this.state = 'knock'; this.t = 0; this.play('Knock'); }
+      // ... and again: knock, wave, stare; after a few rounds (if it can hunt) it breaks in
+      if (this.t >= this.stareFor) {
+        this.loops = (this.loops ?? 0) + 1;
+        if (this.hunt && this.loops >= this.hunt.o.loopsBeforeSmash) { this.state = 'inside'; this.hunt.start(); }
+        else { this.state = 'knock'; this.t = 0; this.play('Knock'); }
+      }
+    } else if (this.state === 'inside') {
+      this.hunt.update(dt, player, this.playerObj);
     }
     this.root.rotation.y = this.heading;
     this.mixer.update(dt);
@@ -201,6 +207,7 @@ export class Grimble {
   // follow; while walking it looks where it's going
   lookAt(player) {
     if (!player || this.state === 'walk' || this.state === 'wait') return;
+    if (this.state === 'inside' && !['chase', 'swipe', 'reachUp'].includes(this.hunt.state)) return;
     this.root.updateMatrixWorld(true);
     if (this.head) turnToward(this.head, player, this.o.headLimit, this.headFwd);
     for (const e of this.eyes) {

@@ -344,6 +344,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":38,
 			"name":"KitchenCoffee_Shelf_LED",
 			"translation":[
@@ -399,6 +410,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":48,
 			"name":"KitchenCoffee_Soffit_LED",
 			"translation":[

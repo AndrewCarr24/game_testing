@@ -496,6 +496,17 @@
 			"name":"KitchenRangeWall_Hood"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":53,
 			"name":"KitchenRangeWall_Hood_Light",
 			"translation":[

@@ -42,6 +42,12 @@ def _to_wall_plane(bm):
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(math.radians(90), 3, "X"))
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -98,6 +104,7 @@ def build(**overrides):
             mk(name, size, loc, bronze)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 

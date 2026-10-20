@@ -43,6 +43,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":3,
 			"name":"LightGSconceUpDown_Lens_NoCollide"
 		},

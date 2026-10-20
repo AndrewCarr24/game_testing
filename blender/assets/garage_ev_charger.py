@@ -21,6 +21,12 @@ NAME = "GarageEVCharger"
 P = dict(name=NAME, width=0.24, depth=0.12, height=1.45, cable_r=0.0125)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     b = gk.Builder(p["name"])
@@ -48,6 +54,7 @@ def build(**overrides):
                                   (hx + 0.02, y0 - 0.24, 0.10), (hx - 0.14, y0 - 0.12, 0.05),
                                   (hx - 0.2, y0, 0.09), (W / 2 - 0.03, y0 + 0.01, 0.36)], 0.07, segments=5, closed=False)
     b.tube("Cable", pts, p["cable_r"], cable, res=2)
+    ix_common.tag_emissive(b.root, "power")   # interactivity: the display goes dark without power
     return b.finish()
 
 

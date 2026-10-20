@@ -100,3 +100,17 @@ PLACEMENTS += [
     ("decor_d_vignette_vanity_desk", (3.4, -4.25, 0.74), 180),  # scent tray, notebook + pen, books
     ("decor_d_floor_vase", (2.0, -4.2, 0.0), 180),              # olive branches between wardrobe and desk
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the suite door (S wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_primary_bedroom (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (5.53, -4.6, 1.1), 180, {'signal': 'lights_primary_bedroom', 'state': True}),
+    ('ix_switch_blinds', (5.43, -4.6, 1.1), 180, {'signal': 'blinds_primary_bedroom'}),
+    ('ix_blind_bedroom', (0.0, 4.75), 0, {'signal': 'blinds_primary_bedroom'}),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "primary_bedroom")

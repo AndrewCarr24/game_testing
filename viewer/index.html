@@ -28,6 +28,44 @@
     #inv-panel .row .tag { margin-left: auto; font-size: 11px; color: #f0c674; letter-spacing: .08em; }
     #inv-panel .empty { color: #888; padding: 8px 2px; }
     #inv-panel .help { margin-top: 14px; font-size: 12px; color: #999; }
+    /* flashlight battery meter */
+    #battery { position: absolute; right: 14px; bottom: 56px; display: none; align-items: center; gap: 6px; font-size: 10px;
+               letter-spacing: .1em; color: #ddd; text-shadow: 0 1px 2px #000; }
+    #battery.show { display: flex; }
+    #battery .cell { width: 54px; height: 9px; border: 1px solid rgba(255,255,255,.6); border-radius: 2px; padding: 1px; background: rgba(0,0,0,.4); }
+    #battery .cell i { display: block; height: 100%; background: #e9e4cf; border-radius: 1px; }
+    #battery.low .cell i { background: #e0533a; }
+    #battery.on span { color: #f0c674; }
+    /* smart-home tablet */
+    #tablet { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10,12,14,.45); }
+    #tablet.open { display: flex; }
+    #tablet .tbox { width: 700px; max-width: calc(100% - 32px); background: #101214; border: 10px solid #050505; border-radius: 22px;
+                    box-shadow: 0 0 0 1px #333, 0 20px 60px rgba(0,0,0,.6); padding: 14px 18px; color: #d8dde2; }
+    #tablet .thead { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    #tablet .ttitle { font-weight: 700; letter-spacing: .2em; font-size: 12px; color: #8fb8d8; margin-right: 10px; }
+    #tablet .ttab { padding: 4px 12px; border-radius: 12px; font-size: 13px; color: #9aa3ab; }
+    #tablet .ttab.on { background: rgba(143,184,216,.18); color: #fff; }
+    #tablet .ttab.sel { outline: 1px solid #8fb8d8; }
+    #tablet .tstat { margin-left: auto; font-size: 10px; letter-spacing: .14em; color: #7c8; }
+    #tablet .tlist { max-height: 380px; overflow: hidden; }
+    #tablet .trow { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 14px; }
+    #tablet .trow.sel { background: rgba(143,184,216,.12); }
+    #tablet .trow.live { color: #fff; }
+    #tablet .troom { flex: 1; }
+    #tablet .tcell { width: 130px; font-size: 12px; color: #9aa3ab; padding: 3px 8px; border-radius: 4px; }
+    #tablet .tcell b { color: #ccd; font-weight: 600; }
+    #tablet .tcell.lit b { color: #f0c674; }
+    #tablet .tcell.sel { outline: 1px solid #8fb8d8; color: #fff; }
+    #tablet .tcams { display: flex; gap: 14px; }
+    #tablet .tcams .tlist { flex: 1; }
+    #tablet .tfeed { position: relative; width: 400px; height: 225px; background: #050607; border-radius: 4px; overflow: hidden; flex: none; }
+    #tablet .tfeed canvas { width: 100%; height: 100%; display: block; filter: grayscale(.8) contrast(1.15) brightness(1.05); }
+    #tablet .tfeed::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); }
+    #tablet .tlabel { position: absolute; left: 8px; top: 6px; font: 11px ui-monospace, monospace; color: #e8e8e8; text-shadow: 0 1px 2px #000; z-index: 1; }
+    #tablet .tover { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 14px ui-monospace, monospace; letter-spacing: .3em; color: #888; z-index: 1; }
+    #tablet .tmsg { min-height: 18px; margin-top: 10px; font-size: 12px; color: #f0c674; }
+    #tablet .thelp { font-size: 11px; color: #7d858c; margin-top: 4px; }
+    #tablet .tempty { color: #888; padding: 10px; }
   </style>
   <script type="importmap">
     { "imports": {
@@ -49,6 +87,8 @@
   <div id="hint"></div>
   <div id="toast"></div>
   <div id="inventory"></div>
+  <div id="battery"><span>LIGHT</span><div class="cell"><i></i></div></div>
+  <div id="tablet"></div>
   <div id="inv-panel"><div class="box"><h2>INVENTORY</h2><div id="inv-list"></div>
     <div class="help">↑ ↓ · choose &nbsp;&nbsp; Enter · arm &nbsp;&nbsp; I · close</div></div></div>
   <script type="module">
@@ -62,12 +102,15 @@
     import { Interactables, Inventory } from './interactables.js';
     import { loadBake } from './baked.js';
     import { Player, KEYS } from './player.js';
-    import { Hand, Throwables } from './items.js';
+    import { Hand, Throwables, Flashlight } from './items.js';
+    import { Signals, Noise } from './signals.js';
+    import { Tablet } from './tablet.js';
     import { batchRooms, RoomCuller } from './batching.js';
     import { loadSky, applyOutdoor } from './sky.js';
     import { Fire } from './fire.js';
     import { createFx, governor } from './fx.js';
     import { Grimble, prepareGrimble } from './grimble.js';
+    import { GrimbleHunt, shatter } from './grimble_hunt.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -203,6 +246,12 @@
       const base = '../assets/';
       const level = await (await fetch(`${base}levels/${name}.json`)).json();
       window.__level = level;
+      // signals (switches, `use` points, the tablet, power) and noise (thrown things landing,
+      // what the Grimble hears): prompts/interactivity.md, viewer/signals.js
+      const signals = new Signals(level.signals || {});
+      const noise = new Noise();
+      window.__signals = signals;
+      window.__noise = noise;
       scene.background = new THREE.Color(0xb9cde3);
       RectAreaLightUniformsLib.init();
 
@@ -292,21 +341,24 @@
       for (const n of names) prepare(proto[n], envIntensity, true);
 
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
+      window.__colliders = colliders;
       const inventoryEl = document.getElementById('inventory');
       const invPanel = document.getElementById('inv-panel');
       const invList = document.getElementById('inv-list');
       const icon = (id) => (id === 'keycard' ? '<span class="card"></span>' : id === 'vase' ? '<span class="glass"></span>' : '');
+      let flashlight = null;
       const inventory = new Inventory((inv) => {
+        if (flashlight && inv.has('flashlight')) flashlight.ensure();
         inventoryEl.innerHTML = [...inv.items].map(([id, it]) =>
-          `<div class="slot${inv.armed === id ? ' armed' : ''}">${icon(id)}${it.name}${inv.armed === id ? ' <span class="tag">ARMED</span>' : ''}</div>`).join('');
+          `<div class="slot${inv.armed === id ? ' armed' : ''}">${icon(id)}${inv.label(id)}${inv.armed === id ? ' <span class="tag">ARMED</span>' : ''}</div>`).join('');
         invPanel.classList.toggle('open', inv.open);
         invList.innerHTML = inv.items.size
-          ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}${inv.name(id)}${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
+          ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}${inv.label(id)}${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
           : '<div class="empty">Nothing yet.</div>';
         hand?.show(inv.armed, inv.armed && inv.get(inv.armed).node);
       });
       let hand = null;
-      const interact = new Interactables(inventory, colliders);
+      const interact = new Interactables(inventory, colliders, signals, scene);
       window.__interact = interact;
       window.__inventory = inventory;
       const fire = new Fire();
@@ -326,16 +378,17 @@
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
-          interact.collect(obj, { lock: p.lock });
+          interact.collect(obj, { lock: p.lock, signal: p.signal, state: p.state });
           total += level.assets[p.asset].tris;
           continue;
         }
         scene.add(obj);
         placed[p.asset] ??= obj;
         obj.updateMatrixWorld(true);
-        interact.collect(obj, { lock: p.lock });
+        interact.collect(obj, { lock: p.lock, signal: p.signal, state: p.state });
+        // (a door asset; an appliance with a swinging door, e.g. the kitchen wall run, stays in its room)
         let door = false;
-        obj.traverse((o) => { if (o.userData.interact?.type === 'rotate') door = true; });
+        if (/(^|_)door/.test(p.asset)) obj.traverse((o) => { if (o.userData.interact?.type === 'rotate') door = true; });
         if (door) shared.push({ obj, rooms: roomsAt(p.position) });
         else (roomRoots[p.room] ??= []).push(obj);
         total += level.assets[p.asset].tris;
@@ -344,9 +397,13 @@
         for (const c of a.colliders || [a.aabb])
           colliders.push(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)).applyMatrix4(obj.matrixWorld));
       }
+      interact.snapAll();      // a later placement's `state` may have set a signal earlier props use
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
       for (const it of interact.items) it.node.traverse((o) => moving.add(o));
+      // reactors that move (blinds, rockers' parts, doors) or carry a light keep their own nodes; the
+      // ones that only change materials (glows, screens) batch per room: their shared materials do it
+      for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
       for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
       const { batches, before, after } = batchRooms(roomRoots, moving);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
@@ -361,11 +418,35 @@
       camera.position.set(...eyePos);
       camera.lookAt(...vec('look', level.spawn.lookAt));
       const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]], { ramps: level.ramps });
+      window.__player = window.__player || player;
+      // inside: after a few rounds at the glass it breaks in and hunts (viewer/grimble_hunt.js);
+      // ?hunt=0 keeps it outside
+      let shatterFx = null;
+      if (grimble && params.get('hunt') !== '0') {
+        grimble.playerObj = player;
+        grimble.hunt = new GrimbleHunt(grimble, {
+          level, colliders, scene,
+          sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
+          opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
+        });
+        grimble.hunt.onBreak = () => { const b = level.breakables?.[0]; if (b) shatterFx = shatter(scene, b); renderer.shadowMap.needsUpdate = true; };
+      }
       window.__player = player;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
-      const throwables = new Throwables(scene, colliders, () => toast('Smash!'));
+      const throwables = new Throwables(scene, colliders, (at, n) => {
+        if (!n.thud) toast('Smash!');
+        noise.emit({ position: at.clone(), loudness: n.loudness, source: n.thud ? 'thud' : 'shatter', item: n.item });
+      }, (obj) => { interact.register(obj); renderer.shadowMap.needsUpdate = true; });   // a book that landed can be taken again
       window.__throwables = throwables;
+      flashlight = new Flashlight(camera);
+      window.__flashlight = flashlight;
+      // the spot light is made up front when the level has a flashlight: adding a light later
+      // recompiles every material in the house
+      if (inventory.has('flashlight') || interact.items.some((i) => i.def.item === 'flashlight')) flashlight.ensure();
+      const batteryEl = document.getElementById('battery');
+      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet') });
+      window.__tablet = tablet;
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
@@ -377,6 +458,8 @@
         keys[e.code] = true;
         if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
         if (!controls.isLocked || e.repeat) return;
+        if (player.isDown) return;                       // knocked down: nothing until they're up
+        if (tablet.open) { tablet.key(e.code); return; } // the tablet takes the keys while it's open
         if (e.code === 'KeyI') { inventory.toggle(); if (inventory.open) frozenLook.copy(camera.quaternion); return; }
         // with the inventory open, the up/down arrows step through it (movement is paused then)
         if (inventory.open && (e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
@@ -411,16 +494,33 @@
           const dir = new THREE.Vector3();
           camera.getWorldDirection(dir);
           const origin = camera.position.clone().addScaledVector(dir, 0.45).add(new THREE.Vector3(0, -0.15, 0));
-          throwables.throw(entry.node, origin, dir);
+          throwables.throw(entry.node, origin, dir, entry.def);
           inventory.remove(id);
           return;
         }
-        toast(interact.useKey(id, camera.position));
+        // a `use` point that needs it (fuse box, car) or a lock it fits, in reach
+        const msg = interact.useItem(id, camera.position);
+        if (msg) { toast(msg); renderer.shadowMap.needsUpdate = true; return; }
+        if (id === 'flashlight') return toggleFlashlight();
+        if (id === 'battery') return loadBattery();
+        if (id === 'tablet') { if (tablet.show()) frozenLook.copy(camera.quaternion); return; }
+        toast(interact.useKey(id, camera.position));      // "Nothing to use the ... on here"
+      }
+      function toggleFlashlight() {
+        if (flashlight.toggle()) return;
+        if (inventory.has('battery')) { loadBattery(); flashlight.toggle(); }
+        else toast('The battery is flat');
+      }
+      function loadBattery() {
+        if (!inventory.has('flashlight')) { toast('Nothing to put the battery in'); return; }
+        inventory.remove('battery');
+        flashlight.refill();
+        toast('New battery in the flashlight');
       }
       addEventListener('keyup', (e) => (keys[e.code] = false));
       const releaseAll = () => { for (const k in keys) keys[k] = false; };
       addEventListener('blur', releaseAll);
-      controls.addEventListener('unlock', () => { releaseAll(); if (inventory.open) inventory.toggle(); });
+      controls.addEventListener('unlock', () => { releaseAll(); if (inventory.open) inventory.toggle(); tablet.close(); });
       const held = (names) => names.some((k) => keys[k]);
       const toastEl = document.getElementById('toast');
       let toastTimer;
@@ -435,30 +535,50 @@
       const clock = new THREE.Clock();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
-        const moved = interact.update(dt);
+        const moved = interact.update(dt, camera.position);
+        flashlight.update(dt);
         fire.update(dt, !!window.__bench);
         grimble?.update(dt, camera.position);
+        if (shatterFx && !shatterFx(dt)) shatterFx = null;
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
         if (culler.update(camera.position, camera)) renderer.shadowMap.needsUpdate = true;
-        if (inventory.open) camera.quaternion.copy(frozenLook);   // the inventory screen pauses looking and moving
-        const on = controls.isLocked && !inventory.open;
+        tablet.update(dt);                       // the camera feed (~5 fps, while that page is open)
+        // the inventory screen and the tablet pause looking and moving
+        if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
+        const on = controls.isLocked && !inventory.open && !tablet.open;
         player.update(dt, {
           forward: on && held(KEYS.forward), back: on && held(KEYS.back),
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
         grimble?.shakeCamera(camera, dt);
-        focus = on ? interact.nearest(camera.position) : null;
-        const armedHint = on && inventory.armed ? interact.armedPrompt(inventory.armed, camera.position) : null;
+        focus = on && !player.isDown ? interact.nearest(camera.position) : null;
+        const armed = on && !player.isDown ? inventory.armed : null;
+        const armedHint = armed ? interact.armedPrompt(armed, camera.position) ?? itemHint(armed) : null;
         const parts = [];
-        if (focus && !(focus.locked && armedHint)) parts.push(`E · ${interact.prompt(focus)}`);
+        const focusPrompt = focus && interact.prompt(focus);
+        if (focusPrompt && !((focus.locked || focus.def.type === 'use') && armedHint)) parts.push(`E · ${focusPrompt}`);
         if (armedHint) parts.push(`Enter · ${armedHint}`);
         if (on && inventory.armed) parts.push('Delete · put away');
         hint.textContent = parts.length ? parts.join('   |   ') : walkHint;
+        // the flashlight's battery, while the player has one
+        batteryEl.classList.toggle('show', inventory.has('flashlight'));
+        if (inventory.has('flashlight')) {
+          batteryEl.querySelector('i').style.width = `${Math.round(flashlight.battery * 100)}%`;
+          batteryEl.classList.toggle('low', flashlight.battery < 0.15);
+          batteryEl.classList.toggle('on', flashlight.on);
+        }
       };
+      // what Enter does with an item that works anywhere
+      function itemHint(id) {
+        if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
+        if (id === 'battery') return inventory.has('flashlight') ? 'Put in the flashlight' : null;
+        if (id === 'tablet') return 'Open tablet';
+        return null;
+      }
     }
 
     const ready = params.get('level') ? viewLevel(params.get('level')) : viewAsset(params.get('asset') || 'lounge_chair');

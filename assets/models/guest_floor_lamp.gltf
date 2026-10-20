@@ -30,6 +30,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":1,
 			"name":"GuestFloorLamp_Bulb",
 			"translation":[
@@ -56,6 +67,17 @@
 			"name":"GuestFloorLamp_RimTop_Piping"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":5,
 			"name":"GuestFloorLamp_Shade",
 			"translation":[
@@ -606,38 +628,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2196,
+			"byteLength":2052,
 			"byteOffset":3132
 		},
 		{
 			"buffer":0,
 			"byteLength":4277,
-			"byteOffset":5328
+			"byteOffset":5184
 		},
 		{
 			"buffer":0,
 			"byteLength":1994,
-			"byteOffset":9608
+			"byteOffset":9464
 		},
 		{
 			"buffer":0,
 			"byteLength":1930,
-			"byteOffset":11604
+			"byteOffset":11460
 		},
 		{
 			"buffer":0,
 			"byteLength":2883,
-			"byteOffset":13536
+			"byteOffset":13392
 		},
 		{
 			"buffer":0,
 			"byteLength":790,
-			"byteOffset":16420
+			"byteOffset":16276
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":17212,
+			"byteLength":17068,
 			"uri":"guest_floor_lamp.bin"
 		}
 	]

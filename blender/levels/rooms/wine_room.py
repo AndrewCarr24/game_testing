@@ -145,3 +145,17 @@ PLACEMENTS += [
     ("decor_b_vignette_cellar_table", (2.6, -2.9, 0.38), 90),
     ("decor_b_wine_crates", (5.32, -4.1), -6),
 ]
+
+
+# --- interactivity (prompts/interactivity.md): the light switch by the door (W wall, latch side),
+# interactive props, and this room's light fixtures wired to lights_wine_room (ix_common.wire)
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = list(PLACEMENTS) + [
+    ('ix_switch', (-6.1, 1.03, 1.1), 90, {'signal': 'lights_wine_room', 'state': True}),
+    ('ix_wine_bottle', (1.3, 0.45, 0.92), 15),
+    ('ix_wine_bottle', (-4.55, 3.62, 0.92), 40),
+]
+PLACEMENTS = ix_common.wire(PLACEMENTS, "wine_room")

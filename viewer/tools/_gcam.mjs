@@ -4,7 +4,7 @@ const [out, ...views] = process.argv.slice(2);
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 1000, height: 640 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
-await p.goto('http://localhost:8765/viewer/index.html?level=mansion&grimble=-32,0,90,0&fx=0');
+await p.goto(`http://localhost:8765/viewer/index.html?level=mansion&grimble=-32,0,90,0&fx=${process.env.FX ?? 0}`);
 await p.waitForFunction(() => window.__loaded, null, { timeout: 90000 });
 let i = 0;
 for (const v of views) {

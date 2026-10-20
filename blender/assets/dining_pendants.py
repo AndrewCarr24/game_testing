@@ -43,6 +43,12 @@ def lathe(bm, profile, segs, z=0.0, x=0.0):
                 bm.faces.new(quad)
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -90,6 +96,7 @@ def build(**overrides):
     for ob in (sh_ob, gl_ob, ca_ob, bu_ob):
         common.box_uv(ob, 0.5)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 

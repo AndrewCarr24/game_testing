@@ -35,7 +35,9 @@ def _key(meshes, params):
 def bake(root, distance=0.3, samples=24, strength=0.6, max_face_area=0.25):
     """Bake (or reuse from build/ao_cache/ when the geometry is unchanged)."""
     import numpy as np
-    meshes = [o for o in [root] + list(root.children_recursive) if o.type == "MESH" and o.data.polygons]
+    # (not hide_render parts: Cycles refuses to bake them, e.g. a tap's water stream the engine shows)
+    meshes = [o for o in [root] + list(root.children_recursive)
+              if o.type == "MESH" and o.data.polygons and not o.hide_render]
     if not meshes:
         return 0
     key = _key(meshes, (distance, samples, strength, max_face_area, "point", 16))

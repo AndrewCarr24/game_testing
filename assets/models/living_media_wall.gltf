@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				30
+				33
 			]
 		}
 	],
@@ -205,6 +205,17 @@
 			]
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"tv",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":18,
 			"name":"LivingMediaWall_Screen"
 		},
@@ -295,6 +306,61 @@
 		},
 		{
 			"mesh":29,
+			"name":"LivingMediaWall_TVButton_Cap",
+			"translation":[
+				0,
+				0.003000020980834961,
+				0
+			]
+		},
+		{
+			"children":[
+				29
+			],
+			"extras":{
+				"interact":{
+					"type":"switch",
+					"signal":"tv",
+					"state":false,
+					"prompt":"Turn on TV",
+					"promptActive":"Turn off TV",
+					"range":1.3,
+					"duration":0.12,
+					"travel":{
+						"axis":"y",
+						"distance":-0.002
+					}
+				}
+			},
+			"name":"LivingMediaWall_TVButton",
+			"translation":[
+				2.309999942779541,
+				0.5429999828338623,
+				0.10999999940395355
+			]
+		},
+		{
+			"mesh":30,
+			"name":"LivingMediaWall_TVButtonSeat",
+			"translation":[
+				2.309999942779541,
+				0.5414999723434448,
+				0.10999999940395355
+			]
+		},
+		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
+			"mesh":31,
 			"name":"LivingMediaWall_UnderGlow",
 			"translation":[
 				0,
@@ -333,7 +399,9 @@
 				26,
 				27,
 				28,
-				29
+				30,
+				31,
+				32
 			],
 			"name":"LivingMediaWall"
 		}
@@ -1250,18 +1318,68 @@
 			]
 		},
 		{
-			"name":"LivingMediaWall_UnderGlow",
+			"name":"LivingMediaWall_TVButton_Cap",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":130,
 						"NORMAL":131,
-						"TEXCOORD_0":132,
-						"COLOR_0":133
+						"COLOR_0":132
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":29,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":133,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingMediaWall_TVButtonSeat",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":134,
+						"NORMAL":135,
+						"COLOR_0":136
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":30,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":133,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingMediaWall_UnderGlow",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":137,
+						"NORMAL":138,
+						"TEXCOORD_0":139,
+						"COLOR_0":140
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":31,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2292,6 +2410,63 @@
 		},
 		{
 			"componentType":5126,
+			"count":32,
+			"max":[
+				0.014999999664723873,
+				0.003000000026077032,
+				0.014999999664723873
+			],
+			"min":[
+				-0.014999999664723873,
+				-0.003000000026077032,
+				-0.014999999664723873
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":32,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":32,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":180,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":32,
+			"max":[
+				0.02199999988079071,
+				0.001500000013038516,
+				0.02199999988079071
+			],
+			"min":[
+				-0.02199999988079071,
+				-0.001500000013038516,
+				-0.02199999988079071
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":32,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":32,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
 			"count":24,
 			"max":[
 				2.4000000953674316,
@@ -2470,8 +2645,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":425,
+			"byteLength":550,
 			"byteOffset":58408
+		},
+		{
+			"buffer":0,
+			"byteLength":562,
+			"byteOffset":58960
+		},
+		{
+			"buffer":0,
+			"byteLength":425,
+			"byteOffset":59524
 		}
 	],
 	"samplers":[
@@ -2482,7 +2667,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":58836,
+			"byteLength":59952,
 			"uri":"living_media_wall.bin"
 		}
 	]

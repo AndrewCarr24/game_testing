@@ -49,10 +49,32 @@
 			"name":"EntryChandelier_OrbCaps"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":7,
 			"name":"EntryChandelier_OrbsGold"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":8,
 			"name":"EntryChandelier_OrbsOpal"
 		},
@@ -708,18 +730,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":5986,
+			"byteLength":5975,
 			"byteOffset":25004
 		},
 		{
 			"buffer":0,
-			"byteLength":15952,
-			"byteOffset":30992
+			"byteLength":16050,
+			"byteOffset":30980
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":46944,
+			"byteLength":47032,
 			"uri":"entry_chandelier.bin"
 		}
 	]

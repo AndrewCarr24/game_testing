@@ -26,6 +26,12 @@ def flat_caps(ob):
     return ob
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -80,6 +86,7 @@ def build(**overrides):
     rim.box((0.07, 0.0, z0 - 0.106), (0.008, 0.008, 0.008))
     rim.to_object(f"{n}_Rims", col, bronze, root)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 

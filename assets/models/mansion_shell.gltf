@@ -19,7 +19,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				119
+				121
 			]
 		}
 	],
@@ -62,9 +62,33 @@
 		},
 		{
 			"extras":{
-				"room":"cloak"
+				"breakable":"Mansion_Breakable_0"
 			},
 			"mesh":4,
+			"name":"Mansion_Breakable_0_M_Aluminium_Black",
+			"translation":[
+				-26,
+				4.199999809265137,
+				0.7272727489471436
+			]
+		},
+		{
+			"extras":{
+				"breakable":"Mansion_Breakable_0"
+			},
+			"mesh":5,
+			"name":"Mansion_Breakable_0_M_Glass",
+			"translation":[
+				-26,
+				4.199999809265137,
+				0
+			]
+		},
+		{
+			"extras":{
+				"room":"cloak"
+			},
+			"mesh":6,
 			"name":"Mansion_cloak_M_Ceiling_Warm",
 			"translation":[
 				10.75,
@@ -76,7 +100,7 @@
 			"extras":{
 				"room":"cloak"
 			},
-			"mesh":5,
+			"mesh":7,
 			"name":"Mansion_cloak_M_OakFloor_Smoked",
 			"translation":[
 				10.75,
@@ -88,7 +112,7 @@
 			"extras":{
 				"room":"cloak"
 			},
-			"mesh":6,
+			"mesh":8,
 			"name":"Mansion_cloak_M_Plaster_Cloak",
 			"translation":[
 				10.75,
@@ -101,14 +125,14 @@
 				"room":"cloak",
 				"lm_borrow":true
 			},
-			"mesh":7,
+			"mesh":9,
 			"name":"Mansion_cloak_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"courtyard"
 			},
-			"mesh":8,
+			"mesh":10,
 			"name":"Mansion_courtyard_M_Courtyard_Paving",
 			"translation":[
 				0,
@@ -121,7 +145,7 @@
 				"room":"courtyard",
 				"lm_borrow":true
 			},
-			"mesh":9,
+			"mesh":11,
 			"name":"Mansion_courtyard_M_Fabric_Outdoor_Jute_Dark_Rug"
 		},
 		{
@@ -129,14 +153,14 @@
 				"room":"courtyard",
 				"lm_borrow":true
 			},
-			"mesh":10,
+			"mesh":12,
 			"name":"Mansion_courtyard_M_Fabric_Outdoor_Jute_Rug"
 		},
 		{
 			"extras":{
 				"room":"den"
 			},
-			"mesh":11,
+			"mesh":13,
 			"name":"Mansion_den_M_Ceiling_Den",
 			"translation":[
 				-19.75,
@@ -148,7 +172,7 @@
 			"extras":{
 				"room":"den"
 			},
-			"mesh":12,
+			"mesh":14,
 			"name":"Mansion_den_M_Fabric_DenGreen",
 			"translation":[
 				-23.149999618530273,
@@ -161,7 +185,7 @@
 				"room":"den",
 				"lm_borrow":true
 			},
-			"mesh":13,
+			"mesh":15,
 			"name":"Mansion_den_M_Fabric_RugCocoa_Rug"
 		},
 		{
@@ -169,14 +193,14 @@
 				"room":"den",
 				"lm_borrow":true
 			},
-			"mesh":14,
+			"mesh":16,
 			"name":"Mansion_den_M_Fabric_RugMoss_Rug"
 		},
 		{
 			"extras":{
 				"room":"den"
 			},
-			"mesh":15,
+			"mesh":17,
 			"name":"Mansion_den_M_OakFloor_Smoked",
 			"translation":[
 				-19.75,
@@ -188,7 +212,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":16,
+			"mesh":18,
 			"name":"Mansion_dining_M_Ceiling_Warm",
 			"translation":[
 				-18,
@@ -200,7 +224,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":17,
+			"mesh":19,
 			"name":"Mansion_dining_M_OakFloor",
 			"translation":[
 				-18,
@@ -212,7 +236,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":18,
+			"mesh":20,
 			"name":"Mansion_dining_M_Plaster_Dining",
 			"translation":[
 				-25,
@@ -224,7 +248,7 @@
 			"extras":{
 				"room":"dining"
 			},
-			"mesh":19,
+			"mesh":21,
 			"name":"Mansion_dining_M_Plaster_Olive",
 			"translation":[
 				-25.924999237060547,
@@ -237,7 +261,7 @@
 				"room":"dining",
 				"lm_borrow":true
 			},
-			"mesh":20,
+			"mesh":22,
 			"name":"Mansion_dining_M_Wool_Greige_Dining_Rug"
 		},
 		{
@@ -245,14 +269,14 @@
 				"room":"dining",
 				"lm_borrow":true
 			},
-			"mesh":21,
+			"mesh":23,
 			"name":"Mansion_dining_M_Wool_Oat_Rug"
 		},
 		{
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":22,
+			"mesh":24,
 			"name":"Mansion_entry_M_Ceiling_Entry",
 			"translation":[
 				0,
@@ -264,7 +288,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":23,
+			"mesh":25,
 			"name":"Mansion_entry_M_Entry_Limestone",
 			"translation":[
 				0,
@@ -277,14 +301,14 @@
 				"room":"entry",
 				"lm_borrow":true
 			},
-			"mesh":24,
+			"mesh":26,
 			"name":"Mansion_entry_M_Fabric_Oat_Rug"
 		},
 		{
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":25,
+			"mesh":27,
 			"name":"Mansion_entry_M_Plaster_Entry",
 			"translation":[
 				-7,
@@ -296,7 +320,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":26,
+			"mesh":28,
 			"name":"Mansion_entry_M_Plaster_Entry_Greige",
 			"translation":[
 				-3.25,
@@ -308,7 +332,7 @@
 			"extras":{
 				"room":"entry"
 			},
-			"mesh":27,
+			"mesh":29,
 			"name":"Mansion_entry_M_Walnut",
 			"translation":[
 				-5.849999904632568,
@@ -321,14 +345,14 @@
 				"room":"entry",
 				"lm_borrow":true
 			},
-			"mesh":28,
+			"mesh":30,
 			"name":"Mansion_entry_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":29,
+			"mesh":31,
 			"name":"Mansion_gallery_e_M_Ceiling_White",
 			"translation":[
 				11.75,
@@ -340,7 +364,7 @@
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":30,
+			"mesh":32,
 			"name":"Mansion_gallery_e_M_OakFloor",
 			"translation":[
 				11.75,
@@ -352,7 +376,7 @@
 			"extras":{
 				"room":"gallery_e"
 			},
-			"mesh":31,
+			"mesh":33,
 			"name":"Mansion_gallery_e_M_Plaster_WarmWhite",
 			"translation":[
 				13.425000190734863,
@@ -364,7 +388,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":32,
+			"mesh":34,
 			"name":"Mansion_gallery_n_M_Ceiling_White",
 			"translation":[
 				0,
@@ -376,7 +400,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":33,
+			"mesh":35,
 			"name":"Mansion_gallery_n_M_OakFloor",
 			"translation":[
 				0,
@@ -388,7 +412,7 @@
 			"extras":{
 				"room":"gallery_n"
 			},
-			"mesh":34,
+			"mesh":36,
 			"name":"Mansion_gallery_n_M_Plaster_WarmWhite",
 			"translation":[
 				-13.25,
@@ -400,7 +424,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":35,
+			"mesh":37,
 			"name":"Mansion_gallery_s_M_Ceiling_White",
 			"translation":[
 				0,
@@ -412,7 +436,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":36,
+			"mesh":38,
 			"name":"Mansion_gallery_s_M_OakFloor",
 			"translation":[
 				0,
@@ -424,7 +448,7 @@
 			"extras":{
 				"room":"gallery_s"
 			},
-			"mesh":37,
+			"mesh":39,
 			"name":"Mansion_gallery_s_M_Plaster_WarmWhite",
 			"translation":[
 				0,
@@ -436,7 +460,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":38,
+			"mesh":40,
 			"name":"Mansion_gallery_w_M_Ceiling_White",
 			"translation":[
 				-11.75,
@@ -448,7 +472,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":39,
+			"mesh":41,
 			"name":"Mansion_gallery_w_M_OakFloor",
 			"translation":[
 				-11.75,
@@ -460,7 +484,7 @@
 			"extras":{
 				"room":"gallery_w"
 			},
-			"mesh":40,
+			"mesh":42,
 			"name":"Mansion_gallery_w_M_Plaster_WarmWhite",
 			"translation":[
 				-13.425000190734863,
@@ -472,7 +496,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":41,
+			"mesh":43,
 			"name":"Mansion_garage_M_Garage_Ceiling",
 			"translation":[
 				19.75,
@@ -484,7 +508,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":42,
+			"mesh":44,
 			"name":"Mansion_garage_M_Garage_PolishedConcrete",
 			"translation":[
 				19.75,
@@ -496,7 +520,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":43,
+			"mesh":45,
 			"name":"Mansion_garage_M_Garage_Wall",
 			"translation":[
 				14.5,
@@ -508,7 +532,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":44,
+			"mesh":46,
 			"name":"Mansion_garage_M_Garage_WallDark",
 			"translation":[
 				16.350000381469727,
@@ -520,7 +544,7 @@
 			"extras":{
 				"room":"garage"
 			},
-			"mesh":45,
+			"mesh":47,
 			"name":"Mansion_garage_M_LightStrip",
 			"translation":[
 				15.25,
@@ -532,7 +556,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":46,
+			"mesh":48,
 			"name":"Mansion_great_room_M_Ceiling_Living",
 			"translation":[
 				-19.75,
@@ -545,7 +569,7 @@
 				"room":"great_room",
 				"lm_borrow":true
 			},
-			"mesh":47,
+			"mesh":49,
 			"name":"Mansion_great_room_M_Fabric_RugInk_Rug"
 		},
 		{
@@ -553,7 +577,7 @@
 				"room":"great_room",
 				"lm_borrow":true
 			},
-			"mesh":48,
+			"mesh":50,
 			"name":"Mansion_great_room_M_Fabric_RugOat_Rug"
 		},
 		{
@@ -561,14 +585,14 @@
 				"room":"great_room",
 				"lm_borrow":true
 			},
-			"mesh":49,
+			"mesh":51,
 			"name":"Mansion_great_room_M_Fabric_RugTaupe_Rug"
 		},
 		{
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":50,
+			"mesh":52,
 			"name":"Mansion_great_room_M_Living_Limestone",
 			"translation":[
 				-19.75,
@@ -580,7 +604,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":51,
+			"mesh":53,
 			"name":"Mansion_great_room_M_Plaster_Living",
 			"translation":[
 				-24.5,
@@ -592,7 +616,7 @@
 			"extras":{
 				"room":"great_room"
 			},
-			"mesh":52,
+			"mesh":54,
 			"name":"Mansion_great_room_M_Plaster_LivingClay",
 			"translation":[
 				-25.5,
@@ -604,7 +628,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":53,
+			"mesh":55,
 			"name":"Mansion_guest_room_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -617,7 +641,7 @@
 				"room":"guest_room",
 				"lm_borrow":true
 			},
-			"mesh":54,
+			"mesh":56,
 			"name":"Mansion_guest_room_M_Fabric_Linen_Rug"
 		},
 		{
@@ -625,14 +649,14 @@
 				"room":"guest_room",
 				"lm_borrow":true
 			},
-			"mesh":55,
+			"mesh":57,
 			"name":"Mansion_guest_room_M_Fabric_SageLight_Rug"
 		},
 		{
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":56,
+			"mesh":58,
 			"name":"Mansion_guest_room_M_OakFloor_Pale",
 			"translation":[
 				19.75,
@@ -644,7 +668,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":57,
+			"mesh":59,
 			"name":"Mansion_guest_room_M_Plaster_Linen",
 			"translation":[
 				19.75,
@@ -656,7 +680,7 @@
 			"extras":{
 				"room":"guest_room"
 			},
-			"mesh":58,
+			"mesh":60,
 			"name":"Mansion_guest_room_M_Plaster_Sage",
 			"translation":[
 				13.574999809265137,
@@ -669,14 +693,14 @@
 				"room":"guest_room",
 				"lm_borrow":true
 			},
-			"mesh":59,
+			"mesh":61,
 			"name":"Mansion_guest_room_M_Wool_Oat_Rug"
 		},
 		{
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":60,
+			"mesh":62,
 			"name":"Mansion_gym_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -688,7 +712,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":61,
+			"mesh":63,
 			"name":"Mansion_gym_M_LightStrip",
 			"translation":[
 				18.049999237060547,
@@ -700,7 +724,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":62,
+			"mesh":64,
 			"name":"Mansion_gym_M_Mirror",
 			"translation":[
 				19.75,
@@ -712,7 +736,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":63,
+			"mesh":65,
 			"name":"Mansion_gym_M_Oak_Light",
 			"translation":[
 				25.924999237060547,
@@ -724,7 +748,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":64,
+			"mesh":66,
 			"name":"Mansion_gym_M_Plaster_Greige",
 			"translation":[
 				14.25,
@@ -736,7 +760,7 @@
 			"extras":{
 				"room":"gym"
 			},
-			"mesh":65,
+			"mesh":67,
 			"name":"Mansion_gym_M_Rubber_Floor",
 			"translation":[
 				19.75,
@@ -748,7 +772,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":66,
+			"mesh":68,
 			"name":"Mansion_kitchen_M_Ceiling_White",
 			"translation":[
 				-1,
@@ -760,7 +784,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":67,
+			"mesh":69,
 			"name":"Mansion_kitchen_M_Kitchen_Stone",
 			"translation":[
 				-1,
@@ -772,7 +796,7 @@
 			"extras":{
 				"room":"kitchen"
 			},
-			"mesh":68,
+			"mesh":70,
 			"name":"Mansion_kitchen_M_Plaster_Kitchen",
 			"translation":[
 				-9,
@@ -785,14 +809,14 @@
 				"room":"kitchen",
 				"lm_borrow":true
 			},
-			"mesh":69,
+			"mesh":71,
 			"name":"Mansion_kitchen_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"library"
 			},
-			"mesh":70,
+			"mesh":72,
 			"name":"Mansion_library_M_Ceiling_Warm",
 			"translation":[
 				-17,
@@ -805,14 +829,14 @@
 				"room":"library",
 				"lm_borrow":true
 			},
-			"mesh":71,
+			"mesh":73,
 			"name":"Mansion_library_M_Library_Rug_Rug"
 		},
 		{
 			"extras":{
 				"room":"library"
 			},
-			"mesh":72,
+			"mesh":74,
 			"name":"Mansion_library_M_OakFloor_Smoked",
 			"translation":[
 				-17,
@@ -824,7 +848,7 @@
 			"extras":{
 				"room":"library"
 			},
-			"mesh":73,
+			"mesh":75,
 			"name":"Mansion_library_M_Plaster_Library",
 			"translation":[
 				-25.5,
@@ -837,14 +861,14 @@
 				"room":"library",
 				"lm_borrow":true
 			},
-			"mesh":74,
+			"mesh":76,
 			"name":"Mansion_library_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":75,
+			"mesh":77,
 			"name":"Mansion_mudroom_M_Ceiling_Warm",
 			"translation":[
 				19.75,
@@ -856,7 +880,7 @@
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":76,
+			"mesh":78,
 			"name":"Mansion_mudroom_M_Mudroom_Tile",
 			"translation":[
 				19.75,
@@ -868,7 +892,7 @@
 			"extras":{
 				"room":"mudroom"
 			},
-			"mesh":77,
+			"mesh":79,
 			"name":"Mansion_mudroom_M_Plaster_Cream",
 			"translation":[
 				19.75,
@@ -881,7 +905,7 @@
 				"room":"mudroom",
 				"lm_borrow":true
 			},
-			"mesh":78,
+			"mesh":80,
 			"name":"Mansion_mudroom_M_Wool_Charcoal_Rug"
 		},
 		{
@@ -889,14 +913,14 @@
 				"room":"mudroom",
 				"lm_borrow":true
 			},
-			"mesh":79,
+			"mesh":81,
 			"name":"Mansion_mudroom_M_Wool_Oat_Rug"
 		},
 		{
 			"extras":{
 				"room":"office"
 			},
-			"mesh":80,
+			"mesh":82,
 			"name":"Mansion_office_M_Ceiling_White",
 			"translation":[
 				6.75,
@@ -908,7 +932,7 @@
 			"extras":{
 				"room":"office"
 			},
-			"mesh":81,
+			"mesh":83,
 			"name":"Mansion_office_M_OakFloor",
 			"translation":[
 				6.75,
@@ -920,7 +944,7 @@
 			"extras":{
 				"room":"office"
 			},
-			"mesh":82,
+			"mesh":84,
 			"name":"Mansion_office_M_Plaster_WarmWhite",
 			"translation":[
 				0.5,
@@ -933,14 +957,14 @@
 				"room":"office",
 				"lm_borrow":true
 			},
-			"mesh":83,
+			"mesh":85,
 			"name":"Mansion_office_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":84,
+			"mesh":86,
 			"name":"Mansion_powder_M_Ceiling_Powder",
 			"translation":[
 				-10.75,
@@ -952,7 +976,7 @@
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":85,
+			"mesh":87,
 			"name":"Mansion_powder_M_Entry_DarkMarble",
 			"translation":[
 				-10.75,
@@ -964,7 +988,7 @@
 			"extras":{
 				"room":"powder"
 			},
-			"mesh":86,
+			"mesh":88,
 			"name":"Mansion_powder_M_Entry_Limestone",
 			"translation":[
 				-10.75,
@@ -977,7 +1001,7 @@
 				"room":"powder",
 				"lm_borrow":true
 			},
-			"mesh":87,
+			"mesh":89,
 			"name":"Mansion_powder_M_Fabric_Oat_Rug"
 		},
 		{
@@ -985,14 +1009,14 @@
 				"room":"powder",
 				"lm_borrow":true
 			},
-			"mesh":88,
+			"mesh":90,
 			"name":"Mansion_powder_M_Wool_Charcoal_Rug"
 		},
 		{
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":89,
+			"mesh":91,
 			"name":"Mansion_primary_bath_M_Bath_Marble",
 			"translation":[
 				-5,
@@ -1004,7 +1028,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":90,
+			"mesh":92,
 			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
 			"translation":[
 				-0.07500000298023224,
@@ -1016,7 +1040,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":91,
+			"mesh":93,
 			"name":"Mansion_primary_bath_M_Bath_MarbleFloor",
 			"translation":[
 				-5,
@@ -1028,7 +1052,7 @@
 			"extras":{
 				"room":"primary_bath"
 			},
-			"mesh":92,
+			"mesh":94,
 			"name":"Mansion_primary_bath_M_Ceiling_Bath",
 			"translation":[
 				-5,
@@ -1040,7 +1064,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":93,
+			"mesh":95,
 			"name":"Mansion_primary_bedroom_M_Ceiling_Warm",
 			"translation":[
 				-18,
@@ -1053,7 +1077,7 @@
 				"room":"primary_bedroom",
 				"lm_borrow":true
 			},
-			"mesh":94,
+			"mesh":96,
 			"name":"Mansion_primary_bedroom_M_Fabric_RugInk_Rug"
 		},
 		{
@@ -1061,14 +1085,14 @@
 				"room":"primary_bedroom",
 				"lm_borrow":true
 			},
-			"mesh":95,
+			"mesh":97,
 			"name":"Mansion_primary_bedroom_M_Fabric_RugOat_Rug"
 		},
 		{
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":96,
+			"mesh":98,
 			"name":"Mansion_primary_bedroom_M_OakFloor_Smoked",
 			"translation":[
 				-18,
@@ -1080,7 +1104,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":97,
+			"mesh":99,
 			"name":"Mansion_primary_bedroom_M_Plaster_Ink",
 			"translation":[
 				-25.924999237060547,
@@ -1092,7 +1116,7 @@
 			"extras":{
 				"room":"primary_bedroom"
 			},
-			"mesh":98,
+			"mesh":100,
 			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
 			"translation":[
 				-25,
@@ -1105,14 +1129,14 @@
 				"room":"primary_bedroom",
 				"lm_borrow":true
 			},
-			"mesh":99,
+			"mesh":101,
 			"name":"Mansion_primary_bedroom_M_Wool_Oat_Rug"
 		},
 		{
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":100,
+			"mesh":102,
 			"name":"Mansion_scullery_M_Ceiling_White",
 			"translation":[
 				10.75,
@@ -1124,7 +1148,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":101,
+			"mesh":103,
 			"name":"Mansion_scullery_M_Kitchen_Stone",
 			"translation":[
 				10.75,
@@ -1136,7 +1160,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":102,
+			"mesh":104,
 			"name":"Mansion_scullery_M_LightStrip",
 			"translation":[
 				9.75,
@@ -1148,7 +1172,7 @@
 			"extras":{
 				"room":"scullery"
 			},
-			"mesh":103,
+			"mesh":105,
 			"name":"Mansion_scullery_M_Plaster_Scullery",
 			"translation":[
 				10.75,
@@ -1160,7 +1184,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":104,
+			"mesh":106,
 			"name":"Mansion_ugallery_e_M_Ceiling_White",
 			"translation":[
 				11.75,
@@ -1172,7 +1196,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":105,
+			"mesh":107,
 			"name":"Mansion_ugallery_e_M_OakFloor",
 			"translation":[
 				11.75,
@@ -1184,7 +1208,7 @@
 			"extras":{
 				"room":"ugallery_e"
 			},
-			"mesh":106,
+			"mesh":108,
 			"name":"Mansion_ugallery_e_M_Plaster_WarmWhite",
 			"translation":[
 				13.425000190734863,
@@ -1196,7 +1220,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":107,
+			"mesh":109,
 			"name":"Mansion_ugallery_n_M_Ceiling_White",
 			"translation":[
 				0,
@@ -1208,7 +1232,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":108,
+			"mesh":110,
 			"name":"Mansion_ugallery_n_M_OakFloor",
 			"translation":[
 				0,
@@ -1220,7 +1244,7 @@
 			"extras":{
 				"room":"ugallery_n"
 			},
-			"mesh":109,
+			"mesh":111,
 			"name":"Mansion_ugallery_n_M_Plaster_WarmWhite",
 			"translation":[
 				-12.899999618530273,
@@ -1232,7 +1256,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":110,
+			"mesh":112,
 			"name":"Mansion_ugallery_s_M_Ceiling_White",
 			"translation":[
 				0,
@@ -1244,7 +1268,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":111,
+			"mesh":113,
 			"name":"Mansion_ugallery_s_M_OakFloor",
 			"translation":[
 				0,
@@ -1256,7 +1280,7 @@
 			"extras":{
 				"room":"ugallery_s"
 			},
-			"mesh":112,
+			"mesh":114,
 			"name":"Mansion_ugallery_s_M_Plaster_WarmWhite",
 			"translation":[
 				-12.399999618530273,
@@ -1268,7 +1292,7 @@
 			"extras":{
 				"room":"ugallery_w"
 			},
-			"mesh":113,
+			"mesh":115,
 			"name":"Mansion_ugallery_w_M_Ceiling_White",
 			"translation":[
 				-11.75,
@@ -1280,7 +1304,7 @@
 			"extras":{
 				"room":"ugallery_w"
 			},
-			"mesh":114,
+			"mesh":116,
 			"name":"Mansion_ugallery_w_M_OakFloor",
 			"translation":[
 				-11.75,
@@ -1292,7 +1316,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":115,
+			"mesh":117,
 			"name":"Mansion_wine_room_M_Ceiling_Cellar",
 			"translation":[
 				19.75,
@@ -1304,7 +1328,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":116,
+			"mesh":118,
 			"name":"Mansion_wine_room_M_Plaster_Cellar",
 			"translation":[
 				19.75,
@@ -1316,7 +1340,7 @@
 			"extras":{
 				"room":"wine_room"
 			},
-			"mesh":117,
+			"mesh":119,
 			"name":"Mansion_wine_room_M_Slate_Dark",
 			"translation":[
 				19.75,
@@ -1329,7 +1353,7 @@
 				"room":"wine_room",
 				"lm_borrow":true
 			},
-			"mesh":118,
+			"mesh":120,
 			"name":"Mansion_wine_room_M_Wool_Oat_Rug"
 		},
 		{
@@ -1452,7 +1476,9 @@
 				115,
 				116,
 				117,
-				118
+				118,
+				119,
+				120
 			],
 			"name":"Mansion_Shell"
 		}
@@ -2552,18 +2578,68 @@
 			]
 		},
 		{
-			"name":"Mansion_cloak_M_Ceiling_Warm",
+			"name":"Mansion_Breakable_0_M_Aluminium_Black",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":16,
 						"NORMAL":17,
-						"TEXCOORD_0":18,
-						"TEXCOORD_1":19
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":19,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_Breakable_0_M_Glass",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_cloak_M_Ceiling_Warm",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25,
+						"TEXCOORD_1":26
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2583,14 +2659,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"TEXCOORD_1":23
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29,
+						"TEXCOORD_1":30
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":7,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2610,14 +2686,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"TEXCOORD_1":27
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33,
+						"TEXCOORD_1":34
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":6,
+							"bufferView":8,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2626,7 +2702,7 @@
 							}
 						}
 					},
-					"indices":28,
+					"indices":35,
 					"material":6,
 					"mode":4
 				}
@@ -2637,14 +2713,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":29,
-						"NORMAL":30,
-						"TEXCOORD_0":31,
-						"TEXCOORD_1":32
+						"POSITION":36,
+						"NORMAL":37,
+						"TEXCOORD_0":38,
+						"TEXCOORD_1":39
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":7,
+							"bufferView":9,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2653,7 +2729,7 @@
 							}
 						}
 					},
-					"indices":33,
+					"indices":40,
 					"material":7,
 					"mode":4
 				}
@@ -2664,14 +2740,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":34,
-						"NORMAL":35,
-						"TEXCOORD_0":36,
-						"TEXCOORD_1":37
+						"POSITION":41,
+						"NORMAL":42,
+						"TEXCOORD_0":43,
+						"TEXCOORD_1":44
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":10,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2691,14 +2767,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":38,
-						"NORMAL":39,
-						"TEXCOORD_0":40,
-						"TEXCOORD_1":41
+						"POSITION":45,
+						"NORMAL":46,
+						"TEXCOORD_0":47,
+						"TEXCOORD_1":48
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":9,
+							"bufferView":11,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2707,7 +2783,7 @@
 							}
 						}
 					},
-					"indices":42,
+					"indices":49,
 					"material":9,
 					"mode":4
 				}
@@ -2718,14 +2794,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":43,
-						"NORMAL":44,
-						"TEXCOORD_0":45,
-						"TEXCOORD_1":46
+						"POSITION":50,
+						"NORMAL":51,
+						"TEXCOORD_0":52,
+						"TEXCOORD_1":53
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":10,
+							"bufferView":12,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2734,7 +2810,7 @@
 							}
 						}
 					},
-					"indices":42,
+					"indices":49,
 					"material":10,
 					"mode":4
 				}
@@ -2745,14 +2821,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":47,
-						"NORMAL":48,
-						"TEXCOORD_0":49,
-						"TEXCOORD_1":50
+						"POSITION":54,
+						"NORMAL":55,
+						"TEXCOORD_0":56,
+						"TEXCOORD_1":57
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":11,
+							"bufferView":13,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2772,64 +2848,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":51,
-						"NORMAL":52,
-						"TEXCOORD_0":53,
-						"TEXCOORD_1":54
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":12,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":28,
-					"material":12,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_den_M_Fabric_RugCocoa_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":55,
-						"NORMAL":56,
-						"TEXCOORD_0":57,
-						"TEXCOORD_1":58
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":13,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":59,
-					"material":13,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_den_M_Fabric_RugMoss_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":60,
-						"NORMAL":61,
-						"TEXCOORD_0":62,
-						"TEXCOORD_1":63
+						"POSITION":58,
+						"NORMAL":59,
+						"TEXCOORD_0":60,
+						"TEXCOORD_1":61
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -2842,7 +2864,61 @@
 							}
 						}
 					},
-					"indices":64,
+					"indices":35,
+					"material":12,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_den_M_Fabric_RugCocoa_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":62,
+						"NORMAL":63,
+						"TEXCOORD_0":64,
+						"TEXCOORD_1":65
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":66,
+					"material":13,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_den_M_Fabric_RugMoss_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":67,
+						"NORMAL":68,
+						"TEXCOORD_0":69,
+						"TEXCOORD_1":70
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":71,
 					"material":14,
 					"mode":4
 				}
@@ -2853,14 +2929,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":65,
-						"NORMAL":66,
-						"TEXCOORD_0":67,
-						"TEXCOORD_1":68
+						"POSITION":72,
+						"NORMAL":73,
+						"TEXCOORD_0":74,
+						"TEXCOORD_1":75
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":15,
+							"bufferView":17,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2880,14 +2956,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":69,
-						"NORMAL":70,
-						"TEXCOORD_0":71,
-						"TEXCOORD_1":72
+						"POSITION":76,
+						"NORMAL":77,
+						"TEXCOORD_0":78,
+						"TEXCOORD_1":79
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":16,
+							"bufferView":18,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2907,14 +2983,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":73,
-						"NORMAL":74,
-						"TEXCOORD_0":75,
-						"TEXCOORD_1":76
+						"POSITION":80,
+						"NORMAL":81,
+						"TEXCOORD_0":82,
+						"TEXCOORD_1":83
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":17,
+							"bufferView":19,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -2934,64 +3010,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":77,
-						"NORMAL":78,
-						"TEXCOORD_0":79,
-						"TEXCOORD_1":80
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":18,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":81,
-					"material":16,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_dining_M_Plaster_Olive",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":82,
-						"NORMAL":83,
-						"TEXCOORD_0":84,
-						"TEXCOORD_1":85
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":19,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":86,
-					"material":17,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_dining_M_Wool_Greige_Dining_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":87,
-						"NORMAL":88,
-						"TEXCOORD_0":89,
-						"TEXCOORD_1":90
+						"POSITION":84,
+						"NORMAL":85,
+						"TEXCOORD_0":86,
+						"TEXCOORD_1":87
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3004,21 +3026,21 @@
 							}
 						}
 					},
-					"indices":91,
-					"material":18,
+					"indices":88,
+					"material":16,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_dining_M_Wool_Oat_Rug",
+			"name":"Mansion_dining_M_Plaster_Olive",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":92,
-						"NORMAL":93,
-						"TEXCOORD_0":94,
-						"TEXCOORD_1":95
+						"POSITION":89,
+						"NORMAL":90,
+						"TEXCOORD_0":91,
+						"TEXCOORD_1":92
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3031,7 +3053,61 @@
 							}
 						}
 					},
-					"indices":91,
+					"indices":19,
+					"material":17,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_dining_M_Wool_Greige_Dining_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":93,
+						"NORMAL":94,
+						"TEXCOORD_0":95,
+						"TEXCOORD_1":96
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":22,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":97,
+					"material":18,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_dining_M_Wool_Oat_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":98,
+						"NORMAL":99,
+						"TEXCOORD_0":100,
+						"TEXCOORD_1":101
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":23,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":97,
 					"material":19,
 					"mode":4
 				}
@@ -3042,14 +3118,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":96,
-						"NORMAL":97,
-						"TEXCOORD_0":98,
-						"TEXCOORD_1":99
+						"POSITION":102,
+						"NORMAL":103,
+						"TEXCOORD_0":104,
+						"TEXCOORD_1":105
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":22,
+							"bufferView":24,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3069,14 +3145,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":100,
-						"NORMAL":101,
-						"TEXCOORD_0":102,
-						"TEXCOORD_1":103
+						"POSITION":106,
+						"NORMAL":107,
+						"TEXCOORD_0":108,
+						"TEXCOORD_1":109
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":23,
+							"bufferView":25,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3096,64 +3172,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":104,
-						"NORMAL":105,
-						"TEXCOORD_0":106,
-						"TEXCOORD_1":107
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":24,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":108,
-					"material":22,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_entry_M_Plaster_Entry",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":109,
-						"NORMAL":110,
-						"TEXCOORD_0":111,
-						"TEXCOORD_1":112
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":25,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":113,
-					"material":23,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_entry_M_Plaster_Entry_Greige",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":114,
-						"NORMAL":115,
-						"TEXCOORD_0":116,
-						"TEXCOORD_1":117
+						"POSITION":110,
+						"NORMAL":111,
+						"TEXCOORD_0":112,
+						"TEXCOORD_1":113
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3166,21 +3188,21 @@
 							}
 						}
 					},
-					"indices":118,
-					"material":24,
+					"indices":114,
+					"material":22,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Walnut",
+			"name":"Mansion_entry_M_Plaster_Entry",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":119,
-						"NORMAL":120,
-						"TEXCOORD_0":121,
-						"TEXCOORD_1":122
+						"POSITION":115,
+						"NORMAL":116,
+						"TEXCOORD_0":117,
+						"TEXCOORD_1":118
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3193,21 +3215,21 @@
 							}
 						}
 					},
-					"indices":123,
-					"material":25,
+					"indices":119,
+					"material":23,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_entry_M_Wool_Charcoal_Rug",
+			"name":"Mansion_entry_M_Plaster_Entry_Greige",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":124,
-						"NORMAL":125,
-						"TEXCOORD_0":126,
-						"TEXCOORD_1":127
+						"POSITION":120,
+						"NORMAL":121,
+						"TEXCOORD_0":122,
+						"TEXCOORD_1":123
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3220,7 +3242,61 @@
 							}
 						}
 					},
-					"indices":128,
+					"indices":124,
+					"material":24,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_entry_M_Walnut",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":125,
+						"NORMAL":126,
+						"TEXCOORD_0":127,
+						"TEXCOORD_1":128
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":29,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":129,
+					"material":25,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_entry_M_Wool_Charcoal_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":130,
+						"NORMAL":131,
+						"TEXCOORD_0":132,
+						"TEXCOORD_1":133
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":30,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":134,
 					"material":7,
 					"mode":4
 				}
@@ -3231,14 +3307,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":129,
-						"NORMAL":130,
-						"TEXCOORD_0":131,
-						"TEXCOORD_1":132
+						"POSITION":135,
+						"NORMAL":136,
+						"TEXCOORD_0":137,
+						"TEXCOORD_1":138
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":29,
+							"bufferView":31,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3258,14 +3334,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":133,
-						"NORMAL":134,
-						"TEXCOORD_0":135,
-						"TEXCOORD_1":136
+						"POSITION":139,
+						"NORMAL":140,
+						"TEXCOORD_0":141,
+						"TEXCOORD_1":142
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":30,
+							"bufferView":32,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3285,14 +3361,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":137,
-						"NORMAL":138,
-						"TEXCOORD_0":139,
-						"TEXCOORD_1":140
+						"POSITION":143,
+						"NORMAL":144,
+						"TEXCOORD_0":145,
+						"TEXCOORD_1":146
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":31,
+							"bufferView":33,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3301,7 +3377,7 @@
 							}
 						}
 					},
-					"indices":141,
+					"indices":147,
 					"material":27,
 					"mode":4
 				}
@@ -3312,14 +3388,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":142,
-						"NORMAL":143,
-						"TEXCOORD_0":144,
-						"TEXCOORD_1":145
+						"POSITION":148,
+						"NORMAL":149,
+						"TEXCOORD_0":150,
+						"TEXCOORD_1":151
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":32,
+							"bufferView":34,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3339,14 +3415,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":146,
-						"NORMAL":147,
-						"TEXCOORD_0":148,
-						"TEXCOORD_1":149
+						"POSITION":152,
+						"NORMAL":153,
+						"TEXCOORD_0":154,
+						"TEXCOORD_1":155
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":33,
+							"bufferView":35,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3366,14 +3442,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":150,
-						"NORMAL":151,
-						"TEXCOORD_0":152,
-						"TEXCOORD_1":153
+						"POSITION":156,
+						"NORMAL":157,
+						"TEXCOORD_0":158,
+						"TEXCOORD_1":159
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":34,
+							"bufferView":36,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3382,7 +3458,7 @@
 							}
 						}
 					},
-					"indices":154,
+					"indices":160,
 					"material":27,
 					"mode":4
 				}
@@ -3393,14 +3469,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":155,
-						"NORMAL":156,
-						"TEXCOORD_0":157,
-						"TEXCOORD_1":158
+						"POSITION":161,
+						"NORMAL":162,
+						"TEXCOORD_0":163,
+						"TEXCOORD_1":164
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":35,
+							"bufferView":37,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3420,14 +3496,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":159,
-						"NORMAL":160,
-						"TEXCOORD_0":161,
-						"TEXCOORD_1":162
+						"POSITION":165,
+						"NORMAL":166,
+						"TEXCOORD_0":167,
+						"TEXCOORD_1":168
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":36,
+							"bufferView":38,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3447,14 +3523,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":163,
-						"NORMAL":164,
-						"TEXCOORD_0":165,
-						"TEXCOORD_1":166
+						"POSITION":169,
+						"NORMAL":170,
+						"TEXCOORD_0":171,
+						"TEXCOORD_1":172
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":37,
+							"bufferView":39,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3463,7 +3539,7 @@
 							}
 						}
 					},
-					"indices":118,
+					"indices":124,
 					"material":27,
 					"mode":4
 				}
@@ -3474,14 +3550,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":167,
-						"NORMAL":168,
-						"TEXCOORD_0":169,
-						"TEXCOORD_1":170
+						"POSITION":173,
+						"NORMAL":174,
+						"TEXCOORD_0":175,
+						"TEXCOORD_1":176
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":38,
+							"bufferView":40,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3501,14 +3577,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":171,
-						"NORMAL":172,
-						"TEXCOORD_0":173,
-						"TEXCOORD_1":174
+						"POSITION":177,
+						"NORMAL":178,
+						"TEXCOORD_0":179,
+						"TEXCOORD_1":180
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":39,
+							"bufferView":41,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3528,14 +3604,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":175,
-						"NORMAL":176,
-						"TEXCOORD_0":177,
-						"TEXCOORD_1":178
+						"POSITION":181,
+						"NORMAL":182,
+						"TEXCOORD_0":183,
+						"TEXCOORD_1":184
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":40,
+							"bufferView":42,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3544,7 +3620,7 @@
 							}
 						}
 					},
-					"indices":179,
+					"indices":185,
 					"material":27,
 					"mode":4
 				}
@@ -3555,14 +3631,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":180,
-						"NORMAL":181,
-						"TEXCOORD_0":182,
-						"TEXCOORD_1":183
+						"POSITION":186,
+						"NORMAL":187,
+						"TEXCOORD_0":188,
+						"TEXCOORD_1":189
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":41,
+							"bufferView":43,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3582,14 +3658,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":184,
-						"NORMAL":185,
-						"TEXCOORD_0":186,
-						"TEXCOORD_1":187
+						"POSITION":190,
+						"NORMAL":191,
+						"TEXCOORD_0":192,
+						"TEXCOORD_1":193
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":42,
+							"bufferView":44,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3609,14 +3685,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":188,
-						"NORMAL":189,
-						"TEXCOORD_0":190,
-						"TEXCOORD_1":191
+						"POSITION":194,
+						"NORMAL":195,
+						"TEXCOORD_0":196,
+						"TEXCOORD_1":197
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":43,
+							"bufferView":45,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3625,7 +3701,7 @@
 							}
 						}
 					},
-					"indices":192,
+					"indices":198,
 					"material":30,
 					"mode":4
 				}
@@ -3636,14 +3712,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":193,
-						"NORMAL":194,
-						"TEXCOORD_0":195,
-						"TEXCOORD_1":196
+						"POSITION":199,
+						"NORMAL":200,
+						"TEXCOORD_0":201,
+						"TEXCOORD_1":202
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":44,
+							"bufferView":46,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3652,7 +3728,7 @@
 							}
 						}
 					},
-					"indices":141,
+					"indices":147,
 					"material":31,
 					"mode":4
 				}
@@ -3663,13 +3739,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":197,
-						"NORMAL":198,
-						"TEXCOORD_0":199
+						"POSITION":203,
+						"NORMAL":204,
+						"TEXCOORD_0":205
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":45,
+							"bufferView":47,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3677,7 +3753,7 @@
 							}
 						}
 					},
-					"indices":141,
+					"indices":147,
 					"material":32,
 					"mode":4
 				}
@@ -3688,14 +3764,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":200,
-						"NORMAL":201,
-						"TEXCOORD_0":202,
-						"TEXCOORD_1":203
+						"POSITION":206,
+						"NORMAL":207,
+						"TEXCOORD_0":208,
+						"TEXCOORD_1":209
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":46,
+							"bufferView":48,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3715,64 +3791,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":204,
-						"NORMAL":205,
-						"TEXCOORD_0":206,
-						"TEXCOORD_1":207
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":47,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":208,
-					"material":34,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_great_room_M_Fabric_RugOat_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":209,
-						"NORMAL":210,
-						"TEXCOORD_0":211,
-						"TEXCOORD_1":212
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":48,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":213,
-					"material":35,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_great_room_M_Fabric_RugTaupe_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":214,
-						"NORMAL":215,
-						"TEXCOORD_0":216,
-						"TEXCOORD_1":217
+						"POSITION":210,
+						"NORMAL":211,
+						"TEXCOORD_0":212,
+						"TEXCOORD_1":213
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -3785,7 +3807,61 @@
 							}
 						}
 					},
-					"indices":218,
+					"indices":214,
+					"material":34,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Fabric_RugOat_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":215,
+						"NORMAL":216,
+						"TEXCOORD_0":217,
+						"TEXCOORD_1":218
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":50,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":219,
+					"material":35,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_great_room_M_Fabric_RugTaupe_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":220,
+						"NORMAL":221,
+						"TEXCOORD_0":222,
+						"TEXCOORD_1":223
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":51,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":224,
 					"material":36,
 					"mode":4
 				}
@@ -3796,14 +3872,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":219,
-						"NORMAL":220,
-						"TEXCOORD_0":221,
-						"TEXCOORD_1":222
+						"POSITION":225,
+						"NORMAL":226,
+						"TEXCOORD_0":227,
+						"TEXCOORD_1":228
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":50,
+							"bufferView":52,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3823,14 +3899,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":223,
-						"NORMAL":224,
-						"TEXCOORD_0":225,
-						"TEXCOORD_1":226
+						"POSITION":229,
+						"NORMAL":230,
+						"TEXCOORD_0":231,
+						"TEXCOORD_1":232
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":51,
+							"bufferView":53,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3839,7 +3915,7 @@
 							}
 						}
 					},
-					"indices":227,
+					"indices":233,
 					"material":38,
 					"mode":4
 				}
@@ -3850,14 +3926,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":228,
-						"NORMAL":229,
-						"TEXCOORD_0":230,
-						"TEXCOORD_1":231
+						"POSITION":234,
+						"NORMAL":235,
+						"TEXCOORD_0":236,
+						"TEXCOORD_1":237
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":52,
+							"bufferView":54,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3866,7 +3942,7 @@
 							}
 						}
 					},
-					"indices":192,
+					"indices":198,
 					"material":39,
 					"mode":4
 				}
@@ -3877,14 +3953,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":232,
-						"NORMAL":233,
-						"TEXCOORD_0":234,
-						"TEXCOORD_1":235
+						"POSITION":238,
+						"NORMAL":239,
+						"TEXCOORD_0":240,
+						"TEXCOORD_1":241
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":53,
+							"bufferView":55,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3904,14 +3980,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":236,
-						"NORMAL":237,
-						"TEXCOORD_0":238,
-						"TEXCOORD_1":239
+						"POSITION":242,
+						"NORMAL":243,
+						"TEXCOORD_0":244,
+						"TEXCOORD_1":245
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":54,
+							"bufferView":56,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3920,7 +3996,7 @@
 							}
 						}
 					},
-					"indices":240,
+					"indices":246,
 					"material":40,
 					"mode":4
 				}
@@ -3931,14 +4007,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":241,
-						"NORMAL":242,
-						"TEXCOORD_0":243,
-						"TEXCOORD_1":244
+						"POSITION":247,
+						"NORMAL":248,
+						"TEXCOORD_0":249,
+						"TEXCOORD_1":250
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":55,
+							"bufferView":57,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3947,7 +4023,7 @@
 							}
 						}
 					},
-					"indices":245,
+					"indices":251,
 					"material":41,
 					"mode":4
 				}
@@ -3958,14 +4034,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":246,
-						"NORMAL":247,
-						"TEXCOORD_0":248,
-						"TEXCOORD_1":249
+						"POSITION":252,
+						"NORMAL":253,
+						"TEXCOORD_0":254,
+						"TEXCOORD_1":255
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":56,
+							"bufferView":58,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -3985,64 +4061,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":250,
-						"NORMAL":251,
-						"TEXCOORD_0":252,
-						"TEXCOORD_1":253
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":57,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":179,
-					"material":43,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_guest_room_M_Plaster_Sage",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":254,
-						"NORMAL":255,
-						"TEXCOORD_0":256,
-						"TEXCOORD_1":257
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":58,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":141,
-					"material":44,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_guest_room_M_Wool_Oat_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":258,
-						"NORMAL":259,
-						"TEXCOORD_0":260,
-						"TEXCOORD_1":261
+						"POSITION":256,
+						"NORMAL":257,
+						"TEXCOORD_0":258,
+						"TEXCOORD_1":259
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -4055,7 +4077,61 @@
 							}
 						}
 					},
-					"indices":262,
+					"indices":185,
+					"material":43,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_Plaster_Sage",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":260,
+						"NORMAL":261,
+						"TEXCOORD_0":262,
+						"TEXCOORD_1":263
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":60,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":147,
+					"material":44,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_guest_room_M_Wool_Oat_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":264,
+						"NORMAL":265,
+						"TEXCOORD_0":266,
+						"TEXCOORD_1":267
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":61,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":268,
 					"material":19,
 					"mode":4
 				}
@@ -4066,14 +4142,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":263,
-						"NORMAL":264,
-						"TEXCOORD_0":265,
-						"TEXCOORD_1":266
+						"POSITION":269,
+						"NORMAL":270,
+						"TEXCOORD_0":271,
+						"TEXCOORD_1":272
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":60,
+							"bufferView":62,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4093,13 +4169,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":267,
-						"NORMAL":268,
-						"TEXCOORD_0":269
+						"POSITION":273,
+						"NORMAL":274,
+						"TEXCOORD_0":275
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":61,
+							"bufferView":63,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4107,7 +4183,7 @@
 							}
 						}
 					},
-					"indices":270,
+					"indices":276,
 					"material":32,
 					"mode":4
 				}
@@ -4118,64 +4194,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":271,
-						"NORMAL":272,
-						"TEXCOORD_0":273,
-						"TEXCOORD_1":274
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":62,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":86,
-					"material":45,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gym_M_Oak_Light",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":275,
-						"NORMAL":276,
-						"TEXCOORD_0":277,
-						"TEXCOORD_1":278
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":63,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":86,
-					"material":46,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_gym_M_Plaster_Greige",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":279,
-						"NORMAL":280,
-						"TEXCOORD_0":281,
-						"TEXCOORD_1":282
+						"POSITION":277,
+						"NORMAL":278,
+						"TEXCOORD_0":279,
+						"TEXCOORD_1":280
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -4188,7 +4210,61 @@
 							}
 						}
 					},
-					"indices":192,
+					"indices":19,
+					"material":45,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Oak_Light",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":281,
+						"NORMAL":282,
+						"TEXCOORD_0":283,
+						"TEXCOORD_1":284
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":65,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":19,
+					"material":46,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_gym_M_Plaster_Greige",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":285,
+						"NORMAL":286,
+						"TEXCOORD_0":287,
+						"TEXCOORD_1":288
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":66,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":198,
 					"material":47,
 					"mode":4
 				}
@@ -4199,14 +4275,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":283,
-						"NORMAL":284,
-						"TEXCOORD_0":285,
-						"TEXCOORD_1":286
+						"POSITION":289,
+						"NORMAL":290,
+						"TEXCOORD_0":291,
+						"TEXCOORD_1":292
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":65,
+							"bufferView":67,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4226,14 +4302,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":287,
-						"NORMAL":288,
-						"TEXCOORD_0":289,
-						"TEXCOORD_1":290
+						"POSITION":293,
+						"NORMAL":294,
+						"TEXCOORD_0":295,
+						"TEXCOORD_1":296
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":66,
+							"bufferView":68,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4253,14 +4329,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":291,
-						"NORMAL":292,
-						"TEXCOORD_0":293,
-						"TEXCOORD_1":294
+						"POSITION":297,
+						"NORMAL":298,
+						"TEXCOORD_0":299,
+						"TEXCOORD_1":300
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":67,
+							"bufferView":69,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4280,14 +4356,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":295,
-						"NORMAL":296,
-						"TEXCOORD_0":297,
-						"TEXCOORD_1":298
+						"POSITION":301,
+						"NORMAL":302,
+						"TEXCOORD_0":303,
+						"TEXCOORD_1":304
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":68,
+							"bufferView":70,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4296,7 +4372,7 @@
 							}
 						}
 					},
-					"indices":299,
+					"indices":305,
 					"material":50,
 					"mode":4
 				}
@@ -4307,14 +4383,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":300,
-						"NORMAL":301,
-						"TEXCOORD_0":302,
-						"TEXCOORD_1":303
+						"POSITION":306,
+						"NORMAL":307,
+						"TEXCOORD_0":308,
+						"TEXCOORD_1":309
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":69,
+							"bufferView":71,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4323,7 +4399,7 @@
 							}
 						}
 					},
-					"indices":33,
+					"indices":40,
 					"material":7,
 					"mode":4
 				}
@@ -4334,14 +4410,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":304,
-						"NORMAL":305,
-						"TEXCOORD_0":306,
-						"TEXCOORD_1":307
+						"POSITION":310,
+						"NORMAL":311,
+						"TEXCOORD_0":312,
+						"TEXCOORD_1":313
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":70,
+							"bufferView":72,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4361,14 +4437,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":308,
-						"NORMAL":309,
-						"TEXCOORD_0":310,
-						"TEXCOORD_1":311
+						"POSITION":314,
+						"NORMAL":315,
+						"TEXCOORD_0":316,
+						"TEXCOORD_1":317
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":71,
+							"bufferView":73,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4377,7 +4453,7 @@
 							}
 						}
 					},
-					"indices":312,
+					"indices":318,
 					"material":51,
 					"mode":4
 				}
@@ -4388,14 +4464,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":313,
-						"NORMAL":314,
-						"TEXCOORD_0":315,
-						"TEXCOORD_1":316
+						"POSITION":319,
+						"NORMAL":320,
+						"TEXCOORD_0":321,
+						"TEXCOORD_1":322
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":72,
+							"bufferView":74,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4415,14 +4491,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":317,
-						"NORMAL":318,
-						"TEXCOORD_0":319,
-						"TEXCOORD_1":320
+						"POSITION":323,
+						"NORMAL":324,
+						"TEXCOORD_0":325,
+						"TEXCOORD_1":326
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":73,
+							"bufferView":75,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4431,7 +4507,7 @@
 							}
 						}
 					},
-					"indices":321,
+					"indices":327,
 					"material":52,
 					"mode":4
 				}
@@ -4442,14 +4518,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":322,
-						"NORMAL":323,
-						"TEXCOORD_0":324,
-						"TEXCOORD_1":325
+						"POSITION":328,
+						"NORMAL":329,
+						"TEXCOORD_0":330,
+						"TEXCOORD_1":331
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":74,
+							"bufferView":76,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4458,7 +4534,7 @@
 							}
 						}
 					},
-					"indices":33,
+					"indices":40,
 					"material":7,
 					"mode":4
 				}
@@ -4469,14 +4545,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":326,
-						"NORMAL":327,
-						"TEXCOORD_0":328,
-						"TEXCOORD_1":329
+						"POSITION":332,
+						"NORMAL":333,
+						"TEXCOORD_0":334,
+						"TEXCOORD_1":335
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":75,
+							"bufferView":77,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4496,14 +4572,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":330,
-						"NORMAL":331,
-						"TEXCOORD_0":332,
-						"TEXCOORD_1":333
+						"POSITION":336,
+						"NORMAL":337,
+						"TEXCOORD_0":338,
+						"TEXCOORD_1":339
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":76,
+							"bufferView":78,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4523,64 +4599,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":334,
-						"NORMAL":335,
-						"TEXCOORD_0":336,
-						"TEXCOORD_1":337
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":77,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":299,
-					"material":54,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_mudroom_M_Wool_Charcoal_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":338,
-						"NORMAL":339,
-						"TEXCOORD_0":340,
-						"TEXCOORD_1":341
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":78,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":33,
-					"material":7,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_mudroom_M_Wool_Oat_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":342,
-						"NORMAL":343,
-						"TEXCOORD_0":344,
-						"TEXCOORD_1":345
+						"POSITION":340,
+						"NORMAL":341,
+						"TEXCOORD_0":342,
+						"TEXCOORD_1":343
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -4593,7 +4615,61 @@
 							}
 						}
 					},
-					"indices":91,
+					"indices":305,
+					"material":54,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_Wool_Charcoal_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":344,
+						"NORMAL":345,
+						"TEXCOORD_0":346,
+						"TEXCOORD_1":347
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":80,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":40,
+					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_mudroom_M_Wool_Oat_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":348,
+						"NORMAL":349,
+						"TEXCOORD_0":350,
+						"TEXCOORD_1":351
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":81,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":97,
 					"material":19,
 					"mode":4
 				}
@@ -4604,14 +4680,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":346,
-						"NORMAL":347,
-						"TEXCOORD_0":348,
-						"TEXCOORD_1":349
+						"POSITION":352,
+						"NORMAL":353,
+						"TEXCOORD_0":354,
+						"TEXCOORD_1":355
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":80,
+							"bufferView":82,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4631,14 +4707,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":350,
-						"NORMAL":351,
-						"TEXCOORD_0":352,
-						"TEXCOORD_1":353
+						"POSITION":356,
+						"NORMAL":357,
+						"TEXCOORD_0":358,
+						"TEXCOORD_1":359
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":81,
+							"bufferView":83,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4658,14 +4734,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":354,
-						"NORMAL":355,
-						"TEXCOORD_0":356,
-						"TEXCOORD_1":357
+						"POSITION":360,
+						"NORMAL":361,
+						"TEXCOORD_0":362,
+						"TEXCOORD_1":363
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":82,
+							"bufferView":84,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4674,7 +4750,7 @@
 							}
 						}
 					},
-					"indices":358,
+					"indices":364,
 					"material":27,
 					"mode":4
 				}
@@ -4685,14 +4761,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":359,
-						"NORMAL":360,
-						"TEXCOORD_0":361,
-						"TEXCOORD_1":362
+						"POSITION":365,
+						"NORMAL":366,
+						"TEXCOORD_0":367,
+						"TEXCOORD_1":368
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":83,
+							"bufferView":85,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4701,7 +4777,7 @@
 							}
 						}
 					},
-					"indices":363,
+					"indices":369,
 					"material":7,
 					"mode":4
 				}
@@ -4712,14 +4788,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":364,
-						"NORMAL":365,
-						"TEXCOORD_0":366,
-						"TEXCOORD_1":367
+						"POSITION":370,
+						"NORMAL":371,
+						"TEXCOORD_0":372,
+						"TEXCOORD_1":373
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":84,
+							"bufferView":86,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4739,14 +4815,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":368,
-						"NORMAL":369,
-						"TEXCOORD_0":370,
-						"TEXCOORD_1":371
+						"POSITION":374,
+						"NORMAL":375,
+						"TEXCOORD_0":376,
+						"TEXCOORD_1":377
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":85,
+							"bufferView":87,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4755,7 +4831,7 @@
 							}
 						}
 					},
-					"indices":28,
+					"indices":35,
 					"material":56,
 					"mode":4
 				}
@@ -4766,14 +4842,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":372,
-						"NORMAL":373,
-						"TEXCOORD_0":374,
-						"TEXCOORD_1":375
+						"POSITION":378,
+						"NORMAL":379,
+						"TEXCOORD_0":380,
+						"TEXCOORD_1":381
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":86,
+							"bufferView":88,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4793,64 +4869,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":376,
-						"NORMAL":377,
-						"TEXCOORD_0":378,
-						"TEXCOORD_1":379
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":87,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":108,
-					"material":22,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_powder_M_Wool_Charcoal_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":380,
-						"NORMAL":381,
-						"TEXCOORD_0":382,
-						"TEXCOORD_1":383
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":88,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":384,
-					"material":7,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_primary_bath_M_Bath_Marble",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":385,
-						"NORMAL":386,
-						"TEXCOORD_0":387,
-						"TEXCOORD_1":388
+						"POSITION":382,
+						"NORMAL":383,
+						"TEXCOORD_0":384,
+						"TEXCOORD_1":385
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -4863,21 +4885,21 @@
 							}
 						}
 					},
-					"indices":192,
-					"material":57,
+					"indices":114,
+					"material":22,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
+			"name":"Mansion_powder_M_Wool_Charcoal_Rug",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":389,
-						"NORMAL":390,
-						"TEXCOORD_0":391,
-						"TEXCOORD_1":392
+						"POSITION":386,
+						"NORMAL":387,
+						"TEXCOORD_0":388,
+						"TEXCOORD_1":389
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -4890,7 +4912,61 @@
 							}
 						}
 					},
-					"indices":86,
+					"indices":390,
+					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Bath_Marble",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":391,
+						"NORMAL":392,
+						"TEXCOORD_0":393,
+						"TEXCOORD_1":394
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":91,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":198,
+					"material":57,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bath_M_Bath_MarbleDark",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":395,
+						"NORMAL":396,
+						"TEXCOORD_0":397,
+						"TEXCOORD_1":398
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":92,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":19,
 					"material":58,
 					"mode":4
 				}
@@ -4901,14 +4977,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":393,
-						"NORMAL":394,
-						"TEXCOORD_0":395,
-						"TEXCOORD_1":396
+						"POSITION":399,
+						"NORMAL":400,
+						"TEXCOORD_0":401,
+						"TEXCOORD_1":402
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":91,
+							"bufferView":93,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4928,14 +5004,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":397,
-						"NORMAL":398,
-						"TEXCOORD_0":399,
-						"TEXCOORD_1":400
+						"POSITION":403,
+						"NORMAL":404,
+						"TEXCOORD_0":405,
+						"TEXCOORD_1":406
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":92,
+							"bufferView":94,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4955,14 +5031,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":401,
-						"NORMAL":402,
-						"TEXCOORD_0":403,
-						"TEXCOORD_1":404
+						"POSITION":407,
+						"NORMAL":408,
+						"TEXCOORD_0":409,
+						"TEXCOORD_1":410
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":93,
+							"bufferView":95,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4982,14 +5058,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":405,
-						"NORMAL":406,
-						"TEXCOORD_0":407,
-						"TEXCOORD_1":408
+						"POSITION":411,
+						"NORMAL":412,
+						"TEXCOORD_0":413,
+						"TEXCOORD_1":414
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":94,
+							"bufferView":96,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -4998,7 +5074,7 @@
 							}
 						}
 					},
-					"indices":409,
+					"indices":415,
 					"material":34,
 					"mode":4
 				}
@@ -5009,14 +5085,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":410,
-						"NORMAL":411,
-						"TEXCOORD_0":412,
-						"TEXCOORD_1":413
+						"POSITION":416,
+						"NORMAL":417,
+						"TEXCOORD_0":418,
+						"TEXCOORD_1":419
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":95,
+							"bufferView":97,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5025,7 +5101,7 @@
 							}
 						}
 					},
-					"indices":414,
+					"indices":420,
 					"material":35,
 					"mode":4
 				}
@@ -5036,14 +5112,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":415,
-						"NORMAL":416,
-						"TEXCOORD_0":417,
-						"TEXCOORD_1":418
+						"POSITION":421,
+						"NORMAL":422,
+						"TEXCOORD_0":423,
+						"TEXCOORD_1":424
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":96,
+							"bufferView":98,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5063,64 +5139,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":419,
-						"NORMAL":420,
-						"TEXCOORD_0":421,
-						"TEXCOORD_1":422
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":97,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":86,
-					"material":61,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":423,
-						"NORMAL":424,
-						"TEXCOORD_0":425,
-						"TEXCOORD_1":426
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":98,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"TEXCOORD_1":3
-							}
-						}
-					},
-					"indices":113,
-					"material":62,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"Mansion_primary_bedroom_M_Wool_Oat_Rug",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":427,
-						"NORMAL":428,
-						"TEXCOORD_0":429,
-						"TEXCOORD_1":430
+						"POSITION":425,
+						"NORMAL":426,
+						"TEXCOORD_0":427,
+						"TEXCOORD_1":428
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -5133,7 +5155,61 @@
 							}
 						}
 					},
-					"indices":91,
+					"indices":19,
+					"material":61,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_Plaster_Stone",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":429,
+						"NORMAL":430,
+						"TEXCOORD_0":431,
+						"TEXCOORD_1":432
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":100,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":119,
+					"material":62,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_primary_bedroom_M_Wool_Oat_Rug",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":433,
+						"NORMAL":434,
+						"TEXCOORD_0":435,
+						"TEXCOORD_1":436
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":101,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"TEXCOORD_1":3
+							}
+						}
+					},
+					"indices":97,
 					"material":19,
 					"mode":4
 				}
@@ -5144,14 +5220,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":431,
-						"NORMAL":432,
-						"TEXCOORD_0":433,
-						"TEXCOORD_1":434
+						"POSITION":437,
+						"NORMAL":438,
+						"TEXCOORD_0":439,
+						"TEXCOORD_1":440
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":100,
+							"bufferView":102,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5171,14 +5247,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":435,
-						"NORMAL":436,
-						"TEXCOORD_0":437,
-						"TEXCOORD_1":438
+						"POSITION":441,
+						"NORMAL":442,
+						"TEXCOORD_0":443,
+						"TEXCOORD_1":444
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":101,
+							"bufferView":103,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5198,13 +5274,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":439,
-						"NORMAL":440,
-						"TEXCOORD_0":441
+						"POSITION":445,
+						"NORMAL":446,
+						"TEXCOORD_0":447
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":102,
+							"bufferView":104,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5212,7 +5288,7 @@
 							}
 						}
 					},
-					"indices":86,
+					"indices":19,
 					"material":32,
 					"mode":4
 				}
@@ -5223,14 +5299,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":442,
-						"NORMAL":443,
-						"TEXCOORD_0":444,
-						"TEXCOORD_1":445
+						"POSITION":448,
+						"NORMAL":449,
+						"TEXCOORD_0":450,
+						"TEXCOORD_1":451
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":103,
+							"bufferView":105,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5239,7 +5315,7 @@
 							}
 						}
 					},
-					"indices":113,
+					"indices":119,
 					"material":63,
 					"mode":4
 				}
@@ -5250,14 +5326,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":446,
-						"NORMAL":447,
-						"TEXCOORD_0":448,
-						"TEXCOORD_1":449
+						"POSITION":452,
+						"NORMAL":453,
+						"TEXCOORD_0":454,
+						"TEXCOORD_1":455
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":104,
+							"bufferView":106,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5277,14 +5353,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":450,
-						"NORMAL":451,
-						"TEXCOORD_0":452,
-						"TEXCOORD_1":453
+						"POSITION":456,
+						"NORMAL":457,
+						"TEXCOORD_0":458,
+						"TEXCOORD_1":459
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":105,
+							"bufferView":107,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5304,14 +5380,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":454,
-						"NORMAL":455,
-						"TEXCOORD_0":456,
-						"TEXCOORD_1":457
+						"POSITION":460,
+						"NORMAL":461,
+						"TEXCOORD_0":462,
+						"TEXCOORD_1":463
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":106,
+							"bufferView":108,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5320,7 +5396,7 @@
 							}
 						}
 					},
-					"indices":458,
+					"indices":464,
 					"material":27,
 					"mode":4
 				}
@@ -5331,14 +5407,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":459,
-						"NORMAL":460,
-						"TEXCOORD_0":461,
-						"TEXCOORD_1":462
+						"POSITION":465,
+						"NORMAL":466,
+						"TEXCOORD_0":467,
+						"TEXCOORD_1":468
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":107,
+							"bufferView":109,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5358,14 +5434,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":463,
-						"NORMAL":464,
-						"TEXCOORD_0":465,
-						"TEXCOORD_1":466
+						"POSITION":469,
+						"NORMAL":470,
+						"TEXCOORD_0":471,
+						"TEXCOORD_1":472
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":108,
+							"bufferView":110,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5385,14 +5461,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":467,
-						"NORMAL":468,
-						"TEXCOORD_0":469,
-						"TEXCOORD_1":470
+						"POSITION":473,
+						"NORMAL":474,
+						"TEXCOORD_0":475,
+						"TEXCOORD_1":476
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":109,
+							"bufferView":111,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5401,7 +5477,7 @@
 							}
 						}
 					},
-					"indices":154,
+					"indices":160,
 					"material":27,
 					"mode":4
 				}
@@ -5412,14 +5488,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":471,
-						"NORMAL":472,
-						"TEXCOORD_0":473,
-						"TEXCOORD_1":474
+						"POSITION":477,
+						"NORMAL":478,
+						"TEXCOORD_0":479,
+						"TEXCOORD_1":480
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":110,
+							"bufferView":112,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5439,14 +5515,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":475,
-						"NORMAL":476,
-						"TEXCOORD_0":477,
-						"TEXCOORD_1":478
+						"POSITION":481,
+						"NORMAL":482,
+						"TEXCOORD_0":483,
+						"TEXCOORD_1":484
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":111,
+							"bufferView":113,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5466,14 +5542,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":479,
-						"NORMAL":480,
-						"TEXCOORD_0":481,
-						"TEXCOORD_1":482
+						"POSITION":485,
+						"NORMAL":486,
+						"TEXCOORD_0":487,
+						"TEXCOORD_1":488
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":112,
+							"bufferView":114,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5482,7 +5558,7 @@
 							}
 						}
 					},
-					"indices":113,
+					"indices":119,
 					"material":27,
 					"mode":4
 				}
@@ -5493,14 +5569,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":483,
-						"NORMAL":484,
-						"TEXCOORD_0":485,
-						"TEXCOORD_1":486
+						"POSITION":489,
+						"NORMAL":490,
+						"TEXCOORD_0":491,
+						"TEXCOORD_1":492
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":113,
+							"bufferView":115,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5520,14 +5596,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":487,
-						"NORMAL":488,
-						"TEXCOORD_0":489,
-						"TEXCOORD_1":490
+						"POSITION":493,
+						"NORMAL":494,
+						"TEXCOORD_0":495,
+						"TEXCOORD_1":496
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":114,
+							"bufferView":116,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5547,14 +5623,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":491,
-						"NORMAL":492,
-						"TEXCOORD_0":493,
-						"TEXCOORD_1":494
+						"POSITION":497,
+						"NORMAL":498,
+						"TEXCOORD_0":499,
+						"TEXCOORD_1":500
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":115,
+							"bufferView":117,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5574,14 +5650,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":495,
-						"NORMAL":496,
-						"TEXCOORD_0":497,
-						"TEXCOORD_1":498
+						"POSITION":501,
+						"NORMAL":502,
+						"TEXCOORD_0":503,
+						"TEXCOORD_1":504
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":116,
+							"bufferView":118,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5590,7 +5666,7 @@
 							}
 						}
 					},
-					"indices":28,
+					"indices":35,
 					"material":65,
 					"mode":4
 				}
@@ -5601,14 +5677,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":499,
-						"NORMAL":500,
-						"TEXCOORD_0":501,
-						"TEXCOORD_1":502
+						"POSITION":505,
+						"NORMAL":506,
+						"TEXCOORD_0":507,
+						"TEXCOORD_1":508
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":117,
+							"bufferView":119,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5628,14 +5704,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":503,
-						"NORMAL":504,
-						"TEXCOORD_0":505,
-						"TEXCOORD_1":506
+						"POSITION":509,
+						"NORMAL":510,
+						"TEXCOORD_0":511,
+						"TEXCOORD_1":512
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":118,
+							"bufferView":120,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -5644,7 +5720,7 @@
 							}
 						}
 					},
-					"indices":91,
+					"indices":97,
 					"material":19,
 					"mode":4
 				}
@@ -6063,7 +6139,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":10896,
+			"count":10848,
 			"max":[
 				24.059999465942383,
 				0.006000000052154064,
@@ -6078,17 +6154,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":10896,
+			"count":10848,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":10896,
+			"count":10848,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":16344,
+			"count":16272,
 			"type":"SCALAR"
 		},
 		{
@@ -6123,7 +6199,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":528,
+			"count":552,
 			"max":[
 				26.006000518798828,
 				4.150000095367432,
@@ -6138,17 +6214,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":528,
+			"count":552,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":528,
+			"count":552,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":792,
+			"count":828,
 			"type":"SCALAR"
 		},
 		{
@@ -6180,6 +6256,61 @@
 			"componentType":5123,
 			"count":432,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.05999999865889549,
+				4.150000095367432,
+				0.02500000037252903
+			],
+			"min":[
+				-0.05999999865889549,
+				-4.150000095367432,
+				-1.4795454740524292
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":72,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.006000000052154064,
+				4.150000095367432,
+				2.1818182468414307
+			],
+			"min":[
+				-0.006000000052154064,
+				-4.150000095367432,
+				-2.1818182468414307
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
@@ -6690,11 +6821,6 @@
 			"componentType":5126,
 			"count":48,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
@@ -9790,598 +9916,608 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":28023,
+			"byteLength":27907,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":314,
-			"byteOffset":28024
+			"byteOffset":27908
 		},
 		{
 			"buffer":0,
-			"byteLength":1891,
-			"byteOffset":28340
+			"byteLength":1953,
+			"byteOffset":28224
 		},
 		{
 			"buffer":0,
 			"byteLength":1145,
-			"byteOffset":30232
+			"byteOffset":30180
+		},
+		{
+			"buffer":0,
+			"byteLength":377,
+			"byteOffset":31328
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":31708
 		},
 		{
 			"buffer":0,
 			"byteLength":389,
-			"byteOffset":31380
+			"byteOffset":31996
 		},
 		{
 			"buffer":0,
 			"byteLength":385,
-			"byteOffset":31772
+			"byteOffset":32388
 		},
 		{
 			"buffer":0,
 			"byteLength":1559,
-			"byteOffset":32160
+			"byteOffset":32776
 		},
 		{
 			"buffer":0,
 			"byteLength":1868,
-			"byteOffset":33720
+			"byteOffset":34336
 		},
 		{
 			"buffer":0,
 			"byteLength":375,
-			"byteOffset":35588
+			"byteOffset":36204
 		},
 		{
 			"buffer":0,
 			"byteLength":299,
-			"byteOffset":35964
+			"byteOffset":36580
 		},
 		{
 			"buffer":0,
 			"byteLength":300,
-			"byteOffset":36264
+			"byteOffset":36880
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":36564
+			"byteOffset":37180
 		},
 		{
 			"buffer":0,
 			"byteLength":1516,
-			"byteOffset":36948
+			"byteOffset":37564
 		},
 		{
 			"buffer":0,
 			"byteLength":827,
-			"byteOffset":38464
+			"byteOffset":39080
 		},
 		{
 			"buffer":0,
 			"byteLength":931,
-			"byteOffset":39292
+			"byteOffset":39908
 		},
 		{
 			"buffer":0,
 			"byteLength":379,
-			"byteOffset":40224
+			"byteOffset":40840
 		},
 		{
 			"buffer":0,
 			"byteLength":383,
-			"byteOffset":40604
+			"byteOffset":41220
 		},
 		{
 			"buffer":0,
 			"byteLength":376,
-			"byteOffset":40988
+			"byteOffset":41604
 		},
 		{
 			"buffer":0,
 			"byteLength":2102,
-			"byteOffset":41364
+			"byteOffset":41980
 		},
 		{
 			"buffer":0,
 			"byteLength":564,
-			"byteOffset":43468
+			"byteOffset":44084
 		},
 		{
 			"buffer":0,
 			"byteLength":1517,
-			"byteOffset":44032
+			"byteOffset":44648
 		},
 		{
 			"buffer":0,
 			"byteLength":1656,
-			"byteOffset":45552
+			"byteOffset":46168
 		},
 		{
 			"buffer":0,
 			"byteLength":383,
-			"byteOffset":47208
+			"byteOffset":47824
 		},
 		{
 			"buffer":0,
 			"byteLength":376,
-			"byteOffset":47592
+			"byteOffset":48208
 		},
 		{
 			"buffer":0,
 			"byteLength":938,
-			"byteOffset":47968
+			"byteOffset":48584
 		},
 		{
 			"buffer":0,
 			"byteLength":1805,
-			"byteOffset":48908
+			"byteOffset":49524
 		},
 		{
 			"buffer":0,
 			"byteLength":1389,
-			"byteOffset":50716
+			"byteOffset":51332
 		},
 		{
 			"buffer":0,
 			"byteLength":2755,
-			"byteOffset":52108
+			"byteOffset":52724
 		},
 		{
 			"buffer":0,
 			"byteLength":3763,
-			"byteOffset":54864
+			"byteOffset":55480
 		},
 		{
 			"buffer":0,
 			"byteLength":395,
-			"byteOffset":58628
+			"byteOffset":59244
 		},
 		{
 			"buffer":0,
 			"byteLength":386,
-			"byteOffset":59024
+			"byteOffset":59640
 		},
 		{
 			"buffer":0,
 			"byteLength":919,
-			"byteOffset":59412
+			"byteOffset":60028
 		},
 		{
 			"buffer":0,
 			"byteLength":396,
-			"byteOffset":60332
+			"byteOffset":60948
 		},
 		{
 			"buffer":0,
 			"byteLength":376,
-			"byteOffset":60728
+			"byteOffset":61344
 		},
 		{
 			"buffer":0,
 			"byteLength":1637,
-			"byteOffset":61104
+			"byteOffset":61720
 		},
 		{
 			"buffer":0,
 			"byteLength":396,
-			"byteOffset":62744
+			"byteOffset":63360
 		},
 		{
 			"buffer":0,
 			"byteLength":376,
-			"byteOffset":63140
+			"byteOffset":63756
 		},
 		{
 			"buffer":0,
 			"byteLength":1475,
-			"byteOffset":63516
+			"byteOffset":64132
 		},
 		{
 			"buffer":0,
 			"byteLength":396,
-			"byteOffset":64992
+			"byteOffset":65608
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":65388
+			"byteOffset":66004
 		},
 		{
 			"buffer":0,
 			"byteLength":1179,
-			"byteOffset":65772
+			"byteOffset":66388
 		},
 		{
 			"buffer":0,
 			"byteLength":385,
-			"byteOffset":66952
+			"byteOffset":67568
 		},
 		{
 			"buffer":0,
 			"byteLength":380,
-			"byteOffset":67340
+			"byteOffset":67956
 		},
 		{
 			"buffer":0,
 			"byteLength":1329,
-			"byteOffset":67720
+			"byteOffset":68336
 		},
 		{
 			"buffer":0,
 			"byteLength":986,
-			"byteOffset":69052
+			"byteOffset":69668
 		},
 		{
 			"buffer":0,
 			"byteLength":719,
-			"byteOffset":70040
+			"byteOffset":70656
 		},
 		{
 			"buffer":0,
 			"byteLength":385,
-			"byteOffset":70760
+			"byteOffset":71376
 		},
 		{
 			"buffer":0,
 			"byteLength":892,
-			"byteOffset":71148
+			"byteOffset":71764
 		},
 		{
 			"buffer":0,
 			"byteLength":1872,
-			"byteOffset":72040
+			"byteOffset":72656
 		},
 		{
 			"buffer":0,
 			"byteLength":1339,
-			"byteOffset":73912
+			"byteOffset":74528
 		},
 		{
 			"buffer":0,
 			"byteLength":380,
-			"byteOffset":75252
+			"byteOffset":75868
 		},
 		{
 			"buffer":0,
 			"byteLength":2441,
-			"byteOffset":75632
+			"byteOffset":76248
 		},
 		{
 			"buffer":0,
 			"byteLength":1297,
-			"byteOffset":78076
+			"byteOffset":78692
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":79376
+			"byteOffset":79992
 		},
 		{
 			"buffer":0,
 			"byteLength":2483,
-			"byteOffset":79760
+			"byteOffset":80376
 		},
 		{
 			"buffer":0,
 			"byteLength":489,
-			"byteOffset":82244
+			"byteOffset":82860
 		},
 		{
 			"buffer":0,
 			"byteLength":377,
-			"byteOffset":82736
+			"byteOffset":83352
 		},
 		{
 			"buffer":0,
 			"byteLength":1231,
-			"byteOffset":83116
+			"byteOffset":83732
 		},
 		{
 			"buffer":0,
 			"byteLength":977,
-			"byteOffset":84348
+			"byteOffset":84964
 		},
 		{
 			"buffer":0,
 			"byteLength":682,
-			"byteOffset":85328
+			"byteOffset":85944
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":86012
+			"byteOffset":86628
 		},
 		{
 			"buffer":0,
 			"byteLength":543,
-			"byteOffset":86396
+			"byteOffset":87012
 		},
 		{
 			"buffer":0,
 			"byteLength":553,
-			"byteOffset":86940
+			"byteOffset":87556
 		},
 		{
 			"buffer":0,
 			"byteLength":562,
-			"byteOffset":87496
+			"byteOffset":88112
 		},
 		{
 			"buffer":0,
 			"byteLength":1383,
-			"byteOffset":88060
+			"byteOffset":88676
 		},
 		{
 			"buffer":0,
 			"byteLength":379,
-			"byteOffset":89444
+			"byteOffset":90060
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":89824
+			"byteOffset":90440
 		},
 		{
 			"buffer":0,
 			"byteLength":375,
-			"byteOffset":90208
+			"byteOffset":90824
 		},
 		{
 			"buffer":0,
 			"byteLength":2325,
-			"byteOffset":90584
+			"byteOffset":91200
 		},
 		{
 			"buffer":0,
 			"byteLength":1868,
-			"byteOffset":92912
+			"byteOffset":93528
 		},
 		{
 			"buffer":0,
 			"byteLength":385,
-			"byteOffset":94780
+			"byteOffset":95396
 		},
 		{
 			"buffer":0,
 			"byteLength":648,
-			"byteOffset":95168
+			"byteOffset":95784
 		},
 		{
 			"buffer":0,
 			"byteLength":375,
-			"byteOffset":95816
+			"byteOffset":96432
 		},
 		{
 			"buffer":0,
 			"byteLength":1964,
-			"byteOffset":96192
+			"byteOffset":96808
 		},
 		{
 			"buffer":0,
 			"byteLength":1866,
-			"byteOffset":98156
+			"byteOffset":98772
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":100024
+			"byteOffset":100640
 		},
 		{
 			"buffer":0,
 			"byteLength":377,
-			"byteOffset":100408
+			"byteOffset":101024
 		},
 		{
 			"buffer":0,
 			"byteLength":2314,
-			"byteOffset":100788
+			"byteOffset":101404
 		},
 		{
 			"buffer":0,
 			"byteLength":1868,
-			"byteOffset":103104
+			"byteOffset":103720
 		},
 		{
 			"buffer":0,
 			"byteLength":1655,
-			"byteOffset":104972
+			"byteOffset":105588
 		},
 		{
 			"buffer":0,
 			"byteLength":382,
-			"byteOffset":106628
+			"byteOffset":107244
 		},
 		{
 			"buffer":0,
 			"byteLength":375,
-			"byteOffset":107012
+			"byteOffset":107628
 		},
 		{
 			"buffer":0,
 			"byteLength":2004,
-			"byteOffset":107388
+			"byteOffset":108004
 		},
 		{
 			"buffer":0,
 			"byteLength":3129,
-			"byteOffset":109392
+			"byteOffset":110008
 		},
 		{
 			"buffer":0,
 			"byteLength":389,
-			"byteOffset":112524
+			"byteOffset":113140
 		},
 		{
 			"buffer":0,
 			"byteLength":1559,
-			"byteOffset":112916
+			"byteOffset":113532
 		},
 		{
 			"buffer":0,
 			"byteLength":386,
-			"byteOffset":114476
+			"byteOffset":115092
 		},
 		{
 			"buffer":0,
 			"byteLength":937,
-			"byteOffset":114864
+			"byteOffset":115480
 		},
 		{
 			"buffer":0,
 			"byteLength":2233,
-			"byteOffset":115804
+			"byteOffset":116420
 		},
 		{
 			"buffer":0,
 			"byteLength":1374,
-			"byteOffset":118040
+			"byteOffset":118656
 		},
 		{
 			"buffer":0,
 			"byteLength":565,
-			"byteOffset":119416
+			"byteOffset":120032
 		},
 		{
 			"buffer":0,
 			"byteLength":345,
-			"byteOffset":119984
+			"byteOffset":120600
 		},
 		{
 			"buffer":0,
 			"byteLength":351,
-			"byteOffset":120332
+			"byteOffset":120948
 		},
 		{
 			"buffer":0,
 			"byteLength":383,
-			"byteOffset":120684
+			"byteOffset":121300
 		},
 		{
 			"buffer":0,
 			"byteLength":973,
-			"byteOffset":121068
+			"byteOffset":121684
 		},
 		{
 			"buffer":0,
 			"byteLength":834,
-			"byteOffset":122044
+			"byteOffset":122660
 		},
 		{
 			"buffer":0,
 			"byteLength":375,
-			"byteOffset":122880
+			"byteOffset":123496
 		},
 		{
 			"buffer":0,
 			"byteLength":566,
-			"byteOffset":123256
+			"byteOffset":123872
 		},
 		{
 			"buffer":0,
 			"byteLength":1848,
-			"byteOffset":123824
+			"byteOffset":124440
 		},
 		{
 			"buffer":0,
 			"byteLength":1637,
-			"byteOffset":125672
+			"byteOffset":126288
 		},
 		{
 			"buffer":0,
 			"byteLength":389,
-			"byteOffset":127312
+			"byteOffset":127928
 		},
 		{
 			"buffer":0,
 			"byteLength":385,
-			"byteOffset":127704
+			"byteOffset":128320
 		},
 		{
 			"buffer":0,
 			"byteLength":377,
-			"byteOffset":128092
+			"byteOffset":128708
 		},
 		{
 			"buffer":0,
 			"byteLength":1832,
-			"byteOffset":128472
+			"byteOffset":129088
 		},
 		{
 			"buffer":0,
 			"byteLength":395,
-			"byteOffset":130304
+			"byteOffset":130920
 		},
 		{
 			"buffer":0,
 			"byteLength":392,
-			"byteOffset":130700
+			"byteOffset":131316
 		},
 		{
 			"buffer":0,
 			"byteLength":1197,
-			"byteOffset":131092
+			"byteOffset":131708
 		},
 		{
 			"buffer":0,
 			"byteLength":396,
-			"byteOffset":132292
+			"byteOffset":132908
 		},
 		{
 			"buffer":0,
 			"byteLength":392,
-			"byteOffset":132688
+			"byteOffset":133304
 		},
 		{
 			"buffer":0,
 			"byteLength":1593,
-			"byteOffset":133080
+			"byteOffset":133696
 		},
 		{
 			"buffer":0,
 			"byteLength":396,
-			"byteOffset":134676
+			"byteOffset":135292
 		},
 		{
 			"buffer":0,
 			"byteLength":393,
-			"byteOffset":135072
+			"byteOffset":135688
 		},
 		{
 			"buffer":0,
 			"byteLength":1824,
-			"byteOffset":135468
+			"byteOffset":136084
 		},
 		{
 			"buffer":0,
 			"byteLength":397,
-			"byteOffset":137292
+			"byteOffset":137908
 		},
 		{
 			"buffer":0,
 			"byteLength":393,
-			"byteOffset":137692
+			"byteOffset":138308
 		},
 		{
 			"buffer":0,
 			"byteLength":384,
-			"byteOffset":138088
+			"byteOffset":138704
 		},
 		{
 			"buffer":0,
 			"byteLength":1566,
-			"byteOffset":138472
+			"byteOffset":139088
 		},
 		{
 			"buffer":0,
 			"byteLength":379,
-			"byteOffset":140040
+			"byteOffset":140656
 		},
 		{
 			"buffer":0,
 			"byteLength":1652,
-			"byteOffset":140420
+			"byteOffset":141036
 		}
 	],
 	"samplers":[
@@ -10392,7 +10528,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":142072,
+			"byteLength":142688,
 			"uri":"mansion_shell.bin"
 		}
 	]

@@ -851,7 +851,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":224,
 			"max":[
 				0.4300000071525574,
 				0.001500000013038516,
@@ -866,17 +866,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":224,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":216,
+			"count":224,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":216,
+			"count":224,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -1414,83 +1414,83 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2978,
+			"byteLength":3088,
 			"byteOffset":6800
 		},
 		{
 			"buffer":0,
 			"byteLength":1053,
-			"byteOffset":9780
+			"byteOffset":9888
 		},
 		{
 			"buffer":0,
 			"byteLength":886,
-			"byteOffset":10836
+			"byteOffset":10944
 		},
 		{
 			"buffer":0,
 			"byteLength":1287,
-			"byteOffset":11724
+			"byteOffset":11832
 		},
 		{
 			"buffer":0,
 			"byteLength":2386,
-			"byteOffset":13012
+			"byteOffset":13120
 		},
 		{
 			"buffer":0,
 			"byteLength":814,
-			"byteOffset":15400
+			"byteOffset":15508
 		},
 		{
 			"buffer":0,
 			"byteLength":1069,
-			"byteOffset":16216
+			"byteOffset":16324
 		},
 		{
 			"buffer":0,
 			"byteLength":1165,
-			"byteOffset":17288
+			"byteOffset":17396
 		},
 		{
 			"buffer":0,
 			"byteLength":1083,
-			"byteOffset":18456
+			"byteOffset":18564
 		},
 		{
 			"buffer":0,
 			"byteLength":1327,
-			"byteOffset":19540
+			"byteOffset":19648
 		},
 		{
 			"buffer":0,
 			"byteLength":1332,
-			"byteOffset":20868
+			"byteOffset":20976
 		},
 		{
 			"buffer":0,
 			"byteLength":4025,
-			"byteOffset":22200
+			"byteOffset":22308
 		},
 		{
 			"buffer":0,
 			"byteLength":3910,
-			"byteOffset":26228
+			"byteOffset":26336
 		},
 		{
 			"buffer":0,
 			"byteLength":1268,
-			"byteOffset":30140
+			"byteOffset":30248
 		},
 		{
 			"buffer":0,
 			"byteLength":1726,
-			"byteOffset":31408
+			"byteOffset":31516
 		},
 		{
 			"buffer":0,
 			"byteLength":2311,
-			"byteOffset":33136
+			"byteOffset":33244
 		}
 	],
 	"samplers":[
@@ -1501,7 +1501,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":35448,
+			"byteLength":35556,
 			"uri":"desk.bin"
 		}
 	]

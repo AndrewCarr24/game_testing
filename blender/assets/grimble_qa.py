@@ -21,7 +21,10 @@ import numpy as np
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
-ACTIONS = {"Walk": 2.8, "Knock": 3.5, "Wave": 2.5, "Idle": 4.0}
+ACTIONS = {"Walk": 2.8, "Knock": 3.5, "Wave": 2.5, "Idle": 4.0,
+           "Smash": 2.5, "Crawl": 2.6, "CrawlFast": 1.1, "CrawlIdle": 6.0, "Swipe": 1.6, "ReachUp": 3.0}
+# the crawl family must pass the house's openings (3.0 m courtyard door): (max height, max width)
+ENVELOPE = {"Crawl": (2.9, 2.6), "CrawlFast": (2.9, 2.6), "CrawlIdle": (2.9, 2.6), "Swipe": (3.5, None)}
 
 
 def _arrays(ob):
@@ -168,6 +171,88 @@ def skin_checks(objs):
     return out
 
 
+def motion_checks(root, parts, every=3):
+    """Deformed-mesh measurements per action (the staff excluded: it is dropped): the crawl
+    family's envelope over the whole cycle, the footprint, and the claws at the marked hit
+    times against the numbers on the root (smashHit, swipeHit / swipeReach, reachHit ...)."""
+    import bpy as _bpy
+    arm = next((o for o in root.children_recursive if o.type == "ARMATURE"), None)
+    out, scene = {}, _bpy.context.scene
+    if arm is None or not arm.animation_data:
+        return out
+    meshes = [o for o in parts if o.type == "MESH" and not o.name.endswith("_Staff")]
+    hands = next(o for o in parts if o.name.endswith("_Hands"))
+    fg = {hands.vertex_groups[n].index for n in ("Foot.L", "Foot.R") if n in hands.vertex_groups}
+    claw = np.array([not any(g.group in fg and g.weight > 0.5 for g in v.groups) for v in hands.data.vertices])
+
+    def pose(f):
+        scene.frame_set(f)
+        dg = _bpy.context.evaluated_depsgraph_get()
+        P, C = [], None
+        for o in meshes:
+            e = o.evaluated_get(dg)
+            me = e.to_mesh()
+            co = np.zeros(len(me.vertices) * 3)
+            me.vertices.foreach_get("co", co)
+            mw = np.array(e.matrix_world)
+            Q = co.reshape(-1, 3) @ mw[:3, :3].T + mw[:3, 3]
+            e.to_mesh_clear()
+            P.append(Q)
+            if o is hands:
+                C = Q[claw]
+        return np.concatenate(P), C
+
+    def use(name):
+        act = _bpy.data.actions.get(name)
+        if act is None:
+            return None
+        arm.animation_data.action = act
+        try:
+            if act.slots:
+                arm.animation_data.action_slot = act.slots[0]
+        except AttributeError:
+            pass
+        return [int(x) for x in act.frame_range]
+    fps = scene.render.fps
+    for name, (hmax, wmax) in ENVELOPE.items():
+        fr = use(name)
+        if fr is None:
+            continue
+        zt, wd = 0.0, 0.0
+        for f in range(fr[0], fr[1] + 1, every):
+            P, _ = pose(f)
+            zt, wd = max(zt, float(P[:, 2].max())), max(wd, float(np.ptp(P[:, 0])))
+        out[name] = dict(height=zt, width=wd, hmax=hmax, wmax=wmax)
+        if name == "Crawl":
+            P, _ = pose(fr[0])
+            lo = P[P[:, 2] < 0.3]
+            out["footprint"] = (float(np.ptp(lo[:, 1])), float(np.ptp(lo[:, 0])))
+    g = root.get("glassY")
+    fr = use("Smash")
+    if fr is not None and g is not None:
+        hit = None
+        for f in range(fr[0], fr[1] + 1):
+            _, C = pose(f)
+            if C[:, 1].min() < -g:
+                hit = (f / fps, float(C[np.argmin(C[:, 1]), 2]))
+                break
+        out["smash"] = hit
+    for name, key in (("Swipe", "swipeHit"), ("ReachUp", "reachHit")):
+        fr = use(name)
+        if fr is None or root.get(key) is None:
+            continue
+        _, C = pose(int(round(root[key] * fps)))
+        i = int(np.argmin(C[:, 1]))
+        out[name + "_hit"] = (float(-C[i, 1]), float(C[i, 2]), float(C[:, 2].max()))
+    arm.animation_data.action = None
+    scene.frame_set(0)
+    for pb in arm.pose.bones:
+        pb.location = (0, 0, 0)
+        pb.rotation_quaternion = (1, 0, 0, 0)
+        pb.scale = (1, 1, 1)
+    return out
+
+
 def run(root, parts, info):
     errors, lines = [], []
 
@@ -239,6 +324,29 @@ def run(root, parts, info):
             got = (act.frame_range[1] - act.frame_range[0]) / fps if act else None
             line(f"QA action {name}: {got if got is None else round(got, 2)} s (expected {dur})")
             err(got is None or abs(got - dur) > 0.05, f"action {name} missing or wrong length")
+        mc = motion_checks(root, parts)
+        for nm in ENVELOPE:
+            if nm in mc:
+                m = mc[nm]
+                line(f"QA motion {nm:9s} max height {m['height']:.2f} m (limit {m['hmax']}), max width "
+                     f"{m['width']:.2f} m" + (f" (limit {m['wmax']})" if m["wmax"] else ""))
+                err(m["height"] > m["hmax"], f"{nm} rises to {m['height']:.2f} m (> {m['hmax']})")
+                err(m["wmax"] is not None and m["width"] > m["wmax"], f"{nm} is {m['width']:.2f} m wide (> {m['wmax']})")
+        if "footprint" in mc:
+            line(f"QA motion Crawl footprint {mc['footprint'][0]:.2f} m long x {mc['footprint'][1]:.2f} m wide")
+        if "smash" in mc:
+            h = mc["smash"]
+            line(f"QA motion Smash: claws through the glass plane at {h[0]:.2f} s (root smashHit {root.get('smashHit')}), "
+                 f"height {h[1]:.2f} m" if h else "QA motion Smash: claws never reach the glass plane")
+            err(h is None or abs(h[0] - root.get("smashHit", 0)) > 0.07, "Smash hit time drifted from smashHit")
+        for nm, k1, k2 in (("Swipe", "swipeReach", None), ("ReachUp", "reachUpReach", "reachUpHeight")):
+            h = mc.get(nm + "_hit")
+            if h:
+                line(f"QA motion {nm} at its hit: claws {h[0]:.2f} m in front, at {h[1]:.2f} m (top {h[2]:.2f} m); "
+                     f"root says {root.get(k1)}" + (f" / {root.get(k2)}" if k2 else ""))
+                err(abs(h[0] - root.get(k1, 0)) > 0.2, f"{nm} reach drifted ({h[0]:.2f} vs {root.get(k1)})")
+                if k2:
+                    err(abs(h[1] - root.get(k2, 0)) > 0.25, f"{nm} height drifted ({h[1]:.2f} vs {root.get(k2)})")
     imgs = {}
     for ob in parts:
         for m in ob.data.materials:

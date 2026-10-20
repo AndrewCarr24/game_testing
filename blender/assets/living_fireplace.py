@@ -255,6 +255,14 @@ def build(**overrides):
     top = fz + fh - 0.03
     flame_card(col, root, f"{n}_FireBack_NoCollide", flame, -fw / 2 + 0.12, fw / 2 - 0.12, yb - 0.085, bed_z + 0.035, top, 1)
     flame_card(col, root, f"{n}_FireFront_NoCollide", flame, -fw / 2 + 0.10, fw / 2 - 0.10, yb - 0.125, bed_z + 0.035, top - 0.08, 2)
+    # interactivity: the fire follows signal "fire" (renamed per placement, {"signal": {"fire":
+    # "fire_great_room"}}, switched by an ix_switch_fire beside it); a gas fire burns without power
+    for ob in root.children:
+        if ob.get("fx") == "fire":
+            ob["react"] = {"signal": "fire", "on": "show", "off": "hide", "power": False}
+        elif ob.name == f"{n}_EmberBed":
+            ob["react"] = {"signal": "fire", "on": {"emissive": 1}, "off": {"emissive": 0}, "power": False,
+                           "duration": 1.5}
 
     # hearth bench: a floating limestone slab (eased edges) on a recessed black base,
     # with a stack of logs at the right-hand end

@@ -385,6 +385,9 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
             entry["attach"] = {"asset": host, "node": node}
         if opts.get("lock"):
             entry["lock"] = opts["lock"]
+        for k in ("signal", "state"):         # interactivity: switch/reactor signal override, initial state
+            if k in opts:
+                entry[k] = opts[k]
         ob.location = loc
         ob.rotation_euler = (0, 0, math.radians(rot))
         placed.append(entry)
@@ -416,6 +419,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         "props": placed,
         "colliders": h.colliders,
         "ramps": h.ramps,
+        "breakables": h.breakables,
         "lights": h.lights + [
             {"type": "sun", "direction": common.to_gltf(sun), "intensity": p["sun_strength"], "color": list(p["sun_color"])},
             {"type": "ambient_env", "intensity": 0.6},

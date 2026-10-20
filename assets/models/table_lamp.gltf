@@ -36,6 +36,17 @@
 			"name":"TableLamp_Bead"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":3,
 			"name":"TableLamp_Bulb"
 		},
@@ -60,6 +71,17 @@
 			"name":"TableLamp_RimTop"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"lights",
+					"on":{
+						"emissive":1
+					},
+					"off":{
+						"emissive":0
+					}
+				}
+			},
 			"mesh":9,
 			"name":"TableLamp_Shade"
 		},

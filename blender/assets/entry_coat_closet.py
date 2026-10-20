@@ -57,6 +57,12 @@ def cube(bm, size, loc, rot=(0, 0, 0), bevel=0.02, seg=2):
         bmesh.ops.bevel(bm, geom=edges, offset=bevel, segments=seg, affect="EDGES")
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -193,6 +199,7 @@ def build(**overrides):
     common.mesh_object(f"{n}_Hangers", hang, col, bronze, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
 
 
