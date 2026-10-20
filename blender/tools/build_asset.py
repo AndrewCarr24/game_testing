@@ -181,7 +181,7 @@ def main():
     lo, hi = report(root, parts, common)
     if not a.no_export:
         out = os.path.join(PROJECT, "assets", "models", f"{a.asset}.gltf")
-        common.export_gltf(root, out)
+        common.export_gltf(root, out, **getattr(mod, "EXPORT", {}))   # an asset may add exporter options
         print(f"EXPORT {out}")
     prev_dir = os.path.join(PROJECT, "build", "previews")
     os.makedirs(prev_dir, exist_ok=True)

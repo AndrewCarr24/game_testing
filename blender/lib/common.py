@@ -295,18 +295,21 @@ def triangle_count(objects):
     return total
 
 
-def export_gltf(root, filepath, texture_dir="textures", image_format="WEBP", quality=85):
+def export_gltf(root, filepath, texture_dir="textures", image_format="WEBP", quality=85, **extra):
     """Export `root` and its children for the web: .gltf + .bin, with images
     converted to WebP in a texture folder shared by every asset (relative to the
-    .gltf), so a texture used by several assets downloads once."""
-    _export(root, filepath, export_format="GLTF_SEPARATE", export_texture_dir=texture_dir,
-            export_image_format=image_format, export_image_quality=quality,
-            # Draco-compressed geometry: several times smaller downloads (three.js DRACOLoader)
-            export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=10,
-            export_draco_position_quantization=14, export_draco_normal_quantization=10,
-            export_draco_texcoord_quantization=12,
-            # the asset's baked ambient occlusion (lib/vertex_ao.py), if it has one
-            export_vertex_color="NAME", export_vertex_color_name="AO")
+    .gltf), so a texture used by several assets downloads once. `extra`: further
+    glTF exporter options (e.g. export_tangents=True), overriding the defaults."""
+    opts = dict(export_format="GLTF_SEPARATE", export_texture_dir=texture_dir,
+                export_image_format=image_format, export_image_quality=quality,
+                # Draco-compressed geometry: several times smaller downloads (three.js DRACOLoader)
+                export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=10,
+                export_draco_position_quantization=14, export_draco_normal_quantization=10,
+                export_draco_texcoord_quantization=12,
+                # the asset's baked ambient occlusion (lib/vertex_ao.py), if it has one
+                export_vertex_color="NAME", export_vertex_color_name="AO")
+    opts.update(extra)
+    _export(root, filepath, **opts)
 
 
 def export_glb(root, filepath):

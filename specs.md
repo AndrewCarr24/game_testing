@@ -380,3 +380,51 @@ is (0, 0)): groups of trees inside the hedge (within 4 m of it, irregular groups
 row), a few specimen trees on open lawn between other zones (stay out of every other
 zone's rect, `plan.GROUNDS["zones"]`), and planting just outside the terrace's outer edge
 (1-2 m beds of shrubs and grasses, keeping the big windows' views open).
+
+## Characters
+
+### grimble (the villain; Opus; asset `blender/assets/grimble.py` + engine `viewer/grimble.js`)
+- Status: READY
+- Concept: `concept/grimble/front.png` (the user's image). Cute-uncanny: a small-looking
+  creature blown up to giant scale. The horror is the contrast: it's adorable, it's
+  4.6 m tall, and it's at your window.
+- What: a hunched, cloaked, furry biped leaning on a gnarled staff.
+- Size: about 4.6 m (15 ft) standing, hunched; the head alone ~1 m across, the eyes
+  ~0.3 m. Next to the house: half the height of the great room's 8.4 m glass wall; it
+  steps over the 2.8 m perimeter hedge.
+- Look (from the concept):
+  - eyes: huge, glossy, near-black with a warm brown iris and a bright catch-light; a
+    real eyeball + clear cornea so they reflect the sky and the house; they track the
+    player once it's close (the creepiest thing it does);
+  - face: short fur, pale tan muzzle and cheeks, darker crown, a small wrinkled nose,
+    a closed sly smile;
+  - cloak: heavy, coarse, near-black woven wool, hood up framing the face, frayed and
+    fringed edges, pooling at the feet; drapes in big folds at this scale;
+  - hands: long thin fingers, wrinkled leathery brown skin, dark claws; feet: bird-like
+    toes with long claws showing under the hem;
+  - staff: taller than it, gnarled dark wood, knotted, a carved hooked head; held in the
+    right hand, planted with each step.
+- Behaviour (first milestone): it starts far out on the horizon on the west garden's axis
+  (golden-hour sun behind it, so it arrives as a silhouette), walks toward the house
+  with slow giant strides, planting the staff, steps over the hedge, crosses the lawn
+  and the terrace, stops at the great room's glass wall, knocks on the glass (three
+  slow taps, the glass shudders), then waves. Keeps waving / watching while the player
+  is near. Later: chooses the window the player is at, and eventually comes inside.
+- Movement: walks (no running). Animations needed: walk (hunched, staff-assisted, heavy),
+  stop, knock, wave, idle (breathing, head tilt as in the concept, blinks), eye/head
+  look-at.
+- Sound: none for now.
+- Build plan: base sculpt from the concept via image-to-3D (Blender MCP `generate_3d`,
+  costs a credit per try; ask first), then rebuilt where it matters: eyes, hands/claws,
+  staff (procedural), cloak (cloth sim on the body + woven fabric texture); retopology
+  to ~30-40k triangles; rig (body + face: eyes, lids, smile; a few cloak bones);
+  animations from Mixamo clips retargeted plus custom keys (knock, wave, head tilt).
+- Engine: one skinned glTF, AnimationMixer, path follower + scripted event; lit by the
+  real-time sun plus the sky (outdoors has no baked light for a moving thing); a soft
+  blob shadow on the unlit lawn; cheap shell fur on the face and hands; always drawn
+  while in view.
+- Budget: ~30-40k triangles, 2-3 texture sets at 1024 (body/fur, cloak, eyes+staff).
+- Decided (2026-10-19): the great room's west glass for the first milestone; it starts a
+  short delay after the game loads; image-to-3D credits are OK (2-3 tries).
+- Open (later): its personality / the "turn" (does the cute ever drop?), choosing the
+  player's window, coming inside, sound.

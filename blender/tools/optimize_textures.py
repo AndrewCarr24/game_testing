@@ -32,6 +32,8 @@ ALWAYS_SHRINK_IF = lambda name: "Rug" in name
 
 def main():
     keep = {n for n in shell_textures() - ALWAYS_SHRINK if not ALWAYS_SHRINK_IF(n)}
+    # the Grimble is 7.3 m tall and seen from 2 m away: its textures keep their full size
+    keep |= {n for n in os.listdir(TEX) if n.startswith("T_Grimble_")}
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:

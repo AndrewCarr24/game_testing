@@ -67,6 +67,7 @@
     import { loadSky, applyOutdoor } from './sky.js';
     import { Fire } from './fire.js';
     import { createFx, governor } from './fx.js';
+    import { Grimble, prepareGrimble } from './grimble.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -263,6 +264,30 @@
         applyOutdoor(outdoor.scene, sky, baked?.bake.outdoor);
         scene.add(outdoor.scene);
       }
+      // the Grimble (viewer/grimble.js): walks in from the west after a short delay; ?grimble=0
+      // leaves it out, ?grimble=x,z[,rotY,y] just stands it there (for screenshots)
+      let grimble = null;
+      if (params.get('grimble') !== '0') {
+        const gltf = await loadGltf(base + 'models/grimble.gltf');
+        const envMap = sky ? sky.getEnv() : scene.environment;
+        if (params.get('grimble')) {
+          const [gx, gz, gr = 90, gy = -0.08] = params.get('grimble').split(',').map(Number);
+          gltf.scene.position.set(gx, gy, gz);
+          gltf.scene.rotation.y = THREE.MathUtils.degToRad(gr);
+          prepareGrimble(gltf.scene, envMap);
+          scene.add(gltf.scene);
+        } else {
+          // west garden (glTF x = west): from the lawn's far edge over the hedge (x -70) and down
+          // the pool's south walk (off the axis, so the sculpture never hides it), then square on
+          // to the great room glass
+          grimble = new Grimble(scene, gltf, {
+            route: [[-88, -4.4], [-35, -4.4], [-33, 0], [-26.1, 0]],
+            ground: (x) => (x > -31.5 ? 0.0 : -0.08),
+            envMap,
+            opts: params.get('gdelay') ? { delay: +params.get('gdelay') } : {},
+          });
+        }
+      }
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity, true);
 
@@ -412,6 +437,7 @@
         const dt = Math.min(clock.getDelta(), 0.05);
         const moved = interact.update(dt);
         fire.update(dt, !!window.__bench);
+        grimble?.update(dt, camera.position);
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
@@ -424,6 +450,7 @@
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
+        grimble?.shakeCamera(camera, dt);
         focus = on ? interact.nearest(camera.position) : null;
         const armedHint = on && inventory.armed ? interact.armedPrompt(inventory.armed, camera.position) : null;
         const parts = [];
