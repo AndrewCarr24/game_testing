@@ -265,6 +265,13 @@ def skin(arm, objs, bones, hand_info, lm):
     W /= W.sum(1, keepdims=True) + 1e-12
 
     def assign(ob, rows):
+        # vertices left without weights (loose fan centres): rigid with the nearest bone
+        zero = np.nonzero(rows.sum(1) < 1e-6)[0]
+        if len(zero):
+            co = np.array([ob.data.vertices[i].co[:] for i in zero])
+            dist = np.stack([_seg_dist(co, a, t) for (a, t) in (seg[nm] for nm in names)], 1)
+            rows = rows.copy()
+            rows[zero, np.argmin(dist, 1)] = 1.0
         for nm in names:
             ob.vertex_groups.new(name=nm)
         q = np.round(rows * 200).astype(int)

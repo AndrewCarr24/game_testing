@@ -15,7 +15,7 @@ import numpy as np
 
 from lib import textures
 
-VERSION = 11
+VERSION = 13
 
 
 def version():
@@ -262,6 +262,10 @@ def paint_body(b, p, eyes, seam=None):
     # shade as dark specks): keep its gentle detail, flatten the outliers
     keep = smoothstep(0.55, 0.85, tn[..., 2])[..., None]
     tn = tn * keep + np.array([0.0, 0.0, 1.0]) * (1 - keep)
+    # the bake is against the unsmoothed sculpt: where the low mesh was smoothed (the nose's
+    # sides, the face) its broad tilts are a mismatch, not detail (the pale specular streak
+    # beside the nose); keep only a third of it (the fur's own normals carry the detail)
+    tn = tn * 0.33 + np.array([0.0, 0.0, 1.0]) * 0.67
     tn /= np.linalg.norm(tn, axis=-1, keepdims=True) + 1e-9
 
     col = np.zeros((H, W, 3), np.float32)
@@ -407,7 +411,7 @@ def paint_body(b, p, eyes, seam=None):
     hand_t = np.zeros(limb.shape, bool)
     hand_t[limb] = True               # (the hands are separate meshes now: this is the feet)
     tn[hand_t] = (0.0, 0.0, 1.0)      # their baked sculpt normals are noise: glints at the hem
-    hgt[limb] = 0.5 * ((-0.9 * wrink + 0.15 * pores) * (1 - claw) + 0.3 * claw)
+    hgt[limb] = 0.25 * ((-0.9 * wrink + 0.15 * pores) * (1 - claw) + 0.3 * claw)
 
     # crevices darken everywhere (the sculpt's folds: mouth, eye sockets, knuckles)
     cavd = smoothstep(0.004, 0.02, cav)
@@ -436,7 +440,7 @@ def cloak_textures(n=1024, seed=61, force=False):
     if all(os.path.exists(pp) for pp in paths) and not force:
         return paths
     rng = np.random.default_rng(seed)
-    threads = 24                                   # yarns per tile each way (~2.5 cm at 0.6 m)
+    threads = 16                                   # yarns per tile each way (~3.7 cm at 0.6 m): coarse, no moire
     x = (np.arange(n) + 0.5) / n
     X, Y = np.meshgrid(x, x)
     wob_x = 0.28 * noise2(n, 0.12, 2.5, 1.6, rng)
@@ -461,10 +465,14 @@ def cloak_textures(n=1024, seed=61, force=False):
     fuzz = noise2(n, 1.0, 1.0, 0.3, rng)
     matted = noise2(n, 1.0, 1.0, 1.4, rng)
     hh = h * (0.75 + 0.25 * matted) + 0.25 * fibres + 0.18 * fuzz + 0.2 * matted
-    nrm = height_to_normal(hh, 2.4)
+    nrm = height_to_normal(hh, 1.8)
     yarn_id = np.where(up, ix % threads, threads + iy % threads)
     tone = rng.uniform(-1, 1, 2 * threads + 2)[yarn_id]
-    t = np.clip(0.35 * h + 0.22 * (fibres * 0.5 + 0.5) + 0.13 * (tone * 0.5 + 0.5) + 0.3 * (matted * 0.5 + 0.5), 0, 1)
+    # colour: mostly heathered, felted wool; only a hint of the weave grid (a strong
+    # regular grid reads as moire at mid distance)
+    blot = noise2(n, 1.0, 1.0, 2.2, rng)
+    t = np.clip(0.12 * h + 0.2 * (fibres * 0.5 + 0.5) + 0.13 * (tone * 0.5 + 0.5) + 0.3 * (matted * 0.5 + 0.5)
+                + 0.25 * (blot * 0.5 + 0.5), 0, 1)
     dark = np.array([0.0050, 0.0042, 0.0036])
     light = np.array([0.046, 0.037, 0.029])
     col = dark + (light - dark) * (t ** 1.6)[..., None]
@@ -571,7 +579,7 @@ def staff_textures(n=1024, seed=81, force=False):
     h = 0.35 * fib1 + 0.4 * fib2 - 0.9 * crev + 0.8 * knots * np.sin(r * 4)
     h += 0.15 * noise2(n, 1.0, 1.0, 1.0, rng)
     nrm = height_to_normal(h, 2.5)
-    t = np.clip(0.55 + 0.25 * fib2 + 0.12 * fib1 - 0.55 * crev - 0.3 * knots, 0, 1)
+    t = np.clip(0.55 + 0.25 * fib2 + 0.12 * fib1 - 0.4 * crev - 0.1 * knots, 0, 1)
     dark = np.array([0.018, 0.009, 0.004])
     mid = np.array([0.085, 0.042, 0.018])
     light = np.array([0.20, 0.105, 0.048])

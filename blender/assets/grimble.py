@@ -50,8 +50,9 @@ from lib import common, textures, vertex_ao  # noqa: E402
 import grimble_hands  # noqa: E402
 import grimble_paint  # noqa: E402
 import grimble_rig  # noqa: E402
+import grimble_rim  # noqa: E402
 
-for _m in (common, textures, vertex_ao, grimble_hands, grimble_paint, grimble_rig):
+for _m in (common, textures, vertex_ao, grimble_hands, grimble_paint, grimble_rig, grimble_rim):
     importlib.reload(_m)
 
 NAME = "Grimble"
@@ -75,9 +76,25 @@ P = dict(
     vis_spacing2=0.03, vis_dirs2=120,   # the second cull, on the decimated mesh
     # budget: body + cloak triangles after the decimation
     tris_body=14000,
-    tris_cloak=12000,
+    tris_cloak=7000,
+    hole_perimeter=8.0,            # the final hole pass closes holes / slits up to this perimeter (m)
+    hood_core_res=(28, 14),
+    # the hood's rolled, frayed front edge (grimble_rim.py)
+    rim=True, rim_seed=11, rim_bins=72, rim_segments=84, rim_phi_max=145.0,
+    rim_face_w=-0.1,               # body vertices this far in front of the head's centre count as the face
+    rim_margin=0.04,               # the opening: the face's outline plus this (m)
+    rim_wave=0.025,                # waviness of the line (m)
+    rim_lift=0.02,                 # out from the hood surface (m)
+    rim_radius=0.07,               # lip radius (m): an ~11 cm thick hem
+    rim_thick_var=0.25,
+    rim_cut=0.06,                  # cloak shards inside the opening (+ this) ...
+    rim_depth=0.35,                # ... and less than this behind the face's edge are removed
+    rim_cut_out=0.50,              # the hood's torn flaps this far outside the opening, in front of the rim, too
+    rim_min_piece=400,             # cloak pieces left smaller than this (faces) after the cut go
+    rim_fringe_step=1, rim_fringe_per=1, rim_fringe_len=0.09,        # the dark shell filling the hood behind the face (segments)
+    cloak_back_smooth=0,           # Laplacian iterations softening the cloak's coarse back
     face_smooth=2,                 # Laplacian iterations on the face (closes hairline cracks)
-    nose_crease=(0.45, -1.45, 5.62), nose_smooth=8,   # ... and harder around the nose's sides
+    nose_crease=(0.45, -1.45, 5.62), nose_smooth=16, nose_smooth_r=0.6,   # ... and harder around the nose's sides
     # decimation steering (small weights: x(1 + 2000 w) collapse cost)
     protect=dict(face=0.004, hands=0.0006, feet=0.0, cloak_front=0.0008, cloak_back=0.0),
     # landmarks (source frame, metres). Eyes: (x, z) of the socket centre seen from the
@@ -126,10 +143,12 @@ P = dict(
     # textures
     tex_body=2048, tex_cloak=1024, tex_staff=1024, tex_eye=512,
     cloak_tile=0.6,                # metres per cloak texture tile
-    cloak_normal=0.6,              # cloak normal map strength (the weave; strong values glint at grazing light)
+    cloak_normal=0.35,             # cloak normal map strength (the weave; strong values glint at grazing light)
     cloak_specular=0.25,           # Specular IOR Level (KHR_materials_specular): black wool barely reflects
-    body_specular=0.35,            # ... and fur
-    lining_dark=0.7,               # how much the cloak's inward-facing side is darkened (baked into AO)
+    body_specular=0.2,             # ... and fur
+    lining_ao=0.3,                 # occlusion of the cloak's lining copies
+    lining_dark=0.85,
+    backing_ao=0.5,                # the face backing (seen through the face's creases) reads as fur in shadow               # how much the cloak's inward-facing side is darkened (baked into AO)
     staff_tile=0.7,
     face_texel_boost=1.25,         # face island scale relative to hands / feet before packing
     uv_smooth=40,                  # Laplacian iterations on the copy the body UVs are projected from
@@ -251,6 +270,166 @@ def _import_source(p):
     me.transform(Matrix.Translation((0, 0, -v[:, 2].min() * s)) @ Matrix.Scale(s, 4))
     src.name = NAME + "_Source"
     return src
+
+
+def _back_visible(verts, tris, occluders=(), dirs=150, spacing=0.02):
+    """Which triangles are seen from their back side by a viewer outside the model
+    (orthographic ray grids from all directions above the ground, like _visible_faces).
+    occluders: (verts, tris) of the other parts."""
+    allv, allt, off = [verts], [tris], len(verts)
+    for ev, et in occluders:
+        allv.append(ev)
+        allt.append(et + off)
+        off += len(ev)
+    av, at = np.concatenate(allv), np.concatenate(allt)
+    tree = BVHTree.FromPolygons([tuple(x) for x in av], [tuple(t) for t in at], all_triangles=True)
+    fn = np.cross(verts[tris[:, 1]] - verts[tris[:, 0]], verts[tris[:, 2]] - verts[tris[:, 0]])
+    nreal = len(tris)
+    lo, hi = verts.min(0), verts.max(0)
+    cen = Vector(((lo + hi) / 2).tolist())
+    R = float(np.linalg.norm(hi - lo) / 2) + 0.1
+    k = int(R / spacing)
+    back = np.zeros(nreal, bool)
+    ga = math.pi * (3 - math.sqrt(5))
+    rc = tree.ray_cast
+    for i in range(dirs):
+        z = 1 - 2 * (i + 0.5) / dirs
+        r = math.sqrt(1 - z * z)
+        dd = Vector((r * math.cos(ga * i), r * math.sin(ga * i), z))
+        if dd.z < -0.97:
+            continue
+        ray = -dd
+        a = dd.orthogonal().normalized()
+        b = dd.cross(a).normalized()
+        o0 = cen + dd * (R + 1)
+        rn = np.array(ray)
+        for ii in range(-k, k + 1):
+            oi = o0 + a * (ii * spacing)
+            for jj in range(-k, k + 1):
+                hit = rc(oi + b * (jj * spacing), ray, 2 * R + 2)
+                if hit[2] is None or hit[2] >= nreal:
+                    continue
+                if dd.z < 0 and hit[0].z + dd.z * 1.0 < 0.5:
+                    continue
+                if fn[hit[2]] @ rn > 0:
+                    back[hit[2]] = True
+    return back
+
+
+def _add_lining(cloak, others, mat, p, cuffs=()):
+    """The cloak is single-sided (three.js lit its back faces with a flipped normal: pale
+    streaks, flecks and torn-looking light patches along the rims and inside the hood);
+    where its back is really seen (the hood lining, the inside of the sleeves and of the
+    front opening) a flipped copy 4 mm behind, in a dark lining material, takes its place.
+    Copies keep the source vertices' skin weights. Cached by geometry."""
+    me = cloak.data
+    v, t = _mesh_arrays(me)
+    key = _hash(np.round(v, 4), t, [np.round(o[0], 3).sum() for o in others], "lining5")
+    cache = os.path.join(CACHE, "lining.npz")
+    back = None
+    if os.path.exists(cache) and not p["force"]:
+        z = np.load(cache)
+        if str(z["key"]) == key:
+            back = z["back"]
+    if back is None:
+        back = _back_visible(v, t, others, dirs=150, spacing=0.02)
+        back |= _back_visible_near(v, t, others, p["_head_centre"])
+        np.savez_compressed(cache, key=np.array(key), back=back)
+    log(f"lining: {back.sum()} of {len(t)} cloak faces are seen from behind")
+    # two kinds: patches of the outer surface wound inside-out by the remesh / decimation
+    # (normal toward the creature's core: seen from outside, they're really its front) are
+    # flipped; the rest is the cloth's inner side (hood, sleeves, front opening) and gets
+    # the dark lining copy
+    fc_ = v[t].mean(1)
+    fn_ = np.cross(v[t[:, 1]] - v[t[:, 0]], v[t[:, 2]] - v[t[:, 0]])
+    fn_ /= np.linalg.norm(fn_, axis=1, keepdims=True) + 1e-12
+    head = p["_head_centre"]
+    kk = np.clip((fc_[:, 2] - 4.6) / 0.8, 0, 1)[:, None]
+    core = np.c_[np.full(len(fc_), -0.1 - p["_shift"][0]), np.full(len(fc_), 0.25 - p["_shift"][1]), fc_[:, 2]] * (1 - kk) + head * kk
+    out_ = fc_ - core
+    out_ /= np.linalg.norm(out_, axis=1, keepdims=True) + 1e-12
+    # (no flipping: which side is "really" outside is ambiguous on the thin double shell)
+    interior = back & ((fn_ * out_).sum(1) >= -0.2)
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.faces.ensure_lookup_table()
+    faces = [bm.faces[i] for i in np.nonzero(back)[0]]
+    is_int = {bm.faces[i] for i in np.nonzero(interior)[0]}
+    dup = bmesh.ops.duplicate(bm, geom=faces)
+    nf = [g for g in dup["geom"] if isinstance(g, bmesh.types.BMFace)]
+    nverts = [g for g in dup["geom"] if isinstance(g, bmesh.types.BMVert)]
+    fmap = dup["face_map"]
+    bmesh.ops.reverse_faces(bm, faces=nf)
+    bm.normal_update()
+    ao = bm.verts.layers.float_color.get(vertex_ao.ATTR)
+    dark = set()
+    for src_f, new_f in fmap.items():
+        near_face = (Vector(src_f.calc_center_median()) - Vector(p["_head_centre"].tolist())).length < 1.5 \
+            if isinstance(src_f, bmesh.types.BMFace) else False
+        if isinstance(src_f, bmesh.types.BMFace) and (src_f in is_int or near_face):
+            dark |= set(new_f.verts)
+    for x in nverts:
+        x.co = x.co + x.normal * 0.004
+        if ao is not None and x in dark:           # the inside of the hood / sleeves: in shadow
+            c0 = x[ao]
+            x[ao] = (min(c0[0], p["lining_ao"]),) * 3 + (1.0,)
+    # the sleeve cuffs' caps (closing the sleeves where the sculpt's hands were) are the
+    # inside of the sleeve: lining too (they caught the sun as a pale wedge)
+    nc = 0
+    for c in cuffs:
+        cv = min(bm.verts, key=lambda x: (Vector(c.tolist()) - x.co).length)
+        if (Vector(c.tolist()) - cv.co).length < 1e-3:
+            for f in cv.link_faces:
+                f.material_index = 1
+                nc += 1
+            if ao is not None:
+                for f in cv.link_faces:
+                    for x in f.verts:
+                        x[ao] = (p["lining_ao"],) * 3 + (1.0,)
+    bm.to_mesh(me)
+    bm.free()
+    for poly in me.polygons:
+        poly.use_smooth = True
+    me.materials.append(mat)
+    log(f"lining: {len(nf)} back-facing cloak faces get a flipped copy ({len(is_int)} inside, darkened); "
+        f"{nc} cuff cap faces")
+    return len(nf)
+
+
+def _back_visible_near(verts, tris, occluders, eyes_c):
+    """Back-side visibility from close viewpoints (players at the glass, 2-8 m away, eye
+    heights 1.7-8 m, all round): the far orthographic test misses the inside of the hood
+    and the sleeves seen from near the creature. A face counts if a ray from a viewpoint
+    to its centre hits it first, from behind."""
+    allv, allt, off = [verts], [tris], len(verts)
+    for ev, et in occluders:
+        allv.append(ev)
+        allt.append(et + off)
+        off += len(ev)
+    av, at = np.concatenate(allv), np.concatenate(allt)
+    tree = BVHTree.FromPolygons([tuple(x) for x in av], [tuple(t) for t in at], all_triangles=True)
+    fc = verts[tris].mean(1)
+    fn = np.cross(verts[tris[:, 1]] - verts[tris[:, 0]], verts[tris[:, 2]] - verts[tris[:, 0]])
+    back = np.zeros(len(tris), bool)
+    rc = tree.ray_cast
+    centre = np.array([eyes_c[0], eyes_c[1] + 0.5, 0.0])
+    for rad in (1.5, 2.0, 2.6, 3.5, 5.0, 7.0):
+        for hz in (1.7, 3.0, 4.5, 5.5, 6.5, 8.0):
+            for k in range(32):
+                a = 2 * math.pi * k / 32
+                o = centre + np.array([rad * math.sin(a), -rad * math.cos(a), hz])
+                d = fc - o
+                L = np.linalg.norm(d, axis=1)
+                d /= L[:, None]
+                cand = np.nonzero((fn * d).sum(1) > 0)[0]     # faces turned away from this viewpoint
+                ov = Vector(o.tolist())
+                for i in cand:
+                    h = rc(ov, Vector(d[i].tolist()), L[i] + 0.01)
+                    j = h[2]
+                    # whatever is hit first, if it's a cloak face turned away, its back shows
+                    if j is not None and j < len(tris) and fn[j] @ d[i] > 0:
+                        back[j] = True
+    return back
 
 
 def _eye_tris(eyes):
@@ -651,50 +830,95 @@ def _fill_holes(verts, tris, lab, eyes, max_sides=48, zip_dist=0.02, caps=()):
     return nv, nt, nl
 
 
-def _fan_fill(nv, nt, nl, eyes, max_sides=48, caps=()):
+FAN_CENTRES = []      # centres of the fans made by the last _fan_fill call
+
+
+def _remove_fins(verts, tris, keep_mask=None):
+    """Edges shared by 3+ triangles (fins the remesh and the fills leave): keep the two
+    largest faces on each, drop the rest, so every hole's rim becomes a closed loop.
+    Returns the boolean mask of triangles to keep."""
+    keep = np.ones(len(tris), bool) if keep_mask is None else keep_mask.copy()
+    area = 0.5 * np.linalg.norm(np.cross(verts[tris[:, 1]] - verts[tris[:, 0]],
+                                         verts[tris[:, 2]] - verts[tris[:, 0]]), axis=1)
+    for _ in range(3):
+        idx = np.nonzero(keep)[0]
+        e = np.sort(np.concatenate([tris[idx][:, [0, 1]], tris[idx][:, [1, 2]], tris[idx][:, [2, 0]]]), 1)
+        f = np.tile(idx, 3)
+        key = e[:, 0] * (len(verts) + 1) + e[:, 1]
+        u, inv, cnt = np.unique(key, return_inverse=True, return_counts=True)
+        bad = np.nonzero(cnt > 2)[0]
+        if not len(bad):
+            break
+        for b in bad:
+            fs = f[inv == b]
+            for fi in fs[np.argsort(-area[fs])][2:]:
+                keep[fi] = False
+    return keep
+
+
+def _fan_fill(nv, nt, nl, eyes, max_sides=48, caps=(), max_perim=None, keep=None, keep_frac=0.0):
     """Fan every open boundary cycle of up to max_sides edges (600 at the eye sockets
     and the given caps) to its centroid; walking directed half-edges, so bow-tie
     vertices are fine. New faces take the label of the face they border."""
-    # directed boundary half-edges: an edge a->b of a face with no face using b->a
+    # open edges (used by one triangle), walked as an undirected graph: a neighbouring
+    # triangle with flipped winding would break a directed walk. Each fan triangle takes
+    # the winding opposite to its rim edge in the triangle it borders.
     he = np.concatenate([nt[:, [0, 1]], nt[:, [1, 2]], nt[:, [2, 0]]])
     owner = np.tile(np.arange(len(nt)), 3)
     und = np.sort(he, 1)
     ukey = und[:, 0] * (len(nv) + 1) + und[:, 1]
     _, inv, cnt = np.unique(ukey, return_inverse=True, return_counts=True)
-    open_ = cnt[inv] == 1
-    nxt = {}
-    for k in np.nonzero(open_)[0]:
-        a, b = he[k]
-        nxt.setdefault(int(b), []).append((int(a), int(owner[k])))   # hole runs b -> a
+    open_ = np.nonzero(cnt[inv] == 1)[0]
+    adj, edir = {}, {}
+    for k in open_:
+        a_, b_ = int(he[k, 0]), int(he[k, 1])
+        adj.setdefault(a_, []).append(b_)
+        adj.setdefault(b_, []).append(a_)
+        edir[(a_, b_)] = int(owner[k])                # the owner triangle has a_ -> b_
+    used = set()
     new_v, new_t, new_l = [], [], []
-    for start in list(nxt.keys()):
-        while nxt.get(start):
-            cyc, labs = [start], []
-            cur = start
-            while True:
-                if not nxt.get(cur):
-                    cyc = None
+    for start in list(adj.keys()):
+        for first in list(adj[start]):
+            if (min(start, first), max(start, first)) in used:
+                continue
+            cyc, prev, cur = [start], start, first
+            used.add((min(start, first), max(start, first)))
+            ok = False
+            while len(cyc) <= 600:
+                if cur == start:
+                    ok = True
                     break
-                b, own = nxt[cur].pop()
-                labs.append(nl[own])
-                if b == start:
+                cyc.append(cur)
+                nxt_ = [x for x in adj[cur] if (min(cur, x), max(cur, x)) not in used]
+                if not nxt_:
                     break
-                cyc.append(b)
-                cur = b
-                if len(cyc) > 600:
-                    break
-            if not cyc or len(cyc) < 3 or len(cyc) > 600:
+                nx = nxt_[0]
+                used.add((min(cur, nx), max(cur, nx)))
+                prev, cur = cur, nx
+            if not ok or len(cyc) < 3:
                 continue
             c = nv[cyc].mean(0)
             socket = any(np.linalg.norm(c - ec) < R * 1.6 for ec, R in eyes.values())
             socket |= any(np.linalg.norm(c - cc) < cr for cc, cr in caps)
             if len(cyc) > (600 if socket else max_sides):
                 continue
+            if keep is not None and keep[cyc].mean() > keep_frac:   # mostly a seam with another part
+                continue
+            if max_perim is not None and not socket:
+                per = np.linalg.norm(np.diff(nv[cyc + cyc[:1]], axis=0), axis=1).sum()
+                if per > max_perim:
+                    continue
             ci = len(nv) + len(new_v)
             new_v.append(c)
             for i in range(len(cyc)):
-                new_t.append((cyc[i], cyc[(i + 1) % len(cyc)], ci))
-                new_l.append(labs[i])
+                a_, b_ = cyc[i], cyc[(i + 1) % len(cyc)]
+                if (a_, b_) in edir:                       # owner has a_ -> b_: the fan goes b_ -> a_
+                    new_t.append((b_, a_, ci))
+                    new_l.append(nl[edir[(a_, b_)]])
+                else:
+                    new_t.append((a_, b_, ci))
+                    new_l.append(nl[edir.get((b_, a_), 0)])
+    FAN_CENTRES[:] = [np.array(x) for x in new_v]
     if new_v:
         nv = np.concatenate([nv, np.array(new_v)])
         nt = np.concatenate([nt, np.array(new_t, np.int64)])
@@ -947,6 +1171,7 @@ def _uv_body(ob, face_mask, p, eyes):
             face_info = dict(n=int(m.sum()), centre=centre, a=a, b=b, f=f, qmin=qmin, scale=scale,
                              corners=corners, pre=q.copy(), good=~np.repeat(bad, 3))
     me.uv_layers["UVMap"].data.foreach_set("uv", uv.ravel())
+    pre = uv.copy()
     _select_only(ob)
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
@@ -954,12 +1179,32 @@ def _uv_body(ob, face_mask, p, eyes):
     bpy.ops.uv.pack_islands(rotate=True, margin=0.004)
     bpy.ops.object.mode_set(mode="OBJECT")
     ob.select_set(False)
+    # keep every island 2% away from the atlas border: the sampler repeats, so texels at
+    # the very edge were filtered with the opposite edge (pale flecks at the hood rim)
+    uvs = np.zeros(len(me.loops) * 2)
+    me.uv_layers["UVMap"].data.foreach_get("uv", uvs)
+    me.uv_layers["UVMap"].data.foreach_set("uv", (0.5 + (uvs - 0.5) * 0.96))
     # folded triangles (hidden inner layers of the voxel shell, socket walls) would
     # overwrite visible texels in the bakes: after packing, each is shrunk into its
     # nearest unfolded neighbour's texels, so it takes that colour and bakes nothing
     uv = np.zeros(len(me.loops) * 2)
     me.uv_layers["UVMap"].data.foreach_get("uv", uv)
     uv = uv.reshape(-1, 2)
+    # the packing's affine per part: maps every corner's projected UV into the packed atlas
+    # (used afterwards to give the folded triangles continuous UVs again)
+    corner_part = np.zeros(len(me.loops), np.int64)
+    corner_part[(ls[:, None] + np.arange(3)[None, :]).ravel()] = np.repeat(comp, 3)
+    good_c = np.zeros(len(me.loops), bool)
+    good_c[(ls[~folded][:, None] + np.arange(3)[None, :]).ravel()] = True
+    natural = uv.copy()
+    for ci in np.unique(comp):
+        sel = corner_part == ci
+        g = sel & good_c
+        if g.sum() < 3:
+            continue
+        Mp = np.linalg.lstsq(np.c_[pre[g], np.ones(g.sum())], uv[g], rcond=None)[0]
+        natural[sel] = np.c_[pre[sel], np.ones(sel.sum())] @ Mp
+    fold_c = (ls[folded][:, None] + np.arange(3)[None, :]).ravel()
     if face_info is not None:   # the packing's transform of the face island (for the backing)
         g = face_info["good"]
         X = np.c_[face_info["pre"][g], np.ones(g.sum())]
@@ -994,6 +1239,7 @@ def _uv_body(ob, face_mask, p, eyes):
         uv[c] = q
     me.uv_layers["UVMap"].data.foreach_set("uv", uv.ravel())
     log(f"body uv: {len(np.unique(comp))} parts, {folded.sum()} folded / hidden triangles collapsed")
+    face_info["restore"] = (fold_c, natural[fold_c])
     return face_info
 
 
@@ -1105,6 +1351,9 @@ def _uv_wrap(ob, tile, eyes):
     med = np.array([np.median(rho[zb == b]) if (zb == b).any() else 1.0 for b in range(21)])
     med = np.convolve(np.pad(med, 1, mode="edge"), np.ones(3) / 3, mode="valid")
     R = np.maximum(med[zb], 0.4)
+    # a whole number of tiles round: the back seam matches (one constant circumference;
+    # the weave runs a little finer on the hood, coarser at the hem)
+    n_round = max(1, round(2 * math.pi * float(np.median(rho)) / tile))
     li = np.zeros(len(me.loops), np.int64)
     me.loops.foreach_get("vertex_index", li)
     uv = np.zeros((len(me.loops), 2))
@@ -1114,12 +1363,12 @@ def _uv_wrap(ob, tile, eyes):
         if t.max() - t.min() > math.pi:       # straddles the back seam: unwrap
             t = np.where(t < 0, t + 2 * math.pi, t)
         vi = li[ls]
-        uv[ls, 0] = t * R[vi] / tile
+        uv[ls, 0] = t / (2 * math.pi) * n_round
         uv[ls, 1] = (v[vi, 2] - 0.5 * rho[vi]) / tile
     me.uv_layers["UVMap"].data.foreach_set("uv", uv.ravel())
 
 
-def _darken_lining(ob, eyes, amount):
+def _darken_lining(ob, eyes, amount, cuffs=()):
     """Multiply the 'AO' colour of vertices whose normal faces the creature's core (a
     vertical axis through the body, blending into the head's centre toward the hood)."""
     me = ob.data
@@ -1138,7 +1387,7 @@ def _darken_lining(ob, eyes, amount):
     d = core - v
     d /= np.linalg.norm(d, axis=1, keepdims=True) + 1e-9
     inward = (nrm * d).sum(1)
-    f = 1 - amount * np.clip((inward - 0.2) / 0.5, 0, 1)
+    f = 1 - amount * np.clip((inward - 0.0) / 0.4, 0, 1)
     # the cloth's rims and fold creases: the remeshed cloth is a thin closed shell, so every
     # edge is a 2 cm tube whose normals sweep round and catch the sun -> darken by curvature
     e = np.zeros(len(me.edges) * 2, np.int64)
@@ -1150,6 +1399,16 @@ def _darken_lining(ob, eyes, amount):
     np.maximum.at(curv, e[:, 1], bend)
     lo, hi = np.percentile(curv, 85), np.percentile(curv, 97)
     f *= 1 - 0.6 * np.clip((curv - lo) / max(hi - lo, 1e-6), 0, 1)
+    # the sleeve cuffs' caps (where the sculpt's hands were): the inside of the sleeve
+    for c in cuffs:
+        f *= 1 - 0.7 * np.clip(1 - np.linalg.norm(v - c, axis=1) / 0.45, 0, 1)
+    # blur over the surface so the rims get a soft dark band, not light-and-dark patches
+    ee = np.concatenate([e, e[:, ::-1]])
+    deg = np.maximum(np.bincount(ee[:, 0], minlength=len(v)), 1)
+    for _ in range(4):
+        acc = np.zeros(len(v))
+        np.add.at(acc, ee[:, 0], f[ee[:, 1]])
+        f = 0.5 * f + 0.5 * acc / deg
     ao = np.zeros(len(attr.data) * 4, np.float32)
     attr.data.foreach_get("color", ao)
     ao = ao.reshape(-1, 4)
@@ -1332,6 +1591,96 @@ def _eye_object(name, centre, R, p, col, root, mat):
     ob.location = Vector(centre.tolist())
     ob["look"] = True
     return ob
+
+
+def _append_rim(sockets, rim):
+    """Add the hood rim to the sockets mesh (rigid with the head; material 0 = the
+    cloak's weave). Returns (first vertex, vertex count, inner mask)."""
+    rv, rt, ruv, rinner, rmat = rim
+    me = sockets.data
+    v0 = len(me.vertices)
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    uvl = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
+    vs = [bm.verts.new(tuple(x)) for x in rv]
+    for t, mi in zip(rt, rmat):
+        try:
+            f = bm.faces.new([vs[i] for i in t])
+        except ValueError:
+            continue
+        f.material_index = int(mi)
+        f.smooth = True
+        for l, i in zip(f.loops, t):
+            l[uvl].uv = tuple(ruv[i])
+    bm.to_mesh(me)
+    bm.free()
+    return v0, len(rv), rinner
+
+
+def _hood_core(sockets, body, cloak, eyes, mat, p):
+    """A dark star-shaped shell filling the hood behind the face (from inside the head,
+    every direction to just short of the nearest fur / cloth): the gaps between the hood's
+    torn rim and the face showed the sky as pale flecks; now they show the hood's dark
+    inside. Rigid with the head (it's part of the sockets mesh)."""
+    allv, allt, off = [], [], 0
+    for ob in (body, cloak):
+        v, t = _mesh_arrays(ob.data)
+        allv.append(v)
+        allt.append(t + off)
+        off += len(v)
+    tree = BVHTree.FromPolygons([tuple(x) for x in np.concatenate(allv)],
+                                [tuple(x) for x in np.concatenate(allt)], all_triangles=True)
+    c = (eyes["L"][0] + eyes["R"][0]) / 2 + np.array([0, 0.75, -0.25])
+    nu, nv_ = p["hood_core_res"]
+    rings = []
+    for i in range(1, nv_):
+        th = math.pi * i / nv_
+        row = []
+        for j in range(nu):
+            ph = 2 * math.pi * j / nu
+            d = Vector((math.sin(th) * math.cos(ph), math.sin(th) * math.sin(ph), math.cos(th)))
+            h = tree.ray_cast(Vector(c.tolist()), d, 3.0)
+            r = min(h[3] if h[0] is not None else 1.2, 1.2)
+            row.append(r)
+        rings.append(row)
+    R = np.array(rings)
+    # stay behind the surface between rays: min over neighbours, then inset
+    Rm = np.minimum.reduce([np.roll(np.pad(R, ((1, 1), (0, 0)), mode="edge"), (di, dj), (0, 1))[1:-1]
+                            for di in (-1, 0, 1) for dj in (-1, 0, 1)])
+    Rm = Rm * 0.9 - 0.03
+    bm = bmesh.new()
+    vs = []
+    for i in range(nv_ - 1):
+        th = math.pi * (i + 1) / nv_
+        vs.append([bm.verts.new(tuple(c + Rm[i, j] * np.array([math.sin(th) * math.cos(2 * math.pi * j / nu),
+                                                                math.sin(th) * math.sin(2 * math.pi * j / nu),
+                                                                math.cos(th)]))) for j in range(nu)])
+    top = bm.verts.new(tuple(c + np.array([0, 0, Rm[0].min()])))
+    bot = bm.verts.new(tuple(c - np.array([0, 0, Rm[-1].min()])))
+    for j in range(nu):
+        j2 = (j + 1) % nu
+        bm.faces.new((top, vs[0][j], vs[0][j2]))
+        bm.faces.new((bot, vs[-1][j2], vs[-1][j]))
+        for i in range(nv_ - 2):
+            bm.faces.new((vs[i][j], vs[i + 1][j], vs[i + 1][j2], vs[i][j2]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bmesh.ops.triangulate(bm, faces=bm.faces)
+    uvl = bm.loops.layers.uv.new("UVMap")
+    for f in bm.faces:
+        f.material_index = 1
+        f.smooth = True
+    tmp = bpy.data.meshes.new("_core")
+    bm.to_mesh(tmp)
+    n = len(bm.faces)
+    bm.free()
+    b2 = bmesh.new()
+    b2.from_mesh(sockets.data)
+    b2.from_mesh(tmp)
+    b2.to_mesh(sockets.data)
+    b2.free()
+    bpy.data.meshes.remove(tmp)
+    sockets.data.materials.append(mat)
+    return n
 
 
 def _socket_object(name, eyes, p, col, root, mat):
@@ -1585,8 +1934,14 @@ def _build(p):
     hands, drop = _extract_hands(p, dv, dt, dl)
     dt, dl = dt[~drop], dl[~drop]
     dv, dt, dl = _fill_holes(dv, dt, dl, eyes, caps=[(h["wrist"], 0.7) for h in hands])
+    cuffs = [c for c in FAN_CENTRES if min(np.linalg.norm(c - h["wrist"]) for h in hands) < 0.7]
     keep = _remove_floaters(dv, dt)
     dt, dl = dt[keep], dl[keep]
+    # last hole pass on the joined surface (body + cloak, so their seam isn't a hole):
+    # every compact hole or slit left by the culls, the hand extraction and the cleanups
+    # (the sky showed through them as pale flecks); the rims are long and stay open
+    dv, dt, dl, nh = _fan_fill(dv, dt, dl, eyes, max_sides=120, max_perim=p["hole_perimeter"])
+    log(f"final hole pass: {nh} holes closed")
     log(f"decimated {len(dt)} tris: body {(dl == BODY).sum()} cloak {(dl == CLOAK).sum()}")
 
     # the body / cloak seam (edges between a body face and a cloak face)
@@ -1599,7 +1954,7 @@ def _build(p):
     _smooth_parts(body, lambda v: (v[:, 2] > 4.4) & ~((v[:, 0] < -0.6) & (v[:, 1] < -1.2)), p["face_smooth"], 0.35)
     # the sculpt's deep cracks down the sides of the nose: iron them out (eye rims stay)
     nose_c = np.array(p["nose_crease"])
-    _smooth_parts(body, lambda v: (np.linalg.norm(v - nose_c, axis=1) < 0.42)
+    _smooth_parts(body, lambda v: (np.linalg.norm(v - nose_c, axis=1) < p["nose_smooth_r"])
                   & np.all([np.linalg.norm(v - c, axis=1) > R * 1.15 for c, R in eyes.values()], axis=0),
                   p["nose_smooth"], 0.5)
     log(f"face folds removed: {_drop_inward_faces(body, eyes, p)}")
@@ -1613,8 +1968,48 @@ def _build(p):
     for poly in body.data.polygons:
         poly.use_smooth = True
     log(f"body holes filled: {nh}")
-    for ob in (body, cloak):
-        ob.data.set_sharp_from_angle(angle=math.radians(85))
+    body.data.set_sharp_from_angle(angle=math.radians(85))   # the cloak is cloth: smooth everywhere
+    # the cloak's back: the cheapest part of the decimation; a light smoothing softens its
+    # facets (open edges stay put)
+    if p["cloak_back_smooth"]:
+        _smooth_parts(cloak, lambda v: v[:, 1] > 0.5, p["cloak_back_smooth"], 0.5)
+    # the cloak's own holes and slits (the joined pass can't see them where a hole's corner
+    # touches another loop): close every compact one that doesn't touch the face seam
+    cv_, ct_ = _mesh_arrays(cloak.data)
+    ct_ = ct_[_remove_fins(cv_, ct_)]
+    bkey = set(map(tuple, np.round(_mesh_arrays(body.data)[0] * 1e4).astype(np.int64)))
+    seam_v = np.array([tuple(x) in bkey for x in np.round(cv_ * 1e4).astype(np.int64)])
+    cv2, ct2, _, nh = _fan_fill(cv_, ct_, np.zeros(len(ct_), np.int8), eyes, max_sides=200,
+                                max_perim=p["hole_perimeter"], keep=seam_v, keep_frac=0.6)
+    old = cloak.data
+    cloak.data = _mesh_from_arrays(n + "_Cloak", cv2, ct2)
+    bpy.data.meshes.remove(old)
+    for poly in cloak.data.polygons:
+        poly.use_smooth = True
+    log(f"cloak holes closed: {nh}")
+    # the hood's front edge: the scan's torn shards around the face go; a rolled, frayed
+    # wool hem is swept along the face opening instead (grimble_rim.py)
+    rim = None
+    if p["rim"]:
+        band, rv, rt, ruv, rinner, nfr, rmat = grimble_rim.build(body, cloak, _face_frame(eyes), p,
+                                                           np.random.default_rng(p["rim_seed"]))
+        cv_, ct_ = _mesh_arrays(cloak.data)
+        ct_ = ct_[~band]
+        # the cut leaves torn slivers hanging by a corner: drop small pieces and faces
+        # joined to the rest only through a vertex
+        comp = _components(len(ct_), _face_adjacency(ct_))
+        sizes = np.bincount(comp)
+        ct_ = ct_[sizes[comp] >= p["rim_min_piece"]]
+        used = np.unique(ct_)
+        remap = -np.ones(len(cv_), np.int64)
+        remap[used] = np.arange(len(used))
+        old = cloak.data
+        cloak.data = _mesh_from_arrays(n + "_Cloak", cv_[used], remap[ct_])
+        bpy.data.meshes.remove(old)
+        for poly in cloak.data.polygons:
+            poly.use_smooth = True
+        rim = (rv, rt, ruv, rinner, rmat)
+        log(f"hood rim: {band.sum()} shard faces removed; rim {len(rt)} tris ({nfr} fringe strands)")
 
     # --- body UVs + textures
     bc = np.array([pl.center for pl in body.data.polygons])
@@ -1643,6 +2038,16 @@ def _build(p):
         json.dump({"key": paint_key}, open(key_file, "w"))
     _remove(hires)
     _remove(src)
+    # the folded triangles were collapsed into their neighbours' texels for the bakes; for
+    # the final mesh they get their continuous projected UVs back (they sample the texels of
+    # the surface in front of them): fewer UV seams, which three.js's derivative tangents
+    # turned into glints (the toes, the creases by the nose)
+    ci_, uv_ = face_info["restore"]
+    data = np.zeros(len(body.data.loops) * 2)
+    body.data.uv_layers["UVMap"].data.foreach_get("uv", data)
+    data = data.reshape(-1, 2)
+    data[ci_] = uv_
+    body.data.uv_layers["UVMap"].data.foreach_set("uv", data.ravel())
 
     n_body_v = len(body.data.vertices)
     nb = _face_backing(body, face_info, eyes, p)
@@ -1650,6 +2055,9 @@ def _build(p):
     body_mat = _material("M_Grimble_Body", (0.4, 0.3, 0.22), 0.72,
                          os.path.join(textures.TEX_DIR, names[0] + ".png"),
                          os.path.join(textures.TEX_DIR, names[1] + ".png"), 1.0, specular=p["body_specular"])
+    body_mat.roughness = 0.85
+    next(nd for nd in body_mat.node_tree.nodes if nd.type == "BSDF_PRINCIPLED").inputs["Roughness"].default_value = 0.85
+    body_mat.use_backface_culling = True        # single-sided: its folds' back faces read as pale streaks
     body.data.materials.append(body_mat)
 
     # --- cloak
@@ -1657,17 +2065,24 @@ def _build(p):
     cb, cn = grimble_paint.cloak_textures(p["tex_cloak"], force=p["force"])
     cloak_mat = _material("M_Grimble_Cloak", (0.03, 0.028, 0.026), 0.95, cb, cn, p["cloak_normal"],
                           specular=p["cloak_specular"])
+    cloak_mat.use_backface_culling = True       # single-sided; the seen back side gets a lining (_add_lining)
     cloak.data.materials.append(cloak_mat)
+    lining_mat = _material("M_Grimble_CloakLining", (0.008, 0.007, 0.006), 1.0, specular=0.1)
+    lining_mat.use_backface_culling = True
 
     # --- eyes
     eb = grimble_paint.eye_texture(p["tex_eye"], force=p["force"])
     eye_mat = _material("M_Grimble_Eye", (0.05, 0.02, 0.01), 0.035, eb)
     eye_objs = [_eye_object(f"{n}_Eye_{side}", c, R, p, col, root, eye_mat) for side, (c, R) in eyes.items()]
     sockets = _socket_object(n + "_Sockets", eyes, p, col, root, cloak_mat)
+    log(f"hood core: {_hood_core(sockets, body, cloak, eyes, lining_mat, p)} tris")
+    rim_range = None
+    if rim is not None:
+        rim_range = _append_rim(sockets, rim)
 
     # --- staff
     sb, sn = grimble_paint.staff_textures(p["tex_staff"], force=p["force"])
-    staff_mat = _material("M_Grimble_Staff", (0.2, 0.12, 0.07), 0.58, sb, sn, 1.0)
+    staff_mat = _material("M_Grimble_Staff", (0.2, 0.12, 0.07), 0.72, sb, sn, 1.0, specular=0.3)
     staff = _staff_object(p, col, root, staff_mat, grips=[h["s"] for h in hands])
     # --- hands, built on the staff's real surface
     hb, hn = grimble_paint.hand_textures(p["tex_hand"], force=p["force"])
@@ -1714,12 +2129,35 @@ def _build(p):
             ao = np.zeros(len(attr.data) * 4, np.float32)
             attr.data.foreach_get("color", ao)
             ao = ao.reshape(-1, 4)
-            ao[n_body_v:, :3] = np.maximum(ao[n_body_v:, :3], 0.7)
+            ao[n_body_v:, :3] = p["backing_ao"]
             attr.data.foreach_set("color", ao.ravel())
         # the cloak's inner side (the hood lining, the walls of the front opening) faces
         # into the creature: in the engine nothing shadows it, so the low sun lit it as
         # bright slivers along the rims. Bake it dark into the occlusion.
-        _darken_lining(cloak, eyes, p["lining_dark"])
+        _darken_lining(cloak, eyes, p["lining_dark"], [c + np.array([-fx, -fy, 0]) for c in cuffs])
+        # the staff and the hands move against the cloak: occlusion baked at rest would ride
+        # along (dark blotches near the staff's foot, dark fingers in the open wave)
+        for ob, lo_ in ((staff, 1.0), (hands_ob, 0.75)):
+            attr = ob.data.color_attributes.get(vertex_ao.ATTR)
+            if attr is not None:
+                ao = np.zeros(len(attr.data) * 4, np.float32)
+                attr.data.foreach_get("color", ao)
+                ao = ao.reshape(-1, 4)
+                ao[:, :3] = np.maximum(ao[:, :3], lo_)
+                attr.data.foreach_set("color", ao.ravel())
+        # the rim's inner side (toward the face) is in the hood's shadow
+        if rim_range is not None:
+            attr = sockets.data.color_attributes.get(vertex_ao.ATTR)
+            if attr is not None:
+                ao = np.zeros(len(attr.data) * 4, np.float32)
+                attr.data.foreach_get("color", ao)
+                ao = ao.reshape(-1, 4)
+                v0, nv_, inner = rim_range
+                seg = ao[v0:v0 + nv_]
+                seg[inner, :3] = np.minimum(seg[inner, :3], p["lining_ao"] + 0.15)
+                seg[~inner, :3] = np.maximum(seg[~inner, :3], 0.75)
+                ao[v0:v0 + nv_] = seg
+                attr.data.foreach_set("color", ao.ravel())
         # the eyeballs turn: occlusion baked in the rest pose would swing into view
         for ob in eye_objs:
             attr = ob.data.color_attributes.get(vertex_ao.ATTR)
@@ -1728,6 +2166,13 @@ def _build(p):
     if p["rig"]:
         _rig(n, col, root, dict(Body=body, Cloak=cloak, Staff=staff, Sockets=sockets, Hands=hands_ob,
                                 Eyes=eye_objs), hand_info, Vector((-fx, -fy, 0)))
+    others = [_mesh_arrays(o.data) for o in (body, staff, sockets, hands_ob)]
+    for o in eye_objs:
+        ev, et = _mesh_arrays(o.data)
+        others.append((ev + np.array(o.matrix_world.translation), et))
+    p["_head_centre"] = (eyes["L"][0] + eyes["R"][0]) / 2 + np.array([-fx, -fy + 0.6, 0])
+    p["_shift"] = (fx, fy)
+    _add_lining(cloak, others, lining_mat, p, [c + np.array([-fx, -fy, 0]) for c in cuffs])
     log(f"done in {time.time() - t0:.1f}s; tris body {len(body.data.polygons)} cloak {len(cloak.data.polygons)}"
         f" staff {sum(len(pl.vertices) - 2 for pl in staff.data.polygons)}"
         f" hands {sum(len(pl.vertices) - 2 for pl in hands_ob.data.polygons)}"
