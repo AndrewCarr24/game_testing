@@ -162,7 +162,7 @@ P = dict(
     face_texel_boost=1.25,         # face island scale relative to hands / feet before packing
     ao=True,
     rig=True,                      # skeleton, skin weights and the actions (grimble_rig.py)
-    crawl_scale=0.65,              # the crawl family's uniform scale (grimble_crawl.py): the house's
+    crawl_scale=0.8,               # the crawl family's uniform scale (grimble_crawl.py): the house's
                                    # openings are 3.0 m; at full size the hood alone is ~3.6 m wide
     qa=True, qa_strict=True,       # run grimble_qa at the end; fail the build on errors
     lining_ao=0.35,                # occlusion floor of the cloak's lining (it's in shadow)
@@ -1079,7 +1079,7 @@ def _material(name, color, roughness, base=None, normal=None, normal_strength=1.
 
 # --------------------------------------------------------------------- rig
 
-def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.65):
+def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.8):
     """Skeleton from the model's landmarks, skin weights, the four actions."""
     t0 = time.time()
     sh = np.array(shift)
@@ -1134,6 +1134,7 @@ def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.65):
         if e > 1e-3:
             log(f"  rest mismatch {bn}: {e:.3f}")
     grimble_rig.prepare(sv)
+    sv.staff_verts = sv_ - 0.0            # the staff's rest vertices (the crawl drags it)
     grimble_crawl.prepare(sv, crawl_scale)
     grimble_rig.bake_actions(sv, bpy.context.scene, extra=grimble_crawl.actions(sv))
     grimble_rig.LAST_SOLVER = sv            # for probes / QA
@@ -1483,10 +1484,18 @@ def _build(p):
     if p["rig"]:
         _rig(n, col, root, dict(Body=body, Cloak=cloak, Staff=staff, Sockets=sockets, Hands=hands_ob,
                                 Eyes=eye_objs), hand_info, Vector((-fx, -fy, 0)), toe_info, p["crawl_scale"])
+        # the crawl body's footprint (from the deformed crawl loops) for the engine's wall push-out
+        motion = grimble_qa.motion_checks(root, parts)
+        mx = np.max([motion[nm]["foot_max"] for nm in grimble_qa.CRAWL_LOOPS if nm in motion], axis=0)
+        for k, v in zip(("bodyFront", "bodyBack", "bodyHalfWidth"), mx):
+            root[k] = round(float(v) + 0.01, 2)
+            bpy.context.scene[k] = root[k]
+    else:
+        motion = None
     # ================= STAGE 7: QA ===================================================
     if p["qa"]:
         errs = grimble_qa.run(root, parts, dict(tex_body=p["tex_body"], tex_cloak_unique=p["tex_cloak_unique"],
-                                                bake=bake_stats))
+                                                bake=bake_stats, motion=motion))
         if errs and p["qa_strict"]:
             raise RuntimeError(f"Grimble QA failed: {len(errs)} errors (see QA ERROR lines)")
     log(f"done in {time.time() - t0:.1f}s; tris body {len(body.data.polygons)} cloak {len(cloak.data.polygons)}"

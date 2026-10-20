@@ -22,9 +22,11 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 ACTIONS = {"Walk": 2.8, "Knock": 3.5, "Wave": 2.5, "Idle": 4.0,
-           "Smash": 2.5, "Crawl": 2.6, "CrawlFast": 1.1, "CrawlIdle": 6.0, "Swipe": 1.6, "ReachUp": 3.0}
-# the crawl family must pass the house's openings (3.0 m courtyard door): (max height, max width)
-ENVELOPE = {"Crawl": (2.9, 2.6), "CrawlFast": (2.9, 2.6), "CrawlIdle": (2.9, 2.6), "Swipe": (3.5, None)}
+           "Smash": 3.0, "Crawl": 2.6, "CrawlFast": 1.1, "CrawlIdle": 6.0, "Swipe": 1.7, "ReachUp": 3.0}
+# the crawl family must pass the house's openings (3.6 m high doors, 3.2 m wide galleries):
+# (max height, max width), the held staff included
+ENVELOPE = {"Crawl": (3.3, 3.0), "CrawlFast": (3.3, 3.0), "CrawlIdle": (3.3, 3.0), "Swipe": (3.5, None)}
+CRAWL_LOOPS = ("Crawl", "CrawlFast", "CrawlIdle")
 
 
 def _arrays(ob):
@@ -172,7 +174,7 @@ def skin_checks(objs):
 
 
 def motion_checks(root, parts, every=3):
-    """Deformed-mesh measurements per action (the staff excluded: it is dropped): the crawl
+    """Deformed-mesh measurements per action (the held staff included): the crawl
     family's envelope over the whole cycle, the footprint, and the claws at the marked hit
     times against the numbers on the root (smashHit, swipeHit / swipeReach, reachHit ...)."""
     import bpy as _bpy
@@ -180,7 +182,7 @@ def motion_checks(root, parts, every=3):
     out, scene = {}, _bpy.context.scene
     if arm is None or not arm.animation_data:
         return out
-    meshes = [o for o in parts if o.type == "MESH" and not o.name.endswith("_Staff")]
+    meshes = [o for o in parts if o.type == "MESH"]
     hands = next(o for o in parts if o.name.endswith("_Hands"))
     fg = {hands.vertex_groups[n].index for n in ("Foot.L", "Foot.R") if n in hands.vertex_groups}
     claw = np.array([not any(g.group in fg and g.weight > 0.5 for g in v.groups) for v in hands.data.vertices])
@@ -223,6 +225,15 @@ def motion_checks(root, parts, every=3):
             P, _ = pose(f)
             zt, wd = max(zt, float(P[:, 2].max())), max(wd, float(np.ptp(P[:, 0])))
         out[name] = dict(height=zt, width=wd, hmax=hmax, wmax=wmax)
+        if name in CRAWL_LOOPS:                       # the body's footprint (front -Y)
+            ext = []
+            for f in range(fr[0], fr[1] + 1, every):
+                P, _ = pose(f)
+                ext.append((-P[:, 1].min(), P[:, 1].max(), np.abs(P[:, 0]).max()))
+            ext = np.array(ext)
+            P, _ = pose(fr[0])
+            out[name]["foot_rest"] = (-P[:, 1].min(), P[:, 1].max(), np.abs(P[:, 0]).max())
+            out[name]["foot_max"] = tuple(ext.max(0))
         if name == "Crawl":
             P, _ = pose(fr[0])
             lo = P[P[:, 2] < 0.3]
@@ -324,7 +335,7 @@ def run(root, parts, info):
             got = (act.frame_range[1] - act.frame_range[0]) / fps if act else None
             line(f"QA action {name}: {got if got is None else round(got, 2)} s (expected {dur})")
             err(got is None or abs(got - dur) > 0.05, f"action {name} missing or wrong length")
-        mc = motion_checks(root, parts)
+        mc = info.get("motion") or motion_checks(root, parts)
         for nm in ENVELOPE:
             if nm in mc:
                 m = mc[nm]
@@ -332,6 +343,17 @@ def run(root, parts, info):
                      f"{m['width']:.2f} m" + (f" (limit {m['wmax']})" if m["wmax"] else ""))
                 err(m["height"] > m["hmax"], f"{nm} rises to {m['height']:.2f} m (> {m['hmax']})")
                 err(m["wmax"] is not None and m["width"] > m["wmax"], f"{nm} is {m['width']:.2f} m wide (> {m['wmax']})")
+        for nm in CRAWL_LOOPS:
+            if nm in mc and "foot_max" in mc[nm]:
+                r, m = mc[nm]["foot_rest"], mc[nm]["foot_max"]
+                line(f"QA motion {nm:9s} footprint (front / back / half width from the origin): rest "
+                     f"{r[0]:.2f} / {r[1]:.2f} / {r[2]:.2f} m, max over the cycle {m[0]:.2f} / {m[1]:.2f} / {m[2]:.2f} m")
+        if root.get("bodyFront") is not None:
+            mx = np.max([mc[nm]["foot_max"] for nm in CRAWL_LOOPS if nm in mc], axis=0)
+            line(f"QA motion root bodyFront {root['bodyFront']} bodyBack {root['bodyBack']} "
+                 f"bodyHalfWidth {root['bodyHalfWidth']} (measured {mx[0]:.2f} / {mx[1]:.2f} / {mx[2]:.2f})")
+            err(mx[0] > root["bodyFront"] + 0.02 or mx[1] > root["bodyBack"] + 0.02
+                or mx[2] > root["bodyHalfWidth"] + 0.02, "the body leaves its root footprint")
         if "footprint" in mc:
             line(f"QA motion Crawl footprint {mc['footprint'][0]:.2f} m long x {mc['footprint'][1]:.2f} m wide")
         if "smash" in mc:

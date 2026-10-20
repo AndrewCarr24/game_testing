@@ -26,6 +26,8 @@ const DEFAULTS = {
   crawlRate: 2.0,          // playback rate of Crawl / CrawlFast (speed scales with it, so no sliding):
   fastRate: 2.4,           //   ~1.2 m/s prowling, ~4.5 m/s chasing (the player walks 3.4, runs 6.8)
   upperY: 3.5,             // player feet above this = on the upper floor
+  bodyFront: 2.4, bodyBack: 2.4, bodyHalfWidth: 1.15,   // crawl footprint about the root (userData overrides)
+  strikeRange: 1.6,        // m beyond its head within which it swipes
 };
 
 export class GrimbleHunt {
@@ -35,7 +37,11 @@ export class GrimbleHunt {
     const ud = grimble.root.userData;
     for (const [k, u] of [['crawlStride', 'crawlStride'], ['crawlCycle', 'crawlCycle'], ['fastStride', 'fastStride'],
       ['fastCycle', 'fastCycle'], ['smashHit', 'smashHit'], ['swipeHit', 'swipeHit'], ['swipeReach', 'swipeReach'],
-      ['reachHit', 'reachHit'], ['reachUp', 'reachUpReach']]) if (ud[u] !== undefined) this.o[k] = ud[u];
+      ['reachHit', 'reachHit'], ['reachUp', 'reachUpReach'], ['bodyFront', 'bodyFront'], ['bodyBack', 'bodyBack'],
+      ['bodyHalfWidth', 'bodyHalfWidth']]) if (ud[u] !== undefined) this.o[k] = ud[u];
+    // the footprint's back is the dragged staff's tail; the robe ends ~2.9 m back: keep only that
+    // out of the walls (the staff tip can skate along a wall)
+    this.o.bodyBack = Math.min(this.o.bodyBack, 2.9);
     for (const n of ['Smash', 'Swipe', 'ReachUp']) {
       const a = grimble.actions[n];
       if (a) { a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; }
@@ -53,7 +59,14 @@ export class GrimbleHunt {
       const b = this.breakable, z0 = Math.min(b.min[2], b.max[2]), z1 = Math.max(b.min[2], b.max[2]);
       areas.push([Math.min(b.min[0], b.max[0]) - 6, z0 - 1, Math.max(b.min[0], b.max[0]) + 0.5, z1 + 1]);
     }
-    this.nav = new NavGrid(colliders, areas);
+    // route clearance a little under the body's half width: the galleries are 3.2 m wide and
+    // it is 3.1; keepOutOfWalls() holds the actual outline off the walls
+    this.nav = new NavGrid(colliders, areas, { cell: 0.2, radius: Math.min(this.o.bodyHalfWidth, 1.4) });
+    // what its body is kept out of: the shell's walls (not the glass it breaks through)
+    const b = this.breakable;
+    const gap = b && new THREE.Box3(new THREE.Vector3(Math.min(b.min[0], b.max[0]) - 0.3, 0, Math.min(b.min[2], b.max[2])),
+      new THREE.Vector3(Math.max(b.min[0], b.max[0]) + 0.3, 9, Math.max(b.min[2], b.max[2])));
+    this.solid = this.walls.filter((c) => c.max.y > 0.4 && c.min.y < 2.8 && !(gap && gap.intersectsBox(c) && c.max.x - c.min.x < 0.5));
     this.double = DOUBLE_HEIGHT.filter((r) => level.rooms[r]).map((r) => level.rooms[r].rect);
     this.state = null;
     this.t = 0;
@@ -121,6 +134,32 @@ export class GrimbleHunt {
     return false;
   }
 
+  // keep the body's footprint (a rectangle along its heading) out of the walls: every sample
+  // point on its outline that ends up inside a wall pushes the root out the shortest way
+  keepOutOfWalls() {
+    const o = this.o, h = this.g.heading, fx = Math.sin(h), fz = Math.cos(h), rx = fz, rz = -fx;
+    const pts = [];
+    for (let f = -o.bodyBack; f <= o.bodyFront + 1e-6; f += 0.5) for (const l of [-o.bodyHalfWidth, o.bodyHalfWidth]) pts.push([f, l]);
+    for (let l = -o.bodyHalfWidth; l <= o.bodyHalfWidth + 1e-6; l += 0.5) { pts.push([o.bodyFront, l]); pts.push([-o.bodyBack, l]); }
+    for (let it = 0; it < 3; it++) {
+      let px = 0, pz = 0;
+      const p = this.root.position;
+      for (const [f, l] of pts) {
+        const x = p.x + fx * f + rx * l, z = p.z + fz * f + rz * l;
+        for (const c of this.solid) {
+          if (x <= c.min.x || x >= c.max.x || z <= c.min.z || z >= c.max.z) continue;
+          const exits = [[c.min.x - x, 0], [c.max.x - x, 0], [0, c.min.z - z], [0, c.max.z - z]];
+          const [ex, ez] = exits.reduce((a, e) => (Math.abs(e[0] + e[1]) < Math.abs(a[0] + a[1]) ? e : a));
+          if (Math.abs(ex) > Math.abs(px)) px = ex;
+          if (Math.abs(ez) > Math.abs(pz)) pz = ez;
+        }
+      }
+      if (!px && !pz) break;
+      p.x += px + Math.sign(px) * 0.01;
+      p.z += pz + Math.sign(pz) * 0.01;
+    }
+  }
+
   turnToward(target, dt) {
     const p = this.pos2();
     const want = Math.atan2(target.x - p.x, target.y - p.y);
@@ -147,7 +186,7 @@ export class GrimbleHunt {
       case 'smash': {
         if (this.t >= o.smashHit && !this.broken) { this.broken = true; this.onBreak?.(); this.openGap(); }
         const len = g.actions.Smash?.getClip().duration ?? 2.5;
-        if (this.t >= len) { this.set('prowl'); this.path = null; this.dropStaff(); }
+        if (this.t >= len) { this.set('prowl'); this.path = null; }
         break;
       }
       case 'swipe': case 'reachUp': {
@@ -156,7 +195,7 @@ export class GrimbleHunt {
         this.turnToward(pp, dt);
         if (!this.hitDone && this.t >= hitT) {
           this.hitDone = true;
-          const reach = this.state === 'swipe' ? o.swipeReach + 0.6 : o.reachUp + 0.9;
+          const reach = this.state === 'swipe' ? o.bodyFront + o.strikeRange + 0.4 : o.reachUp + 0.9;
           const vertOk = this.state === 'swipe' ? !upper : upper;
           if (dist <= reach && vertOk && player?.knockDown) {
             const from = new THREE.Vector3(this.root.position.x, feet.y, this.root.position.z);
@@ -168,16 +207,25 @@ export class GrimbleHunt {
         break;
       }
       default: {
-        // close enough to strike?
+        // close enough to strike? (measured from its head, not its middle; up close it turns on
+        // the player fast and swipes whether or not it "sees" them)
+        const hx = this.root.position.x + Math.sin(g.heading) * o.bodyFront, hz = this.root.position.z + Math.cos(g.heading) * o.bodyFront;
+        const headDist = Math.hypot(pp.x - hx, pp.y - hz);
+        const close = !upper && (headDist <= o.strikeRange || dist <= o.bodyFront + 0.5);
+        if (close && canHit) {
+          const off = this.turnToward(pp, dt * 2.5);
+          if (off < 0.6) { this.strike('swipe'); break; }
+          this.g.play('CrawlIdle');
+          break;
+        }
         if (seen && canHit) {
-          if (!upper && dist <= o.swipeReach && this.turnToward(pp, dt) < 0.5) { this.strike('swipe'); break; }
           if (upper && dist <= o.reachUp + 0.5 && this.inDouble(this.root.position.x, this.root.position.z)
             && this.turnToward(pp, dt) < 0.5) { this.strike('reachUp'); break; }
         }
         if (seen || this.time - this.seenAt < o.memory) {
           // chase toward the player (or the nearest place below them), re-planning twice a second
           const target = this.lastSeen;
-          if (seen && !upper && dist <= o.swipeReach * 0.85) { this.lurk(dt, pp); this.state = 'chase'; break; }   // close: hold and strike
+
           if (!this.path || this.time - this.pathAt > 0.5) this.goTo(target);
           if (!this.path) { this.lurk(dt, pp); break; }
           const arrived = this.follow(dt, true);
@@ -195,7 +243,13 @@ export class GrimbleHunt {
         }
       }
     }
-    // speed of the cycles matches the ground covered (no sliding)
+    // stuck (the walls push back as hard as the path pulls, e.g. turning a gallery corner a
+    // 6 m body can't turn in): let it squeeze through for a moment rather than freeze
+    const here = this.pos2();
+    if (!this._prog || here.distanceTo(this._prog.at) > 0.5) this._prog = { at: here, t: this.time };
+    const moving = this.path && this.path.length && ['chase', 'search', 'prowl'].includes(this.state);
+    if (moving && this.time - this._prog.t > 1.5) this.squeezeUntil = this.time + 1.5;
+    if (this.state !== 'smash' && !(this.time < (this.squeezeUntil ?? 0))) this.keepOutOfWalls();
     g.root.rotation.y = g.heading;
   }
 

@@ -414,6 +414,10 @@ class Solver:
             M = (c["head_abs"].to_matrix().to_4x4() @ self.R["Head"])
             M.translation = PM["Head"].translation
             PM["Head"] = M
+        if c.get("head_x") is not None:       # ... and kept from swaying sideways (width)
+            M = PM["Head"].copy()
+            M.translation.x = c["head_x"]
+            PM["Head"] = M
         torso = (PM["Spine3"] @ self.R["Spine3"].inverted()).to_quaternion()
         for s in "LR":
             M = self.default(PM, "Shoulder." + s)
@@ -448,7 +452,9 @@ class Solver:
             HMr.translation = _v(Wr)
             PM["Hand." + s] = HMr
         PM["Staff"] = PM["Hand.R"] @ self.rel["Staff"]
-        if c.get("staff_world") is not None:     # dropped: wherever the action puts it
+        if c.get("staff_held") is not None:      # held, but not where the grip was modelled
+            PM["Staff"] = c["staff_held"].copy()   # (the hand slid along the shaft)
+        if c.get("staff_world") is not None:     # dropped: wherever the action puts it (unscaled)
             PM["Staff"] = c["staff_world"].copy()
         for s in "LR":
             self._fingers(PM, s, c.get("open_" + s, 0.0), c.get("flutter_" + s, (0, 0, 0, 0, 0)))
@@ -744,9 +750,18 @@ def bake_actions(sv, scene, extra=()):
         prev = {}
         sv.gap = 0.0
         sv.gaps = {}
+        gap_frames = []
         for f in range(nf + 1):
             t = f / FPS if oneshot else (f % nf) / FPS
+            g_before = dict(sv.gaps)
+            sv.gaps = {}
             PM = sv.solve(fn(sv, t))
+            bad = {k: v for k, v in sv.gaps.items() if v > 0.03}
+            if bad:
+                gap_frames.append((f, bad))
+            for k, v in sv.gaps.items():
+                g_before[k] = max(g_before.get(k, 0), v)
+            sv.gaps = g_before
             for bn, B in sv.basis(PM).items():
                 pb = arm.pose.bones[bn]
                 loc, q, scl = B.decompose()
@@ -762,7 +777,8 @@ def bake_actions(sv, scene, extra=()):
                 pb.scale = scl
                 pb.keyframe_insert("scale", frame=f, group=bn)
         log(f"action {name}: {nf} frames ({T:.2f} s), max IK gap {sv.gap * 100:.1f} cm "
-            + " ".join(f"{k} {v * 100:.0f}" for k, v in sv.gaps.items() if v > 0.005))
+            + " ".join(f"{k} {v * 100:.0f}" for k, v in sv.gaps.items() if v > 0.005)
+            + (f"; > 3 cm on frames {[g[0] for g in gap_frames]}" if gap_frames else ""))
         arm.animation_data.action = None
         track = arm.animation_data.nla_tracks.new()
         track.name = name

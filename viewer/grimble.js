@@ -209,7 +209,9 @@ export class Grimble {
     if (!player || this.state === 'walk' || this.state === 'wait') return;
     if (this.state === 'inside' && !['chase', 'swipe', 'reachUp'].includes(this.hunt.state)) return;
     this.root.updateMatrixWorld(true);
-    if (this.head) turnToward(this.head, player, this.o.headLimit, this.headFwd);
+    // crawling, the hood is as wide as the openings: only the eyes follow the player then
+    const crawling = this.state === 'inside' && this.hunt.state !== 'reachUp';
+    if (this.head && !crawling) turnToward(this.head, player, this.o.headLimit, this.headFwd);
     for (const e of this.eyes) {
       e.o.quaternion.copy(e.rest);
       e.o.updateMatrixWorld(true);
