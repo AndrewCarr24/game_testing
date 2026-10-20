@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
 // The Grimble (specs.md "grimble"): a 7.3 m cloaked creature that walks in from far out on the
-// west garden's axis, up to the great room's glass, knocks three times, waves, then stands
-// watching the player (head and eyes turn to follow them).
+// west garden's axis, up to the great room's glass, then over and over: knocks three times,
+// waves, stands staring at the player (head and eyes follow them) for a while.
 //
 // Outdoors nothing is baked for a moving thing, so it's lit by the real-time sun plus the sky
 // as its environment (the rooms' probes would light it like the entry hall). It casts no
@@ -20,7 +20,8 @@ const DEFAULTS = {
   taps: [1.25, 1.95, 2.65],   // s into Knock when the knuckles hit the glass
   shake: 0.035,        // m camera shudder per tap for a player within shakeRange
   shakeRange: 14,
-  waveTime: 7,         // s of waving before it settles into watching
+  waveTime: 5,         // s of waving
+  stare: [10, 18],     // s it stands staring before it knocks again (random in this range)
   fade: 0.5,           // s cross-fade between actions
   turnRate: 1.2,       // rad/s it can turn while walking
   headLimit: 0.6,      // rad the head may turn toward the player (the hood is rigid with it)
@@ -132,7 +133,13 @@ export class Grimble {
       for (const at of o.taps) if (this.t >= at && this.t - dt < at) this._shake = 1;
       if (this.t >= len) { this.state = 'wave'; this.t = 0; this.play('Wave'); }
     } else if (this.state === 'wave') {
-      if (this.t >= o.waveTime) { this.state = 'watch'; this.t = 0; this.play('Idle'); }
+      if (this.t >= o.waveTime) {
+        this.state = 'watch'; this.t = 0; this.play('Idle');
+        this.stareFor = o.stare[0] + Math.random() * (o.stare[1] - o.stare[0]);
+      }
+    } else if (this.state === 'watch') {
+      // ... and again: knock, wave, stare, for as long as the player is there
+      if (this.t >= this.stareFor) { this.state = 'knock'; this.t = 0; this.play('Knock'); }
     }
     this.root.rotation.y = this.heading;
     this.mixer.update(dt);

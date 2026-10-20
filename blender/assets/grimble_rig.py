@@ -20,6 +20,11 @@ import numpy as np
 from mathutils import Matrix, Quaternion, Vector
 
 FPS = 30
+FINGERS = ("Index", "Middle", "Ring", "Pinky", "Thumb")
+# the open hand: per finger the spread (degrees toward the thumb side) and the curl at
+# each of its three joints (degrees toward the palm)
+OPEN = dict(Index=(16, (6, 14, 16)), Middle=(5, (6, 14, 16)), Ring=(-6, (8, 15, 17)),
+            Pinky=(-17, (10, 16, 18)), Thumb=(0, (10, 12, 14)))
 
 # walk
 WALK_T = 2.8          # s per cycle (two steps)
@@ -116,6 +121,10 @@ def skeleton(lm):
         add("UpperArm." + s, "Shoulder." + s, a["sh"], e, a["pole"])
         add("Forearm." + s, "UpperArm." + s, e, w, a["pole"])
         add("Hand." + s, "Forearm." + s, w, lm["pad_" + s], (0, 0, 1))
+        for f in lm["fingers_" + s]:                 # 3 bones per finger, along its centre line
+            for j in range(3):
+                par = "Hand." + s if j == 0 else f"{f['name']}{j}.{s}"
+                add(f"{f['name']}{j + 1}.{s}", par, f["J"][j], f["J"][j + 1], f["up"][j])
     add("Staff", "Hand.R", lm["staff_tip"], lm["grip_R"])
     for s, hip_x in (("L", 0.55), ("R", -0.6)):
         ank, toe = lm["ankle_" + s], lm["toe_" + s]
@@ -276,12 +285,37 @@ def skin(arm, objs, bones, hand_info, lm):
             rows[idx, bi[bone]] = 1
         assign(ob, rows)
 
+    # hands: the palm / wrist on Hand.X; each finger along its length on its three bones,
+    # blended over the knuckles; the claws rigid with the last bone
     nv = len(objs["Hands"].data.vertices)
-    hand_groups = []
+    rows = np.zeros((nv, nb))
     for side, h in zip("RL", hand_info):         # the hands are listed upper (right) first
         a, b = h["verts"]
-        hand_groups.append(("Hand." + side, np.arange(a, min(b, nv))))
-    rigid(objs["Hands"], hand_groups)
+        rows[a:min(b, nv), bi["Hand." + side]] = 1
+        for f in h["fingers"]:
+            ids = [bi["Hand." + side]] + [bi[f"{f['name']}{j}.{side}"] for j in (1, 2, 3)]
+            v0, v1 = f["tube"]
+            k = np.arange(v0, v1)
+            ring = np.minimum((k - v0) // f["sides"], len(f["ts"]) - 1)
+            t = np.where(k - v0 >= len(f["ts"]) * f["sides"], 1.0, f["ts"][ring])
+            wb = np.zeros((len(k), 4))
+            J = f["joints"]
+            wdt = 0.07
+            for jj in range(3):                     # weight of segment jj+1 vs jj at joint J[jj]
+                x = np.clip((t - (J[jj] - wdt)) / (2 * wdt), 0, 1)
+                wb[:, jj + 1] = x
+            w = np.zeros((len(k), 4))
+            w[:, 0] = 1 - wb[:, 1]
+            w[:, 1] = wb[:, 1] - wb[:, 2]
+            w[:, 2] = wb[:, 2] - wb[:, 3]
+            w[:, 3] = wb[:, 3]
+            rows[k] = 0
+            for jj in range(4):
+                rows[k, ids[jj]] = w[:, jj]
+            c0, c1 = f["claw"]
+            rows[c0:c1] = 0
+            rows[c0:c1, ids[3]] = 1
+    assign(objs["Hands"], rows)
     rigid(objs["Staff"], [("Staff", np.arange(len(objs["Staff"].data.vertices)))])
     rigid(objs["Sockets"], [("Head", np.arange(len(objs["Sockets"].data.vertices)))])
     # eyes ride on the head bone, pivots unchanged
@@ -313,6 +347,11 @@ class Solver:
         # reference frames of the IK bones at rest (head -> tail, toward the rest pole):
         # a pose frame maps onto the bone's own matrix through these, whatever its roll
         self.Fr = {}
+        self.up = {b[0]: b[4] for b in bones}
+        for b in bones:
+            if b[0].rstrip(".LR")[:-1] in FINGERS:
+                bb = arm.data.bones[b[0]]
+                self.Fr[b[0]] = frame(_np(bb.head_local), _np(bb.tail_local), b[4]).inverted() @ self.R[b[0]]
         for s in "LR":
             for b, pole in ((f"UpperArm.{s}", arms[s]["pole"]), (f"Forearm.{s}", arms[s]["pole"]),
                             (f"Thigh.{s}", (0.15 if s == "L" else -0.15, -1, 0)),
@@ -369,6 +408,8 @@ class Solver:
             HMr.translation = _v(Wr)
             PM["Hand." + s] = HMr
         PM["Staff"] = PM["Hand.R"] @ self.rel["Staff"]
+        for s in "LR":
+            self._fingers(PM, s, c.get("open_" + s, 0.0), c.get("flutter_" + s, (0, 0, 0, 0, 0)))
         yaw = c.get("hips_rot", Quaternion())
         for s in "LR":
             hip = _np(self.default(PM, "Thigh." + s).translation)
@@ -393,6 +434,41 @@ class Solver:
                 q = (tail - M.translation).rotation_difference(tail + _v(d) - M.translation)
                 PM[b] = rot_about(M, M.translation, q)
         return PM
+
+    def _fingers(self, PM, s, o, flutter):
+        """Finger chains: the modelled staff grip at o = 0; o = 1 is the open hand (fingers
+        spread from the knuckles along the hand's forward axis, slightly curled toward the
+        palm; the thumb out to the side)."""
+        names = [[f"{f}{j}.{s}" for j in (1, 2, 3)] for f in FINGERS]
+        if o <= 0:
+            for chain in names:
+                for b in chain:
+                    PM[b] = self.default(PM, b)
+            return
+        F, N, Tp = self.open_axes[s]
+        X = PM["Hand." + s] @ self.R["Hand." + s].inverted()     # the hand's motion from rest
+        for fi, chain in enumerate(names):
+            spread, curls = OPEN[FINGERS[fi]]
+            a = math.radians(spread)
+            if FINGERS[fi] == "Thumb":
+                d = F * 0.45 + Tp * 0.9 + N * 0.3
+            else:
+                d = F * math.cos(a) + Tp * math.sin(a)
+            d = _v(d).normalized()
+            head = self.R[chain[0]].translation.copy()
+            parent_open = PM["Hand." + s]
+            parent_pose = PM["Hand." + s]
+            for j, b in enumerate(chain):
+                c = math.radians(curls[j] + flutter[fi] * (1 + j) / 3)
+                d = (d * math.cos(c) + _v(N) * math.sin(c)).normalized()
+                tail = head + d * self.len[b]
+                Mo = X @ frame(_np(head), _np(tail), N) @ self.Fr[b]
+                Bo = (parent_open @ self.rel[b]).inverted() @ Mo
+                q = Quaternion().slerp(Bo.to_quaternion(), o)
+                loc = Bo.translation * o
+                PM[b] = parent_pose @ self.rel[b] @ (Matrix.Translation(loc) @ q.to_matrix().to_4x4())
+                parent_open, parent_pose = Mo, PM[b]
+                head = tail
 
     def basis(self, PM):
         out = {}
@@ -564,6 +640,8 @@ def wave(sv, t):
     w = np.array(WAVE_WRIST) + np.array([0.22 * sw, 0.0, 0.05 * abs(sw)])
     c["hand_L"] = sv.hand_at("L", w, Quaternion((0, 1, 0), math.radians(18 * sw)) @ sv.wave_q)
     c["pole_L"] = (0.8, 0.6, -0.6)
+    c["open_L"] = 1.0             # open for the whole clip (the engine's cross-fade does the opening)
+    c["flutter_L"] = tuple(5 * math.sin(2 * math.pi * (4 * ph + 0.17 * k)) for k in range(5))
     c["Shoulder.L"] = euler_q(0, -10, 0)
     c["Spine2"] = euler_q(-2, -3, 3)
     c["Spine3"] = euler_q(-1, -2, 2)
@@ -644,8 +722,24 @@ def prepare(sv):
     yaw = math.degrees(math.atan2(-1.0, 0.0) - math.atan2(kd[1], kd[0]))
     sv.knock_q = euler_q(0, 0, yaw)
     sv.knock_rel = _knock_contact(sv, sv.knock_q)
-    # wave: the curled hand turned so the curled fingers face forward, tilted out
-    sv.wave_q = euler_q(0, 15, yaw + 180)
+    # open-hand axes (rest space) per hand: F from the wrist toward the knuckles, N the palm
+    # side (toward where the staff is), Tp across the fingers toward the thumb (up the staff)
+    sv.open_axes = {}
+    for s in "LR":
+        F = sv.lm["pad_" + s] - sv.lm["wrist_" + s]
+        F /= np.linalg.norm(F)
+        N = -sv.lm["knuckle_" + s]
+        N = N - (N @ F) * F
+        N /= np.linalg.norm(N)
+        Tp = np.cross(N, F)
+        if Tp @ sv.lm["axis_" + s] < 0:
+            Tp = -Tp
+        sv.open_axes[s] = (F, N, Tp)
+    # wave: the open left hand turned fingers-up, palm toward the viewer (-Y), tilted out a little
+    F, N, _ = sv.open_axes["L"]
+    A = Matrix((_v(F), _v(N), _v(np.cross(F, N)))).transposed()
+    Bm = Matrix(((0, 0, 1), (0, -1, 0), tuple(np.cross((0, 0, 1), (0, -1, 0))))).transposed()
+    sv.wave_q = euler_q(0, 12, 8) @ (Bm @ A.inverted()).to_quaternion()
     wy = -KNOCK_D - sv.knock_rel[1]
     contact = np.array([KNOCK_WRIST[0], wy, KNOCK_WRIST[2]]) + sv.knock_rel
     log(f"knock contact: {KNOCK_D:.2f} m in front of the origin, height {contact[2]:.2f} m, x {contact[0]:.2f}")

@@ -1487,6 +1487,13 @@ def _rig(n, col, root, objs, hand_info, shift):
         lm["grip_" + side] = h["grip"] + sh
         lm["knuckle_" + side] = h["knuckle_dir"]
         lm["axis_" + side] = h["axis"]
+        fl = []
+        for f in h["fingers"]:
+            interp = lambda t, arr: np.array([np.interp(t, f["ts"], arr[:, i]) for i in range(3)])
+            J = [interp(t, f["pts"]) + sh for t in f["joints"]]
+            ups = [interp((f["joints"][j] + f["joints"][j + 1]) / 2, f["inward"]) for j in range(3)]
+            fl.append(dict(name=f["name"], J=J, up=ups))
+        lm["fingers_" + side] = fl
     sv_ = np.zeros(len(objs["Staff"].data.vertices) * 3)
     objs["Staff"].data.vertices.foreach_get("co", sv_)
     sv_ = sv_.reshape(-1, 3)

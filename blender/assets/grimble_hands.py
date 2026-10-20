@@ -157,14 +157,17 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
         # wrist: a thick tube from inside the pad deep into the sleeve (its end is hidden)
         tube(bm, uvl, np.array([pc - ax1 * rf, (pc + w) / 2, w, w + ax1 * 0.45]),
              [rf * 2.6, rf * 2.4, rf * 2.6, rf * 2.8], 10, tile, cap_end=True)
-        # fingers, index (top) to little finger
+        # fingers, index (top) to little finger; each is recorded for the rig (its centre
+        # line, the inward direction at each sample, its tube's and claw's vertex ranges)
+        fingers = []
         for k in range(n_f):
             a_k = top - k * pitch
             r_k = rf * (1.0 - 0.06 * k) * (1 + 0.04 * rng.standard_normal())
             wrap = math.radians(p["finger_wrap"] - 8 * k + 5 * rng.standard_normal())
-            pts, rad = [], []
+            pts, rad, inward = [], [], []
             n = 24
-            for t in np.linspace(-0.18, 1.0, n):
+            ts = np.linspace(-0.18, 1.0, n)
+            for t in ts:
                 phi = phi_k + sign * wrap * max(t, 0) + sign * wrap * 0.4 * min(t, 0)
                 a = a_k - p["finger_slant"] * pitch * max(t, 0)
                 d = rot(phi)
@@ -177,11 +180,18 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
                 pt_, _ = axis_at(a)
                 pts.append(pt_ + d * (surf(a, d) + rt * 0.8 + lift))
                 rad.append(rt)
+                inward.append(-d)
+            v0 = len(bm.verts)
             tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True, phase=0.3 * k)
+            v1 = len(bm.verts)
             _claw(bm, uvl, np.array(pts), rad[-1], d, tile, p)
+            fingers.append(dict(name=("Index", "Middle", "Ring", "Pinky")[k], ts=ts, pts=np.array(pts),
+                                inward=np.array(inward), joints=(0.0, 0.38, 0.68, 1.0), sides=8,
+                                tube=(v0, v1), claw=(v1, len(bm.verts))))
         # thumb: from the hand's back up over the index finger, pressing along the shaft
-        pts, rad = [], []
-        for t in np.linspace(-0.2, 1.0, 14):
+        pts, rad, inward = [], [], []
+        ts = np.linspace(-0.2, 1.0, 14)
+        for t in ts:
             phi = phi_k * (0.55 + 0.25 * max(t, 0)) - sign * math.radians(p["thumb_wrap"]) * max(t, 0)
             a = top + pitch * (0.2 + 1.9 * max(t, 0)) - (0.0 if t >= 0 else -t * pitch)
             d = rot(phi)
@@ -190,10 +200,15 @@ def build_hands(bm, uvl, hands, line, sl, staff_tree, p):
             pt_, _ = axis_at(a)
             pts.append(pt_ + d * (surf(a, d) + rt * 0.8 + lift))
             rad.append(rt)
+            inward.append(-d)
+        v0 = len(bm.verts)
         tube(bm, uvl, np.array(pts), rad, 8, tile, cap_end=True)
+        v1 = len(bm.verts)
         _claw(bm, uvl, np.array(pts), rad[-1], d, tile, p)
+        fingers.append(dict(name="Thumb", ts=ts, pts=np.array(pts), inward=np.array(inward),
+                            joints=(0.0, 0.42, 0.72, 1.0), sides=8, tube=(v0, v1), claw=(v1, len(bm.verts))))
         info.append(dict(verts=(v_start, len(bm.verts)), wrist=w.copy(), pad=pc.copy(), grip=G.copy(),
-                         axis=T.copy(), knuckle_dir=db.copy(), s=h["s"]))
+                         axis=T.copy(), knuckle_dir=db.copy(), s=h["s"], fingers=fingers))
     return info
 
 
