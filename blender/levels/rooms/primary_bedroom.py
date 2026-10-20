@@ -40,7 +40,9 @@ PLACEMENTS = [
     ("living_armchair", (2.2, 2.6), 0),
     ("living_armchair", (4.6, 2.6), 0),
     ("living_coffee_round", (3.4, 1.2), 0),
-    ("living_floor_lamp", (5.6, -0.6), 180),
+    # arc lamp east of the sofa, its shade swung west over the sofa's east end at (3.9, -0.3)
+    # (at rot 180 it hung over the walkway at head height)
+    ("living_floor_lamp", (5.3, -0.3), -90),
     ("library_plant", (7.1, 3.9), 0),
     ("art_wash_horizon", (7.85, -2.4, 1.6), -90),        # east wall, south of the bath door
     # dressing along the south wall
@@ -72,21 +74,21 @@ LIGHTS = [
     # behind the headboard, washing up the ink wall (and onto the ceiling's edge)
     dict(kind="area", pos=(-7.78, 0.0, 1.22), size=(2.0, 0.06), aim=(-7.85, 0.0, 3.8), power=240.0,
          color=(1.0, 0.78, 0.56)),
-    # picture light on the art above the bed
-    dict(kind="spot", pos=(-7.0, 0.0, CEIL - 0.03), aim=(-7.85, 0.0, 2.75), power=160.0, angle=34.0, blend=0.6,
+    # picture light on the art above the bed (aimed at its centre, 1.40..2.50 m)
+    dict(kind="spot", pos=(-7.0, 0.0, CEIL - 0.03), aim=(-7.85, 0.0, 1.95), power=160.0, angle=28.0, blend=0.6,
          color=(1.0, 0.82, 0.62)),
     # hidden uplight on top of the two wardrobes (x -2.3..1.35), onto the ceiling
     dict(kind="area", pos=(-0.475, -4.3, 2.43), size=(3.5, 0.3), aim=(-0.475, -3.9, CEIL), power=320.0,
          color=(1.0, 0.82, 0.62)),
     # east wall art, the round table between the sofa and the armchairs
-    dict(kind="spot", pos=(7.05, -2.4, CEIL - 0.03), aim=(7.85, -2.4, 1.6), power=170.0, angle=50.0, blend=0.75,
+    dict(kind="spot", pos=(7.05, -2.4, CEIL - 0.03), aim=(7.85, -2.4, 1.6), power=170.0, angle=30.0, blend=0.75,
          color=(1.0, 0.82, 0.62)),
     dict(kind="spot", pos=(3.4, 1.2, CEIL - 0.03), aim=(3.4, 1.2, 0.0), power=220.0, angle=45.0, blend=0.8,
          color=(1.0, 0.82, 0.62)),
     dict(kind="spot", pos=(-5.0, 0.0, CEIL - 0.03), aim=(-5.0, 0.0, 0.0), power=200.0, angle=55.0, blend=0.8,
          color=(1.0, 0.82, 0.62)),
     # arc floor lamp over the sofa, desk lamp
-    dict(kind="point", pos=(5.6, -0.6, 1.9), power=75.0, color=(1.0, 0.75, 0.48)),
+    dict(kind="point", pos=(3.9, -0.3, 1.8), power=75.0, color=(1.0, 0.75, 0.48)),     # in the arc lamp's shade
     dict(kind="point", pos=(2.85, -4.3, 1.15), power=45.0, color=(1.0, 0.72, 0.45)),
 ]
 

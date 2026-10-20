@@ -251,14 +251,17 @@ def build(**overrides):
                 x += r * 1.35 / dens
         else:
             x += 0.3
-    # middle: ferns with the odd boxwood mound and small shrub
-    bmb = bmesh.new()
+    # middle: ferns with the odd boxwood mound and small shrub; each mound is its own mesh
+    # (its own collider: one mesh for all of them, or with the groundcover, was a box over
+    # the whole bed at the mounds' height, an invisible floor at ~0.94 m)
     nbox = max(1, round(L / p["box_every"]))
     box_x = [(-L / 2 + L * (i + 0.5) / nbox) + rng.uniform(-0.3, 0.3) for i in range(nbox)]
     box_x = [bx for bx in box_x if free(bx) and free(bx - 0.35) and free(bx + 0.35)]
-    for bx in box_x:
+    for i, bx in enumerate(box_x):
         r = rng.uniform(0.30, 0.38)
+        bmb = bmesh.new()
         boxwood(bmb, Vector((bx, (y0 + y1) / 2 - 0.05, zs + r * 0.55)), r, rng)
+        common.mesh_object(f"{n}_Boxwood{i}", bmb, col, box, root, smooth=True)
     x = -xin + rng.uniform(0.1, 0.3)
     ym = (y0 + y1) / 2 + 0.02
     while x < xin:
@@ -284,8 +287,10 @@ def build(**overrides):
         spill(tr, x, y0 + 0.1, -D / 2 - 0.02, H, rng)
         x += p["trail_every"] * rng.uniform(0.7, 1.7)
     tr.finish(f"{n}_TrailingNoCollide", col, leaf, root, limit=(L / 2 - 0.03, D / 2 - 0.03))
-    groundcover(bmb, -L / 2 + t, L / 2 - t, y0, y1, zs, rng)
-    common.mesh_object(f"{n}_Boxwood", bmb, col, box, root, smooth=True)
+    # the groundcover is walk-through (the soil under it is the bed's floor)
+    bmg = bmesh.new()
+    groundcover(bmg, -L / 2 + t, L / 2 - t, y0, y1, zs, rng)
+    common.mesh_object(f"{n}_GroundcoverNoCollide", bmg, col, box, root, smooth=True)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

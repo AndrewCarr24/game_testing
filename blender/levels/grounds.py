@@ -123,6 +123,94 @@ def base(plan, col):
     return objs
 
 
+# ------------------------------------------------------------------ the house's outside
+def plane_grid(name, origin, du, dv, step, col, mat, uv_tile=2.0):
+    """A flat grid from `origin` spanning vectors du, dv (its normal is du x dv), cut about
+    every `step` metres both ways (vertex lighting)."""
+    o, du, dv = Vector(origin), Vector(du), Vector(dv)
+    nu, nv = max(1, round(du.length / step)), max(1, round(dv.length / step))
+    bm = bmesh.new()
+    vs = [[bm.verts.new(o + du * (i / nu) + dv * (j / nv)) for j in range(nv + 1)] for i in range(nu + 1)]
+    for i in range(nu):
+        for j in range(nv):
+            bm.faces.new((vs[i][j], vs[i + 1][j], vs[i + 1][j + 1], vs[i][j + 1]))
+    uv = bm.loops.layers.uv.new("UVMap")
+    ua, va = du.normalized(), dv.normalized()
+    for f in bm.faces:
+        for lp in f.loops:
+            lp[uv].uv = (lp.vert.co.dot(ua) / uv_tile, lp.vert.co.dot(va) / uv_tile)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.append(mat)
+    ob = bpy.data.objects.new(name, me)
+    col.objects.link(ob)
+    return ob
+
+
+def _subtract(spans, a0, a1):
+    """1D: spans [(s0, s1)] minus (a0, a1)."""
+    out = []
+    for s0, s1 in spans:
+        for b0, b1 in ((s0, min(s1, a0)), (max(s0, a1), s1)):
+            if b1 - b0 > 1e-4:
+                out.append((b0, b1))
+    return out
+
+
+def house_exterior(h, plan, col, off=0.01, coping=(0.3, 0.25)):
+    """The outside of the house shell, outdoor-baked like the grounds (it was unlit black
+    through the upper windows): the facades (white render, 1 cm proud of the shell's outer
+    faces, around every window and door), the roofs (a sedum mat on the low roofs over the
+    cloakroom and garage, gravel on the main roof) and a stone coping round each roof edge
+    where nothing rises beyond it."""
+    objs = []
+    render = outdoor.render_white()
+    lawn = plan.LAWN_Z + 0.06                       # the terrace surface
+    for k, (axis, line, sign, a0, a1, z0, z1) in enumerate(h.exterior_walls()):
+        z0 = max(z0, lawn - 0.02)
+        if z1 - z0 < 1e-3:
+            continue
+        L = line + sign * off
+        if axis == "x":         # wall along x at y = L, normal (0, sign, 0)
+            o, du, dv = ((a0, L, z0), (a1 - a0, 0, 0), (0, 0, z1 - z0)) if sign < 0 else \
+                        ((a1, L, z0), (a0 - a1, 0, 0), (0, 0, z1 - z0))
+        else:                   # wall along y at x = L, normal (sign, 0, 0)
+            o, du, dv = ((L, a1, z0), (0, a0 - a1, 0), (0, 0, z1 - z0)) if sign < 0 else \
+                        ((L, a0, z0), (0, a1 - a0, 0), (0, 0, z1 - z0))
+        objs.append(plane_grid(f"Facade_{k}", o, du, dv, 1.5, col, render))
+    tops = {r: h.outer_z(r)[1] for r in plan.ROOMS}
+    sedum, gravel, stone = outdoor.sedum(), outdoor.gravel(), outdoor.stone()
+    cw, chh = coping
+    for k, (room, (x0, y0, x1, y1), top) in enumerate(h.roofs()):
+        low = top < plan.TOP
+        objs.append(plane_grid(f"Roof_{k}", (x0, y0, top + off), (x1 - x0, 0, 0), (0, y1 - y0, 0),
+                               1.0 if low else 3.0, col, sedum if low else gravel))
+        # coping along the edges nothing rises beyond (the facade, the courtyard)
+        for side, line, b0, b1 in (("S", y0, x0, x1), ("N", y1, x0, x1), ("W", x0, y0, y1), ("E", x1, y0, y1)):
+            spans = [(b0, b1)]
+            for o, q in plan.ROOMS.items():
+                if o == room or q.get("kind") == "courtyard" or tops[o] < top - 1e-6:
+                    continue
+                qx0, qy0, qx1, qy1 = q["rect"]
+                near = {"S": qy1, "N": qy0, "W": qx1, "E": qx0}[side]
+                if abs(near - line) > 1e-6:
+                    continue
+                c0, c1 = (qx0, qx1) if side in "SN" else (qy0, qy1)
+                spans = _subtract(spans, c0, c1)
+            for j, (s0, s1) in enumerate(spans):
+                if side == "S":
+                    lo, hi = (s0, y0, top), (s1, y0 + cw, top + chh)
+                elif side == "N":
+                    lo, hi = (s0, y1 - cw, top), (s1, y1, top + chh)
+                elif side == "W":
+                    lo, hi = (x0, s0, top), (x0 + cw, s1, top + chh)
+                else:
+                    lo, hi = (x1 - cw, s0, top), (x1, s1, top + chh)
+                objs.append(segmented_box(f"Coping_{k}_{side}{j}", lo, hi, 1.5, col, stone, 2.0))
+    return objs
+
+
 # ------------------------------------------------------------------ zones
 def zone_module(name):
     try:
@@ -267,7 +355,7 @@ def build(h, plan, roots, zones_only=None):
     """roots: asset -> root already built for the rooms. Returns (outdoor root, objects, report)."""
     col = common.fresh_collection(f"{h.name}_Outdoor")
     root = common.empty(f"{h.name}_Outdoor", col)
-    objs = base(plan, col)
+    objs = base(plan, col) + house_exterior(h, plan, col)
     placed, report = place_zones(plan, col, roots, zones_only)
     merged = merge(objs + placed, col, h.name, root)
     return root, merged, report

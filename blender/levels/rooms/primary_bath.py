@@ -93,7 +93,7 @@ LIGHTS = [
     *[dict(kind="point", pos=(WE - 0.06, y, 1.70), power=50.0, color=_WARM) for y in (0.35, 3.15)],
     # backlit mirrors: a soft source behind each, facing the wall
     *[dict(kind="area", pos=(x, WN - 0.012, 1.90), size=(0.7, 1.05), aim=(x, WN, 1.90), power=100.0,
-           color=(1.0, 0.84, 0.66)) for x in (VX - 0.76, VX + 0.76)],
+           color=(1.0, 0.84, 0.66), shape="ellipse") for x in (VX - 0.76, VX + 0.76)],   # pill mirrors: round halos
     # toe-kick under the vanity (front of the plinth ~ y 4.09)
     dict(kind="area", pos=(VX, WN - 0.53, 0.09), size=(2.75, 0.04), aim=(VX, WN - 0.9, 0.0), power=85.0,
          color=(1.0, 0.84, 0.66)),

@@ -472,7 +472,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":75616,
+			"count":79201,
 			"max":[
 				71.27143096923828,
 				12.753400802612305,
@@ -487,23 +487,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":75616,
+			"count":79201,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":75616,
+			"count":79201,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":75616,
+			"count":79201,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5125,
-			"count":111858,
+			"count":117222,
 			"type":"SCALAR"
 		},
 		{
@@ -539,10 +539,10 @@
 		},
 		{
 			"componentType":5126,
-			"count":3154,
+			"count":3762,
 			"max":[
 				59.30000305175781,
-				3.6700000762939453,
+				8.609999656677246,
 				66
 			],
 			"min":[
@@ -554,28 +554,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":3154,
+			"count":3762,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3154,
+			"count":3762,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3154,
+			"count":3762,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":4872,
+			"count":5790,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":35341,
+			"count":35343,
 			"max":[
 				71.02157592773438,
 				14.513749122619629,
@@ -590,17 +590,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":35341,
+			"count":35343,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":35341,
+			"count":35343,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":35341,
+			"count":35343,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -611,7 +611,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":9755,
+			"count":9761,
 			"max":[
 				90,
 				0.4700000286102295,
@@ -626,17 +626,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":9755,
+			"count":9761,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":9755,
+			"count":9761,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":9755,
+			"count":9761,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -647,10 +647,10 @@
 		},
 		{
 			"componentType":5126,
-			"count":13577,
+			"count":16499,
 			"max":[
 				64.8499984741211,
-				3.120000123977661,
+				8.850000381469727,
 				66
 			],
 			"min":[
@@ -662,23 +662,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":13577,
+			"count":16499,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":13577,
+			"count":16499,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":13577,
+			"count":16499,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":20514,
+			"count":25374,
 			"type":"SCALAR"
 		},
 		{
@@ -757,43 +757,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":719670,
+			"byteLength":746195,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":1511,
-			"byteOffset":719672
+			"byteOffset":746196
 		},
 		{
 			"buffer":0,
-			"byteLength":31347,
-			"byteOffset":721184
+			"byteLength":36020,
+			"byteOffset":747708
 		},
 		{
 			"buffer":0,
-			"byteLength":464745,
-			"byteOffset":752532
+			"byteLength":464689,
+			"byteOffset":783728
 		},
 		{
 			"buffer":0,
-			"byteLength":76821,
-			"byteOffset":1217280
+			"byteLength":76997,
+			"byteOffset":1248420
 		},
 		{
 			"buffer":0,
-			"byteLength":134318,
-			"byteOffset":1294104
+			"byteLength":159282,
+			"byteOffset":1325420
 		},
 		{
 			"buffer":0,
-			"byteLength":86015,
-			"byteOffset":1428424
+			"byteLength":86018,
+			"byteOffset":1484704
 		},
 		{
 			"buffer":0,
 			"byteLength":706,
-			"byteOffset":1514440
+			"byteOffset":1570724
 		}
 	],
 	"samplers":[
@@ -804,7 +804,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1515148,
+			"byteLength":1571432,
 			"uri":"mansion_outdoor.bin"
 		}
 	]

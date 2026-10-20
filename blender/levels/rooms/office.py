@@ -4,7 +4,8 @@ is on y = -4.6 at x = 0, the gym door on the east wall (x = +6.6) at y = +1.75."
 
 PLACEMENTS = [
     ("desk", (2.0, 2.4), 0),                 # sitter faces the room, back to the window
-    ("desk_chair", (2.0, 3.4), 0),
+    # pushed back and turned a little: the open drawer (front at y ~3.14) clears its runners (y >= 3.40)
+    ("desk_chair", (2.25, 3.75), 12),
     ("rug", (-3.4, -0.6), 0),
     ("coffee_table", (-3.4, -0.6), 90),
     ("lounge_chair", (-4.35, -0.6), 90),

@@ -556,6 +556,95 @@ def gooseneck_tap(b, name, x, y, z, mat, reach=0.20, rise=0.40, lever=1, toward=
 
 # ------------------------------------------------------------------- appliances
 
+def hinge(b, tag, parts, pivot, interact):
+    """Interactivity: hang an appliance door's meshes (`<n>_<tag>_<part>`) under an empty at its
+    hinge line, carrying the `interact`; the geometry and the closed pose are unchanged."""
+    e = common.empty(f"{b.n}_{tag}_Hinge", b.col, pivot)
+    e.parent = b.root
+    for ob in list(b.root.children):
+        if ob.type == "MESH" and any(ob.name == f"{b.n}_{tag}_{k}" for k in parts):
+            ob.parent = e
+            ob.location = ob.location - e.location
+    e["interact"] = interact
+    return e
+
+
+def oven_hinge(b, tag, xm, y_front, z_bottom, parts=("Door", "Window", "Band", "Display_NoCollide", "Handle")):
+    """A built-in oven door (oven_door's parts) that drops open on its bottom front edge."""
+    return hinge(b, tag, parts, (xm, y_front, z_bottom), {
+        "type": "rotate", "axis": common.to_gltf((1, 0, 0)), "angle": 85, "duration": 0.7, "range": 1.5,
+        "side": "both", "collide": True, "prompt": "Open oven", "promptActive": "Close oven"})
+
+
+def bottle_profile(kind):
+    """(r, z) lathe profiles: a wine bottle, a squat water bottle, a milk bottle."""
+    return {
+        "wine": [(0.0, 0.0), (0.036, 0.0), (0.037, 0.008), (0.037, 0.2), (0.03, 0.235), (0.014, 0.262),
+                 (0.013, 0.30), (0.015, 0.305), (0.0, 0.305)],
+        "water": [(0.0, 0.0), (0.04, 0.0), (0.041, 0.008), (0.041, 0.17), (0.03, 0.205), (0.016, 0.22),
+                  (0.016, 0.24), (0.0, 0.24)],
+        "milk": [(0.0, 0.0), (0.042, 0.0), (0.043, 0.008), (0.043, 0.15), (0.03, 0.185), (0.022, 0.2),
+                 (0.022, 0.215), (0.0, 0.215)],
+    }[kind]
+
+
+def fridge_interior(b, tag, xa, xb, za, zb, y0, depth, contents, seed=1):
+    """The inside of a fridge column seen with the door open: an open white liner box (inner
+    faces) from y0 back by `depth`, a glowing back panel, glass shelves with steel front trims,
+    a frosted crisper drawer at the bottom, and a few bottles, jars and containers on the
+    shelves (`contents`: one list per shelf of (kind, x offset from the left wall)). Everything
+    but the liner is NoCollide. Returns the shelf heights."""
+    rng = np.random.default_rng(seed)
+    liner = common.pbr_material("M_Fridge_Liner", (0.80, 0.81, 0.82), roughness=0.3)
+    light = materials.emissive("M_Fridge_Light", (0.90, 0.95, 1.0), 0.9)
+    shelf = materials.glass("M_Glass_Shelf", (0.85, 0.93, 0.92), 0.22, roughness=0.05)
+    frost = materials.glass("M_Glass_Frosted", (0.88, 0.92, 0.92), 0.55, roughness=0.35)
+    trim = materials.steel()
+    oven_cavity(b, tag, xa, xb, za, zb, y0, depth, liner, trim, racks=0)
+    w, xm, yb = xb - xa, (xa + xb) / 2, y0 + depth
+    b.box(f"{tag}_FridgeLight_NoCollide", (w - 0.16, 0.004, zb - za - 0.5), (xm, yb - 0.003, (za + zb) / 2 + 0.1),
+          light, bevel=0, tile=0)
+    # crisper drawer: frosted front and lid over the bottom 0.34 m
+    zc = za + 0.34
+    b.box(f"{tag}_Crisper_NoCollide", (w - 0.02, 0.01, 0.30), (xm, y0 + 0.03, za + 0.16), frost, bevel=0.002, tile=0)
+    b.box(f"{tag}_CrisperLid_NoCollide", (w - 0.01, depth - 0.05, 0.006), (xm, y0 + 0.025 + (depth - 0.05) / 2, zc),
+          shelf, bevel=0, tile=0)
+    levels = [zc + (zb - 0.1 - zc) * (k + 1) / (len(contents)) for k in range(len(contents) - 1)]
+    shelf_z = [zc] + levels
+    for k, z in enumerate(levels):
+        b.box(f"{tag}_Shelf{k}_NoCollide", (w - 0.01, depth - 0.07, 0.006), (xm, y0 + 0.05 + (depth - 0.07) / 2, z),
+              shelf, bevel=0, tile=0)
+        b.box(f"{tag}_ShelfTrim{k}_NoCollide", (w - 0.01, 0.01, 0.022), (xm, y0 + 0.05, z - 0.004), trim, bevel=0.002,
+              tile=0)
+    green = materials.glass("M_Glass_Olive", (0.2, 0.28, 0.1), 0.55)
+    clear = materials.glass("M_Glass_Jar", (0.9, 0.95, 0.92), 0.25)
+    milk = common.pbr_material("M_Fridge_Milk", (0.82, 0.82, 0.80), roughness=0.4)
+    tub = common.pbr_material("M_Fridge_Tub", (0.72, 0.70, 0.64), roughness=0.5)
+    lid = common.pbr_material("M_Fridge_Lid", (0.10, 0.22, 0.32), roughness=0.5)
+    fills = [common.pbr_material("M_Fridge_Juice", (0.70, 0.32, 0.03), roughness=0.3),
+             common.pbr_material("M_Fridge_Jam", (0.32, 0.03, 0.04), roughness=0.3)]
+    groups = {}
+    for k, row in enumerate(contents):
+        z = shelf_z[k] + 0.003
+        for kind, dx in row:
+            x, y = xa + dx, y0 + 0.16 + float(rng.uniform(-0.04, 0.06))
+            if kind in ("wine", "water", "milk"):
+                bm = lathe(bottle_profile(kind), 12, closed=False, sharp=50)
+                bmesh.ops.translate(bm, vec=(x, y, z), verts=bm.verts)
+                groups.setdefault({"wine": green, "water": clear, "milk": milk}[kind], []).append(bm)
+            elif kind == "tub":                    # a lidded food container
+                for mat, (h0, h1, r) in ((tub, (0.0, 0.09, 0.0)), (lid, (0.09, 0.105, 0.004))):
+                    bm = common.box_bmesh((0.17 + r, 0.12 + r, h1 - h0))
+                    bmesh.ops.translate(bm, vec=(x, y + 0.05, z + (h0 + h1) / 2), verts=bm.verts)
+                    groups.setdefault(mat, []).append(bm)
+            elif kind == "jars":
+                jars(b, f"{tag}_Jars{k}_NoCollide_", x, y, z, 3, clear, trim, fills[k % 2], gap=0.1, seed=seed + k)
+    for i, (mat, bms) in enumerate(groups.items()):
+        ob = common.mesh_object(f"{b.n}_{tag}_Contents{i}_NoCollide", merged(bms), b.col, mat, b.root)
+        planar_uv(ob, 0.3)
+    return shelf_z
+
+
 def oven_glass():
     """Smoked oven-door glass: dark, but the lit cavity and racks read through it."""
     return materials.glass("M_Glass_Oven", tint=(0.03, 0.03, 0.035), alpha=0.6, roughness=0.04)

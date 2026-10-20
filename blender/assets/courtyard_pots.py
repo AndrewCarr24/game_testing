@@ -146,11 +146,11 @@ def build(**overrides):
             rim_trailers(pl, c, r_rim, r_rim + 0.02, z_top, 3, rng, (0.1, 0.25))
     pl.finish(f"{n}_PlantsNoCollide", col, leaf, root)
     if bmb.verts:
-        common.mesh_object(f"{n}_Boxwood", bmb, col, box, root, smooth=True)
+        common.mesh_object(f"{n}_BoxwoodNoCollide", bmb, col, box, root, smooth=True)
     else:
         bmb.free()
     if stems.verts:
-        common.mesh_object(f"{n}_Stems", stems, col, cc.bark_mat(), root, smooth=True)
+        common.mesh_object(f"{n}_StemsNoCollide", stems, col, cc.bark_mat(), root, smooth=True)
     else:
         stems.free()
     parts = [o for o in root.children_recursive if o.type == "MESH"]

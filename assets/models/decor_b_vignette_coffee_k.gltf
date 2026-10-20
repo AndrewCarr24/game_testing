@@ -990,53 +990,53 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2024,
+			"byteLength":2070,
 			"byteOffset":372
 		},
 		{
 			"buffer":0,
 			"byteLength":3609,
-			"byteOffset":2396
+			"byteOffset":2444
 		},
 		{
 			"buffer":0,
 			"byteLength":1968,
-			"byteOffset":6008
+			"byteOffset":6056
 		},
 		{
 			"buffer":0,
 			"byteLength":304,
-			"byteOffset":7976
+			"byteOffset":8024
 		},
 		{
 			"buffer":0,
 			"byteLength":4149,
-			"byteOffset":8280
+			"byteOffset":8328
 		},
 		{
 			"buffer":0,
 			"byteLength":1158,
-			"byteOffset":12432
+			"byteOffset":12480
 		},
 		{
 			"buffer":0,
 			"byteLength":1095,
-			"byteOffset":13592
+			"byteOffset":13640
 		},
 		{
 			"buffer":0,
 			"byteLength":1503,
-			"byteOffset":14688
+			"byteOffset":14736
 		},
 		{
 			"buffer":0,
 			"byteLength":2514,
-			"byteOffset":16192
+			"byteOffset":16240
 		},
 		{
 			"buffer":0,
 			"byteLength":1115,
-			"byteOffset":18708
+			"byteOffset":18756
 		}
 	],
 	"samplers":[
@@ -1047,7 +1047,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":19824,
+			"byteLength":19872,
 			"uri":"decor_b_vignette_coffee_k.bin"
 		}
 	]

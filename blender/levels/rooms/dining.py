@@ -86,7 +86,7 @@ LIGHTS = [
     dict(kind="spot", pos=(-6.4, -3.6, 4.08), aim=(-6.4, -4.55, 1.6), power=130.0, angle=34, blend=0.5),
 ]
 
-PROBE = (TX, TY, 1.6)
+PROBE = (-0.5, -2.2, 1.6)          # clear of the table (on it, the panorama was the walnut top)
 
 # set dressing (decor_b_*): composed vignettes on the sideboards, the nook's coffee table and
 # either end of the dining table (all NoCollide)

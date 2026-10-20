@@ -24,7 +24,11 @@ Room modules (blender/levels/rooms/<module>.py) may define, all optional:
                  hidden soft source: cove / valance wash, backlit headboard or shelf,
                  under-cabinet, toe-kick; no glowing geometry of its own. size's axes follow
                  the aim (to_track_quat("-Z", "Y")): aimed straight down it's (x, y); aimed
-                 sideways it's (along the wall, vertical); tilted towards +-x they swap
+                 sideways it's (along the wall, vertical); tilted towards +-x they swap;
+                 shape="ellipse" for a round or pill-shaped source (default "rectangle")
+             point / spot / area may add no_shadow=[asset, ...]: those props in this room
+                 don't block this light in the bake (a sculpture under its own spot). A
+                 fixture never shadows its own light anyway (bake.py)
              spot power counts like a bare bulb's: a narrow beam doesn't concentrate it
   PROBE      (x, y, z) room-local point for the room's environment panorama
 
@@ -83,7 +87,12 @@ LOOKS = {
 }
 LOOK = "golden"
 P = dict(LOOKS[LOOK], look=LOOK,
-         lightmap_res=1024)                # upper limit per room; small rooms get 512
+         lightmap_res=1024,                # upper limit per room
+         # GPU memory for all lightmap atlases together (lightmap_policy shares it out by
+         # texel density; 2026-10-20: 5 x 1024² + 21 x 512² were 57.4 MB)
+         lightmap_mb=62.0,
+         lightmap_hero=1.3)                # double-height rooms count their density / this (big, seen from afar)
+LIGHTMAP_SIZES = [(512, 512), (1024, 512), (1024, 1024)]
 
 
 def plaster_walls():
@@ -97,7 +106,8 @@ def plaster_walls():
 
 
 def default_finishes():
-    oak = common.pbr_material("M_OakFloor", (0.4, 0.27, 0.15), roughness=0.45, coat=0.1)
+    # oiled oak, no lacquer coat (a mirror-sharp coat slid the room panorama's lamps over the floor)
+    oak = common.pbr_material("M_OakFloor", (0.4, 0.27, 0.15), roughness=0.45)
     common.set_base_color_map(oak, textures.load(textures.oak_floor()))
     return dict(
         floor=oak,
@@ -174,7 +184,7 @@ def blender_lights(p, h):
         col.objects.link(ob)
     for i, ar in enumerate(h.areas):
         ld = bpy.data.lights.get(f"{NAME}_Area_{i}") or bpy.data.lights.new(f"{NAME}_Area_{i}", "AREA")
-        ld.shape = "RECTANGLE"
+        ld.shape = "ELLIPSE" if ar.get("shape") == "ellipse" else "RECTANGLE"
         ld.size, ld.size_y = ar["size"]
         ld.energy, ld.color = ar["power"], ar["color"]
         ob = bpy.data.objects.new(f"{NAME}_Area_{i}", ld)
@@ -200,17 +210,37 @@ def blender_lights(p, h):
     bg.inputs["Strength"].default_value = p["sky_strength"]
 
 
+# flat wall art: drawn with the shell and lit by the wall's lightmap behind it (as a prop it
+# had only the room probe: spot-lit art came out darker than its wall)
+WALL_ART = ("art_", "picture_frame", "dining_artwork", "entry_artwork", "living_art_")
+
+
+FIXTURE_WORDS = ("light", "lamp", "pendant", "chandelier", "sconce", "halo")
+
+
+def is_fixture(asset):
+    """A light fixture (its own light shouldn't be shadowed by it in the bake, its glow is the
+    light object's), by name: lamps, pendants, chandeliers, sconces, downlights, halos (not the
+    built-ins with LED strips in ix_common.FIXTURES: a cabinet should still block light)."""
+    return any(w in asset for w in FIXTURE_WORDS) and not asset.startswith(("ix_switch", "ix_flashlight"))
+
+
 def baked_prop(asset):
-    """Flat, static props drawn as part of the room's shell, lit by the floor's lightmap right
-    under them (baked with them hidden), so the furniture's contact shadows land on them (as
-    props they were lit by the room probe alone, so a sofa floated on its rug). Baking a rug
-    itself failed: a few mm above the floor, most of its texels came out black."""
-    return "rug" in asset
+    """Flat, static props drawn as part of the room's shell, lit by the lightmap of the
+    surface right under/behind them (baked with them hidden), so the furniture's contact
+    shadows land on them (as props they were lit by the room probe alone, so a sofa floated on
+    its rug) and spot-lit art gets its spot. Baking a rug itself failed: a few mm above the
+    floor, most of its texels came out black. Returns "floor" (rugs), "wall" (wall art) or None."""
+    if "rug" in asset:
+        return "floor"
+    if asset.startswith(WALL_ART) and asset != "art_painters" and asset != "art_collection":
+        return "wall"
+    return None
 
 
-def bake_into_shell(h, room, asset, loc, rot):
+def bake_into_shell(h, room, asset, loc, rot, mode):
     """Build `asset` and copy its meshes into the shell at a placement, transforms applied,
-    tagged ob["lm_borrow"] (see borrow_floor_lightmap); returns False if there's no asset."""
+    tagged ob["lm_borrow"] = mode (see borrow_lightmaps); returns False if there's no asset."""
     from mathutils import Matrix
     try:
         mod = importlib.import_module(asset)
@@ -218,26 +248,49 @@ def bake_into_shell(h, room, asset, loc, rot):
         return False
     importlib.reload(mod)
     root, parts = mod.build()
+    # the parts' matrix_world is stale until the depsgraph updates (their location was set in
+    # build()): without this every rug part sat at z 0, the border slab covered the body and
+    # stripes and the rug came out one flat muddy slab (courtyard)
+    bpy.context.view_layer.update()
     import bmesh
-    floor = h.to_world(room, loc)[2]
-    place = Matrix.Translation(h.to_world(room, loc)) @ Matrix.Rotation(math.radians(rot), 4, "Z")
+    origin = Vector(h.to_world(room, loc))
+    inward = Matrix.Rotation(math.radians(rot), 4, "Z") @ Vector((0, -1, 0))    # art faces -Y
+    place = Matrix.Translation(origin) @ Matrix.Rotation(math.radians(rot), 4, "Z")
     for part in parts:
         me = part.data.copy()
         me.transform(place @ part.matrix_world)
-        # keep only what faces up above the floor (it borrows the floor's light from above;
-        # its 7 mm edge isn't seen from eye height)
         bm = bmesh.new()
         bm.from_mesh(me)
-        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z < 0.3 or f.calc_center_median().z < floor + 0.001],
-                         context="FACES")
+        if mode == "floor":
+            # keep only what faces up above the floor (it borrows the floor's light from above;
+            # its 7 mm edge isn't seen from eye height)
+            drop = [f for f in bm.faces if f.normal.z < 0.3 or f.calc_center_median().z < origin.z + 0.001]
+        else:
+            # everything but the back (against the wall): side faces take the light at their
+            # footprint on the wall
+            drop = [f for f in bm.faces if f.normal.dot(inward) < -0.3 or
+                    (f.calc_center_median() - origin).dot(inward) < -0.002]
+        bmesh.ops.delete(bm, geom=drop, context="FACES")
         bm.to_mesh(me)
         bm.free()
         if not me.polygons:
             continue
+        mat = me.materials[0] if me.materials else None
+        if mode == "wall" and mat is not None and mat.name.startswith("M_Glass"):
+            bpy.data.meshes.remove(me)        # picture glass: near-invisible, one more draw call per room
+            continue
         ob = bpy.data.objects.new(f"{NAME}_{room}_{part.name}", me)
         h.col.objects.link(ob)
         ob.parent = h.root
-        ob["room"], ob["lm_borrow"] = room, True
+        if mode == "wall" and mat is not None and mat.name == h.frame.name:
+            # black metal frames and backings: one unbaked mesh for the whole house (at 2% albedo
+            # the lightmap shows nothing; a draw call per room saved), hidden from every bake
+            # like the art (left in, they shadowed the wall texels the art borrows: black art)
+            ob["art_frame"] = True
+            h.art_frame_rooms.add(room)
+            continue
+        ob["room"], ob["lm_borrow"] = room, mode
+        ob["lm_plane"] = list(origin) + list(inward if mode == "wall" else Vector((0, 0, 1)))
         h.borrowed.setdefault(room, []).append(ob)
         if not any(t in part.name for t in common.COLLIDER_SKIP):
             vs = [v.co for v in me.vertices]
@@ -251,23 +304,132 @@ def bake_into_shell(h, room, asset, loc, rot):
     return True
 
 
-def borrow_floor_lightmap(h):
-    """Give each rug the floor lightmap's UVs at the same x, y (the floor's top face is one
-    axis-aligned rectangle in its room's atlas, so the mapping is affine)."""
+def _surface_map(h, room, point, normal):
+    """The lightmap UV of the room's baked surface through `point` facing `normal` (an
+    axis): (axes, M) with uv = M @ (co[axes[0]], co[axes[1]], 1), an affine map from that
+    face's loops (the lightmap charts are axis-aligned, and one chart covers a whole wall
+    plane, so it extends across the wall)."""
+    import numpy as np
+    na = max(range(3), key=lambda i: abs(normal[i]))
+    sign = normal[na] > 0
+    axes = [i for i in range(3) if i != na]
+    best = None
+    for ob in h.baked.get(room, []):
+        me = ob.data
+        if "Lightmap" not in me.uv_layers:
+            continue
+        lm = me.uv_layers["Lightmap"].data
+        off = Vector(ob.location)
+        for poly in me.polygons:
+            if abs(poly.normal[na]) < 0.99 or (poly.normal[na] > 0) != sign:
+                continue
+            cos = [off + me.vertices[me.loops[li].vertex_index].co for li in poly.loop_indices]
+            d = abs(cos[0][na] - point[na])
+            if d > 0.05:
+                continue
+            uvs = [lm[li].uv for li in poly.loop_indices]
+            if max(abs(u.x - uvs[0].x) + abs(u.y - uvs[0].y) for u in uvs) < 1e-6:
+                continue                      # collapsed: not in the atlas
+            lo = [min(c[a] for c in cos) for a in axes]
+            hi = [max(c[a] for c in cos) for a in axes]
+            out = sum(max(0.0, lo[k] - point[a], point[a] - hi[k]) for k, a in enumerate(axes))
+            score = (out, d)
+            if best is None or score < best[0]:
+                A = np.array([[c[axes[0]], c[axes[1]], 1.0] for c in cos])
+                B = np.array([[u.x, u.y] for u in uvs])
+                M = np.linalg.lstsq(A, B, rcond=None)[0].T
+                best = (score, M)
+    if best is None:
+        return None
+    if best[0][0] > 0.05:
+        print(f"WARN {room}: no lightmapped surface under borrowed piece at {tuple(round(v, 2) for v in point)}")
+    return axes, best[1]
+
+
+def borrow_lightmaps(h):
+    """Give each borrowed piece (rug, wall art) the lightmap UVs of the surface it lies on at
+    the same point (an affine mapping onto that face's atlas region)."""
     for room, obs in h.borrowed.items():
-        floor = bpy.data.objects[f"{NAME}_{room}_Floor"]
-        me = floor.data
-        top = max(me.polygons, key=lambda f: f.normal.z)
-        pts = [(floor.matrix_world @ me.vertices[me.loops[li].vertex_index].co, me.uv_layers["Lightmap"].data[li].uv)
-               for li in top.loop_indices]
-        (xa, ua), (xb, ub) = min(((p.x, uv.x) for p, uv in pts)), max(((p.x, uv.x) for p, uv in pts))
-        (ya, va), (yb, vb) = min(((p.y, uv.y) for p, uv in pts)), max(((p.y, uv.y) for p, uv in pts))
         for ob in obs:
+            plane = list(ob["lm_plane"])
+            found = _surface_map(h, room, Vector(plane[:3]), Vector(plane[3:]))
             layer = ob.data.uv_layers.get("Lightmap") or ob.data.uv_layers.new(name="Lightmap")
             ob.data.uv_layers.active_index = 0
+            if found is None:
+                print(f"WARN {room}: {ob.name} found no surface to borrow light from")
+                continue
+            axes, M = found
             for li, loop in enumerate(ob.data.loops):
                 co = ob.matrix_world @ ob.data.vertices[loop.vertex_index].co
-                layer.data[li].uv = (ua + (co.x - xa) * (ub - ua) / (xb - xa), va + (co.y - ya) * (vb - va) / (yb - ya))
+                u, v = M @ (co[axes[0]], co[axes[1]], 1.0)
+                layer.data[li].uv = (float(u), float(v))
+
+
+def lightmap_policy(h, rooms_objs, air_all, p):
+    """Lightmap charts and atlas size per room, within a GPU memory budget: every room starts
+    at the smallest LIGHTMAP_SIZES entry; the room with the lowest texel density (after
+    packing) moves up a size while the total stays within p["lightmap_mb"] (w*h*4 bytes + 1/3
+    for mips, as viewer/tools/bench.mjs counts). Returns {room: (charts, (W, H), k, placements, fill)}."""
+    sizes = [s for s in LIGHTMAP_SIZES if max(s) <= p["lightmap_res"]]
+    mb = lambda s: s[0] * s[1] * 4 * 4 / 3 / 1e6
+    packs = {}
+    for room, objs in sorted(rooms_objs.items()):
+        charts = common.lightmap_charts(objs, h.solids, air_all)
+        packs[room] = (charts, [common.pack_charts(charts, *size) for size in sizes])
+    level = {room: 0 for room in packs}
+    total = sum(mb(sizes[0]) for _ in packs)
+    while True:
+        weight = lambda r: p.get("lightmap_hero", 1.0) if plan.ROOMS[r].get("double") else 1.0
+        cand = sorted((packs[r][1][level[r]][0] / weight(r), r) for r in packs if level[r] + 1 < len(sizes))
+        moved = False
+        for k, r in cand:
+            extra = mb(sizes[level[r] + 1]) - mb(sizes[level[r]])
+            if total + extra <= p["lightmap_mb"]:
+                level[r] += 1
+                total += extra
+                moved = True
+                break
+        if not moved:
+            break
+    out = {}
+    for room, (charts, results) in packs.items():
+        k, placed, fill = results[level[room]]
+        out[room] = (charts, sizes[level[room]], k, placed, fill)
+    print("LIGHTMAPS " + ", ".join(f"{r} {W}x{H} {k:.1f}/m {fill:.0%} (" + "/".join(f"{x[0]:.0f}" for x in packs[r][1]) + ")"
+                                   for r, (_, (W, H), k, _, fill) in out.items()))
+    print(f"LIGHTMAPS total ~{total:.1f} MB GPU (budget {p['lightmap_mb']}), lowest density "
+          f"{min(v[2] for v in out.values()):.1f} texels/m")
+    return out
+
+
+def check_probes(h, roots_placed, probes, clearance=0.15):
+    """Warn about probes inside furniture or within `clearance` of it (the panorama would see
+    the inside of a table, or one surface filling half the view). Returns {room: [asset]}."""
+    out = {}
+    for room, pt in probes.items():
+        pt = Vector(pt)
+        hits = []
+        for r, asset, ob in roots_placed:
+            meshes = [o for o in [ob] + list(ob.children_recursive) if o.type == "MESH" and o.data.polygons]
+            if r != room or not meshes:
+                continue
+            lo, hi = common.world_aabb(meshes)
+            if not all(lo[i] - clearance <= pt[i] <= hi[i] + clearance for i in range(3)):
+                continue
+            for o in meshes:
+                inv = o.matrix_world.inverted()
+                ok, loc, nrm, _ = o.closest_point_on_mesh(inv @ pt)
+                if not ok:
+                    continue
+                w = o.matrix_world @ loc
+                inside = (pt - w).dot((o.matrix_world.to_3x3() @ nrm).normalized()) < 0
+                if (w - pt).length < clearance or (inside and (w - pt).length < 1.0):
+                    hits.append(f"{asset}:{o.name.split('.')[0]} ({(w - pt).length:.2f} m{', inside' if inside else ''})")
+                    break
+        if hits:
+            out[room] = hits
+            print(f"WARN probe {room} at {tuple(round(v, 2) for v in pt)} is inside / within {clearance} m of {hits}")
+    return out
 
 
 def default_lights(h, room):
@@ -314,29 +476,35 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                        L.get("angle", 40.0), L.get("blend", 0.6), L.get("color", (1.0, 0.82, 0.62)))
             elif L["kind"] == "area":
                 h.area(h.to_world(room, L["pos"]), L["size"], h.to_world(room, L["aim"]), L["power"],
-                       L.get("color", (1.0, 0.84, 0.66)))
+                       L.get("color", (1.0, 0.84, 0.66)), L.get("shape", "rectangle"))
             else:
                 raise ValueError(f"{room}: unknown light kind {L['kind']!r}")
+            if L.get("no_shadow") and L["kind"] != "strip":
+                lst = {"point": h.points, "spot": h.spots, "area": h.areas}[L["kind"]]
+                lst[-1]["no_shadow"] = (room, list(L["no_shadow"]))
         probe = per_room(mod, "PROBE", room, None)
         if probe:
             h.probes[room] = h.to_world(room, probe)
 
-    # rugs become part of the shell, lit by the floor's lightmap under them
+    # rugs and flat wall art become part of the shell, lit by the lightmap under/behind them
     in_shell = set()
-    h.borrowed = {}
+    h.borrowed, h.art_frame_rooms = {}, set()
     for room in plan.ROOMS:
         if rooms_only and room not in rooms_only:
             continue
         for i, (asset, loc, rot, *rest) in enumerate(per_room(mods[room], "PLACEMENTS", room, []) or []):
-            if baked_prop(asset) and "attach" not in (rest[0] if rest else {}) and bake_into_shell(h, room, asset, loc, rot):
+            mode = baked_prop(asset)
+            if mode and "attach" not in (rest[0] if rest else {}) and bake_into_shell(h, room, asset, loc, rot, mode):
                 in_shell.add((room, i))
 
-    air_all = [box for boxes in h.air.values() for box in boxes]
+    # the air: the rooms and the gaps through the walls at openings, windows, balustrades
+    air_all = [box for boxes in h.air.values() for box in boxes] + h.gap_air
     lm_res = {}
-    for room, objs in h.baked.items():
-        lm_res[room] = min(p["lightmap_res"], h.lightmap_resolution(room))
-        common.lightmap_uv(objs, h.solids, air_all, resolution=lm_res[room])
-    borrow_floor_lightmap(h)
+    for room, (charts, size, k, placed, fill) in lightmap_policy(h, h.baked, air_all, p).items():
+        lm_res[room] = list(size)
+        common.apply_charts(h.baked[room], charts, k, placed, *size)
+    borrow_lightmaps(h)
+    print("ART FRAMES (hidden from the bake) in", ",".join(sorted(h.art_frame_rooms)))
     h.merge()
     blender_lights(p, h)
 
@@ -354,7 +522,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
             pos = loc if "attach" in opts else h.to_world(room, loc)
             entries.append((room, asset, pos, rot, opts))
 
-    assets, roots, placed = {}, {}, []
+    assets, roots, placed, prop_roots = {}, {}, [], []
     for room, asset, loc, rot, opts in entries:
         if asset not in roots:
             try:
@@ -366,6 +534,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
             importlib.reload(mod)
             root, parts = mod.build()
             roots[asset] = root
+            prop_roots.append((room, asset, root))
             lo, hi = common.world_aabb(parts)
             assets[asset] = {"file": f"models/{asset}.gltf", "aabb": common.aabb_gltf(lo, hi),
                              "colliders": common.part_colliders(parts),
@@ -373,11 +542,14 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
             if export:
                 vertex_ao.bake(root)          # the asset's own occlusion -> vertex colours
                 common.export_gltf(root, os.path.join(models, f"{asset}.gltf"))
+            if is_fixture(asset):
+                root["fixture"] = True        # for bake.py (after the export: not a glTF extra); copies inherit it
             ob = root
         elif roots[asset] is None:
             continue
         else:
             ob = common.duplicate_hierarchy(roots[asset], props_col, f".{len(placed):02d}")
+        prop_roots.append((room, asset, ob))
         entry = {"asset": asset, "room": room, "position": common.to_gltf(loc), "rotationY": rot}
         if "attach" in opts:
             host, node = opts["attach"]
@@ -392,8 +564,16 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         ob.rotation_euler = (0, 0, math.radians(rot))
         placed.append(entry)
 
-    # the grounds (after the rooms: they reuse assets the rooms already built)
     bpy.context.view_layer.update()
+    check_probes(h, prop_roots, h.probes)
+    # LIGHTS no_shadow: the props (by asset, in the light's room) that don't block that light in the bake
+    for kind, lst in (("Lamp", h.points), ("Spot", h.spots), ("Area", h.areas)):
+        for i, L in enumerate(lst):
+            if "no_shadow" in L:
+                room, names = L["no_shadow"]
+                bpy.data.objects[f"{NAME}_{kind}_{i}"]["no_shadow"] = [ob.name for r, a, ob in prop_roots
+                                                                       if r == room and a in names]
+    # the grounds (after the rooms: they reuse assets the rooms already built)
     out_root, _, zone_tris = grounds.build(h, plan, roots, zones_only)
     if export:
         common.export_gltf(h.root, os.path.join(models, "mansion_shell.gltf"))

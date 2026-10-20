@@ -9,7 +9,8 @@ their clump and the crown (volumetric shading, no noise).
 
 Trunk, limbs and canopy are separate meshes, and the lower stems belong to the trunk
 mesh (below 2.1 m) so the collision boxes (one per mesh) leave the ground under the
-canopy free. Origin: planter centre on the floor. Units are metres.
+canopy free; the limbs are NoCollide (their box, 3.5 m wide from 2.1 m up, was an invisible
+ceiling under the crown) and the canopy is skipped as "Canopy". Origin: planter centre on the floor. Units are metres.
 """
 import importlib
 import math
@@ -289,7 +290,7 @@ def build_tree(p, col, root, bark, leaf):
         clumps.append((c, (tip - q).normalized()))
 
     trunk = common.mesh_object(f"{n}_Trunk", trunk_bm, col, bark, root)
-    limbs = common.mesh_object(f"{n}_Limbs", limb_bm, col, bark, root)
+    limbs = common.mesh_object(f"{n}_LimbsNoCollide", limb_bm, col, bark, root)
 
     # leaf cards in an open shell round each clump; sprig base inside, tip outward
     cb = bmesh.new()

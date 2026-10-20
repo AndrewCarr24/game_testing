@@ -227,6 +227,9 @@ def build(**overrides):
     # --- end panel on the visible (right) end
     xr = xs["tall_r"][1]
     b.box("EndPanel", (0.03, D, p["top_z"]), (xr + 0.015, 0.0, p["top_z"] / 2), oak, bevel=0.002, seg=1, shift=(0.5, 0.1))
+    # interactivity: the two range ovens drop open like the wall ovens (kitchen_wall_run)
+    for i, sx in enumerate((-1, 1)):
+        L.oven_hinge(b, f"Oven{i}", rxm + sx * (dw / 2 + 0.002), yd, ph + 0.03)
     ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
     return b.finish()
 

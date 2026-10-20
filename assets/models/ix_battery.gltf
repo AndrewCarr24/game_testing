@@ -80,7 +80,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.23999999463558197
 				}
 			},
 			"name":"M_Battery_Band",
@@ -112,7 +113,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.20999999344348907
 				}
 			},
 			"name":"M_Battery_Wrap",

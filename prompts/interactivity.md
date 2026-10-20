@@ -13,6 +13,7 @@ Existing types keep working unchanged. New:
   on the moving part (rocker, knob, button). E toggles `state` and sets signal `<name>` to it;
   the part animates by `travel` (a rocker tips 12 degrees). The level may override `signal`
   and the initial `state` per placement (below).
+- A switch may carry `requires: "<signal>"` (+ `requiresPrompt`): it can only be switched on while that signal is on (the main breaker needs `fuse_garage`); switching off always works.
 - `interact = {type: "use", needs: "<item id>", consume: true, prompt: "Insert fuse",
   promptDone?: "...", signal: "<name>", value: true}`: with that item ARMED, Enter sets the
   signal (e.g. a fuse into the breaker restores "power"). Without it, the prompt says what's missing.

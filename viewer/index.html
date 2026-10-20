@@ -342,6 +342,7 @@
 
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
       window.__colliders = colliders;
+      const walls = colliders.slice();   // the shell's boxes (props add theirs below)
       const inventoryEl = document.getElementById('inventory');
       const invPanel = document.getElementById('inv-panel');
       const invList = document.getElementById('inv-list');
@@ -359,6 +360,7 @@
       });
       let hand = null;
       const interact = new Interactables(inventory, colliders, signals, scene);
+      interact.walls = walls;            // (a switch behind a wall isn't in reach)
       window.__interact = interact;
       window.__inventory = inventory;
       const fire = new Fire();
@@ -369,11 +371,30 @@
       const roomsAt = ([x, y, z]) => Object.entries(level.rooms).filter(([, r]) =>
         y >= r.floor - 0.1 && y <= r.floor + r.height && x >= r.rect[0] - 0.4 && x <= r.rect[2] + 0.4 &&
         z >= r.rect[1] - 0.4 && z <= r.rect[3] + 0.4).map(([name]) => name);
+      // the room on the other side of a door placed in `p.room`'s wall, and the leaf's normal
+      // pointing into it (assets face +z in glTF; the closed leaf lies in the wall)
+      const acrossDoor = (p) => {
+        const a = THREE.MathUtils.degToRad(p.rotationY), r = level.rooms[p.room];
+        const axis = new THREE.Vector3(Math.sin(a), 0, Math.cos(a));
+        const [x, y, z] = p.position;
+        if (r && ((r.rect[0] + r.rect[2]) / 2 - x) * axis.x + ((r.rect[1] + r.rect[3]) / 2 - z) * axis.z > 0) axis.negate();
+        const qx = x + axis.x * 0.6, qy = y + 1.0, qz = z + axis.z * 0.6;
+        const other = Object.entries(level.rooms).find(([n, o]) => n !== p.room && qy >= o.floor && qy <= o.floor + o.height &&
+          qx >= o.rect[0] && qx <= o.rect[2] && qz >= o.rect[1] && qz <= o.rect[3]);
+        return other ? { room: other[0], axis } : null;
+      };
       for (const p of level.props) {
         const obj = proto[p.asset].clone(true);
         obj.position.set(...p.position);
         obj.rotation.y = THREE.MathUtils.degToRad(p.rotationY);
-        if (baked) baked.applyRoom(obj, p.room, level.rooms[p.room]?.sun === false);
+        // (a door asset; an appliance with a swinging door, e.g. the kitchen wall run, stays in its room)
+        let door = false;
+        if (!p.attach && /(^|_)door/.test(p.asset)) obj.traverse((o) => { if (o.userData.interact?.type === 'rotate') door = true; });
+        const across = door && params.get('door2') !== '0' && acrossDoor(p);   // (?door2=0: own room only, to compare)
+        if (baked && across) {
+          // lit from both rooms (each face by the room it faces); real-time sun if either room gets it
+          baked.applyDoor(obj, p.room, across.room, across.axis, level.rooms[p.room]?.sun === false && level.rooms[across.room]?.sun === false);
+        } else if (baked) baked.applyRoom(obj, p.room, level.rooms[p.room]?.sun === false);
         fire.collect(obj);
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
@@ -386,9 +407,6 @@
         placed[p.asset] ??= obj;
         obj.updateMatrixWorld(true);
         interact.collect(obj, { lock: p.lock, signal: p.signal, state: p.state });
-        // (a door asset; an appliance with a swinging door, e.g. the kitchen wall run, stays in its room)
-        let door = false;
-        if (/(^|_)door/.test(p.asset)) obj.traverse((o) => { if (o.userData.interact?.type === 'rotate') door = true; });
         if (door) shared.push({ obj, rooms: roomsAt(p.position) });
         else (roomRoots[p.room] ??= []).push(obj);
         total += level.assets[p.asset].tris;
@@ -409,6 +427,17 @@
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
       const culler = new RoomCuller(level, roomRoots, batches, { shared });
       window.__culler = culler;
+      // rugs and wall art are drawn with the shell (they borrow its lightmap) but are furniture:
+      // cull them with their room's props, and keep them out of the sun's shadow pass
+      {
+        const rooms = Object.keys(level.rooms).sort((a, b) => b.length - a.length);
+        shell.scene.traverse((o) => {
+          if (!o.isMesh || !/_(Art|Rug)$/.test(o.name)) return;
+          o.castShadow = false;
+          const room = rooms.find((r) => o.name.startsWith(`Mansion_${r}_`));
+          culler.rooms.find((r) => r.name === room)?.objects.push(o);
+        });
+      }
       stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders · ${before}→${after} meshes`;
 
       camera.fov = 65; camera.updateProjectionMatrix();
@@ -533,6 +562,7 @@
       window.__toast = () => toastEl.textContent;
 
       const clock = new THREE.Clock();
+      const viewDir = new THREE.Vector3();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
         const moved = interact.update(dt, camera.position);
@@ -545,6 +575,7 @@
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
         if (culler.update(camera.position, camera)) renderer.shadowMap.needsUpdate = true;
+        baked?.setGlassSun(!culler.here || culler.here.name === 'courtyard');   // the sun's glint on glass only from outdoors
         tablet.update(dt);                       // the camera feed (~5 fps, while that page is open)
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
@@ -555,7 +586,8 @@
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
         grimble?.shakeCamera(camera, dt);
-        focus = on && !player.isDown ? interact.nearest(camera.position) : null;
+        // what the crosshair is on (or nearest to it) among the things in reach
+        focus = on && !player.isDown ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
         const armedHint = armed ? interact.armedPrompt(armed, camera.position) ?? itemHint(armed) : null;
         const parts = [];

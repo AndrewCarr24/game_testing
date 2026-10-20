@@ -80,6 +80,7 @@ FIXTURES = {
     "guest_floor_lamp",
     "kitchen_pendant",
     "library_floorlamp", "library_lamp",
+    "light_g_cove", "light_g_cove_down",
     "light_g_pendant_linear", "light_g_sconce_updown", "light_u_halo", "light_u_linear_pendant",
     "living_chandelier", "living_floor_lamp", "living_table_lamp",
     "table_lamp",

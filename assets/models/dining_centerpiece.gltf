@@ -531,23 +531,23 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6149,
+			"byteLength":6184,
 			"byteOffset":12644
 		},
 		{
 			"buffer":0,
 			"byteLength":3062,
-			"byteOffset":18796
+			"byteOffset":18828
 		},
 		{
 			"buffer":0,
 			"byteLength":1080,
-			"byteOffset":21860
+			"byteOffset":21892
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":22940,
+			"byteLength":22972,
 			"uri":"dining_centerpiece.bin"
 		}
 	]

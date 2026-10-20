@@ -71,7 +71,7 @@
 		},
 		{
 			"mesh":7,
-			"name":"CourtyardPotsDoor_Stems"
+			"name":"CourtyardPotsDoor_StemsNoCollide"
 		},
 		{
 			"children":[
@@ -322,7 +322,7 @@
 			]
 		},
 		{
-			"name":"CourtyardPotsDoor_Stems",
+			"name":"CourtyardPotsDoor_StemsNoCollide",
 			"primitives":[
 				{
 					"attributes":{

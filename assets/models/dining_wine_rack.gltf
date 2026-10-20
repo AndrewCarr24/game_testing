@@ -170,7 +170,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",

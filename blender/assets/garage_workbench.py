@@ -20,7 +20,44 @@ common, materials = gk.common, gk.materials
 
 NAME = "GarageWorkbench"
 
-P = dict(name=NAME, width=2.6, depth=0.9, height=0.95, top_t=0.05, stools=2)
+P = dict(name=NAME, width=2.6, depth=0.9, height=0.95, top_t=0.05, stools=2,
+         # the one drawer that opens (side, column, row from the top): the middle top drawer
+         # on the back (+Y) side, away from the stools; the spare main fuse lies in it
+         open_drawer=("B", 1, 0), drawer_travel=0.32, drawer_depth=0.42)
+
+
+def drawer(b, p, xs, ya, yb2, zs, gr, grd, al):
+    """The opening drawer: an empty `<n>_Drawer` on the carcass face (back side, opens +Y)
+    with an `interact` slide, its front, pull and tray parented to it. Built outside the
+    Builder (whose finish() merges everything into static meshes). Drawer-local frame for
+    attached items: origin on the carcass face at the drawer's mid-height, inside is -Y,
+    the tray floor at z = -h / 2 + 0.016."""
+    n = b.n
+    x0, x1 = xs
+    z0, z1 = zs
+    xc, zc, h, w = (x0 + x1) / 2, (z0 + z1) / 2, z1 - z0, x1 - x0
+    dr = common.empty(f"{n}_Drawer", b.col, (xc, ya, zc))
+    dr.parent = b.root
+    dr["interact"] = {"type": "slide", "axis": common.to_gltf((0, 1, 0)), "distance": p["drawer_travel"],
+                      "duration": 0.45, "range": 1.5, "prompt": "Open drawer", "promptActive": "Close drawer"}
+
+    def part(name, mat, size, centre, bevel=0.0015):
+        ob = common.mesh_object(f"{n}_Drawer_{name}", common.box_bmesh(size), b.col, mat, dr, smooth=bool(bevel))
+        ob.location = centre
+        if bevel:
+            common.add_bevel(ob, bevel, segments=1)
+        common.box_uv(ob, 0.5)
+        return ob
+
+    dt = yb2 - ya
+    part("Front", gr, (w, dt, h), (0, dt / 2, 0), 0.002)
+    part("Pull", al, (w - 0.2, 0.014, 0.016), (0, dt + 0.007, h / 2 - 0.03))
+    # steel tray behind the front: sides, back and floor (dark inside, the carcass hides it shut)
+    d, tw, th, t = p["drawer_depth"], w - 0.03, h - 0.03, 0.008
+    for sname, sx in (("L", -1), ("R", 1)):
+        part(f"Side{sname}", grd, (t, d, th), (sx * (tw - t) / 2, -d / 2, -h / 2 + 0.012 + th / 2), 0)
+    part("Back", grd, (tw - 2 * t, t, th), (0, -d + t / 2, -h / 2 + 0.012 + th / 2), 0)
+    part("Floor", grd, (tw - 2 * t, d - t, 0.004), (0, -(d - t) / 2, -h / 2 + 0.014), 0)
 
 
 def build(**overrides):
@@ -51,6 +88,10 @@ def build(**overrides):
             hs = [0.15, 0.15, bh - ph - 0.3 - 4 * g]
             z = bh - g
             for k, h in enumerate(hs):
+                if (side, c, k) == p["open_drawer"]:
+                    drawer(b, p, (xa + g / 2, xa + cw - g / 2), ya, yb2, (z - h, z), gr, grd, al)
+                    z -= h + g
+                    continue
                 b.lo_hi(f"Drawer{side}{c}_{k}", (xa + g / 2, ya, z - h), (xa + cw - g / 2, yb2, z), gr, bevel=0.002)
                 py = ya - 0.007 if sy < 0 else yb2 + 0.007
                 b.box(f"Drawer{side}{c}_{k}_Pull", (cw - 0.2, 0.014, 0.016), (xa + cw / 2, py, z - 0.03), al, bevel=0.0015, seg=1)

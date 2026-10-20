@@ -241,7 +241,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -851,7 +852,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":224,
+			"count":220,
 			"max":[
 				0.4300000071525574,
 				0.001500000013038516,
@@ -866,17 +867,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":224,
+			"count":220,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":224,
+			"count":220,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":224,
+			"count":220,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -1414,83 +1415,83 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3088,
+			"byteLength":2975,
 			"byteOffset":6800
 		},
 		{
 			"buffer":0,
 			"byteLength":1053,
-			"byteOffset":9888
+			"byteOffset":9776
 		},
 		{
 			"buffer":0,
 			"byteLength":886,
-			"byteOffset":10944
+			"byteOffset":10832
 		},
 		{
 			"buffer":0,
 			"byteLength":1287,
-			"byteOffset":11832
+			"byteOffset":11720
 		},
 		{
 			"buffer":0,
 			"byteLength":2386,
-			"byteOffset":13120
+			"byteOffset":13008
 		},
 		{
 			"buffer":0,
 			"byteLength":814,
-			"byteOffset":15508
+			"byteOffset":15396
 		},
 		{
 			"buffer":0,
 			"byteLength":1069,
-			"byteOffset":16324
+			"byteOffset":16212
 		},
 		{
 			"buffer":0,
 			"byteLength":1165,
-			"byteOffset":17396
+			"byteOffset":17284
 		},
 		{
 			"buffer":0,
 			"byteLength":1083,
-			"byteOffset":18564
+			"byteOffset":18452
 		},
 		{
 			"buffer":0,
 			"byteLength":1327,
-			"byteOffset":19648
+			"byteOffset":19536
 		},
 		{
 			"buffer":0,
 			"byteLength":1332,
-			"byteOffset":20976
+			"byteOffset":20864
 		},
 		{
 			"buffer":0,
 			"byteLength":4025,
-			"byteOffset":22308
+			"byteOffset":22196
 		},
 		{
 			"buffer":0,
 			"byteLength":3910,
-			"byteOffset":26336
+			"byteOffset":26224
 		},
 		{
 			"buffer":0,
 			"byteLength":1268,
-			"byteOffset":30248
+			"byteOffset":30136
 		},
 		{
 			"buffer":0,
 			"byteLength":1726,
-			"byteOffset":31516
+			"byteOffset":31404
 		},
 		{
 			"buffer":0,
 			"byteLength":2311,
-			"byteOffset":33244
+			"byteOffset":33132
 		}
 	],
 	"samplers":[
@@ -1501,7 +1502,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":35556,
+			"byteLength":35444,
 			"uri":"desk.bin"
 		}
 	]

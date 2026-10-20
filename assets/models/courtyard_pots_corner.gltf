@@ -23,7 +23,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"CourtyardPotsCorner_Boxwood"
+			"name":"CourtyardPotsCorner_BoxwoodNoCollide"
 		},
 		{
 			"mesh":1,
@@ -145,7 +145,7 @@
 	],
 	"meshes":[
 		{
-			"name":"CourtyardPotsCorner_Boxwood",
+			"name":"CourtyardPotsCorner_BoxwoodNoCollide",
 			"primitives":[
 				{
 					"attributes":{

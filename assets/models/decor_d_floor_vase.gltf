@@ -62,7 +62,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.25200000405311584
 				}
 			},
 			"name":"M_DecorD_Charcoal",

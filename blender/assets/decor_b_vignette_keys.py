@@ -1,4 +1,4 @@
-"""Catch-all by the garage door: a walnut tray with a set of car keys and a house key, a pair
+"""Catch-all by the garage door: a walnut tray (with a set of car keys and a house key if keys=True), a pair
 of sunglasses, and a little stack of post and a magazine beside it.
 Origin: centre of the group (worktop z = 0), front -Y. NoCollide."""
 import importlib
@@ -18,7 +18,9 @@ importlib.reload(K)
 
 NAME = "DecorBVignetteKeys"
 
-P = dict(name=NAME, seed=41, tray="walnut", paper="paper_white", cover="linen_sage", fob="leather")
+# keys=False: the tray is left empty for the real (pickup) car key, ix_car_key, placed in it by
+# the room (mudroom); a tray of look-alike keys next to it read as decoys
+P = dict(name=NAME, seed=41, tray="walnut", paper="paper_white", cover="linen_sage", fob="leather", keys=False)
 
 
 def build(**overrides):
@@ -29,8 +31,9 @@ def build(**overrides):
     rnd = random.Random(p["seed"])
     a = K.Acc()
     K.tray(a, p["tray"], K.T(0.02, 0.06, rz=6), 0.26, 0.16, h=0.022, rim=0.008, floor=0.007, r=0.03)
-    K.keys(a, K.T(-0.03, 0.06, 0.007, rz=20), rnd, metal="steel", fob=p["fob"])
-    K.keys(a, K.T(0.07, 0.04, 0.007, rz=-50), rnd, metal="bronze", fob="black_metal")
+    if p["keys"]:
+        K.keys(a, K.T(-0.03, 0.06, 0.007, rz=20), rnd, metal="steel", fob=p["fob"])
+        K.keys(a, K.T(0.07, 0.04, 0.007, rz=-50), rnd, metal="bronze", fob="black_metal")
     K.glasses(a, K.T(0.0, -0.12, rz=170), key="black_metal")
     # post: three envelopes and a magazine
     K.magazine(a, K.T(-0.30, -0.02, 0.0, rz=-9), p["cover"], p["paper"], size=(0.27, 0.21), t=0.006)

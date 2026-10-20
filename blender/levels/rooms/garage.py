@@ -123,7 +123,8 @@ PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-0.72, 9.85, 1.1), 0, {'signal': 'lights_garage', 'state': True}),
     ('ix_switch_garage', (-0.82, 9.85, 1.1), 0),
     ('ix_breaker_panel', (-6.1, -0.95, 1.45), 90),
-    ('ix_fuse', (-2.25, 6.36, 0.95), 30),
+    # the spare main fuse, in the workbench's opening drawer (back side, middle top; drawer-local)
+    ('ix_fuse', (0.06, -0.14, -0.059), 20, {'attach': ('garage_workbench', 'GarageWorkbench_Drawer')}),
     ('ix_battery', (-2.55, 6.34, 0.95), -15),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "garage")

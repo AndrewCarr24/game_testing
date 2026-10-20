@@ -132,7 +132,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.27000001072883606
 				}
 			},
 			"name":"M_Mudroom_Cream",
@@ -151,7 +152,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.10000000149011612
+					"clearcoatFactor":0.10000000149011612,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Mudroom_Oak",
@@ -167,7 +169,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.30000001192092896
+					"clearcoatFactor":0.30000001192092896,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Mudroom_Sage",

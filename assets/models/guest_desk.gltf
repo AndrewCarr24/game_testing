@@ -178,7 +178,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_Oak_Light",
@@ -1225,7 +1226,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3823,
+			"byteLength":3636,
 			"byteOffset":15176
 		}
 	],
@@ -1237,7 +1238,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":19000,
+			"byteLength":18812,
 			"uri":"guest_desk.bin"
 		}
 	]

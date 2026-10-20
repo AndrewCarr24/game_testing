@@ -27,7 +27,7 @@
 		},
 		{
 			"mesh":1,
-			"name":"CourtyardOliveTree_Limbs"
+			"name":"CourtyardOliveTree_LimbsNoCollide"
 		},
 		{
 			"mesh":2,
@@ -134,7 +134,7 @@
 			]
 		},
 		{
-			"name":"CourtyardOliveTree_Limbs",
+			"name":"CourtyardOliveTree_LimbsNoCollide",
 			"primitives":[
 				{
 					"attributes":{

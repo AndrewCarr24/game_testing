@@ -240,7 +240,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -1345,73 +1346,73 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3929,
+			"byteLength":3876,
 			"byteOffset":10540
 		},
 		{
 			"buffer":0,
 			"byteLength":699,
-			"byteOffset":14472
+			"byteOffset":14416
 		},
 		{
 			"buffer":0,
 			"byteLength":1578,
-			"byteOffset":15172
+			"byteOffset":15116
 		},
 		{
 			"buffer":0,
 			"byteLength":1633,
-			"byteOffset":16752
+			"byteOffset":16696
 		},
 		{
 			"buffer":0,
 			"byteLength":1733,
-			"byteOffset":18388
+			"byteOffset":18332
 		},
 		{
 			"buffer":0,
 			"byteLength":1423,
-			"byteOffset":20124
+			"byteOffset":20068
 		},
 		{
 			"buffer":0,
 			"byteLength":405,
-			"byteOffset":21548
+			"byteOffset":21492
 		},
 		{
 			"buffer":0,
 			"byteLength":906,
-			"byteOffset":21956
+			"byteOffset":21900
 		},
 		{
 			"buffer":0,
 			"byteLength":1361,
-			"byteOffset":22864
+			"byteOffset":22808
 		},
 		{
 			"buffer":0,
 			"byteLength":1431,
-			"byteOffset":24228
+			"byteOffset":24172
 		},
 		{
 			"buffer":0,
 			"byteLength":322,
-			"byteOffset":25660
+			"byteOffset":25604
 		},
 		{
 			"buffer":0,
 			"byteLength":1872,
-			"byteOffset":25984
+			"byteOffset":25928
 		},
 		{
 			"buffer":0,
 			"byteLength":1961,
-			"byteOffset":27856
+			"byteOffset":27800
 		},
 		{
 			"buffer":0,
 			"byteLength":2660,
-			"byteOffset":29820
+			"byteOffset":29764
 		}
 	],
 	"samplers":[
@@ -1422,7 +1423,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":32480,
+			"byteLength":32424,
 			"uri":"entry_vanity.bin"
 		}
 	]

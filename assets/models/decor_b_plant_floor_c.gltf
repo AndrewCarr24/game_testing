@@ -46,7 +46,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Garage_Graphite",

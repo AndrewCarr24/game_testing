@@ -107,7 +107,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Garage_Graphite",
@@ -140,7 +141,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Garage_RaceSilver",
@@ -238,7 +240,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Garage_RaceBlue",
@@ -257,7 +260,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Garage_RaceRed",
@@ -291,7 +295,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.23999999463558197
 				}
 			},
 			"name":"M_Garage_WhiteLacquer",
@@ -1289,48 +1294,48 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":5678,
+			"byteLength":5686,
 			"byteOffset":9084
 		},
 		{
 			"buffer":0,
-			"byteLength":13347,
-			"byteOffset":14764
+			"byteLength":13306,
+			"byteOffset":14772
 		},
 		{
 			"buffer":0,
-			"byteLength":3621,
-			"byteOffset":28112
+			"byteLength":3607,
+			"byteOffset":28080
 		},
 		{
 			"buffer":0,
-			"byteLength":5235,
-			"byteOffset":31736
+			"byteLength":5214,
+			"byteOffset":31688
 		},
 		{
 			"buffer":0,
-			"byteLength":4901,
-			"byteOffset":36972
+			"byteLength":4755,
+			"byteOffset":36904
 		},
 		{
 			"buffer":0,
 			"byteLength":1163,
-			"byteOffset":41876
+			"byteOffset":41660
 		},
 		{
 			"buffer":0,
-			"byteLength":9248,
-			"byteOffset":43040
+			"byteLength":9246,
+			"byteOffset":42824
 		},
 		{
 			"buffer":0,
-			"byteLength":3893,
-			"byteOffset":52288
+			"byteLength":3880,
+			"byteOffset":52072
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":56184,
+			"byteLength":55952,
 			"uri":"garage_vitrine.bin"
 		}
 	]

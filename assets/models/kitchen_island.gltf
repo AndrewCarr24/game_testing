@@ -633,7 +633,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -663,7 +664,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -4119,228 +4121,228 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6304,
+			"byteLength":6338,
 			"byteOffset":10652
 		},
 		{
 			"buffer":0,
-			"byteLength":3711,
-			"byteOffset":16956
+			"byteLength":3717,
+			"byteOffset":16992
 		},
 		{
 			"buffer":0,
 			"byteLength":1648,
-			"byteOffset":20668
+			"byteOffset":20712
 		},
 		{
 			"buffer":0,
 			"byteLength":1790,
-			"byteOffset":22316
+			"byteOffset":22360
 		},
 		{
 			"buffer":0,
 			"byteLength":316,
-			"byteOffset":24108
+			"byteOffset":24152
 		},
 		{
 			"buffer":0,
 			"byteLength":333,
-			"byteOffset":24424
+			"byteOffset":24468
 		},
 		{
 			"buffer":0,
 			"byteLength":2462,
-			"byteOffset":24760
+			"byteOffset":24804
 		},
 		{
 			"buffer":0,
 			"byteLength":794,
-			"byteOffset":27224
+			"byteOffset":27268
 		},
 		{
 			"buffer":0,
 			"byteLength":1320,
-			"byteOffset":28020
+			"byteOffset":28064
 		},
 		{
 			"buffer":0,
 			"byteLength":1032,
-			"byteOffset":29340
+			"byteOffset":29384
 		},
 		{
 			"buffer":0,
 			"byteLength":921,
-			"byteOffset":30372
+			"byteOffset":30416
 		},
 		{
 			"buffer":0,
 			"byteLength":761,
-			"byteOffset":31296
+			"byteOffset":31340
 		},
 		{
 			"buffer":0,
 			"byteLength":480,
-			"byteOffset":32060
+			"byteOffset":32104
 		},
 		{
 			"buffer":0,
 			"byteLength":780,
-			"byteOffset":32540
+			"byteOffset":32584
 		},
 		{
 			"buffer":0,
 			"byteLength":2013,
-			"byteOffset":33320
+			"byteOffset":33364
 		},
 		{
 			"buffer":0,
 			"byteLength":208,
-			"byteOffset":35336
+			"byteOffset":35380
 		},
 		{
 			"buffer":0,
 			"byteLength":2797,
-			"byteOffset":35544
+			"byteOffset":35588
 		},
 		{
 			"buffer":0,
 			"byteLength":923,
-			"byteOffset":38344
+			"byteOffset":38388
 		},
 		{
 			"buffer":0,
 			"byteLength":920,
-			"byteOffset":39268
+			"byteOffset":39312
 		},
 		{
 			"buffer":0,
 			"byteLength":935,
-			"byteOffset":40188
+			"byteOffset":40232
 		},
 		{
 			"buffer":0,
 			"byteLength":405,
-			"byteOffset":41124
+			"byteOffset":41168
 		},
 		{
 			"buffer":0,
 			"byteLength":353,
-			"byteOffset":41532
+			"byteOffset":41576
 		},
 		{
 			"buffer":0,
 			"byteLength":353,
-			"byteOffset":41888
+			"byteOffset":41932
 		},
 		{
 			"buffer":0,
 			"byteLength":905,
-			"byteOffset":42244
+			"byteOffset":42288
 		},
 		{
 			"buffer":0,
 			"byteLength":920,
-			"byteOffset":43152
+			"byteOffset":43196
 		},
 		{
 			"buffer":0,
 			"byteLength":937,
-			"byteOffset":44072
+			"byteOffset":44116
 		},
 		{
 			"buffer":0,
 			"byteLength":405,
-			"byteOffset":45012
+			"byteOffset":45056
 		},
 		{
 			"buffer":0,
 			"byteLength":353,
-			"byteOffset":45420
+			"byteOffset":45464
 		},
 		{
 			"buffer":0,
 			"byteLength":353,
-			"byteOffset":45776
+			"byteOffset":45820
 		},
 		{
 			"buffer":0,
 			"byteLength":942,
-			"byteOffset":46132
+			"byteOffset":46176
 		},
 		{
 			"buffer":0,
 			"byteLength":931,
-			"byteOffset":47076
+			"byteOffset":47120
 		},
 		{
 			"buffer":0,
 			"byteLength":413,
-			"byteOffset":48008
+			"byteOffset":48052
 		},
 		{
 			"buffer":0,
 			"byteLength":413,
-			"byteOffset":48424
+			"byteOffset":48468
 		},
 		{
 			"buffer":0,
 			"byteLength":906,
-			"byteOffset":48840
+			"byteOffset":48884
 		},
 		{
 			"buffer":0,
 			"byteLength":924,
-			"byteOffset":49748
+			"byteOffset":49792
 		},
 		{
 			"buffer":0,
 			"byteLength":931,
-			"byteOffset":50672
+			"byteOffset":50716
 		},
 		{
 			"buffer":0,
 			"byteLength":403,
-			"byteOffset":51604
+			"byteOffset":51648
 		},
 		{
 			"buffer":0,
 			"byteLength":351,
-			"byteOffset":52008
+			"byteOffset":52052
 		},
 		{
 			"buffer":0,
 			"byteLength":351,
-			"byteOffset":52360
+			"byteOffset":52404
 		},
 		{
 			"buffer":0,
 			"byteLength":933,
-			"byteOffset":52712
+			"byteOffset":52756
 		},
 		{
 			"buffer":0,
 			"byteLength":970,
-			"byteOffset":53648
+			"byteOffset":53692
 		},
 		{
 			"buffer":0,
 			"byteLength":965,
-			"byteOffset":54620
+			"byteOffset":54664
 		},
 		{
 			"buffer":0,
 			"byteLength":412,
-			"byteOffset":55588
+			"byteOffset":55632
 		},
 		{
 			"buffer":0,
 			"byteLength":360,
-			"byteOffset":56000
+			"byteOffset":56044
 		},
 		{
 			"buffer":0,
 			"byteLength":360,
-			"byteOffset":56360
+			"byteOffset":56404
 		}
 	],
 	"samplers":[
@@ -4351,7 +4353,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":56720,
+			"byteLength":56764,
 			"uri":"kitchen_island.bin"
 		}
 	]

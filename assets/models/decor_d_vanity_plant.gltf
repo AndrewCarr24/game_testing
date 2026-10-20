@@ -102,7 +102,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.30000001192092896
+					"clearcoatFactor":0.30000001192092896,
+					"clearcoatRoughnessFactor":0.07999999821186066
 				}
 			},
 			"name":"M_Bath_Ceramic",
@@ -121,7 +122,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.25200000405311584
 				}
 			},
 			"name":"M_DecorD_Charcoal",

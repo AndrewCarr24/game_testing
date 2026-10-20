@@ -133,10 +133,10 @@ def build(**overrides):
     hose = []
     a, b = (rx, yv - 0.056, 1.30), (ox, yv - 0.032, oz - 0.03)
     for k in range(13):
-        t = k / 12
-        sag = 0.42 * math.sin(math.pi * t) ** 0.8
-        hose.append((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t - 0.02 * math.sin(math.pi * t),
-                     a[2] + (b[2] - a[2]) * t - sag))
+        s = k / 12  # not `t`: that is the wall thickness, used again by the glass below
+        sag = 0.42 * math.sin(math.pi * s) ** 0.8
+        hose.append((a[0] + (b[0] - a[0]) * s, a[1] + (b[1] - a[1]) * s - 0.02 * math.sin(math.pi * s),
+                     a[2] + (b[2] - a[2]) * s - sag))
     common.tube_object(f"{n}_Hose", hose, 0.0065, col, brass, root, closed=False, profile_res=2)
     # rain head: arm out of the back wall, a flat disc with a rim
     ax = -0.45

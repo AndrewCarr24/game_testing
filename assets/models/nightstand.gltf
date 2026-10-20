@@ -209,7 +209,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -1185,53 +1186,53 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3327,
+			"byteLength":3399,
 			"byteOffset":6120
 		},
 		{
 			"buffer":0,
 			"byteLength":760,
-			"byteOffset":9448
+			"byteOffset":9520
 		},
 		{
 			"buffer":0,
 			"byteLength":1134,
-			"byteOffset":10208
+			"byteOffset":10280
 		},
 		{
 			"buffer":0,
 			"byteLength":1071,
-			"byteOffset":11344
+			"byteOffset":11416
 		},
 		{
 			"buffer":0,
 			"byteLength":564,
-			"byteOffset":12416
+			"byteOffset":12488
 		},
 		{
 			"buffer":0,
 			"byteLength":714,
-			"byteOffset":12980
+			"byteOffset":13052
 		},
 		{
 			"buffer":0,
 			"byteLength":753,
-			"byteOffset":13696
+			"byteOffset":13768
 		},
 		{
 			"buffer":0,
 			"byteLength":1264,
-			"byteOffset":14452
+			"byteOffset":14524
 		},
 		{
 			"buffer":0,
 			"byteLength":1317,
-			"byteOffset":15716
+			"byteOffset":15788
 		},
 		{
 			"buffer":0,
 			"byteLength":951,
-			"byteOffset":17036
+			"byteOffset":17108
 		}
 	],
 	"samplers":[
@@ -1242,7 +1243,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":17988,
+			"byteLength":18060,
 			"uri":"nightstand.bin"
 		}
 	]

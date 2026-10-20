@@ -130,7 +130,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Garage_Graphite",
@@ -191,7 +192,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.23999999463558197
 				}
 			},
 			"name":"M_Garage_WhiteLacquer",

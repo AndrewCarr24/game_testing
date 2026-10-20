@@ -40,26 +40,14 @@ import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
 importlib.reload(ix_common)
 
 
-def hinge(b, tag, parts, pivot, interact):
-    """Interactivity: hang an appliance door's meshes (`<n>_<tag>_<part>`) under an empty at its
-    hinge line, carrying the `interact`; the geometry and the closed pose are unchanged."""
-    e = common.empty(f"{b.n}_{tag}_Hinge", b.col, pivot)
-    e.parent = b.root
-    for ob in list(b.root.children):
-        if ob.type == "MESH" and any(ob.name == f"{b.n}_{tag}_{k}" for k in parts):
-            ob.parent = e
-            ob.location = ob.location - e.location
-    e["interact"] = interact
-    return e
+hinge = L.hinge
 
 
 def doors(b, p, ovens, fridge):
-    """The two ovens drop open (hinged along the bottom front edge), the two fridge columns
-    swing open as a French pair (hinged on their outer edges), all from the -Y fronts."""
+    """The ovens (and the steam oven) drop open (hinged along the bottom front edge), the two
+    fridge columns swing open as a French pair (hinged on their outer edges), all from the -Y fronts."""
     for tag, xm, z0 in ovens:
-        hinge(b, tag, ("Door", "Window", "Band", "Display_NoCollide", "Handle"), (xm, fridge["yf"], z0), {
-            "type": "rotate", "axis": common.to_gltf((1, 0, 0)), "angle": 85, "duration": 0.7, "range": 1.5,
-            "side": "both", "collide": True, "prompt": "Open oven", "promptActive": "Close oven"})
+        L.oven_hinge(b, tag, xm, fridge["yf"], z0)
     for i, (hx, angle) in enumerate(fridge["hinges"]):
         hinge(b, f"Fridge{i}", ("Door", "Handle"), (hx, fridge["yf"], 0.0), {
             "type": "rotate", "axis": common.to_gltf((0, 0, 1)), "angle": angle, "duration": 0.9, "range": 1.6,
@@ -166,10 +154,30 @@ def build(**overrides):
     fr_t = L.Fronts(b, walnut, bronze, yf)
     fr_t.unit("d1", x0, x1, p["band_z"], p["top_z"], "OvenUpper")
 
-    # --- fridge columns (integrated, steel)
-    tall_body("fridge")
+    # --- fridge columns (integrated, steel): solid carcass above the doors; below them a black
+    #     fascia round two lit cavities (kitchen_lib.fridge_interior), seen with the doors open
     x0, x1 = xs["fridge"]
     fw = p["fridge_w"]
+    tz = p["tall_z"]
+    b.box("fridge_Body", (x1 - x0, yb - (yf + t), p["top_z"] - tz), ((x0 + x1) / 2, (yf + t + yb) / 2, (tz + p["top_z"]) / 2),
+          black, bevel=0, tile=0)
+    y_in = yf + 0.027                    # just behind the doors (0.026 thick)
+    fz0, fz1 = ph + 0.05, tz - 0.06
+    holes = [(a + 0.035, a + fw - 0.035, fz0, fz1) for a in (x0, x0 + fw)]
+    L.panel_with_holes(b, "fridge_Fascia", x0, x1, ph, tz, y_in, 0.012, holes, black, bevel=0, seg=1)
+    contents = [
+        [[("milk", 0.12), ("milk", 0.22), ("tub", 0.45), ("tub", 0.66)],
+         [("jars", 0.1), ("water", 0.55), ("water", 0.66)],
+         [("wine", 0.12), ("wine", 0.22), ("wine", 0.32), ("tub", 0.6)],
+         [("tub", 0.15), ("jars", 0.45)], []],
+        [[("tub", 0.15), ("tub", 0.38), ("water", 0.62)],
+         [("wine", 0.1), ("milk", 0.25), ("jars", 0.42)],
+         [("tub", 0.2), ("tub", 0.42), ("milk", 0.68)],
+         [("water", 0.12), ("water", 0.23)], []],
+    ]
+    for i, (xa, xb, za, zb) in enumerate(holes):
+        L.fridge_interior(b, f"FridgeInner{i}", xa, xb, za, zb, y_in + 0.012, yb - 0.03 - (y_in + 0.012), contents[i],
+                          seed=5 + i)
     for i, (a, c) in enumerate(((x0, x0 + fw), (x0 + fw, x1))):
         b.box(f"Fridge{i}_Door", (fw - 0.004, 0.026, p["tall_z"] - ph - 0.004), ((a + c) / 2, yf + 0.013, (ph + p["tall_z"]) / 2),
               steel, bevel=0.003, seg=2, tile=0)
@@ -190,10 +198,10 @@ def build(**overrides):
     # the oven displays the power
     xo = (xs["oven"][0] + xs["oven"][1]) / 2
     x0f, x1f = xs["fridge"]
-    doors(b, p, [("OvenA", xo, 0.54), ("OvenB", xo, 1.16)],
+    doors(b, p, [("OvenA", xo, 0.54), ("OvenB", xo, 1.16), ("Steam", xo, 1.78)],
           dict(yf=yf, hinges=[(x0f, -90), (x1f, 90)]))
     ix_common.tag_emissive(b.root)
-    ix_common.tag_emissive(b.root, "power", names=("Display",))
+    ix_common.tag_emissive(b.root, "power", names=("Display", "FridgeLight"))
     return b.finish()
 
 

@@ -30,6 +30,8 @@ const RED = new THREE.Color(1.0, 0.04, 0.02);
 const MAX_LIGHTS = 2;        // real-time point lights for `light` reacts (all room light is baked)
 const truthy = (v) => v === true || v === 1 || v === 'true' || v === '1';
 const AXES = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
+const REACH_BELOW = 1.9, REACH_ABOVE = 0.9;   // m from the eye: the floor at your feet .. a high shelf
+const PICKUP_CONE = THREE.MathUtils.degToRad(45);   // pickups this close to the crosshair win (nearest())
 
 // "y", "-x", [0, 0, -1] -> unit vector
 export function axisOf(a, fallback = 'y') {
@@ -98,6 +100,9 @@ export class Interactables {
     this.scene = scene;           // for the point-light pool
     this.lights = null;           // [PointLight] once a `light` react exists
     this._box = new THREE.Box3();
+    this._c = new THREE.Vector3(); this._d = new THREE.Vector3(); this._h = new THREE.Vector3();
+    this._ray = new THREE.Ray(); this._view = new THREE.Ray();
+    this.walls = null;            // the shell's boxes (behindWall), set by the level
     // who set each signal's initial value: reactors and use points only name it (0), a switch's
     // authored state (1), a placement's `state` (2), the level's "signals" (3). The highest wins
     // whatever the load order; unclaimed values resolve to false (power: on) in snapAll().
@@ -381,14 +386,22 @@ export class Interactables {
     return !it.taken && (!it.host || (it.host.t === 1 && it.host.target === 1));
   }
 
+  // the item's world box; an item with no mesh of its own (an empty marking a slot, e.g. the
+  // breaker's fuse slot) is a 20 cm box round its origin (an empty box was never in reach)
+  boxOf(it, box = new THREE.Box3()) {
+    box.setFromObject(it.node);
+    if (box.isEmpty()) box.setFromCenterAndSize(it.node.getWorldPosition(this._c), this._d.set(0.2, 0.2, 0.2));
+    return box;
+  }
+
   centre(it) {
-    return new THREE.Box3().setFromObject(it.node).getCenter(new THREE.Vector3());
+    return this.boxOf(it).getCenter(new THREE.Vector3());
   }
 
   // horizontal distance from a point to the nearest edge of the item (so an open
   // door that has swung away is still in reach from the doorway)
   reach(it, point) {
-    const box = this._box.setFromObject(it.node);
+    const box = this.boxOf(it, this._box);
     const dx = Math.max(box.min.x - point.x, 0, point.x - box.max.x);
     const dz = Math.max(box.min.z - point.z, 0, point.z - box.max.z);
     return Math.hypot(dx, dz);
@@ -396,22 +409,62 @@ export class Interactables {
 
   range(it) { return it.def.range ?? (it.def.type === 'switch' || it.def.type === 'use' ? 1.2 : 1.5); }
 
-  // what the player can use from here: pickups first, then the nearest thing
-  nearest(player) {
-    const off = new THREE.Vector3(), dir = new THREE.Vector3();
+  // in reach from the eye: within range horizontally (reach), and level with it: the item's box
+  // overlaps [eye - BELOW, eye + ABOVE]. Without the height test a switch on the floor above
+  // (the guest room's, straight over the mudroom's) was "in reach" too, and the two swapped
+  // focus as one rocker tilted (the first press seemed to be swallowed).
+  inReach(it, eye) {
+    if (this.reach(it, eye) > this.range(it)) return false;   // (leaves the item's box in this._box)
+    return this._box.max.y >= eye.y - REACH_BELOW && this._box.min.y <= eye.y + REACH_ABOVE;
+  }
+
+  // Walls between the eye and a small item (a switch on the far side of the wall, back to back
+  // with this room's): `walls` are the shell's boxes. Doors and drawers sit in or by walls, so
+  // only switches, use points and pickups are tested, along the line to the box's centre.
+  behindWall(eye, box) {
+    if (!this.walls) return false;
+    const c = box.getCenter(this._c), dir = this._d.subVectors(c, eye), len = dir.length();
+    if (len < 1e-6) return false;
+    this._ray.set(eye, dir.divideScalar(len));
+    for (const w of this.walls) {
+      const hit = this._ray.intersectBox(w, this._h);
+      if (hit && hit.distanceTo(eye) < len - 0.05) return true;
+    }
+    return false;
+  }
+
+  // What the player can use from here. With `forward` (the view direction): the thing under the
+  // crosshair, else the one closest to it by angle, so a light and a blinds plate 10 cm apart
+  // are picked by where the player looks; range and height only gate. Pickups still come first
+  // while they're within PICKUP_CONE of the crosshair (a card in an open drawer, a fuse on the
+  // stand beside its breaker: small things you'd otherwise have to aim at exactly), the one
+  // nearest the crosshair of them. Without `forward`: pickups first, then the nearest thing.
+  nearest(player, forward = null) {
+    const off = new THREE.Vector3(), dir = new THREE.Vector3(), to = new THREE.Vector3();
+    const view = forward && this._view.set(player, forward.clone().normalize());
     let best = null, bestScore = Infinity;
     for (const it of this.items) {
-      if (!this.available(it)) continue;
+      if (!this.available(it) || !this.inReach(it, player)) continue;
       const d = this.reach(it, player);
-      if (d > this.range(it)) continue;
-      off.subVectors(player, this.centre(it));
+      const box = this._box, centre = box.getCenter(new THREE.Vector3());
+      off.subVectors(player, centre);
       off.y = 0;
       if ((it.def.side || 'axis') === 'axis' && it.def.type === 'slide') {
         dir.copy(it.axis).transformDirection(it.node.parent.matrixWorld);
         dir.y = 0;
         if (off.dot(dir) <= 0) continue;
       }
-      const score = d - (it.def.type === 'pickup' ? 10 : 0);
+      const small = it.def.type === 'switch' || it.def.type === 'use' || it.def.type === 'pickup';
+      if (small && this.behindWall(player, box.clone())) continue;
+      const pickup = it.def.type === 'pickup';
+      let score;
+      if (view) {
+        // 0 when the crosshair is on the item's box (2 cm margin: switch plates are small),
+        // else the angle to its centre; a little distance and centre angle break ties
+        const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
+        const angle = forward.angleTo(to.subVectors(centre, player));
+        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
+      } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
     }
     return best;
@@ -425,7 +478,11 @@ export class Interactables {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
     if (it.locked) return d.lockedPrompt || 'Locked';
-    if (d.type === 'switch') return truthy(this.signals.get(it.signal)) ? (d.promptActive || 'Turn off') : (d.prompt || 'Turn on');
+    if (d.type === 'switch') {
+      const on = truthy(this.signals.get(it.signal));
+      if (!on && d.requires && !truthy(this.signals.get(d.requires))) return d.requiresPrompt || 'Nothing happens';
+      return on ? (d.promptActive || 'Turn off') : (d.prompt || 'Turn on');
+    }
     if (d.type === 'use') {
       if (this.done(it)) return d.promptDone;
       if (!d.needs) return d.prompt;
@@ -441,9 +498,9 @@ export class Interactables {
   lockTarget(itemId, player) {
     let best = null, bestD = Infinity;
     for (const it of this.items) {
-      if (it.lockKey !== itemId) continue;
+      if (it.lockKey !== itemId || !this.inReach(it, player)) continue;
       const d = this.reach(it, player);
-      if (d <= this.range(it) && d < bestD) { best = it; bestD = d; }
+      if (d < bestD) { best = it; bestD = d; }
     }
     return best;
   }
@@ -452,9 +509,9 @@ export class Interactables {
   useTarget(itemId, player) {
     let best = null, bestD = Infinity;
     for (const it of this.items) {
-      if (it.def.type !== 'use' || it.def.needs !== itemId || this.done(it)) continue;
+      if (it.def.type !== 'use' || it.def.needs !== itemId || this.done(it) || !this.inReach(it, player)) continue;
       const d = this.reach(it, player);
-      if (d <= this.range(it) && d < bestD) { best = it; bestD = d; }
+      if (d < bestD) { best = it; bestD = d; }
     }
     return best;
   }
@@ -510,6 +567,11 @@ export class Interactables {
       return d.lockedPrompt || 'Locked';
     }
     if (d.type === 'switch') {
+      // `requires`: another signal that must be on before this one can be switched on (the main
+      // breaker needs its fuse); switching off always works
+      if (!truthy(this.signals.get(it.signal)) && d.requires && !truthy(this.signals.get(d.requires))) {
+        return d.requiresPrompt || 'Nothing happens';
+      }
       this.signals.toggle(it.signal);
       return null;
     }

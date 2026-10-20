@@ -54,7 +54,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.08399999886751175
 				}
 			},
 			"name":"M_Garage_BayPad",

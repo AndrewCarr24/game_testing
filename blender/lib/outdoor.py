@@ -126,6 +126,11 @@ def soil():
     return flat("M_Out_Soil", (0.05, 0.035, 0.025))
 
 
+def sedum():
+    """Green roof: a low sedum mat (olive green with rust and straw), the low roofs of the house."""
+    return flat("M_Out_Sedum", (0.11, 0.13, 0.06))
+
+
 def lamp(name="Warm"):
     """Glowing part of a landscape light (bollard lens, lantern)."""
     return flat(f"M_Out_Lamp_{name}", (0.9, 0.8, 0.6), emission=(1.0, 0.8, 0.55), strength=6.0)

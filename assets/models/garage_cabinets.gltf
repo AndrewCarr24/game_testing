@@ -99,7 +99,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.20000000298023224
+					"clearcoatFactor":0.20000000298023224,
+					"clearcoatRoughnessFactor":0.13199999928474426
 				}
 			},
 			"name":"M_Garage_Quartz",
@@ -133,7 +134,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Garage_Graphite",

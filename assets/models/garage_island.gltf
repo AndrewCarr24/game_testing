@@ -143,7 +143,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.27000001072883606
 				}
 			},
 			"name":"M_Mudroom_Cream",
@@ -162,7 +163,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.10000000149011612
+					"clearcoatFactor":0.10000000149011612,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Mudroom_Oak",
@@ -1052,43 +1054,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2486,
+			"byteLength":2492,
 			"byteOffset":15840
 		},
 		{
 			"buffer":0,
 			"byteLength":5130,
-			"byteOffset":18328
+			"byteOffset":18332
 		},
 		{
 			"buffer":0,
 			"byteLength":8090,
-			"byteOffset":23460
+			"byteOffset":23464
 		},
 		{
 			"buffer":0,
 			"byteLength":2199,
-			"byteOffset":31552
+			"byteOffset":31556
 		},
 		{
 			"buffer":0,
 			"byteLength":1284,
-			"byteOffset":33752
+			"byteOffset":33756
 		},
 		{
 			"buffer":0,
-			"byteLength":4501,
-			"byteOffset":35036
+			"byteLength":4506,
+			"byteOffset":35040
 		},
 		{
 			"buffer":0,
 			"byteLength":5237,
-			"byteOffset":39540
+			"byteOffset":39548
 		},
 		{
 			"buffer":0,
 			"byteLength":1213,
-			"byteOffset":44780
+			"byteOffset":44788
 		}
 	],
 	"samplers":[
@@ -1099,7 +1101,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":45996,
+			"byteLength":46004,
 			"uri":"garage_island.bin"
 		}
 	]

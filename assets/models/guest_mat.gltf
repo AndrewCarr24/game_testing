@@ -368,23 +368,23 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3296,
+			"byteLength":3345,
 			"byteOffset":1680
 		},
 		{
 			"buffer":0,
-			"byteLength":3377,
-			"byteOffset":4976
+			"byteLength":3452,
+			"byteOffset":5028
 		},
 		{
 			"buffer":0,
 			"byteLength":4810,
-			"byteOffset":8356
+			"byteOffset":8480
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":13168,
+			"byteLength":13292,
 			"uri":"guest_mat.bin"
 		}
 	]

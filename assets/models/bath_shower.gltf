@@ -64,7 +64,7 @@
 			"translation":[
 				-1.093000054359436,
 				1.2350000143051147,
-				0.5
+				0.02500000037252903
 			]
 		},
 		{
@@ -128,7 +128,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.09600000083446503
 				}
 			},
 			"name":"M_Bath_MarbleDark",
@@ -626,12 +627,12 @@
 			"max":[
 				0.004999999888241291,
 				1.225000023841858,
-				0.44999998807907104
+				0.925000011920929
 			],
 			"min":[
 				-0.004999999888241291,
 				-1.225000023841858,
-				-0.44999998807907104
+				-0.925000011920929
 			],
 			"type":"VEC3"
 		},
@@ -679,7 +680,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":1847,
+			"count":1854,
 			"max":[
 				1.1990001201629639,
 				1.2300000190734863,
@@ -694,17 +695,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":1847,
+			"count":1854,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1847,
+			"count":1854,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1847,
+			"count":1854,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -820,53 +821,53 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":743,
+			"byteLength":762,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":1431,
-			"byteOffset":744
+			"byteOffset":764
 		},
 		{
 			"buffer":0,
 			"byteLength":1419,
-			"byteOffset":2176
+			"byteOffset":2196
 		},
 		{
 			"buffer":0,
 			"byteLength":327,
-			"byteOffset":3596
+			"byteOffset":3616
 		},
 		{
 			"buffer":0,
-			"byteLength":374,
-			"byteOffset":3924
+			"byteLength":358,
+			"byteOffset":3944
 		},
 		{
 			"buffer":0,
 			"byteLength":1826,
-			"byteOffset":4300
+			"byteOffset":4304
 		},
 		{
 			"buffer":0,
-			"byteLength":11478,
-			"byteOffset":6128
+			"byteLength":11558,
+			"byteOffset":6132
 		},
 		{
 			"buffer":0,
-			"byteLength":1345,
-			"byteOffset":17608
+			"byteLength":1324,
+			"byteOffset":17692
 		},
 		{
 			"buffer":0,
 			"byteLength":394,
-			"byteOffset":18956
+			"byteOffset":19016
 		},
 		{
 			"buffer":0,
-			"byteLength":1340,
-			"byteOffset":19352
+			"byteLength":1322,
+			"byteOffset":19412
 		}
 	],
 	"samplers":[
@@ -877,7 +878,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20692,
+			"byteLength":20736,
 			"uri":"bath_shower.bin"
 		}
 	]

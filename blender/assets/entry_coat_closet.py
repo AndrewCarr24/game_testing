@@ -30,7 +30,7 @@ NAME = "EntryCoatCloset"
 
 P = dict(
     name=NAME,
-    size=(2.4, 0.62, 3.0),
+    size=(2.29, 0.62, 3.0),     # two fill the cloakroom's 5.2 m north wall up to the east run's front (4.58 m)
     plinth_h=0.07,
     side_t=0.036, top_t=0.045, back_t=0.012, door_t=0.022,
     reveal=0.003,

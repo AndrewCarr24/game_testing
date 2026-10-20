@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				33
+				34
 			]
 		}
 	],
@@ -98,6 +98,15 @@
 		},
 		{
 			"mesh":6,
+			"name":"LivingMediaWall_FasciaLip",
+			"translation":[
+				0,
+				0.12999999523162842,
+				0.17900000512599945
+			]
+		},
+		{
+			"mesh":7,
 			"name":"LivingMediaWall_GrilleL",
 			"translation":[
 				-2.9000000953674316,
@@ -106,7 +115,7 @@
 			]
 		},
 		{
-			"mesh":7,
+			"mesh":8,
 			"name":"LivingMediaWall_GrilleR",
 			"translation":[
 				2.9000000953674316,
@@ -115,7 +124,7 @@
 			]
 		},
 		{
-			"mesh":8,
+			"mesh":9,
 			"name":"LivingMediaWall_PanelL0",
 			"translation":[
 				-2.8575000762939453,
@@ -124,7 +133,7 @@
 			]
 		},
 		{
-			"mesh":9,
+			"mesh":10,
 			"name":"LivingMediaWall_PanelL1",
 			"translation":[
 				-3.6624999046325684,
@@ -133,7 +142,7 @@
 			]
 		},
 		{
-			"mesh":10,
+			"mesh":11,
 			"name":"LivingMediaWall_PanelR0",
 			"translation":[
 				2.8575000762939453,
@@ -142,7 +151,7 @@
 			]
 		},
 		{
-			"mesh":11,
+			"mesh":12,
 			"name":"LivingMediaWall_PanelR1",
 			"translation":[
 				3.6624999046325684,
@@ -151,7 +160,7 @@
 			]
 		},
 		{
-			"mesh":12,
+			"mesh":13,
 			"name":"LivingMediaWall_Plinth",
 			"translation":[
 				0,
@@ -160,7 +169,7 @@
 			]
 		},
 		{
-			"mesh":13,
+			"mesh":14,
 			"name":"LivingMediaWall_Pull0",
 			"translation":[
 				-1.8296250104904175,
@@ -169,7 +178,7 @@
 			]
 		},
 		{
-			"mesh":14,
+			"mesh":15,
 			"name":"LivingMediaWall_Pull1",
 			"translation":[
 				-0.6098750233650208,
@@ -178,7 +187,7 @@
 			]
 		},
 		{
-			"mesh":15,
+			"mesh":16,
 			"name":"LivingMediaWall_Pull2",
 			"translation":[
 				0.6098750233650208,
@@ -187,7 +196,7 @@
 			]
 		},
 		{
-			"mesh":16,
+			"mesh":17,
 			"name":"LivingMediaWall_Pull3",
 			"translation":[
 				1.8296250104904175,
@@ -196,7 +205,7 @@
 			]
 		},
 		{
-			"mesh":17,
+			"mesh":18,
 			"name":"LivingMediaWall_RevealShadow",
 			"translation":[
 				0,
@@ -216,11 +225,11 @@
 					}
 				}
 			},
-			"mesh":18,
+			"mesh":19,
 			"name":"LivingMediaWall_Screen"
 		},
 		{
-			"mesh":19,
+			"mesh":20,
 			"name":"LivingMediaWall_SlatBacking",
 			"translation":[
 				0,
@@ -229,7 +238,7 @@
 			]
 		},
 		{
-			"mesh":20,
+			"mesh":21,
 			"name":"LivingMediaWall_SlatCap",
 			"translation":[
 				0,
@@ -238,11 +247,11 @@
 			]
 		},
 		{
-			"mesh":21,
+			"mesh":22,
 			"name":"LivingMediaWall_Slats"
 		},
 		{
-			"mesh":22,
+			"mesh":23,
 			"name":"LivingMediaWall_SpeakerCapL",
 			"translation":[
 				-2.9000000953674316,
@@ -251,7 +260,7 @@
 			]
 		},
 		{
-			"mesh":23,
+			"mesh":24,
 			"name":"LivingMediaWall_SpeakerCapR",
 			"translation":[
 				2.9000000953674316,
@@ -260,7 +269,7 @@
 			]
 		},
 		{
-			"mesh":24,
+			"mesh":25,
 			"name":"LivingMediaWall_SpeakerFootL",
 			"translation":[
 				-2.9000000953674316,
@@ -269,7 +278,7 @@
 			]
 		},
 		{
-			"mesh":25,
+			"mesh":26,
 			"name":"LivingMediaWall_SpeakerFootR",
 			"translation":[
 				2.9000000953674316,
@@ -278,7 +287,7 @@
 			]
 		},
 		{
-			"mesh":26,
+			"mesh":27,
 			"name":"LivingMediaWall_SpeakerL",
 			"translation":[
 				-2.9000000953674316,
@@ -287,7 +296,7 @@
 			]
 		},
 		{
-			"mesh":27,
+			"mesh":28,
 			"name":"LivingMediaWall_SpeakerR",
 			"translation":[
 				2.9000000953674316,
@@ -296,7 +305,7 @@
 			]
 		},
 		{
-			"mesh":28,
+			"mesh":29,
 			"name":"LivingMediaWall_TVBody",
 			"translation":[
 				0,
@@ -305,7 +314,7 @@
 			]
 		},
 		{
-			"mesh":29,
+			"mesh":30,
 			"name":"LivingMediaWall_TVButton_Cap",
 			"translation":[
 				0,
@@ -315,7 +324,7 @@
 		},
 		{
 			"children":[
-				29
+				30
 			],
 			"extras":{
 				"interact":{
@@ -340,7 +349,7 @@
 			]
 		},
 		{
-			"mesh":30,
+			"mesh":31,
 			"name":"LivingMediaWall_TVButtonSeat",
 			"translation":[
 				2.309999942779541,
@@ -360,12 +369,12 @@
 					}
 				}
 			},
-			"mesh":31,
+			"mesh":32,
 			"name":"LivingMediaWall_UnderGlow",
 			"translation":[
 				0,
-				0.1340000033378601,
-				0.12999999523162842
+				0.13699999451637268,
+				0.019999999552965164
 			]
 		},
 		{
@@ -399,9 +408,10 @@
 				26,
 				27,
 				28,
-				30,
+				29,
 				31,
-				32
+				32,
+				33
 			],
 			"name":"LivingMediaWall"
 		}
@@ -411,7 +421,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -515,11 +526,6 @@
 				0.6200000047683716,
 				0.30000001192092896
 			],
-			"extensions":{
-				"KHR_materials_emissive_strength":{
-					"emissiveStrength":2.200000047683716
-				}
-			},
 			"name":"M_Living_WarmGlow",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -697,7 +703,7 @@
 			]
 		},
 		{
-			"name":"LivingMediaWall_GrilleL",
+			"name":"LivingMediaWall_FasciaLip",
 			"primitives":[
 				{
 					"attributes":{
@@ -718,13 +724,13 @@
 						}
 					},
 					"indices":31,
-					"material":2,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_GrilleR",
+			"name":"LivingMediaWall_GrilleL",
 			"primitives":[
 				{
 					"attributes":{
@@ -744,21 +750,21 @@
 							}
 						}
 					},
-					"indices":31,
+					"indices":36,
 					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mesh",
+			"name":"LivingMediaWall_GrilleR",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":36,
-						"NORMAL":37,
-						"TEXCOORD_0":38,
-						"COLOR_0":39
+						"POSITION":37,
+						"NORMAL":38,
+						"TEXCOORD_0":39,
+						"COLOR_0":40
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -771,8 +777,8 @@
 							}
 						}
 					},
-					"indices":40,
-					"material":3,
+					"indices":36,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -798,7 +804,7 @@
 							}
 						}
 					},
-					"indices":40,
+					"indices":45,
 					"material":3,
 					"mode":4
 				}
@@ -809,10 +815,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":45,
-						"NORMAL":46,
-						"TEXCOORD_0":47,
-						"COLOR_0":48
+						"POSITION":46,
+						"NORMAL":47,
+						"TEXCOORD_0":48,
+						"COLOR_0":49
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -825,7 +831,7 @@
 							}
 						}
 					},
-					"indices":40,
+					"indices":45,
 					"material":3,
 					"mode":4
 				}
@@ -836,10 +842,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":49,
-						"NORMAL":50,
-						"TEXCOORD_0":51,
-						"COLOR_0":52
+						"POSITION":50,
+						"NORMAL":51,
+						"TEXCOORD_0":52,
+						"COLOR_0":53
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -852,21 +858,21 @@
 							}
 						}
 					},
-					"indices":40,
+					"indices":45,
 					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Plinth",
+			"name":"Mesh",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":53,
-						"NORMAL":54,
-						"TEXCOORD_0":55,
-						"COLOR_0":56
+						"POSITION":54,
+						"NORMAL":55,
+						"TEXCOORD_0":56,
+						"COLOR_0":57
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -879,14 +885,14 @@
 							}
 						}
 					},
-					"indices":57,
-					"material":2,
+					"indices":45,
+					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Pull0",
+			"name":"LivingMediaWall_Plinth",
 			"primitives":[
 				{
 					"attributes":{
@@ -907,13 +913,13 @@
 						}
 					},
 					"indices":62,
-					"material":1,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Pull1",
+			"name":"LivingMediaWall_Pull0",
 			"primitives":[
 				{
 					"attributes":{
@@ -933,21 +939,21 @@
 							}
 						}
 					},
-					"indices":62,
+					"indices":67,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Pull2",
+			"name":"LivingMediaWall_Pull1",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":67,
-						"NORMAL":68,
-						"TEXCOORD_0":69,
-						"COLOR_0":70
+						"POSITION":68,
+						"NORMAL":69,
+						"TEXCOORD_0":70,
+						"COLOR_0":71
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -960,21 +966,21 @@
 							}
 						}
 					},
-					"indices":62,
+					"indices":67,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Pull3",
+			"name":"LivingMediaWall_Pull2",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":71,
-						"NORMAL":72,
-						"TEXCOORD_0":73,
-						"COLOR_0":74
+						"POSITION":72,
+						"NORMAL":73,
+						"TEXCOORD_0":74,
+						"COLOR_0":75
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -987,21 +993,21 @@
 							}
 						}
 					},
-					"indices":62,
+					"indices":67,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_RevealShadow",
+			"name":"LivingMediaWall_Pull3",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":75,
-						"NORMAL":76,
-						"TEXCOORD_0":77,
-						"COLOR_0":78
+						"POSITION":76,
+						"NORMAL":77,
+						"TEXCOORD_0":78,
+						"COLOR_0":79
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1014,21 +1020,21 @@
 							}
 						}
 					},
-					"indices":57,
-					"material":2,
+					"indices":67,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Screen",
+			"name":"LivingMediaWall_RevealShadow",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":79,
-						"NORMAL":80,
-						"TEXCOORD_0":81,
-						"COLOR_0":82
+						"POSITION":80,
+						"NORMAL":81,
+						"TEXCOORD_0":82,
+						"COLOR_0":83
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1041,14 +1047,14 @@
 							}
 						}
 					},
-					"indices":83,
-					"material":4,
+					"indices":62,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SlatBacking",
+			"name":"LivingMediaWall_Screen",
 			"primitives":[
 				{
 					"attributes":{
@@ -1068,21 +1074,21 @@
 							}
 						}
 					},
-					"indices":57,
-					"material":2,
+					"indices":88,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SlatCap",
+			"name":"LivingMediaWall_SlatBacking",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":88,
-						"NORMAL":89,
-						"TEXCOORD_0":90,
-						"COLOR_0":91
+						"POSITION":89,
+						"NORMAL":90,
+						"TEXCOORD_0":91,
+						"COLOR_0":92
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1095,14 +1101,14 @@
 							}
 						}
 					},
-					"indices":92,
-					"material":1,
+					"indices":62,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_Slats",
+			"name":"LivingMediaWall_SlatCap",
 			"primitives":[
 				{
 					"attributes":{
@@ -1123,13 +1129,13 @@
 						}
 					},
 					"indices":97,
-					"material":0,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerCapL",
+			"name":"LivingMediaWall_Slats",
 			"primitives":[
 				{
 					"attributes":{
@@ -1156,7 +1162,7 @@
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerCapR",
+			"name":"LivingMediaWall_SpeakerCapL",
 			"primitives":[
 				{
 					"attributes":{
@@ -1176,21 +1182,21 @@
 							}
 						}
 					},
-					"indices":102,
+					"indices":107,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerFootL",
+			"name":"LivingMediaWall_SpeakerCapR",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":107,
-						"NORMAL":108,
-						"TEXCOORD_0":109,
-						"COLOR_0":110
+						"POSITION":108,
+						"NORMAL":109,
+						"TEXCOORD_0":110,
+						"COLOR_0":111
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1203,14 +1209,14 @@
 							}
 						}
 					},
-					"indices":111,
-					"material":1,
+					"indices":107,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerFootR",
+			"name":"LivingMediaWall_SpeakerFootL",
 			"primitives":[
 				{
 					"attributes":{
@@ -1230,21 +1236,21 @@
 							}
 						}
 					},
-					"indices":111,
+					"indices":116,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerL",
+			"name":"LivingMediaWall_SpeakerFootR",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":116,
-						"NORMAL":117,
-						"TEXCOORD_0":118,
-						"COLOR_0":119
+						"POSITION":117,
+						"NORMAL":118,
+						"TEXCOORD_0":119,
+						"COLOR_0":120
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1257,14 +1263,14 @@
 							}
 						}
 					},
-					"indices":120,
-					"material":5,
+					"indices":116,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_SpeakerR",
+			"name":"LivingMediaWall_SpeakerL",
 			"primitives":[
 				{
 					"attributes":{
@@ -1284,21 +1290,21 @@
 							}
 						}
 					},
-					"indices":120,
+					"indices":125,
 					"material":5,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LivingMediaWall_TVBody",
+			"name":"LivingMediaWall_SpeakerR",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":125,
-						"NORMAL":126,
-						"TEXCOORD_0":127,
-						"COLOR_0":128
+						"POSITION":126,
+						"NORMAL":127,
+						"TEXCOORD_0":128,
+						"COLOR_0":129
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1311,7 +1317,34 @@
 							}
 						}
 					},
-					"indices":129,
+					"indices":125,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingMediaWall_TVBody",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":130,
+						"NORMAL":131,
+						"TEXCOORD_0":132,
+						"COLOR_0":133
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":29,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":134,
 					"material":5,
 					"mode":4
 				}
@@ -1322,34 +1355,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":130,
-						"NORMAL":131,
-						"COLOR_0":132
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":29,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":133,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LivingMediaWall_TVButtonSeat",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":134,
-						"NORMAL":135,
-						"COLOR_0":136
+						"POSITION":135,
+						"NORMAL":136,
+						"COLOR_0":137
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -1361,7 +1369,32 @@
 							}
 						}
 					},
-					"indices":133,
+					"indices":138,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"LivingMediaWall_TVButtonSeat",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":139,
+						"NORMAL":140,
+						"COLOR_0":141
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":31,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":138,
 					"material":5,
 					"mode":4
 				}
@@ -1372,14 +1405,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":137,
-						"NORMAL":138,
-						"TEXCOORD_0":139,
-						"COLOR_0":140
+						"POSITION":142,
+						"NORMAL":143,
+						"TEXCOORD_0":144,
+						"COLOR_0":145
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":31,
+							"bufferView":32,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -1388,7 +1421,7 @@
 							}
 						}
 					},
-					"indices":57,
+					"indices":62,
 					"material":6,
 					"mode":4
 				}
@@ -1639,6 +1672,42 @@
 			"count":176,
 			"normalized":true,
 			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":128,
+			"max":[
+				2.437999963760376,
+				0.009999999776482582,
+				0.008999999612569809
+			],
+			"min":[
+				-2.437999963760376,
+				-0.009999999776482582,
+				-0.008999999612569809
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":128,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":128,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":128,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
@@ -2470,12 +2539,12 @@
 			"count":24,
 			"max":[
 				2.4000000953674316,
-				0.006000000052154064,
+				0.003000000026077032,
 				0.014999999664723873
 			],
 			"min":[
 				-2.4000000953674316,
-				-0.006000000052154064,
+				-0.003000000026077032,
 				-0.014999999664723873
 			],
 			"type":"VEC3"
@@ -2500,163 +2569,168 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1755,
+			"byteLength":1882,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3033,
-			"byteOffset":1756
+			"byteLength":3096,
+			"byteOffset":1884
 		},
 		{
 			"buffer":0,
 			"byteLength":2076,
-			"byteOffset":4792
+			"byteOffset":4980
 		},
 		{
 			"buffer":0,
 			"byteLength":2000,
-			"byteOffset":6868
+			"byteOffset":7056
 		},
 		{
 			"buffer":0,
 			"byteLength":2076,
-			"byteOffset":8868
+			"byteOffset":9056
 		},
 		{
 			"buffer":0,
 			"byteLength":2000,
-			"byteOffset":10944
+			"byteOffset":11132
+		},
+		{
+			"buffer":0,
+			"byteLength":1625,
+			"byteOffset":13132
 		},
 		{
 			"buffer":0,
 			"byteLength":1986,
-			"byteOffset":12944
+			"byteOffset":14760
 		},
 		{
 			"buffer":0,
 			"byteLength":1986,
-			"byteOffset":14932
+			"byteOffset":16748
 		},
 		{
 			"buffer":0,
 			"byteLength":4722,
-			"byteOffset":16920
+			"byteOffset":18736
 		},
 		{
 			"buffer":0,
 			"byteLength":4040,
-			"byteOffset":21644
+			"byteOffset":23460
 		},
 		{
 			"buffer":0,
 			"byteLength":4733,
-			"byteOffset":25684
+			"byteOffset":27500
 		},
 		{
 			"buffer":0,
 			"byteLength":3855,
-			"byteOffset":30420
+			"byteOffset":32236
 		},
 		{
 			"buffer":0,
 			"byteLength":481,
-			"byteOffset":34276
+			"byteOffset":36092
 		},
 		{
 			"buffer":0,
 			"byteLength":1288,
-			"byteOffset":34760
+			"byteOffset":36576
 		},
 		{
 			"buffer":0,
 			"byteLength":1288,
-			"byteOffset":36048
+			"byteOffset":37864
 		},
 		{
 			"buffer":0,
 			"byteLength":1288,
-			"byteOffset":37336
+			"byteOffset":39152
 		},
 		{
 			"buffer":0,
 			"byteLength":1288,
-			"byteOffset":38624
+			"byteOffset":40440
 		},
 		{
 			"buffer":0,
 			"byteLength":390,
-			"byteOffset":39912
+			"byteOffset":41728
 		},
 		{
 			"buffer":0,
 			"byteLength":215,
-			"byteOffset":40304
+			"byteOffset":42120
 		},
 		{
 			"buffer":0,
 			"byteLength":462,
-			"byteOffset":40520
+			"byteOffset":42336
 		},
 		{
 			"buffer":0,
 			"byteLength":1494,
-			"byteOffset":40984
+			"byteOffset":42800
 		},
 		{
 			"buffer":0,
 			"byteLength":4886,
-			"byteOffset":42480
+			"byteOffset":44296
 		},
 		{
 			"buffer":0,
 			"byteLength":1491,
-			"byteOffset":47368
+			"byteOffset":49184
 		},
 		{
 			"buffer":0,
 			"byteLength":1491,
-			"byteOffset":48860
+			"byteOffset":50676
 		},
 		{
 			"buffer":0,
 			"byteLength":1552,
-			"byteOffset":50352
+			"byteOffset":52168
 		},
 		{
 			"buffer":0,
 			"byteLength":1552,
-			"byteOffset":51904
+			"byteOffset":53720
 		},
 		{
 			"buffer":0,
 			"byteLength":1506,
-			"byteOffset":53456
+			"byteOffset":55272
 		},
 		{
 			"buffer":0,
 			"byteLength":1524,
-			"byteOffset":54964
+			"byteOffset":56780
 		},
 		{
 			"buffer":0,
 			"byteLength":1920,
-			"byteOffset":56488
+			"byteOffset":58304
 		},
 		{
 			"buffer":0,
 			"byteLength":550,
-			"byteOffset":58408
+			"byteOffset":60224
 		},
 		{
 			"buffer":0,
 			"byteLength":562,
-			"byteOffset":58960
+			"byteOffset":60776
 		},
 		{
 			"buffer":0,
-			"byteLength":425,
-			"byteOffset":59524
+			"byteLength":426,
+			"byteOffset":61340
 		}
 	],
 	"samplers":[
@@ -2667,7 +2741,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":59952,
+			"byteLength":61768,
 			"uri":"living_media_wall.bin"
 		}
 	]

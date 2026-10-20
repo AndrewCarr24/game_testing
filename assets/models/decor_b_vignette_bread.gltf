@@ -171,7 +171,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -200,7 +201,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -917,43 +919,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2740,
+			"byteLength":2771,
 			"byteOffset":11108
 		},
 		{
 			"buffer":0,
 			"byteLength":689,
-			"byteOffset":13848
+			"byteOffset":13880
 		},
 		{
 			"buffer":0,
 			"byteLength":7351,
-			"byteOffset":14540
+			"byteOffset":14572
 		},
 		{
 			"buffer":0,
 			"byteLength":2164,
-			"byteOffset":21892
+			"byteOffset":21924
 		},
 		{
 			"buffer":0,
-			"byteLength":6023,
-			"byteOffset":24056
+			"byteLength":6002,
+			"byteOffset":24088
 		},
 		{
 			"buffer":0,
 			"byteLength":528,
-			"byteOffset":30080
+			"byteOffset":30092
 		},
 		{
 			"buffer":0,
 			"byteLength":2837,
-			"byteOffset":30608
+			"byteOffset":30620
 		},
 		{
 			"buffer":0,
 			"byteLength":3879,
-			"byteOffset":33448
+			"byteOffset":33460
 		}
 	],
 	"samplers":[
@@ -964,7 +966,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":37328,
+			"byteLength":37340,
 			"uri":"decor_b_vignette_bread.bin"
 		}
 	]

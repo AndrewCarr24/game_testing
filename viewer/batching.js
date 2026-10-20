@@ -91,6 +91,7 @@ export class RoomCuller {
     // the room the eye is in: if it's open to the other floor, so is the view
     const here = this.rooms.find((r) => r.level === level && pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3])
       ?? this.rooms.find((r) => pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3] && r.vertical);
+    this.here = here ?? null;            // (outdoors: null)
     const crossFloor = !here || here.vertical;
     for (const r of this.rooms) {
       const [x0, z0, x1, z1] = r.rect;

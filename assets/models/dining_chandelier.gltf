@@ -379,18 +379,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":14533,
+			"byteLength":14411,
 			"byteOffset":17756
 		},
 		{
 			"buffer":0,
 			"byteLength":4232,
-			"byteOffset":32292
+			"byteOffset":32168
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":36524,
+			"byteLength":36400,
 			"uri":"dining_chandelier.bin"
 		}
 	]

@@ -60,8 +60,11 @@ def mesh_object(name, bm, col, mat=None, parent=None, smooth=True):
 
 # ------------------------------------------------------------------ materials
 
-def pbr_material(name, color, roughness=0.5, metallic=0.0, coat=0.0):
-    """Principled BSDF only, so it survives glTF export unchanged."""
+def pbr_material(name, color, roughness=0.5, metallic=0.0, coat=0.0, coat_roughness=None):
+    """Principled BSDF only, so it survives glTF export unchanged.
+    coat: clear-coat weight (lacquer, varnish, screen glass); coat_roughness defaults to 60% of
+    the base roughness, at least 0.08 (Blender's default 0.03 exported a mirror coat that showed
+    the room panorama's lamps as sharp squares and orbs sliding over floors and cabinets)."""
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     try:
         mat.use_nodes = True
@@ -73,6 +76,11 @@ def pbr_material(name, color, roughness=0.5, metallic=0.0, coat=0.0):
     bsdf.inputs["Metallic"].default_value = metallic
     if "Coat Weight" in bsdf.inputs:
         bsdf.inputs["Coat Weight"].default_value = coat
+    if "Coat Roughness" in bsdf.inputs:
+        # (left at Blender's default without a coat: anything else exports a clearcoat extension,
+        # which makes three.js build a costlier MeshPhysicalMaterial for nothing)
+        bsdf.inputs["Coat Roughness"].default_value = (0.03 if coat <= 0 else coat_roughness if coat_roughness is not None
+                                                       else max(0.08, 0.6 * roughness))
     mat.diffuse_color = (*color, 1.0)
     mat.roughness = roughness
     mat.metallic = metallic
@@ -402,33 +410,30 @@ def aabb_gltf(lo, hi):
 
 # ------------------------------------------------------------ baked lighting
 
-def lightmap_uv(objects, solids, air, resolution=1024, padding=4, name="Lightmap"):
-    """Second UV layer for baked lighting (exported as TEXCOORD_1).
-
-    Every face that can be seen from the air inside `bounds` gets its own
-    rectangle in one shared atlas at a uniform texel density; faces buried in
-    another solid or facing out of the bounds collapse to a corner so they
-    don't waste space. Meant for axis-aligned architecture (box faces).
-    solids: list of (lo, hi) boxes; air: list of (lo, hi) boxes the player can be in.
-    A face counts as visible if any of five sample points on it borders air.
-    Returns texels per metre."""
+def lightmap_charts(objects, solids, air):
+    """The charts of a room's lightmap atlas (see lightmap_uv): every face that can be seen
+    from the air (one of five sample points 5 cm in front of it is inside an `air` box and
+    not buried in a `solid`), with coplanar faces that touch along an edge joined into one
+    chart (a wall's pieces around an opening: the small piece over a doorway was its own
+    island with its own noise and edge seams, and baked visibly different from the wall
+    around it). Meant for axis-aligned architecture (box faces).
+    solids, air: lists of (lo, hi) boxes. Returns a list of charts
+    {"axes": (a, b), "mins": [ma, mb], "size": [sa, sb], "faces": [(ob, poly index), ...],
+     "area": face area (m²)}."""
 
     def in_air(p):
         inside = any(all(lo[i] - 1e-6 <= p[i] <= hi[i] + 1e-6 for i in range(3)) for lo, hi in air)
-        buried = any(all(s_lo[i] < p[i] < s_hi[i] for i in range(3)) for s_lo, s_hi in solids)
+        buried = inside and any(all(s_lo[i] < p[i] < s_hi[i] for i in range(3)) for s_lo, s_hi in solids)
         return inside and not buried
 
-    faces = []   # (ob, poly, axes, mins, size)
+    planes = {}   # (normal axis, sign, plane coordinate) -> [face]
     for ob in objects:
         me = ob.data
-        if name not in me.uv_layers:
-            me.uv_layers.new(name=name)
-        me.uv_layers.active_index = 0
         off = Vector(ob.location)
         for poly in me.polygons:
             n = [abs(c) for c in poly.normal]
             na = n.index(max(n))
-            axes = [i for i in range(3) if i != na]
+            axes = tuple(i for i in range(3) if i != na)
             cos = [off + me.vertices[vi].co for vi in poly.vertices]
             mins = [min(c[a] for c in cos) for a in axes]
             size = [max(c[a] for c in cos) - mins[k] for k, a in enumerate(axes)]
@@ -441,45 +446,151 @@ def lightmap_uv(objects, solids, air, resolution=1024, padding=4, name="Lightmap
                 samples.append(q)
             if not any(in_air(q) for q in samples):
                 continue
-            faces.append((ob, poly, axes, mins, size))
+            key = (na, poly.normal[na] > 0, round(cos[0][na], 4))
+            planes.setdefault(key, []).append(dict(ob=ob, poly=poly.index, axes=axes, mins=mins, size=size))
 
-    def pack(k):
-        """Shelf-pack all rectangles at k texels/metre; return placements or None."""
-        order = sorted(range(len(faces)), key=lambda i: -faces[i][4][1])
-        x = y = shelf = 0
-        out = {}
-        for i in order:
-            w = faces[i][4][0] * k + 2 * padding
-            h = faces[i][4][1] * k + 2 * padding
-            if x + w > resolution:
-                x, y, shelf = 0, y + shelf, 0
-            if w > resolution or y + h > resolution:
-                return None
-            out[i] = (x + padding, y + padding)
-            x += w
-            shelf = max(shelf, h)
-        return out
+    charts = []
+    for key, faces in planes.items():
+        parent = list(range(len(faces)))
 
-    lo_k, hi_k = 1.0, float(resolution)
-    for _ in range(40):
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+
+        for i in range(len(faces)):
+            for j in range(i + 1, len(faces)):
+                fi, fj = faces[i], faces[j]
+                ov = [min(fi["mins"][k] + fi["size"][k], fj["mins"][k] + fj["size"][k]) - max(fi["mins"][k], fj["mins"][k])
+                      for k in range(2)]
+                # overlapping, or sharing an edge segment (not just a corner)
+                if ov[0] > -1e-4 and ov[1] > -1e-4 and (ov[0] > 1e-4 or ov[1] > 1e-4):
+                    parent[find(i)] = find(j)
+        groups = {}
+        for i in range(len(faces)):
+            groups.setdefault(find(i), []).append(faces[i])
+        for fs in groups.values():
+            mins = [min(f["mins"][k] for f in fs) for k in range(2)]
+            size = [max(f["mins"][k] + f["size"][k] for f in fs) - mins[k] for k in range(2)]
+            charts.append(dict(axes=fs[0]["axes"], mins=mins, size=size, faces=[(f["ob"], f["poly"]) for f in fs],
+                               area=sum(f["size"][0] * f["size"][1] for f in fs)))
+    return charts
+
+
+def _skyline_pack(rects, W, H):
+    """Skyline bottom-left packing of integer rectangles [(w, h)] into W x H, each may turn
+    90 degrees. Returns [(x, y, turned)] or None if they don't fit."""
+    order = sorted(range(len(rects)), key=lambda i: (-max(rects[i]), -rects[i][0] * rects[i][1]))
+    sky = [[0, 0, W]]                 # segments [x, y, width], left to right
+    out = [None] * len(rects)
+    for i in order:
+        best = None
+        for turned in (False, True):
+            w, h = rects[i][::-1] if turned else rects[i]
+            if turned and w == h:
+                continue
+            for s in range(len(sky)):
+                x = sky[s][0]
+                if x + w > W:
+                    break
+                y, j, cover = 0, s, 0
+                while cover < w:
+                    y = max(y, sky[j][1])
+                    cover = sky[j][0] + sky[j][2] - x
+                    j += 1
+                if y + h > H:
+                    continue
+                score = (y + h, x)
+                if best is None or score < best[0]:
+                    best = (score, s, x, y, w, h, turned)
+        if best is None:
+            return None
+        _, s, x, y, w, h, turned = best
+        out[i] = (x, y, turned)
+        # raise the skyline over x .. x + w
+        new, end = [x, y + h, w], x + w
+        rest = []
+        for seg in sky:
+            sx, sy, sw = seg
+            if sx + sw <= x or sx >= end:
+                rest.append(seg)
+                continue
+            if sx < x:
+                rest.append([sx, sy, x - sx])
+            if sx + sw > end:
+                rest.append([end, sy, sx + sw - end])
+        rest.append(new)
+        rest.sort(key=lambda g: g[0])
+        sky = []
+        for seg in rest:
+            if sky and sky[-1][1] == seg[1] and sky[-1][0] + sky[-1][2] == seg[0]:
+                sky[-1][2] += seg[2]
+            else:
+                sky.append(seg)
+    return out
+
+
+def _chart_texels(chart, k, min_texels):
+    """A chart's texel extent at k texels/metre, never below min_texels on either axis (a
+    12 mm skirting top or a 15 cm reveal gets at least that many, stretched)."""
+    return [max(min_texels, int(math.ceil(chart["size"][a] * k))) for a in range(2)]
+
+
+def pack_charts(charts, W, H, padding=4, min_texels=2):
+    """The highest uniform texel density (texels per metre) at which `charts` fit a W x H
+    atlas, and their placements. Returns (k, placements, fill) with fill = fraction of the
+    atlas the faces themselves cover."""
+    def attempt(k):
+        rects = [tuple(t + 2 * padding for t in _chart_texels(c, k, min_texels)) for c in charts]
+        return _skyline_pack(rects, W, H)
+
+    total = sum(max(c["size"][0], 1e-3) * max(c["size"][1], 1e-3) for c in charts) or 1.0
+    lo_k, hi_k = 1.0, math.sqrt(W * H / total) * 1.05
+    if attempt(lo_k) is None:
+        raise ValueError(f"lightmap charts don't fit {W}x{H} even at 1 texel/m")
+    for _ in range(18):
         mid = (lo_k + hi_k) / 2
-        lo_k, hi_k = (mid, hi_k) if pack(mid) else (lo_k, mid)
-    k = int(lo_k * 0.995)
-    placed = pack(k)
+        lo_k, hi_k = (mid, hi_k) if attempt(mid) else (lo_k, mid)
+    k = lo_k
+    placed = attempt(k)
+    fill = sum(c["area"] for c in charts) * k * k / (W * H)
+    return k, placed, fill
 
+
+def apply_charts(objects, charts, k, placed, W, H, padding=4, min_texels=2, name="Lightmap"):
+    """Write the lightmap UV layer: each chart's faces at their placement (faces not in a
+    chart collapse to the corner texel)."""
     for ob in objects:
-        layer = ob.data.uv_layers[name]
-        for d in layer.data:
+        me = ob.data
+        if name not in me.uv_layers:
+            me.uv_layers.new(name=name)
+        me.uv_layers.active_index = 0
+        for d in me.uv_layers[name].data:
             d.uv = (0.0, 0.0)
-    for i, (ob, poly, axes, mins, size) in enumerate(faces):
-        px, py = placed[i]
-        layer = ob.data.uv_layers[name]
-        off = Vector(ob.location)
-        for li in poly.loop_indices:
-            co = off + ob.data.vertices[ob.data.loops[li].vertex_index].co
-            u = px + (co[axes[0]] - mins[0]) * k
-            v = py + (co[axes[1]] - mins[1]) * k
-            layer.data[li].uv = (u / resolution, v / resolution)
+    for c, (px, py, turned) in zip(charts, placed):
+        tex = _chart_texels(c, k, min_texels)
+        sc = [tex[a] / max(c["size"][a], 1e-6) for a in range(2)]       # texels per metre on each axis
+        for ob, pi in c["faces"]:
+            me = ob.data
+            layer = me.uv_layers[name]
+            off = Vector(ob.location)
+            for li in me.polygons[pi].loop_indices:
+                co = off + me.vertices[me.loops[li].vertex_index].co
+                t = [(co[c["axes"][a]] - c["mins"][a]) * sc[a] for a in range(2)]
+                if turned:
+                    t = t[::-1]
+                layer.data[li].uv = ((px + padding + t[0]) / W, (py + padding + t[1]) / H)
+
+
+def lightmap_uv(objects, solids, air, resolution=1024, padding=4, name="Lightmap", size=None):
+    """Second UV layer for baked lighting (exported as TEXCOORD_1): the room's charts
+    (lightmap_charts) skyline-packed into one atlas (`size` = (W, H), default resolution
+    square) at a uniform texel density. Returns texels per metre."""
+    W, H = size or (resolution, resolution)
+    charts = lightmap_charts(objects, solids, air)
+    k, placed, _ = pack_charts(charts, W, H, padding)
+    apply_charts(objects, charts, k, placed, W, H, padding, name=name)
     return k
 
 

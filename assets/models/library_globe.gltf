@@ -66,7 +66,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.20000000298023224
+					"clearcoatFactor":0.20000000298023224,
+					"clearcoatRoughnessFactor":0.27000001072883606
 				}
 			},
 			"name":"M_Library_Globe",
@@ -82,7 +83,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -394,13 +396,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6207,
+			"byteLength":6118,
 			"byteOffset":8016
 		},
 		{
 			"buffer":0,
 			"byteLength":6954,
-			"byteOffset":14224
+			"byteOffset":14136
 		}
 	],
 	"samplers":[
@@ -411,7 +413,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":21180,
+			"byteLength":21092,
 			"uri":"library_globe.bin"
 		}
 	]

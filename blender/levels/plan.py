@@ -102,7 +102,7 @@ CUTS = [
     dict(kind="window", axis="y", line=10, span=(-7, 7), z=(4.6, TOP)),
     # upper floor: galleries overlooking the entry and great room; the stair arrives at x 1.5..4.5
     dict(kind="balustrade", axis="x", line=-10.5, span=(-8, 1.5), z=(4.6, TOP)),
-    dict(kind="opening", axis="x", line=-10.5, span=(1.5, 4.5), z=(4.6, 7.0)),               # stair landing
+    dict(kind="opening", axis="x", line=-10.5, span=(1.5, 4.5), z=(4.6, TOP)),               # stair landing (open to the roof: no block over the stair top)
     dict(kind="balustrade", axis="x", line=-10.5, span=(4.5, 8), z=(4.6, TOP)),
     dict(kind="balustrade", axis="y", line=-13.5, span=(-7, 7), z=(4.6, TOP)),
     dict(kind="window", axis="x", line=-10.5, span=(-25, -14.5), z=(4.6, TOP)),              # library -> great room

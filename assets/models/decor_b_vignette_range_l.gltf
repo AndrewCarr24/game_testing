@@ -83,7 +83,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -113,7 +114,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -501,18 +503,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6368,
+			"byteLength":6380,
 			"byteOffset":5168
 		},
 		{
 			"buffer":0,
 			"byteLength":295,
-			"byteOffset":11536
+			"byteOffset":11548
 		},
 		{
 			"buffer":0,
 			"byteLength":2904,
-			"byteOffset":11832
+			"byteOffset":11844
 		}
 	],
 	"samplers":[
@@ -523,7 +525,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":14736,
+			"byteLength":14748,
 			"uri":"decor_b_vignette_range_l.bin"
 		}
 	]

@@ -85,7 +85,8 @@ LIGHTS = [
     dict(kind="area", pos=(7.77, 0.0, 5.27), size=(7.8, 0.08), aim=(7.3, 0.0, 8.4), power=420.0, color=(1.0, 0.84, 0.66)),
     dict(kind="area", pos=(-7.75, 0.0, 5.17), size=(7.8, 0.08), aim=(-7.2, 0.0, 2.5), power=300.0, color=(1.0, 0.82, 0.62)),
     dict(kind="area", pos=(7.75, 0.0, 5.17), size=(7.8, 0.08), aim=(7.2, 0.0, 2.5), power=260.0, color=(1.0, 0.82, 0.62)),
-    dict(kind="spot", pos=(7.72, -0.3, 5.15), aim=(7.2, -0.3, 1.4), power=250.0, angle=28, blend=0.5),   # the trefoil
+    dict(kind="spot", pos=(7.72, -0.3, 5.15), aim=(7.2, -0.3, 1.4), power=250.0, angle=28, blend=0.5,
+         no_shadow=["entry_sculpture"]),   # the trefoil (its own shadow was a grey cloud on the wall)
     # opal sconces at the doors (in front of the tube, 0.095 m off the wall)
     dict(kind="point", pos=(-7.6, -3.3, 2.35), power=60.0, color=(1.0, 0.80, 0.55)),
     dict(kind="point", pos=(-7.6, -1.25, 2.35), power=60.0, color=(1.0, 0.80, 0.55)),

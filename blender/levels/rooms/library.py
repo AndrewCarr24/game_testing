@@ -160,7 +160,7 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (5.53, 4.6, 1.1), 0, {'signal': 'lights_library', 'state': True}),
-    ('ix_book', (1.95, 0.18, 0.76), 10),
-    ('ix_book_b', (0.95, -0.22, 0.76), -15),
+    ('ix_book', (1.6, 0.3, 0.76), 10),           # between the folios and the notebook
+    ('ix_book_b', (0.75, -0.05, 0.76), -15),     # between the west lamp and the mug
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "library")

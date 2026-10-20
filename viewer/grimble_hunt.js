@@ -52,7 +52,12 @@ export class GrimbleHunt {
     this.scene = scene;
     this.sightBlockers = sightBlockers;
     // walls for sight: the shell's colliders only (props don't hide you from it)
-    this.walls = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
+    // (not the balustrades' invisible anti-vault boxes: it sees over a glass rail. They're
+    // tagged seeThrough in the level, or recognised as thin 2.2 m-tall boxes in older levels)
+    const rail = (c) => c.seeThrough || (Math.abs(c.max[1] - c.min[1] - 2.2) < 0.05 &&
+      Math.min(c.max[0] - c.min[0], c.max[2] - c.min[2]) <= 0.12);
+    this.walls = level.colliders.filter((c) => !rail(c))
+      .map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
     const areas = MAIN_SPACES.filter((r) => level.rooms[r]).map((r) => level.rooms[r].rect);
     this.breakable = (level.breakables || [])[0];
     if (this.breakable) {           // the lawn in front of the glass it breaks, so it can come through
@@ -195,9 +200,11 @@ export class GrimbleHunt {
         this.turnToward(pp, dt);
         if (!this.hitDone && this.t >= hitT) {
           this.hitDone = true;
-          const reach = this.state === 'swipe' ? o.bodyFront + o.strikeRange + 0.4 : o.reachUp + 0.9;
+          const hx = this.root.position.x + Math.sin(g.heading) * o.bodyFront, hz = this.root.position.z + Math.cos(g.heading) * o.bodyFront;
+          const fromHead = Math.hypot(pp.x - hx, pp.y - hz);
           const vertOk = this.state === 'swipe' ? !upper : upper;
-          if (dist <= reach && vertOk && player?.knockDown) {
+          const inReach = this.state === 'swipe' ? dist <= o.bodyFront + o.strikeRange + 0.4 : fromHead <= o.reachUp + 0.9;
+          if (inReach && vertOk && player?.knockDown) {
             const from = new THREE.Vector3(this.root.position.x, feet.y, this.root.position.z);
             player.knockDown(from);
             this.hitAt = this.time;
@@ -219,12 +226,15 @@ export class GrimbleHunt {
           break;
         }
         if (seen && canHit) {
-          if (upper && dist <= o.reachUp + 0.5 && this.inDouble(this.root.position.x, this.root.position.z)
-            && this.turnToward(pp, dt) < 0.5) { this.strike('reachUp'); break; }
+          // reach up from where its head is, and only with its head under open sky / a double-height void
+          if (upper && headDist <= o.reachUp + 0.5 && this.inDouble(hx, hz) && this.turnToward(pp, dt) < 0.5) {
+            this.strike('reachUp'); break;
+          }
         }
         if (seen || this.time - this.seenAt < o.memory) {
           // chase toward the player (or the nearest place below them), re-planning twice a second
-          const target = this.lastSeen;
+          // upstairs: the place to reach up from is the nearest spot in a double-height room
+          const target = upper ? (this.reachSpot(this.lastSeen) ?? this.lastSeen) : this.lastSeen;
 
           if (!this.path || this.time - this.pathAt > 0.5) this.goTo(target);
           if (!this.path) { this.lurk(dt, pp); break; }
@@ -264,6 +274,24 @@ export class GrimbleHunt {
     this.hitDone = false;
     this.path = null;
     this.g.play(kind === 'swipe' ? 'Swipe' : 'ReachUp');
+  }
+
+  // the walkable cell in a double-height room nearest a player on the upper floor (within 4.5 m)
+  reachSpot(p) {
+    const key = `${Math.round(p.x * 2)},${Math.round(p.y * 2)}`;
+    if (this._reachKey === key) return this._reach;
+    let best = null, bd = 4.5;
+    const n = this.nav, R = Math.ceil(4.5 / n.cell), ci = Math.floor((p.x - n.x0) / n.cell), cj = Math.floor((p.y - n.z0) / n.cell);
+    for (let dj = -R; dj <= R; dj++) for (let di = -R; di <= R; di++) {
+      const i = ci + di, j = cj + dj;
+      if (i < 0 || j < 0 || i >= n.w || j >= n.h) continue;
+      const k = j * n.w + i;
+      if (!n.walkable(k)) continue;
+      const c = n.centre(k), d = c.distanceTo(p);
+      if (d < bd && this.inDouble(c.x, c.y)) { bd = d; best = c; }
+    }
+    this._reachKey = key; this._reach = best;
+    return best;
   }
 
   randomSpot() {

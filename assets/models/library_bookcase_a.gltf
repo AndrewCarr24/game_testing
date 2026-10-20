@@ -72,7 +72,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -316,13 +317,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4428,
+			"byteLength":4441,
 			"byteOffset":19952
 		},
 		{
 			"buffer":0,
 			"byteLength":5066,
-			"byteOffset":24380
+			"byteOffset":24396
 		}
 	],
 	"samplers":[
@@ -333,7 +334,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":29448,
+			"byteLength":29464,
 			"uri":"library_bookcase_a.bin"
 		}
 	]

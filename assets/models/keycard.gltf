@@ -80,7 +80,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.6000000238418579
+					"clearcoatFactor":0.6000000238418579,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Card_Blue",
@@ -99,7 +100,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.6000000238418579
+					"clearcoatFactor":0.6000000238418579,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Card_Pearl",

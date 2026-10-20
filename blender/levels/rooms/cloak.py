@@ -23,12 +23,13 @@ FINISHES = dict(
 )
 
 PLACEMENTS = [
-    # --- north wall: two closets
-    ("entry_coat_closet", (-1.2, 4.29), 0),
-    ("entry_coat_closet", (1.2, 4.29), 0),
-    # --- east wall: two closets facing west
-    ("entry_coat_closet", (2.29, 2.65), -90),
-    ("entry_coat_closet", (2.29, 0.2), -90),
+    # --- north wall: two closets (2.29 m wide) from the west wall to the east run's front (x 1.98)
+    ("entry_coat_closet", (-1.455, 4.29), 0),
+    ("entry_coat_closet", (0.835, 4.29), 0),
+    # --- east wall: two closets facing west, from the north run's front (y 3.98) south; the
+    #     corner square behind both runs' end panels is closed off (a blind corner)
+    ("entry_coat_closet", (2.29, 2.835), -90),
+    ("entry_coat_closet", (2.29, 0.545), -90),
     # --- west wall: full-length mirror between sconces
     ("entry_mirror_tall", (-2.6, 1.2, 1.25), 90),
     ("entry_sconce", (-2.6, 0.2, 1.75), 90),
@@ -59,13 +60,13 @@ PLACEMENTS = [
 # pool light on the leather bench, the south wall and the way in. No ceiling lines.
 LIGHTS = [
     # hat-shelf LEDs (shelf 2.30 m), north pair and east pair
-    dict(kind="area", pos=(-1.2, 4.08, 2.27), size=(2.2, 0.05), aim=(-1.2, 3.9, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
-    dict(kind="area", pos=(1.2, 4.08, 2.27), size=(2.2, 0.05), aim=(1.2, 3.9, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
-    dict(kind="area", pos=(2.08, 2.65, 2.27), size=(2.2, 0.05), aim=(1.9, 2.65, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
-    dict(kind="area", pos=(2.08, 0.2, 2.27), size=(2.2, 0.05), aim=(1.9, 0.2, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
+    dict(kind="area", pos=(-1.455, 4.08, 2.27), size=(2.1, 0.05), aim=(-1.455, 3.9, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
+    dict(kind="area", pos=(0.835, 4.08, 2.27), size=(2.1, 0.05), aim=(0.835, 3.9, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
+    dict(kind="area", pos=(2.08, 2.835, 2.27), size=(2.1, 0.05), aim=(1.9, 2.835, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
+    dict(kind="area", pos=(2.08, 0.545, 2.27), size=(2.1, 0.05), aim=(1.9, 0.545, 0.0), power=45.0, color=(1.0, 0.82, 0.58)),
     # on top of the 3 m closets, up onto the ceiling
-    dict(kind="area", pos=(0.0, 4.25, 3.04), size=(4.7, 0.3), aim=(0.0, 4.25, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
-    dict(kind="area", pos=(2.3, 1.42, 3.04), size=(0.3, 4.8), aim=(2.3, 1.42, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
+    dict(kind="area", pos=(-0.31, 4.25, 3.04), size=(4.5, 0.3), aim=(-0.31, 4.25, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
+    dict(kind="area", pos=(2.3, 1.69, 3.04), size=(0.3, 4.5), aim=(2.3, 1.69, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
     # valance wash down the mirror wall (lip down at 3.9 m)
     dict(kind="area", pos=(-2.5, 0.0, 3.84), size=(7.8, 0.06), aim=(-2.1, 0.0, 0.5), power=260.0, color=(1.0, 0.82, 0.6)),
     # mirror sconces

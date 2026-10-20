@@ -159,7 +159,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Walnut",
@@ -201,7 +202,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":1
+					"clearcoatFactor":1,
+					"clearcoatRoughnessFactor":0.07999999821186066
 				}
 			},
 			"name":"M_Glass_Black",
@@ -677,38 +679,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1987,
+			"byteLength":1971,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":472,
-			"byteOffset":1988
+			"byteLength":471,
+			"byteOffset":1972
 		},
 		{
 			"buffer":0,
 			"byteLength":428,
-			"byteOffset":2460
+			"byteOffset":2444
 		},
 		{
 			"buffer":0,
 			"byteLength":444,
-			"byteOffset":2888
+			"byteOffset":2872
 		},
 		{
 			"buffer":0,
 			"byteLength":495,
-			"byteOffset":3332
+			"byteOffset":3316
 		},
 		{
 			"buffer":0,
-			"byteLength":575,
-			"byteOffset":3828
+			"byteLength":603,
+			"byteOffset":3812
 		},
 		{
 			"buffer":0,
 			"byteLength":215,
-			"byteOffset":4404
+			"byteOffset":4416
 		}
 	],
 	"samplers":[
@@ -719,7 +721,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":4620,
+			"byteLength":4632,
 			"uri":"ix_tablet_dock.bin"
 		}
 	]

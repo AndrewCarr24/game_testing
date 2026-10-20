@@ -79,12 +79,23 @@ if ( roughnessFactor < 0.75 ) {
 // Point and spot lights (the flashlight, a hero lamp's react light) still light baked surfaces:
 // only the sun and the stand-in fills are in the bake. Their direct light is summed before the
 // directional loop in r160's chunk, so it's saved there and put back after the rest is zeroed.
+// The clearcoat and sheen lobes keep their own direct-light sums (globals of the physical
+// shader, added to the output after lights_fragment_end), so they're saved and restored too:
+// otherwise the sun's coat glint shows on floors and props it can't reach.
 const LOCAL_LIGHTS = THREE.ShaderChunk.lights_fragment_begin.replace(
   '#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )',
-  'vec3 localDiffuse = reflectedLight.directDiffuse, localSpecular = reflectedLight.directSpecular;\n#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )');
+  'vec3 localDiffuse = reflectedLight.directDiffuse, localSpecular = reflectedLight.directSpecular;\n' +
+  'vec3 localCoat = clearcoatSpecularDirect, localSheen = sheenSpecularDirect;\n#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )');
 if (!LOCAL_LIGHTS.includes('localDiffuse')) console.warn('baked.js: lights_fragment_begin changed; point/spot lights will not light baked surfaces');
 const keepLocal = (fs) => fs.replace('#include <lights_fragment_begin>', LOCAL_LIGHTS.includes('localDiffuse') ? LOCAL_LIGHTS
-  : '#include <lights_fragment_begin>\nvec3 localDiffuse = vec3( 0.0 ), localSpecular = vec3( 0.0 );');
+  : '#include <lights_fragment_begin>\nvec3 localDiffuse = vec3( 0.0 ), localSpecular = vec3( 0.0 ), localCoat = vec3( 0.0 ), localSheen = vec3( 0.0 );');
+// after keepLocal: direct light back to the local lights only (the sun is in the bake, or can't get here)
+const LOCAL_ONLY = [
+  'reflectedLight.directDiffuse = localDiffuse;',
+  'reflectedLight.directSpecular = localSpecular;',
+  'clearcoatSpecularDirect = localCoat;',
+  'sheenSpecularDirect = localSheen;',
+];
 
 function addSheen(shader) {
   shader.fragmentShader = shader.fragmentShader
@@ -155,8 +166,7 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
         [
           // all direct light is in the bake; without shadows a real-time sun glint
           // would appear even where the sun can't reach (windowless rooms)
-          'reflectedLight.directDiffuse = localDiffuse;',
-          'reflectedLight.directSpecular = localSpecular;',
+          ...LOCAL_ONLY,
           'irradiance = vec3( 0.0 );',
           '#include <lights_fragment_maps>',
           'iblIrradiance = vec3( 0.0 );',
@@ -166,7 +176,9 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
           ...(r.sh && specOcc ? [
             'float lmL = dot( lightMapIrradiance, vec3( 0.2126, 0.7152, 0.0722 ) );',
             'float shL = dot( shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH ), vec3( 0.2126, 0.7152, 0.0722 ) );',
-            'radiance *= smoothstep( 0.1, 0.8, lmL / max( shL, 1e-4 ) );',
+            // (not on metals: a mirror or steel panel is dark in the lightmap because it has
+            // no diffuse, not because it's occluded; with it the gym's mirror wall went black)
+            'radiance *= mix( smoothstep( 0.1, 0.8, lmL / max( shL, 1e-4 ) ), 1.0, step( 0.5, metalnessFactor ) );',
           ] : []),
         ].join('\n'));
     };
@@ -180,23 +192,35 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   // the baked walls); reflections from the room's (highlight-clamped) panorama.
   // sunless: the room never gets direct sun (mansion.json rooms[r].sun === false), so its
   // props skip the real-time sun (and its shadow lookups) entirely
-  function roomMaterial(src, room, sunless = false) {
-    const key = `${room}|${src.uuid}|env${sunless ? '|nosun' : ''}`;
+  //
+  // door: { room, axis } for a door between `room` and door.room. A door lit by its own room's
+  // probe alone read black from the brighter side (the gym door from the office), so each face
+  // takes the probe of the room it faces: axis (world, horizontal) points from `room` into
+  // door.room; the leaf's edges and a door swung open blend the two; reflections stay `room`'s.
+  // Every prop runs the same code (for the others roomSH2 = roomSH and the branch is skipped),
+  // so doors share the props' shader programs: no extra compile when one comes into view.
+  const noDoor = new THREE.Vector3();
+  function roomMaterial(src, room, sunless = false, door = null) {
+    const key = `${room}|${src.uuid}|env${sunless ? '|nosun' : ''}${door ? `|door:${door.room}` : ''}`;
     if (clones.has(key)) return clones.get(key);
     const m = src.clone();
     const r = rooms[room];
     m.envMap = r.envMap;
     if (r.sh) {
+      const sh2 = door ? rooms[door.room].sh : r.sh;
       m.onBeforeCompile = (shader) => {
         addBoxProjection(shader, r.box);
-        shader.uniforms.roomSH = { value: r.sh };
+        Object.assign(shader.uniforms, { roomSH: { value: r.sh }, roomSH2: { value: sh2 }, doorAxis: { value: door ? door.axis : noDoor } });
         shader.fragmentShader = (sunless ? keepLocal(shader.fragmentShader) : shader.fragmentShader)
-          .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 roomSH[ 9 ];')
+          .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 roomSH[ 9 ], roomSH2[ 9 ];\nuniform vec3 doorAxis;')
           .replace('#include <lights_fragment_maps>', [
             '#include <lights_fragment_maps>',
             'iblIrradiance = vec3( 0.0 );',
-            'irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), roomSH );',
-            ...(sunless ? ['reflectedLight.directDiffuse = localDiffuse;', 'reflectedLight.directSpecular = localSpecular;'] : []),
+            'vec3 shN = inverseTransformDirection( geometryNormal, viewMatrix );',
+            'vec3 shIrr = shGetIrradianceAt( shN, roomSH );',
+            'if ( dot( doorAxis, doorAxis ) > 0.0 ) shIrr = mix( shIrr, shGetIrradianceAt( shN, roomSH2 ), smoothstep( -0.35, 0.35, dot( shN, doorAxis ) ) );',
+            'irradiance += shIrr;',
+            ...(sunless ? LOCAL_ONLY : []),
           ].join('\n'));
       };
       m.customProgramCacheKey = () => (sunless ? 'room-sh-nosun-local' : 'room-sh') + (r.box ? '-box' : '');
@@ -205,11 +229,51 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
     return m;
   }
 
-  // shell: every baked mesh gets its room's lightmap
+  // a door prop between rooms a and b (a's lighting only if either has no probe)
+  function applyDoor(root, a, b, axis, sunless = false) {
+    if (!rooms[a]?.sh || !rooms[b]?.sh) return applyRoom(root, a, sunless);
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      o.material = roomMaterial(o.material, a, sunless, { room: b, axis });
+      if (sunless) o.castShadow = o.receiveShadow = false;
+    });
+  }
+
+  // The house's window glass: no lightmap and no shadows (it's transparent), so the real-time
+  // sun put its highlight on every pane, also inside rooms the sun can't reach (the gym's north
+  // glass). Its direct specular is kept only while the eye is outdoors (glassSun = 1, see
+  // setGlassSun: there the visible face is the sunlit outer one); indoors it shows only the
+  // panorama's reflection. Balustrade glass is always indoors.
+  const glassSun = { value: 0 };
+  function glassMaterial(src, outdoor) {
+    const key = `${src.uuid}|glass`;
+    if (clones.has(key)) return clones.get(key);
+    const m = src.clone();
+    m.onBeforeCompile = (shader) => {
+      shader.uniforms.glassSun = outdoor ? glassSun : { value: 0 };
+      shader.fragmentShader = keepLocal(shader.fragmentShader)
+        .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform float glassSun;')
+        .replace('#include <lights_fragment_maps>', [
+          '#include <lights_fragment_maps>',
+          'reflectedLight.directSpecular = mix( localSpecular, reflectedLight.directSpecular, glassSun );',
+          'clearcoatSpecularDirect = mix( localCoat, clearcoatSpecularDirect, glassSun );',
+        ].join('\n'));
+    };
+    m.customProgramCacheKey = () => 'house-glass';
+    clones.set(key, m);
+    return m;
+  }
+
+  // shell: every baked mesh gets its room's lightmap; the glass its sun-aware material
   function applyLightmaps(root) {
     let count = 0;
     root.traverse((o) => {
-      const room = o.isMesh && roomOf.get(o.name);
+      if (!o.isMesh) return;
+      const room = roomOf.get(o.name);
+      if (!room && !Array.isArray(o.material) && /Glass/.test(o.material.name)) {
+        o.material = glassMaterial(o.material, !/Rail/.test(o.material.name));
+        return;
+      }
       if (!room || !o.geometry.attributes.uv1) return;
       o.material = bakedMaterial(o.material, room);
       o.receiveShadow = false;             // its shadows are already in the bake
@@ -231,5 +295,7 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   // materials without a room of their own (the house's window glass) reflect the entry's
   // panorama; picked by name, not by which room happened to finish loading first
   const fallback = rooms.entry ?? rooms[Object.keys(bake.rooms)[0]];
-  return { bake, rooms, applyLightmaps, applyRoom, defaultEnv: fallback?.envMap };
+  // is the eye outdoors (the lawn, the terraces, the courtyard)? Then the glass shows the sun
+  const setGlassSun = (outdoors) => { glassSun.value = outdoors ? 1 : 0; };
+  return { bake, rooms, applyLightmaps, applyRoom, applyDoor, setGlassSun, defaultEnv: fallback?.envMap };
 }

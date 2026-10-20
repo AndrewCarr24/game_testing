@@ -16,17 +16,25 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				9
+				12
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"CourtyardBedNorth_Boxwood"
+			"name":"CourtyardBedNorth_Boxwood0"
 		},
 		{
 			"mesh":1,
+			"name":"CourtyardBedNorth_Boxwood1"
+		},
+		{
+			"mesh":2,
+			"name":"CourtyardBedNorth_Boxwood2"
+		},
+		{
+			"mesh":3,
 			"name":"CourtyardBedNorth_Coping",
 			"translation":[
 				0,
@@ -35,7 +43,7 @@
 			]
 		},
 		{
-			"mesh":2,
+			"mesh":4,
 			"name":"CourtyardBedNorth_EndE",
 			"translation":[
 				9.899999618530273,
@@ -44,7 +52,7 @@
 			]
 		},
 		{
-			"mesh":3,
+			"mesh":5,
 			"name":"CourtyardBedNorth_EndW",
 			"translation":[
 				-9.899999618530273,
@@ -53,11 +61,15 @@
 			]
 		},
 		{
-			"mesh":4,
+			"mesh":6,
+			"name":"CourtyardBedNorth_GroundcoverNoCollide"
+		},
+		{
+			"mesh":7,
 			"name":"CourtyardBedNorth_PlantingNoCollide"
 		},
 		{
-			"mesh":5,
+			"mesh":8,
 			"name":"CourtyardBedNorth_Soil",
 			"translation":[
 				0,
@@ -66,11 +78,11 @@
 			]
 		},
 		{
-			"mesh":6,
+			"mesh":9,
 			"name":"CourtyardBedNorth_TrailingNoCollide"
 		},
 		{
-			"mesh":7,
+			"mesh":10,
 			"name":"CourtyardBedNorth_WallBack",
 			"translation":[
 				0,
@@ -79,7 +91,7 @@
 			]
 		},
 		{
-			"mesh":8,
+			"mesh":11,
 			"name":"CourtyardBedNorth_WallFront",
 			"translation":[
 				0,
@@ -97,7 +109,10 @@
 				5,
 				6,
 				7,
-				8
+				8,
+				9,
+				10,
+				11
 			],
 			"name":"CourtyardBedNorth"
 		}
@@ -157,7 +172,7 @@
 	],
 	"meshes":[
 		{
-			"name":"CourtyardBedNorth_Boxwood",
+			"name":"CourtyardBedNorth_Boxwood0",
 			"primitives":[
 				{
 					"attributes":{
@@ -182,14 +197,13 @@
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_Coping",
+			"name":"CourtyardBedNorth_Boxwood1",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":4,
 						"NORMAL":5,
-						"TEXCOORD_0":6,
-						"COLOR_0":7
+						"COLOR_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -197,26 +211,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":8,
-					"material":1,
+					"indices":7,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_EndE",
+			"name":"CourtyardBedNorth_Boxwood2",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
-						"COLOR_0":12
+						"POSITION":8,
+						"NORMAL":9,
+						"COLOR_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -224,26 +236,25 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"COLOR_0":2
 							}
 						}
 					},
-					"indices":13,
-					"material":1,
+					"indices":11,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_EndW",
+			"name":"CourtyardBedNorth_Coping",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14,
+						"COLOR_0":15
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -256,21 +267,21 @@
 							}
 						}
 					},
-					"indices":18,
+					"indices":16,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_PlantingNoCollide",
+			"name":"CourtyardBedNorth_EndE",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":19,
-						"NORMAL":20,
-						"TEXCOORD_0":21,
-						"COLOR_0":22
+						"POSITION":17,
+						"NORMAL":18,
+						"TEXCOORD_0":19,
+						"COLOR_0":20
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -283,50 +294,25 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":2,
+					"indices":21,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_Soil",
+			"name":"CourtyardBedNorth_EndW",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"COLOR_0":26
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24,
+						"COLOR_0":25
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
 							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":27,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"CourtyardBedNorth_TrailingNoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":28,
-						"NORMAL":29,
-						"TEXCOORD_0":30,
-						"COLOR_0":31
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -335,21 +321,46 @@
 							}
 						}
 					},
-					"indices":32,
-					"material":2,
+					"indices":26,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardBedNorth_WallBack",
+			"name":"CourtyardBedNorth_GroundcoverNoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":33,
-						"NORMAL":34,
-						"TEXCOORD_0":35,
-						"COLOR_0":36
+						"POSITION":27,
+						"NORMAL":28,
+						"COLOR_0":29
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":30,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardBedNorth_PlantingNoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33,
+						"COLOR_0":34
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -362,7 +373,86 @@
 							}
 						}
 					},
-					"indices":37,
+					"indices":35,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardBedNorth_Soil",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":36,
+						"NORMAL":37,
+						"COLOR_0":38
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":39,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardBedNorth_TrailingNoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42,
+						"COLOR_0":43
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":44,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardBedNorth_WallBack",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":45,
+						"NORMAL":46,
+						"TEXCOORD_0":47,
+						"COLOR_0":48
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":49,
 					"material":1,
 					"mode":4
 				}
@@ -373,14 +463,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":38,
-						"NORMAL":39,
-						"TEXCOORD_0":40,
-						"COLOR_0":41
+						"POSITION":50,
+						"NORMAL":51,
+						"TEXCOORD_0":52,
+						"COLOR_0":53
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":11,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -389,7 +479,7 @@
 							}
 						}
 					},
-					"indices":42,
+					"indices":54,
 					"material":1,
 					"mode":4
 				}
@@ -429,33 +519,95 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":615,
+			"count":146,
 			"max":[
-				9.850000381469727,
+				-7.1877570152282715,
 				0.9366735219955444,
 				0.35586488246917725
 			],
 			"min":[
-				-9.850000381469727,
+				-7.94244909286499,
 				0.37208691239356995,
-				-0.5
+				-0.40367960929870605
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":615,
+			"count":146,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":615,
+			"count":146,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":3153,
+			"count":822,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"max":[
+				-1.975056767463684,
+				0.8962360620498657,
+				0.3398880660533905
+			],
+			"min":[
+				-2.65875506401062,
+				0.37967073917388916,
+				-0.3783794045448303
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":146,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":822,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"max":[
+				7.5734357833862305,
+				0.867638111114502,
+				0.29792389273643494
+			],
+			"min":[
+				6.9230523109436035,
+				0.3783695101737976,
+				-0.353078156709671
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":146,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":146,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":813,
 			"type":"SCALAR"
 		},
 		{
@@ -564,6 +716,37 @@
 		{
 			"componentType":5123,
 			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":177,
+			"max":[
+				9.850000381469727,
+				0.5368690490722656,
+				0.3400000035762787
+			],
+			"min":[
+				-9.850000381469727,
+				0.38999998569488525,
+				-0.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":177,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":177,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":696,
 			"type":"SCALAR"
 		},
 		{
@@ -745,48 +928,63 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3987,
+			"byteLength":1412,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
+			"byteLength":1485,
+			"byteOffset":1412
+		},
+		{
+			"buffer":0,
+			"byteLength":1560,
+			"byteOffset":2900
+		},
+		{
+			"buffer":0,
 			"byteLength":568,
-			"byteOffset":3988
+			"byteOffset":4460
 		},
 		{
 			"buffer":0,
 			"byteLength":620,
-			"byteOffset":4556
+			"byteOffset":5028
 		},
 		{
 			"buffer":0,
 			"byteLength":620,
-			"byteOffset":5176
+			"byteOffset":5648
+		},
+		{
+			"buffer":0,
+			"byteLength":1341,
+			"byteOffset":6268
 		},
 		{
 			"buffer":0,
 			"byteLength":27634,
-			"byteOffset":5796
+			"byteOffset":7612
 		},
 		{
 			"buffer":0,
 			"byteLength":267,
-			"byteOffset":33432
+			"byteOffset":35248
 		},
 		{
 			"buffer":0,
 			"byteLength":6748,
-			"byteOffset":33700
+			"byteOffset":35516
 		},
 		{
 			"buffer":0,
 			"byteLength":640,
-			"byteOffset":40448
+			"byteOffset":42264
 		},
 		{
 			"buffer":0,
 			"byteLength":569,
-			"byteOffset":41088
+			"byteOffset":42904
 		}
 	],
 	"samplers":[
@@ -797,7 +995,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":41660,
+			"byteLength":43476,
 			"uri":"courtyard_bed_north.bin"
 		}
 	]

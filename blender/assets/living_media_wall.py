@@ -176,9 +176,12 @@ def build(**overrides):
     for i in range(doors):
         x = -cw / 2 + 0.012 + dw / 2 + i * (dw + gap)
         box(col, root, f"{n}_Pull{i}", bronze, (0.30, 0.012, 0.012), (x, cy - cd / 2 - 0.006, cz + ch - 0.045), 0.003)
-    # under-glow strip and a dark plinth recess
-    glow = materials.emissive("M_Living_WarmGlow", (1.0, 0.62, 0.30), 2.2)
-    box(col, root, f"{n}_UnderGlow", glow, (cw - 0.1, 0.03, 0.012), (0, cy - cd / 2 + 0.07, cz - 0.006), uv=1.0)
+    # under-glow strip and a dark plinth recess. The strip sits 0.18 m back from the front,
+    # nearly flush with the underside, behind a 2 cm oak fascia lip: seen from across the room
+    # a 12 mm strip just behind the front edge showed as a dashed bright line
+    glow = materials.emissive("M_Living_WarmGlow", (1.0, 0.62, 0.30), 1.0)
+    box(col, root, f"{n}_UnderGlow", glow, (cw - 0.1, 0.03, 0.006), (0, cy - cd / 2 + 0.18, cz - 0.003), uv=1.0)
+    box(col, root, f"{n}_FasciaLip", oak, (cw - 0.024, 0.018, 0.02), (0, cy - cd / 2 + 0.012 + 0.009, cz - 0.01), 0.002)
     box(col, root, f"{n}_Plinth", felt, (cw - 0.3, cd - 0.12, 0.02), (0, cy, 0.012 + 0.0), uv=1.0)
     # wall-hung bronze reveal line above the picture and a slim cap on the slat wall
     box(col, root, f"{n}_SlatCap", bronze, (sz, 0.06, 0.012), (0, yb - 0.04, wh + 0.006), 0.002)

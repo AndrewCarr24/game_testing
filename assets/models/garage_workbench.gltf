@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				11
+				18
 			]
 		}
 	],
@@ -66,6 +66,91 @@
 			"name":"GarageWorkbench_Detail_Piping_Steel_Polished"
 		},
 		{
+			"mesh":11,
+			"name":"GarageWorkbench_Drawer_Back",
+			"translation":[
+				0,
+				-0.003000020980834961,
+				0.41600000858306885
+			]
+		},
+		{
+			"mesh":12,
+			"name":"GarageWorkbench_Drawer_Floor",
+			"translation":[
+				0,
+				-0.06099998950958252,
+				0.20600000023841858
+			]
+		},
+		{
+			"mesh":13,
+			"name":"GarageWorkbench_Drawer_Front",
+			"translation":[
+				0,
+				0,
+				-0.009999990463256836
+			]
+		},
+		{
+			"mesh":14,
+			"name":"GarageWorkbench_Drawer_Pull",
+			"translation":[
+				0,
+				0.04500001668930054,
+				-0.027000010013580322
+			]
+		},
+		{
+			"mesh":15,
+			"name":"GarageWorkbench_Drawer_SideL",
+			"translation":[
+				-0.39283332228660583,
+				-0.003000020980834961,
+				0.20999999344348907
+			]
+		},
+		{
+			"mesh":16,
+			"name":"GarageWorkbench_Drawer_SideR",
+			"translation":[
+				0.39283332228660583,
+				-0.003000020980834961,
+				0.20999999344348907
+			]
+		},
+		{
+			"children":[
+				11,
+				12,
+				13,
+				14,
+				15,
+				16
+			],
+			"extras":{
+				"interact":{
+					"type":"slide",
+					"axis":[
+						0,
+						0,
+						-1
+					],
+					"distance":0.32,
+					"duration":0.45,
+					"range":1.5,
+					"prompt":"Open drawer",
+					"promptActive":"Close drawer"
+				}
+			},
+			"name":"GarageWorkbench_Drawer",
+			"translation":[
+				0,
+				0.8220000267028809,
+				-0.41999998688697815
+			]
+		},
+		{
 			"children":[
 				0,
 				1,
@@ -77,7 +162,8 @@
 				7,
 				8,
 				9,
-				10
+				10,
+				17
 			],
 			"name":"GarageWorkbench"
 		}
@@ -141,7 +227,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.30000001192092896
 				}
 			},
 			"name":"M_Garage_Graphite",
@@ -198,7 +285,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.4000000059604645
+					"clearcoatFactor":0.4000000059604645,
+					"clearcoatRoughnessFactor":0.07999999821186066
 				}
 			},
 			"name":"M_Garage_Screen",
@@ -217,7 +305,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.23999999463558197
 				}
 			},
 			"name":"M_Garage_WhiteLacquer",
@@ -530,6 +619,168 @@
 					"mode":4
 				}
 			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_Back",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":55,
+						"NORMAL":56,
+						"TEXCOORD_0":57,
+						"COLOR_0":58
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":39,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_Floor",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":59,
+						"NORMAL":60,
+						"TEXCOORD_0":61,
+						"COLOR_0":62
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":39,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_Front",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":63,
+						"NORMAL":64,
+						"TEXCOORD_0":65,
+						"COLOR_0":66
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":67,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_Pull",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":68,
+						"NORMAL":69,
+						"TEXCOORD_0":70,
+						"COLOR_0":71
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":72,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_SideL",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":73,
+						"NORMAL":74,
+						"TEXCOORD_0":75,
+						"COLOR_0":76
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":39,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"GarageWorkbench_Drawer_SideR",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":77,
+						"NORMAL":78,
+						"TEXCOORD_0":79,
+						"COLOR_0":80
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":39,
+					"material":0,
+					"mode":4
+				}
+			]
 		}
 	],
 	"accessors":[
@@ -643,7 +894,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":1785,
+			"count":1736,
 			"max":[
 				1.1399999856948853,
 				1.058000087738037,
@@ -658,28 +909,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":1785,
+			"count":1736,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1785,
+			"count":1736,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1785,
+			"count":1736,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":4752,
+			"count":4620,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":2283,
+			"count":2183,
 			"max":[
 				1.2384999990463257,
 				1.0199999809265137,
@@ -694,23 +945,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":2283,
+			"count":2183,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":2283,
+			"count":2183,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2283,
+			"count":2183,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":7452,
+			"count":7128,
 			"type":"SCALAR"
 		},
 		{
@@ -928,6 +1179,202 @@
 			"componentType":5123,
 			"count":2028,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.38883334398269653,
+				0.05999999865889549,
+				0.004000000189989805
+			],
+			"min":[
+				-0.38883334398269653,
+				-0.05999999865889549,
+				-0.004000000189989805
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.38883334398269653,
+				0.0020000000949949026,
+				0.20600000023841858
+			],
+			"min":[
+				-0.38883334398269653,
+				-0.0020000000949949026,
+				-0.20600000023841858
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.41183334589004517,
+				0.07500000298023224,
+				0.009999999776482582
+			],
+			"min":[
+				-0.41183334589004517,
+				-0.07500000298023224,
+				-0.009999999776482582
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":48,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":49,
+			"max":[
+				0.31183332204818726,
+				0.00800000037997961,
+				0.007000000216066837
+			],
+			"min":[
+				-0.31183332204818726,
+				-0.00800000037997961,
+				-0.007000000216066837
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":49,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":49,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":49,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.004000000189989805,
+				0.05999999865889549,
+				0.20999999344348907
+			],
+			"min":[
+				-0.004000000189989805,
+				-0.05999999865889549,
+				-0.20999999344348907
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.004000000189989805,
+				0.05999999865889549,
+				0.20999999344348907
+			],
+			"min":[
+				-0.004000000189989805,
+				-0.05999999865889549,
+				-0.20999999344348907
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
@@ -948,48 +1395,78 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":12275,
+			"byteLength":11990,
 			"byteOffset":5736
 		},
 		{
 			"buffer":0,
-			"byteLength":15186,
-			"byteOffset":18012
+			"byteLength":14610,
+			"byteOffset":17728
 		},
 		{
 			"buffer":0,
 			"byteLength":7309,
-			"byteOffset":33200
+			"byteOffset":32340
 		},
 		{
 			"buffer":0,
 			"byteLength":2960,
-			"byteOffset":40512
+			"byteOffset":39652
 		},
 		{
 			"buffer":0,
 			"byteLength":459,
-			"byteOffset":43472
+			"byteOffset":42612
 		},
 		{
 			"buffer":0,
 			"byteLength":1056,
-			"byteOffset":43932
+			"byteOffset":43072
 		},
 		{
 			"buffer":0,
 			"byteLength":1098,
-			"byteOffset":44988
+			"byteOffset":44128
 		},
 		{
 			"buffer":0,
 			"byteLength":6238,
-			"byteOffset":46088
+			"byteOffset":45228
+		},
+		{
+			"buffer":0,
+			"byteLength":483,
+			"byteOffset":51468
+		},
+		{
+			"buffer":0,
+			"byteLength":495,
+			"byteOffset":51952
+		},
+		{
+			"buffer":0,
+			"byteLength":883,
+			"byteOffset":52448
+		},
+		{
+			"buffer":0,
+			"byteLength":890,
+			"byteOffset":53332
+		},
+		{
+			"buffer":0,
+			"byteLength":510,
+			"byteOffset":54224
+		},
+		{
+			"buffer":0,
+			"byteLength":507,
+			"byteOffset":54736
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":52328,
+			"byteLength":55244,
 			"uri":"garage_workbench.bin"
 		}
 	]

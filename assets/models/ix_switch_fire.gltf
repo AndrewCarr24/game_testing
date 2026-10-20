@@ -117,7 +117,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.4000000059604645
+					"clearcoatFactor":0.4000000059604645,
+					"clearcoatRoughnessFactor":0.18000000715255737
 				}
 			},
 			"name":"M_Switch_Rocker",

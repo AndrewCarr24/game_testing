@@ -25,7 +25,8 @@ FINISHES = dict(
 
 PLACEMENTS = [
     # ---- screen wall (south) ----------------------------------------------------------
-    ("living_media_wall", (0.0, -4.34), 180, {"signal": {"tv": "tv_den"}}),
+    # the TV starts on: the bake has the screen's light (LIGHTS) in it
+    ("living_media_wall", (0.0, -4.34), 180, {"signal": {"tv": "tv_den"}, "state": True}),
     # ---- seating: the sectional faces the screen -----------------------------------------
     ("living_rug_den", (0.0, -0.8), 0),
     ("living_sectional", (-0.6, 0.6), 0),
@@ -91,8 +92,8 @@ LIGHTS = [
     # the screen (a 3.1 m picture) and the warm glow under the floating credenza
     dict(kind="area", pos=(0.0, -4.12, 1.82), size=(3.0, 1.7), aim=(0.0, 0.0, 1.82), power=50.0, color=(1.0, 0.82, 0.66)),
     dict(kind="area", pos=(0.0, -4.2, 0.12), size=(4.7, 0.05), aim=(0.0, -4.2, 0.0), power=20.0, color=(1.0, 0.62, 0.30)),
-    # cove on top of the 3.75 m slat wall, up onto the ceiling
-    dict(kind="area", pos=(0.0, -4.4, 3.8), size=(8.0, 0.15), aim=(0.0, -4.4, 4.2), power=300.0, color=(1.0, 0.84, 0.66)),
+    # cove on top of the 3.75 m slat wall (4.9 m wide, living_media_wall slat_zone), up onto the ceiling
+    dict(kind="area", pos=(0.0, -4.4, 3.8), size=(4.9, 0.15), aim=(0.0, -4.4, 4.2), power=130.0, color=(1.0, 0.84, 0.66)),
     # table lamps and the arc lamp
     dict(kind="point", pos=(-3.3, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),
     dict(kind="point", pos=(2.2, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),

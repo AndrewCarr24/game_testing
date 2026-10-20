@@ -78,7 +78,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":1
+					"clearcoatFactor":1,
+					"clearcoatRoughnessFactor":0.07999999821186066
 				}
 			},
 			"name":"M_Glass_Black",
@@ -325,13 +326,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":401,
+			"byteLength":431,
 			"byteOffset":968
 		},
 		{
 			"buffer":0,
 			"byteLength":215,
-			"byteOffset":1372
+			"byteOffset":1400
 		}
 	],
 	"samplers":[
@@ -342,7 +343,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1588,
+			"byteLength":1616,
 			"uri":"ix_control_panel.bin"
 		}
 	]

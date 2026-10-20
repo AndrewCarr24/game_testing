@@ -97,7 +97,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_OakSmoked",
@@ -480,23 +481,23 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1250,
+			"byteLength":1271,
 			"byteOffset":1952
 		},
 		{
 			"buffer":0,
 			"byteLength":987,
-			"byteOffset":3204
+			"byteOffset":3224
 		},
 		{
 			"buffer":0,
-			"byteLength":1785,
-			"byteOffset":4192
+			"byteLength":1825,
+			"byteOffset":4212
 		},
 		{
 			"buffer":0,
 			"byteLength":1494,
-			"byteOffset":5980
+			"byteOffset":6040
 		}
 	],
 	"samplers":[
@@ -507,7 +508,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7476,
+			"byteLength":7536,
 			"uri":"decor_b_sink_set.bin"
 		}
 	]

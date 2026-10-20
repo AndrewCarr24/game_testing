@@ -113,7 +113,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.33000001311302185
 				}
 			},
 			"name":"M_Oak_Light",
@@ -730,48 +731,48 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1254,
+			"byteLength":1379,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":11722,
-			"byteOffset":1256
+			"byteLength":11696,
+			"byteOffset":1380
 		},
 		{
 			"buffer":0,
-			"byteLength":11160,
-			"byteOffset":12980
-		},
-		{
-			"buffer":0,
-			"byteLength":926,
-			"byteOffset":24140
+			"byteLength":11153,
+			"byteOffset":13076
 		},
 		{
 			"buffer":0,
 			"byteLength":926,
-			"byteOffset":25068
+			"byteOffset":24232
+		},
+		{
+			"buffer":0,
+			"byteLength":926,
+			"byteOffset":25160
 		},
 		{
 			"buffer":0,
 			"byteLength":409,
-			"byteOffset":25996
+			"byteOffset":26088
 		},
 		{
 			"buffer":0,
-			"byteLength":1488,
-			"byteOffset":26408
+			"byteLength":1552,
+			"byteOffset":26500
 		},
 		{
 			"buffer":0,
 			"byteLength":1410,
-			"byteOffset":27896
+			"byteOffset":28052
 		},
 		{
 			"buffer":0,
-			"byteLength":1570,
-			"byteOffset":29308
+			"byteLength":1547,
+			"byteOffset":29464
 		}
 	],
 	"samplers":[
@@ -782,7 +783,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":30880,
+			"byteLength":31012,
 			"uri":"guest_kettlebells.bin"
 		}
 	]

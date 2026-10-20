@@ -18,15 +18,49 @@ MAX = 512
 
 
 def shell_textures():
+    """Images the house shell uses, except those used only by borrowed pieces (rugs, wall art:
+    drawn with the shell for its lightmap, but prop-sized detail)."""
     with open(os.path.join(PROJECT, "assets", "models", "mansion_shell.gltf")) as f:
         g = json.load(f)
-    return {os.path.basename(i.get("uri", "")) for i in g.get("images", [])}
+    borrowed = lambda name: name.endswith(("_Rug", "_Art"))
+    mat_users = {}
+    for node in g.get("nodes", []):
+        if "mesh" not in node:
+            continue
+        for prim in g["meshes"][node["mesh"]].get("primitives", []):
+            if "material" in prim:
+                mat_users.setdefault(prim["material"], set()).add(borrowed(node.get("name", "")))
+    keep = set()
+    for mi, mat in enumerate(g.get("materials", [])):
+        if mat_users.get(mi) == {True}:
+            continue
+        texs = [v["index"] for v in _texture_refs(mat)]
+        for t in texs:
+            src = g["textures"][t].get("source")
+            if src is None:            # WebP via EXT_texture_webp
+                src = g["textures"][t].get("extensions", {}).get("EXT_texture_webp", {}).get("source")
+            if src is not None:
+                keep.add(os.path.basename(g["images"][src].get("uri", "")))
+    return keep
+
+
+def _texture_refs(obj):
+    """Every {"index": ...} texture reference inside a glTF material (any extension)."""
+    if isinstance(obj, dict):
+        if "index" in obj and isinstance(obj["index"], int) and len(obj) <= 4:
+            yield obj
+        for v in obj.values():
+            yield from _texture_refs(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _texture_refs(v)
 
 
 # fine detail maps shrink even when the shell uses them (a 0.25 m fabric weave at 1024 was the
 # biggest single download and 5.6 MB of GPU memory, for no visible gain over 512)
 ALWAYS_SHRINK = {"T_Fabric_Normal.webp"}
 # rugs are drawn with the shell (to get the bake's contact shadows) but are still prop-sized detail
+# (shell_textures() also leaves out whatever only rugs and wall art use)
 ALWAYS_SHRINK_IF = lambda name: "Rug" in name
 
 

@@ -122,7 +122,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.800000011920929
+					"clearcoatFactor":0.800000011920929,
+					"clearcoatRoughnessFactor":0.1080000028014183
 				}
 			},
 			"name":"M_KeyFob_Black",
@@ -478,38 +479,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":670,
+			"byteLength":692,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":481,
-			"byteOffset":672
+			"byteLength":469,
+			"byteOffset":692
 		},
 		{
 			"buffer":0,
-			"byteLength":487,
-			"byteOffset":1156
+			"byteLength":463,
+			"byteOffset":1164
 		},
 		{
 			"buffer":0,
-			"byteLength":487,
-			"byteOffset":1644
+			"byteLength":463,
+			"byteOffset":1628
 		},
 		{
 			"buffer":0,
 			"byteLength":2331,
-			"byteOffset":2132
+			"byteOffset":2092
 		},
 		{
 			"buffer":0,
-			"byteLength":2402,
-			"byteOffset":4464
+			"byteLength":2350,
+			"byteOffset":4424
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":6868,
+			"byteLength":6776,
 			"uri":"ix_car_key.bin"
 		}
 	]

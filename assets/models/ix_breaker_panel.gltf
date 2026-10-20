@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				13
+				17
 			]
 		}
 	],
@@ -52,6 +52,60 @@
 			"name":"IX_BreakerPanel_FuseClips"
 		},
 		{
+			"mesh":5,
+			"name":"IX_BreakerPanel_FuseInserted_Body"
+		},
+		{
+			"mesh":6,
+			"name":"IX_BreakerPanel_FuseInserted_Cap0",
+			"translation":[
+				-0.025499999523162842,
+				0,
+				0
+			]
+		},
+		{
+			"mesh":7,
+			"name":"IX_BreakerPanel_FuseInserted_Cap1",
+			"rotation":[
+				1,
+				0,
+				0,
+				0
+			],
+			"scale":[
+				-1,
+				-1,
+				-1
+			],
+			"translation":[
+				0.025499999523162842,
+				0,
+				0
+			]
+		},
+		{
+			"children":[
+				5,
+				6,
+				7
+			],
+			"extras":{
+				"react":{
+					"signal":"fuse_garage",
+					"on":"show",
+					"off":"hide",
+					"power":false
+				}
+			},
+			"name":"IX_BreakerPanel_FuseInserted",
+			"translation":[
+				0,
+				-0.25,
+				0.057999998331069946
+			]
+		},
+		{
 			"extras":{
 				"interact":{
 					"type":"use",
@@ -60,7 +114,7 @@
 					"consume":true,
 					"prompt":"Insert fuse",
 					"promptDone":"Main fuse in place",
-					"signal":"power",
+					"signal":"fuse_garage",
 					"value":true,
 					"range":1.4
 				}
@@ -73,7 +127,7 @@
 			]
 		},
 		{
-			"mesh":5,
+			"mesh":8,
 			"name":"IX_BreakerPanel_IsolatorPlate",
 			"translation":[
 				0,
@@ -82,7 +136,7 @@
 			]
 		},
 		{
-			"mesh":6,
+			"mesh":9,
 			"name":"IX_BreakerPanel_MainSwitch_Handle",
 			"translation":[
 				0,
@@ -91,13 +145,13 @@
 			]
 		},
 		{
-			"mesh":7,
+			"mesh":10,
 			"name":"IX_BreakerPanel_MainSwitch_Hub"
 		},
 		{
 			"children":[
-				7,
-				8
+				11,
+				12
 			],
 			"extras":{
 				"interact":{
@@ -112,7 +166,9 @@
 						"axis":"z",
 						"angle":-90
 					},
-					"indicator":"IX_BreakerPanel_PowerLED"
+					"indicator":"IX_BreakerPanel_PowerLED",
+					"requires":"fuse_garage",
+					"requiresPrompt":"No main fuse"
 				}
 			},
 			"name":"IX_BreakerPanel_MainSwitch",
@@ -123,7 +179,7 @@
 			]
 		},
 		{
-			"mesh":8,
+			"mesh":11,
 			"name":"IX_BreakerPanel_PowerLED",
 			"translation":[
 				0.07500000298023224,
@@ -132,11 +188,11 @@
 			]
 		},
 		{
-			"mesh":9,
+			"mesh":12,
 			"name":"IX_BreakerPanel_Rails"
 		},
 		{
-			"mesh":10,
+			"mesh":13,
 			"name":"IX_BreakerPanel_Toggles"
 		},
 		{
@@ -146,12 +202,13 @@
 				2,
 				3,
 				4,
-				5,
-				6,
+				8,
 				9,
 				10,
-				11,
-				12
+				13,
+				14,
+				15,
+				16
 			],
 			"name":"IX_BreakerPanel"
 		}
@@ -228,6 +285,20 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Fuse_Ceramic",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.800000011920929,
+					0.7799999713897705,
+					0.7300000190734863,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Breaker_Yellow",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -244,7 +315,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.30000001192092896
+					"clearcoatFactor":0.30000001192092896,
+					"clearcoatRoughnessFactor":0.20999999344348907
 				}
 			},
 			"name":"M_Breaker_Red",
@@ -411,7 +483,7 @@
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_IsolatorPlate",
+			"name":"IX_BreakerPanel_FuseInserted_Body",
 			"primitives":[
 				{
 					"attributes":{
@@ -436,7 +508,7 @@
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_MainSwitch_Handle",
+			"name":"IX_BreakerPanel_FuseInserted_Cap0",
 			"primitives":[
 				{
 					"attributes":{
@@ -455,13 +527,13 @@
 						}
 					},
 					"indices":27,
-					"material":6,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_MainSwitch_Hub",
+			"name":"IX_BreakerPanel_FuseInserted_Cap1",
 			"primitives":[
 				{
 					"attributes":{
@@ -479,20 +551,20 @@
 							}
 						}
 					},
-					"indices":31,
-					"material":6,
+					"indices":27,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_PowerLED",
+			"name":"IX_BreakerPanel_IsolatorPlate",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":32,
-						"NORMAL":33,
-						"COLOR_0":34
+						"POSITION":31,
+						"NORMAL":32,
+						"COLOR_0":33
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -504,20 +576,20 @@
 							}
 						}
 					},
-					"indices":35,
-					"material":7,
+					"indices":34,
+					"material":6,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_Rails",
+			"name":"IX_BreakerPanel_MainSwitch_Handle",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":36,
-						"NORMAL":37,
-						"COLOR_0":38
+						"POSITION":35,
+						"NORMAL":36,
+						"COLOR_0":37
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -529,20 +601,20 @@
 							}
 						}
 					},
-					"indices":39,
-					"material":2,
+					"indices":38,
+					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"IX_BreakerPanel_Toggles",
+			"name":"IX_BreakerPanel_MainSwitch_Hub",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":40,
-						"NORMAL":41,
-						"COLOR_0":42
+						"POSITION":39,
+						"NORMAL":40,
+						"COLOR_0":41
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -554,7 +626,82 @@
 							}
 						}
 					},
-					"indices":43,
+					"indices":42,
+					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"IX_BreakerPanel_PowerLED",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":43,
+						"NORMAL":44,
+						"COLOR_0":45
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":46,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"IX_BreakerPanel_Rails",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":47,
+						"NORMAL":48,
+						"COLOR_0":49
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":50,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"IX_BreakerPanel_Toggles",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":51,
+						"NORMAL":52,
+						"COLOR_0":53
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"COLOR_0":2
+							}
+						}
+					},
+					"indices":54,
 					"material":3,
 					"mode":4
 				}
@@ -716,6 +863,94 @@
 			"componentType":5123,
 			"count":72,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":32,
+			"max":[
+				0.014500000514090061,
+				0.006600000895559788,
+				0.006599999964237213
+			],
+			"min":[
+				-0.014500000514090061,
+				-0.006600000895559788,
+				-0.006599999964237213
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":32,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":32,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":33,
+			"max":[
+				0.01100000087171793,
+				0.007000001147389412,
+				0.007000000216066837
+			],
+			"min":[
+				-5.284853110687493e-10,
+				-0.007000000216066837,
+				-0.007000000216066837
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":33,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":33,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":33,
+			"max":[
+				0.01100000087171793,
+				0.007000001147389412,
+				0.007000000216066837
+			],
+			"min":[
+				-5.284853110687493e-10,
+				-0.007000000216066837,
+				-0.007000000216066837
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":33,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":33,
+			"normalized":true,
+			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
@@ -932,38 +1167,53 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1725,
+			"byteLength":458,
 			"byteOffset":14864
 		},
 		{
 			"buffer":0,
+			"byteLength":511,
+			"byteOffset":15324
+		},
+		{
+			"buffer":0,
+			"byteLength":498,
+			"byteOffset":15836
+		},
+		{
+			"buffer":0,
+			"byteLength":1717,
+			"byteOffset":16336
+		},
+		{
+			"buffer":0,
 			"byteLength":807,
-			"byteOffset":16592
+			"byteOffset":18056
 		},
 		{
 			"buffer":0,
 			"byteLength":896,
-			"byteOffset":17400
+			"byteOffset":18864
 		},
 		{
 			"buffer":0,
 			"byteLength":854,
-			"byteOffset":18296
+			"byteOffset":19760
 		},
 		{
 			"buffer":0,
 			"byteLength":730,
-			"byteOffset":19152
+			"byteOffset":20616
 		},
 		{
 			"buffer":0,
 			"byteLength":2735,
-			"byteOffset":19884
+			"byteOffset":21348
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":22620,
+			"byteLength":24084,
 			"uri":"ix_breaker_panel.bin"
 		}
 	]

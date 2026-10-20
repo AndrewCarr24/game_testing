@@ -98,7 +98,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.30000001192092896
+					"clearcoatFactor":0.30000001192092896,
+					"clearcoatRoughnessFactor":0.07999999821186066
 				}
 			},
 			"name":"M_Bath_Ceramic",
@@ -117,7 +118,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.3499999940395355
+					"clearcoatFactor":0.3499999940395355,
+					"clearcoatRoughnessFactor":0.13199999928474426
 				}
 			},
 			"name":"M_Bath_Marble",
@@ -192,7 +194,8 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.5
+					"clearcoatFactor":0.5,
+					"clearcoatRoughnessFactor":0.09600000083446503
 				}
 			},
 			"name":"M_Bath_MarbleDark",

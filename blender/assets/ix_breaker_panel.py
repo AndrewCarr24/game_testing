@@ -1,8 +1,10 @@
 """Garage breaker panel: a light-grey powder-coated steel distribution board (560 x 720 x
 110 mm, open front) with three DIN rows of white breakers, a big red-on-yellow rotary main
 isolator (a `switch` on signal "power", starting on; a green LED beside it is its indicator)
-and an empty main-fuse carrier under it (a `use` needing item "fuse": with the fuse armed,
-Enter puts it in and sets "power" true).
+and a main-fuse carrier under it, empty at the start (a `use` needing item "fuse": with the
+fuse armed, Enter puts it in, sets "fuse_garage" true and shows the fuse in the clips). The
+isolator carries `requires: "fuse_garage"` (it should only switch with the fuse in; needs the
+engine to gate switches on it).
 
 Wall-mounted: origin at the enclosure's back centre (on the wall), front -Y; place at z = 1.45."""
 import importlib
@@ -82,9 +84,12 @@ def build(**overrides):
     common.add_bevel(base, 0.002, segments=1)
     hub = common.empty(f"{n}_MainSwitch", col, (mx, -0.05, mz))
     hub.parent = root
+    # `requires`: the isolator only switches while the main fuse is in (signal "fuse_garage");
+    # until the engine gates on it (viewer/interactables.js), the switch toggles regardless
     hub["interact"] = {"type": "switch", "signal": "power", "state": True, "prompt": "Switch the power on",
                        "promptActive": "Switch the power off", "range": 1.4, "duration": 0.35,
-                       "travel": {"axis": "z", "angle": -90}, "indicator": f"{n}_PowerLED"}
+                       "travel": {"axis": "z", "angle": -90}, "indicator": f"{n}_PowerLED",
+                       "requires": "fuse_garage", "requiresPrompt": "No main fuse"}
     knob = ix_common.lathe_bmesh([(0, 0), (0.022, 0), (0.024, 0.004), (0.022, 0.012), (0, 0.012)], 20)
     bmesh.ops.rotate(knob, verts=knob.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(math.radians(90), 3, "X"))
     common.mesh_object(f"{n}_MainSwitch_Hub", knob, col, red, hub)
@@ -106,6 +111,22 @@ def build(**overrides):
         [((sx * 0.027, -0.058, fz), (0.010, 0.010, 0.020)) for sx in (-1, 1)]), col, brass, root, smooth=False)
     slot = common.empty(f"{n}_FuseSlot", col, (0, -0.06, fz))
     slot.parent = root
+    # the slot sets its own signal (not "power": with power on at the start the empty slot
+    # read as done); the isolator then restores power
     slot["interact"] = {"type": "use", "needs": "fuse", "needsName": "fuse", "consume": True, "prompt": "Insert fuse",
-                        "promptDone": "Main fuse in place", "signal": "power", "value": True, "range": 1.4}
+                        "promptDone": "Main fuse in place", "signal": "fuse_garage", "value": True, "range": 1.4}
+    # the fuse in the clips, shown once it's inserted (not electric: it shows without power)
+    fl, fr = 0.051, 0.007
+    # (the react on the empty drives its child meshes)
+    inserted = common.empty(f"{n}_FuseInserted", col, (0, -0.058, fz))
+    inserted.parent = root
+    inserted["react"] = {"signal": "fuse_garage", "on": "show", "off": "hide", "power": False}
+    ceramic = common.pbr_material("M_Fuse_Ceramic", (0.80, 0.78, 0.73), roughness=0.55)
+    body = common.mesh_object(f"{n}_FuseInserted_Body", ix_common.lathe_bmesh(
+        [(fr - 0.0004, -fl / 2 + 0.011), (fr - 0.0004, fl / 2 - 0.011)], 16, axis="x"), col, ceramic, inserted)
+    for k, sx in enumerate((-1, 1)):
+        cap = common.mesh_object(f"{n}_FuseInserted_Cap{k}", ix_common.lathe_bmesh(
+            [(0, 0.0), (fr, 0.0), (fr, 0.011)], 16, axis="x"), col, brass, inserted)
+        cap.scale = (-sx, 1, 1)
+        cap.location = (sx * fl / 2, 0, 0)
     return ix_common.finish(root)
