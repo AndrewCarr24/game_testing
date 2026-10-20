@@ -31,7 +31,43 @@ const DEFAULTS = {
 // materials for outdoors: the sky as environment; single-sided (the export marks them double-
 // sided, and the cloak is a thin closed shell: its inner faces, lit with flipped normals, showed
 // as bright slivers along every fold edge); the eyes reflect the sky less (a blue sheen)
-export function prepareGrimble(root, envMap) {
+//
+// Detail maps (the asset's material contract, blender/assets/grimble.py): a material whose
+// extras carry `detail = {normal, uv, scale, blend: "udn"}` gets that tiling normal map on top of
+// its unique baked normal map (whiteout/UDN blend: the two tangent-space x/y offsets add). The
+// detail texture is read from the asset's texture folder, on the UV set `uv` (world scale).
+const detailCache = new Map();
+function addDetailNormal(m, base) {
+  const d = m.userData.detail;
+  if (!d || !m.normalMap || m.userData._detail) return;
+  m.userData._detail = true;
+  if (!detailCache.has(d.normal)) {
+    const t = new THREE.TextureLoader().load(`${base}textures/${d.normal}.webp`);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.colorSpace = THREE.NoColorSpace;
+    t.flipY = false;                     // glTF UV convention
+    t.anisotropy = 4;
+    detailCache.set(d.normal, t);
+  }
+  const tex = detailCache.get(d.normal);
+  m.onBeforeCompile = (shader) => {
+    shader.uniforms.detailNormalMap = { value: tex };
+    shader.uniforms.detailScale = { value: d.scale ?? 0.35 };
+    // the detail UVs: the same set the base colour map reads when it's on that channel
+    const uvVar = m.map && m.map.channel === (d.uv ?? 1) ? 'vMapUv' : 'vNormalMapUv';
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <normalmap_pars_fragment>', '#include <normalmap_pars_fragment>\nuniform sampler2D detailNormalMap;\nuniform float detailScale;')
+      .replace('normal = normalize( tbn * mapN );', [
+        'vec3 detN = texture2D( detailNormalMap, ' + uvVar + ' ).xyz * 2.0 - 1.0;',
+        'mapN = normalize( vec3( mapN.xy + detN.xy * detailScale, mapN.z ) );',
+        'normal = normalize( tbn * mapN );',
+      ].join('\n'));
+  };
+  m.customProgramCacheKey = () => 'grimble-detail';
+  m.needsUpdate = true;
+}
+
+export function prepareGrimble(root, envMap, base = '../assets/models/') {
   root.traverse((o) => {
     if (!o.isMesh) return;
     o.castShadow = false;
@@ -41,6 +77,7 @@ export function prepareGrimble(root, envMap) {
       m.envMap = envMap;
       m.side = THREE.FrontSide;
       m.envMapIntensity = o.userData.look ? 0.45 : 1.0;
+      addDetailNormal(m, base);
     }
   });
 }
@@ -55,7 +92,7 @@ export class Grimble {
     for (const k of ['stride', 'cycle']) if (ud[k]) this.o[k] = ud[k];
     if (ud.knockReach) this.o.reach = ud.knockReach;
     this.ground = ground;
-    prepareGrimble(this.root, envMap);
+    prepareGrimble(this.root, envMap, opts.base);
     // the route stops short of the glass by the knock reach, so the knuckles land on it
     const pts = route.map(([x, z]) => new THREE.Vector2(x, z));
     const last = pts[pts.length - 1], prev = pts[pts.length - 2];

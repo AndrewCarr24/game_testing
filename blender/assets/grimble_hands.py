@@ -228,3 +228,63 @@ def _claw(bm, uvl, finger, r_tip, radial, tile, p):
                                                                   + L * 0.25 * math.sin(ang)))
         rad.append(r_tip * 0.62 * (1 - t) ** 1.1 + 0.003)
     tube(bm, uvl, np.array(pts), rad, 7, tile, mat=1, cap_end=True)
+
+
+def build_toes(bm, uvl, feet, hem_pts, p):
+    """Three fat clawed toes per foot, poking out from under the hem (as in the concept).
+    feet: list of (centre, side); hem_pts: the robe's bottom row (the hem line).
+    Each toe starts inside the foot, runs forward (-Y, splayed outward) until it is
+    p['toe_out'] past the hem, arches a little and rests on the floor; a dark claw
+    grows out of its tip and curls down to the floor. Returns per-foot vertex ranges."""
+    rng = np.random.default_rng(p["hand_seed"] + 7)
+    tile = p["hand_tile"]
+    info = []
+    up = np.array([0, 0, 1.0])
+    for c, side in feet:
+        v_start = len(bm.verts)
+        out_sign = 1.0 if side == "L" else -1.0
+        for k, ang in enumerate(p["toe_angles"]):
+            a = math.radians(out_sign * (p["toe_splay"] + ang) + 4 * rng.standard_normal())
+            d = np.array([math.sin(a), -math.cos(a), 0.0])
+            # the hem's distance from the foot centre along d (hem points within +-12 deg)
+            rel = hem_pts[:, :2] - c[:2]
+            dist = np.linalg.norm(rel, axis=1)
+            cosang = (rel @ d[:2]) / (dist + 1e-9)
+            near = cosang > math.cos(math.radians(12))
+            reach = float(np.median(rel[near] @ d[:2])) if near.sum() else 0.6
+            r0 = p["toe_r"] * (1.0 - 0.12 * abs(ang) / 30) * (1 + 0.05 * rng.standard_normal())
+            s0, s1 = 0.15, reach + p["toe_out"] * (1.0 - 0.25 * abs(ang) / 30)
+            n = 14
+            ts = np.linspace(0, 1, n)
+            pts, rad = [], []
+            for t in ts:
+                rt = r0 * (1 - 0.4 * t ** 2)
+                rt *= 1 + sum(amp * math.exp(-((t - kt) / 0.07) ** 2) for kt, amp in ((0.55, 0.22), (0.8, 0.18)))
+                rt *= 1 - 0.06 * math.exp(-((t - 0.68) / 0.06) ** 2)
+                z = rt + 0.004 + r0 * 0.9 * math.sin(math.pi * min(t / 0.85, 1.0)) * 0.6 + (1 - t) * 0.06
+                pts.append(np.array([c[0], c[1], 0.0]) + d * (s0 + (s1 - s0) * t) + up * z)
+                rad.append(rt)
+            pts = np.array(pts)
+            tube(bm, uvl, pts, rad, 8, tile, cap_end=True, cap_start=True, phase=0.4 * k)
+            _toe_claw(bm, uvl, pts, rad[-1], tile, p)
+        info.append(dict(side=side, verts=(v_start, len(bm.verts))))
+    return info
+
+
+def _toe_claw(bm, uvl, toe, r_tip, tile, p):
+    """A thick claw from the toe tip's top, hooking forward and down to the floor."""
+    tg = toe[-1] - toe[-3]
+    tg[2] = 0
+    tg /= np.linalg.norm(tg)
+    up = np.array([0, 0, 1.0])
+    L = p["toe_claw_len"]
+    a = toe[-1] + tg * r_tip * 0.2 + up * r_tip * 0.45
+    b = a + tg * L * 0.75 + up * 0.02
+    e = toe[-1] + tg * L
+    e[2] = 0.006
+    pts, rad = [], []
+    for t in np.linspace(0, 1, 7):
+        q = (1 - t) ** 2 * a + 2 * (1 - t) * t * b + t ** 2 * e
+        pts.append(q)
+        rad.append(r_tip * 0.6 * (1 - t) ** 1.1 + 0.004)
+    tube(bm, uvl, np.array(pts), rad, 7, tile, mat=1, cap_end=True, cap_start=True)

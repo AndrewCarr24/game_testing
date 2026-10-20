@@ -15,7 +15,7 @@ import numpy as np
 
 from lib import textures
 
-VERSION = 13
+VERSION = 15
 
 
 def version():
@@ -283,7 +283,7 @@ def paint_body(b, p, eyes, seam=None):
     h = np.linalg.norm(cl - cr) / 2
     dall = pos - M
     Ua, Va = (dall @ ax) / h, (dall @ up) / h
-    face = valid & (pos[..., 2] > 4.3) & (np.abs(Ua) < 3.4) & (np.abs(Va) < 3.6)
+    face = valid & (pos[..., 2] > 4.0)
     P = pos[face]
     d = P - M
     U, V, D = Ua[face], Va[face], d @ fw
@@ -382,6 +382,10 @@ def paint_body(b, p, eyes, seam=None):
     if seam is not None and len(seam):
         fade = 1 - smoothstep(0.03, 0.30, nearest_distance(P, seam, 0.3))
         c = c + (crown * 0.8 - c) * (0.85 * fade)[:, None]
+    # the head's back and top behind the face (inside the hood): the face-space zones
+    # don't apply there (its points project onto the muzzle); dark crown fur
+    behind = smoothstep(-0.25, -0.7, D)
+    c = c + (crown * 0.9 * 1.0 - c) * behind[:, None]
     col[face] = c
     # height for the normal map: strands, partings, nose wrinkles, mouth groove
     hf = amt * (0.9 * thh + 0.15 * fine) + 0.2 * clumps2
@@ -435,7 +439,7 @@ def cloak_textures(n=1024, seed=61, force=False):
     """Coarse, hairy hand-woven wool: an irregular plain weave of thick, uneven
     yarns, felted fuzz over it; near black with heathered brown-grey yarns and
     sparse copper fibres (the concept's flecks). Tileable; one tile = P['cloak_tile']."""
-    names = ("T_Grimble_Cloak_BaseColor", "T_Grimble_Cloak_Normal")
+    names = ("T_Grimble_Cloak_DetailAlbedo", "T_Grimble_Cloak_DetailNormal")
     paths = [_path(nm) for nm in names]
     if all(os.path.exists(pp) for pp in paths) and not force:
         return paths

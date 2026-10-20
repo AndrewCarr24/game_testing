@@ -130,7 +130,12 @@ def skeleton(lm):
         ank, toe = lm["ankle_" + s], lm["toe_" + s]
         hip = (hip_x, 0.12, 2.35)
         pole = (0.15 if s == "L" else -0.15, -1, 0)
-        k, _ = ik(hip, ank, 1.2, 1.2, pole)
+        # long enough to reach the ends of the walk's stride (plus the hips' sway)
+        half = WALK_S * WALK_DUTY / 2
+        need = max(np.linalg.norm(np.asarray(hip) - (ank + np.array([dx, dy, 0])))
+                   for dy in (-half, half) for dx in (-0.15, 0.15))
+        lg = max(1.2, 0.5 * need * 1.03)
+        k, _ = ik(hip, ank, lg, lg, pole)
         add("Thigh." + s, "Hips", hip, k, pole)
         add("Shin." + s, "Thigh." + s, k, ank, pole)
         add("Foot." + s, "Shin." + s, ank, toe, (0, 0, 1))
@@ -250,6 +255,24 @@ def skin(arm, objs, bones, hand_info, lm):
         W[ib[fm]] = 0
         W[ib[fm], bi["Foot." + s]] = 1
         pinned[ib[fm]] = True
+        # the hem over the foot is kicked along with it (the toes would poke through the robe
+        # through the swing otherwise): cloak vertices near the foot, low down, follow Foot.X
+        dk = D["Foot." + s][ic] - 0.3
+        hv_ = np.zeros(len(objs["Hands"].data.vertices) * 3)
+        objs["Hands"].data.vertices.foreach_get("co", hv_)
+        hv_ = hv_.reshape(-1, 3)
+        for t_ in lm.get("toes", ()):            # ... and from the toes themselves
+            if t_["side"] != s:
+                continue
+            tp = hv_[t_["verts"][0]:t_["verts"][1]:3]
+            for c0 in range(0, len(cloak_v), 4000):
+                dd = np.linalg.norm(cloak_v[c0:c0 + 4000, None, :] - tp[None], axis=2).min(1)
+                dk[c0:c0 + 4000] = np.minimum(dk[c0:c0 + 4000], dd - 0.12)
+        kick = np.clip(1 - dk / 0.4, 0, 1) * np.clip((1.1 - cloak_v[:, 2]) / 0.5, 0, 1)
+        kick = kick[:, None]
+        oh = np.zeros(nb)
+        oh[bi["Foot." + s]] = 1
+        W[ic] = W[ic] * (1 - kick) + oh * kick
     # smooth over the welded surface (pinned rows stay)
     e = np.concatenate([edges, edges[:, ::-1]])
     deg = np.maximum(np.bincount(e[:, 0], minlength=n), 1)[:, None]
@@ -322,6 +345,10 @@ def skin(arm, objs, bones, hand_info, lm):
             c0, c1 = f["claw"]
             rows[c0:c1] = 0
             rows[c0:c1, ids[3]] = 1
+    for t_ in lm.get("toes", ()):                # toes: rigid with their foot
+        a, b = t_["verts"]
+        rows[a:b] = 0
+        rows[a:b, bi["Foot." + t_["side"]]] = 1
     assign(objs["Hands"], rows)
     rigid(objs["Staff"], [("Staff", np.arange(len(objs["Staff"].data.vertices)))])
     rigid(objs["Sockets"], [("Head", np.arange(len(objs["Sockets"].data.vertices)))])
