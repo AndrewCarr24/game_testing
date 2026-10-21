@@ -110,7 +110,7 @@
     import { Fire } from './fire.js';
     import { createFx, governor } from './fx.js';
     import { Grimble, prepareGrimble } from './grimble.js';
-    import { GrimbleHunt, shatter } from './grimble_hunt.js';
+    import { GrimbleHunt, shatter, Footsteps } from './grimble_hunt.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -450,15 +450,18 @@
       window.__player = window.__player || player;
       // inside: after a few rounds at the glass it breaks in and hunts (viewer/grimble_hunt.js);
       // ?hunt=0 keeps it outside
-      let shatterFx = null;
+      let shatterFx = null, footsteps = null;
       if (grimble && params.get('hunt') !== '0') {
         grimble.playerObj = player;
         grimble.hunt = new GrimbleHunt(grimble, {
-          level, colliders, scene,
+          level, colliders, scene, interact,     // (interact: shut doors block its sight and swipes)
           sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
           opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
         });
         grimble.hunt.onBreak = () => { const b = level.breakables?.[0]; if (b) shatterFx = shatter(scene, b); renderer.shadowMap.needsUpdate = true; };
+        // the player's running footsteps: soft noises it can hear (grimble_hunt.js Footsteps)
+        footsteps = new Footsteps(noise);
+        window.__footsteps = footsteps;
       }
       window.__player = player;
       scene.add(camera);                       // so the held item (a child of the camera) renders
@@ -586,6 +589,7 @@
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
         grimble?.shakeCamera(camera, dt);
+        footsteps?.update(dt, player);
         // what the crosshair is on (or nearest to it) among the things in reach
         focus = on && !player.isDown ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;

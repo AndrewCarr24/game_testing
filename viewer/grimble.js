@@ -155,6 +155,13 @@ export class Grimble {
       this.t = 0;
       this.play('Walk');
     }
+    // the player out on the grounds, in its sight: it drops to all fours and hunts them there
+    // (grimble_hunt.js startOutside; back in the house, it breaks in after them)
+    if (this.hunt && this.playerObj && ['walk', 'knock', 'wave', 'watch'].includes(this.state) &&
+      this.hunt.playerOutside(this.playerObj.pos) && !this.playerObj.hidden && this.hunt.seesFromOutside(player)) {
+      this.state = 'inside';
+      this.hunt.startOutside(player);
+    }
     if (this.state === 'walk') {
       this.s += (o.stride / o.cycle) * dt;
       this.place();
@@ -208,10 +215,15 @@ export class Grimble {
   }
 
   // once it has stopped, the head turns toward the player (on top of the animation) and the eyes
-  // follow; while walking it looks where it's going
+  // follow, but only while it can see them (inside: toward whatever it's after, hunt.lookTarget:
+  // the player it sees, where it last saw them, a noise); while walking it looks where it's going
   lookAt(player) {
     if (!player || this.state === 'walk' || this.state === 'wait') return;
-    if (this.state === 'inside' && !['chase', 'swipe', 'reachUp'].includes(this.hunt.state)) return;
+    if (this.state === 'inside') {
+      if (this.hunt.state === 'smash') return;
+      player = this.hunt.lookTarget;
+      if (!player) return;
+    } else if (this.playerObj?.hidden || (this.hunt && !this.hunt.seesFromOutside(player))) return;
     this.root.updateMatrixWorld(true);
     // crawling, the hood is as wide as the openings: only the eyes follow the player then
     const crawling = this.state === 'inside' && this.hunt.state !== 'reachUp';
