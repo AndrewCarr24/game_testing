@@ -15791,6 +15791,23 @@
       ],
       "tris": 1632
     },
+    "ix_key_locker": {
+      "file": "models/ix_key_locker.gltf",
+      "aabb": {
+        "min": [
+          -0.07,
+          -0.0001,
+          -0.012
+        ],
+        "max": [
+          0.041,
+          0.0036,
+          0.012
+        ]
+      },
+      "colliders": [],
+      "tris": 1192
+    },
     "garage_lockers": {
       "file": "models/garage_lockers.gltf",
       "aabb": {
@@ -16250,40 +16267,6 @@
         }
       ],
       "tris": 696
-    },
-    "ix_flashlight": {
-      "file": "models/ix_flashlight.gltf",
-      "aabb": {
-        "min": [
-          -0.0825,
-          0.0,
-          -0.0193
-        ],
-        "max": [
-          0.0825,
-          0.0386,
-          0.0193
-        ]
-      },
-      "colliders": [],
-      "tris": 1868
-    },
-    "ix_car_key": {
-      "file": "models/ix_car_key.gltf",
-      "aabb": {
-        "min": [
-          -0.0364,
-          0.0,
-          -0.0174
-        ],
-        "max": [
-          0.0492,
-          0.0125,
-          0.0174
-        ]
-      },
-      "colliders": [],
-      "tris": 940
     },
     "garage_bay": {
       "file": "models/garage_bay.gltf",
@@ -17080,6 +17063,226 @@
         }
       ],
       "tris": 3228
+    },
+    "ix_key_cellar": {
+      "file": "models/ix_key_cellar.gltf",
+      "aabb": {
+        "min": [
+          -0.072,
+          -0.0001,
+          -0.013
+        ],
+        "max": [
+          0.049,
+          0.0036,
+          0.013
+        ]
+      },
+      "colliders": [],
+      "tris": 1208
+    },
+    "ix_gun_locker": {
+      "file": "models/ix_gun_locker.gltf",
+      "aabb": {
+        "min": [
+          -0.46,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.46,
+          1.85,
+          0.3035
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.46,
+            0.06,
+            -0.25
+          ],
+          "max": [
+            0.46,
+            1.85,
+            -0.225
+          ]
+        },
+        {
+          "min": [
+            -0.435,
+            0.06,
+            -0.225
+          ],
+          "max": [
+            0.435,
+            0.085,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            -0.447,
+            0.243,
+            0.244
+          ],
+          "max": [
+            -0.423,
+            1.667,
+            0.268
+          ]
+        },
+        {
+          "min": [
+            -0.435,
+            0.085,
+            -0.225
+          ],
+          "max": [
+            0.435,
+            1.825,
+            -0.221
+          ]
+        },
+        {
+          "min": [
+            -0.435,
+            0.085,
+            -0.225
+          ],
+          "max": [
+            0.435,
+            0.089,
+            0.21
+          ]
+        },
+        {
+          "min": [
+            -0.435,
+            0.085,
+            -0.225
+          ],
+          "max": [
+            -0.431,
+            1.825,
+            0.21
+          ]
+        },
+        {
+          "min": [
+            0.431,
+            0.085,
+            -0.225
+          ],
+          "max": [
+            0.435,
+            1.825,
+            0.21
+          ]
+        },
+        {
+          "min": [
+            -0.43,
+            0.0,
+            -0.22
+          ],
+          "max": [
+            0.43,
+            0.06,
+            0.2
+          ]
+        },
+        {
+          "min": [
+            -0.431,
+            0.508,
+            -0.225
+          ],
+          "max": [
+            0.431,
+            0.52,
+            0.19
+          ]
+        },
+        {
+          "min": [
+            -0.431,
+            0.988,
+            -0.225
+          ],
+          "max": [
+            0.431,
+            1.0,
+            0.19
+          ]
+        },
+        {
+          "min": [
+            -0.431,
+            1.438,
+            -0.225
+          ],
+          "max": [
+            0.431,
+            1.45,
+            0.19
+          ]
+        },
+        {
+          "min": [
+            -0.46,
+            0.06,
+            -0.225
+          ],
+          "max": [
+            -0.435,
+            1.85,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            0.435,
+            0.06,
+            -0.225
+          ],
+          "max": [
+            0.46,
+            1.85,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            -0.435,
+            1.825,
+            -0.225
+          ],
+          "max": [
+            0.435,
+            1.85,
+            0.25
+          ]
+        }
+      ],
+      "tris": 1792
+    },
+    "ix_flashlight": {
+      "file": "models/ix_flashlight.gltf",
+      "aabb": {
+        "min": [
+          -0.0825,
+          0.0,
+          -0.0193
+        ],
+        "max": [
+          0.0825,
+          0.0386,
+          0.0193
+        ]
+      },
+      "colliders": [],
+      "tris": 1868
     },
     "ix_fuse": {
       "file": "models/ix_fuse.gltf",
@@ -20225,6 +20428,23 @@
       "colliders": [],
       "tris": 156
     },
+    "ix_key_safe": {
+      "file": "models/ix_key_safe.gltf",
+      "aabb": {
+        "min": [
+          -0.07,
+          -0.0001,
+          -0.012
+        ],
+        "max": [
+          0.055,
+          0.0036,
+          0.012
+        ]
+      },
+      "colliders": [],
+      "tris": 1304
+    },
     "bed": {
       "file": "models/bed.gltf",
       "aabb": {
@@ -22696,6 +22916,173 @@
       },
       "colliders": [],
       "tris": 720
+    },
+    "ix_safe": {
+      "file": "models/ix_safe.gltf",
+      "aabb": {
+        "min": [
+          -0.28,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.28,
+          0.7,
+          0.291
+        ]
+      },
+      "colliders": [
+        {
+          "min": [
+            -0.28,
+            0.0,
+            -0.25
+          ],
+          "max": [
+            0.28,
+            0.7,
+            -0.2
+          ]
+        },
+        {
+          "min": [
+            -0.23,
+            0.0,
+            -0.2
+          ],
+          "max": [
+            0.23,
+            0.05,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            -0.242,
+            0.128,
+            0.244
+          ],
+          "max": [
+            -0.218,
+            0.572,
+            0.268
+          ]
+        },
+        {
+          "min": [
+            -0.23,
+            0.05,
+            -0.2
+          ],
+          "max": [
+            0.23,
+            0.65,
+            -0.196
+          ]
+        },
+        {
+          "min": [
+            -0.23,
+            0.05,
+            -0.2
+          ],
+          "max": [
+            0.23,
+            0.054,
+            0.18
+          ]
+        },
+        {
+          "min": [
+            -0.23,
+            0.05,
+            -0.2
+          ],
+          "max": [
+            -0.226,
+            0.65,
+            0.18
+          ]
+        },
+        {
+          "min": [
+            0.226,
+            0.05,
+            -0.2
+          ],
+          "max": [
+            0.23,
+            0.65,
+            0.18
+          ]
+        },
+        {
+          "min": [
+            -0.226,
+            0.348,
+            -0.2
+          ],
+          "max": [
+            0.226,
+            0.36,
+            0.16
+          ]
+        },
+        {
+          "min": [
+            -0.28,
+            0.0,
+            -0.2
+          ],
+          "max": [
+            -0.23,
+            0.7,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            0.23,
+            0.0,
+            -0.2
+          ],
+          "max": [
+            0.28,
+            0.7,
+            0.25
+          ]
+        },
+        {
+          "min": [
+            -0.23,
+            0.65,
+            -0.2
+          ],
+          "max": [
+            0.23,
+            0.7,
+            0.25
+          ]
+        }
+      ],
+      "tris": 1568
+    },
+    "ix_car_key": {
+      "file": "models/ix_car_key.gltf",
+      "aabb": {
+        "min": [
+          -0.0364,
+          0.0,
+          -0.0174
+        ],
+        "max": [
+          0.0492,
+          0.0125,
+          0.0174
+        ]
+      },
+      "colliders": [],
+      "tris": 940
     },
     "guest_mirror_trim": {
       "file": "models/guest_mirror_trim.gltf",
@@ -25183,6 +25570,23 @@
         }
       ],
       "tris": 2148
+    },
+    "ix_key_office": {
+      "file": "models/ix_key_office.gltf",
+      "aabb": {
+        "min": [
+          -0.07,
+          -0.0001,
+          -0.012
+        ],
+        "max": [
+          0.047,
+          0.0036,
+          0.012
+        ]
+      },
+      "colliders": [],
+      "tris": 1208
     }
   },
   "props": [
@@ -25275,7 +25679,8 @@
         4.6,
         -10.5
       ],
-      "rotationY": 0
+      "rotationY": 0,
+      "lock": "key_office"
     },
     {
       "asset": "door_plain",
@@ -28335,6 +28740,7 @@
         -19.575
       ],
       "rotationY": 0,
+      "lock": "key_cellar",
       "signal": {
         "lights": "lights_wine_room"
       }
@@ -28696,6 +29102,20 @@
       "rotationY": 40
     },
     {
+      "asset": "ix_key_locker",
+      "room": "wine_room",
+      "position": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotationY": 160,
+      "attach": {
+        "asset": "dining_climate_wall",
+        "node": "DiningClimateWall_Inside"
+      }
+    },
+    {
       "asset": "garage_lockers",
       "room": "mudroom",
       "position": [
@@ -28939,26 +29359,6 @@
       "rotationY": 90,
       "signal": "lights_mudroom",
       "state": true
-    },
-    {
-      "asset": "ix_flashlight",
-      "room": "mudroom",
-      "position": [
-        20.5,
-        0.92,
-        -5.8
-      ],
-      "rotationY": 12
-    },
-    {
-      "asset": "ix_car_key",
-      "room": "mudroom",
-      "position": [
-        21.29,
-        0.927,
-        -6.11
-      ],
-      "rotationY": 80
     },
     {
       "asset": "garage_bay",
@@ -29260,12 +29660,12 @@
       "rotationY": 90
     },
     {
-      "asset": "ix_fuse",
+      "asset": "ix_key_cellar",
       "room": "garage",
       "position": [
         0.06,
         -0.059,
-        0.14
+        0.15
       ],
       "rotationY": 20,
       "attach": {
@@ -29274,14 +29674,57 @@
       }
     },
     {
+      "asset": "ix_gun_locker",
+      "room": "garage",
+      "position": [
+        13.92,
+        0.0,
+        12.2
+      ],
+      "rotationY": 90,
+      "lock": "key_locker"
+    },
+    {
+      "asset": "ix_flashlight",
+      "room": "garage",
+      "position": [
+        -0.2,
+        0.0,
+        -0.0
+      ],
+      "rotationY": 8,
+      "attach": {
+        "asset": "ix_gun_locker",
+        "node": "IX_GunLocker_Inside"
+      }
+    },
+    {
+      "asset": "ix_fuse",
+      "room": "garage",
+      "position": [
+        0.08,
+        0.0,
+        0.04
+      ],
+      "rotationY": -15,
+      "attach": {
+        "asset": "ix_gun_locker",
+        "node": "IX_GunLocker_Inside"
+      }
+    },
+    {
       "asset": "ix_battery",
       "room": "garage",
       "position": [
-        17.2,
-        0.95,
-        3.66
+        0.26,
+        0.0,
+        -0.05
       ],
-      "rotationY": -15
+      "rotationY": 25,
+      "attach": {
+        "asset": "ix_gun_locker",
+        "node": "IX_GunLocker_Inside"
+      }
     },
     {
       "asset": "decor_c_gallery_bench",
@@ -31134,6 +31577,16 @@
       "rotationY": -15
     },
     {
+      "asset": "ix_key_safe",
+      "room": "library",
+      "position": [
+        -14.95,
+        5.368,
+        15.61
+      ],
+      "rotationY": 35
+    },
+    {
       "asset": "bed",
       "room": "primary_bedroom",
       "position": [
@@ -31480,6 +31933,20 @@
       ],
       "rotationY": 0,
       "signal": "blinds_primary_bedroom"
+    },
+    {
+      "asset": "ix_battery",
+      "room": "primary_bedroom",
+      "position": [
+        -0.06,
+        -0.073,
+        -0.16
+      ],
+      "rotationY": 70,
+      "attach": {
+        "asset": "nightstand",
+        "node": "Nightstand_Drawer"
+      }
     },
     {
       "asset": "bath_vanity",
@@ -32379,6 +32846,45 @@
       "rotationY": 84
     },
     {
+      "asset": "ix_safe",
+      "room": "office",
+      "position": [
+        13.08,
+        4.6,
+        -18.55
+      ],
+      "rotationY": -90,
+      "lock": "key_safe"
+    },
+    {
+      "asset": "ix_car_key",
+      "room": "office",
+      "position": [
+        0.06,
+        0.0,
+        -0.0
+      ],
+      "rotationY": 20,
+      "attach": {
+        "asset": "ix_safe",
+        "node": "IX_Safe_Inside"
+      }
+    },
+    {
+      "asset": "ix_battery",
+      "room": "office",
+      "position": [
+        -0.13,
+        0.0,
+        -0.04
+      ],
+      "rotationY": 75,
+      "attach": {
+        "asset": "ix_safe",
+        "node": "IX_Safe_Inside"
+      }
+    },
+    {
       "asset": "guest_mirror_trim",
       "room": "gym",
       "position": [
@@ -32987,6 +33493,20 @@
       "rotationY": 90,
       "signal": "lights_guest_room",
       "state": true
+    },
+    {
+      "asset": "ix_key_office",
+      "room": "guest_room",
+      "position": [
+        0.05,
+        -0.058,
+        -0.12
+      ],
+      "rotationY": 25,
+      "attach": {
+        "asset": "guest_nightstand",
+        "node": "GuestNightstand_Drawer"
+      }
     },
     {
       "asset": "decor_c_plant_snake",
