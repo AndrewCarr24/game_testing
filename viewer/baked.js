@@ -41,6 +41,85 @@ export async function loadEnvironment(url, scale = 1) {
   return tex;
 }
 
+// ------------------------------------------------------------------ lights off
+// A room with a lights-off bake (bake.py --state off: bake JSON rooms[r].off) fades between its
+// lit and dark states from its light signal (lights_<room>, or the group's) and `power`:
+// - shell: the off lightmap is packed into the on lightmap's alpha as a luminance ratio
+//   (sqrt-encoded), decoded in the shader as  off = on x ratio x mix(tint, 1, ratio)
+//   (the light left over keeps the room's own tint: sky / sun bounce), so the GPU holds one
+//   texture per room as before;
+// - props: the room's SH probe is lerped in place (every material of the room shares it);
+// - reflections: the room's panorama is re-filtered (PMREM) from a blend of the on and off
+//   panoramas, a few times per fade (they're blurry), into the same render target;
+// - the room's ceiling strips (shell emissive) fade with it; the fixtures' glows are reacts
+//   (interactables.js) on the same signal.
+const LUT_LIN = new Float32Array(256);
+for (let i = 0; i < 256; i++) { const c = i / 255; LUT_LIN[i] = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+const FADE = 0.45;           // seconds for a room to go dark or come back (dimmable LEDs)
+
+async function fetchBlob(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: ${res.status}`);
+  return res.blob();
+}
+const toBitmap = (blob) => createImageBitmap(blob, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+// a panorama bitmap as an 8-bit sRGB texture (decoded to linear by the GPU)
+function envTexture(bmp) {
+  const t = new THREE.Texture(bmp);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.flipY = false;
+  t.generateMipmaps = false;
+  t.minFilter = t.magFilter = THREE.LinearFilter;
+  t.needsUpdate = true;
+  return t;
+}
+
+function bitmapPixels(bmp) {
+  const g = new OffscreenCanvas(bmp.width, bmp.height).getContext('2d', { willReadFrequently: true });
+  g.drawImage(bmp, 0, 0);
+  return g.getImageData(0, 0, bmp.width, bmp.height).data;
+}
+
+// on (RGB) + the luminance ratio off / on (alpha, sqrt-encoded) in one sRGB RGBA texture,
+// rows top-down like the image (flipY = false: the glTF UV convention)
+function packLightmap(onBmp, offBmp) {
+  if (onBmp.width !== offBmp.width || onBmp.height !== offBmp.height) return null;
+  const a = bitmapPixels(onBmp), b = bitmapPixels(offBmp);
+  const out = new Uint8Array(a.length);
+  for (let i = 0; i < a.length; i += 4) {
+    const lon = 0.2126 * LUT_LIN[a[i]] + 0.7152 * LUT_LIN[a[i + 1]] + 0.0722 * LUT_LIN[a[i + 2]];
+    const loff = 0.2126 * LUT_LIN[b[i]] + 0.7152 * LUT_LIN[b[i + 1]] + 0.0722 * LUT_LIN[b[i + 2]];
+    out[i] = a[i]; out[i + 1] = a[i + 1]; out[i + 2] = a[i + 2];
+    out[i + 3] = lon > 1e-6 ? Math.round(Math.sqrt(Math.min(1, loff / lon)) * 255) : 255;
+  }
+  const tex = new THREE.DataTexture(out, onBmp.width, onBmp.height, THREE.RGBAFormat, THREE.UnsignedByteType);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.generateMipmaps = true;
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+// the lightmap chunk with the lights-off ratio applied (roomOff 0 = lit, 1 = dark)
+const LIGHTMAP_OFF = THREE.ShaderChunk.lights_fragment_maps.replace(
+  'vec3 lightMapIrradiance = lightMapTexel.rgb * lightMapIntensity;',
+  'vec3 lightMapIrradiance = lightMapTexel.rgb * lightMapIntensity;\n' +
+  'float lmRatio = lightMapTexel.a * lightMapTexel.a;\n' +
+  'lightMapIrradiance *= mix( vec3( 1.0 ), lmRatio * mix( roomTint, vec3( 1.0 ), lmRatio ), roomOff );');
+if (!LIGHTMAP_OFF.includes('lmRatio')) console.warn('baked.js: lights_fragment_maps changed; rooms will not go dark');
+
+// the panorama blend (on -> off) that a room's reflections are re-filtered from
+const ENV_BLEND = new THREE.ShaderMaterial({
+  uniforms: { onMap: { value: null }, offMap: { value: null }, t: { value: 0 }, scale: { value: 1 } },
+  vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4( position.xy, 0.0, 1.0 ); }',
+  // the bitmaps' rows run top-down (an ImageBitmap ignores flipY); equirect textures here are bottom-up
+  fragmentShader: `uniform sampler2D onMap, offMap; uniform float t, scale; varying vec2 vUv;
+    void main() { vec2 uv = vec2( vUv.x, 1.0 - vUv.y );
+      gl_FragColor = vec4( mix( texture2D( onMap, uv ).rgb, texture2D( offMap, uv ).rgb, t ) * scale, 1.0 ); }`,
+  depthTest: false, depthWrite: false,
+});
+
 // Box-projected (parallax-corrected) reflections: a room is a box, so a reflection ray is
 // traced to the room's walls and the panorama is looked up in the direction from the probe
 // (where it was rendered) to that hit point. Floors and counters then reflect the real
@@ -117,32 +196,98 @@ function addBoxProjection(shader, box) {
 // box = false turns box projection off (?box=0, for comparison)
 // specOcc = false turns the lightmap specular occlusion off (?so=0)
 // sheen = false turns the roughness variation off (?sheen=0)
-export async function loadBake(base, levelName, renderer, levelRooms = {}, box = true, specOcc = true, sheen = true) {
+// offStates = false ignores the lights-off bakes (?loff=0, for comparison): rooms stay lit
+export async function loadBake(base, levelName, renderer, levelRooms = {}, box = true, specOcc = true, sheen = true, offStates = true) {
   const res = await fetch(`${base}levels/${levelName}_bake.json`);
   if (!res.ok) return null;
   const bake = await res.json();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const rooms = {};
+  // lights off: one PMREM generator per panorama width (each keeps its blur targets, so a room's
+  // reflections can be re-filtered into the same render target) and one blend target per width
+  const envGen = new Map();
+  const envGenFor = (w, h) => {
+    if (!envGen.has(w)) {
+      const target = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, depthBuffer: false, generateMipmaps: false,
+                                                       magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter });
+      target.texture.mapping = THREE.EquirectangularReflectionMapping;
+      envGen.set(w, { gen: new THREE.PMREMGenerator(renderer), target });
+    }
+    return envGen.get(w);
+  };
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), ENV_BLEND);
+  quad.frustumCulled = false;
+  const quadCam = new THREE.Camera();
+  // re-filter room r's reflections from its panoramas blended at t (0 = lit, 1 = dark); needs
+  // the panoramas decoded (envSources)
+  function filterEnv(r, t) {
+    const L = r.lit, { gen, target } = envGenFor(L.envW, L.envH);
+    const u = ENV_BLEND.uniforms;
+    u.onMap.value = L.src.on; u.offMap.value = L.src.off; u.t.value = t; u.scale.value = L.envScale;
+    const prev = renderer.getRenderTarget();
+    renderer.setRenderTarget(target);
+    renderer.render(quad, quadCam);
+    renderer.setRenderTarget(prev);
+    L.envRT = gen.fromEquirectangular(target.texture, L.envRT);
+    L.envT = t;
+    return L.envRT.texture;
+  }
+  // a fading room's panoramas: kept as their (few kB) WebP blobs and decoded only while needed
+  function envSources(L) {
+    if (L.src || L.loading) return L.src;
+    L.loading = Promise.all(L.envBlobs.map(toBitmap)).then(([a, b]) => { L.src = { on: envTexture(a), off: envTexture(b), bitmaps: [a, b] }; })
+      .catch((err) => console.warn('baked.js: panorama decode failed', err)).finally(() => { L.loading = null; });
+    return null;
+  }
+  function freeEnvSources(L) {
+    if (!L.src) return;
+    L.src.on.dispose(); L.src.off.dispose();
+    for (const bmp of L.src.bitmaps) bmp.close();
+    L.src = null;
+  }
   await Promise.all(Object.entries(bake.rooms).map(async ([room, r]) => {
-    const [lightTex, envHdr] = await Promise.all([
-      new THREE.TextureLoader().loadAsync(base + r.lightmap.file),
-      loadEnvironment(base + r.environment.file, r.environment.scale),
-    ]);
+    let lightTex, envMap, lit = null;
+    if (r.off && offStates) {
+      try {
+        const blobs = await Promise.all([r.lightmap.file, r.off.lightmap, r.environment.file, r.off.environment].map((f) => fetchBlob(base + f)));
+        const [onBmp, offBmp, envOnBmp, envOffBmp] = await Promise.all(blobs.map(toBitmap));
+        lightTex = packLightmap(onBmp, offBmp);
+        onBmp.close(); offBmp.close();
+        if (!lightTex || envOnBmp.width !== envOffBmp.width) throw new Error('its off maps do not match the on maps (re-bake with --state off)');
+        lit = { signal: r.off.signal, t: 0, envT: -1, ratio: r.off.ratio ?? 0.3,
+                envBlobs: blobs.slice(2), src: { on: envTexture(envOnBmp), off: envTexture(envOffBmp), bitmaps: [envOnBmp, envOffBmp] },
+                loading: null, envW: envOnBmp.width, envH: envOnBmp.height, envScale: r.environment.scale, envRT: null,
+                offU: { value: 0 }, tintU: { value: new THREE.Vector3(...(r.off.tint || [1, 1, 1])) },
+                shOn: r.sh.map((c) => new THREE.Vector3(...c)), shOff: r.off.sh.map((c) => new THREE.Vector3(...c)) };
+      } catch (err) {
+        console.warn(`baked.js: ${room} lights-off state not loaded: ${err.message}`);
+        lightTex = null; lit = null;
+      }
+    }
+    if (!lightTex) {
+      lightTex = await new THREE.TextureLoader().loadAsync(base + r.lightmap.file);
+      lightTex.colorSpace = THREE.SRGBColorSpace;
+    }
     lightTex.flipY = false;                  // glTF UV convention
-    lightTex.colorSpace = THREE.SRGBColorSpace;
     lightTex.channel = r.lightmap.uv;        // TEXCOORD_1 -> geometry.attributes.uv1
-    envHdr.mapping = THREE.EquirectangularReflectionMapping;
-    const envMap = pmrem.fromEquirectangular(envHdr).texture;
-    envHdr.dispose();
+    if (!lit) {
+      const envHdr = await loadEnvironment(base + r.environment.file, r.environment.scale);
+      envHdr.mapping = THREE.EquirectangularReflectionMapping;
+      envMap = pmrem.fromEquirectangular(envHdr).texture;
+      envHdr.dispose();
+    }
     const L = levelRooms[room], T = 0.15;   // T: wall lining, the rect is the room's outer edge
     rooms[room] = { lightTex, envMap, intensity: r.lightmap.intensity, objects: new Set(r.lightmap.objects),
-                    sh: r.sh ? r.sh.map((c) => new THREE.Vector3(...c)) : null,
+                    sh: r.sh ? r.sh.map((c) => new THREE.Vector3(...c)) : null, lit,
+                    offU: lit ? lit.offU : { value: 0 }, tintU: lit ? lit.tintU : { value: new THREE.Vector3(1, 1, 1) },
                     box: box && L?.probe && room !== 'courtyard' ? {   // (open to the sky: no box)
                       min: new THREE.Vector3(L.rect[0] + T, L.floor, L.rect[1] + T),
                       max: new THREE.Vector3(L.rect[2] - T, L.floor + L.height, L.rect[3] - T),
                       probe: new THREE.Vector3(...L.probe) } : null };
   }));
   pmrem.dispose();
+  // the lit panoramas of the rooms with an off state (one at a time: the generators are shared)
+  for (const r of Object.values(rooms)) if (r.lit) { r.envMap = filterEnv(r, 0); freeEnvSources(r.lit); }
 
   const roomOf = new Map();                  // shell mesh name -> room
   for (const [room, r] of Object.entries(rooms)) for (const n of r.objects) roomOf.set(n, room);
@@ -160,15 +305,16 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
       addBoxProjection(shader, r.box);
       if (r.box && sheen) addSheen(shader);           // (needs vWorldPos from the box projection)
       if (r.sh) shader.uniforms.roomSH = { value: r.sh };
+      Object.assign(shader.uniforms, { roomOff: r.offU, roomTint: r.tintU });     // lights off (shared per room)
       shader.fragmentShader = keepLocal(shader.fragmentShader).replace(
-        '#include <lights_pars_begin>', '#include <lights_pars_begin>\n' + (r.sh ? 'uniform vec3 roomSH[ 9 ];' : '')).replace(
+        '#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform float roomOff;\nuniform vec3 roomTint;\n' + (r.sh ? 'uniform vec3 roomSH[ 9 ];' : '')).replace(
         '#include <lights_fragment_maps>',
         [
           // all direct light is in the bake; without shadows a real-time sun glint
           // would appear even where the sun can't reach (windowless rooms)
           ...LOCAL_ONLY,
           'irradiance = vec3( 0.0 );',
-          '#include <lights_fragment_maps>',
+          LIGHTMAP_OFF.includes('lmRatio') ? LIGHTMAP_OFF : '#include <lights_fragment_maps>',
           'iblIrradiance = vec3( 0.0 );',
           // specular occlusion from the bake: where the lightmap is much darker than the
           // room's average light from that side (under a table, behind a sofa), the
@@ -265,10 +411,21 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   }
 
   // shell: every baked mesh gets its room's lightmap; the glass its sun-aware material
+  const byLength = Object.keys(rooms).sort((a, b) => b.length - a.length);
+  const strips = {};                         // room -> {material, base}: its ceiling strips' glow
   function applyLightmaps(root) {
     let count = 0;
     root.traverse((o) => {
       if (!o.isMesh) return;
+      // the glowing ceiling slots (one merged mesh per room): their glow follows the room's lights
+      if (!Array.isArray(o.material) && /^M_LightStrip/.test(o.material.name)) {
+        const room = byLength.find((n) => o.name.startsWith(`Mansion_${n}_`));
+        if (room) {
+          strips[room] ??= { material: o.material.clone(), base: o.material.emissiveIntensity };
+          o.material = strips[room].material;
+        }
+        return;
+      }
       const room = roomOf.get(o.name);
       if (!room && !Array.isArray(o.material) && /Glass/.test(o.material.name)) {
         o.material = glassMaterial(o.material, !/Rail/.test(o.material.name));
@@ -297,5 +454,80 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   const fallback = rooms.entry ?? rooms[Object.keys(bake.rooms)[0]];
   // is the eye outdoors (the lawn, the terraces, the courtyard)? Then the glass shows the sun
   const setGlassSun = (outdoors) => { glassSun.value = outdoors ? 1 : 0; };
-  return { bake, rooms, applyLightmaps, applyRoom, applyDoor, setGlassSun, defaultEnv: fallback?.envMap };
+
+  // ---- lights off: which signal each room's lights follow, and the per-frame fade
+  // room -> signal: its off bake's, else mansion.json rooms[r].lights, else the lights signal
+  // most of its fixtures were wired to (ix_common.wire), else lights_<room> (as bake.py)
+  let signals = null;
+  const roomSignal = {};
+  const state = {};                          // room -> {t, target} for rooms without an off bake (strips only)
+  function bindSignals(sigs, level) {
+    signals = sigs;
+    const counts = {};
+    for (const p of level.props || []) {
+      const s = typeof p.signal === 'object' && p.signal ? p.signal.lights : (typeof p.signal === 'string' && p.signal.startsWith('lights_') ? p.signal : null);
+      if (s) { counts[p.room] ??= {}; counts[p.room][s] = (counts[p.room][s] || 0) + 1; }
+    }
+    for (const room of Object.keys(level.rooms)) {
+      const c = counts[room];
+      roomSignal[room] = rooms[room]?.lit?.signal ?? level.rooms[room].lights ??
+        (c ? Object.keys(c).sort((a, b) => c[b] - c[a])[0] : `lights_${room}`);
+      if (roomSignal[room]) sigs.define(roomSignal[room], true);      // a room's lights start on unless a switch says otherwise
+    }
+    // start in the right state, no fade
+    for (const room of Object.keys(roomSignal)) apply(room, target(room));    // (its reflections follow in update)
+  }
+  const target = (room) => (!signals || !roomSignal[room] ? 0 :
+    (signals.get('power') === false || signals.get(roomSignal[room]) === false) ? 1 : 0);
+  const smooth = (t) => t * t * (3 - 2 * t);
+  // t: 0 = lit, 1 = dark (linear; eased here)
+  function apply(room, t) {
+    const r = rooms[room], L = r?.lit, st = L ?? (state[room] ??= { t: 0 });
+    st.t = t;
+    const s = smooth(t);
+    if (strips[room]) strips[room].material.emissiveIntensity = strips[room].base * (1 - s);
+    if (!L) return;
+    L.offU.value = s;
+    for (let i = 0; i < 9; i++) r.sh[i].lerpVectors(L.shOn[i], L.shOff[i], s);
+  }
+  // per frame: fade every room toward its signal; re-filter a fading room's reflections every
+  // ~0.12 of the fade (at most 2 rooms a frame: power off fades the whole house at once)
+  function update(dt) {
+    if (!signals) return;
+    const pending = [];
+    for (const room of Object.keys(roomSignal)) {
+      const r = rooms[room], st = r?.lit ?? state[room];
+      if (!st) continue;
+      const goal = target(room);
+      const L = r?.lit;
+      if (st.t !== goal) {
+        if (L) envSources(L);                    // start decoding its panoramas
+        apply(room, goal > st.t ? Math.min(goal, st.t + dt / FADE) : Math.max(goal, st.t - dt / FADE));
+      }
+      if (L) {
+        const s = smooth(L.t), gap = Math.abs(L.envT - s);
+        if (gap > 0.12 || (gap > 1e-3 && L.t === goal)) pending.push([gap, room, goal]);
+      }
+    }
+    pending.sort((a, b) => b[0] - a[0]);
+    let n = 0;
+    for (const [, room, goal] of pending) {
+      const L = rooms[room].lit;
+      if (n >= 2 || !envSources(L)) continue;   // (still decoding: next frame)
+      filterEnv(rooms[room], smooth(L.t));
+      n++;
+      if (L.t === goal) freeEnvSources(L);       // settled: free the decoded panoramas
+    }
+  }
+  // how much of a room's light is on right now: 1 = lit, down to its dark state's share of
+  // the light (sun and sky through the windows, the neighbours' through the doors); for the
+  // Grimble's eyes, the tablet, tests
+  const lightLevel = (room) => {
+    const L = rooms[room]?.lit;
+    return L ? 1 - smooth(L.t) * (1 - L.ratio) : 1 - (state[room] ? smooth(state[room].t) : 0);
+  };
+  const isDark = (room) => (rooms[room]?.lit ?? state[room])?.t === 1;
+
+  return { bake, rooms, applyLightmaps, applyRoom, applyDoor, setGlassSun, defaultEnv: fallback?.envMap,
+           bindSignals, update, lightLevel, isDark, roomSignal };
 }

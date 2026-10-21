@@ -30,6 +30,12 @@ Room modules (blender/levels/rooms/<module>.py) may define, all optional:
                  don't block this light in the bake (a sculpture under its own spot). A
                  fixture never shadows its own light anyway (bake.py)
              spot power counts like a bare bulb's: a narrow beam doesn't concentrate it
+             any light may add signal="<name>" (default: the room's, below) or signal=None
+                 (not electric: candles; it stays on in the lights-off bake and with power off)
+  LIGHTS_SIGNAL  the signal the room's lights follow (or {room: name}); default: the one most
+             of its fixtures were wired to (ix_common.wire), else lights_<room>. Written to
+             mansion.json rooms[r].lights; the lights-off bake (bake.py --state off) turns
+             every light, ceiling strip and fixture glow on that signal off
   PROBE      (x, y, z) room-local point for the room's environment panorama
 
 Each room has its own lightmap atlas and environment probe (bake.py), sized by area.
@@ -156,6 +162,29 @@ def finishes_for(room, mod, base):
     return f
 
 
+def light_signal(mod, room):
+    """The signal a room's lights follow (its light switch, the tablet, the lights-off bake):
+    the room module's LIGHTS_SIGNAL (a name, or {room: name} in a shared module) if it has one,
+    else the lights signal most of its fixtures were wired to (ix_common.wire: lights_<room>, or a
+    group's like lights_galleries), else lights_<room>."""
+    sig = per_room(mod, "LIGHTS_SIGNAL", room, None)
+    if sig is not None:
+        return sig
+    counts = {}
+    for _, _, _, *rest in per_room(mod, "PLACEMENTS", room, []) or []:
+        s = (rest[0] if rest else {}).get("signal")
+        s = s.get("lights") if isinstance(s, dict) else None
+        if s:
+            counts[s] = counts.get(s, 0) + 1
+    return max(counts, key=counts.get) if counts else f"lights_{room}"
+
+
+def tag_light(ob, L):
+    """The room and signal a light follows (bake.py LightsOff reads them)."""
+    if "room" in L:
+        ob["room"], ob["signal"] = L["room"], L["signal"]
+
+
 def blender_lights(p, h):
     """Blender lights + sky. These drive the Cycles bake; the engine gets the sun from the JSON."""
     col = common.fresh_collection(f"{NAME}_PreviewLights")
@@ -167,12 +196,14 @@ def blender_lights(p, h):
         ld.color = p["cove_color"]
         ob = bpy.data.objects.new(f"{NAME}_Cove_{i}", ld)
         ob.location = (*ls["pos"], ls["z"] - 0.02)
+        tag_light(ob, ls)
         col.objects.link(ob)
     for i, pt in enumerate(h.points):
         ld = bpy.data.lights.get(f"{NAME}_Lamp_{i}") or bpy.data.lights.new(f"{NAME}_Lamp_{i}", "POINT")
         ld.energy, ld.color, ld.shadow_soft_size = pt["power"], pt["color"], pt["radius"]
         ob = bpy.data.objects.new(f"{NAME}_Lamp_{i}", ld)
         ob.location = pt["pos"]
+        tag_light(ob, pt)
         col.objects.link(ob)
     for i, sp in enumerate(h.spots):
         ld = bpy.data.lights.get(f"{NAME}_Spot_{i}") or bpy.data.lights.new(f"{NAME}_Spot_{i}", "SPOT")
@@ -180,6 +211,7 @@ def blender_lights(p, h):
         ld.spot_size, ld.spot_blend = math.radians(sp["angle"]), sp["blend"]
         ob = bpy.data.objects.new(f"{NAME}_Spot_{i}", ld)
         ob.location = sp["pos"]
+        tag_light(ob, sp)
         ob.rotation_euler = (Vector(sp["aim"]) - Vector(sp["pos"])).to_track_quat("-Z", "Y").to_euler()
         col.objects.link(ob)
     for i, ar in enumerate(h.areas):
@@ -189,6 +221,7 @@ def blender_lights(p, h):
         ld.energy, ld.color = ar["power"], ar["color"]
         ob = bpy.data.objects.new(f"{NAME}_Area_{i}", ld)
         ob.location = ar["pos"]
+        tag_light(ob, ar)
         ob.rotation_euler = (Vector(ar["aim"]) - Vector(ar["pos"])).to_track_quat("-Z", "Y").to_euler()
         col.objects.link(ob)
     sd = bpy.data.lights.get(f"{NAME}_Sun") or bpy.data.lights.new(f"{NAME}_Sun", "SUN")
@@ -459,6 +492,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                                               court if plan.ROOMS[room].get("kind") == "courtyard" else base)
                            for room in plan.ROOMS}, NAME).build()
 
+    room_signal = {room: light_signal(mods[room], room) for room in plan.ROOMS}
     for room in plan.ROOMS:
         mod = mods[room]
         _, z0, z1 = h.interior(room)
@@ -479,9 +513,13 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                        L.get("color", (1.0, 0.84, 0.66)), L.get("shape", "rectangle"))
             else:
                 raise ValueError(f"{room}: unknown light kind {L['kind']!r}")
+            lst = {"strip": h.strips, "point": h.points, "spot": h.spots, "area": h.areas}[L["kind"]]
             if L.get("no_shadow") and L["kind"] != "strip":
-                lst = {"point": h.points, "spot": h.spots, "area": h.areas}[L["kind"]]
                 lst[-1]["no_shadow"] = (room, list(L["no_shadow"]))
+            # lights off (bake.py --state off): the signal this light follows; signal=None in
+            # LIGHTS = never switched (candles, a fire)
+            lst[-1]["room"] = room
+            lst[-1]["signal"] = L.get("signal", room_signal[room]) or ""
         probe = per_room(mod, "PROBE", room, None)
         if probe:
             h.probes[room] = h.to_world(room, probe)
@@ -562,6 +600,10 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                 entry[k] = opts[k]
         ob.location = loc
         ob.rotation_euler = (0, 0, math.radians(rot))
+        # the light signal a fixture was wired to (bake.py LightsOff darkens its glow; after the
+        # export: not a glTF extra)
+        sig = opts.get("signal")
+        ob["lights"] = (sig.get("lights") if isinstance(sig, dict) else None) or ""
         placed.append(entry)
 
     bpy.context.view_layer.update()
@@ -586,7 +628,8 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         _, z0, z1 = h.interior(r)
         rooms[r] = {"probe": common.to_gltf(pt), "lightmap": lm_res.get(r), "level": plan.ROOMS[r]["level"],
                     "floor": z0, "height": round(z1 - z0, 3),
-                    "rect": [x0, -y1, x1, -y0]}          # glTF: x0, z0, x1, z1
+                    "rect": [x0, -y1, x1, -y0],          # glTF: x0, z0, x1, z1
+                    "lights": room_signal[r]}            # the signal its lights follow (lights off: bake.py, baked.js)
     level = {
         "name": NAME,
         "units": "metres, Y-up (glTF)",

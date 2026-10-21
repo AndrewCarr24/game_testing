@@ -18,8 +18,10 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import courtyard_common as cc  # noqa: E402
+import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
 
 importlib.reload(cc)
+importlib.reload(ix_common)
 common = cc.common
 
 NAME = "CourtyardFestoon"
@@ -140,7 +142,8 @@ def build(**overrides):
             cc.lathe_bm(gb, gl, 5, Matrix.Translation(top))
     bmesh.ops.recalc_face_normals(gb, faces=gb.faces[:])
     common.mesh_object(f"{n}_CablesNoCollide", cb, col, black, root, smooth=True)
-    common.mesh_object(f"{n}_BulbsNoCollide", gb, col, glow, root, smooth=True)
+    bulbs = common.mesh_object(f"{n}_BulbsNoCollide", gb, col, glow, root, smooth=True)
+    bulbs["react"] = ix_common.glow()      # interactivity: the bulbs follow the courtyard's lights (and power)
 
     # star jasmine twining up the lower half of each mast
     if p["jasmine"]:

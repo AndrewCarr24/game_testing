@@ -93,8 +93,16 @@ def _festoon_lights():
 
 
 LIGHTS = _festoon_lights() + [
-    # candle glow on the table and in the lanterns
-    dict(kind="point", pos=(TABLE[0], TABLE[1], 0.98), power=4.0, color=(1.0, 0.62, 0.32)),
-] + [dict(kind="point", pos=(x, y, 0.26), power=2.5, color=(1.0, 0.60, 0.30)) for x, y in LANTERNS]
+    # candle glow on the table and in the lanterns (signal=None: not electric, they stay lit with the lights off)
+    dict(kind="point", pos=(TABLE[0], TABLE[1], 0.98), power=4.0, color=(1.0, 0.62, 0.32), signal=None),
+] + [dict(kind="point", pos=(x, y, 0.26), power=2.5, color=(1.0, 0.60, 0.30), signal=None) for x, y in LANTERNS]
 
 PROBE = (0.0, 0.0, 1.6)
+
+# --- lights (lights workstream): no switch out here; the festoon strings follow lights_courtyard,
+# on at the start (the tablet can switch it; power off darkens them), the candles stay lit
+import importlib as _il  # noqa: E402
+import ix_common  # noqa: E402
+
+_il.reload(ix_common)
+PLACEMENTS = ix_common.wire(PLACEMENTS, "courtyard", state=True)
