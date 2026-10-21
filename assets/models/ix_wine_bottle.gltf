@@ -45,7 +45,7 @@
 					"prompt":"Take wine bottle",
 					"range":1.4,
 					"throwable":true,
-					"noise":1.0,
+					"noise":1.2,
 					"shatter":true
 				}
 			},

@@ -158,3 +158,10 @@ PLACEMENTS = list(PLACEMENTS) + [
     ('ix_blind_great_room', (-6.25, 5.091), 90, {'signal': 'blinds_great_room'}),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "great_room")
+
+# --- distractions (viewer/devices.js): the sound system, a column speaker in each east corner
+# (both on music_great_room: either button, or the tablet, plays them; loud until stopped)
+PLACEMENTS = list(PLACEMENTS) + [
+    ("ix_speaker", (5.6, 9.8), -135, {"signal": {"music": "music_great_room"}}),
+    ("ix_speaker", (5.6, -9.8), -45, {"signal": {"music": "music_great_room"}}),
+]

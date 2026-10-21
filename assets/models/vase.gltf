@@ -39,7 +39,8 @@
 					"name":"Glass vase",
 					"prompt":"Take vase",
 					"range":1.4,
-					"throwable":true
+					"throwable":true,
+					"noise":1.4
 				}
 			},
 			"name":"Vase"

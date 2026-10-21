@@ -147,7 +147,8 @@ def build(**overrides):
     col = common.fresh_collection(n)
     root = common.empty(n, col)
     root["interact"] = {"type": "pickup", "item": p["item"], "name": p["label"],
-                        "prompt": "Take vase", "range": 1.4, "throwable": True}
+                        "prompt": "Take vase", "range": 1.4, "throwable": True,
+                        "noise": 1.4}   # heavy glass: the loudest thing to throw (distractions)
 
     smoke = materials.glass("M_Glass_Smoke", tint=p["tint"], alpha=0.35, roughness=0.04)
     dense = materials.glass("M_Glass_Smoke_Dense", tint=tuple(c * 0.85 for c in p["tint"]),

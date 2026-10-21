@@ -1,6 +1,6 @@
 """Car key: the EVs' key fob, a glossy black pebble (72 x 34 x 12 mm) with a satin steel
 band round its waist, three flush buttons (no markings) and a steel key ring through one end.
-A pickup (item "car_key"). Lies flat; origin at the centre of its underside."""
+A pickup (item "car_key"; armed + Enter sets off the car alarm). Lies flat; origin at the centre of its underside."""
 import importlib
 import math
 import os
@@ -21,7 +21,9 @@ def build(**overrides):
     n = p["name"]
     col = common.fresh_collection(n)
     root = common.empty(n, col)
-    root["interact"] = ix_common.pickup("car_key", "Car key")
+    # armed + Enter: the panic button sets off the silver car's alarm (car_ev), wherever you are
+    # (viewer/devices.js useRemote): a loud lure to the garage end of the house
+    root["interact"] = ix_common.pickup("car_key", "Car key", remote="car_alarm", remotePrompt="Car alarm")
 
     gloss = common.pbr_material("M_KeyFob_Black", (0.012, 0.012, 0.014), roughness=0.18, coat=0.8)
     satin = common.pbr_material("M_Steel_Satin", (0.62, 0.62, 0.63), roughness=0.3, metallic=1.0)

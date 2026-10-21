@@ -84,7 +84,9 @@
 					"item":"car_key",
 					"name":"Car key",
 					"prompt":"Take car key",
-					"range":1.4
+					"range":1.4,
+					"remote":"car_alarm",
+					"remotePrompt":"Car alarm"
 				}
 			},
 			"name":"IX_CarKey"
@@ -479,38 +481,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":702,
+			"byteLength":699,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":460,
-			"byteOffset":704
+			"byteOffset":700
 		},
 		{
 			"buffer":0,
 			"byteLength":467,
-			"byteOffset":1164
+			"byteOffset":1160
 		},
 		{
 			"buffer":0,
 			"byteLength":467,
-			"byteOffset":1632
+			"byteOffset":1628
 		},
 		{
 			"buffer":0,
 			"byteLength":2331,
-			"byteOffset":2100
+			"byteOffset":2096
 		},
 		{
 			"buffer":0,
-			"byteLength":2353,
-			"byteOffset":4432
+			"byteLength":2351,
+			"byteOffset":4428
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":6788,
+			"byteLength":6780,
 			"uri":"ix_car_key.bin"
 		}
 	]

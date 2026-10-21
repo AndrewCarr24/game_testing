@@ -5,11 +5,13 @@ import * as THREE from 'three';
 // Esc, which also releases the mouse) closes. Two pages:
 //   Rooms    every room with a lights_<room> or blinds_<room> signal in the level, with its
 //            toggles (setting the signal, exactly like the wall switch)
+//   Devices  the hub's noisy devices (viewer/devices.js: TV, speaker, doorbell chime, blender,
+//            alarm clock): Enter switches one on / off, wherever the player is (distractions)
 //   Cameras  one security-camera feed at a time: the scene from a fixed camera rendered at
 //            320x180, ~5 times a second, into a canvas in the panel. Cameras come from the
 //            level (mansion.json "cameras": [{name, position, lookAt, fov?}]) or, without
 //            them, the defaults below (great room, entry, courtyard, kitchen).
-// The hub needs house power: with `power` off both pages are offline (and nothing renders).
+// The hub needs house power: with `power` off the pages are offline (and nothing renders).
 //
 // The feed is drawn into a corner of the main canvas before the frame (so it gets the same
 // tone mapping and colour output as the game), copied into the panel's canvas, then the
@@ -58,8 +60,8 @@ export function feedCameras(level) {
 
 export class Tablet {
   // hide: objects not to show in the feed (the player's held item)
-  constructor({ renderer, scene, camera, level, signals, culler = null, hide = [], el, fps = 5 }) {
-    Object.assign(this, { renderer, scene, camera, level, signals, culler, hide, el, fps });
+  constructor({ renderer, scene, camera, level, signals, culler = null, hide = [], el, fps = 5, devices = null }) {
+    Object.assign(this, { renderer, scene, camera, level, signals, culler, hide, el, fps, devices });
     this.open = false;
     this.page = 'rooms';
     this.row = 1;
@@ -94,7 +96,15 @@ export class Tablet {
   }
 
   offline() { return this.signals.get('power') === false; }
-  rowCount() { return this.page === 'rooms' ? this.rooms().length : this.cams.length; }
+  rowCount() { return this.page === 'rooms' ? this.rooms().length : this.page === 'devices' ? this.deviceRows().length : this.cams.length; }
+
+  // (distractions) the Devices page sits between Rooms and Cameras when the level has devices
+  deviceRows() { return this.devices ? this.devices.tabletList() : []; }
+  pages() { return this.deviceRows().length ? ['rooms', 'devices', 'cameras'] : ['rooms', 'cameras']; }
+  nextPage(step = 1) {
+    const ps = this.pages(), i = Math.max(0, ps.indexOf(this.page));
+    return ps[(i + step + ps.length) % ps.length];
+  }
 
   toggle() { return this.open ? this.close() : this.show(); }
   show() {
@@ -133,7 +143,8 @@ export class Tablet {
     }
     if (code === 'ArrowLeft' || code === 'ArrowRight') {
       const step = code === 'ArrowRight' ? 1 : -1;
-      if (this.row === 0) this.setPage(this.page === 'rooms' ? 'cameras' : 'rooms');
+      if (this.row === 0) this.setPage(this.nextPage(step));
+      else if (this.page === 'devices') { /* one toggle per row */ }
       else if (this.page === 'rooms') {
         const r = this.rooms()[this.row - 1];
         const cols = [r.lights && 0, r.blinds && 1].filter((c) => c !== undefined && c !== false);
@@ -147,8 +158,12 @@ export class Tablet {
       return true;
     }
     if (code === 'Enter' || code === 'NumpadEnter') {
-      if (this.row === 0) { this.setPage(this.page === 'rooms' ? 'cameras' : 'rooms'); return true; }
-      if (this.page === 'rooms') {
+      if (this.row === 0) { this.setPage(this.nextPage(1)); return true; }
+      if (this.page === 'devices') {
+        const r = this.deviceRows()[this.row - 1];
+        if (this.offline()) this.msg = 'Hub offline · no power';
+        else if (r) this.msg = `${roomLabel(r.room ?? '')} · ${this.devices.toggle(r.device).toLowerCase()}`;
+      } else if (this.page === 'rooms') {
         const r = this.rooms()[this.row - 1];
         const sig = this.col === 1 ? r.blinds ?? r.lights : r.lights ?? r.blinds;
         if (this.offline()) this.msg = 'Hub offline · no power';
@@ -182,13 +197,21 @@ export class Tablet {
           cell(r.lights, 0, 'ON', 'OFF', 'Lights') + cell(r.blinds, 1, 'CLOSED', 'OPEN', 'Blinds') + '</div>';
       }).join('') : '<div class="tempty">No connected rooms.</div>';
       body = `<div class="tlist">${body}</div>`;
+    } else if (this.page === 'devices') {
+      const rows = this.deviceRows();
+      body = rows.map((r, i) => {
+        const sel = this.row === i + 1, lit = r.status !== 'OFF';
+        return `<div class="trow${sel ? ' sel' : ''}"><span class="troom">${roomLabel(r.room ?? '')}</span>` +
+          `<span class="tcell${sel ? ' sel' : ''}${lit ? ' lit' : ''}" style="width:200px">${r.label} <b>${off ? '--' : r.status}</b></span></div>`;
+      }).join('');
+      body = `<div class="tlist">${body}</div>`;
     } else {
       const list = this.cams.map((c, i) => `<div class="trow${this.row === i + 1 ? ' sel' : ''}${this.cam === i ? ' live' : ''}">CAM ${String(i + 1).padStart(2, '0')} · ${c.name}</div>`).join('');
       body = `<div class="tcams"><div class="tfeed"><div class="tover">${off ? 'NO SIGNAL' : ''}</div><div class="tlabel"></div></div><div class="tlist">${list}</div></div>`;
     }
-    this.el.innerHTML = `<div class="tbox"><div class="thead"><span class="ttitle">HOME</span>${tab('rooms', 'Rooms')}${tab('cameras', 'Cameras')}` +
+    this.el.innerHTML = `<div class="tbox"><div class="thead"><span class="ttitle">HOME</span>${tab('rooms', 'Rooms')}${this.pages().includes('devices') ? tab('devices', 'Devices') : ''}${tab('cameras', 'Cameras')}` +
       `<span class="tstat">${off ? 'OFFLINE' : 'ONLINE'}</span></div>${body}<div class="tmsg">${this.msg}</div>` +
-      `<div class="thelp">↑ ↓ · choose &nbsp; ← → · ${this.page === 'rooms' ? 'lights / blinds' : 'camera'} &nbsp; Enter · toggle &nbsp; I · close</div></div>`;
+      `<div class="thelp">↑ ↓ · choose &nbsp; ${this.page === 'devices' ? '' : `← → · ${this.page === 'rooms' ? 'lights / blinds' : 'camera'} &nbsp; `}Enter · ${this.page === 'devices' ? 'on / off' : 'toggle'} &nbsp; I · close</div></div>`;
     const feed = this.el.querySelector('.tfeed');
     if (feed) { feed.prepend(this.canvas); this.label(); }
   }
@@ -200,6 +223,12 @@ export class Tablet {
 
   // call once per frame, before the frame renders
   update(dt) {
+    // (distractions) the Devices page counts down an alarm that's set: redraw twice a second
+    if (this.open && this.page === 'devices') {
+      this._devT = (this._devT ?? 0) + dt;
+      if (this._devT >= 0.5) { this._devT = 0; this.draw(); }
+      return;
+    }
     if (!this.open || this.page !== 'cameras' || !this.cams.length) return;
     if (this.offline()) { this.ctx.fillStyle = '#050607'; this.ctx.fillRect(0, 0, FEED_W, FEED_H); return; }
     // real time (the game's dt is clamped), and never more than every 3rd frame: on a slow

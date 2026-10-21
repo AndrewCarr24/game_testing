@@ -11,6 +11,7 @@
 // Also the noise hook the Grimble listens to:
 //   noise.on(fn)               fn({position, loudness, source}) per event; returns off()
 //   noise.emit(event)          thrown items landing / shattering (loudness = the item's `noise`, default 1)
+//                              and devices sounding (viewer/devices.js: TV, music, chime, alarms, car alarm)
 
 export class Signals {
   constructor(initial = {}) {

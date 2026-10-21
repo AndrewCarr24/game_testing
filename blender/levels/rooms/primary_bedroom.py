@@ -116,3 +116,9 @@ PLACEMENTS = list(PLACEMENTS) + [
     ('ix_blind_bedroom', (0.0, 4.75), 0, {'signal': 'blinds_primary_bedroom'}),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "primary_bedroom")
+
+# --- distractions (viewer/devices.js): an alarm clock on the south nightstand, facing the bed
+# (set it, leave: it rings 10 s later for 12 s; also from the tablet, through the locked door)
+PLACEMENTS = list(PLACEMENTS) + [
+    ("ix_alarm_clock", (-7.5, -1.78, 0.55), 110),
+]

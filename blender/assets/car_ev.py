@@ -58,6 +58,7 @@ PAINTS = {
 P = dict(
     name=NAME,
     paint="silver",
+    alarm=True,             # distractions: the car alarm (car key's panic button), lamps that flash
     analytic_normals=True,  # body vertex normals from the analytic surface (smooth reflections)
     paint_metallic=0.55,
     paint_roughness=0.30,
@@ -732,6 +733,8 @@ def build(**overrides):
 
     # ---- trim decals (shut lines, sill, intakes, handles, lamps)
     _trim(p, body, col, root, n, [shut, satin, gloss, steel, lens, lamp_w, lamp_r])
+    if p["alarm"]:
+        _alarm(p, col, root, n)
 
     # ---- mirrors (camera pods)
     _mirrors(p, body, col, root, n, paint, gloss)
@@ -749,6 +752,34 @@ def build(**overrides):
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     _checks(p, body)
     return root, parts
+
+
+# ------------------------------------------------------------------ car alarm (distractions)
+
+def _alarm(p, col, root, n):
+    """The car alarm (viewer/devices.js): the lamp decals move out of the trim into their own
+    mesh, which flashes (react on "car_alarm_flash") while the alarm sounds, and an empty at the
+    middle of the car is the noise the Grimble hears: 12 s, very loud, no house power needed.
+    The car key (ix_car_key, `remote: "car_alarm"`) sets it off from anywhere."""
+    trim = bpy.data.objects[f"{n}_Trim"]
+    lamps_idx = {i for i, m in enumerate(trim.data.materials) if m and m.name.startswith("M_CarEV_Lamp")}
+    lamps = trim.copy()
+    lamps.data = trim.data.copy()
+    lamps.name = lamps.data.name = f"{n}_Lamps"
+    common.link(lamps, col, root)
+    for ob, keep in ((trim, False), (lamps, True)):
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if (f.material_index in lamps_idx) != keep], context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+    lamps["react"] = {"signal": "car_alarm_flash", "on": {"emissive": 3.5}, "off": {"emissive": 1},
+                      "power": False, "duration": 0.06}
+    snd = common.empty(f"{n}_Alarm", col, (0, 0, 0.9))
+    snd.parent = root
+    snd["noisemaker"] = {"signal": "car_alarm", "power": False, "loudness": 2.0, "every": 1.0, "for": 12,
+                         "flash": "car_alarm_flash", "flashEvery": 0.35, "sfx": "car_alarm",
+                         "source": "car_alarm", "label": "Car alarm", "tablet": False}
 
 
 # ------------------------------------------------------------------ greenhouse

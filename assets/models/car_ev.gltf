@@ -18,11 +18,34 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				10
 			]
 		}
 	],
 	"nodes":[
+		{
+			"extras":{
+				"noisemaker":{
+					"signal":"car_alarm",
+					"power":false,
+					"loudness":2.0,
+					"every":1.0,
+					"for":12,
+					"flash":"car_alarm_flash",
+					"flashEvery":0.35,
+					"sfx":"car_alarm",
+					"source":"car_alarm",
+					"label":"Car alarm",
+					"tablet":false
+				}
+			},
+			"name":"CarEV_Alarm",
+			"translation":[
+				0,
+				0.8999999761581421,
+				0
+			]
+		},
 		{
 			"mesh":0,
 			"name":"CarEV_BeltTrim"
@@ -40,19 +63,36 @@
 			"name":"CarEV_Interior"
 		},
 		{
+			"extras":{
+				"react":{
+					"signal":"car_alarm_flash",
+					"on":{
+						"emissive":3.5
+					},
+					"off":{
+						"emissive":1
+					},
+					"power":false,
+					"duration":0.06
+				}
+			},
 			"mesh":4,
-			"name":"CarEV_Mirrors"
+			"name":"CarEV_Lamps"
 		},
 		{
 			"mesh":5,
-			"name":"CarEV_Trim"
+			"name":"CarEV_Mirrors"
 		},
 		{
 			"mesh":6,
-			"name":"CarEV_Underbody"
+			"name":"CarEV_Trim"
 		},
 		{
 			"mesh":7,
+			"name":"CarEV_Underbody"
+		},
+		{
+			"mesh":8,
 			"name":"CarEV_Wheels"
 		},
 		{
@@ -64,7 +104,9 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8,
+				9
 			],
 			"name":"CarEV"
 		}
@@ -282,20 +324,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_CarEV_Shut",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.003000000026077032,
-					0.003000000026077032,
-					0.003000000026077032,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
 			"emissiveFactor":[
 				1,
 				0.9700000286102295,
@@ -340,6 +368,20 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.6000000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_CarEV_Shut",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.003000000026077032,
+					0.003000000026077032,
+					0.003000000026077032,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
 			}
 		},
 		{
@@ -801,7 +843,7 @@
 			]
 		},
 		{
-			"name":"CarEV_Mirrors",
+			"name":"CarEV_Lamps",
 			"primitives":[
 				{
 					"attributes":{
@@ -820,7 +862,7 @@
 						}
 					},
 					"indices":84,
-					"material":1,
+					"material":12,
 					"mode":4
 				},
 				{
@@ -840,13 +882,13 @@
 						}
 					},
 					"indices":88,
-					"material":3,
+					"material":13,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CarEV_Trim",
+			"name":"CarEV_Mirrors",
 			"primitives":[
 				{
 					"attributes":{
@@ -865,7 +907,7 @@
 						}
 					},
 					"indices":92,
-					"material":12,
+					"material":1,
 					"mode":4
 				},
 				{
@@ -885,9 +927,14 @@
 						}
 					},
 					"indices":96,
-					"material":2,
+					"material":3,
 					"mode":4
-				},
+				}
+			]
+		},
+		{
+			"name":"CarEV_Trim",
+			"primitives":[
 				{
 					"attributes":{
 						"POSITION":97,
@@ -905,7 +952,7 @@
 						}
 					},
 					"indices":100,
-					"material":3,
+					"material":14,
 					"mode":4
 				},
 				{
@@ -925,7 +972,7 @@
 						}
 					},
 					"indices":104,
-					"material":0,
+					"material":2,
 					"mode":4
 				},
 				{
@@ -945,7 +992,7 @@
 						}
 					},
 					"indices":108,
-					"material":11,
+					"material":3,
 					"mode":4
 				},
 				{
@@ -965,7 +1012,7 @@
 						}
 					},
 					"indices":112,
-					"material":13,
+					"material":0,
 					"mode":4
 				},
 				{
@@ -985,7 +1032,7 @@
 						}
 					},
 					"indices":116,
-					"material":14,
+					"material":11,
 					"mode":4
 				}
 			]
@@ -1147,7 +1194,7 @@
 						}
 					},
 					"indices":150,
-					"material":12,
+					"material":14,
 					"mode":4
 				}
 			]
@@ -1817,6 +1864,68 @@
 		},
 		{
 			"componentType":5126,
+			"count":166,
+			"max":[
+				0.8403341174125671,
+				0.6126041412353516,
+				2.344900131225586
+			],
+			"min":[
+				-0.8403341174125671,
+				0.5296611189842224,
+				2.2474067211151123
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":166,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":166,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":480,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"max":[
+				0.8932446837425232,
+				0.8935611844062805,
+				-2.1574034690856934
+			],
+			"min":[
+				-0.8932446837425232,
+				0.8462960124015808,
+				-2.413757801055908
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5123,
+			"count":246,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":684,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
 			"count":104,
 			"max":[
 				0.9713347554206848,
@@ -2030,68 +2139,6 @@
 		{
 			"componentType":5123,
 			"count":1992,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":166,
-			"max":[
-				0.8403341174125671,
-				0.6126041412353516,
-				2.344900131225586
-			],
-			"min":[
-				-0.8403341174125671,
-				0.5296611189842224,
-				2.2474067211151123
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":166,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":166,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":480,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":246,
-			"max":[
-				0.8932446837425232,
-				0.8935611844062805,
-				-2.1574034690856934
-			],
-			"min":[
-				-0.8932446837425232,
-				0.8462960124015808,
-				-2.413757801055908
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":246,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":246,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":684,
 			"type":"SCALAR"
 		},
 		{
@@ -2430,83 +2477,83 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":939,
+			"byteLength":639,
 			"byteOffset":163916
 		},
 		{
 			"buffer":0,
-			"byteLength":579,
-			"byteOffset":164856
+			"byteLength":1261,
+			"byteOffset":164556
 		},
 		{
 			"buffer":0,
-			"byteLength":2080,
-			"byteOffset":165436
+			"byteLength":939,
+			"byteOffset":165820
+		},
+		{
+			"buffer":0,
+			"byteLength":579,
+			"byteOffset":166760
+		},
+		{
+			"buffer":0,
+			"byteLength":2088,
+			"byteOffset":167340
 		},
 		{
 			"buffer":0,
 			"byteLength":1007,
-			"byteOffset":167516
+			"byteOffset":169428
 		},
 		{
 			"buffer":0,
-			"byteLength":2065,
-			"byteOffset":168524
+			"byteLength":2070,
+			"byteOffset":170436
 		},
 		{
 			"buffer":0,
-			"byteLength":2617,
-			"byteOffset":170592
+			"byteLength":2464,
+			"byteOffset":172508
 		},
 		{
 			"buffer":0,
-			"byteLength":3127,
-			"byteOffset":173212
-		},
-		{
-			"buffer":0,
-			"byteLength":639,
-			"byteOffset":176340
-		},
-		{
-			"buffer":0,
-			"byteLength":1271,
-			"byteOffset":176980
+			"byteLength":3191,
+			"byteOffset":174972
 		},
 		{
 			"buffer":0,
 			"byteLength":549,
-			"byteOffset":178252
+			"byteOffset":178164
 		},
 		{
 			"buffer":0,
 			"byteLength":22431,
-			"byteOffset":178804
+			"byteOffset":178716
 		},
 		{
 			"buffer":0,
 			"byteLength":13412,
-			"byteOffset":201236
+			"byteOffset":201148
 		},
 		{
 			"buffer":0,
 			"byteLength":10032,
-			"byteOffset":214648
+			"byteOffset":214560
 		},
 		{
 			"buffer":0,
 			"byteLength":4692,
-			"byteOffset":224680
+			"byteOffset":224592
 		},
 		{
 			"buffer":0,
 			"byteLength":2643,
-			"byteOffset":229372
+			"byteOffset":229284
 		},
 		{
 			"buffer":0,
 			"byteLength":2060,
-			"byteOffset":232016
+			"byteOffset":231928
 		}
 	],
 	"samplers":[
@@ -2517,7 +2564,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":234076,
+			"byteLength":233988,
 			"uri":"car_ev.bin"
 		}
 	]

@@ -10,7 +10,7 @@ importlib.reload(car_ev)
 common = car_ev.common
 
 NAME = "CarEV_Ink"
-P = dict(name=NAME, paint="ink")
+P = dict(name=NAME, paint="ink", alarm=False)   # (the car key belongs to the silver car)
 
 
 def build(**overrides):
