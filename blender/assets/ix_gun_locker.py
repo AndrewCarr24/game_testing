@@ -18,7 +18,7 @@ P = dict(name=NAME, style="locker", size=(0.92, 0.50, 1.85), wall=0.025, door_t=
          shelves=(0.52, 1.0, 1.45), inside_z=1.0, open_angle=-105,
          prompt="Open locker", prompt_active="Close locker",
          body=("M_Locker_Graphite", (0.040, 0.044, 0.047), 0.5, 0.6),
-         lining=("M_Locker_Inner", (0.11, 0.115, 0.12), 0.7, 0.0))
+         lining=("M_Locker_Inner", (0.36, 0.37, 0.38), 0.7, 0.0))
 
 
 def build(**overrides):

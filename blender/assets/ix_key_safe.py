@@ -10,7 +10,7 @@ importlib.reload(ix_key)
 common = ix_key.common
 
 NAME = "IX_KeySafe"
-P = dict(name=NAME, item="key_safe", label="Safe key", metal="nickel", fob=(0.012, 0.012, 0.014), blade=0.044, double=True,
+P = dict(name=NAME, item="key_safe", label="Safe key", metal="nickel", fob=(0.46, 0.36, 0.22), blade=0.044, double=True,
          bits=(0.003, 0.005, 0.0025, 0.0045, 0.0035))
 
 

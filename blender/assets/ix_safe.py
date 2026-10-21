@@ -34,7 +34,7 @@ P = dict(
     open_angle=-100,               # swings out (-Y) about the hinge on -X
     prompt="Open safe", prompt_active="Close safe",
     body=("M_Safe_Graphite", (0.030, 0.032, 0.035), 0.42, 0.55),
-    lining=("M_Safe_Felt", (0.030, 0.045, 0.040), 0.95, 0.0),
+    lining=("M_Safe_Felt", (0.06, 0.09, 0.08), 0.95, 0.0),
 )
 
 
@@ -89,8 +89,15 @@ def build(**overrides):
     _box(n, "Lining_Floor", (iw, idp, lt), (0, yi, z0 + t + lt / 2), col, lining, root)
     for side, sx in (("L", -1), ("R", 1)):
         _box(n, f"Lining_{side}", (lt, idp, ih), (sx * (iw - lt) / 2, yi, z0 + t + ih / 2), col, lining, root)
+    shelf_m = lining if p["style"] == "locker" else body
     for k, zs in enumerate(p["shelves"]):
-        _box(n, f"Shelf{k}", (iw - 2 * lt, idp - 0.02, 0.012), (0, yi + 0.01, zs - 0.006), col, body, root, 0.002)
+        _box(n, f"Shelf{k}", (iw - 2 * lt, idp - 0.02, 0.012), (0, yi + 0.01, zs - 0.006), col, shelf_m, root, 0.002)
+    if True:
+        # an LED bar under the top, behind the door head, so the contents read in the dark box
+        # (emissive only, no real-time light; on while the house has power)
+        led = materials.emissive("M_Locker_LED", (1.0, 0.93, 0.82), 3.0)
+        bar = _box(n, "LED_NoCollide", (iw - 0.08, 0.02, 0.008), (0, yf + dt + 0.03, H - t - 0.006), col, led, root)
+        bar["react"] = ix_common.glow("power")
     inside = common.empty(f"{n}_Inside", col, (0, yi - idp * 0.1, p["inside_z"] if p["inside_z"] else z0 + t + lt))
     inside.parent = root
     inside["inside"] = f"{n}_Door"           # the door that closes it (prompts/interactivity.md)

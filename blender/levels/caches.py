@@ -47,9 +47,10 @@ PLACEMENTS = {
     "primary_bedroom": [
         ("ix_battery", (-0.06, 0.16, -0.073), 70, {"attach": ("nightstand", "Nightstand_Drawer")}),
     ],
-    # B: the safe key on the library's reading table, by the east lamp
+    # B: the safe key on the library reading table's leather mat, in front of the east lamp
+    # (z 0.768: on the mat, not under it)
     "library": [
-        ("ix_key_safe", (2.0, 0.3, 0.76), 35),
+        ("ix_key_safe", (2.05, -0.36, 0.768), 35),
     ],
     # B: the floor safe against the office's east wall, north of the gym door (front faces west)
     "office": [
