@@ -594,7 +594,7 @@ class LightsOff:
         if m.name not in cls._dark:
             d = m.copy()
             d.name = m.name + "_LightsOff"
-            for n in d.node_tree.nodes if d.use_nodes else []:
+            for n in d.node_tree.nodes if d.node_tree is not None else []:
                 if n.type == "BSDF_PRINCIPLED":
                     n.inputs["Emission Strength"].default_value = 0
                 elif n.type == "EMISSION":

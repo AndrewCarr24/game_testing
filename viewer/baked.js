@@ -203,6 +203,7 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   const bake = await res.json();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const rooms = {};
+  let packMs = 0;                            // main-thread time spent packing the off lightmaps at load
   // lights off: one PMREM generator per panorama width (each keeps its blur targets, so a room's
   // reflections can be re-filtered into the same render target) and one blend target per width
   const envGen = new Map();
@@ -251,7 +252,9 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
       try {
         const blobs = await Promise.all([r.lightmap.file, r.off.lightmap, r.environment.file, r.off.environment].map((f) => fetchBlob(base + f)));
         const [onBmp, offBmp, envOnBmp, envOffBmp] = await Promise.all(blobs.map(toBitmap));
+        const t0 = performance.now();
         lightTex = packLightmap(onBmp, offBmp);
+        packMs += performance.now() - t0;
         onBmp.close(); offBmp.close();
         if (!lightTex || envOnBmp.width !== envOffBmp.width) throw new Error('its off maps do not match the on maps (re-bake with --state off)');
         lit = { signal: r.off.signal, t: 0, envT: -1, ratio: r.off.ratio ?? 0.3,
@@ -529,5 +532,5 @@ export async function loadBake(base, levelName, renderer, levelRooms = {}, box =
   const isDark = (room) => (rooms[room]?.lit ?? state[room])?.t === 1;
 
   return { bake, rooms, applyLightmaps, applyRoom, applyDoor, setGlassSun, defaultEnv: fallback?.envMap,
-           bindSignals, update, lightLevel, isDark, roomSignal };
+           bindSignals, update, lightLevel, isDark, roomSignal, packMs };
 }

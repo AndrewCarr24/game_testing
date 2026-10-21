@@ -50,7 +50,15 @@ Existing types keep working unchanged. New:
   else its reactors'; `{"state": false}` on the breaker starts the house without power); `{"lock": "<item>"}` as today; `{"attach": ...}` as today.
 - Signals are level-global strings. Conventions:
   - `power`: whole-house power (initially on). Everything lit electrically also depends on it.
-  - `lights_<room>`: a room's light switch. A room's lamps/glows react to `lights_<room>` AND `power`.
+  - `lights_<room>`: a room's light switch. A room's lamps/glows react to `lights_<room>` AND `power`,
+    and so does the room's baked light (the lights-off bake, below). Room modules wire their
+    fixtures with `ix_common.wire(PLACEMENTS, "<room>")` (every asset in `ix_common.FIXTURES`:
+    lamps, pendants, downlights, coves, built-ins with LED strips). Shared spaces share one
+    signal: the 8 galleries `lights_galleries` (no switch: the tablet), the courtyard's festoons
+    `lights_courtyard`. A room's signal is written to mansion.json `rooms[r].lights`
+    (`LIGHTS_SIGNAL` in the module overrides it); a `LIGHTS` entry may say `signal=None` (not
+    electric: candles) or another signal. A lamp with its own switch should also be wired to
+    its room's signal (its baked light can only follow one signal: the room's).
   - `blinds_<room>`: motorised blinds for a room's glass.
   - `<thing>_<room>`: anything else (`tv_den`, `fire_great_room`, `garage_door`).
 
@@ -63,8 +71,15 @@ Existing types keep working unchanged. New:
   shadow off; battery 4 min, `battery` refills), throwables emit `noise` events
   `{position, loudness}` on landing (`window.__noise` hook the Grimble listens to).
 - Power: `power` off = every `react` with `light`/`emissive`/`show` tied to electric things goes
-  off, and (later, needs a "lights off" bake) the rooms' lightmaps swap to the dark bake. Until
-  that bake exists, power off just switches the reactive parts.
+  off, and every room fades to its lights-off bake.
+- Lights off (built: `bake.py --state off|both`, `viewer/baked.js`): while a room's light signal
+  is false or `power` is off, its baked light fades (0.45 s) to a second bake with its own
+  lights, ceiling strips and fixture glows off (daylight and the neighbours' light still come
+  in): the shell's lightmap, the props' SH probe, the reflections, the strips' glow. No
+  real-time lights, no extra GPU texture (the off lightmap rides in the on lightmap's alpha).
+  `window.__lighting`: `lightLevel(room)` (1 = lit, down to the dark state's share of the light),
+  `isDark(room)`, `roomSignal` (room -> signal) for gameplay (the Grimble's eyes, hiding).
+  Signals for rooms without a switch (galleries, courtyard) are defined on (true) at load.
 - The smart-home tablet: armed + Enter opens a HUD panel listing rooms with toggles for
   lights / blinds and the security camera feeds (render-to-texture views from fixed cameras,
   one at a time, low resolution).

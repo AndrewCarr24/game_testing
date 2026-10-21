@@ -71,6 +71,7 @@ try {
   await p.goto(url(first.view, first.viewLook) + '&grimble=0&q=2' + (process.env.QS || ''));
   await p.waitForFunction(() => window.__loaded && window.__lighting, null, { timeout: 120000 });
   await p.mouse.click(640, 360); await p.waitForTimeout(500);
+  console.log(`load: packing ${rooms.length} off lightmaps took ${(await p.evaluate(() => window.__lighting.packMs)).toFixed(1)} ms`);
 
   const result = {};
   for (const r of rooms) {
