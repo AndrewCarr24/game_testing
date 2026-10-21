@@ -256,9 +256,13 @@ export class Interactables {
       this.colliders.push(r.collider);
     }
     if (chans.includes('light')) this.ensureLights();
+    // --- power as gameplay (viewer/house.js): moving reacts (blinds, the garage door) are
+    // motorised: they need `power` to move; with it off they stop where they are and catch up
+    // when it's back. `motor: false` (or an explicit `power`) in the react opts out.
+    r.motor = def.motor !== undefined ? truthy(def.motor) : moves && def.power === undefined;
     this.claim(r.signal, undefined, 0);
     this.signals.on(r.signal, () => this.aim(r));
-    if (r.electric && r.signal !== 'power') this.signals.on('power', () => this.aim(r));
+    if ((r.electric || r.motor) && r.signal !== 'power') this.signals.on('power', () => this.aim(r));
     this.reactors.push(r);
     return r;
   }
@@ -282,7 +286,14 @@ export class Interactables {
     const v = this.signals.get(r.signal);
     return truthy(v) && (!r.electric || r.signal === 'power' || this.signals.get('power') !== false);
   }
-  aim(r) { r.target = this.live(r) ? 1 : 0; }
+  aim(r) {
+    if (r.motor && this.signals.get('power') === false) { r.target = r.t; return; }   // (house.js: no power, no motor)
+    r.target = this.live(r) ? 1 : 0;
+  }
+  // does anything on this signal need power (lamps, screens, motors)? (house.js: "no power" prompts)
+  needsPower(signal) {
+    return signal !== 'power' && this.reactors.some((r) => r.signal === signal && (r.electric || r.motor));
+  }
   follow(it) {
     it.target = truthy(this.signals.get(it.signal)) ? 1 : 0;
     this.setSwitchIndicator(it);
@@ -481,7 +492,8 @@ export class Interactables {
     if (d.type === 'switch') {
       const on = truthy(this.signals.get(it.signal));
       if (!on && d.requires && !truthy(this.signals.get(d.requires))) return d.requiresPrompt || 'Nothing happens';
-      return on ? (d.promptActive || 'Turn off') : (d.prompt || 'Turn on');
+      const p = on ? (d.promptActive || 'Turn off') : (d.prompt || 'Turn on');
+      return this.signals.get('power') === false && this.needsPower(it.signal) ? `${p} · no power` : p;   // (house.js)
     }
     if (d.type === 'use') {
       if (this.done(it)) return d.promptDone;
@@ -573,7 +585,7 @@ export class Interactables {
         return d.requiresPrompt || 'Nothing happens';
       }
       this.signals.toggle(it.signal);
-      return null;
+      return this.signals.get('power') === false && this.needsPower(it.signal) ? 'No power' : null;   // (house.js)
     }
     if (d.type === 'use') {
       if (this.done(it)) return null;

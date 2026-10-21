@@ -29257,21 +29257,8 @@
         1.45,
         10.95
       ],
-      "rotationY": 90
-    },
-    {
-      "asset": "ix_fuse",
-      "room": "garage",
-      "position": [
-        0.06,
-        -0.059,
-        0.14
-      ],
-      "rotationY": 20,
-      "attach": {
-        "asset": "garage_workbench",
-        "node": "GarageWorkbench_Drawer"
-      }
+      "rotationY": 90,
+      "state": true
     },
     {
       "asset": "ix_battery",
@@ -31482,6 +31469,20 @@
       "signal": "blinds_primary_bedroom"
     },
     {
+      "asset": "ix_battery",
+      "room": "primary_bedroom",
+      "position": [
+        -0.05,
+        -0.0725,
+        -0.18
+      ],
+      "rotationY": -10,
+      "attach": {
+        "asset": "nightstand",
+        "node": "Nightstand_Drawer"
+      }
+    },
+    {
       "asset": "bath_vanity",
       "room": "primary_bath",
       "position": [
@@ -32987,6 +32988,20 @@
       "rotationY": 90,
       "signal": "lights_guest_room",
       "state": true
+    },
+    {
+      "asset": "ix_fuse",
+      "room": "guest_room",
+      "position": [
+        0.06,
+        -0.0575,
+        -0.17
+      ],
+      "rotationY": 20,
+      "attach": {
+        "asset": "guest_nightstand",
+        "node": "GuestNightstand_Drawer"
+      }
     },
     {
       "asset": "decor_c_plant_snake",

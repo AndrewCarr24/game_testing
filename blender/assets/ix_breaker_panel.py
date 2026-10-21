@@ -1,10 +1,10 @@
 """Garage breaker panel: a light-grey powder-coated steel distribution board (560 x 720 x
 110 mm, open front) with three DIN rows of white breakers, a big red-on-yellow rotary main
 isolator (a `switch` on signal "power", starting on; a green LED beside it is its indicator)
-and a main-fuse carrier under it, empty at the start (a `use` needing item "fuse": with the
-fuse armed, Enter puts it in, sets "fuse_garage" true and shows the fuse in the clips). The
-isolator carries `requires: "fuse_garage"` (it should only switch with the fuse in; needs the
-engine to gate switches on it).
+and a main-fuse carrier under it (a `use` needing item "fuse": with the fuse armed, Enter puts
+it in, sets "fuse_garage" true and shows the fuse in the clips). The isolator carries
+`requires: "fuse_garage"`: it only switches on with the fuse in. The level places the panel
+with `state: True` (fuse in, power on); viewer/house.js blows the fuse when the Grimble breaks in.
 
 Wall-mounted: origin at the enclosure's back centre (on the wall), front -Y; place at z = 1.45."""
 import importlib
@@ -84,8 +84,7 @@ def build(**overrides):
     common.add_bevel(base, 0.002, segments=1)
     hub = common.empty(f"{n}_MainSwitch", col, (mx, -0.05, mz))
     hub.parent = root
-    # `requires`: the isolator only switches while the main fuse is in (signal "fuse_garage");
-    # until the engine gates on it (viewer/interactables.js), the switch toggles regardless
+    # `requires`: the isolator only switches on while the main fuse is in (signal "fuse_garage")
     hub["interact"] = {"type": "switch", "signal": "power", "state": True, "prompt": "Switch the power on",
                        "promptActive": "Switch the power off", "range": 1.4, "duration": 0.35,
                        "travel": {"axis": "z", "angle": -90}, "indicator": f"{n}_PowerLED",
