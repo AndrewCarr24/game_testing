@@ -40,7 +40,7 @@ process.on('SIGINT', () => { release(); process.exit(1); });
 
 let fails = 0;
 const results = [];
-const closeups = [], contexts = [];
+const closeups = [], contexts = [], toggledShots = [];
 try {
   const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
   const p = await b.newPage({ viewport: { width: 960, height: 600 } });
@@ -117,6 +117,9 @@ try {
       const after = await p.evaluate((s) => window.__signals.get(s), r.signal);
       const hint2 = ((await p.textContent('#hint')) || '').trim();
       toggled = { before: !!before, after: !!after, hint2 };
+      const flipped = path.join(outDir, `${label}_toggled.png`);   // the part moved, its LED changed
+      await p.screenshot({ path: flipped });
+      toggledShots.push(flipped);
       await p.keyboard.press('KeyE'); await p.waitForTimeout(450);
     }
     // context: 2.6 m out, eye height (the player's eye; pulled in if it lands in a collider)
@@ -152,7 +155,7 @@ try {
 
 fs.writeFileSync(path.join(outDir, 'controls.json'), JSON.stringify(results, null, 1));
 const here = path.dirname(new URL(import.meta.url).pathname);
-for (const [name, list] of [['closeups', closeups], ['contexts', contexts]]) {
+for (const [name, list] of [['closeups', closeups], ['toggled', toggledShots], ['contexts', contexts]]) {
   for (let i = 0; i < list.length; i += 12) {
     try {
       execFileSync('node', [path.join(here, 'grid.mjs'), path.join(outDir, `_${name}_${i / 12 + 1}.png`), '4', ...list.slice(i, i + 12)], { stdio: 'ignore' });

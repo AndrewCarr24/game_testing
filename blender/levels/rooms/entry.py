@@ -114,9 +114,9 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (7.17, 4.6, 1.1), 0, {'signal': 'lights_entry', 'state': True}),
-    # (controls) the blinds switch by the seating nook on the west wall, the side the glass is
-    # on (both glass corners are filled by the trees' crowns); not beside the light switch
-    ('ix_switch_blinds', (-7.85, -0.95, 1.1), 90, {'signal': 'blinds_entry'}),
+    # (controls) the blinds switch on the south wall's return beside the glass, at the seating
+    # nook's end (under the corner tree's crown, clear of its pot); not beside the light switch
+    ('ix_switch_blinds', (-6.35, -4.6, 1.1), 180, {'signal': 'blinds_entry'}),
     ('ix_control_panel', (7.85, 3.9, 1.45), -90),
     ('ix_blind_entry', (0.0, -4.75), 180, {'signal': 'blinds_entry'}),
 ]
