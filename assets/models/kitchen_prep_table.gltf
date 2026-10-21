@@ -2224,68 +2224,68 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6392,
+			"byteLength":6386,
 			"byteOffset":13660
 		},
 		{
 			"buffer":0,
-			"byteLength":3786,
-			"byteOffset":20052
+			"byteLength":3759,
+			"byteOffset":20048
 		},
 		{
 			"buffer":0,
-			"byteLength":848,
-			"byteOffset":23840
+			"byteLength":820,
+			"byteOffset":23808
 		},
 		{
 			"buffer":0,
 			"byteLength":364,
-			"byteOffset":24688
+			"byteOffset":24628
 		},
 		{
 			"buffer":0,
 			"byteLength":278,
-			"byteOffset":25052
+			"byteOffset":24992
 		},
 		{
 			"buffer":0,
 			"byteLength":373,
-			"byteOffset":25332
+			"byteOffset":25272
 		},
 		{
 			"buffer":0,
 			"byteLength":285,
-			"byteOffset":25708
+			"byteOffset":25648
 		},
 		{
 			"buffer":0,
 			"byteLength":394,
-			"byteOffset":25996
+			"byteOffset":25936
 		},
 		{
 			"buffer":0,
 			"byteLength":792,
-			"byteOffset":26392
+			"byteOffset":26332
 		},
 		{
 			"buffer":0,
 			"byteLength":880,
-			"byteOffset":27184
+			"byteOffset":27124
 		},
 		{
 			"buffer":0,
 			"byteLength":801,
-			"byteOffset":28064
+			"byteOffset":28004
 		},
 		{
 			"buffer":0,
 			"byteLength":1972,
-			"byteOffset":28868
+			"byteOffset":28808
 		},
 		{
 			"buffer":0,
 			"byteLength":1997,
-			"byteOffset":30840
+			"byteOffset":30780
 		}
 	],
 	"samplers":[
@@ -2296,7 +2296,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":32840,
+			"byteLength":32780,
 			"uri":"kitchen_prep_table.bin"
 		}
 	]

@@ -1182,38 +1182,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1767,
+			"byteLength":1750,
 			"byteOffset":16336
 		},
 		{
 			"buffer":0,
 			"byteLength":807,
-			"byteOffset":18104
+			"byteOffset":18088
 		},
 		{
 			"buffer":0,
 			"byteLength":896,
-			"byteOffset":18912
+			"byteOffset":18896
 		},
 		{
 			"buffer":0,
 			"byteLength":854,
-			"byteOffset":19808
+			"byteOffset":19792
 		},
 		{
 			"buffer":0,
 			"byteLength":730,
-			"byteOffset":20664
+			"byteOffset":20648
 		},
 		{
 			"buffer":0,
 			"byteLength":2735,
-			"byteOffset":21396
+			"byteOffset":21380
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":24132,
+			"byteLength":24116,
 			"uri":"ix_breaker_panel.bin"
 		}
 	]

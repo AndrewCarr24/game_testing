@@ -503,18 +503,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6392,
+			"byteLength":6364,
 			"byteOffset":5168
 		},
 		{
 			"buffer":0,
 			"byteLength":295,
-			"byteOffset":11560
+			"byteOffset":11532
 		},
 		{
 			"buffer":0,
 			"byteLength":2904,
-			"byteOffset":11856
+			"byteOffset":11828
 		}
 	],
 	"samplers":[
@@ -525,7 +525,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":14760,
+			"byteLength":14732,
 			"uri":"decor_b_vignette_range_l.bin"
 		}
 	]

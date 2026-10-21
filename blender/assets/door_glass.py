@@ -11,6 +11,8 @@ import importlib
 import os
 import sys
 
+import bpy
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, materials  # noqa: E402
@@ -38,6 +40,16 @@ P = dict(
 )
 
 
+def join(obs, name):
+    """One mesh per material (a door is drawn as a few draw calls, not ten)."""
+    if len(obs) > 1:
+        with bpy.context.temp_override(active_object=obs[0], selected_editable_objects=obs,
+                                       selected_objects=obs, object=obs[0]):
+            bpy.ops.object.join()
+    obs[0].name = obs[0].data.name = name
+    return obs[0]
+
+
 def build(**overrides):
     p = {**P, **overrides}
     n = p["name"]
@@ -58,6 +70,7 @@ def build(**overrides):
     hx = (w / 2 - sj - g) * (1 if right else -1)
 
     # surround: jambs + head, static (the mullions' black, flush with the leaf's faces)
+    sur = []
     for name, size, loc in (
         ("Jamb_L", (sj, sd, h), (-w / 2 + sj / 2, 0, h / 2)),
         ("Jamb_R", (sj, sd, h), (w / 2 - sj / 2, 0, h / 2)),
@@ -65,6 +78,9 @@ def build(**overrides):
     ):
         ob = common.mesh_object(f"{n}_{name}", common.box_bmesh(size), col, black, root, smooth=False)
         ob.location = loc
+        sur.append(ob)
+    bpy.context.view_layer.update()
+    join(sur, f"{n}_Surround_NoCollide")   # (one box over the whole doorway would block it)
 
     # the hinge on the leaf's +Y face so the opened leaf clears the jamb
     hinge = common.empty(f"{n}_Hinge", col, (hx, lt / 2, 0))
@@ -87,6 +103,7 @@ def build(**overrides):
     st, br, pt = p["stile"], p["bottom_rail"], p["pane_t"]
     z0 = p["floor_gap"]
     cx = s * lw / 2
+    frame = []
     for name, size, loc in (
         ("StileHinge", (st, lt, lh), (s * st / 2, -lt / 2, z0 + lh / 2)),
         ("StileLatch", (st, lt, lh), (s * (lw - st / 2), -lt / 2, z0 + lh / 2)),
@@ -95,6 +112,9 @@ def build(**overrides):
     ):
         ob = common.mesh_object(f"{n}_{name}", common.box_bmesh(size), col, black, hinge, smooth=False)
         ob.location = loc
+        frame.append(ob)
+    bpy.context.view_layer.update()
+    join(frame, f"{n}_Frame")
     pane = common.mesh_object(f"{n}_Pane", common.box_bmesh((lw - 2 * st + 0.01, pt, lh - st - br + 0.01)),
                               col, glass, hinge, smooth=False)
     pane.location = (cx, -lt / 2, z0 + br + (lh - st - br) / 2)
@@ -102,10 +122,12 @@ def build(**overrides):
     # bar pulls on both faces near the latch stile: a long bronze D-pull
     px = s * (lw - st - 0.06)
     za, zb = p["pull_z"] - p["pull_len"] / 2, p["pull_z"] + p["pull_len"] / 2
+    pulls = []
     for side, face, out in (("Out", 0.0, p["pull_off"]), ("In", -lt, -p["pull_off"])):
         pts = common.fillet_polyline([(px, face, za), (px, face + out, za), (px, face + out, zb), (px, face, zb)],
                                      0.02, segments=5, closed=False)
-        common.tube_object(f"{n}_Pull_{side}", pts, p["pull_r"], col, bronze, hinge, closed=False)
+        pulls.append(common.tube_object(f"{n}_Pull_{side}", pts, p["pull_r"], col, bronze, hinge, closed=False))
+    join(pulls, f"{n}_Pulls")
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
