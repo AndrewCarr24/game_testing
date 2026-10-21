@@ -1499,7 +1499,7 @@ export class GrimbleHunt {
   openGap() {
     const b = this.breakable;
     if (b) {
-      this.nav.clear(Math.min(b.min[0], b.max[0]) - 1.5, Math.min(b.min[2], b.max[2]), Math.max(b.min[0], b.max[0]) + 1.5, Math.max(b.min[2], b.max[2]));
+      this.nav.clearArea(Math.min(b.min[0], b.max[0]) - 1.5, Math.min(b.min[2], b.max[2]), Math.max(b.min[0], b.max[0]) + 1.5, Math.max(b.min[2], b.max[2]));
       const g = this.gapBox, keep = [];
       for (const w of this.walls) {
         if (!w.glass || !g.intersectsBox(w)) { keep.push(w); continue; }

@@ -58,7 +58,8 @@ export class NavGrid {
   }
 
   // a hole it made (the smashed glass): open whatever its colliders blocked there
-  clear(x0, z0, x1, z1) { this.mark(x0, z0, x1, z1, 0); }
+  // (not `clear`: that is the clearance array once clearance() has run)
+  clearArea(x0, z0, x1, z1) { this.mark(x0, z0, x1, z1, 0); }
 
   idx(x, z) {
     const i = Math.floor((x - this.x0) / this.cell), j = Math.floor((z - this.z0) / this.cell);
