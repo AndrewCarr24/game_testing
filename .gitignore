@@ -11,3 +11,4 @@ node_modules/
 
 # headless build previews
 build/
+.claude/worktrees/
