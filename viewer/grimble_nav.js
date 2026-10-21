@@ -249,7 +249,7 @@ export class NavGrid {
   // (cheap: nor through jammed cells, nor closer to the edge than its two ends are)
   clearLine(a, b, cheap = false) {
     const d = a.distanceTo(b), steps = Math.ceil(d / (this.cell * 0.5)), B = this.base;
-    const lim = cheap && B ? Math.max(B[this.idx(a.x, a.y)] ?? 0, B[this.idx(b.x, b.y)] ?? 0) : 9;
+    const lim = cheap && B && this.centreLines !== false ? Math.max(B[this.idx(a.x, a.y)] ?? 0, B[this.idx(b.x, b.y)] ?? 0) : 9;
     for (let s = 1; s < steps; s++) {
       const t = s / steps, k = this.idx(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
       if (!this.walkable(k) || (cheap && (this.cost[k] || (B && B[k] > lim)))) return false;

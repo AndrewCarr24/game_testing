@@ -82,7 +82,8 @@ const DEFAULTS = {
 
 // the lawn inside the perimeter hedge (plan.GROUNDS: hedge x +-70, z +-62, 1.4 m thick), round
 // the house (x +-26, z +-20): where it may go outdoors when the level doesn't say
-const HEDGE = [-68.5, -60.5, 68.5, 60.5], HOUSE = [-26, -20, 26, 20], TERRACE = [-31, -25, 31, 25];
+const HEDGE = [-68.5, -60.5, 68.5, 60.5], HOUSE = [-26, -20, 26, 20];
+const TERRACES = [[-31, 20, 31, 25], [-31, -25, 31, -20], [-31, -20, -26, 20], [26, -20, 31, 20]];
 const LAWN_Y = -0.08;
 const rand = (a, b) => a + Math.random() * (b - a);
 const inRect = (r, x, z, m = 0) => x >= r[0] - m && x <= r[2] + m && z >= r[1] - m && z <= r[3] + m;
@@ -153,9 +154,23 @@ export class GrimbleHunt {
     const box = (c) => Object.assign(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)), { glass: glass(c) });
     this.walls = level.colliders.filter((c) => !rail(c)).map(box);
     this.sightWalls = this.walls.filter((w) => !w.glass);
-    // furniture: what a crouched player can duck behind (and tall pieces hide anyone)
-    const own = new Set((interact?.items ?? []).map((i) => i.collider).filter(Boolean));
-    this.cover = colliders.slice(level.colliders.length).filter((c) => !own.has(c) && !c.isEmpty());
+    // the grounds (level.grounds, with their colliders in `colliders`, tagged `kind`): heights,
+    // where outdoors is, the zones it prowls outside
+    const G = level.grounds;
+    this.grounds = {
+      lawn: G?.lawn ?? LAWN_Y, terrace: G?.terrace ?? 0, house: G?.house ?? HOUSE, bounds: G?.bounds ?? HEDGE,
+      terraces: G?.terraces ?? TERRACES,
+      zones: Object.entries(G?.zones ?? Object.fromEntries(Object.entries(level.zones ?? {}).map(([k, z]) => [k, z.rect]))).filter(([k]) => k !== 'planting'),
+    };
+    // furniture (props, the grounds' furniture and hedges): what a crouched player can duck
+    // behind; tall pieces hide anyone. Not what a sight line passes (seeThrough: the boundary,
+    // water) nor the ground itself, nor moving parts (doors are handled as doors)
+    const own = new Set([...(interact?.items ?? []).map((i) => i.collider), ...(interact?.reactors ?? []).map((r) => r.collider)].filter(Boolean));
+    const cover = colliders.slice(level.colliders.length).filter((c) => !own.has(c) && !c.isEmpty() && !c.seeThrough && c.kind !== 'ground' && c.max.y > 0.5);
+    this.coverTall = cover.filter((c) => c.max.y > 1.9);
+    this.coverLow = cover.filter((c) => c.max.y <= 1.9);
+    // outdoors its body is kept out of the hedges, walls and furniture of the grounds too
+    this.groundSolid = colliders.filter((c) => c.kind && c.kind !== 'ground' && c.max.y > 1.3 && c.min.y < 2.8);
     this.allRooms = Object.entries(level.rooms).map(([name, r]) => ({ name, rect: r.rect, floor: r.floor ?? 0, height: r.height ?? 4.2, sun: r.sun }));
     this.rooms = MAIN_SPACES.filter((r) => level.rooms[r]).map((r) => level.rooms[r].rect);
     const areas = this.rooms.slice();
@@ -164,11 +179,12 @@ export class GrimbleHunt {
       const b = this.breakable, z0 = Math.min(b.min[2], b.max[2]), z1 = Math.max(b.min[2], b.max[2]);
       areas.push([Math.min(b.min[0], b.max[0]) - 6, z0 - 1, Math.max(b.min[0], b.max[0]) + 0.5, z1 + 1]);
     }
-    // outdoors: the level's walkable rects for it (level.grimble.outdoor), else the lawn inside
-    // the hedge round the house; outdoor colliders (hedges, walls, furniture) in `colliders` stop it
+    // outdoors: the level's walkable rects for it (level.grimble.outdoor), else the grounds inside
+    // the hedge round the house (level.grounds.bounds / house); the grounds' colliders in
+    // `colliders` (hedges, walls, furniture, water) keep it out of what it can't cross
+    const B = this.grounds.bounds, H = this.grounds.house;
     this.outdoorAreas = !this.o.outdoor ? [] : level.grimble?.outdoor ?? [
-      [HEDGE[0], HEDGE[1], HOUSE[0], HEDGE[3]], [HOUSE[2], HEDGE[1], HEDGE[2], HEDGE[3]],
-      [HOUSE[0], HEDGE[1], HOUSE[2], HOUSE[1]], [HOUSE[0], HOUSE[3], HOUSE[2], HEDGE[3]]];
+      [B[0], B[1], H[0], B[3]], [H[2], B[1], B[2], B[3]], [H[0], B[1], H[2], H[1]], [H[0], H[3], H[2], B[3]]];
     areas.push(...this.outdoorAreas);
     this.nav = new NavGrid(colliders, areas, { cell: 0.2, radius: this.body.w - this.o.navMargin });
     // what its body is kept out of: the shell's walls (not the glass it breaks through)
@@ -176,7 +192,8 @@ export class GrimbleHunt {
     this.gapBox = b && new THREE.Box3(new THREE.Vector3(Math.min(b.min[0], b.max[0]) - 0.3, 0, Math.min(b.min[2], b.max[2])),
       new THREE.Vector3(Math.max(b.min[0], b.max[0]) + 0.3, 9, Math.max(b.min[2], b.max[2])));
     // (as for its routes: it climbs over what is lower than 1.3 m, e.g. the stair's bottom treads)
-    this.solid = this.walls.filter((c) => c.max.y > 1.3 && c.min.y < 2.8 && !(this.gapBox && this.gapBox.intersectsBox(c) && c.max.x - c.min.x < 0.5));
+    this.solid = this.walls.filter((c) => c.max.y > 1.3 && c.min.y < 2.8 && !(this.gapBox && this.gapBox.intersectsBox(c) && c.max.x - c.min.x < 0.5))
+      .concat(this.groundSolid);
     this.double = DOUBLE_HEIGHT.filter((r) => level.rooms[r]).map((r) => level.rooms[r].rect);
     this.doorways = this.findDoorways(level);
     // the stair's foot (its ramp's low end), where it waits for someone who went upstairs
@@ -358,12 +375,13 @@ export class GrimbleHunt {
   // `crouch`: furniture the eye at b is ducked behind; tall furniture always)
   sightClear(a, b, crouch = false) {
     if (this.blocked(a, b, this.sightWalls) || this.blocked(a, b, this.doorBoxes(), 0.1) || this.blocked(a, b, this.sightBlockers(), 0.1)) return false;
+    if (this.blocked(a, b, this.coverTall, 0.05)) return false;
+    if (!crouch) return true;
+    // cover: a piece close in front of a crouched eye whose top is near it hides it (they duck
+    // right down behind it: as if it were half a metre taller)
     const near = [];
-    for (const c of this.cover) {
-      if (c.max.y > 1.9) { near.push(c); continue; }
-      // cover: a piece close in front of a crouched eye whose top is near it hides it (they duck
-      // right down behind it: as if it were half a metre taller)
-      if (crouch && c.max.y >= b.y - 0.35 && c.min.y < b.y && c.distanceToPoint(b) < 1.5) {
+    for (const c of this.coverLow) {
+      if (c.max.y >= b.y - 0.35 && c.min.y < b.y && c.distanceToPoint(b) < 1.5) {
         near.push(new THREE.Box3(c.min, new THREE.Vector3(c.max.x, Math.max(c.max.y, b.y + 0.5), c.max.z)));
       }
     }
@@ -374,9 +392,14 @@ export class GrimbleHunt {
 
   // how lit the player is: the flashlight, daylight in a room with sun, or the room's lights
   // (lights_<room> signal) and power; dark ~0.35
+  // (with the house / lighting systems: window.__house.lightAt(pos) 0..1, else
+  // window.__lighting.isDark(room))
   lit(feet) {
     if (window.__flashlight?.on) return 1.6;
+    const v = window.__house?.lightAt?.(new THREE.Vector3(feet.x, feet.y + 1.2, feet.z));
+    if (typeof v === 'number' && isFinite(v)) return 0.35 + 0.65 * Math.min(1, Math.max(0, v));
     const r = this.roomAt(feet.x, feet.z, feet.y);
+    if (r && window.__lighting?.isDark) return window.__lighting.isDark(r.name) ? 0.35 : 1;
     if (!r || r.sun !== false) return 1;
     const sig = window.__signals;
     if (sig?.get?.('power') === false) return 0.35;
@@ -385,8 +408,10 @@ export class GrimbleHunt {
   }
 
   roomAt(x, z, y = 0) { return this.allRooms.find((r) => y >= r.floor - 0.5 && y < r.floor + r.height && inRect(r.rect, x, z)); }
-  inHouse(x, z) { return inRect(HOUSE, x, z, 0.1); }
-  groundY(x, z) { return inRect(TERRACE, x, z) ? 0 : LAWN_Y; }
+  inHouse(x, z) { return inRect(this.grounds.house, x, z, 0.1); }
+  groundY(x, z) { const g = this.grounds; return this.inHouse(x, z) ? 0 : g.terraces.some((t) => inRect(t, x, z)) ? g.terrace : g.lawn; }
+  // somewhere on its grid (the walk-in starts beyond the hedge, off it)
+  onGrid() { return this.nav.nearest(this.root.position.x, this.root.position.z, 3) >= 0; }
 
   // every frame: what it sees of the player (the notice meter), what it remembers of them
   perceive(dt, eye, player) {
@@ -510,7 +535,7 @@ export class GrimbleHunt {
     if (head.distanceTo(eye) > this.o.sight) return false;
     return this.sightClear(head, eye, !!this._crouch) && !this.blocked(head, eye, this.doorBoxes(), 0.1);
   }
-  playerOutside(feet) { return !this.inHouse(feet.x, feet.z) && feet.y < 2; }
+  playerOutside(feet) { return !this.inHouse(feet.x, feet.z) && inRect(this.grounds.bounds, feet.x, feet.z) && feet.y < 2; }
 
   // nothing solid between its head end and the player (it can't swipe through a wall, a shut door or glass)
   clearTo(feet, fromY = 1.2) {
@@ -833,9 +858,7 @@ export class GrimbleHunt {
     const o = this.o, c = this.chain;
     const end = this.path[this.path.length - 1];
     if (c.hd.distanceTo(end) < 0.7) { this.path = null; return true; }
-    // (in narrow ways it steers closer in, keeping to the route's middle)
-    const cl = this.nav.clear?.[this.nav.idx(c.hd.x, c.hd.y)] ?? 9;
-    const target = this.carrot(Math.min(o.lookAhead, Math.max(0.9, 0.9 + 2 * cl)));
+    const target = this.carrot(o.lookAhead);
     const off = this.turnHead(target, dt);
     // forward along its facing, slowing in a tight turn; a target behind it: turn on the spot
     const k = off > 1.9 ? 0 : Math.max(0.3, Math.cos(Math.min(off, Math.PI / 2)));
@@ -1257,8 +1280,9 @@ export class GrimbleHunt {
       const r = this.level.rooms[name];
       if (r) R.push({ name, rect: r.rect, cells: [], visited: -1e9, doors: this.doorways.filter((d) => d.main === name), out: false });
     }
-    const zones = Object.entries(this.level.zones ?? {}).filter(([k]) => k !== 'planting');
-    for (const [name, z] of zones) R.push({ name, rect: z.rect, cells: [], visited: -1e9, doors: [], out: true });
+    // outdoors: the grounds' zones and the terraces round the house
+    const outRooms = [...this.grounds.zones, ...this.grounds.terraces.map((t, i) => [`terrace_${i}`, t])];
+    for (const [name, rect] of outRooms) R.push({ name, rect, cells: [], visited: -1e9, doors: [], out: true });
     for (const k of n.reachList ?? []) {
       const p = n.centre(k), r = R.find((rr) => inRect(rr.rect, p.x, p.y));
       if (r && (!n.clear || n.clear[k] >= 0.25)) r.cells.push(k);
@@ -1276,7 +1300,8 @@ export class GrimbleHunt {
     // every so often, back to where it lost them
     if (lossOn && this.time - this.lastReturn > rand(45, 75)) {
       this.lastReturn = this.time;
-      room = this.prowlRoomAt(this.lossPos.x, this.lossPos.y);
+      const cd = (r) => Math.hypot(Math.max(r.rect[0] - this.lossPos.x, 0, this.lossPos.x - r.rect[2]), Math.max(r.rect[1] - this.lossPos.y, 0, this.lossPos.y - r.rect[3]));
+      room = rooms.slice().sort((a, b) => cd(a) - cd(b))[0] ?? null;   // (the nearest it prowls to where it lost them)
       if (room === here) room = null;
     }
     if (!room) {

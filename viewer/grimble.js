@@ -158,7 +158,7 @@ export class Grimble {
     // the player out on the grounds, in its sight: it drops to all fours and hunts them there
     // (grimble_hunt.js startOutside; back in the house, it breaks in after them)
     if (this.hunt && this.playerObj && ['walk', 'knock', 'wave', 'watch'].includes(this.state) &&
-      this.hunt.playerOutside(this.playerObj.pos) && !this.playerObj.hidden && this.hunt.seesFromOutside(player)) {
+      this.hunt.playerOutside(this.playerObj.pos) && !this.playerObj.hidden && this.hunt.onGrid() && this.hunt.seesFromOutside(player)) {
       this.state = 'inside';
       this.hunt.startOutside(player);
     }
