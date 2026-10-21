@@ -38,6 +38,16 @@ Existing types keep working unchanged. New:
 - Switch extras: `indicator` glows (its authored emissive colour, green if none) while the
   signal is on and powered. `use` extras: `value` defaults to true, `consume` to true;
   `needsName` (optional) is how the prompt names the missing item.
+- Wall controls (`ix_common.switch`; each kind must read as itself from across the room):
+  `ix_switch` lights = small graphite square, black rocker, amber LED; `ix_switch_blinds` =
+  tall bronze plate, ivory rocker between up/down chevrons, white LED; `ix_switch_fire` =
+  round bronze plate, quarter-turn knob, orange LED; `ix_switch_garage` = tall graphite plate,
+  push button in a blue lit ring. Placing them: a light switch at each main way into a room
+  (doors: latch side, ~0.17 m from the jamb, never behind the door's swing; z = 1.1),
+  extra ones on the same signal (two-way); blinds by the glass they drive, never stacked
+  or side by side with a light switch; the garage opener at 1.5 m. Prompts say what they
+  do ("Turn off lights", "Lower blinds"). `viewer/tools/controls.mjs` checks every one
+  (focus, prompt, nothing in front, room to stand, E toggles).
 - `pickup` gains item kinds through `item`: `flashlight` (armed: a real-time spot from the
   camera, Enter toggles it, battery drains), `battery`, `fuse`, `key_<id>` / `keycard`,
   `car_key`, `tablet` (opens the smart-home screen), and any `throwable: true` item
