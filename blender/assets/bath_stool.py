@@ -1,5 +1,5 @@
 """Spa stool: a sculpted honed-stone drum with a soft waist and a dark marble top, with
-a stack of folded oat linen towels and a brass-lidded candle jar on it.
+a stack of folded oat linen towels and a brass-lidded candle jar on it (the jar is a throwable pickup).
 
 Origin: floor centre. Rotationally symmetric; the front faces -Y.
 """
@@ -11,11 +11,12 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
-from lib import common, materials  # noqa: E402
+from lib import common, materials, pickups  # noqa: E402
 import bath_common as bc  # noqa: E402
 import bath_vanity as bv  # noqa: E402  (soft_extrude, round_outline)
 
 importlib.reload(common)
+importlib.reload(pickups)
 importlib.reload(bc)
 importlib.reload(bv)
 
@@ -72,6 +73,8 @@ def build(**overrides):
     lid = bc.lathe([(0.0, 0.0), (0.043, 0.0), (0.043, 0.012), (0.0, 0.012)], 28)
     l = common.mesh_object(f"{n}_Lid", lid, col, brass, root)
     l.location = (0.125, 0.06, h + 0.0015 + 0.078)
+    # the candle jar is a throwable pickup (lib/pickups.py); the towels stay
+    pickups.adopt(f"{n}_CandleJar", col, root, "candle", [j, l], (0.125, 0.06, h + 0.0015))
     bc.merge(root, bc.children(root, "_Towel_"), f"{n}_Towels")
     return root, bc.parts_of(root)
 

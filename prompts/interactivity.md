@@ -95,3 +95,27 @@ Existing types keep working unchanged. New:
   come from mansion.json `"cameras": [{name, position, lookAt, fov?}]` (glTF coords) if present,
   else defaults in the great room, entry, courtyard and kitchen. Optional `"signals": {...}`
   in mansion.json sets initial values.
+
+## Loose things: which ones lift (blender/lib/pickups.py)
+- The rule (the module's docstring has it in full): anything hand-sized (no side over 0.6 m)
+  standing or lying free on a surface is a throwable `pickup`, everywhere it appears: vases,
+  bowls, dishes, plates, cups, mugs, glasses, carafes, decanters, bottles, candles, books and
+  magazines lying flat (each book of a stack), notebooks, small ornaments, boxes, fruit, bread,
+  soap and dispensers, reading glasses, a laptop. Glass and ceramic shatter (noise ~0.8-1.0);
+  everything else thuds and lands whole (`shatter: false`). Fixed: books standing in rows,
+  contents of built-ins / display cases / cabinets, trays and boards, plants, flowers and
+  branches (and their vase), textiles, floor pieces, sculpture on plinths, and anything with
+  fixed geometry resting on it.
+- Item ids are per kind (and per material where it changes the behaviour): `book`, `magazine`,
+  `vase` (glass, as vase.py) / `ceramic_vase`, `bowl` / `glass_bowl` / `bronze_bowl` /
+  `wooden_bowl`, `cup`, `glass`, `wine_glass`, `carafe`, `decanter`, `wine_bottle`, `candle`,
+  `ornament`, `lemon`, ... so identical things stack in the inventory.
+- Decor kits (decor_a/b/c/d_kit.py) call `pickups.wrap()` on their item functions and
+  `pickups.emit()` in finish(); a hand-made asset uses `pickups.make()` / `pickups.adopt()`.
+  Each pickup is an empty `<Asset>_<Kind>NN` (origin at its base) with `_NoCollide` meshes.
+- Engine: resting pickups are drawn by their room's batch (viewer/batching.js `unbatch`): their
+  own meshes stay in the scene but hidden until the item is focused (`interact.nearest()`
+  unbatches what it returns) or taken. Anything that changes a pickup's own meshes (a highlight,
+  an outline) must call `window.__interact.unbatch(item)` first. A pickup with other pickups
+  resting on it (`item.load`: books under a candle, a bowl under lemons) can't be taken until
+  they are.

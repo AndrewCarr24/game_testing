@@ -17,43 +17,66 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				7
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorD_VanityTowels_BathStone_NoCollide"
+			"name":"DecorD_VanityTowels_Candle01_BathStone_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_VanityTowels_Brass_NoCollide"
+			"name":"DecorD_VanityTowels_Candle01_Brass_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorD_VanityTowels_Charcoal_NoCollide"
+			"name":"DecorD_VanityTowels_Candle01_Charcoal_NoCollide"
 		},
 		{
 			"mesh":3,
-			"name":"DecorD_VanityTowels_Ivory_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorD_VanityTowels_Oat_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorD_VanityTowels_Paper_NoCollide"
+			"name":"DecorD_VanityTowels_Candle01_Paper_NoCollide"
 		},
 		{
 			"children":[
 				0,
 				1,
 				2,
-				3,
+				3
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_VanityTowels_Candle01",
+			"translation":[
+				-0.12999999523162842,
+				0,
+				-0.10999999940395355
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorD_VanityTowels_Ivory_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorD_VanityTowels_Oat_NoCollide"
+		},
+		{
+			"children":[
 				4,
-				5
+				5,
+				6
 			],
 			"name":"DecorD_VanityTowels"
 		}
@@ -108,6 +131,20 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_DecorD_Paper",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.699999988079071,
+					0.6800000071525574,
+					0.6200000047683716,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Fabric_Linen_Ivory",
 			"normalTexture":{
 				"index":0,
@@ -141,32 +178,17 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.8999999761581421
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_DecorD_Paper",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.699999988079071,
-					0.6800000071525574,
-					0.6200000047683716,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8500000238418579
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorD_VanityTowels_BathStone_NoCollide",
+			"name":"DecorD_VanityTowels_Candle01_BathStone_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -174,26 +196,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_VanityTowels_Brass_NoCollide",
+			"name":"DecorD_VanityTowels_Candle01_Brass_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -201,26 +221,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_VanityTowels_Charcoal_NoCollide",
+			"name":"DecorD_VanityTowels_Candle01_Charcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -228,13 +246,37 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_VanityTowels_Candle01_Paper_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":15,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -244,24 +286,22 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
 					"indices":19,
-					"material":3,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -273,35 +313,7 @@
 					"attributes":{
 						"POSITION":20,
 						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":24,
-					"material":4,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_VanityTowels_Paper_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"TEXCOORD_0":22
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -309,12 +321,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
+					"indices":23,
 					"material":5,
 					"mode":4
 				}
@@ -351,14 +362,14 @@
 			"componentType":5126,
 			"count":234,
 			"max":[
-				-0.08799999952316284,
+				0.041999995708465576,
 				0.08500000089406967,
-				-0.06800000369548798
+				0.041999995708465576
 			],
 			"min":[
-				-0.171999990940094,
+				-0.041999995708465576,
 				0,
-				-0.15199999511241913
+				-0.041999995708465576
 			],
 			"type":"VEC3"
 		},
@@ -374,12 +385,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":234,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":576,
 			"type":"SCALAR"
 		},
@@ -387,14 +392,14 @@
 			"componentType":5126,
 			"count":172,
 			"max":[
-				-0.08699999749660492,
+				0.0429999977350235,
 				0.09700000286102295,
-				-0.06700000166893005
+				0.0429999977350235
 			],
 			"min":[
-				-0.17299999296665192,
+				-0.0429999977350235,
 				0.08100000023841858,
-				-0.15299999713897705
+				-0.0429999977350235
 			],
 			"type":"VEC3"
 		},
@@ -407,12 +412,6 @@
 			"componentType":5126,
 			"count":172,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":172,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -423,14 +422,14 @@
 			"componentType":5126,
 			"count":8,
 			"max":[
-				-0.12879998981952667,
+				0.0012000054121017456,
 				0.07699999958276749,
-				-0.1088000014424324
+				0.0011999979615211487
 			],
 			"min":[
-				-0.13120000064373016,
+				-0.0012000054121017456,
 				0.06499999761581421,
-				-0.1111999973654747
+				-0.0011999979615211487
 			],
 			"type":"VEC3"
 		},
@@ -443,16 +442,40 @@
 			"componentType":5126,
 			"count":8,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":8,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":24,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"max":[
+				0.036799997091293335,
+				0.06599999964237213,
+				0.036799997091293335
+			],
+			"min":[
+				-0.036799997091293335,
+				0.06400000303983688,
+				-0.036799997091293335
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":144,
 			"type":"SCALAR"
 		},
 		{
@@ -479,12 +502,6 @@
 			"componentType":5126,
 			"count":226,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":226,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -518,82 +535,40 @@
 		},
 		{
 			"componentType":5123,
-			"count":116,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":372,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":53,
-			"max":[
-				-0.09319999814033508,
-				0.06599999964237213,
-				-0.07320000231266022
-			],
-			"min":[
-				-0.16679999232292175,
-				0.06400000303983688,
-				-0.1467999964952469
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":53,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":53,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":53,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":144,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2764,
+			"byteLength":2161,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1946,
-			"byteOffset":2764
+			"byteLength":1539,
+			"byteOffset":2164
 		},
 		{
 			"buffer":0,
-			"byteLength":277,
-			"byteOffset":4712
+			"byteLength":241,
+			"byteOffset":3704
 		},
 		{
 			"buffer":0,
-			"byteLength":3012,
-			"byteOffset":4992
+			"byteLength":586,
+			"byteOffset":3948
 		},
 		{
 			"buffer":0,
-			"byteLength":1846,
-			"byteOffset":8004
+			"byteLength":2121,
+			"byteOffset":4536
 		},
 		{
 			"buffer":0,
-			"byteLength":634,
-			"byteOffset":9852
+			"byteLength":1197,
+			"byteOffset":6660
 		}
 	],
 	"samplers":[
@@ -604,7 +579,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10488,
+			"byteLength":7860,
 			"uri":"decor_d_vanity_towels.bin"
 		}
 	]

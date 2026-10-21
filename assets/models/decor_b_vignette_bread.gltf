@@ -17,82 +17,529 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				10
+				35
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorBVignetteBread_CeramicCharcoal_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorBVignetteBread_CeramicWhite_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorBVignetteBread_Crust_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorBVignetteBread_Flour_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorBVignetteBread_Lemon_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorBVignetteBread_LinenStone_NoCollide"
-		},
-		{
-			"mesh":6,
-			"name":"DecorBVignetteBread_OakSmoked_NoCollide"
-		},
-		{
-			"mesh":7,
-			"name":"DecorBVignetteBread_Steel_NoCollide"
-		},
-		{
-			"mesh":8,
-			"name":"DecorBVignetteBread_Walnut_NoCollide"
-		},
-		{
-			"mesh":9,
-			"name":"DecorBVignetteBread_Wicker_NoCollide"
+			"name":"DecorBVignetteBread_Bowl01_CeramicWhite_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteBread_Bowl01",
+			"translation":[
+				0.699999988079071,
 				0,
-				1,
-				2,
-				3,
-				4,
-				5,
+				0.03999999910593033
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorBVignetteBread_Bowl02_CeramicWhite_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteBread_Bowl02",
+			"rotation":[
+				0,
+				0.14780938625335693,
+				0,
+				0.9890158772468567
+			],
+			"translation":[
+				0.699999988079071,
+				0.03200000151991844,
+				0.03999999910593033
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorBVignetteBread_Bowl03_CeramicWhite_NoCollide"
+		},
+		{
+			"children":[
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteBread_Bowl03",
+			"rotation":[
+				0,
+				0.2923716902732849,
+				0,
+				0.9563047885894775
+			],
+			"translation":[
+				0.699999988079071,
+				0.06400000303983688,
+				0.03999999910593033
+			]
+		},
+		{
+			"mesh":3,
+			"name":"DecorBVignetteBread_Bread01_Crust_NoCollide"
+		},
+		{
+			"mesh":4,
+			"name":"DecorBVignetteBread_Bread01_Flour_NoCollide"
+		},
+		{
+			"children":[
 				6,
-				7,
-				8,
+				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bread",
+					"name":"Bread",
+					"prompt":"Take bread",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Bread01",
+			"translation":[
+				-0.6600000262260437,
+				0.029999999329447746,
+				-0.03999999910593033
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorBVignetteBread_Bread02_Crust_NoCollide"
+		},
+		{
+			"children":[
 				9
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bread",
+					"name":"Bread",
+					"prompt":"Take bread",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Bread02",
+			"rotation":[
+				0,
+				-0.12186937034130096,
+				0,
+				0.9925461411476135
+			],
+			"translation":[
+				-0.44999998807907104,
+				0.029999999329447746,
+				-0.05999999865889549
+			]
+		},
+		{
+			"mesh":6,
+			"name":"DecorBVignetteBread_Crock01_CeramicCharcoal_NoCollide"
+		},
+		{
+			"mesh":7,
+			"name":"DecorBVignetteBread_Crock01_OakSmoked_NoCollide"
+		},
+		{
+			"children":[
+				11,
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"crock",
+					"name":"Utensil crock",
+					"prompt":"Take utensil crock",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteBread_Crock01",
+			"translation":[
+				0.5,
+				0,
+				-0.10000000149011612
+			]
+		},
+		{
+			"mesh":8,
+			"name":"DecorBVignetteBread_Dish01_Wicker_NoCollide"
+		},
+		{
+			"children":[
+				14
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"wicker_dish",
+					"name":"Wicker dish",
+					"prompt":"Take wicker dish",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.5,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Dish01",
+			"translation":[
+				0.9800000190734863,
+				0,
+				0
+			]
+		},
+		{
+			"mesh":9,
+			"name":"DecorBVignetteBread_Knife01_Steel_NoCollide"
+		},
+		{
+			"mesh":10,
+			"name":"DecorBVignetteBread_Knife01_Walnut_NoCollide"
+		},
+		{
+			"children":[
+				16,
+				17
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"knife",
+					"name":"Knife",
+					"prompt":"Take knife",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.5,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Knife01",
+			"rotation":[
+				0,
+				0.03489953652024269,
+				0,
+				0.9993908405303955
+			],
+			"translation":[
+				-0.550000011920929,
+				0.029999999329447746,
+				0.11999999731779099
+			]
+		},
+		{
+			"mesh":11,
+			"name":"DecorBVignetteBread_Lemon01_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				19
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon01",
+			"rotation":[
+				0,
+				0.5332150459289551,
+				0,
+				0.8459797501564026
+			],
+			"translation":[
+				1.0449999570846558,
+				0.009332673624157906,
+				0
+			]
+		},
+		{
+			"mesh":12,
+			"name":"DecorBVignetteBread_Lemon02_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				21
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon02",
+			"rotation":[
+				0,
+				-0.30261409282684326,
+				0,
+				0.9531131982803345
+			],
+			"translation":[
+				0.9998781085014343,
+				0.009030869230628014,
+				-0.06188587099313736
+			]
+		},
+		{
+			"mesh":13,
+			"name":"DecorBVignetteBread_Lemon03_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				23
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon03",
+			"rotation":[
+				0,
+				-0.9724785089492798,
+				0,
+				0.2329925298690796
+			],
+			"translation":[
+				0.9271581172943115,
+				0.008919905871152878,
+				-0.037851493805646896
+			]
+		},
+		{
+			"mesh":14,
+			"name":"DecorBVignetteBread_Lemon04_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				25
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon04",
+			"rotation":[
+				0,
+				0.863922655582428,
+				0,
+				0.5036244988441467
+			],
+			"translation":[
+				0.9278020262718201,
+				0.009237884543836117,
+				0.038734618574380875
+			]
+		},
+		{
+			"mesh":15,
+			"name":"DecorBVignetteBread_Lemon05_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				27
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon05",
+			"rotation":[
+				0,
+				0.8540310263633728,
+				0,
+				0.5202220678329468
+			],
+			"translation":[
+				1.0009158849716187,
+				0.008812030777335167,
+				0.06154289469122887
+			]
+		},
+		{
+			"mesh":16,
+			"name":"DecorBVignetteBread_Lemon06_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				29
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon06",
+			"rotation":[
+				0,
+				0.5050694942474365,
+				0,
+				0.8630787134170532
+			],
+			"translation":[
+				1,
+				0.046432189643383026,
+				-0.009999999776482582
+			]
+		},
+		{
+			"mesh":17,
+			"name":"DecorBVignetteBread_Lemon07_Lemon_NoCollide"
+		},
+		{
+			"children":[
+				31
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"lemon",
+					"name":"Lemon",
+					"prompt":"Take lemon",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteBread_Lemon07",
+			"rotation":[
+				0,
+				-0.948887288570404,
+				0,
+				0.31561511754989624
+			],
+			"translation":[
+				0.949999988079071,
+				0.04589582234621048,
+				0.029999999329447746
+			]
+		},
+		{
+			"mesh":18,
+			"name":"DecorBVignetteBread_LinenStone_NoCollide"
+		},
+		{
+			"mesh":19,
+			"name":"DecorBVignetteBread_Walnut_NoCollide"
+		},
+		{
+			"children":[
+				1,
+				3,
+				5,
+				8,
+				10,
+				13,
+				15,
+				18,
+				20,
+				22,
+				24,
+				26,
+				28,
+				30,
+				32,
+				33,
+				34
 			],
 			"name":"DecorBVignetteBread"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Ceramic_Charcoal",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.05000000074505806,
-					0.05000000074505806,
-					0.054999999701976776,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Ceramic_White",
@@ -137,34 +584,16 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Lemon",
+			"name":"M_Ceramic_Charcoal",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.75,
-					0.550000011920929,
-					0.029999999329447746,
+					0.05000000074505806,
+					0.05000000074505806,
+					0.054999999701976776,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.5
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Fabric_Stone",
-			"normalTexture":{
-				"index":0,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.1599999964237213,
-					0.15000000596046448,
-					0.14000000059604645,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
+				"roughnessFactor":0.30000001192092896
 			}
 		},
 		{
@@ -178,10 +607,24 @@
 			"name":"M_OakSmoked",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":1
+					"index":0
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.550000011920929
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Wicker",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.30000001192092896,
+					0.20999999344348907,
+					0.11999999731779099,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.949999988079071
 			}
 		},
 		{
@@ -208,7 +651,7 @@
 			"name":"M_Walnut",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":2
+					"index":1
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -216,29 +659,46 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Wicker",
+			"name":"M_Lemon",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.30000001192092896,
-					0.20999999344348907,
-					0.11999999731779099,
+					0.75,
+					0.550000011920929,
+					0.029999999329447746,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.949999988079071
+				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Stone",
+			"normalTexture":{
+				"index":2,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.1599999964237213,
+					0.15000000596046448,
+					0.14000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorBVignetteBread_CeramicCharcoal_NoCollide",
+			"name":"DecorBVignetteBread_Bowl01_CeramicWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -246,26 +706,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteBread_CeramicWhite_NoCollide",
+			"name":"DecorBVignetteBread_Bowl02_CeramicWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -273,26 +731,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":7,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteBread_Crust_NoCollide",
+			"name":"DecorBVignetteBread_Bowl03_CeramicWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -300,26 +756,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
+					"indices":11,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteBread_Flour_NoCollide",
+			"name":"DecorBVignetteBread_Bread01_Crust_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -327,26 +781,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":15,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteBread_Lemon_NoCollide",
+			"name":"DecorBVignetteBread_Bread01_Flour_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -354,13 +806,337 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":19,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Bread02_Crust_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Crock01_CeramicCharcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":27,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Crock01_OakSmoked_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":28,
+						"NORMAL":29,
+						"TEXCOORD_0":30
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":31,
 					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Dish01_Wicker_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":32,
+						"NORMAL":33,
+						"TEXCOORD_0":34
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":35,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Knife01_Steel_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":36,
+						"NORMAL":37,
+						"TEXCOORD_0":38
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":39,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Knife01_Walnut_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":43,
+					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon01_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":44,
+						"NORMAL":45,
+						"TEXCOORD_0":46
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":47,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon02_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":48,
+						"NORMAL":49,
+						"TEXCOORD_0":50
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":51,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon03_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":52,
+						"NORMAL":53,
+						"TEXCOORD_0":54
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":55,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon04_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":56,
+						"NORMAL":57,
+						"TEXCOORD_0":58
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":59,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon05_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":60,
+						"NORMAL":61,
+						"TEXCOORD_0":62
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":59,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon06_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":63,
+						"NORMAL":64,
+						"TEXCOORD_0":65
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":66,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteBread_Lemon07_Lemon_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":67,
+						"NORMAL":68,
+						"TEXCOORD_0":69
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":17,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":70,
+					"material":8,
 					"mode":4
 				}
 			]
@@ -370,78 +1146,22 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"POSITION":71,
+						"NORMAL":72,
+						"TEXCOORD_0":73
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":18,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
-					"material":5,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteBread_OakSmoked_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":6,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":34,
-					"material":6,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteBread_Steel_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":35,
-						"NORMAL":36,
-						"TEXCOORD_0":37,
-						"COLOR_0":38
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":7,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":39,
-					"material":7,
+					"indices":74,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -451,51 +1171,22 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":40,
-						"NORMAL":41,
-						"TEXCOORD_0":42,
-						"COLOR_0":43
+						"POSITION":75,
+						"NORMAL":76,
+						"TEXCOORD_0":77
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":19,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":44,
-					"material":8,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteBread_Wicker_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":45,
-						"NORMAL":46,
-						"TEXCOORD_0":47,
-						"COLOR_0":48
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":9,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":49,
-					"material":9,
+					"indices":78,
+					"material":7,
 					"mode":4
 				}
 			]
@@ -530,11 +1221,6 @@
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Fabric_Normal",
-			"uri":"textures/T_Fabric_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
 			"name":"T_OakSmoked_BaseColor",
 			"uri":"textures/T_OakSmoked_BaseColor.webp"
 		},
@@ -542,129 +1228,146 @@
 			"mimeType":"image/webp",
 			"name":"T_Walnut_BaseColor",
 			"uri":"textures/T_Walnut_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Fabric_Normal",
+			"uri":"textures/T_Fabric_Normal.webp"
 		}
 	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":266,
+			"count":226,
 			"max":[
-				0.5649999976158142,
-				0.1826999932527542,
-				-0.03500000387430191
+				0.08499997854232788,
+				0.07225000113248825,
+				0.08286887407302856
 			],
 			"min":[
-				0.4350000023841858,
+				-0.08499997854232788,
 				0,
-				-0.16499999165534973
+				-0.08286887407302856
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":266,
+			"count":226,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":266,
+			"count":226,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":266,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":960,
+			"count":840,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":718,
+			"count":240,
 			"max":[
-				0.7849999666213989,
-				0.13625000417232513,
-				0.12286887317895889
+				0.07300001382827759,
+				0.07224999368190765,
+				0.07116974890232086
 			],
 			"min":[
-				0.6150000095367432,
+				-0.07300001382827759,
+				-3.725290298461914e-09,
+				-0.07116974890232086
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":840,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":252,
+			"max":[
+				0.061000049114227295,
+				0.07225000113248825,
+				0.05947059392929077
+			],
+			"min":[
+				-0.061000049114227295,
 				0,
-				-0.042868874967098236
+				-0.05947059392929077
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":718,
+			"count":252,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":718,
+			"count":252,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":718,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":2520,
+			"count":840,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":130,
 			"max":[
-				-0.21690620481967926,
-				0.12000000476837158,
-				0.06000000238418579
+				0.10000002384185791,
+				0.09000000357627869,
+				0.10000000149011612
 			],
 			"min":[
-				-0.7600000500679016,
-				0.029999999329447746,
-				-0.14000000059604645
+				-0.10000002384185791,
+				0,
+				-0.10000000149011612
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":130,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":130,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":206,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":780,
+			"count":480,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":33,
 			"max":[
-				-0.5980000495910645,
-				0.12150000035762787,
-				0.02199999988079071
+				0.06199997663497925,
+				0.09149999916553497,
+				0.06199999898672104
 			],
 			"min":[
-				-0.722000002861023,
-				0.11249999701976776,
-				-0.10199999809265137
+				-0.06199997663497925,
+				0.08249999582767487,
+				-0.06199999898672104
 			],
 			"type":"VEC3"
 		},
@@ -677,12 +1380,6 @@
 			"componentType":5126,
 			"count":33,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":33,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -691,38 +1388,387 @@
 		},
 		{
 			"componentType":5126,
-			"count":630,
+			"count":76,
 			"max":[
-				1.0774235725402832,
-				0.10990417748689651,
-				0.09818140417337418
+				0.2377641648054123,
+				0.05119999498128891,
+				0.03199999779462814
 			],
 			"min":[
-				0.8898757696151733,
-				0.008812030777335167,
-				-0.09525235742330551
+				-0.2377641797065735,
+				0,
+				-0.03200000524520874
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":630,
+			"count":76,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":630,
+			"count":76,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":630,
-			"normalized":true,
-			"type":"VEC4"
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":266,
+			"max":[
+				0.06499999761581421,
+				0.1826999932527542,
+				0.06499999761581421
+			],
+			"min":[
+				-0.06499999761581421,
+				0,
+				-0.06499999016523361
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":266,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":266,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":2100,
+			"count":960,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":558,
+			"max":[
+				0.09563475847244263,
+				0.32668864727020264,
+				0.07148903608322144
+			],
+			"min":[
+				-0.08817499876022339,
+				0.01890593022108078,
+				-0.06781963258981705
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":558,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":558,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1020,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":318,
+			"max":[
+				0.1499999761581421,
+				0.09359999746084213,
+				0.14772115647792816
+			],
+			"min":[
+				-0.1499999761581421,
+				0,
+				-0.14772115647792816
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":318,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":318,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":972,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.23699995875358582,
+				0.005499999970197678,
+				0.011999979615211487
+			],
+			"min":[
+				0.06299996376037598,
+				0.0040000006556510925,
+				-0.01000000536441803
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.06299996376037598,
+				0.012000001966953278,
+				0.008000001311302185
+			],
+			"min":[
+				-0.06300002336502075,
+				1.862645149230957e-09,
+				-0.008000001311302185
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"max":[
+				0.041265904903411865,
+				0.06113465875387192,
+				0.029482781887054443
+			],
+			"min":[
+				-0.04126587510108948,
+				0,
+				-0.029482781887054443
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":92,
+			"max":[
+				0.041673362255096436,
+				0.061738260090351105,
+				0.029482722282409668
+			],
+			"min":[
+				-0.04167330265045166,
+				0,
+				-0.02948284149169922
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":92,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":92,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"max":[
+				0.04182314872741699,
+				0.06196019425988197,
+				0.029482752084732056
+			],
+			"min":[
+				-0.04182308912277222,
+				0,
+				-0.029482752084732056
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"max":[
+				0.04071033000946045,
+				0.06132423132658005,
+				0.029482781887054443
+			],
+			"min":[
+				-0.04071033000946045,
+				0,
+				-0.029482722282409668
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"max":[
+				0.04040902853012085,
+				0.0621759369969368,
+				0.029482781887054443
+			],
+			"min":[
+				-0.04040902853012085,
+				0,
+				-0.029482781887054443
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"max":[
+				0.040090858936309814,
+				0.06293562054634094,
+				0.029482722282409668
+			],
+			"min":[
+				-0.04009079933166504,
+				0,
+				-0.029482722282409668
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":90,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":88,
+			"max":[
+				0.03954130411148071,
+				0.06400835514068604,
+				0.029482722282409668
+			],
+			"min":[
+				-0.03954130411148071,
+				0,
+				-0.029482781887054443
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":88,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":88,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":300,
 			"type":"SCALAR"
 		},
 		{
@@ -752,93 +1798,15 @@
 		},
 		{
 			"componentType":5123,
-			"count":192,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":648,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":558,
-			"max":[
-				0.5956347584724426,
-				0.32668864727020264,
-				-0.028510967269539833
-			],
-			"min":[
-				0.4118250012397766,
-				0.01890593022108078,
-				-0.16781963407993317
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":558,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":558,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":558,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1020,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				-0.3141354024410248,
-				0.035499997437000275,
-				0.1275760978460312
-			],
-			"min":[
-				-0.4878510534763336,
-				0.03399999812245369,
-				0.09548717737197876
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":240,
+			"count":144,
 			"max":[
 				-0.1654491424560547,
-				0.041999999433755875,
+				0.029999999329447746,
 				0.16311267018318176
 			],
 			"min":[
@@ -850,112 +1818,120 @@
 		},
 		{
 			"componentType":5126,
-			"count":240,
+			"count":144,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":240,
+			"count":144,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":240,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":492,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":318,
-			"max":[
-				1.1299999952316284,
-				0.09359999746084213,
-				0.14772115647792816
-			],
-			"min":[
-				0.8300000429153442,
-				0,
-				-0.14772115647792816
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":318,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":318,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":318,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":972,
+			"count":360,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3377,
+			"byteLength":2212,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":7727,
-			"byteOffset":3380
+			"byteLength":2320,
+			"byteOffset":2212
 		},
 		{
 			"buffer":0,
-			"byteLength":2777,
-			"byteOffset":11108
+			"byteLength":2447,
+			"byteOffset":4532
 		},
 		{
 			"buffer":0,
-			"byteLength":689,
-			"byteOffset":13888
+			"byteLength":1430,
+			"byteOffset":6980
 		},
 		{
 			"buffer":0,
-			"byteLength":7351,
-			"byteOffset":14580
+			"byteLength":503,
+			"byteOffset":8412
 		},
 		{
 			"buffer":0,
-			"byteLength":2164,
-			"byteOffset":21932
+			"byteLength":931,
+			"byteOffset":8916
 		},
 		{
 			"buffer":0,
-			"byteLength":6011,
-			"byteOffset":24096
+			"byteLength":2459,
+			"byteOffset":9848
 		},
 		{
 			"buffer":0,
-			"byteLength":528,
-			"byteOffset":30108
+			"byteLength":4534,
+			"byteOffset":12308
 		},
 		{
 			"buffer":0,
-			"byteLength":2837,
-			"byteOffset":30636
+			"byteLength":2892,
+			"byteOffset":16844
 		},
 		{
 			"buffer":0,
-			"byteLength":3879,
-			"byteOffset":33476
+			"byteLength":332,
+			"byteOffset":19736
+		},
+		{
+			"buffer":0,
+			"byteLength":635,
+			"byteOffset":20068
+		},
+		{
+			"buffer":0,
+			"byteLength":1047,
+			"byteOffset":20704
+		},
+		{
+			"buffer":0,
+			"byteLength":1067,
+			"byteOffset":21752
+		},
+		{
+			"buffer":0,
+			"byteLength":1039,
+			"byteOffset":22820
+		},
+		{
+			"buffer":0,
+			"byteLength":1053,
+			"byteOffset":23860
+		},
+		{
+			"buffer":0,
+			"byteLength":1043,
+			"byteOffset":24916
+		},
+		{
+			"buffer":0,
+			"byteLength":1044,
+			"byteOffset":25960
+		},
+		{
+			"buffer":0,
+			"byteLength":1039,
+			"byteOffset":27004
+		},
+		{
+			"buffer":0,
+			"byteLength":1463,
+			"byteOffset":28044
+		},
+		{
+			"buffer":0,
+			"byteLength":1203,
+			"byteOffset":29508
 		}
 	],
 	"samplers":[
@@ -966,7 +1942,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":37356,
+			"byteLength":30712,
 			"uri":"decor_b_vignette_bread.bin"
 		}
 	]

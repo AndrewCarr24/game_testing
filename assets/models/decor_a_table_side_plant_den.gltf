@@ -16,33 +16,37 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				7
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorATableSidePlantDen_BookCharcoal_NoCollide"
+			"name":"DecorATableSidePlantDen_Book01_BookCream_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorATableSidePlantDen_BookCream_NoCollide"
+			"name":"DecorATableSidePlantDen_Book01_BookMoss_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorATableSidePlantDen_BookMoss_NoCollide"
+			"name":"DecorATableSidePlantDen_Book02_BookCharcoal_NoCollide"
 		},
 		{
 			"mesh":3,
-			"name":"DecorATableSidePlantDen_glaze_NoCollide"
+			"name":"DecorATableSidePlantDen_Book02_BookCream_NoCollide"
 		},
 		{
 			"mesh":4,
-			"name":"DecorATableSidePlantDen_leaf_NoCollide"
+			"name":"DecorATableSidePlantDen_glaze_NoCollide"
 		},
 		{
 			"mesh":5,
+			"name":"DecorATableSidePlantDen_leaf_NoCollide"
+		},
+		{
+			"mesh":6,
 			"name":"DecorATableSidePlantDen_soil_NoCollide"
 		},
 		{
@@ -52,26 +56,13 @@
 				2,
 				3,
 				4,
-				5
+				5,
+				6
 			],
 			"name":"DecorATableSidePlantDen"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Book_Charcoal",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.029999999329447746,
-					0.029999999329447746,
-					0.03200000151991844,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.75
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Book_Cream",
@@ -94,6 +85,20 @@
 					0.03999999910593033,
 					0.07000000029802322,
 					0.05000000074505806,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.75
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Book_Charcoal",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.029999999329447746,
+					0.029999999329447746,
+					0.03200000151991844,
 					1
 				],
 				"metallicFactor":0,
@@ -141,14 +146,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorATableSidePlantDen_BookCharcoal_NoCollide",
+			"name":"DecorATableSidePlantDen_Book01_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -156,26 +160,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableSidePlantDen_BookCream_NoCollide",
+			"name":"DecorATableSidePlantDen_Book01_BookMoss_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -183,26 +185,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableSidePlantDen_BookMoss_NoCollide",
+			"name":"DecorATableSidePlantDen_Book02_BookCharcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -210,13 +210,37 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":7,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableSidePlantDen_Book02_BookCream_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
@@ -228,21 +252,19 @@
 					"attributes":{
 						"POSITION":14,
 						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":18,
+					"indices":17,
 					"material":3,
 					"mode":4
 				}
@@ -253,23 +275,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":19,
-						"NORMAL":20,
-						"TEXCOORD_0":21,
-						"COLOR_0":22
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":4,
+							"bufferView":5,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":23,
+					"indices":21,
 					"material":4,
 					"mode":4
 				}
@@ -280,23 +300,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"COLOR_0":27
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":28,
+					"indices":25,
 					"material":5,
 					"mode":4
 				}
@@ -323,46 +341,10 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":52,
-			"max":[
-				0.09304137527942657,
-				0.05055566877126694,
-				0.1320728063583374
-			],
-			"min":[
-				-0.15015941858291626,
-				0.021253259852528572,
-				-0.08223152160644531
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":52,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":52,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":52,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":78,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
+			"count":12,
 			"max":[
 				0.11590272188186646,
-				0.04775566607713699,
+				0.018453259021043777,
 				0.15028633177280426
 			],
 			"min":[
@@ -374,23 +356,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":12,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":12,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
+			"count":18,
 			"type":"SCALAR"
 		},
 		{
@@ -420,9 +396,58 @@
 		},
 		{
 			"componentType":5123,
+			"count":78,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
 			"count":52,
-			"normalized":true,
-			"type":"VEC4"
+			"max":[
+				0.09304137527942657,
+				0.05055566877126694,
+				0.1320728063583374
+			],
+			"min":[
+				-0.15015941858291626,
+				0.021253259852528572,
+				-0.08223152160644531
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.08910177648067474,
+				0.04775566607713699,
+				0.12813320755958557
+			],
+			"min":[
+				-0.14621980488300323,
+				0.024053260684013367,
+				-0.07829192280769348
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
@@ -448,12 +473,6 @@
 			"componentType":5126,
 			"count":224,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":224,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -487,12 +506,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":224,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":576,
 			"type":"SCALAR"
 		},
@@ -523,12 +536,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":13,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
 		}
@@ -536,33 +543,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":825,
+			"byteLength":254,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":524,
-			"byteOffset":828
+			"byteOffset":256
 		},
 		{
 			"buffer":0,
-			"byteLength":587,
-			"byteOffset":1352
+			"byteLength":533,
+			"byteOffset":780
 		},
 		{
 			"buffer":0,
-			"byteLength":3014,
-			"byteOffset":1940
+			"byteLength":254,
+			"byteOffset":1316
 		},
 		{
 			"buffer":0,
-			"byteLength":3290,
-			"byteOffset":4956
+			"byteLength":2153,
+			"byteOffset":1572
 		},
 		{
 			"buffer":0,
-			"byteLength":416,
-			"byteOffset":8248
+			"byteLength":2269,
+			"byteOffset":3728
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":6000
 		}
 	],
 	"samplers":[
@@ -573,7 +585,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":8664,
+			"byteLength":6288,
 			"uri":"decor_a_table_side_plant_den.bin"
 		}
 	]

@@ -17,77 +17,194 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				9
+				16
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorBVignetteCellarTable_BlackMetal_NoCollide"
+			"name":"DecorBVignetteCellarTable_Book01_Label_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorBVignetteCellarTable_Label_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorBVignetteCellarTable_Leather_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorBVignetteCellarTable_Marble_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorBVignetteCellarTable_OakSmoked_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorBVignetteCellarTable_PaperWhite_NoCollide"
-		},
-		{
-			"mesh":6,
-			"name":"DecorBVignetteCellarTable_Steel_NoCollide"
-		},
-		{
-			"mesh":7,
-			"name":"DecorBVignetteCellarTable_Walnut_NoCollide"
-		},
-		{
-			"mesh":8,
-			"name":"DecorBVignetteCellarTable_Wicker_NoCollide"
+			"name":"DecorBVignetteCellarTable_Book01_OakSmoked_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCellarTable_Book01",
+			"rotation":[
+				0,
+				-0.061385758221149445,
+				0,
+				0.9981141090393066
+			],
+			"translation":[
+				-0.20449720323085785,
+				0,
+				0.005256353877484798
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorBVignetteCellarTable_Book02_Label_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorBVignetteCellarTable_Book02_Leather_NoCollide"
+		},
+		{
+			"mesh":4,
+			"name":"DecorBVignetteCellarTable_Book02_PaperWhite_NoCollide"
+		},
+		{
+			"children":[
 				3,
 				4,
-				5,
-				6,
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCellarTable_Book02",
+			"rotation":[
+				0,
+				-0.09024127572774887,
+				0,
+				0.995919942855835
+			],
+			"translation":[
+				-0.2006363868713379,
+				0.026655038818717003,
+				-0.0033706624526530504
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorBVignetteCellarTable_Book03_Label_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorBVignetteCellarTable_Book03_PaperWhite_NoCollide"
+		},
+		{
+			"children":[
 				7,
 				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCellarTable_Book03",
+			"rotation":[
+				0,
+				-0.03709287941455841,
+				0,
+				0.9993119239807129
+			],
+			"translation":[
+				-0.19836026430130005,
+				0.055132169276475906,
+				-0.004133746027946472
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorBVignetteCellarTable_Bowl01_Marble_NoCollide"
+		},
+		{
+			"mesh":8,
+			"name":"DecorBVignetteCellarTable_Spectacles01_BlackMetal_NoCollide"
+		},
+		{
+			"children":[
+				11
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"spectacles",
+					"name":"Reading glasses",
+					"prompt":"Take reading glasses",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCellarTable_Spectacles01",
+			"rotation":[
+				0,
+				0.13052617013454437,
+				0,
+				0.9914448857307434
+			],
+			"translation":[
+				-0.20000000298023224,
+				0.0801636278629303,
+				0.019999999552965164
+			]
+		},
+		{
+			"mesh":9,
+			"name":"DecorBVignetteCellarTable_Steel_NoCollide"
+		},
+		{
+			"mesh":10,
+			"name":"DecorBVignetteCellarTable_Walnut_NoCollide"
+		},
+		{
+			"mesh":11,
+			"name":"DecorBVignetteCellarTable_Wicker_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				6,
+				9,
+				10,
+				12,
+				13,
+				14,
+				15
 			],
 			"name":"DecorBVignetteCellarTable"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Label_Cream",
@@ -104,9 +221,26 @@
 		},
 		{
 			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
+				}
+			},
+			"name":"M_OakSmoked",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Leather_Cognac",
 			"normalTexture":{
-				"index":0,
+				"index":1,
 				"scale":0.6000000238418579
 			},
 			"pbrMetallicRoughness":{
@@ -122,34 +256,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Marble_White",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":1
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448,
-					"clearcoatRoughnessFactor":0.33000001311302185
-				}
-			},
-			"name":"M_OakSmoked",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":2
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.550000011920929
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Picture_Mat",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -160,6 +266,34 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Marble_White",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.800000011920929,
+					0.7900000214576721,
+					0.7699999809265137,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.30000001192092896
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
 			}
 		},
 		{
@@ -186,7 +320,7 @@
 			"name":"M_Walnut",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":3
+					"index":2
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -209,14 +343,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorBVignetteCellarTable_BlackMetal_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book01_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -224,26 +357,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCellarTable_Label_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book01_OakSmoked_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -251,26 +382,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCellarTable_Leather_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book02_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -278,26 +407,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":2,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCellarTable_Marble_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book02_Leather_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -305,26 +432,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":18,
-					"material":3,
+					"indices":7,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCellarTable_OakSmoked_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book02_PaperWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":19,
-						"NORMAL":20,
-						"TEXCOORD_0":21,
-						"COLOR_0":22
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -332,26 +457,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":4,
+					"indices":3,
+					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCellarTable_PaperWhite_NoCollide",
+			"name":"DecorBVignetteCellarTable_Book03_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":23,
-						"NORMAL":24,
-						"TEXCOORD_0":25,
-						"COLOR_0":26
+						"POSITION":17,
+						"NORMAL":18,
+						"TEXCOORD_0":19
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -359,12 +482,86 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":27,
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCellarTable_Book03_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCellarTable_Bowl01_Marble_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":26,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCellarTable_Spectacles01_BlackMetal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":30,
 					"material":5,
 					"mode":4
 				}
@@ -375,23 +572,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":28,
-						"NORMAL":29,
-						"TEXCOORD_0":30,
-						"COLOR_0":31
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":6,
+							"bufferView":9,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":32,
+					"indices":34,
 					"material":6,
 					"mode":4
 				}
@@ -402,23 +597,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":33,
-						"NORMAL":34,
-						"TEXCOORD_0":35,
-						"COLOR_0":36
+						"POSITION":35,
+						"NORMAL":36,
+						"TEXCOORD_0":37
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":7,
+							"bufferView":10,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":37,
+					"indices":38,
 					"material":7,
 					"mode":4
 				}
@@ -429,19 +622,17 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":38,
-						"NORMAL":39,
-						"TEXCOORD_0":40,
-						"COLOR_0":41
+						"POSITION":39,
+						"NORMAL":40,
+						"TEXCOORD_0":41
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":11,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -476,31 +667,18 @@
 				}
 			},
 			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":3
-				}
-			},
-			"sampler":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Leather_Normal",
-			"uri":"textures/T_Leather_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Marble_BaseColor",
-			"uri":"textures/T_Marble_BaseColor.webp"
-		},
-		{
-			"mimeType":"image/webp",
 			"name":"T_OakSmoked_BaseColor",
 			"uri":"textures/T_OakSmoked_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Leather_Normal",
+			"uri":"textures/T_Leather_Normal.webp"
 		},
 		{
 			"mimeType":"image/webp",
@@ -511,52 +689,46 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":322,
+			"count":24,
 			"max":[
-				-0.14342288672924042,
-				0.13332639634609222,
-				0.0392409972846508
+				0.16012878715991974,
+				0.023855037987232208,
+				0.1201835423707962
 			],
 			"min":[
-				-0.25672775506973267,
-				0.0801636278629303,
-				-0.029775291681289673
+				-0.16012880206108093,
+				0.00279999990016222,
+				-0.120743528008461
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":322,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":322,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":322,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":702,
+			"count":36,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":72,
 			"max":[
-				-0.030779298394918442,
-				0.07714075595140457,
-				0.1441563069820404
+				0.16292878985404968,
+				0.026655038818717003,
+				0.12354353070259094
 			],
 			"min":[
-				-0.3781464695930481,
-				0.00279999990016222,
-				-0.14430582523345947
+				-0.16292881965637207,
+				0,
+				-0.12354351580142975
 			],
 			"type":"VEC3"
 		},
@@ -569,12 +741,6 @@
 			"componentType":5126,
 			"count":72,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -583,16 +749,41 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":24,
 			"max":[
-				-0.03344099968671799,
-				0.055132173001766205,
-				0.140822172164917
+				0.1453256607055664,
+				0.025677131488919258,
+				0.11615434288978577
 			],
 			"min":[
-				-0.3678317666053772,
-				0.026655038818717003,
-				-0.14756350219249725
+				-0.1453256458044052,
+				0.0028000008314847946,
+				-0.11671435832977295
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.14812564849853516,
+				0.028477134183049202,
+				0.1195143461227417
+			],
+			"min":[
+				-0.14812566339969635,
+				0,
+				-0.1195143461227417
 			],
 			"type":"VEC3"
 		},
@@ -607,10 +798,79 @@
 			"type":"VEC2"
 		},
 		{
-			"componentType":5123,
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.04179106652736664,
+				0.022781705483794212,
+				0.12051434814929962
+			],
+			"min":[
+				-0.011534154415130615,
+				0.00569542683660984,
+				0.11931434273719788
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.14843375980854034,
+				0.022008590400218964,
+				0.10887666791677475
+			],
+			"min":[
+				-0.14843375980854034,
+				0.002800002694129944,
+				-0.10943666100502014
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
 			"count":72,
-			"normalized":true,
-			"type":"VEC4"
+			"max":[
+				0.1512337625026703,
+				0.024808593094348907,
+				0.11223666369915009
+			],
+			"min":[
+				-0.15123377740383148,
+				3.725290298461914e-09,
+				-0.11223667114973068
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
@@ -639,80 +899,37 @@
 		},
 		{
 			"componentType":5123,
-			"count":304,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1080,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":322,
 			"max":[
-				-0.027657290920615196,
-				0.026655038818717003,
-				0.14783409237861633
+				0.05820000171661377,
+				0.053162768483161926,
+				0.006334133446216583
 			],
 			"min":[
-				-0.38133710622787476,
+				-0.058199986815452576,
 				0,
-				-0.1373213827610016
+				-0.046454597264528275
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":322,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":322,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"max":[
-				-0.039222028106451035,
-				0.07994075864553452,
-				0.12269265204668045
-			],
-			"min":[
-				-0.35749849677085876,
-				0.03235046565532684,
-				-0.12727323174476624
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":96,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":144,
+			"count":702,
 			"type":"SCALAR"
 		},
 		{
@@ -739,12 +956,6 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -778,12 +989,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":96,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
 		},
@@ -814,12 +1019,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":684,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1296,
 			"type":"SCALAR"
 		}
@@ -827,48 +1026,63 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4455,
+			"byteLength":314,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1000,
-			"byteOffset":4456
+			"byteLength":547,
+			"byteOffset":316
 		},
 		{
 			"buffer":0,
-			"byteLength":1145,
-			"byteOffset":5456
+			"byteLength":317,
+			"byteOffset":864
 		},
 		{
 			"buffer":0,
-			"byteLength":3672,
-			"byteOffset":6604
+			"byteLength":529,
+			"byteOffset":1184
 		},
 		{
 			"buffer":0,
-			"byteLength":1125,
-			"byteOffset":10276
+			"byteLength":322,
+			"byteOffset":1716
 		},
 		{
 			"buffer":0,
-			"byteLength":1343,
-			"byteOffset":11404
+			"byteLength":315,
+			"byteOffset":2040
 		},
 		{
 			"buffer":0,
-			"byteLength":517,
-			"byteOffset":12748
+			"byteLength":550,
+			"byteOffset":2356
 		},
 		{
 			"buffer":0,
-			"byteLength":1137,
-			"byteOffset":13268
+			"byteLength":2992,
+			"byteOffset":2908
 		},
 		{
 			"buffer":0,
-			"byteLength":6258,
-			"byteOffset":14408
+			"byteLength":3209,
+			"byteOffset":5900
+		},
+		{
+			"buffer":0,
+			"byteLength":327,
+			"byteOffset":9112
+		},
+		{
+			"buffer":0,
+			"byteLength":875,
+			"byteOffset":9440
+		},
+		{
+			"buffer":0,
+			"byteLength":4471,
+			"byteOffset":10316
 		}
 	],
 	"samplers":[
@@ -879,7 +1093,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20668,
+			"byteLength":14788,
 			"uri":"decor_b_vignette_cellar_table.bin"
 		}
 	]

@@ -17,28 +17,76 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				3
+				9
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorBDishRack_CeramicWhite_NoCollide"
+			"name":"DecorBDishRack_Bowl01_CeramicWhite_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorBDishRack_Steel_NoCollide"
+			"name":"DecorBDishRack_Bowl02_CeramicWhite_NoCollide"
 		},
 		{
 			"mesh":2,
+			"name":"DecorBDishRack_Plate01_CeramicWhite_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorBDishRack_Plate02_CeramicWhite_NoCollide"
+		},
+		{
+			"mesh":4,
+			"name":"DecorBDishRack_Plate03_CeramicWhite_NoCollide"
+		},
+		{
+			"children":[
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"plate",
+					"name":"Plate",
+					"prompt":"Take plate",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBDishRack_Plate03",
+			"translation":[
+				0.01805839128792286,
+				0.012886572629213333,
+				0
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorBDishRack_Plate04_CeramicWhite_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorBDishRack_Steel_NoCollide"
+		},
+		{
+			"mesh":7,
 			"name":"DecorBDishRack_Walnut_NoCollide"
 		},
 		{
 			"children":[
 				0,
 				1,
-				2
+				2,
+				3,
+				5,
+				6,
+				7,
+				8
 			],
 			"name":"DecorBDishRack"
 		}
@@ -91,14 +139,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorBDishRack_CeramicWhite_NoCollide",
+			"name":"DecorBDishRack_Bowl01_CeramicWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -106,12 +153,136 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBDishRack_Bowl02_CeramicWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBDishRack_Plate01_CeramicWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBDishRack_Plate02_CeramicWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":15,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBDishRack_Plate03_CeramicWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":19,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBDishRack_Plate04_CeramicWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
 					"material":0,
 					"mode":4
 				}
@@ -122,23 +293,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":1,
+							"bufferView":6,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":27,
 					"material":1,
 					"mode":4
 				}
@@ -149,23 +318,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":28,
+						"NORMAL":29,
+						"TEXCOORD_0":30
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":2,
+							"bufferView":7,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":31,
 					"material":2,
 					"mode":4
 				}
@@ -192,9 +359,69 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":1140,
+			"count":240,
+			"max":[
+				0.15077362954616547,
+				0.16770826280117035,
+				0.04311959445476532
+			],
+			"min":[
+				0.05158168822526932,
+				0.023608818650245667,
+				-0.10311959683895111
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":840,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":240,
 			"max":[
 				0.17077362537384033,
+				0.16770826280117035,
+				0.04311959445476532
+			],
+			"min":[
+				0.07158168405294418,
+				0.023608818650245667,
+				-0.10311959683895111
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":240,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":840,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"max":[
+				-0.04115709662437439,
 				0.26045358180999756,
 				0.125
 			],
@@ -207,23 +434,107 @@
 		},
 		{
 			"componentType":5126,
-			"count":1140,
+			"count":165,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":1140,
+			"count":165,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1140,
-			"normalized":true,
-			"type":"VEC4"
+			"count":576,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"max":[
+				0.006842900067567825,
+				0.26045358180999756,
+				0.125
+			],
+			"min":[
+				-0.03950977697968483,
+				0.012886572629213333,
+				-0.125
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3984,
+			"count":576,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"max":[
+				0.03678450733423233,
+				0.24756701290607452,
+				0.125
+			],
+			"min":[
+				-0.009568167850375175,
+				0,
+				-0.125
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":576,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"max":[
+				0.10284289717674255,
+				0.26045358180999756,
+				0.125
+			],
+			"min":[
+				0.0564902201294899,
+				0.012886572629213333,
+				-0.125
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":165,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":576,
 			"type":"SCALAR"
 		},
 		{
@@ -250,12 +561,6 @@
 			"componentType":5126,
 			"count":240,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":240,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -289,12 +594,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":432,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":600,
 			"type":"SCALAR"
 		}
@@ -302,18 +601,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":12304,
+			"byteLength":2506,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2307,
-			"byteOffset":12304
+			"byteLength":2504,
+			"byteOffset":2508
 		},
 		{
 			"buffer":0,
-			"byteLength":2971,
-			"byteOffset":14612
+			"byteLength":1745,
+			"byteOffset":5012
+		},
+		{
+			"buffer":0,
+			"byteLength":1745,
+			"byteOffset":6760
+		},
+		{
+			"buffer":0,
+			"byteLength":1745,
+			"byteOffset":8508
+		},
+		{
+			"buffer":0,
+			"byteLength":1744,
+			"byteOffset":10256
+		},
+		{
+			"buffer":0,
+			"byteLength":1177,
+			"byteOffset":12000
+		},
+		{
+			"buffer":0,
+			"byteLength":1835,
+			"byteOffset":13180
 		}
 	],
 	"samplers":[
@@ -324,7 +648,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":17584,
+			"byteLength":15016,
 			"uri":"decor_b_dish_rack.bin"
 		}
 	]

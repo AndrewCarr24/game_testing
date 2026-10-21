@@ -4,113 +4,242 @@
 		"version":"2.0"
 	},
 	"extensionsUsed":[
-		"KHR_draco_mesh_compression",
-		"EXT_texture_webp",
-		"KHR_materials_sheen"
+		"KHR_draco_mesh_compression"
 	],
 	"extensionsRequired":[
-		"KHR_draco_mesh_compression",
-		"EXT_texture_webp"
+		"KHR_draco_mesh_compression"
 	],
 	"scene":0,
 	"scenes":[
 		{
 			"name":"Scene",
 			"nodes":[
-				11
+				20
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorBVignetteCoffee_BlackMetal_NoCollide"
+			"name":"DecorBVignetteCoffee_Book01_Candle_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorBVignetteCoffee_Bronze_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorBVignetteCoffee_Candle_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorBVignetteCoffee_CeramicCharcoal_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorBVignetteCoffee_CeramicOat_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorBVignetteCoffee_ClothRust_NoCollide"
-		},
-		{
-			"mesh":6,
-			"name":"DecorBVignetteCoffee_Leaf_NoCollide"
-		},
-		{
-			"mesh":7,
-			"name":"DecorBVignetteCoffee_Marble_NoCollide"
-		},
-		{
-			"mesh":8,
-			"name":"DecorBVignetteCoffee_PaperWhite_NoCollide"
-		},
-		{
-			"mesh":9,
-			"name":"DecorBVignetteCoffee_Soil_NoCollide"
-		},
-		{
-			"mesh":10,
-			"name":"DecorBVignetteCoffee_WoolGreige_NoCollide"
+			"name":"DecorBVignetteCoffee_Book01_PaperWhite_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCoffee_Book01",
+			"rotation":[
+				0,
+				0.10059478878974915,
+				0,
+				0.9949274659156799
+			],
+			"translation":[
+				-0.06740516424179077,
+				0,
+				-0.018542690202593803
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorBVignetteCoffee_Book02_Candle_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorBVignetteCoffee_Book02_ClothRust_NoCollide"
+		},
+		{
+			"mesh":4,
+			"name":"DecorBVignetteCoffee_Book02_PaperWhite_NoCollide"
+		},
+		{
+			"children":[
 				3,
 				4,
-				5,
-				6,
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCoffee_Book02",
+			"rotation":[
+				0,
+				0.05001628398895264,
+				0,
+				0.9987484216690063
+			],
+			"translation":[
+				-0.05801531672477722,
+				0.027398984879255295,
+				-0.014378879219293594
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorBVignetteCoffee_Book03_Candle_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorBVignetteCoffee_Book03_WoolGreige_NoCollide"
+		},
+		{
+			"children":[
 				7,
-				8,
+				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCoffee_Book03",
+			"rotation":[
+				0,
+				0.043737877160310745,
+				0,
+				0.9990430474281311
+			],
+			"translation":[
+				-0.06591962277889252,
+				0.05208967626094818,
+				-0.020591331645846367
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorBVignetteCoffee_Candle01_BlackMetal_NoCollide"
+		},
+		{
+			"mesh":8,
+			"name":"DecorBVignetteCoffee_Candle01_Candle_NoCollide"
+		},
+		{
+			"mesh":9,
+			"name":"DecorBVignetteCoffee_Candle01_CeramicOat_NoCollide"
+		},
+		{
+			"children":[
+				10,
+				11,
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCoffee_Candle01",
+			"translation":[
+				0.17000000178813934,
+				0,
+				0.11999999731779099
+			]
+		},
+		{
+			"mesh":10,
+			"name":"DecorBVignetteCoffee_CeramicCharcoal_NoCollide"
+		},
+		{
+			"mesh":11,
+			"name":"DecorBVignetteCoffee_Leaf_NoCollide"
+		},
+		{
+			"mesh":12,
+			"name":"DecorBVignetteCoffee_Ornament01_Bronze_NoCollide"
+		},
+		{
+			"mesh":13,
+			"name":"DecorBVignetteCoffee_Ornament01_Marble_NoCollide"
+		},
+		{
+			"children":[
+				16,
+				17
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCoffee_Ornament01",
+			"rotation":[
+				0,
+				-0.17364811897277832,
+				0,
+				0.9848077893257141
+			],
+			"translation":[
+				-0.03999999910593033,
+				0.07368572056293488,
+				-0.019999999552965164
+			]
+		},
+		{
+			"mesh":14,
+			"name":"DecorBVignetteCoffee_Soil_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				6,
 				9,
-				10
+				13,
+				14,
+				15,
+				18,
+				19
 			],
 			"name":"DecorBVignetteCoffee"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Bronze",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.25999999046325684,
-					0.12999999523162842,
-					1
-				],
-				"roughnessFactor":0.3199999928474426
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Candle_Cream",
@@ -123,73 +252,6 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.550000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Ceramic_Charcoal",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.05000000074505806,
-					0.05000000074505806,
-					0.054999999701976776,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Ceramic_Oat",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.550000011920929,
-					0.5,
-					0.4000000059604645,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Decor_Cloth_Rust",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.30000001192092896,
-					0.10000000149011612,
-					0.04500000178813934,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8500000238418579
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Mudroom_Leaf",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.03999999910593033,
-					0.11999999731779099,
-					0.03500000014901161,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.6000000238418579
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Marble_White",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
 			}
 		},
 		{
@@ -208,6 +270,116 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Decor_Cloth_Rust",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.30000001192092896,
+					0.10000000149011612,
+					0.04500000178813934,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Wool_Greige_Dining",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.20000000298023224,
+					0.18000000715255737,
+					0.15000000596046448,
+					1
+				],
+				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceramic_Oat",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.550000011920929,
+					0.5,
+					0.4000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.3499999940395355
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceramic_Charcoal",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.05000000074505806,
+					0.05000000074505806,
+					0.054999999701976776,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.30000001192092896
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Mudroom_Leaf",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.03999999910593033,
+					0.11999999731779099,
+					0.03500000014901161,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.6000000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Bronze",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.25999999046325684,
+					0.12999999523162842,
+					1
+				],
+				"roughnessFactor":0.3199999928474426
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Marble_White",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.800000011920929,
+					0.7900000214576721,
+					0.7699999809265137,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.30000001192092896
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Plant_Soil",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -218,41 +390,17 @@
 				],
 				"metallicFactor":0
 			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_sheen":{
-					"sheenColorFactor":[
-						1.0,
-						1.0,
-						1.0
-					],
-					"sheenRoughnessFactor":0.5
-				}
-			},
-			"name":"M_Wool_Greige_Dining",
-			"normalTexture":{
-				"index":1
-			},
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":2
-				},
-				"metallicFactor":0
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorBVignetteCoffee_BlackMetal_NoCollide",
+			"name":"DecorBVignetteCoffee_Book01_Candle_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -260,26 +408,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCoffee_Bronze_NoCollide",
+			"name":"DecorBVignetteCoffee_Book01_PaperWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -287,26 +433,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCoffee_Candle_NoCollide",
+			"name":"DecorBVignetteCoffee_Book02_Candle_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -314,13 +458,187 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Book02_ClothRust_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Book02_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Book03_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":17,
+						"NORMAL":18,
+						"TEXCOORD_0":19
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Book03_WoolGreige_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Candle01_BlackMetal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":26,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Candle01_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":30,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Candle01_CeramicOat_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":34,
+					"material":5,
 					"mode":4
 				}
 			]
@@ -330,78 +648,22 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":35,
+						"NORMAL":36,
+						"TEXCOORD_0":37
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":10,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteCoffee_CeramicOat_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":24,
-					"material":4,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteCoffee_ClothRust_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":29,
-					"material":5,
+					"indices":38,
+					"material":6,
 					"mode":4
 				}
 			]
@@ -411,78 +673,72 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
+						"POSITION":39,
+						"NORMAL":40,
+						"TEXCOORD_0":41
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":6,
+							"bufferView":11,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":34,
-					"material":6,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteCoffee_Marble_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":35,
-						"NORMAL":36,
-						"TEXCOORD_0":37,
-						"COLOR_0":38
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":7,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":39,
+					"indices":42,
 					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCoffee_PaperWhite_NoCollide",
+			"name":"DecorBVignetteCoffee_Ornament01_Bronze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":40,
-						"NORMAL":41,
-						"TEXCOORD_0":42,
-						"COLOR_0":43
+						"POSITION":43,
+						"NORMAL":44,
+						"TEXCOORD_0":45
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":12,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":44,
+					"indices":46,
 					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCoffee_Ornament01_Marble_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":47,
+						"NORMAL":48,
+						"TEXCOORD_0":49
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":50,
+					"material":9,
 					"mode":4
 				}
 			]
@@ -492,112 +748,225 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":45,
-						"NORMAL":46,
-						"TEXCOORD_0":47,
-						"COLOR_0":48
+						"POSITION":51,
+						"NORMAL":52,
+						"TEXCOORD_0":53
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":9,
+							"bufferView":14,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":49,
-					"material":9,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteCoffee_WoolGreige_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":50,
-						"NORMAL":51,
-						"TEXCOORD_0":52,
-						"COLOR_0":53
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":10,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":29,
+					"indices":54,
 					"material":10,
 					"mode":4
 				}
 			]
 		}
 	],
-	"textures":[
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":0
-				}
-			},
-			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":1
-				}
-			},
-			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":2
-				}
-			},
-			"sampler":0
-		}
-	],
-	"images":[
-		{
-			"mimeType":"image/webp",
-			"name":"T_Marble_BaseColor",
-			"uri":"textures/T_Marble_BaseColor.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Dining_Rug_Normal",
-			"uri":"textures/T_Dining_Rug_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Dining_Rug_BaseColor",
-			"uri":"textures/T_Dining_Rug_BaseColor.webp"
-		}
-	],
 	"accessors":[
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.16017241775989532,
+				0.02459898591041565,
+				0.1260414868593216
+			],
+			"min":[
+				-0.16017241775989532,
+				0.00279999990016222,
+				-0.12660148739814758
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.16297242045402527,
+				0.027398984879255295,
+				0.12940149009227753
+			],
+			"min":[
+				-0.16297242045402527,
+				0,
+				-0.12940149009227753
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.15020492672920227,
+				0.021890688687562943,
+				0.10930705815553665
+			],
+			"min":[
+				-0.15020492672920227,
+				0.0027999989688396454,
+				-0.10986705124378204
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.15300491452217102,
+				0.024690691381692886,
+				0.11266705393791199
+			],
+			"min":[
+				-0.15300491452217102,
+				0,
+				-0.11266705393791199
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.03289739042520523,
+				0.01975255087018013,
+				0.11366704851388931
+			],
+			"min":[
+				-0.022184383124113083,
+				0.004938136786222458,
+				0.11246704310178757
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.1451466679573059,
+				0.01879604160785675,
+				0.11159639805555344
+			],
+			"min":[
+				-0.1451466679573059,
+				0.0027999989688396454,
+				-0.11215639114379883
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.14794665575027466,
+				0.021596044301986694,
+				0.11495640128850937
+			],
+			"min":[
+				-0.14794667065143585,
+				0,
+				-0.11495639383792877
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
 		{
 			"componentType":5126,
 			"count":18,
 			"max":[
-				0.1715385764837265,
+				0.0015385746955871582,
 				0.0870370864868164,
-				0.12060000002384186
+				0.0006000027060508728
 			],
 			"min":[
-				0.16896143555641174,
+				-0.0010385662317276,
 				0.07296290993690491,
-				0.11879999935626984
+				-0.0011999979615211487
 			],
 			"type":"VEC3"
 		},
@@ -610,12 +979,6 @@
 			"componentType":5126,
 			"count":18,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":18,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -624,74 +987,62 @@
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":98,
 			"max":[
-				0.02150288224220276,
-				0.22413571178913116,
-				0.007302539423108101
+				0.030000001192092896,
+				0.07800000160932541,
+				0.0299999937415123
 			],
 			"min":[
-				-0.10150288045406342,
-				0.09323571622371674,
-				-0.04730253666639328
+				-0.030000001192092896,
+				0.00800000037997961,
+				-0.030000001192092896
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":98,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":98,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":264,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":864,
+			"count":288,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":170,
+			"count":148,
 			"max":[
-				0.20000000298023224,
-				0.07800000160932541,
-				0.14999999105930328
+				0.046000003814697266,
+				0.029999999329447746,
+				0.04484669119119644
 			],
 			"min":[
-				-0.2496776133775711,
-				0.00279999990016222,
-				-0.17464348673820496
+				-0.046000003814697266,
+				0,
+				-0.044846683740615845
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":170,
+			"count":148,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":170,
+			"count":148,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":170,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":396,
+			"count":420,
 			"type":"SCALAR"
 		},
 		{
@@ -721,85 +1072,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":278,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":840,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":148,
-			"max":[
-				0.2160000056028366,
-				0.029999999329447746,
-				0.16484668850898743
-			],
-			"min":[
-				0.12399999797344208,
-				0,
-				0.07515331357717514
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":148,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":148,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":148,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":420,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.10548033565282822,
-				0.05208967626094818,
-				0.11301077902317047
-			],
-			"min":[
-				-0.22151096165180206,
-				0.027398984879255295,
-				-0.14176854491233826
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":108,
 			"type":"SCALAR"
 		},
 		{
@@ -829,63 +1102,51 @@
 		},
 		{
 			"componentType":5123,
-			"count":342,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":720,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":264,
 			"max":[
-				0.0025271307677030563,
-				0.09918572008609772,
-				0.012366696260869503
+				0.06544999778270721,
+				0.1504499912261963,
+				0.006625097710639238
 			],
 			"min":[
-				-0.08252713084220886,
-				0.07368572056293488,
-				-0.052366696298122406
+				-0.06545001268386841,
+				0.019549988210201263,
+				-0.006625104229897261
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":264,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":264,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":96,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":132,
+			"count":864,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":96,
 			"max":[
-				0.1181710883975029,
-				0.047151535749435425,
-				0.14086192846298218
+				0.03824999928474426,
+				0.025499992072582245,
+				0.021250000223517418
 			],
 			"min":[
-				-0.25298142433166504,
-				0,
-				-0.17794731259346008
+				-0.03825000301003456,
+				-7.450580596923828e-09,
+				-0.021250005811452866
 			],
 			"type":"VEC3"
 		},
@@ -901,13 +1162,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":96,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":144,
+			"count":132,
 			"type":"SCALAR"
 		},
 		{
@@ -937,113 +1192,90 @@
 		},
 		{
 			"componentType":5123,
-			"count":15,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":42,
 			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.09150727093219757,
-				0.07368572056293488,
-				0.10685461014509201
-			],
-			"min":[
-				-0.2233465164899826,
-				0.05208967626094818,
-				-0.14803726971149445
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":402,
+			"byteLength":322,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3537,
-			"byteOffset":404
+			"byteLength":537,
+			"byteOffset":324
 		},
 		{
 			"buffer":0,
-			"byteLength":2053,
-			"byteOffset":3944
+			"byteLength":321,
+			"byteOffset":864
 		},
 		{
 			"buffer":0,
-			"byteLength":3529,
-			"byteOffset":6000
+			"byteLength":558,
+			"byteOffset":1188
 		},
 		{
 			"buffer":0,
-			"byteLength":1983,
-			"byteOffset":9532
+			"byteLength":321,
+			"byteOffset":1748
 		},
 		{
 			"buffer":0,
-			"byteLength":1087,
-			"byteOffset":11516
+			"byteLength":310,
+			"byteOffset":2072
 		},
 		{
 			"buffer":0,
-			"byteLength":4102,
-			"byteOffset":12604
+			"byteLength":532,
+			"byteOffset":2384
 		},
 		{
 			"buffer":0,
-			"byteLength":1501,
-			"byteOffset":16708
+			"byteLength":290,
+			"byteOffset":2916
 		},
 		{
 			"buffer":0,
-			"byteLength":1392,
-			"byteOffset":18212
+			"byteLength":1055,
+			"byteOffset":3208
 		},
 		{
 			"buffer":0,
-			"byteLength":304,
-			"byteOffset":19604
+			"byteLength":1446,
+			"byteOffset":4264
 		},
 		{
 			"buffer":0,
-			"byteLength":1056,
-			"byteOffset":19908
-		}
-	],
-	"samplers":[
+			"byteLength":2711,
+			"byteOffset":5712
+		},
 		{
-			"magFilter":9729,
-			"minFilter":9987
+			"buffer":0,
+			"byteLength":3028,
+			"byteOffset":8424
+		},
+		{
+			"buffer":0,
+			"byteLength":2531,
+			"byteOffset":11452
+		},
+		{
+			"buffer":0,
+			"byteLength":879,
+			"byteOffset":13984
+		},
+		{
+			"buffer":0,
+			"byteLength":268,
+			"byteOffset":14864
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":20964,
+			"byteLength":15132,
 			"uri":"decor_b_vignette_coffee.bin"
 		}
 	]

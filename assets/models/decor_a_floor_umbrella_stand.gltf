@@ -143,8 +143,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -152,12 +151,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -168,10 +166,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -179,12 +176,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -195,10 +191,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -206,12 +201,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -222,10 +216,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -233,12 +226,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":15,
 					"material":3,
 					"mode":4
 				}
@@ -249,10 +241,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -260,12 +251,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":19,
 					"material":4,
 					"mode":4
 				}
@@ -338,12 +328,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":76,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
 		},
@@ -371,12 +355,6 @@
 			"componentType":5126,
 			"count":178,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":178,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -410,12 +388,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":320,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":480,
 			"type":"SCALAR"
 		},
@@ -443,12 +415,6 @@
 			"componentType":5126,
 			"count":320,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":320,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -482,12 +448,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":220,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":612,
 			"type":"SCALAR"
 		}
@@ -495,28 +455,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1040,
+			"byteLength":790,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1918,
-			"byteOffset":1040
+			"byteLength":1332,
+			"byteOffset":792
 		},
 		{
 			"buffer":0,
-			"byteLength":3471,
-			"byteOffset":2960
+			"byteLength":2349,
+			"byteOffset":2124
 		},
 		{
 			"buffer":0,
-			"byteLength":3490,
-			"byteOffset":6432
+			"byteLength":2353,
+			"byteOffset":4476
 		},
 		{
 			"buffer":0,
-			"byteLength":2516,
-			"byteOffset":9924
+			"byteLength":2026,
+			"byteOffset":6832
 		}
 	],
 	"samplers":[
@@ -527,7 +487,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":12440,
+			"byteLength":8860,
 			"uri":"decor_a_floor_umbrella_stand.bin"
 		}
 	]

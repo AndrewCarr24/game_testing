@@ -17,7 +17,13 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 //     floors). Walls (the shell) always draw, so nothing pops in at close range; galleries
 //     and the courtyard always draw. Hidden furniture also leaves the sun's shadow pass.
 
-export function batchRooms(roomRoots, skip) {
+// Resting pickups (`resting`: mesh -> its pickup item; the books, vases, candles... of the decor
+// vignettes, hundreds of them) are merged too, so splitting a vignette into pickups costs no draw
+// calls: their own meshes stay in place but hidden (boxes, the hand and throws still use them),
+// each item remembers its range in the batch (`item.batched`), and unbatch() collapses that range
+// and shows the item's own meshes when it is focused or taken. Glass pickups (transparent, never
+// merged per room) merge per placement and material instead: what one vignette's glass cost before.
+export function batchRooms(roomRoots, skip, resting = new Map()) {
   const batches = {};   // room -> [mesh]
   let before = 0, after = 0;
   for (const [room, roots] of Object.entries(roomRoots)) {
@@ -28,9 +34,10 @@ export function batchRooms(roomRoots, skip) {
         if (!o.isMesh || skip.has(o)) return;
         before++;
         const m = o.material;
-        if (Array.isArray(m) || m.transparent || m.alphaTest > 0) return;
+        const glass = resting.has(o) && !Array.isArray(m) && m.transparent && !(m.alphaTest > 0);
+        if (Array.isArray(m) || ((m.transparent || m.alphaTest > 0) && !glass)) return;
         const g = o.geometry;
-        const key = `${m.uuid}|${Object.keys(g.attributes).sort().join(',')}|${g.index ? 1 : 0}`;
+        const key = `${glass ? root.uuid : ''}${m.uuid}|${Object.keys(g.attributes).sort().join(',')}|${g.index ? 1 : 0}`;
         if (!groups.has(key)) groups.set(key, { material: m, items: [] });
         groups.get(key).items.push(o);
       });
@@ -40,19 +47,45 @@ export function batchRooms(roomRoots, skip) {
       if (items.length < 2) continue;
       const geos = items.map((o) => o.geometry.clone().applyMatrix4(o.matrixWorld));
       const merged = mergeGeometries(geos, false);
-      geos.forEach((g) => g.dispose());
-      if (!merged) continue;
+      if (!merged) { geos.forEach((g) => g.dispose()); continue; }
       const mesh = new THREE.Mesh(merged, material);
       mesh.castShadow = items[0].castShadow;          // per room: off where the sun never reaches
       mesh.receiveShadow = items[0].receiveShadow;
       mesh.name = `Batch_${room}_${material.name}`;
-      for (const o of items) o.removeFromParent();
+      let start = 0;
+      items.forEach((o, i) => {
+        const count = geos[i].index ? geos[i].index.count : geos[i].attributes.position.count;
+        const it = resting.get(o);
+        if (it) {
+          (it.batched ??= []).push({ geometry: merged, start, count, mesh: o });
+          o.visible = false;
+        } else o.removeFromParent();
+        start += count;
+      });
+      geos.forEach((g) => g.dispose());
       batches[room].push(mesh);
     }
   }
-  for (const roots of Object.values(roomRoots)) for (const r of roots) r.traverse((o) => { if (o.isMesh) after++; });
+  for (const roots of Object.values(roomRoots)) for (const r of roots) r.traverse((o) => { if (o.isMesh && o.visible) after++; });   // (resting pickups' own meshes are hidden)
   for (const b of Object.values(batches)) after += b.length;
   return { batches, before, after };
+}
+
+// a pickup leaves its room batch: its triangles there collapse to nothing, its own meshes show
+export function unbatch(item) {
+  for (const { geometry, start, count, mesh } of item.batched ?? []) {
+    const index = geometry.index;
+    if (index) {
+      index.array.fill(index.array[start], start, start + count);
+      index.needsUpdate = true;
+    } else {
+      const pos = geometry.attributes.position;
+      for (let i = start + 1; i < start + count; i++) pos.setXYZ(i, pos.getX(start), pos.getY(start), pos.getZ(start));
+      pos.needsUpdate = true;
+    }
+    mesh.visible = true;
+  }
+  item.batched = null;
 }
 
 export class RoomCuller {

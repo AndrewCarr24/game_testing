@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				7
+				8
 			]
 		}
 	],
@@ -50,6 +50,10 @@
 			"name":"DecorASoftVanity_twig_NoCollide"
 		},
 		{
+			"mesh":7,
+			"name":"DecorASoftVanity_Vase01_Porcelain_NoCollide"
+		},
+		{
 			"children":[
 				0,
 				1,
@@ -57,7 +61,8 @@
 				3,
 				4,
 				5,
-				6
+				6,
+				7
 			],
 			"name":"DecorASoftVanity"
 		}
@@ -113,9 +118,9 @@
 			},
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.41999998688697815,
-					0.3700000047683716,
-					0.30000001192092896,
+					0.5,
+					0.4399999976158142,
+					0.3499999940395355,
 					1
 				],
 				"metallicFactor":0,
@@ -173,8 +178,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -182,12 +186,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -198,10 +201,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -209,12 +211,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":1,
 					"mode":4
 				}
@@ -225,10 +226,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
-						"COLOR_0":12
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -236,12 +236,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":13,
+					"indices":10,
 					"material":2,
 					"mode":4
 				}
@@ -252,10 +251,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -263,12 +261,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":18,
+					"indices":14,
 					"material":3,
 					"mode":4
 				}
@@ -279,10 +276,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":19,
-						"NORMAL":20,
-						"TEXCOORD_0":21,
-						"COLOR_0":22
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -290,12 +286,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":23,
+					"indices":18,
 					"material":4,
 					"mode":4
 				}
@@ -306,10 +301,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"COLOR_0":27
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -317,12 +311,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":28,
+					"indices":22,
 					"material":5,
 					"mode":4
 				}
@@ -333,10 +326,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":29,
-						"NORMAL":30,
-						"TEXCOORD_0":31,
-						"COLOR_0":32
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -344,13 +336,37 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":33,
+					"indices":26,
 					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorASoftVanity_Vase01_Porcelain_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":30,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -401,12 +417,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":120,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":648,
 			"type":"SCALAR"
 		},
@@ -436,12 +446,6 @@
 			"type":"VEC2"
 		},
 		{
-			"componentType":5123,
-			"count":120,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
 			"componentType":5126,
 			"count":149,
 			"max":[
@@ -465,12 +469,6 @@
 			"componentType":5126,
 			"count":149,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":149,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -504,49 +502,37 @@
 		},
 		{
 			"componentType":5123,
-			"count":700,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":2688,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":362,
+			"count":116,
 			"max":[
-				0.6724247336387634,
+				0.5260828137397766,
 				0.1599999964237213,
-				0.016805008053779602
+				0.010687755420804024
 			],
 			"min":[
 				0.4542582333087921,
 				0.004999999888241291,
-				-0.06699036806821823
+				-0.06045366823673248
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":362,
+			"count":116,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":362,
+			"count":116,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":362,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1212,
+			"count":420,
 			"type":"SCALAR"
 		},
 		{
@@ -573,12 +559,6 @@
 			"componentType":5126,
 			"count":176,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":176,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -612,51 +592,80 @@
 		},
 		{
 			"componentType":5123,
-			"count":122,
-			"normalized":true,
-			"type":"VEC4"
+			"count":252,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"max":[
+				0.6724247336387634,
+				0.1363999992609024,
+				0.016805008053779602
+			],
+			"min":[
+				0.5886293053627014,
+				0.004999999888241291,
+				-0.06699036806821823
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":252,
+			"count":792,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1846,
+			"byteLength":1322,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1726,
-			"byteOffset":1848
+			"byteLength":1314,
+			"byteOffset":1324
 		},
 		{
 			"buffer":0,
-			"byteLength":1964,
-			"byteOffset":3576
+			"byteLength":1351,
+			"byteOffset":2640
 		},
 		{
 			"buffer":0,
-			"byteLength":6143,
-			"byteOffset":5540
+			"byteLength":4691,
+			"byteOffset":3992
 		},
 		{
 			"buffer":0,
-			"byteLength":4386,
-			"byteOffset":11684
+			"byteLength":1231,
+			"byteOffset":8684
 		},
 		{
 			"buffer":0,
-			"byteLength":1762,
-			"byteOffset":16072
+			"byteLength":1290,
+			"byteOffset":9916
 		},
 		{
 			"buffer":0,
-			"byteLength":1966,
-			"byteOffset":17836
+			"byteLength":1361,
+			"byteOffset":11208
+		},
+		{
+			"buffer":0,
+			"byteLength":2362,
+			"byteOffset":12572
 		}
 	],
 	"samplers":[
@@ -667,7 +676,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":19804,
+			"byteLength":14936,
 			"uri":"decor_a_soft_vanity.bin"
 		}
 	]

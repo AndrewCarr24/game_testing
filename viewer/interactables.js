@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Signals } from './signals.js';
+import { unbatch } from './batching.js';
 
 // Objects that carry an `interact` definition in their glTF extras (a custom
 // property set in Blender). Types:
@@ -178,8 +179,31 @@ export class Interactables {
       for (const n of names) this.claim(n, typeof state === 'number' ? state : truthy(state), 2);
     }
     for (const a of added) this.snap(a);
+    this.stackPickups(added);
     return added;
   }
+
+  // Pickups resting on other pickups of the same placement (the top book of a stack, a candle on
+  // it, lemons in a bowl, a carafe on a tray): the one underneath can only be taken once the ones
+  // on it are gone, so nothing is left floating. B rests on A when B's footprint centre lies over
+  // A's footprint and B's bottom is between A's bottom and just above A's top.
+  stackPickups(added) {
+    const ps = added.filter((a) => !a.isReactor && a.def?.type === 'pickup');
+    if (ps.length < 2) return;
+    const boxes = ps.map((p) => this.boxOf(p, new THREE.Box3()));
+    const c = new THREE.Vector3();
+    ps.forEach((a, i) => ps.forEach((b, j) => {
+      if (i === j) return;
+      const A = boxes[i], B = boxes[j];
+      B.getCenter(c);
+      if (c.x > A.min.x && c.x < A.max.x && c.z > A.min.z && c.z < A.max.z &&
+          B.min.y >= A.min.y + 0.005 && B.min.y <= A.max.y + 0.01) (a.load ??= []).push(b);
+    }));
+  }
+
+  // the item's own meshes, not its room batch (batching.js): before taking it, or any per-node
+  // effect (a highlight). Resting pickups are drawn by the batch until then.
+  unbatch(it) { if (it?.batched) unbatch(it); }
 
   // add a prop built at runtime (tests, scripted scenes): collect + pose everything on its signals
   register(root, opts = {}) {
@@ -383,6 +407,7 @@ export class Interactables {
   available(it) {
     if (it.def.type === 'use') return !this.done(it) || !!it.def.promptDone;
     if (it.def.type !== 'pickup') return true;
+    if (it.load?.some((o) => !o.taken)) return false;     // something still rests on it
     return !it.taken && (!it.host || (it.host.t === 1 && it.host.target === 1));
   }
 
@@ -444,6 +469,8 @@ export class Interactables {
     const view = forward && this._view.set(player, forward.clone().normalize());
     let best = null, bestScore = Infinity;
     for (const it of this.items) {
+      // (hundreds of pickups: skip far ones before measuring their boxes)
+      if (it.def.type === 'pickup' && this._c.setFromMatrixPosition(it.node.matrixWorld).distanceToSquared(player) > (this.range(it) + 2.5) ** 2) continue;
       if (!this.available(it) || !this.inReach(it, player)) continue;
       const d = this.reach(it, player);
       const box = this._box, centre = box.getCenter(new THREE.Vector3());
@@ -467,6 +494,7 @@ export class Interactables {
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
     }
+    this.unbatch(best);       // the focused pickup draws itself (ready for a highlight, or to be taken)
     return best;
   }
 
@@ -553,6 +581,7 @@ export class Interactables {
   use(it, playerBox) {
     const d = it.def;
     if (d.type === 'pickup') {
+      this.unbatch(it);
       it.taken = true;
       it.node.parent.remove(it.node);
       this.inventory.add(d.item, d.name, it.node, d);

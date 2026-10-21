@@ -28,11 +28,11 @@
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_FloorVase_Body"
+			"name":"DecorD_FloorVase_Leaf_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorD_FloorVase_Leaf_NoCollide"
+			"name":"DecorD_FloorVase_Vase01_Charcoal_NoCollide"
 		},
 		{
 			"children":[
@@ -60,6 +60,17 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Library_Leaf",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.3799999952316284
+			}
+		},
+		{
+			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
 					"clearcoatFactor":0.15000000596046448,
@@ -77,17 +88,6 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.41999998688697815
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Leaf",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.3799999952316284
-			}
 		}
 	],
 	"meshes":[
@@ -98,8 +98,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -107,40 +106,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_FloorVase_Body",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":1,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":9,
-					"material":1,
 					"mode":4
 				}
 			]
@@ -150,10 +121,34 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_FloorVase_Vase01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -161,12 +156,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -218,49 +212,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":898,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1890,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":398,
-			"max":[
-				0.16917431354522705,
-				0.5814999938011169,
-				0.1666041761636734
-			],
-			"min":[
-				-0.16917431354522705,
-				0,
-				-0.1666041761636734
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":398,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":398,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":398,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1404,
 			"type":"SCALAR"
 		},
 		{
@@ -290,31 +242,55 @@
 		},
 		{
 			"componentType":5123,
-			"count":1365,
-			"normalized":true,
-			"type":"VEC4"
+			"count":3510,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":398,
+			"max":[
+				0.16917431354522705,
+				0.5814999938011169,
+				0.1666041761636734
+			],
+			"min":[
+				-0.16917431354522705,
+				0,
+				-0.1666041761636734
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":398,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":398,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3510,
+			"count":1404,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":9702,
+			"byteLength":7424,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4278,
-			"byteOffset":9704
+			"byteLength":9341,
+			"byteOffset":7424
 		},
 		{
 			"buffer":0,
-			"byteLength":12322,
-			"byteOffset":13984
+			"byteLength":3491,
+			"byteOffset":16768
 		}
 	],
 	"samplers":[
@@ -325,7 +301,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":26308,
+			"byteLength":20260,
 			"uri":"decor_d_floor_vase.bin"
 		}
 	]

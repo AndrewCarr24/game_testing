@@ -54,8 +54,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -63,12 +62,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -103,12 +101,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":432,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":648,
 			"type":"SCALAR"
 		}
@@ -116,13 +108,13 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4051,
+			"byteLength":3180,
 			"byteOffset":0
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":4052,
+			"byteLength":3180,
 			"uri":"decor_c_yoga_blocks.bin"
 		}
 	]

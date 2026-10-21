@@ -17,63 +17,244 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				9
+				18
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorBVignetteCheese_BlackMetal_NoCollide"
+			"name":"DecorBVignetteCheese_Book01_Label_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorBVignetteCheese_Bronze_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorBVignetteCheese_Label_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorBVignetteCheese_Leather_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorBVignetteCheese_OakSmoked_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorBVignetteCheese_PaperWhite_NoCollide"
-		},
-		{
-			"mesh":6,
-			"name":"DecorBVignetteCheese_Steel_NoCollide"
-		},
-		{
-			"mesh":7,
-			"name":"DecorBVignetteCheese_Walnut_NoCollide"
-		},
-		{
-			"mesh":8,
-			"name":"DecorBVignetteCheese_Wine_NoCollide"
+			"name":"DecorBVignetteCheese_Book01_PaperWhite_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCheese_Book01",
+			"rotation":[
+				0,
+				0.06491871178150177,
+				0,
+				0.9978905916213989
+			],
+			"translation":[
+				0.37496864795684814,
+				0,
+				-0.020638348534703255
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorBVignetteCheese_Book02_Label_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorBVignetteCheese_Book02_Leather_NoCollide"
+		},
+		{
+			"children":[
 				3,
-				4,
-				5,
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCheese_Book02",
+			"rotation":[
+				0,
+				0.04519401863217354,
+				0,
+				0.998978316783905
+			],
+			"translation":[
+				0.3863812983036041,
+				0.02767200395464897,
+				-0.021730726584792137
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorBVignetteCheese_Candle01_BlackMetal_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorBVignetteCheese_Candle01_Bronze_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorBVignetteCheese_Candle01_Label_NoCollide"
+		},
+		{
+			"children":[
 				6,
 				7,
 				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCheese_Candle01",
+			"translation":[
+				0.4000000059604645,
+				0.061837296932935715,
+				-0.029999999329447746
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorBVignetteCheese_Grapes01_OakSmoked_NoCollide"
+		},
+		{
+			"mesh":8,
+			"name":"DecorBVignetteCheese_Grapes01_Wine_NoCollide"
+		},
+		{
+			"mesh":9,
+			"name":"DecorBVignetteCheese_Knife01_Steel_NoCollide"
+		},
+		{
+			"mesh":10,
+			"name":"DecorBVignetteCheese_Knife01_Walnut_NoCollide"
+		},
+		{
+			"children":[
+				12,
+				13
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"knife",
+					"name":"Knife",
+					"prompt":"Take knife",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.5,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteCheese_Knife01",
+			"rotation":[
+				0,
+				0.05233602598309517,
+				0,
+				0.9986295104026794
+			],
+			"translation":[
+				-0.14000000059604645,
+				0,
+				0.15000000596046448
+			]
+		},
+		{
+			"mesh":11,
+			"name":"DecorBVignetteCheese_Label_NoCollide"
+		},
+		{
+			"mesh":12,
+			"name":"DecorBVignetteCheese_PaperWhite_NoCollide"
+		},
+		{
+			"mesh":13,
+			"name":"DecorBVignetteCheese_Walnut_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				5,
+				9,
+				10,
+				11,
+				14,
+				15,
+				16,
+				17
 			],
 			"name":"DecorBVignetteCheese"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Label_Cream",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.6200000047683716,
+					0.5600000023841858,
+					0.41999998688697815,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.800000011920929
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Picture_Mat",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.8799999952316284,
+					0.8700000047683716,
+					0.8299999833106995,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Leather_Cognac",
+			"normalTexture":{
+				"index":0,
+				"scale":0.6000000238418579
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.23000000417232513,
+					0.07500000298023224,
+					0.02500000037252903,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Aluminium_Black",
@@ -103,38 +284,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Label_Cream",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.6200000047683716,
-					0.5600000023841858,
-					0.41999998688697815,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Leather_Cognac",
-			"normalTexture":{
-				"index":0,
-				"scale":0.6000000238418579
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.23000000417232513,
-					0.07500000298023224,
-					0.02500000037252903,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
-			}
-		},
-		{
-			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
 					"clearcoatFactor":0.15000000596046448,
@@ -152,16 +301,16 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Picture_Mat",
+			"name":"M_Wine_Red",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.8799999952316284,
-					0.8700000047683716,
-					0.8299999833106995,
+					0.11999999731779099,
+					0.006000000052154064,
+					0.012000000104308128,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.9200000166893005
+				"roughnessFactor":0.07999999821186066
 			}
 		},
 		{
@@ -193,32 +342,17 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Wine_Red",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.11999999731779099,
-					0.006000000052154064,
-					0.012000000104308128,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.07999999821186066
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorBVignetteCheese_BlackMetal_NoCollide",
+			"name":"DecorBVignetteCheese_Book01_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -226,26 +360,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Bronze_NoCollide",
+			"name":"DecorBVignetteCheese_Book01_PaperWhite_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -253,26 +385,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Label_NoCollide",
+			"name":"DecorBVignetteCheese_Book02_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -280,26 +410,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
+					"indices":11,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Leather_NoCollide",
+			"name":"DecorBVignetteCheese_Book02_Leather_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -307,26 +435,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":7,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_OakSmoked_NoCollide",
+			"name":"DecorBVignetteCheese_Candle01_BlackMetal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -334,26 +460,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
-					"material":4,
+					"indices":18,
+					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_PaperWhite_NoCollide",
+			"name":"DecorBVignetteCheese_Candle01_Bronze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -361,26 +485,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
-					"material":5,
+					"indices":22,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Steel_NoCollide",
+			"name":"DecorBVignetteCheese_Candle01_Label_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -388,8 +510,57 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":26,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCheese_Grapes01_OakSmoked_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":30,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCheese_Grapes01_Wine_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":31,
+						"NORMAL":32,
+						"TEXCOORD_0":33
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -400,54 +571,125 @@
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Walnut_NoCollide",
+			"name":"DecorBVignetteCheese_Knife01_Steel_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":35,
 						"NORMAL":36,
-						"TEXCOORD_0":37,
-						"COLOR_0":38
+						"TEXCOORD_0":37
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":7,
+							"bufferView":9,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":39,
+					"indices":38,
 					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteCheese_Wine_NoCollide",
+			"name":"DecorBVignetteCheese_Knife01_Walnut_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":40,
-						"NORMAL":41,
-						"TEXCOORD_0":42,
-						"COLOR_0":43
+						"POSITION":39,
+						"NORMAL":40,
+						"TEXCOORD_0":41
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":10,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":44,
+					"indices":42,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCheese_Label_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":43,
+						"NORMAL":44,
+						"TEXCOORD_0":45
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":46,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCheese_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":47,
+						"NORMAL":48,
+						"TEXCOORD_0":49
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":50,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteCheese_Walnut_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":51,
+						"NORMAL":52,
+						"TEXCOORD_0":53
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":54,
 					"material":8,
 					"mode":4
 				}
@@ -500,16 +742,131 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":18,
+			"count":24,
 			"max":[
-				0.40153858065605164,
-				0.32287439703941345,
-				-0.029399998486042023
+				0.13322612643241882,
+				0.024872004985809326,
+				0.1010054275393486
 			],
 			"min":[
-				0.3989614248275757,
-				0.30880019068717957,
-				-0.031199999153614044
+				-0.13322609663009644,
+				0.00279999990016222,
+				-0.10156544297933578
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.13602617383003235,
+				0.02767200395464897,
+				0.10436544567346573
+			],
+			"min":[
+				-0.13602612912654877,
+				0,
+				-0.10436543822288513
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.12158584594726562,
+				0.0313652940094471,
+				0.10130097717046738
+			],
+			"min":[
+				-0.12158581614494324,
+				0.0027999989688396454,
+				-0.0975009873509407
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":72,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.12438583374023438,
+				0.03416529297828674,
+				0.10030098259449005
+			],
+			"min":[
+				-0.12438583374023438,
+				0,
+				-0.10030099004507065
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":18,
+			"max":[
+				0.0015385746955871582,
+				0.26103711128234863,
+				0.0006000008434057236
+			],
+			"min":[
+				-0.001038581132888794,
+				0.24696289002895355,
+				-0.001199999824166298
 			],
 			"type":"VEC3"
 		},
@@ -522,12 +879,6 @@
 			"componentType":5126,
 			"count":18,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":18,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -538,14 +889,14 @@
 			"componentType":5126,
 			"count":202,
 			"max":[
-				0.43799999356269836,
-				0.16183729469776154,
-				0.0070472601801157
+				0.03799998760223389,
+				0.09999999403953552,
+				0.037047259509563446
 			],
 			"min":[
-				0.3620000183582306,
-				0.061837296932935715,
-				-0.06704726070165634
+				-0.03799998760223389,
+				0,
+				-0.037047259509563446
 			],
 			"type":"VEC3"
 		},
@@ -558,12 +909,6 @@
 			"componentType":5126,
 			"count":202,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":202,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -572,74 +917,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":234,
+			"count":114,
 			"max":[
-				0.5201584100723267,
-				0.31383728981018066,
-				0.12105946242809296
+				0.011000007390975952,
+				0.25200000405311584,
+				0.010999999940395355
 			],
 			"min":[
-				-0.2199999988079071,
-				0.00279999990016222,
-				-0.13860894739627838
+				-0.011000007390975952,
+				0.09199999272823334,
+				-0.011000001803040504
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":234,
+			"count":114,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":234,
+			"count":114,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":234,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":468,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.5193157196044922,
-				0.061837296932935715,
-				0.0893920287489891
-			],
-			"min":[
-				0.25344687700271606,
-				0.02767200395464897,
-				-0.13285347819328308
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":108,
+			"count":288,
 			"type":"SCALAR"
 		},
 		{
@@ -669,121 +972,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":26,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":42,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":186,
-			"max":[
-				0.5233702063560486,
-				0.0560000017285347,
-				0.10047142952680588
-			],
-			"min":[
-				-0.06400000303983688,
-				0,
-				-0.14174813032150269
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":186,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":186,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":186,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":492,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.01629822887480259,
-				0.005499999970197678,
-				0.1575440615415573
-			],
-			"min":[
-				-0.0992753654718399,
-				0.004000000189989805,
-				0.12552830576896667
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":240,
-			"max":[
-				0.18466050922870636,
-				0.02199999988079071,
-				0.16203279793262482
-			],
-			"min":[
-				-0.3252211809158325,
-				0,
-				-0.13898062705993652
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":240,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":240,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":240,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":492,
 			"type":"SCALAR"
 		},
 		{
@@ -813,61 +1002,230 @@
 		},
 		{
 			"componentType":5123,
-			"count":704,
-			"normalized":true,
-			"type":"VEC4"
+			"count":1728,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.15800002217292786,
+				0.005499999970197678,
+				0.011999979615211487
+			],
+			"min":[
+				0.04200001060962677,
+				0.004000000189989805,
+				-0.010000012814998627
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1728,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.04200001806020737,
+				0.012000000104308128,
+				0.008000001311302185
+			],
+			"min":[
+				-0.041999995708465576,
+				0,
+				-0.008000016212463379
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				-0.07324276864528656,
+				0.06700000166893005,
+				0.12105946242809296
+			],
+			"min":[
+				-0.2199999988079071,
+				0.02199999988079071,
+				-0.09540952742099762
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":72,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":114,
+			"max":[
+				0.04399999976158142,
+				0.0560000017285347,
+				0.0040000006556510925
+			],
+			"min":[
+				-0.06400000303983688,
+				0.02199999988079071,
+				-0.10400000214576721
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":114,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":114,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":384,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				0.18466050922870636,
+				0.02199999988079071,
+				0.13898062705993652
+			],
+			"min":[
+				-0.3252211809158325,
+				0,
+				-0.13898062705993652
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":360,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":330,
+			"byteLength":312,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2375,
-			"byteOffset":332
+			"byteLength":548,
+			"byteOffset":312
 		},
 		{
 			"buffer":0,
-			"byteLength":2734,
-			"byteOffset":2708
+			"byteLength":471,
+			"byteOffset":860
 		},
 		{
 			"buffer":0,
-			"byteLength":1122,
-			"byteOffset":5444
+			"byteLength":524,
+			"byteOffset":1332
 		},
 		{
 			"buffer":0,
-			"byteLength":634,
-			"byteOffset":6568
+			"byteLength":285,
+			"byteOffset":1856
 		},
 		{
 			"buffer":0,
-			"byteLength":2352,
-			"byteOffset":7204
+			"byteLength":1835,
+			"byteOffset":2144
 		},
 		{
 			"buffer":0,
-			"byteLength":541,
-			"byteOffset":9556
+			"byteLength":1095,
+			"byteOffset":3980
 		},
 		{
 			"buffer":0,
-			"byteLength":2745,
-			"byteOffset":10100
+			"byteLength":430,
+			"byteOffset":5076
 		},
 		{
 			"buffer":0,
-			"byteLength":7901,
-			"byteOffset":12848
+			"byteLength":5975,
+			"byteOffset":5508
+		},
+		{
+			"buffer":0,
+			"byteLength":333,
+			"byteOffset":11484
+		},
+		{
+			"buffer":0,
+			"byteLength":692,
+			"byteOffset":11820
+		},
+		{
+			"buffer":0,
+			"byteLength":545,
+			"byteOffset":12512
+		},
+		{
+			"buffer":0,
+			"byteLength":1171,
+			"byteOffset":13060
+		},
+		{
+			"buffer":0,
+			"byteLength":1245,
+			"byteOffset":14232
 		}
 	],
 	"samplers":[
@@ -878,7 +1236,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20752,
+			"byteLength":15480,
 			"uri":"decor_b_vignette_cheese.bin"
 		}
 	]

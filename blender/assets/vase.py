@@ -146,10 +146,12 @@ def build(**overrides):
     t = p["wall"]
     col = common.fresh_collection(n)
     root = common.empty(n, col)
-    root["interact"] = {"type": "pickup", "item": p["item"], "name": p["label"],
-                        "prompt": "Take vase", "range": 1.4, "throwable": True}
-
     smoke = materials.glass("M_Glass_Smoke", tint=p["tint"], alpha=0.35, roughness=0.04)
+    # the same pickup as every glass vase of the decor kits (lib/pickups.py)
+    from lib import pickups
+    importlib.reload(pickups)
+    root["interact"] = {**pickups.define("vase", smoke), "item": p["item"], "name": p["label"],
+                        "prompt": f"Take {p['label'].lower()}"}
     dense = materials.glass("M_Glass_Smoke_Dense", tint=tuple(c * 0.85 for c in p["tint"]),
                             alpha=0.55, roughness=0.04)
 

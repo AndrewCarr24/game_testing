@@ -26,7 +26,7 @@ const S = () => p.evaluate(() => ({
 const press = async (k, wait = 400) => { await p.keyboard.press(k); await p.waitForTimeout(wait); };
 
 let s = await S();
-check('vase on the table offers to be taken', s.hint.includes('Take vase'), `hint="${s.hint}"`);
+check('vase on the table offers to be taken', s.hint.includes('Take glass vase'), `hint="${s.hint}"`);
 await p.screenshot({ path: `${out}/vase_on_table.png` });
 await press('KeyE'); s = await S();
 check('E picks it up', s.has && s.toast.includes('Glass vase'), `toast="${s.toast}"`);

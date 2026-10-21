@@ -14,43 +14,247 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				18
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorATableCredenza_BookCream_NoCollide"
+			"name":"DecorATableCredenza_Book01_BookCream_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorATableCredenza_BookInk_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorATableCredenza_BookMoss_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorATableCredenza_BookRust_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorATableCredenza_charcoal_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorATableCredenza_glaze_NoCollide"
+			"name":"DecorATableCredenza_Book01_BookMoss_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCredenza_Book01",
+			"rotation":[
+				0,
+				0.01355010736733675,
+				0,
+				0.9999082088470459
+			],
+			"translation":[
+				-2.0268168449401855,
+				0,
+				0.0063247764483094215
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorATableCredenza_Book02_BookCream_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorATableCredenza_Book02_BookInk_NoCollide"
+		},
+		{
+			"children":[
 				3,
-				4,
-				5
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCredenza_Book02",
+			"rotation":[
+				0,
+				0.03265003114938736,
+				0,
+				0.9994668960571289
+			],
+			"translation":[
+				-2.026623010635376,
+				0.04496049880981445,
+				-0.002404253464192152
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorATableCredenza_Book03_BookCream_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorATableCredenza_Book03_BookRust_NoCollide"
+		},
+		{
+			"children":[
+				6,
+				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCredenza_Book03",
+			"rotation":[
+				0,
+				0.021263547241687775,
+				0,
+				0.9997739195823669
+			],
+			"translation":[
+				-2.022305965423584,
+				0.06725286692380905,
+				0.006116305012255907
+			]
+		},
+		{
+			"mesh":6,
+			"name":"DecorATableCredenza_Bowl01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				9
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorATableCredenza_Bowl01",
+			"translation":[
+				-1.6699999570846558,
+				0,
+				-0.019999999552965164
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorATableCredenza_Ornament01_Charcoal_NoCollide"
+		},
+		{
+			"mesh":8,
+			"name":"DecorATableCredenza_Ornament01_Glaze_NoCollide"
+		},
+		{
+			"children":[
+				11,
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCredenza_Ornament01",
+			"translation":[
+				1.7000000476837158,
+				0.006803251337260008,
+				0
+			]
+		},
+		{
+			"mesh":9,
+			"name":"DecorATableCredenza_Vase01_Glaze_NoCollide"
+		},
+		{
+			"children":[
+				14
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorATableCredenza_Vase01",
+			"translation":[
+				2,
+				0,
+				-0.019999999552965164
+			]
+		},
+		{
+			"mesh":10,
+			"name":"DecorATableCredenza_Vase02_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				16
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorATableCredenza_Vase02",
+			"translation":[
+				2.1700000762939453,
+				0,
+				0.03999999910593033
+			]
+		},
+		{
+			"children":[
+				2,
+				5,
+				8,
+				10,
+				13,
+				15,
+				17
 			],
 			"name":"DecorATableCredenza"
 		}
@@ -72,12 +276,12 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Book_Ink",
+			"name":"M_Book_Moss",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.02500000037252903,
 					0.03999999910593033,
 					0.07000000029802322,
+					0.05000000074505806,
 					1
 				],
 				"metallicFactor":0,
@@ -86,12 +290,12 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Book_Moss",
+			"name":"M_Book_Ink",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
+					0.02500000037252903,
 					0.03999999910593033,
 					0.07000000029802322,
-					0.05000000074505806,
 					1
 				],
 				"metallicFactor":0,
@@ -143,14 +347,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorATableCredenza_BookCream_NoCollide",
+			"name":"DecorATableCredenza_Book01_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -158,26 +361,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCredenza_BookInk_NoCollide",
+			"name":"DecorATableCredenza_Book01_BookMoss_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -185,26 +386,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCredenza_BookMoss_NoCollide",
+			"name":"DecorATableCredenza_Book02_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -212,26 +411,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":2,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCredenza_BookRust_NoCollide",
+			"name":"DecorATableCredenza_Book02_BookInk_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -239,26 +436,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":3,
+					"indices":7,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCredenza_charcoal_NoCollide",
+			"name":"DecorATableCredenza_Book03_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":18,
-						"NORMAL":19,
-						"TEXCOORD_0":20,
-						"COLOR_0":21
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -266,26 +461,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":22,
-					"material":4,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCredenza_glaze_NoCollide",
+			"name":"DecorATableCredenza_Book03_BookRust_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":23,
-						"NORMAL":24,
-						"TEXCOORD_0":25,
-						"COLOR_0":26
+						"POSITION":17,
+						"NORMAL":18,
+						"TEXCOORD_0":19
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -293,13 +486,137 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCredenza_Bowl01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":23,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCredenza_Ornament01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
 					"indices":27,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCredenza_Ornament01_Glaze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":28,
+						"NORMAL":29,
+						"TEXCOORD_0":30
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":31,
 					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCredenza_Vase01_Glaze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":32,
+						"NORMAL":33,
+						"TEXCOORD_0":34
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":35,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCredenza_Vase02_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":36,
+						"NORMAL":37,
+						"TEXCOORD_0":38
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":39,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -308,52 +625,46 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":36,
+			"count":12,
 			"max":[
-				-1.8594099283218384,
-				0.09666963666677475,
-				0.13285639882087708
+				0.16415786743164062,
+				0.04216049984097481,
+				0.12212816625833511
 			],
 			"min":[
-				-2.1942238807678223,
+				-0.16415786743164062,
 				0.0027999989688396454,
-				-0.12806642055511475
+				-0.12212818115949631
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":36,
+			"count":12,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":36,
+			"count":12,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":36,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":54,
+			"count":18,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":52,
 			"max":[
-				-1.8768402338027954,
-				0.06725286692380905,
-				0.12644731998443604
+				0.16715800762176514,
+				0.04496050253510475,
+				0.1251281499862671
 			],
 			"min":[
-				-2.176405906677246,
-				0.04496049880981445,
-				-0.13125582039356232
+				-0.16715788841247559,
+				0,
+				-0.1251281499862671
 			],
 			"type":"VEC3"
 		},
@@ -366,12 +677,6 @@
 			"componentType":5126,
 			"count":52,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":52,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -380,174 +685,315 @@
 		},
 		{
 			"componentType":5126,
-			"count":52,
+			"count":12,
 			"max":[
-				-1.8563296794891357,
-				0.04496050253510475,
-				0.13593657314777374
+				0.1392660140991211,
+				0.019492369145154953,
+				0.1168220117688179
 			],
 			"min":[
-				-2.1973040103912354,
+				-0.139265775680542,
+				0.002799995243549347,
+				-0.11682203412055969
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"max":[
+				0.1422661542892456,
+				0.0222923643887043,
+				0.11982201784849167
+			],
+			"min":[
+				-0.14226579666137695,
+				-3.725290298461914e-09,
+				-0.11982202529907227
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.13251936435699463,
+				0.0294167622923851,
+				0.10329584032297134
+			],
+			"min":[
+				-0.13251900672912598,
+				0.002799995243549347,
+				-0.10329583287239075
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"max":[
+				0.13551926612854004,
+				0.03221675753593445,
+				0.10629584640264511
+			],
+			"min":[
+				-0.13551926612854004,
+				-7.450580596923828e-09,
+				-0.10629583895206451
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":282,
+			"max":[
+				0.12000000476837158,
+				0.06222834438085556,
+				0.11999998986721039
+			],
+			"min":[
+				-0.12000000476837158,
 				0,
-				-0.12328701466321945
+				-0.12000000476837158
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":52,
+			"count":282,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":52,
+			"count":282,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":52,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":52,
-			"max":[
-				-1.8823899030685425,
-				0.0994696319103241,
-				0.11807795614004135
-			],
-			"min":[
-				-2.162222146987915,
-				0.06725286692380905,
-				-0.10584533959627151
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":52,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":52,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":52,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":652,
-			"max":[
-				2.2200000286102295,
-				0.16140000522136688,
-				0.09999999403953552
-			],
-			"min":[
-				-1.7899999618530273,
-				0,
-				-0.14000000059604645
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":652,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":652,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":652,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":2472,
+			"count":960,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":352,
+			"count":124,
 			"max":[
-				2.0850000381469727,
-				0.24237999320030212,
-				0.0628688782453537
+				0.05126047134399414,
+				0.10877777636051178,
+				0.06123819574713707
 			],
 			"min":[
-				1.6545212268829346,
+				-0.05437469482421875,
 				0,
-				-0.10286886990070343
+				-0.06123819574713707
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":352,
+			"count":124,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":352,
+			"count":124,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":352,
-			"normalized":true,
-			"type":"VEC4"
+			"count":720,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":62,
+			"max":[
+				0.04253745079040527,
+				0.08856900781393051,
+				0.04222922399640083
+			],
+			"min":[
+				-0.04547882080078125,
+				0.046073853969573975,
+				-0.04222922399640083
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":62,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":62,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1284,
+			"count":360,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":290,
+			"max":[
+				0.08500003814697266,
+				0.24237999320030212,
+				0.08286887407302856
+			],
+			"min":[
+				-0.08500003814697266,
+				0,
+				-0.08286887407302856
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":290,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":290,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":924,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"max":[
+				0.04999995231628418,
+				0.16140000522136688,
+				0.05000000447034836
+			],
+			"min":[
+				-0.04999995231628418,
+				0,
+				-0.05000000074505806
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":246,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":792,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":608,
+			"byteLength":244,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":846,
-			"byteOffset":608
+			"byteLength":500,
+			"byteOffset":244
 		},
 		{
 			"buffer":0,
-			"byteLength":751,
-			"byteOffset":1456
+			"byteLength":239,
+			"byteOffset":744
 		},
 		{
 			"buffer":0,
-			"byteLength":861,
-			"byteOffset":2208
+			"byteLength":463,
+			"byteOffset":984
 		},
 		{
 			"buffer":0,
-			"byteLength":6004,
-			"byteOffset":3072
+			"byteLength":237,
+			"byteOffset":1448
 		},
 		{
 			"buffer":0,
-			"byteLength":4210,
-			"byteOffset":9076
+			"byteLength":489,
+			"byteOffset":1688
+		},
+		{
+			"buffer":0,
+			"byteLength":2658,
+			"byteOffset":2180
+		},
+		{
+			"buffer":0,
+			"byteLength":1408,
+			"byteOffset":4840
+		},
+		{
+			"buffer":0,
+			"byteLength":837,
+			"byteOffset":6248
+		},
+		{
+			"buffer":0,
+			"byteLength":2743,
+			"byteOffset":7088
+		},
+		{
+			"buffer":0,
+			"byteLength":2339,
+			"byteOffset":9832
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":13288,
+			"byteLength":12172,
 			"uri":"decor_a_table_credenza.bin"
 		}
 	]

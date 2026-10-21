@@ -274,9 +274,12 @@ def bowl_profile(r, h, wall=0.004, foot=0.35):
 # ----------------------------------------------------------------- props
 
 def fruit_bowl(b, loc, mat_bowl, mat_fruit, mat_fruit2, r=0.17):
-    """Ceramic bowl heaped with lemons and limes (cheap spheres)."""
-    b.lathe("Bowl", bowl_profile(r, 0.075), mat_bowl, loc=loc, segs=24, sharp=60, uv_tile=0.3)
-    lemons, limes = [], []
+    """Ceramic bowl heaped with lemons and limes (cheap spheres). The bowl and each fruit are
+    throwable pickups (lib/pickups.py): the fruit comes off first, then the bowl."""
+    from lib import pickups
+    importlib.reload(pickups)
+    bowl = b.lathe("Bowl", bowl_profile(r, 0.075), mat_bowl, loc=loc, segs=24, sharp=60, uv_tile=0.3)
+    pickups.adopt(f"{b.n}_FruitBowl", b.col, b.root, "bowl", [bowl], loc)
     for i in range(9):
         a = i * 2.4
         rr = 0.085 if i < 6 else 0.03 * (i - 6)
@@ -285,12 +288,13 @@ def fruit_bowl(b, loc, mat_bowl, mat_fruit, mat_fruit2, r=0.17):
         bmesh.ops.create_uvsphere(bm, u_segments=10, v_segments=6, radius=0.036)
         for v in bm.verts:
             v.co.x *= 1.25
-        bm.transform(Matrix.Translation((loc[0] + rr * math.cos(a), loc[1] + rr * math.sin(a), z)) @
-                     Matrix.Rotation(a, 4, "Z"))
-        (lemons if i % 3 else limes).append(bm)
-    for tag, bms, mat in (("Lemons", lemons, mat_fruit), ("Limes", limes, mat_fruit2)):
-        ob = common.mesh_object(f"{b.n}_{tag}", merged(bms), b.col, mat, b.root)
+        bm.transform(Matrix.Translation((0, 0, 0.036)))
+        lemon = i % 3 != 0
+        tag = "Lemon" if lemon else "Lime"
+        ob = common.mesh_object(f"{b.n}_{tag}{i}", bm, b.col, mat_fruit if lemon else mat_fruit2, b.root)
         planar_uv(ob, 0.3)
+        base = (loc[0] + rr * math.cos(a), loc[1] + rr * math.sin(a), z - 0.036)
+        pickups.adopt(f"{b.n}_{tag}{i}_Pickup", b.col, b.root, tag.lower(), [ob], base, yaw=a)
 
 
 def stack_plates(b, name, loc, mat, r=0.13, count=6, step=0.016, segs=12):

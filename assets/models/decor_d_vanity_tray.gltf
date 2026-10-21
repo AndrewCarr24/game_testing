@@ -17,26 +17,108 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				8
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorD_VanityTray_BathStone_NoCollide"
+			"name":"DecorD_VanityTray_Soap01_Paper_NoCollide"
+		},
+		{
+			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"soap",
+					"name":"Soap",
+					"prompt":"Take soap",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.1,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_VanityTray_Soap01",
+			"rotation":[
+				0,
+				0.10452847927808762,
+				0,
+				0.9945219159126282
+			],
+			"translation":[
+				0.08500000089406967,
+				0.006000000052154064,
+				0.012000000104308128
+			]
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_VanityTray_Brass_NoCollide"
+			"name":"DecorD_VanityTray_SoapPump01_Brass_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorD_VanityTray_Charcoal_NoCollide"
+			"name":"DecorD_VanityTray_SoapPump01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				3
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"soap_pump",
+					"name":"Soap dispenser",
+					"prompt":"Take soap dispenser",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_VanityTray_SoapPump01",
+			"rotation":[
+				0,
+				-0.9848077893257141,
+				0,
+				0.17364808917045593
+			],
+			"translation":[
+				-0.07500000298023224,
+				0.006000000052154064,
+				-0.012000000104308128
+			]
 		},
 		{
 			"mesh":3,
-			"name":"DecorD_VanityTray_Paper_NoCollide"
+			"name":"DecorD_VanityTray_Vase01_BathStone_NoCollide"
+		},
+		{
+			"children":[
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"stone_vase",
+					"name":"Stone vase",
+					"prompt":"Take stone vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":1.0,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_VanityTray_Vase01",
+			"translation":[
+				0.009999999776482582,
+				0.006000000052154064,
+				-0.02199999988079071
+			]
 		},
 		{
 			"mesh":4,
@@ -44,11 +126,10 @@
 		},
 		{
 			"children":[
-				0,
 				1,
-				2,
-				3,
-				4
+				4,
+				6,
+				7
 			],
 			"name":"DecorD_VanityTray"
 		}
@@ -56,16 +137,16 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Bath_Stone",
+			"name":"M_DecorD_Paper",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.7400000095367432,
-					0.7149999737739563,
-					0.6700000166893005,
+					0.699999988079071,
+					0.6800000071525574,
+					0.6200000047683716,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.5
+				"roughnessFactor":0.8500000238418579
 			}
 		},
 		{
@@ -103,16 +184,16 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_DecorD_Paper",
+			"name":"M_Bath_Stone",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.699999988079071,
-					0.6800000071525574,
-					0.6200000047683716,
+					0.7400000095367432,
+					0.7149999737739563,
+					0.6700000166893005,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.8500000238418579
+				"roughnessFactor":0.5
 			}
 		},
 		{
@@ -135,14 +216,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorD_VanityTray_BathStone_NoCollide",
+			"name":"DecorD_VanityTray_Soap01_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -150,26 +230,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_VanityTray_Brass_NoCollide",
+			"name":"DecorD_VanityTray_SoapPump01_Brass_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -177,26 +255,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_VanityTray_Charcoal_NoCollide",
+			"name":"DecorD_VanityTray_SoapPump01_Charcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -204,26 +280,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_VanityTray_Paper_NoCollide",
+			"name":"DecorD_VanityTray_Vase01_BathStone_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -231,12 +305,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":15,
 					"material":3,
 					"mode":4
 				}
@@ -247,10 +320,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -258,12 +330,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":19,
 					"material":4,
 					"mode":4
 				}
@@ -290,52 +361,46 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":388,
+			"count":120,
 			"max":[
-				0.040755823254585266,
-				0.1166749969124794,
-				0.007984708994626999
+				0.03999999910593033,
+				0.02200000174343586,
+				0.02499999850988388
 			],
 			"min":[
-				-0.020755821838974953,
-				0.006000000052154064,
-				-0.05198470875620842
+				-0.04000000283122063,
+				9.313225746154785e-10,
+				-0.02499999850988388
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":388,
+			"count":120,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":388,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":388,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1176,
+			"count":372,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":226,
 			"max":[
-				-0.06346486508846283,
-				0.19899998605251312,
-				-7.309718057513237e-06
+				0.012000001966953278,
+				0.19299998879432678,
+				0.04524759203195572
 			],
 			"min":[
-				-0.09268002212047577,
-				0.15600000321865082,
-				-0.054997652769088745
+				-0.012000001966953278,
+				0.15000000596046448,
+				-0.01141267642378807
 			],
 			"type":"VEC3"
 		},
@@ -348,12 +413,6 @@
 			"componentType":5126,
 			"count":226,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":226,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -364,14 +423,14 @@
 			"componentType":5126,
 			"count":192,
 			"max":[
-				-0.04402950778603554,
-				0.15600000321865082,
-				0.018970493227243423
+				0.03099999576807022,
+				0.15000000596046448,
+				0.031000003218650818
 			],
 			"min":[
-				-0.10597049444913864,
-				0.006000000052154064,
-				-0.04297049343585968
+				-0.031000003218650818,
+				0,
+				-0.03099999763071537
 			],
 			"type":"VEC3"
 		},
@@ -384,12 +443,6 @@
 			"componentType":5126,
 			"count":192,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":192,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -398,38 +451,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":388,
 			"max":[
-				0.12809714674949646,
-				0.02800000086426735,
-				0.043106865137815475
+				0.030755823478102684,
+				0.11067499965429306,
+				0.02998470887541771
 			],
 			"min":[
-				0.041902847588062286,
-				0.006000000052154064,
-				-0.01910686492919922
+				-0.030755821615457535,
+				0,
+				-0.02998470887541771
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":388,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":120,
+			"count":388,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":120,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":372,
+			"count":1176,
 			"type":"SCALAR"
 		},
 		{
@@ -459,12 +506,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":384,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":660,
 			"type":"SCALAR"
 		}
@@ -472,28 +513,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4517,
+			"byteLength":1317,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2942,
-			"byteOffset":4520
+			"byteLength":1826,
+			"byteOffset":1320
 		},
 		{
 			"buffer":0,
-			"byteLength":2312,
-			"byteOffset":7464
+			"byteLength":1742,
+			"byteOffset":3148
 		},
 		{
 			"buffer":0,
-			"byteLength":1934,
-			"byteOffset":9776
+			"byteLength":3455,
+			"byteOffset":4892
 		},
 		{
 			"buffer":0,
-			"byteLength":3337,
-			"byteOffset":11712
+			"byteLength":2484,
+			"byteOffset":8348
 		}
 	],
 	"samplers":[
@@ -504,7 +545,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":15052,
+			"byteLength":10832,
 			"uri":"decor_d_vanity_tray.bin"
 		}
 	]

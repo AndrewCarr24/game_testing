@@ -17,72 +17,223 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				17
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorATableOttomanDen_black_NoCollide"
+			"name":"DecorATableOttomanDen_Book01_BookCharcoal_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorATableOttomanDen_BookCharcoal_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorATableOttomanDen_BookCream_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorATableOttomanDen_BookMoss_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorATableOttomanDen_candle_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorATableOttomanDen_charcoal_NoCollide"
-		},
-		{
-			"mesh":6,
-			"name":"DecorATableOttomanDen_oak_NoCollide"
-		},
-		{
-			"mesh":7,
-			"name":"DecorATableOttomanDen_walnut_NoCollide"
+			"name":"DecorATableOttomanDen_Book01_BookCream_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttomanDen_Book01",
+			"rotation":[
+				0,
+				-0.12259582430124283,
+				0,
+				0.9924566745758057
+			],
+			"translation":[
+				-0.32017090916633606,
+				0,
+				0.24029092490673065
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorATableOttomanDen_Book02_BookCream_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorATableOttomanDen_Book02_BookMoss_NoCollide"
+		},
+		{
+			"children":[
 				3,
-				4,
-				5,
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttomanDen_Book02",
+			"rotation":[
+				0,
+				-0.12033744156360626,
+				0,
+				0.9927330613136292
+			],
+			"translation":[
+				-0.317186176776886,
+				0.026552610099315643,
+				0.24607175588607788
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorATableOttomanDen_Book03_BookCharcoal_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorATableOttomanDen_Book03_BookCream_NoCollide"
+		},
+		{
+			"children":[
 				6,
 				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttomanDen_Book03",
+			"rotation":[
+				0,
+				-0.1003260612487793,
+				0,
+				0.9949547052383423
+			],
+			"translation":[
+				-0.312926709651947,
+				0.051266610622406006,
+				0.23754049837589264
+			]
+		},
+		{
+			"mesh":6,
+			"name":"DecorATableOttomanDen_Box01_Black_NoCollide"
+		},
+		{
+			"mesh":7,
+			"name":"DecorATableOttomanDen_Box01_Oak_NoCollide"
+		},
+		{
+			"children":[
+				9,
+				10
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"box",
+					"name":"Box",
+					"prompt":"Take box",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.5,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttomanDen_Box01",
+			"rotation":[
+				0,
+				0.7313537001609802,
+				0,
+				0.6819983720779419
+			],
+			"translation":[
+				0.30000001192092896,
+				0.006000000052154064,
+				0.019999999552965164
+			]
+		},
+		{
+			"mesh":8,
+			"name":"DecorATableOttomanDen_Candle01_Black_NoCollide"
+		},
+		{
+			"mesh":9,
+			"name":"DecorATableOttomanDen_Candle01_Candle_NoCollide"
+		},
+		{
+			"mesh":10,
+			"name":"DecorATableOttomanDen_Candle01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				12,
+				13,
+				14
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttomanDen_Candle01",
+			"rotation":[
+				0,
+				0.7071066498756409,
+				0,
+				0.70710688829422
+			],
+			"translation":[
+				0.2900000214576721,
+				0.006000000052154064,
+				-0.1599999964237213
+			]
+		},
+		{
+			"mesh":11,
+			"name":"DecorATableOttomanDen_walnut_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				5,
+				8,
+				11,
+				15,
+				16
 			],
 			"name":"DecorATableOttomanDen"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Book_Charcoal",
@@ -127,6 +278,37 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Aluminium_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.019999999552965164,
+					0.019999999552965164,
+					0.02199999988079071,
+					1
+				],
+				"metallicFactor":0.699999988079071,
+				"roughnessFactor":0.3499999940395355
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
+				}
+			},
+			"name":"M_OakSmoked",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Candle_Cream",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -157,23 +339,6 @@
 			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448,
-					"clearcoatRoughnessFactor":0.33000001311302185
-				}
-			},
-			"name":"M_OakSmoked",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.550000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
 					"clearcoatFactor":0.25,
 					"clearcoatRoughnessFactor":0.30000001192092896
 				}
@@ -190,14 +355,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorATableOttomanDen_black_NoCollide",
+			"name":"DecorATableOttomanDen_Book01_BookCharcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -205,26 +369,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_BookCharcoal_NoCollide",
+			"name":"DecorATableOttomanDen_Book01_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -232,26 +394,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_BookCream_NoCollide",
+			"name":"DecorATableOttomanDen_Book02_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -259,26 +419,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
+					"indices":7,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_BookMoss_NoCollide",
+			"name":"DecorATableOttomanDen_Book02_BookMoss_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -286,26 +444,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":3,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_candle_NoCollide",
+			"name":"DecorATableOttomanDen_Book03_BookCharcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -313,26 +469,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
-					"material":4,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_charcoal_NoCollide",
+			"name":"DecorATableOttomanDen_Book03_BookCream_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"POSITION":17,
+						"NORMAL":18,
+						"TEXCOORD_0":19
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -340,26 +494,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
-					"material":5,
+					"indices":7,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttomanDen_oak_NoCollide",
+			"name":"DecorATableOttomanDen_Box01_Black_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -367,12 +519,111 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":34,
+					"indices":23,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttomanDen_Box01_Oak_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":24,
+						"NORMAL":25,
+						"TEXCOORD_0":26
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":27,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttomanDen_Candle01_Black_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":28,
+						"NORMAL":29,
+						"TEXCOORD_0":30
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":31,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttomanDen_Candle01_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":32,
+						"NORMAL":33,
+						"TEXCOORD_0":34
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":35,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttomanDen_Candle01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":36,
+						"NORMAL":37,
+						"TEXCOORD_0":38
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":10,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":39,
 					"material":6,
 					"mode":4
 				}
@@ -383,23 +634,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":35,
-						"NORMAL":36,
-						"TEXCOORD_0":37,
-						"COLOR_0":38
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":7,
+							"bufferView":11,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":39,
+					"indices":43,
 					"material":7,
 					"mode":4
 				}
@@ -439,124 +688,16 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":40,
-			"max":[
-				0.3572445809841156,
-				0.07699999958276749,
-				0.10043976455926895
-			],
-			"min":[
-				0.24275542795658112,
-				0.04820000007748604,
-				-0.16099999845027924
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":40,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":40,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":40,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":60,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":104,
-			"max":[
-				-0.14113913476467133,
-				0.08494466543197632,
-				0.3913028836250305
-			],
-			"min":[
-				-0.4992026686668396,
-				0,
-				0.08927897363901138
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":104,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":104,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":104,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":156,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":36,
-			"max":[
-				-0.1447789967060089,
-				0.08214466273784637,
-				0.38766300678253174
-			],
-			"min":[
-				-0.4955628216266632,
-				0.00279999990016222,
-				0.09291883558034897
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":36,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":36,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":54,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
 			"count":52,
 			"max":[
-				-0.16758599877357483,
-				0.051266610622406006,
-				0.3792799711227417
-			],
-			"min":[
-				-0.46678635478019714,
+				0.1552942395210266,
 				0.026552610099315643,
-				0.11286354809999466
+				0.116731196641922
+			],
+			"min":[
+				-0.1552942395210266,
+				0,
+				-0.11673122644424438
 			],
 			"type":"VEC3"
 		},
@@ -569,12 +710,6 @@
 			"componentType":5126,
 			"count":52,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":52,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -583,16 +718,236 @@
 		},
 		{
 			"componentType":5126,
-			"count":53,
+			"count":12,
 			"max":[
-				0.32200002670288086,
-				0.07000000029802322,
-				-0.12799999117851257
+				0.15229421854019165,
+				0.023752611130475998,
+				0.11373117566108704
 			],
 			"min":[
-				0.2580000162124634,
-				0.06399999558925629,
-				-0.19200000166893005
+				-0.15229421854019165,
+				0.00279999990016222,
+				-0.11373120546340942
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":18,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.12506148219108582,
+				0.02191399596631527,
+				0.10267147421836853
+			],
+			"min":[
+				-0.1250615119934082,
+				0.002799997106194496,
+				-0.10267148911952972
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"max":[
+				0.1280614733695984,
+				0.024713998660445213,
+				0.10567149519920349
+			],
+			"min":[
+				-0.1280614733695984,
+				-1.862645149230957e-09,
+				-0.10567149519920349
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"max":[
+				0.11949199438095093,
+				0.03367805480957031,
+				0.0935085117816925
+			],
+			"min":[
+				-0.11949196457862854,
+				0,
+				-0.0935085117816925
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.11649200320243835,
+				0.03087805211544037,
+				0.09050849080085754
+			],
+			"min":[
+				-0.11649197340011597,
+				0.0027999989688396454,
+				-0.09050852060317993
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":16,
+			"max":[
+				0.07699999213218689,
+				0.04619999974966049,
+				0.0520000159740448
+			],
+			"min":[
+				-0.07699999213218689,
+				0.0421999990940094,
+				-0.052000001072883606
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":16,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":16,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":188,
+			"max":[
+				0.07999999076128006,
+				0.05420000106096268,
+				0.05500000715255737
+			],
+			"min":[
+				-0.07999999076128006,
+				9.313225746154785e-10,
+				-0.05499999225139618
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":188,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":188,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":258,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0010000020265579224,
+				0.07100000232458115,
+				0.0009999871253967285
+			],
+			"min":[
+				-0.0010000020265579224,
+				0.06300000101327896,
+				-0.0009999871253967285
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"max":[
+				0.03200000524520874,
+				0.06400000303983688,
+				0.03200000524520874
+			],
+			"min":[
+				-0.03200000524520874,
+				0.05799999460577965,
+				-0.03200000524520874
 			],
 			"type":"VEC3"
 		},
@@ -605,12 +960,6 @@
 			"componentType":5126,
 			"count":53,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":53,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -621,14 +970,14 @@
 			"componentType":5126,
 			"count":204,
 			"max":[
-				0.32600003480911255,
-				0.08739999681711197,
-				-0.12399999797344208
+				0.035999998450279236,
+				0.08139999955892563,
+				0.03600001335144043
 			],
 			"min":[
-				0.2540000081062317,
-				0.006000000052154064,
-				-0.19599999487400055
+				-0.03599999099969864,
+				0,
+				-0.03600001335144043
 			],
 			"type":"VEC3"
 		},
@@ -641,52 +990,10 @@
 			"componentType":5126,
 			"count":204,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":204,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":672,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":188,
-			"max":[
-				0.3603070378303528,
-				0.060200002044439316,
-				0.10350221395492554
-			],
-			"min":[
-				0.23969298601150513,
-				0.006000000052154064,
-				-0.06350221484899521
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":188,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":188,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":188,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":258,
 			"type":"SCALAR"
 		},
 		{
@@ -716,12 +1023,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":176,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":330,
 			"type":"SCALAR"
 		}
@@ -729,43 +1030,63 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":590,
+			"byteLength":485,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1293,
-			"byteOffset":592
+			"byteLength":244,
+			"byteOffset":488
 		},
 		{
 			"buffer":0,
-			"byteLength":614,
-			"byteOffset":1888
+			"byteLength":237,
+			"byteOffset":732
 		},
 		{
 			"buffer":0,
-			"byteLength":889,
-			"byteOffset":2504
+			"byteLength":464,
+			"byteOffset":972
 		},
 		{
 			"buffer":0,
-			"byteLength":798,
-			"byteOffset":3396
+			"byteLength":485,
+			"byteOffset":1436
 		},
 		{
 			"buffer":0,
-			"byteLength":2490,
-			"byteOffset":4196
+			"byteLength":237,
+			"byteOffset":1924
 		},
 		{
 			"buffer":0,
-			"byteLength":2597,
-			"byteOffset":6688
+			"byteLength":267,
+			"byteOffset":2164
 		},
 		{
 			"buffer":0,
-			"byteLength":1654,
-			"byteOffset":9288
+			"byteLength":1229,
+			"byteOffset":2432
+		},
+		{
+			"buffer":0,
+			"byteLength":303,
+			"byteOffset":3664
+		},
+		{
+			"buffer":0,
+			"byteLength":619,
+			"byteOffset":3968
+		},
+		{
+			"buffer":0,
+			"byteLength":1860,
+			"byteOffset":4588
+		},
+		{
+			"buffer":0,
+			"byteLength":1235,
+			"byteOffset":6448
 		}
 	],
 	"samplers":[
@@ -776,7 +1097,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10944,
+			"byteLength":7684,
 			"uri":"decor_a_table_ottoman_den.bin"
 		}
 	]

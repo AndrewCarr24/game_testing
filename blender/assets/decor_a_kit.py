@@ -26,11 +26,12 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
-from lib import common, materials, textures  # noqa: E402
+from lib import common, materials, pickups, textures  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
 importlib.reload(textures)
+importlib.reload(pickups)
 
 
 # ------------------------------------------------------------------ materials
@@ -174,6 +175,8 @@ class Builder:
         src.free()
 
     def finish(self):
+        # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
+        pickups.emit(self, self.n, self.col, self.root, list(self.meshes.values()), lambda b: b, mat)
         for key, b in self.meshes.items():
             suffix = key.replace("M_", "").replace("_", "")
             name = f"{self.n}_{suffix}" + ("" if key in self.collide else "_NoCollide")
@@ -849,3 +852,13 @@ def keys(B, M, key="steel"):
         Mk = M @ at(0, 0, 0.0015, a)
         B.add(key, box((0.045, 0.011, 0.002), (0.038, 0, 0.001), ("-z",)), Mk)
         B.add(key, lathe([(0.0, 0.0), (0.011, 0.0), (0.011, 0.003), (0.0, 0.003)], 8, sharp=50), Mk @ at(0.012, 0, 0))
+
+
+# ------------------------------------------------------------------ pickups
+# the loose things a player expects to lift (lib/pickups.py has the rule): each call of these
+# becomes its own pickup; books standing in a row stay part of the furniture
+pickups.wrap(sys.modules[__name__], "meshes", items=dict(
+    book="book", magazine="magazine", open_book="book", vase="vase", bowl="bowl", plate="plate",
+    walnut_box="box", candle="candle", cup="cup", tumbler="glass", carafe="carafe", decanter="decanter",
+    glasses="spectacles", sphere_on_block="ornament", cairn="ornament", ring_sculpture="ornament",
+), fixed=("upright_row",))

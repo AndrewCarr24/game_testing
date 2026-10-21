@@ -73,8 +73,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -82,12 +81,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -98,10 +96,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -109,12 +106,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -149,12 +145,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":348,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1404,
 			"type":"SCALAR"
 		},
@@ -185,12 +175,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":1899,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":4875,
 			"type":"SCALAR"
 		}
@@ -198,18 +182,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3986,
+			"byteLength":3092,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":16820,
-			"byteOffset":3988
+			"byteLength":14358,
+			"byteOffset":3092
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":20808,
+			"byteLength":17452,
 			"uri":"decor_a_floor.bin"
 		}
 	]

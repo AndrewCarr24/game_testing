@@ -25,19 +25,19 @@
 		},
 		{
 			"mesh":1,
-			"name":"DecorBTableBuds_CeramicCharcoal_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorBTableBuds_CeramicOat_NoCollide"
-		},
-		{
-			"mesh":3,
 			"name":"DecorBTableBuds_Leaf_NoCollide"
 		},
 		{
+			"mesh":2,
+			"name":"DecorBTableBuds_Vase01_CeramicOat_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorBTableBuds_Vase02_PaperWhite_NoCollide"
+		},
+		{
 			"mesh":4,
-			"name":"DecorBTableBuds_PaperWhite_NoCollide"
+			"name":"DecorBTableBuds_Vase03_CeramicCharcoal_NoCollide"
 		},
 		{
 			"children":[
@@ -67,16 +67,16 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Ceramic_Charcoal",
+			"name":"M_Mudroom_Leaf",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.05000000074505806,
-					0.05000000074505806,
-					0.054999999701976776,
+					0.03999999910593033,
+					0.11999999731779099,
+					0.03500000014901161,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
+				"roughnessFactor":0.6000000238418579
 			}
 		},
 		{
@@ -95,20 +95,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Mudroom_Leaf",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.03999999910593033,
-					0.11999999731779099,
-					0.03500000014901161,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.6000000238418579
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Picture_Mat",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -120,6 +106,20 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.9200000166893005
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceramic_Charcoal",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.05000000074505806,
+					0.05000000074505806,
+					0.054999999701976776,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.30000001192092896
+			}
 		}
 	],
 	"meshes":[
@@ -130,8 +130,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -139,67 +138,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBTableBuds_CeramicCharcoal_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":1,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":9,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBTableBuds_CeramicOat_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":14,
-					"material":2,
 					"mode":4
 				}
 			]
@@ -209,10 +153,59 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":1,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBTableBuds_Vase01_CeramicOat_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBTableBuds_Vase02_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -220,26 +213,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":15,
 					"material":3,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBTableBuds_PaperWhite_NoCollide",
+			"name":"DecorBTableBuds_Vase03_CeramicCharcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -247,12 +238,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":19,
 					"material":4,
 					"mode":4
 				}
@@ -287,85 +277,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":164,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":384,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":245,
-			"max":[
-				0.17000000178813934,
-				0.121799997985363,
-				0.020000001415610313
-			],
-			"min":[
-				0.06999999284744263,
-				0,
-				-0.07999999821186066
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":245,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":245,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":245,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":720,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":237,
-			"max":[
-				-0.06800000369548798,
-				0.16179999709129333,
-				0.02199999988079071
-			],
-			"min":[
-				-0.15199999511241913,
-				0,
-				-0.06199999898672104
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":237,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":237,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":237,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":720,
 			"type":"SCALAR"
 		},
 		{
@@ -395,13 +307,37 @@
 		},
 		{
 			"componentType":5123,
-			"count":189,
-			"normalized":true,
-			"type":"VEC4"
+			"count":336,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":237,
+			"max":[
+				-0.06800000369548798,
+				0.16179999709129333,
+				0.02199999988079071
+			],
+			"min":[
+				-0.15199999511241913,
+				0,
+				-0.06199999898672104
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":237,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":237,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":336,
+			"count":720,
 			"type":"SCALAR"
 		},
 		{
@@ -431,46 +367,70 @@
 		},
 		{
 			"componentType":5123,
-			"count":396,
-			"normalized":true,
-			"type":"VEC4"
+			"count":1296,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":245,
+			"max":[
+				0.17000000178813934,
+				0.121799997985363,
+				0.020000001415610313
+			],
+			"min":[
+				0.06999999284744263,
+				0,
+				-0.07999999821186066
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":245,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":245,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1296,
+			"count":720,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2226,
+			"byteLength":1423,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3261,
-			"byteOffset":2228
+			"byteLength":1923,
+			"byteOffset":1424
 		},
 		{
 			"buffer":0,
-			"byteLength":2967,
-			"byteOffset":5492
+			"byteLength":2278,
+			"byteOffset":3348
 		},
 		{
 			"buffer":0,
-			"byteLength":2777,
-			"byteOffset":8460
+			"byteLength":3514,
+			"byteOffset":5628
 		},
 		{
 			"buffer":0,
-			"byteLength":4550,
-			"byteOffset":11240
+			"byteLength":2439,
+			"byteOffset":9144
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":15792,
+			"byteLength":11584,
 			"uri":"decor_b_table_buds.bin"
 		}
 	]

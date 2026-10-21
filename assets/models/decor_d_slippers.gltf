@@ -109,8 +109,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -118,12 +117,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -134,10 +132,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -145,12 +142,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -161,10 +157,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -172,12 +167,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -237,12 +231,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":480,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":840,
 			"type":"SCALAR"
 		},
@@ -270,12 +258,6 @@
 			"componentType":5126,
 			"count":288,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":288,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -309,12 +291,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":288,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":840,
 			"type":"SCALAR"
 		}
@@ -322,18 +298,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":4451,
+			"byteLength":3619,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3103,
-			"byteOffset":4452
+			"byteLength":2006,
+			"byteOffset":3620
 		},
 		{
 			"buffer":0,
-			"byteLength":3914,
-			"byteOffset":7556
+			"byteLength":2859,
+			"byteOffset":5628
 		}
 	],
 	"samplers":[
@@ -344,7 +320,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":11472,
+			"byteLength":8488,
 			"uri":"decor_d_slippers.bin"
 		}
 	]

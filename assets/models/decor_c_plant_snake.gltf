@@ -72,8 +72,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -81,12 +80,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -97,10 +95,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -108,12 +105,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -165,12 +161,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":207,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":918,
 			"type":"SCALAR"
 		},
@@ -201,12 +191,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":247,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":858,
 			"type":"SCALAR"
 		}
@@ -214,13 +198,13 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2404,
+			"byteLength":1885,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3452,
-			"byteOffset":2404
+			"byteLength":2450,
+			"byteOffset":1888
 		}
 	],
 	"samplers":[
@@ -231,7 +215,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":5856,
+			"byteLength":4340,
 			"uri":"decor_c_plant_snake.bin"
 		}
 	]

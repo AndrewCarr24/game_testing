@@ -17,98 +17,213 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				15
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorD_Vignette_Dresser_Glass_NoCollide"
+			"name":"DecorD_Vignette_Dresser_Book01_Paper_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_Vignette_Dresser_Linen_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorD_Vignette_Dresser_OakLight_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorD_Vignette_Dresser_Paper_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorD_Vignette_Dresser_Sage_NoCollide"
-		},
-		{
-			"mesh":5,
-			"name":"DecorD_Vignette_Dresser_Terracotta_NoCollide"
+			"name":"DecorD_Vignette_Dresser_Book01_Sage_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Book01",
+			"rotation":[
+				0,
+				0.6590225100517273,
+				0,
+				0.752123236656189
+			],
+			"translation":[
+				-0.15161828696727753,
+				0,
+				-0.02763177454471588
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorD_Vignette_Dresser_Book02_Linen_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorD_Vignette_Dresser_Book02_Paper_NoCollide"
+		},
+		{
+			"children":[
 				3,
-				4,
-				5
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Book02",
+			"rotation":[
+				0,
+				0.6305000185966492,
+				0,
+				0.7761892676353455
+			],
+			"translation":[
+				-0.15942776203155518,
+				0.03622901812195778,
+				-0.028887031599879265
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorD_Vignette_Dresser_Bowl01_Terracotta_NoCollide"
+		},
+		{
+			"children":[
+				6
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Bowl01",
+			"translation":[
+				-0.15000000596046448,
+				0.07545226812362671,
+				-0.029999999329447746
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorD_Vignette_Dresser_Carafe01_Glass_NoCollide"
+		},
+		{
+			"children":[
+				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"carafe",
+					"name":"Carafe",
+					"prompt":"Take carafe",
+					"range":1.4,
+					"throwable":true,
+					"noise":1.0,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Carafe01",
+			"translation":[
+				0.3400000035762787,
+				0.007000000216066837,
+				-0.05000000074505806
+			]
+		},
+		{
+			"mesh":6,
+			"name":"DecorD_Vignette_Dresser_Glass01_Glass_NoCollide"
+		},
+		{
+			"children":[
+				10
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"glass",
+					"name":"Glass",
+					"prompt":"Take glass",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Glass01",
+			"translation":[
+				0.46000000834465027,
+				0.007000000216066837,
+				0
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorD_Vignette_Dresser_Glass02_Glass_NoCollide"
+		},
+		{
+			"children":[
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"glass",
+					"name":"Glass",
+					"prompt":"Take glass",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_Vignette_Dresser_Glass02",
+			"translation":[
+				0.5299999713897705,
+				0.007000000216066837,
+				-0.05999999865889549
+			]
+		},
+		{
+			"mesh":8,
+			"name":"DecorD_Vignette_Dresser_OakLight_NoCollide"
+		},
+		{
+			"children":[
+				2,
+				5,
+				7,
+				9,
+				11,
+				13,
+				14
 			],
 			"name":"DecorD_Vignette_Dresser"
 		}
 	],
 	"materials":[
-		{
-			"alphaMode":"BLEND",
-			"doubleSided":true,
-			"name":"M_Glass_Smoke",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.4000000059604645,
-					0.3700000047683716,
-					0.3499999940395355
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.03999999910593033
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Fabric_Linen",
-			"normalTexture":{
-				"index":0,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.5199999809265137,
-					0.49000000953674316,
-					0.41999998688697815,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.05000000074505806,
-					"clearcoatRoughnessFactor":0.33000001311302185
-				}
-			},
-			"name":"M_Oak_Light",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":1
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.550000011920929
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_DecorD_Paper",
@@ -127,7 +242,7 @@
 			"doubleSided":true,
 			"name":"M_Fabric_Sage",
 			"normalTexture":{
-				"index":2,
+				"index":0,
 				"scale":0.5
 			},
 			"pbrMetallicRoughness":{
@@ -135,6 +250,24 @@
 					0.1599999964237213,
 					0.22499999403953552,
 					0.14000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Linen",
+			"normalTexture":{
+				"index":1,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5199999809265137,
+					0.49000000953674316,
+					0.41999998688697815,
 					1
 				],
 				"metallicFactor":0,
@@ -154,18 +287,49 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.6200000047683716
 			}
+		},
+		{
+			"alphaMode":"BLEND",
+			"doubleSided":true,
+			"name":"M_Glass_Smoke",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.4000000059604645,
+					0.3700000047683716,
+					0.3499999940395355
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.03999999910593033
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.05000000074505806,
+					"clearcoatRoughnessFactor":0.33000001311302185
+				}
+			},
+			"name":"M_Oak_Light",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":2
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorD_Vignette_Dresser_Glass_NoCollide",
+			"name":"DecorD_Vignette_Dresser_Book01_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -173,26 +337,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Vignette_Dresser_Linen_NoCollide",
+			"name":"DecorD_Vignette_Dresser_Book01_Sage_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -200,13 +362,162 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Book02_Linen_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Book02_Paper_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Bowl01_Terracotta_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":17,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Carafe01_Glass_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":21,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Glass01_Glass_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":25,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Vignette_Dresser_Glass02_Glass_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":26,
+						"NORMAL":27,
+						"TEXCOORD_0":28
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":25,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -216,104 +527,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":2,
+							"bufferView":8,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_Vignette_Dresser_Paper_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":19,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_Vignette_Dresser_Sage_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":9,
-					"material":4,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_Vignette_Dresser_Terracotta_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"COLOR_0":27
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":28,
+					"indices":32,
 					"material":5,
 					"mode":4
 				}
@@ -332,7 +560,7 @@
 		{
 			"extensions":{
 				"EXT_texture_webp":{
-					"source":1
+					"source":0
 				}
 			},
 			"sampler":0
@@ -340,7 +568,7 @@
 		{
 			"extensions":{
 				"EXT_texture_webp":{
-					"source":0
+					"source":1
 				}
 			},
 			"sampler":0
@@ -361,52 +589,46 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":588,
+			"count":12,
 			"max":[
-				0.5639999508857727,
-				0.22200000286102295,
-				0.03400000184774399
+				0.13700000941753387,
+				0.033429019153118134,
+				0.16699999570846558
 			],
 			"min":[
-				0.2939999997615814,
-				0.007000000216066837,
-				-0.09600000083446503
+				-0.13232001662254333,
+				0.0028000008314847946,
+				-0.16699998080730438
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":588,
+			"count":12,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":588,
+			"count":12,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":588,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":2112,
+			"count":18,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":72,
 			"max":[
-				0.011981168761849403,
-				0.07545226812362671,
-				0.11930684000253677
+				0.14000000059604645,
+				0.03622901812195778,
+				0.17000001668930054
 			],
 			"min":[
-				-0.330836683511734,
-				0.03622901812195778,
-				-0.177080899477005
+				-0.14000001549720764,
+				0,
+				-0.17000000178813934
 			],
 			"type":"VEC3"
 		},
@@ -419,17 +641,176 @@
 			"componentType":5126,
 			"count":72,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.11999999731779099,
+				0.03922325000166893,
+				0.15000000596046448
+			],
+			"min":[
+				-0.11999999731779099,
+				0,
+				-0.15000002086162567
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.11700001358985901,
+				0.036423247307538986,
+				0.1469999998807907
+			],
+			"min":[
+				-0.11232000589370728,
+				0.0027999989688396454,
+				-0.1469999998807907
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":400,
+			"max":[
+				0.07500000298023224,
+				0.04179999977350235,
+				0.07386057823896408
+			],
+			"min":[
+				-0.07500000298023224,
+				0,
+				-0.07386057823896408
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":400,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":400,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1512,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"max":[
+				0.046000003814697266,
+				0.2150000035762787,
+				0.04600000008940697
+			],
+			"min":[
+				-0.046000003814697266,
+				0,
+				-0.04600000008940697
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1152,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"max":[
+				0.034000009298324585,
+				0.08500000089406967,
+				0.03400000184774399
+			],
+			"min":[
+				-0.034000009298324585,
+				0,
+				-0.03400000184774399
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":480,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"max":[
+				0.0339999794960022,
+				0.08500000089406967,
+				0.03400000184774399
+			],
+			"min":[
+				-0.034000009298324585,
+				0,
+				-0.03399999812245369
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":154,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
@@ -458,149 +839,55 @@
 		},
 		{
 			"componentType":5123,
-			"count":384,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":660,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.031933076679706573,
-				0.07265226542949677,
-				0.12548156082630157
-			],
-			"min":[
-				-0.3345547914505005,
-				0.0028000008314847946,
-				-0.18538454174995422
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.03530121594667435,
-				0.03622901812195778,
-				0.13348913192749023
-			],
-			"min":[
-				-0.3385377824306488,
-				0,
-				-0.188752681016922
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":400,
-			"max":[
-				-0.07500000298023224,
-				0.11725226789712906,
-				0.043860577046871185
-			],
-			"min":[
-				-0.22500000894069672,
-				0.07545226812362671,
-				-0.10386057943105698
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":400,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":400,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":400,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1512,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":5806,
+			"byteLength":242,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1140,
-			"byteOffset":5808
+			"byteLength":637,
+			"byteOffset":244
 		},
 		{
 			"buffer":0,
-			"byteLength":3492,
-			"byteOffset":6948
+			"byteLength":642,
+			"byteOffset":884
 		},
 		{
 			"buffer":0,
-			"byteLength":454,
-			"byteOffset":10440
+			"byteLength":242,
+			"byteOffset":1528
 		},
 		{
 			"buffer":0,
-			"byteLength":899,
-			"byteOffset":10896
+			"byteLength":3815,
+			"byteOffset":1772
 		},
 		{
 			"buffer":0,
-			"byteLength":4675,
-			"byteOffset":11796
+			"byteLength":2475,
+			"byteOffset":5588
+		},
+		{
+			"buffer":0,
+			"byteLength":1541,
+			"byteOffset":8064
+		},
+		{
+			"buffer":0,
+			"byteLength":1541,
+			"byteOffset":9608
+		},
+		{
+			"buffer":0,
+			"byteLength":2839,
+			"byteOffset":11152
 		}
 	],
 	"samplers":[
@@ -611,7 +898,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":16472,
+			"byteLength":13992,
 			"uri":"decor_d_vignette_dresser.bin"
 		}
 	]

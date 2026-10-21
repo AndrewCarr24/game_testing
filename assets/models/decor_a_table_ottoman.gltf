@@ -17,48 +17,185 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				12
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorATableOttoman_black_NoCollide"
+			"name":"DecorATableOttoman_Book01_Spines_NoCollide"
+		},
+		{
+			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttoman_Book01",
+			"rotation":[
+				0,
+				0.053458817303180695,
+				0,
+				0.9985700845718384
+			],
+			"translation":[
+				-0.11853618919849396,
+				0.006000000052154064,
+				-0.005908366292715073
+			]
 		},
 		{
 			"mesh":1,
-			"name":"DecorATableOttoman_candle_NoCollide"
+			"name":"DecorATableOttoman_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttoman_Book02",
+			"rotation":[
+				0,
+				0.04470205307006836,
+				0,
+				0.9990003705024719
+			],
+			"translation":[
+				-0.1189221665263176,
+				0.03466138243675232,
+				-0.006890063639730215
+			]
 		},
 		{
 			"mesh":2,
-			"name":"DecorATableOttoman_charcoal_NoCollide"
+			"name":"DecorATableOttoman_Candle01_Black_NoCollide"
 		},
 		{
 			"mesh":3,
-			"name":"DecorATableOttoman_glaze_NoCollide"
+			"name":"DecorATableOttoman_Candle01_Candle_NoCollide"
 		},
 		{
 			"mesh":4,
-			"name":"DecorATableOttoman_spines_NoCollide"
+			"name":"DecorATableOttoman_Candle01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				4,
+				5,
+				6
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttoman_Candle01",
+			"rotation":[
+				0,
+				0.06975646317005157,
+				0,
+				0.9975640773773193
+			],
+			"translation":[
+				0.15721172094345093,
+				0.006000000052154064,
+				-0.10288085788488388
+			]
 		},
 		{
 			"mesh":5,
+			"name":"DecorATableOttoman_Ornament01_Charcoal_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorATableOttoman_Ornament01_Glaze_NoCollide"
+		},
+		{
+			"children":[
+				8,
+				9
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableOttoman_Ornament01",
+			"rotation":[
+				0,
+				0.06975646317005157,
+				0,
+				0.9975640773773193
+			],
+			"translation":[
+				-0.11171294748783112,
+				0.0812751054763794,
+				-0.004496327601373196
+			]
+		},
+		{
+			"mesh":7,
 			"name":"DecorATableOttoman_walnut_NoCollide"
 		},
 		{
 			"children":[
-				0,
 				1,
-				2,
 				3,
-				4,
-				5
+				7,
+				10,
+				11
 			],
 			"name":"DecorATableOttoman"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Library_Spines",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Aluminium_Black",
@@ -117,17 +254,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Library_Spines",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
-			}
-		},
-		{
-			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
 					"clearcoatFactor":0.25,
@@ -146,14 +272,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorATableOttoman_black_NoCollide",
+			"name":"DecorATableOttoman_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -161,26 +286,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttoman_candle_NoCollide",
+			"name":"DecorATableOttoman_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -188,26 +311,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableOttoman_charcoal_NoCollide",
+			"name":"DecorATableOttoman_Candle01_Black_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -215,8 +336,32 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":10,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttoman_Candle01_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -227,41 +372,13 @@
 			]
 		},
 		{
-			"name":"DecorATableOttoman_glaze_NoCollide",
+			"name":"DecorATableOttoman_Candle01_Charcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":15,
 						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":19,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorATableOttoman_spines_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -269,12 +386,61 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":18,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttoman_Ornament01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":22,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableOttoman_Ornament01_Glaze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":23,
+						"NORMAL":24,
+						"TEXCOORD_0":25
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":26,
 					"material":4,
 					"mode":4
 				}
@@ -285,23 +451,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"POSITION":27,
+						"NORMAL":28,
+						"TEXCOORD_0":29
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":7,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
+					"indices":30,
 					"material":5,
 					"mode":4
 				}
@@ -341,16 +505,71 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":24,
+			"count":64,
 			"max":[
-				0.1583411693572998,
-				0.08699999749660492,
-				-0.1017514169216156
+				0.158791646361351,
+				0.02866138145327568,
+				0.1266610324382782
 			],
 			"min":[
-				0.15608227252960205,
-				0.07899999618530273,
-				-0.10401029884815216
+				-0.15879163146018982,
+				0,
+				-0.1266610324382782
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.1352979838848114,
+				0.040454596281051636,
+				0.11021286249160767
+			],
+			"min":[
+				-0.1352979838848114,
+				0,
+				-0.11021285504102707
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0010000020265579224,
+				0.08100000023841858,
+				0.0010000094771385193
+			],
+			"min":[
+				-0.0010000169277191162,
+				0.0729999989271164,
+				-0.0009999945759773254
 			],
 			"type":"VEC3"
 		},
@@ -363,12 +582,6 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -379,14 +592,14 @@
 			"componentType":5126,
 			"count":53,
 			"max":[
-				0.1948419064283371,
-				0.07999999821186066,
-				-0.06525067239999771
+				0.03800000250339508,
+				0.07400000095367432,
+				0.03800000622868538
 			],
 			"min":[
-				0.11958153545856476,
-				0.07400000095367432,
-				-0.14051103591918945
+				-0.03800000250339508,
+				0.06800000369548798,
+				-0.03799998760223389
 			],
 			"type":"VEC3"
 		},
@@ -399,12 +612,6 @@
 			"componentType":5126,
 			"count":53,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":53,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -413,52 +620,76 @@
 		},
 		{
 			"componentType":5126,
-			"count":328,
+			"count":204,
 			"max":[
-				0.19880297780036926,
-				0.16652853786945343,
-				0.03933755308389664
+				0.041999995708465576,
+				0.09139999747276306,
+				0.04200000315904617
 			],
 			"min":[
-				-0.1492520570755005,
-				0.006000000052154064,
-				-0.1444721221923828
+				-0.04200001060962677,
+				0,
+				-0.04200000315904617
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":328,
+			"count":204,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":328,
+			"count":204,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":328,
-			"normalized":true,
-			"type":"VEC4"
+			"count":672,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":124,
+			"max":[
+				0.03973478823900223,
+				0.08525343239307404,
+				0.045366086065769196
+			],
+			"min":[
+				-0.03644568473100662,
+				0,
+				-0.045366086065769196
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":124,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":124,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":1392,
+			"count":720,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":62,
 			"max":[
-				-0.07500573247671127,
-				0.15027835965156555,
-				0.03058352880179882
+				0.03641032427549362,
+				0.06900325417518616,
+				0.035660162568092346
 			],
 			"min":[
-				-0.1423604041337967,
-				0.12158916890621185,
-				-0.04042782634496689
+				-0.03029099851846695,
+				0.04031406342983246,
+				-0.035660162568092346
 			],
 			"type":"VEC3"
 		},
@@ -471,52 +702,10 @@
 			"componentType":5126,
 			"count":62,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":62,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":360,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":128,
-			"max":[
-				0.05287078022956848,
-				0.07511597871780396,
-				0.1369820535182953
-			],
-			"min":[
-				-0.2899431586265564,
-				0.006000000052154064,
-				-0.14879879355430603
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":128,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":128,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":128,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":192,
 			"type":"SCALAR"
 		},
 		{
@@ -546,12 +735,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":176,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":330,
 			"type":"SCALAR"
 		}
@@ -559,33 +742,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":473,
+			"byteLength":541,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":804,
-			"byteOffset":476
+			"byteLength":540,
+			"byteOffset":544
 		},
 		{
 			"buffer":0,
-			"byteLength":3659,
-			"byteOffset":1280
+			"byteLength":295,
+			"byteOffset":1084
 		},
 		{
 			"buffer":0,
-			"byteLength":1107,
-			"byteOffset":4940
+			"byteLength":619,
+			"byteOffset":1380
 		},
 		{
 			"buffer":0,
-			"byteLength":1781,
-			"byteOffset":6048
+			"byteLength":1869,
+			"byteOffset":2000
 		},
 		{
 			"buffer":0,
-			"byteLength":1769,
-			"byteOffset":7832
+			"byteLength":1422,
+			"byteOffset":3872
+		},
+		{
+			"buffer":0,
+			"byteLength":827,
+			"byteOffset":5296
+		},
+		{
+			"buffer":0,
+			"byteLength":1273,
+			"byteOffset":6124
 		}
 	],
 	"samplers":[
@@ -596,7 +789,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9604,
+			"byteLength":7400,
 			"uri":"decor_a_table_ottoman.bin"
 		}
 	]

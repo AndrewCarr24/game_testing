@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				12
 			]
 		}
 	],
@@ -27,42 +27,134 @@
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_Nightstand_Guest_A_Black_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Book01_Paper_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorD_Nightstand_Guest_A_Glass_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Book01_Sage_NoCollide"
+		},
+		{
+			"children":[
+				1,
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_A_Book01",
+			"rotation":[
+				0,
+				0.9998669028282166,
+				0,
+				0.016321847215294838
+			],
+			"translation":[
+				-0.1657666563987732,
+				0,
+				0.0056500425562262535
+			]
 		},
 		{
 			"mesh":3,
-			"name":"DecorD_Nightstand_Guest_A_Leaf_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Book02_Linen_NoCollide"
 		},
 		{
 			"mesh":4,
-			"name":"DecorD_Nightstand_Guest_A_Linen_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Book02_Paper_NoCollide"
+		},
+		{
+			"children":[
+				4,
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_A_Book02",
+			"rotation":[
+				0,
+				0.9997414946556091,
+				0,
+				0.02273692935705185
+			],
+			"translation":[
+				-0.16512498259544373,
+				0.030277203768491745,
+				0.005278803873807192
+			]
 		},
 		{
 			"mesh":5,
-			"name":"DecorD_Nightstand_Guest_A_Paper_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Leaf_NoCollide"
 		},
 		{
 			"mesh":6,
-			"name":"DecorD_Nightstand_Guest_A_Sage_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Spectacles01_Black_NoCollide"
 		},
 		{
 			"mesh":7,
-			"name":"DecorD_Nightstand_Guest_A_Terracotta_NoCollide"
+			"name":"DecorD_Nightstand_Guest_A_Spectacles01_Glass_NoCollide"
+		},
+		{
+			"children":[
+				8,
+				9
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"spectacles",
+					"name":"Reading glasses",
+					"prompt":"Take reading glasses",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_A_Spectacles01",
+			"rotation":[
+				0,
+				-0.14753495156764984,
+				0,
+				0.9890569448471069
+			],
+			"translation":[
+				-0.1599999964237213,
+				0.06191898509860039,
+				0.029999999329447746
+			]
+		},
+		{
+			"mesh":8,
+			"name":"DecorD_Nightstand_Guest_A_Vase01_Terracotta_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
 				3,
-				4,
-				5,
 				6,
-				7
+				7,
+				10,
+				11
 			],
 			"name":"DecorD_Nightstand_Guest_A"
 		}
@@ -80,6 +172,67 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.800000011920929
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_DecorD_Paper",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.699999988079071,
+					0.6800000071525574,
+					0.6200000047683716,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Sage",
+			"normalTexture":{
+				"index":0,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.1599999964237213,
+					0.22499999403953552,
+					0.14000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Linen",
+			"normalTexture":{
+				"index":1,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5199999809265137,
+					0.49000000953674316,
+					0.41999998688697815,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Library_Leaf",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":2
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.3799999952316284
 			}
 		},
 		{
@@ -113,67 +266,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Library_Leaf",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.3799999952316284
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Fabric_Linen",
-			"normalTexture":{
-				"index":1,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.5199999809265137,
-					0.49000000953674316,
-					0.41999998688697815,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_DecorD_Paper",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.699999988079071,
-					0.6800000071525574,
-					0.6200000047683716,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8500000238418579
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Fabric_Sage",
-			"normalTexture":{
-				"index":2,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.1599999964237213,
-					0.22499999403953552,
-					0.14000000059604645,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_DecorD_Terracotta",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -195,8 +287,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -204,26 +295,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_A_Black_NoCollide",
+			"name":"DecorD_Nightstand_Guest_A_Book01_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -231,26 +320,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_A_Glass_NoCollide",
+			"name":"DecorD_Nightstand_Guest_A_Book01_Sage_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -258,13 +345,62 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Nightstand_Guest_A_Book02_Linen_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Nightstand_Guest_A_Book02_Paper_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -274,64 +410,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":19,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_Nightstand_Guest_A_Linen_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":24,
-					"material":4,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorD_Nightstand_Guest_A_Paper_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -339,26 +420,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
-					"material":5,
+					"indices":21,
+					"material":4,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_A_Sage_NoCollide",
+			"name":"DecorD_Nightstand_Guest_A_Spectacles01_Black_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -366,26 +445,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
-					"material":6,
+					"indices":25,
+					"material":5,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_A_Terracotta_NoCollide",
+			"name":"DecorD_Nightstand_Guest_A_Spectacles01_Glass_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":34,
-						"NORMAL":35,
-						"TEXCOORD_0":36,
-						"COLOR_0":37
+						"POSITION":26,
+						"NORMAL":27,
+						"TEXCOORD_0":28
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -393,12 +470,36 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":38,
+					"indices":29,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Nightstand_Guest_A_Vase01_Terracotta_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":30,
+						"NORMAL":31,
+						"TEXCOORD_0":32
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":33,
 					"material":7,
 					"mode":4
 				}
@@ -417,7 +518,7 @@
 		{
 			"extensions":{
 				"EXT_texture_webp":{
-					"source":1
+					"source":0
 				}
 			},
 			"sampler":0
@@ -434,13 +535,13 @@
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Library_Leaf",
-			"uri":"textures/T_Library_Leaf.webp"
+			"name":"T_Fabric_Normal",
+			"uri":"textures/T_Fabric_Normal.webp"
 		},
 		{
 			"mimeType":"image/webp",
-			"name":"T_Fabric_Normal",
-			"uri":"textures/T_Fabric_Normal.webp"
+			"name":"T_Library_Leaf",
+			"uri":"textures/T_Library_Leaf.webp"
 		}
 	],
 	"accessors":[
@@ -471,86 +572,118 @@
 		},
 		{
 			"componentType":5123,
-			"count":28,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":108,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":212,
+			"count":12,
 			"max":[
-				-0.09128768742084503,
-				0.0980139896273613,
-				0.04495912045240402
+				0.07449999451637268,
+				0.0274772047996521,
+				0.1145000159740448
 			],
 			"min":[
-				-0.2183479219675064,
-				0.06191898509860039,
-				-0.007782122120261192
+				-0.06982000917196274,
+				0.00279999990016222,
+				-0.1145000085234642
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":212,
+			"count":12,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":212,
+			"count":12,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":212,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":744,
+			"count":18,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"max":[
-				-0.10428113490343094,
-				0.09646151959896088,
-				0.043474230915308
+				0.07750000059604645,
+				0.030277203768491745,
+				0.11750001460313797
 			],
 			"min":[
-				-0.2133183628320694,
-				0.06347145885229111,
-				0.008402999490499496
+				-0.07750000804662704,
+				0,
+				-0.11750001460313797
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":72,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
+			"count":132,
+			"type":"SCALAR"
 		},
 		{
-			"componentType":5123,
-			"count":60,
-			"type":"SCALAR"
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.07250000536441803,
+				0.03169425204396248,
+				0.11000002175569534
+			],
+			"min":[
+				-0.07250001281499863,
+				0,
+				-0.11000001430511475
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.06949999928474426,
+				0.028894253075122833,
+				0.10700001567602158
+			],
+			"min":[
+				-0.06482001394033432,
+				0.002800002694129944,
+				-0.10700000822544098
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
@@ -579,63 +712,51 @@
 		},
 		{
 			"componentType":5123,
-			"count":63,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":162,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":212,
 			"max":[
-				-0.08769912272691727,
-				0.061971455812454224,
-				0.11846107244491577
+				0.06607338786125183,
+				0.03609500080347061,
+				0.0015524700284004211
 			],
 			"min":[
-				-0.24255084991455078,
-				0.030277203768491745,
-				-0.10790346562862396
+				-0.0660729706287384,
+				-3.725290298461914e-09,
+				-0.019385848194360733
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":212,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":212,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":132,
+			"count":744,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":24,
 			"max":[
-				-0.0922466591000557,
-				0.05917145684361458,
-				0.12236791849136353
+				0.05700000375509262,
+				0.03454253077507019,
+				0
 			],
 			"min":[
-				-0.24396416544914246,
-				0.00279999990016222,
-				-0.111220583319664
+				-0.056999996304512024,
+				0.0015524700284004211,
+				-0.008225351572036743
 			],
 			"type":"VEC3"
 		},
@@ -651,45 +772,8 @@
 		},
 		{
 			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
+			"count":60,
 			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				-0.08447283506393433,
-				0.030277203768491745,
-				0.12561698257923126
-			],
-			"min":[
-				-0.24706047773361206,
-				0,
-				-0.1143169030547142
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
@@ -718,12 +802,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":338,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1176,
 			"type":"SCALAR"
 		}
@@ -731,43 +809,48 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":619,
+			"byteLength":442,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3288,
-			"byteOffset":620
+			"byteLength":249,
+			"byteOffset":444
 		},
 		{
 			"buffer":0,
-			"byteLength":438,
-			"byteOffset":3908
+			"byteLength":640,
+			"byteOffset":696
 		},
 		{
 			"buffer":0,
-			"byteLength":1146,
-			"byteOffset":4348
+			"byteLength":646,
+			"byteOffset":1336
 		},
 		{
 			"buffer":0,
-			"byteLength":1131,
-			"byteOffset":5496
+			"byteLength":248,
+			"byteOffset":1984
 		},
 		{
 			"buffer":0,
-			"byteLength":488,
-			"byteOffset":6628
+			"byteLength":772,
+			"byteOffset":2232
 		},
 		{
 			"buffer":0,
-			"byteLength":980,
-			"byteOffset":7116
+			"byteLength":2166,
+			"byteOffset":3004
 		},
 		{
 			"buffer":0,
-			"byteLength":3843,
-			"byteOffset":8096
+			"byteLength":376,
+			"byteOffset":5172
+		},
+		{
+			"buffer":0,
+			"byteLength":3146,
+			"byteOffset":5548
 		}
 	],
 	"samplers":[
@@ -778,7 +861,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":11940,
+			"byteLength":8696,
 			"uri":"decor_d_nightstand_guest_a.bin"
 		}
 	]

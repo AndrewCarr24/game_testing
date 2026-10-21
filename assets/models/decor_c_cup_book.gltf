@@ -16,33 +16,154 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				9
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorC_CupBook_Bronze_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorC_CupBook_Charcoal_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorC_CupBook_Glaze_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorC_CupBook_Spines_NoCollide"
+			"name":"DecorC_CupBook_Book01_Spines_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_CupBook_Book01",
+			"rotation":[
 				0,
+				-0.1329241842031479,
+				0,
+				0.991126298904419
+			],
+			"translation":[
+				-0.03603440150618553,
+				0,
+				-0.024421343579888344
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorC_CupBook_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_CupBook_Book02",
+			"rotation":[
+				0,
+				0.9863519072532654,
+				0,
+				0.16465136408805847
+			],
+			"translation":[
+				-0.032671377062797546,
+				0.031067900359630585,
+				-0.03475727513432503
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorC_CupBook_Cup01_Charcoal_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorC_CupBook_Cup01_Glaze_NoCollide"
+		},
+		{
+			"children":[
+				4,
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"cup",
+					"name":"Cup",
+					"prompt":"Take cup",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorC_CupBook_Cup01",
+			"rotation":[
+				0,
+				0.9659258723258972,
+				0,
+				0.25881922245025635
+			],
+			"translation":[
+				0.11999999731779099,
+				0,
+				0.10000000149011612
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorC_CupBook_Spectacles01_Bronze_NoCollide"
+		},
+		{
+			"children":[
+				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"spectacles",
+					"name":"Reading glasses",
+					"prompt":"Take reading glasses",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.2,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_CupBook_Spectacles01",
+			"rotation":[
+				0,
+				-0.2588191032409668,
+				0,
+				0.9659258127212524
+			],
+			"translation":[
+				-0.03999999910593033,
+				0.06013176217675209,
+				-0.019999999552965164
+			]
+		},
+		{
+			"children":[
 				1,
-				2,
-				3
+				3,
+				6,
+				8
 			],
 			"name":"DecorC_CupBook"
 		}
@@ -50,15 +171,13 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Bronze",
+			"name":"M_Library_Spines",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.25999999046325684,
-					0.12999999523162842,
-					1
-				],
-				"roughnessFactor":0.3199999928474426
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
 			}
 		},
 		{
@@ -91,26 +210,27 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Library_Spines",
+			"name":"M_Bronze",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.25999999046325684,
+					0.12999999523162842,
+					1
+				],
+				"roughnessFactor":0.3199999928474426
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorC_CupBook_Bronze_NoCollide",
+			"name":"DecorC_CupBook_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -118,26 +238,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorC_CupBook_Charcoal_NoCollide",
+			"name":"DecorC_CupBook_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -145,26 +263,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorC_CupBook_Glaze_NoCollide",
+			"name":"DecorC_CupBook_Cup01_Charcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -172,8 +288,32 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":10,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorC_CupBook_Cup01_Glaze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -184,27 +324,25 @@
 			]
 		},
 		{
-			"name":"DecorC_CupBook_Spines_NoCollide",
+			"name":"DecorC_CupBook_Spectacles01_Bronze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":15,
 						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":18,
 					"material":3,
 					"mode":4
 				}
@@ -231,88 +369,101 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":185,
+			"count":64,
 			"max":[
-				0.012975882738828659,
-				0.10508868098258972,
-				0.011600008234381676
+				0.09913676232099533,
+				0.031067900359630585,
+				0.11609848588705063
 			],
 			"min":[
-				-0.09265433996915817,
-				0.06013176217675209,
-				-0.05822794884443283
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":185,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":185,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":185,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":768,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"max":[
-				0.1519245207309723,
-				0.05299999937415123,
-				0.13192452490329742
-			],
-			"min":[
-				0.08807547390460968,
-				0.05299999937415123,
-				0.06807547807693481
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":48,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":48,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":48,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":311,
-			"max":[
-				0.18795174360275269,
-				0.06499999761581421,
-				0.16899999976158142
-			],
-			"min":[
-				0.05204825848340988,
+				-0.09913675487041473,
 				0,
-				0.03100000135600567
+				-0.11609847843647003
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.0941367819905281,
+				0.029542328789830208,
+				0.11209850758314133
+			],
+			"min":[
+				-0.0941367894411087,
+				1.862645149230957e-09,
+				-0.11209849268198013
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"max":[
+				0.03219999372959137,
+				0.05299999937415123,
+				0.03219999745488167
+			],
+			"min":[
+				-0.032200008630752563,
+				0.05299999937415123,
+				-0.03219999372959137
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":48,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":311,
+			"max":[
+				0.0689999908208847,
+				0.06499999761581421,
+				0.0679517388343811
+			],
+			"min":[
+				-0.0689999908208847,
+				0,
+				-0.06795172393321991
 			],
 			"type":"VEC3"
 		},
@@ -325,12 +476,6 @@
 			"componentType":5126,
 			"count":311,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":311,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -339,61 +484,60 @@
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":185,
 			"max":[
-				0.09277176856994629,
-				0.06061022728681564,
-				0.11369596421718597
+				0.060478463768959045,
+				0.04495692253112793,
+				0.002199999988079071
 			],
 			"min":[
-				-0.1622585952281952,
-				0,
-				-0.17135414481163025
+				-0.060478467494249344,
+				3.725290298461914e-09,
+				-0.0178964976221323
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":185,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":185,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":128,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":192,
+			"count":768,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3030,
+			"byteLength":547,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":524,
-			"byteOffset":3032
+			"byteLength":549,
+			"byteOffset":548
 		},
 		{
 			"buffer":0,
-			"byteLength":3991,
-			"byteOffset":3556
+			"byteLength":489,
+			"byteOffset":1100
 		},
 		{
 			"buffer":0,
-			"byteLength":1712,
-			"byteOffset":7548
+			"byteLength":2937,
+			"byteOffset":1592
+		},
+		{
+			"buffer":0,
+			"byteLength":2042,
+			"byteOffset":4532
 		}
 	],
 	"samplers":[
@@ -404,7 +548,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9260,
+			"byteLength":6576,
 			"uri":"decor_c_cup_book.bin"
 		}
 	]

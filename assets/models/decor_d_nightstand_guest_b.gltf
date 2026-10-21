@@ -16,71 +16,129 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				9
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorD_Nightstand_Guest_B_Bronze_NoCollide"
+			"name":"DecorD_Nightstand_Guest_B_Book01_Linen_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_Nightstand_Guest_B_Glass_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorD_Nightstand_Guest_B_Linen_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorD_Nightstand_Guest_B_Paper_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorD_Nightstand_Guest_B_Sage_NoCollide"
+			"name":"DecorD_Nightstand_Guest_B_Book01_Paper_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_B_Book01",
+			"rotation":[
+				0,
+				0.02150643989443779,
+				0,
+				0.9997687339782715
+			],
+			"translation":[
+				-0.17037458717823029,
+				0,
+				-0.012984566390514374
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorD_Nightstand_Guest_B_Book02_Paper_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorD_Nightstand_Guest_B_Book02_Sage_NoCollide"
+		},
+		{
+			"children":[
 				3,
 				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_B_Book02",
+			"rotation":[
+				0,
+				0.9999338388442993,
+				0,
+				0.011504113674163818
+			],
+			"translation":[
+				-0.16138173639774323,
+				0.02632232941687107,
+				-0.012377990409731865
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorD_Nightstand_Guest_B_Bronze_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorD_Nightstand_Guest_B_Carafe01_Glass_NoCollide"
+		},
+		{
+			"children":[
+				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"carafe",
+					"name":"Carafe",
+					"prompt":"Take carafe",
+					"range":1.4,
+					"throwable":true,
+					"noise":1.0,
+					"shatter":true
+				}
+			},
+			"name":"DecorD_Nightstand_Guest_B_Carafe01",
+			"translation":[
+				0.16500000655651093,
+				0.004000000189989805,
+				0
+			]
+		},
+		{
+			"children":[
+				2,
+				5,
+				6,
+				8
 			],
 			"name":"DecorD_Nightstand_Guest_B"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"name":"M_Bronze",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.25999999046325684,
-					0.12999999523162842,
-					1
-				],
-				"roughnessFactor":0.3199999928474426
-			}
-		},
-		{
-			"alphaMode":"BLEND",
-			"doubleSided":true,
-			"name":"M_Glass_Smoke",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.4000000059604645,
-					0.3700000047683716,
-					0.3499999940395355
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.03999999910593033
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Fabric_Linen",
@@ -130,18 +188,45 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.8999999761581421
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Bronze",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.25999999046325684,
+					0.12999999523162842,
+					1
+				],
+				"roughnessFactor":0.3199999928474426
+			}
+		},
+		{
+			"alphaMode":"BLEND",
+			"doubleSided":true,
+			"name":"M_Glass_Smoke",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.4000000059604645,
+					0.3700000047683716,
+					0.3499999940395355
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.03999999910593033
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorD_Nightstand_Guest_B_Bronze_NoCollide",
+			"name":"DecorD_Nightstand_Guest_B_Book01_Linen_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -149,26 +234,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_B_Glass_NoCollide",
+			"name":"DecorD_Nightstand_Guest_B_Book01_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -176,26 +259,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_B_Linen_NoCollide",
+			"name":"DecorD_Nightstand_Guest_B_Book02_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -203,26 +284,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
+					"indices":7,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_B_Paper_NoCollide",
+			"name":"DecorD_Nightstand_Guest_B_Book02_Sage_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -230,26 +309,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":3,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Nightstand_Guest_B_Sage_NoCollide",
+			"name":"DecorD_Nightstand_Guest_B_Bronze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -257,12 +334,36 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":17,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Nightstand_Guest_B_Carafe01_Glass_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":21,
 					"material":4,
 					"mode":4
 				}
@@ -297,6 +398,116 @@
 	"accessors":[
 		{
 			"componentType":5126,
+			"count":72,
+			"max":[
+				0.08000000566244125,
+				0.02632232941687107,
+				0.12000000476837158
+			],
+			"min":[
+				-0.07999999821186066,
+				0,
+				-0.12000000476837158
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.07699999958276749,
+				0.023522328585386276,
+				0.11699999868869781
+			],
+			"min":[
+				-0.07232001423835754,
+				0.00279999990016222,
+				-0.11699999868869781
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":18,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.06450001895427704,
+				0.026288283988833427,
+				0.09950000792741776
+			],
+			"min":[
+				-0.0598200187087059,
+				0.0028000008314847946,
+				-0.09950000792741776
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.06750001013278961,
+				0.02908828668296337,
+				0.10250001400709152
+			],
+			"min":[
+				-0.0675000250339508,
+				0,
+				-0.10250001400709152
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
 			"count":362,
 			"max":[
 				0.24000000953674316,
@@ -322,12 +533,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":362,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1008,
 			"type":"SCALAR"
 		},
@@ -335,13 +540,13 @@
 			"componentType":5126,
 			"count":454,
 			"max":[
-				0.2110000103712082,
-				0.25200000405311584,
+				0.046000003814697266,
+				0.24800001084804535,
 				0.04600000008940697
 			],
 			"min":[
-				0.11900000274181366,
-				0.004000000189989805,
+				-0.046000003814697266,
+				0,
 				-0.04600000008940697
 			],
 			"type":"VEC3"
@@ -358,149 +563,40 @@
 		},
 		{
 			"componentType":5123,
-			"count":454,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1728,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				-0.08528824150562286,
-				0.02632232941687107,
-				0.11034465581178665
-			],
-			"min":[
-				-0.2554609179496765,
-				0,
-				-0.136313796043396
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":132,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				-0.08841448277235031,
-				0.0526106134057045,
-				0.1070171669125557
-			],
-			"min":[
-				-0.24765904247760773,
-				0.00279999990016222,
-				-0.13318756222724915
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				-0.09154144674539566,
-				0.05541061609983444,
-				0.09164781123399734
-			],
-			"min":[
-				-0.2312220335006714,
-				0.02632232941687107,
-				-0.11640378832817078
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":132,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3644,
+			"byteLength":642,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4404,
-			"byteOffset":3644
+			"byteLength":249,
+			"byteOffset":644
 		},
 		{
 			"buffer":0,
-			"byteLength":914,
-			"byteOffset":8048
+			"byteLength":248,
+			"byteOffset":896
 		},
 		{
 			"buffer":0,
-			"byteLength":520,
-			"byteOffset":8964
+			"byteLength":649,
+			"byteOffset":1144
 		},
 		{
 			"buffer":0,
-			"byteLength":1180,
-			"byteOffset":9484
+			"byteLength":2969,
+			"byteOffset":1796
+		},
+		{
+			"buffer":0,
+			"byteLength":3910,
+			"byteOffset":4768
 		}
 	],
 	"samplers":[
@@ -511,7 +607,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10664,
+			"byteLength":8680,
 			"uri":"decor_d_nightstand_guest_b.bin"
 		}
 	]

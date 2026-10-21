@@ -5,8 +5,7 @@
 	},
 	"extensionsUsed":[
 		"KHR_draco_mesh_compression",
-		"EXT_texture_webp",
-		"KHR_materials_sheen"
+		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
 		"KHR_draco_mesh_compression",
@@ -101,24 +100,14 @@
 		},
 		{
 			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_sheen":{
-					"sheenColorFactor":[
-						0.75,
-						0.6800000071525574,
-						0.550000011920929
-					],
-					"sheenRoughnessFactor":0.5
-				}
-			},
 			"name":"M_Wool_Oat",
-			"normalTexture":{
-				"index":2
-			},
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":3
-				},
+				"baseColorFactor":[
+					0.44999998807907104,
+					0.4000000059604645,
+					0.3199999928474426,
+					1
+				],
 				"metallicFactor":0
 			}
 		}
@@ -131,8 +120,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -140,12 +128,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -156,10 +143,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -167,12 +153,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -183,10 +168,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -194,12 +178,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -210,10 +193,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -221,12 +203,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":15,
 					"material":3,
 					"mode":4
 				}
@@ -249,22 +230,6 @@
 				}
 			},
 			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":2
-				}
-			},
-			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":3
-				}
-			},
-			"sampler":0
 		}
 	],
 	"images":[
@@ -277,16 +242,6 @@
 			"mimeType":"image/webp",
 			"name":"T_Fabric_Normal",
 			"uri":"textures/T_Fabric_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_BedroomRug_Normal",
-			"uri":"textures/T_BedroomRug_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Guest_Wool_BaseColor",
-			"uri":"textures/T_Guest_Wool_BaseColor.webp"
 		}
 	],
 	"accessors":[
@@ -314,12 +269,6 @@
 			"componentType":5126,
 			"count":192,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":192,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -353,12 +302,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":714,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":2400,
 			"type":"SCALAR"
 		},
@@ -386,12 +329,6 @@
 			"componentType":5126,
 			"count":56,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":56,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -425,12 +362,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":56,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":132,
 			"type":"SCALAR"
 		}
@@ -438,23 +369,23 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1886,
+			"byteLength":1040,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":7642,
-			"byteOffset":1888
+			"byteLength":6161,
+			"byteOffset":1040
 		},
 		{
 			"buffer":0,
-			"byteLength":996,
-			"byteOffset":9532
+			"byteLength":696,
+			"byteOffset":7204
 		},
 		{
 			"buffer":0,
-			"byteLength":1057,
-			"byteOffset":10528
+			"byteLength":732,
+			"byteOffset":7900
 		}
 	],
 	"samplers":[
@@ -465,7 +396,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":11588,
+			"byteLength":8632,
 			"uri":"decor_b_basket_blankets.bin"
 		}
 	]

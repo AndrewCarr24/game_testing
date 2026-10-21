@@ -418,12 +418,16 @@
       interact.snapAll();      // a later placement's `state` may have set a signal earlier props use
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
-      for (const it of interact.items) it.node.traverse((o) => moving.add(o));
+      // (pickups: resting ones batch with their room until focused or taken, batching.js; ?pbatch=0 compares)
+      const restingPickups = new Map();
+      const restingOk = (it) => it.def.type === 'pickup' && !it.host && params.get('pbatch') !== '0';
+      for (const it of interact.items) if (!restingOk(it)) it.node.traverse((o) => moving.add(o));
+      for (const it of interact.items) if (restingOk(it)) it.node.traverse((o) => { if (o.isMesh && !moving.has(o)) restingPickups.set(o, it); });
       // reactors that move (blinds, rockers' parts, doors) or carry a light keep their own nodes; the
       // ones that only change materials (glows, screens) batch per room: their shared materials do it
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
       for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
-      const { batches, before, after } = batchRooms(roomRoots, moving);
+      const { batches, before, after } = batchRooms(roomRoots, moving, restingPickups);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
       const culler = new RoomCuller(level, roomRoots, batches, { shared });
       window.__culler = culler;

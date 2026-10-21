@@ -17,43 +17,214 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				12
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorAConsoleSofa_black_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorAConsoleSofa_candle_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorAConsoleSofa_charcoal_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorAConsoleSofa_spines_NoCollide"
-		},
-		{
-			"mesh":4,
-			"name":"DecorAConsoleSofa_walnut_NoCollide"
+			"name":"DecorAConsoleSofa_Book01_Spines_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorAConsoleSofa_Book01",
+			"rotation":[
 				0,
-				1,
-				2,
-				3,
+				-0.038669124245643616,
+				0,
+				0.9992520809173584
+			],
+			"translation":[
+				-0.19692514836788177,
+				0.8199999928474426,
+				0.00038277485873550177
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorAConsoleSofa_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorAConsoleSofa_Book02",
+			"rotation":[
+				0,
+				-0.054651450365781784,
+				0,
+				0.9985055923461914
+			],
+			"translation":[
+				-0.20560090243816376,
+				0.8493741750717163,
+				0.007294807117432356
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorAConsoleSofa_Book03_Spines_NoCollide"
+		},
+		{
+			"children":[
 				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorAConsoleSofa_Book03",
+			"rotation":[
+				0,
+				0.007241304498165846,
+				0,
+				0.9999737739562988
+			],
+			"translation":[
+				-0.1978965848684311,
+				0.8829401135444641,
+				-0.004074009135365486
+			]
+		},
+		{
+			"mesh":3,
+			"name":"DecorAConsoleSofa_Bowl01_Walnut_NoCollide"
+		},
+		{
+			"children":[
+				6
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"wooden_bowl",
+					"name":"Wooden bowl",
+					"prompt":"Take wooden bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.5,
+					"shatter":false
+				}
+			},
+			"name":"DecorAConsoleSofa_Bowl01",
+			"translation":[
+				0.20000000298023224,
+				0.8199999928474426,
+				0
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorAConsoleSofa_Candle01_Black_NoCollide"
+		},
+		{
+			"mesh":5,
+			"name":"DecorAConsoleSofa_Candle01_Candle_NoCollide"
+		},
+		{
+			"mesh":6,
+			"name":"DecorAConsoleSofa_Candle01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				8,
+				9,
+				10
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorAConsoleSofa_Candle01",
+			"translation":[
+				-0.20000000298023224,
+				0.9127679467201233,
+				0
+			]
+		},
+		{
+			"children":[
+				1,
+				3,
+				5,
+				7,
+				11
 			],
 			"name":"DecorAConsoleSofa"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Library_Spines",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.25,
+					"clearcoatRoughnessFactor":0.30000001192092896
+				}
+			},
+			"name":"M_Walnut",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Aluminium_Black",
@@ -95,46 +266,17 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.30000001192092896
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Spines",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.25,
-					"clearcoatRoughnessFactor":0.30000001192092896
-				}
-			},
-			"name":"M_Walnut",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":1
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.5
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorAConsoleSofa_black_NoCollide",
+			"name":"DecorAConsoleSofa_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -142,26 +284,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorAConsoleSofa_candle_NoCollide",
+			"name":"DecorAConsoleSofa_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -169,26 +309,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorAConsoleSofa_charcoal_NoCollide",
+			"name":"DecorAConsoleSofa_Book03_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -196,26 +334,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
-					"material":2,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorAConsoleSofa_spines_NoCollide",
+			"name":"DecorAConsoleSofa_Bowl01_Walnut_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -223,26 +359,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":13,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorAConsoleSofa_walnut_NoCollide",
+			"name":"DecorAConsoleSofa_Candle01_Black_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -250,12 +384,61 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":17,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorAConsoleSofa_Candle01_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":21,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorAConsoleSofa_Candle01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":25,
 					"material":4,
 					"mode":4
 				}
@@ -295,159 +478,95 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":24,
+			"count":64,
 			"max":[
-				-0.19900000095367432,
-				0.9887679219245911,
-				0.0010000000474974513
+				0.1462097316980362,
+				0.029374241828918457,
+				0.12004631757736206
 			],
 			"min":[
-				-0.20100000500679016,
-				0.9807679653167725,
-				-0.0010000000474974513
+				-0.146209716796875,
+				5.960464477539063e-08,
+				-0.12004631757736206
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":64,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":36,
+			"count":96,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":53,
+			"count":64,
 			"max":[
-				-0.16600000858306885,
-				0.9817679524421692,
-				0.03400000184774399
+				0.12456301599740982,
+				0.03356599807739258,
+				0.09600074589252472
 			],
 			"min":[
-				-0.23399999737739563,
-				0.975767970085144,
-				-0.03400000184774399
+				-0.12456302344799042,
+				0,
+				-0.09600074589252472
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":53,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":53,
+			"count":64,
 			"type":"VEC2"
 		},
 		{
-			"componentType":5123,
-			"count":53,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":144,
-			"type":"SCALAR"
-		},
-		{
 			"componentType":5126,
-			"count":204,
+			"count":64,
 			"max":[
-				-0.16200000047683716,
-				0.9991679191589355,
-				0.03799999877810478
+				0.11537720263004303,
+				0.02982771396636963,
+				0.098378024995327
 			],
 			"min":[
-				-0.23800000548362732,
-				0.9127679467201233,
-				-0.03799999877810478
+				-0.11537718772888184,
+				-5.960464477539063e-08,
+				-0.0983780175447464
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":204,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":204,
+			"count":64,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":204,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":672,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"max":[
-				-0.0418754480779171,
-				0.9127678871154785,
-				0.1313692182302475
-			],
-			"min":[
-				-0.35197484493255615,
-				0.8199999928474426,
-				-0.13060367107391357
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":192,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":192,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":288,
-			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":306,
 			"max":[
-				0.32999998331069946,
-				0.8823856115341187,
+				0.12999998033046722,
+				0.062385618686676025,
 				0.12999999523162842
 			],
 			"min":[
-				0.07000000774860382,
-				0.8199999928474426,
+				-0.12999999523162842,
+				0,
 				-0.12999999523162842
 			],
 			"type":"VEC3"
@@ -464,41 +583,135 @@
 		},
 		{
 			"componentType":5123,
-			"count":306,
-			"normalized":true,
-			"type":"VEC4"
+			"count":960,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.0010000020265579224,
+				0.07599997520446777,
+				0.0010000000474974513
+			],
+			"min":[
+				-0.0010000020265579224,
+				0.06800001859664917,
+				-0.0010000000474974513
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":960,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"max":[
+				0.03399999439716339,
+				0.0690000057220459,
+				0.03400000184774399
+			],
+			"min":[
+				-0.03399999439716339,
+				0.06300002336502075,
+				-0.03400000184774399
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":53,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"max":[
+				0.03800000250339508,
+				0.08639997243881226,
+				0.03799999877810478
+			],
+			"min":[
+				-0.03800000250339508,
+				0,
+				-0.03799999877810478
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":672,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":475,
+			"byteLength":534,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":772,
-			"byteOffset":476
+			"byteLength":559,
+			"byteOffset":536
 		},
 		{
 			"buffer":0,
-			"byteLength":2347,
-			"byteOffset":1248
+			"byteLength":530,
+			"byteOffset":1096
 		},
 		{
 			"buffer":0,
-			"byteLength":2321,
-			"byteOffset":3596
+			"byteLength":2916,
+			"byteOffset":1628
 		},
 		{
 			"buffer":0,
-			"byteLength":3648,
-			"byteOffset":5920
+			"byteLength":302,
+			"byteOffset":4544
+		},
+		{
+			"buffer":0,
+			"byteLength":621,
+			"byteOffset":4848
+		},
+		{
+			"buffer":0,
+			"byteLength":1864,
+			"byteOffset":5472
 		}
 	],
 	"samplers":[
@@ -509,7 +722,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9568,
+			"byteLength":7336,
 			"uri":"decor_a_console_sofa.bin"
 		}
 	]

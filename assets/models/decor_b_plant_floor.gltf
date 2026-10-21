@@ -92,8 +92,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -101,12 +100,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -117,10 +115,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -128,12 +125,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -144,10 +140,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -155,12 +150,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -195,12 +189,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":228,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":720,
 			"type":"SCALAR"
 		},
@@ -228,12 +216,6 @@
 			"componentType":5126,
 			"count":17,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":17,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -267,12 +249,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":607,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1452,
 			"type":"SCALAR"
 		}
@@ -280,23 +256,23 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2556,
+			"byteLength":2153,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":468,
-			"byteOffset":2556
+			"byteLength":315,
+			"byteOffset":2156
 		},
 		{
 			"buffer":0,
-			"byteLength":6877,
-			"byteOffset":3024
+			"byteLength":5180,
+			"byteOffset":2472
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":9904,
+			"byteLength":7652,
 			"uri":"decor_b_plant_floor.bin"
 		}
 	]

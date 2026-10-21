@@ -42,13 +42,13 @@
 			},
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.019999999552965164,
-					0.03200000151991844,
-					0.05999999865889549,
+					0.017999999225139618,
+					0.024000000208616257,
+					0.03999999910593033,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
+				"roughnessFactor":0.800000011920929
 			}
 		}
 	],
@@ -60,8 +60,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -69,12 +68,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -126,12 +124,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":256,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":924,
 			"type":"SCALAR"
 		}
@@ -139,7 +131,7 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2550,
+			"byteLength":1940,
 			"byteOffset":0
 		}
 	],
@@ -151,7 +143,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2552,
+			"byteLength":1940,
 			"uri":"decor_a_soft_sectional_throw.bin"
 		}
 	]

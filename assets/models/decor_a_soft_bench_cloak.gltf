@@ -106,8 +106,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -115,12 +114,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -131,10 +129,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -142,12 +139,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -158,10 +154,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -169,12 +164,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -242,12 +236,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":302,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1212,
 			"type":"SCALAR"
 		},
@@ -275,12 +263,6 @@
 			"componentType":5126,
 			"count":72,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -314,12 +296,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":575,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":2208,
 			"type":"SCALAR"
 		}
@@ -327,18 +303,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3596,
+			"byteLength":2919,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1109,
-			"byteOffset":3596
+			"byteLength":784,
+			"byteOffset":2920
 		},
 		{
 			"buffer":0,
-			"byteLength":5108,
-			"byteOffset":4708
+			"byteLength":3860,
+			"byteOffset":3704
 		}
 	],
 	"samplers":[
@@ -349,7 +325,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9816,
+			"byteLength":7564,
 			"uri":"decor_a_soft_bench_cloak.bin"
 		}
 	]

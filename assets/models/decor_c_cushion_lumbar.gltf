@@ -60,8 +60,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -69,12 +68,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -126,12 +124,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":162,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":768,
 			"type":"SCALAR"
 		}
@@ -139,7 +131,7 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1629,
+			"byteLength":1576,
 			"byteOffset":0
 		}
 	],
@@ -151,7 +143,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1632,
+			"byteLength":1576,
 			"uri":"decor_c_cushion_lumbar.bin"
 		}
 	]

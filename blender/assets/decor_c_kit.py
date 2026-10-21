@@ -26,13 +26,13 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
-from lib import common, materials, textures  # noqa: E402
+from lib import common, materials, pickups, textures  # noqa: E402
 import library_bookcase  # noqa: E402
 import library_plant  # noqa: E402
 import guest_mats  # noqa: E402
 import library_kit  # noqa: E402
 
-for _m in (common, textures, materials, library_bookcase, library_plant, guest_mats, library_kit):
+for _m in (common, textures, materials, pickups, library_bookcase, library_plant, guest_mats, library_kit):
     importlib.reload(_m)
 
 TAU = 2 * math.pi
@@ -298,7 +298,8 @@ class Kit:
     def finish(self, n, col, root, collide=()):
         """One mesh object per material: `<n>_<Key>_NoCollide`, or `<n>_<Key>` for keys in
         `collide` (benches, consoles, planters)."""
-        out = []
+        # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
+        out = pickups.emit(self, n, col, root, [a.bm for a in self.accs.values()], lambda a: a.bm, lambda key: MATS[key]())
         for key, acc in self.accs.items():
             if not acc.bm.faces:
                 acc.bm.free()
@@ -1040,3 +1041,14 @@ def ceramic_trio(k, M, rnd, family="mixed", scale=1.0):
     for (kind, mat, sc), (x, y) in zip(TRIOS[family], spots):
         vessel(k, M @ T((x + rnd.uniform(-0.01, 0.01)) * scale, (y + rnd.uniform(-0.01, 0.01)) * scale, 0,
                         rz=rnd.uniform(0, 360)), kind, mat, scale=sc * scale)
+
+
+# ------------------------------------------------------------------ pickups
+# the loose things a player expects to lift (lib/pickups.py has the rule): each call of these
+# becomes its own pickup (a lemon bowl: the bowl and each lemon); books between bookends, trays,
+# plants, cushions, throws, towels and baskets stay furniture
+pickups.wrap(sys.modules[__name__], "accs", items=dict(
+    book="book", open_book="book", vessel="vase", bowl="bowl", lemon="lemon", candle_dish="dish",
+    tumbler="glass", carafe="carafe", cup_saucer="cup", mug="mug", reading_glasses="spectacles",
+    laptop="laptop", notebook="notebook", sculpture="ornament",
+), fixed=("bookends_stack",))

@@ -16,33 +16,119 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				8
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorD_Books_Bench_Ink_NoCollide"
+			"name":"DecorD_Books_Bench_Book01_Oat_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorD_Books_Bench_Oat_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorD_Books_Bench_Paper_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorD_Books_Bench_Stoneware_NoCollide"
+			"name":"DecorD_Books_Bench_Book01_Paper_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
+				1
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Books_Bench_Book01",
+			"rotation":[
+				0,
+				0.722678005695343,
+				0,
+				0.6911848187446594
+			],
+			"translation":[
+				0.0006506856298074126,
+				0,
+				0.005061294883489609
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorD_Books_Bench_Book02_Ink_NoCollide"
+		},
+		{
+			"mesh":3,
+			"name":"DecorD_Books_Bench_Book02_Paper_NoCollide"
+		},
+		{
+			"children":[
+				3,
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Books_Bench_Book02",
+			"rotation":[
+				0,
+				0.716816246509552,
+				0,
+				0.6972621083259583
+			],
+			"translation":[
+				-0.004728288855403662,
+				0.022670714184641838,
+				-0.003684662515297532
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorD_Books_Bench_Ornament01_Stoneware_NoCollide"
+		},
+		{
+			"children":[
+				6
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorD_Books_Bench_Ornament01",
+			"translation":[
+				0.029999999329447746,
+				0.04994611442089081,
+				0
+			]
+		},
+		{
+			"children":[
 				2,
-				3
+				5,
+				7
 			],
 			"name":"DecorD_Books_Bench"
 		}
@@ -50,27 +136,9 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Fabric_Ink",
-			"normalTexture":{
-				"index":0,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.017999999225139618,
-					0.024000000208616257,
-					0.03999999910593033,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Fabric_Oat",
 			"normalTexture":{
-				"index":1,
+				"index":0,
 				"scale":0.5
 			},
 			"pbrMetallicRoughness":{
@@ -100,6 +168,24 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Fabric_Ink",
+			"normalTexture":{
+				"index":1,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.017999999225139618,
+					0.024000000208616257,
+					0.03999999910593033,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.800000011920929
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Library_Planter",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -115,14 +201,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorD_Books_Bench_Ink_NoCollide",
+			"name":"DecorD_Books_Bench_Book01_Oat_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -130,26 +215,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Books_Bench_Oat_NoCollide",
+			"name":"DecorD_Books_Bench_Book01_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -157,26 +240,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Books_Bench_Paper_NoCollide",
+			"name":"DecorD_Books_Bench_Book02_Ink_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
-						"COLOR_0":12
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -184,26 +265,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":13,
+					"indices":3,
 					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorD_Books_Bench_Stoneware_NoCollide",
+			"name":"DecorD_Books_Bench_Book02_Paper_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -211,12 +290,36 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":18,
+					"indices":7,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorD_Books_Bench_Ornament01_Stoneware_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":14,
+						"NORMAL":15,
+						"TEXCOORD_0":16
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":17,
 					"material":3,
 					"mode":4
 				}
@@ -253,14 +356,14 @@
 			"componentType":5126,
 			"count":72,
 			"max":[
-				0.16394151747226715,
-				0.04994611442089081,
-				0.13582615554332733
+				0.1549999862909317,
+				0.022670714184641838,
+				0.19499999284744263
 			],
 			"min":[
-				-0.17339809238910675,
-				0.022670714184641838,
-				-0.1431954801082611
+				-0.1550000160932541,
+				0,
+				-0.19500002264976501
 			],
 			"type":"VEC3"
 		},
@@ -273,12 +376,6 @@
 			"componentType":5126,
 			"count":72,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -287,82 +384,95 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":12,
 			"max":[
-				0.20235896110534668,
-				0.022670714184641838,
-				0.16859033703804016
+				0.15200001001358032,
+				0.019870713353157043,
+				0.19199998676776886
 			],
 			"min":[
-				-0.20105759799480438,
-				0,
-				-0.15846773982048035
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.19901996850967407,
-				0.04714611545205116,
-				0.16078437864780426
-			],
-			"min":[
-				-0.19792698323726654,
+				-0.1473200023174286,
 				0.0028000008314847946,
-				-0.1553371548652649
+				-0.19200000166893005
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":12,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":24,
+			"count":12,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
+			"count":18,
+			"type":"SCALAR"
 		},
 		{
-			"componentType":5123,
-			"count":36,
-			"type":"SCALAR"
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.13500002026557922,
+				0.02727540023624897,
+				0.16500000655651093
+			],
+			"min":[
+				-0.13500002026557922,
+				0,
+				-0.16500002145767212
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"max":[
+				0.13199999928474426,
+				0.024475401267409325,
+				0.16200000047683716
+			],
+			"min":[
+				-0.12731999158859253,
+				0.0028000008314847946,
+				-0.16200000047683716
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":12,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5126,
 			"count":360,
 			"max":[
-				0.0666203573346138,
-				0.12160807102918625,
+				0.036620356142520905,
+				0.07166195660829544,
 				0.045941174030303955
 			],
 			"min":[
-				-0.013261975720524788,
-				0.04994611442089081,
+				-0.043261975049972534,
+				0,
 				-0.05236458405852318
 			],
 			"type":"VEC3"
@@ -379,12 +489,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":360,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1260,
 			"type":"SCALAR"
 		}
@@ -392,23 +496,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1166,
+			"byteLength":621,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":999,
-			"byteOffset":1168
+			"byteLength":243,
+			"byteOffset":624
 		},
 		{
 			"buffer":0,
-			"byteLength":490,
-			"byteOffset":2168
+			"byteLength":627,
+			"byteOffset":868
 		},
 		{
 			"buffer":0,
-			"byteLength":4848,
-			"byteOffset":2660
+			"byteLength":242,
+			"byteOffset":1496
+		},
+		{
+			"buffer":0,
+			"byteLength":3754,
+			"byteOffset":1740
 		}
 	],
 	"samplers":[
@@ -419,7 +528,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7508,
+			"byteLength":5496,
 			"uri":"decor_d_books_bench.bin"
 		}
 	]

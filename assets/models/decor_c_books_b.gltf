@@ -16,28 +16,131 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				6
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorC_BooksB_Bronze_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorC_BooksB_Spines_NoCollide"
+			"name":"DecorC_BooksB_Book01_Spines_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_BooksB_Book01",
+			"rotation":[
 				0,
-				1
+				-0.9995909929275513,
+				0,
+				0.02859889343380928
+			],
+			"translation":[
+				-0.006624844390898943,
+				0,
+				0.0013092455919831991
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorC_BooksB_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_BooksB_Book02",
+			"rotation":[
+				0,
+				-0.9997397661209106,
+				0,
+				0.022816546261310577
+			],
+			"translation":[
+				-0.004428176674991846,
+				0.03277653455734253,
+				-0.0020389314740896225
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorC_BooksB_Ornament01_Bronze_NoCollide"
+		},
+		{
+			"children":[
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_BooksB_Ornament01",
+			"rotation":[
+				0,
+				-0.15761254727840424,
+				0,
+				0.9875010848045349
+			],
+			"translation":[
+				-0.0061991713009774685,
+				0.07239896059036255,
+				-0.02857530675828457
+			]
+		},
+		{
+			"children":[
+				1,
+				3,
+				5
 			],
 			"name":"DecorC_BooksB"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Library_Spines",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Bronze",
@@ -50,29 +153,17 @@
 				],
 				"roughnessFactor":0.3199999928474426
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Spines",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorC_BooksB_Bronze_NoCollide",
+			"name":"DecorC_BooksB_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -80,26 +171,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorC_BooksB_Spines_NoCollide",
+			"name":"DecorC_BooksB_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -107,12 +196,36 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorC_BooksB_Ornament01_Bronze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":10,
 					"material":1,
 					"mode":4
 				}
@@ -139,87 +252,105 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":151,
+			"count":64,
 			"max":[
-				0.044445887207984924,
-				0.1823989599943161,
-				0.024625876918435097
+				0.12825962901115417,
+				0.03277653455734253,
+				0.16643528640270233
 			],
 			"min":[
-				-0.06444676220417023,
-				0.07239896059036255,
-				-0.0842667743563652
+				-0.12825962901115417,
+				0,
+				-0.16643530130386353
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":151,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":151,
+			"count":64,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":151,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":672,
+			"count":96,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":64,
 			"max":[
-				0.13094080984592438,
-				0.07239896059036255,
-				0.1748054325580597
+				0.12325964868068695,
+				0.03962242603302002,
+				0.15103395283222198
 			],
 			"min":[
-				-0.14419050514698029,
+				-0.12325964123010635,
 				0,
-				-0.1721869558095932
+				-0.15103395283222198
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":151,
+			"max":[
+				0.05016442760825157,
+				0.10999999940395355,
+				0.054164424538612366
+			],
+			"min":[
+				-0.05816442519426346,
+				0,
+				-0.05416443198919296
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":151,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":151,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":128,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":192,
+			"count":672,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1999,
+			"byteLength":583,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1554,
-			"byteOffset":2000
+			"byteLength":559,
+			"byteOffset":584
+		},
+		{
+			"buffer":0,
+			"byteLength":1596,
+			"byteOffset":1144
 		}
 	],
 	"samplers":[
@@ -230,7 +361,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":3556,
+			"byteLength":2740,
 			"uri":"decor_c_books_b.bin"
 		}
 	]

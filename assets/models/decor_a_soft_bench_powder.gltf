@@ -17,26 +17,51 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				5
+				6
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorASoftBenchPowder_black_NoCollide"
+			"name":"DecorASoftBenchPowder_Candle01_Black_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"DecorASoftBenchPowder_candle_NoCollide"
+			"name":"DecorASoftBenchPowder_Candle01_Candle_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorASoftBenchPowder_oat_NoCollide"
+			"name":"DecorASoftBenchPowder_Candle01_Stoneware_NoCollide"
+		},
+		{
+			"children":[
+				0,
+				1,
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"candle",
+					"name":"Candle",
+					"prompt":"Take candle",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorASoftBenchPowder_Candle01",
+			"translation":[
+				0,
+				-0.003000000026077032,
+				-0.029999999329447746
+			]
 		},
 		{
 			"mesh":3,
-			"name":"DecorASoftBenchPowder_stoneware_NoCollide"
+			"name":"DecorASoftBenchPowder_oat_NoCollide"
 		},
 		{
 			"mesh":4,
@@ -44,11 +69,9 @@
 		},
 		{
 			"children":[
-				0,
-				1,
-				2,
 				3,
-				4
+				4,
+				5
 			],
 			"name":"DecorASoftBenchPowder"
 		}
@@ -84,24 +107,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Fabric_Oat",
-			"normalTexture":{
-				"index":0,
-				"scale":0.5
-			},
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.3700000047683716,
-					0.30000001192092896,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Entry_Stoneware",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -112,6 +117,24 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.6200000047683716
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Fabric_Oat",
+			"normalTexture":{
+				"index":0,
+				"scale":0.5
+			},
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.5,
+					0.4399999976158142,
+					0.3499999940395355,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.8999999761581421
 			}
 		},
 		{
@@ -134,14 +157,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorASoftBenchPowder_black_NoCollide",
+			"name":"DecorASoftBenchPowder_Candle01_Black_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -149,26 +171,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorASoftBenchPowder_candle_NoCollide",
+			"name":"DecorASoftBenchPowder_Candle01_Candle_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -176,13 +196,37 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorASoftBenchPowder_Candle01_Stoneware_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -192,37 +236,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":14,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorASoftBenchPowder_stoneware_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -230,12 +246,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":15,
 					"material":3,
 					"mode":4
 				}
@@ -246,10 +261,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -257,12 +271,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":24,
+					"indices":19,
 					"material":4,
 					"mode":4
 				}
@@ -305,13 +318,13 @@
 			"count":24,
 			"max":[
 				0.0010000000474974513,
-				0.08300000429153442,
-				-0.028999999165534973
+				0.0860000029206276,
+				0.0010000001639127731
 			],
 			"min":[
 				-0.0010000000474974513,
-				0.07500000298023224,
-				-0.03099999949336052
+				0.07800000160932541,
+				-0.0010000001639127731
 			],
 			"type":"VEC3"
 		},
@@ -324,12 +337,6 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":24,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -341,13 +348,13 @@
 			"count":53,
 			"max":[
 				0.03799999877810478,
-				0.07600000500679016,
-				0.007999999448657036
+				0.07900000363588333,
+				0.03799999877810478
 			],
 			"min":[
 				-0.03799999877810478,
-				0.07000000029802322,
-				-0.06799999624490738
+				0.0729999989271164,
+				-0.037999995052814484
 			],
 			"type":"VEC3"
 		},
@@ -363,13 +370,37 @@
 		},
 		{
 			"componentType":5123,
-			"count":53,
-			"normalized":true,
-			"type":"VEC4"
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"max":[
+				0.041999999433755875,
+				0.09640000015497208,
+				0.041999999433755875
+			],
+			"min":[
+				-0.041999999433755875,
+				0,
+				-0.041999995708465576
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":204,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":672,
 			"type":"SCALAR"
 		},
 		{
@@ -399,49 +430,7 @@
 		},
 		{
 			"componentType":5123,
-			"count":246,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":864,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":204,
-			"max":[
-				0.041999999433755875,
-				0.0934000015258789,
-				0.012000000104308128
-			],
-			"min":[
-				-0.041999999433755875,
-				-0.003000000026077032,
-				-0.07199999690055847
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":204,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":204,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":204,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":672,
 			"type":"SCALAR"
 		},
 		{
@@ -471,12 +460,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":176,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":330,
 			"type":"SCALAR"
 		}
@@ -484,28 +467,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":472,
+			"byteLength":299,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":765,
-			"byteOffset":472
+			"byteLength":614,
+			"byteOffset":300
 		},
 		{
 			"buffer":0,
-			"byteLength":2283,
-			"byteOffset":1240
+			"byteLength":1857,
+			"byteOffset":916
 		},
 		{
 			"buffer":0,
-			"byteLength":2216,
-			"byteOffset":3524
+			"byteLength":2050,
+			"byteOffset":2776
 		},
 		{
 			"buffer":0,
-			"byteLength":1774,
-			"byteOffset":5740
+			"byteLength":1213,
+			"byteOffset":4828
 		}
 	],
 	"samplers":[
@@ -516,7 +499,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7516,
+			"byteLength":6044,
 			"uri":"decor_a_soft_bench_powder.bin"
 		}
 	]

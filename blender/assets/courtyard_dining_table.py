@@ -149,7 +149,11 @@ def dress(p, col, root, rng):
     bb = bmesh.new()
     buv = bb.loops.layers.uv.new("UVMap")
     cc.lathe_bm(bb, bowl, 16, Matrix.Translation((0.56, 0.0, z0)), buv, tile=0.25)
-    common.mesh_object(f"{n}_BowlNoCollide", bb, col, terra, root, smooth=True)
+    bowl = common.mesh_object(f"{n}_BowlNoCollide", bb, col, terra, root, smooth=True)
+    # the bowl is a throwable pickup (lib/pickups.py); the lit candles and the bud vase stay
+    from lib import pickups
+    importlib.reload(pickups)
+    pickups.adopt(f"{n}_Bowl", col, root, "bowl", [bowl], (0.56, 0.0, z0))
 
 
 if __name__ == "__main__":

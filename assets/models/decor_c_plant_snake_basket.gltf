@@ -90,8 +90,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -99,12 +98,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
@@ -115,10 +113,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -126,12 +123,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
@@ -142,10 +138,9 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -153,12 +148,11 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
@@ -210,12 +204,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":247,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":858,
 			"type":"SCALAR"
 		},
@@ -243,12 +231,6 @@
 			"componentType":5126,
 			"count":49,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":49,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -282,12 +264,6 @@
 		},
 		{
 			"componentType":5123,
-			"count":288,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":1488,
 			"type":"SCALAR"
 		}
@@ -295,18 +271,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3432,
+			"byteLength":2426,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":835,
-			"byteOffset":3432
+			"byteLength":552,
+			"byteOffset":2428
 		},
 		{
 			"buffer":0,
-			"byteLength":2884,
-			"byteOffset":4268
+			"byteLength":2426,
+			"byteOffset":2980
 		}
 	],
 	"samplers":[
@@ -317,7 +293,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":7152,
+			"byteLength":5408,
 			"uri":"decor_c_plant_snake_basket.bin"
 		}
 	]

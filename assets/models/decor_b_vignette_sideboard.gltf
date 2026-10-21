@@ -6,8 +6,7 @@
 	"extensionsUsed":[
 		"KHR_draco_mesh_compression",
 		"KHR_materials_clearcoat",
-		"EXT_texture_webp",
-		"KHR_materials_sheen"
+		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
 		"KHR_draco_mesh_compression",
@@ -18,7 +17,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				12
+				26
 			]
 		}
 	],
@@ -29,62 +28,318 @@
 		},
 		{
 			"mesh":1,
-			"name":"DecorBVignetteSideboard_Bronze_NoCollide"
+			"name":"DecorBVignetteSideboard_Book01_Candle_NoCollide"
 		},
 		{
 			"mesh":2,
-			"name":"DecorBVignetteSideboard_Candle_NoCollide"
+			"name":"DecorBVignetteSideboard_Book01_ClothRust_NoCollide"
+		},
+		{
+			"children":[
+				1,
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteSideboard_Book01",
+			"rotation":[
+				0,
+				0.02859416790306568,
+				0,
+				0.9995911121368408
+			],
+			"translation":[
+				0.047822799533605576,
+				0,
+				0.003751082345843315
+			]
 		},
 		{
 			"mesh":3,
-			"name":"DecorBVignetteSideboard_CeramicCharcoal_NoCollide"
+			"name":"DecorBVignetteSideboard_Book02_Candle_NoCollide"
 		},
 		{
 			"mesh":4,
-			"name":"DecorBVignetteSideboard_CeramicOat_NoCollide"
+			"name":"DecorBVignetteSideboard_Book02_WoolGreige_NoCollide"
+		},
+		{
+			"children":[
+				4,
+				5
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteSideboard_Book02",
+			"rotation":[
+				0,
+				0.035151153802871704,
+				0,
+				0.9993820190429688
+			],
+			"translation":[
+				0.05547818914055824,
+				0.027726370841264725,
+				0.005630954168736935
+			]
 		},
 		{
 			"mesh":5,
-			"name":"DecorBVignetteSideboard_ClothRust_NoCollide"
+			"name":"DecorBVignetteSideboard_Book03_Candle_NoCollide"
 		},
 		{
 			"mesh":6,
-			"name":"DecorBVignetteSideboard_GlassSmoke_NoCollide"
+			"name":"DecorBVignetteSideboard_Book03_PaperWhite_NoCollide"
+		},
+		{
+			"children":[
+				7,
+				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteSideboard_Book03",
+			"rotation":[
+				0,
+				-0.008600248955190182,
+				0,
+				0.9999630451202393
+			],
+			"translation":[
+				0.049393344670534134,
+				0.06078756973147392,
+				-0.0032907319255173206
+			]
 		},
 		{
 			"mesh":7,
-			"name":"DecorBVignetteSideboard_Leaf_NoCollide"
+			"name":"DecorBVignetteSideboard_Carafe01_GlassSmoke_NoCollide"
+		},
+		{
+			"children":[
+				10
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"carafe",
+					"name":"Carafe",
+					"prompt":"Take carafe",
+					"range":1.4,
+					"throwable":true,
+					"noise":1.0,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteSideboard_Carafe01",
+			"translation":[
+				0.8700000047683716,
+				0.00800000037997961,
+				-0.03999999910593033
+			]
 		},
 		{
 			"mesh":8,
-			"name":"DecorBVignetteSideboard_Marble_NoCollide"
+			"name":"DecorBVignetteSideboard_Glass01_GlassSmoke_NoCollide"
+		},
+		{
+			"children":[
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"glass",
+					"name":"Glass",
+					"prompt":"Take glass",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteSideboard_Glass01",
+			"translation":[
+				0.6800000071525574,
+				0.00800000037997961,
+				0.029999999329447746
+			]
 		},
 		{
 			"mesh":9,
-			"name":"DecorBVignetteSideboard_PaperWhite_NoCollide"
+			"name":"DecorBVignetteSideboard_Glass02_GlassSmoke_NoCollide"
+		},
+		{
+			"children":[
+				14
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"glass",
+					"name":"Glass",
+					"prompt":"Take glass",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteSideboard_Glass02",
+			"translation":[
+				0.7599999904632568,
+				0.00800000037997961,
+				0.07000000029802322
+			]
 		},
 		{
 			"mesh":10,
-			"name":"DecorBVignetteSideboard_Walnut_NoCollide"
+			"name":"DecorBVignetteSideboard_Leaf_NoCollide"
 		},
 		{
 			"mesh":11,
-			"name":"DecorBVignetteSideboard_WoolGreige_NoCollide"
+			"name":"DecorBVignetteSideboard_Ornament01_Bronze_NoCollide"
+		},
+		{
+			"mesh":12,
+			"name":"DecorBVignetteSideboard_Ornament01_Marble_NoCollide"
+		},
+		{
+			"children":[
+				17,
+				18
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ornament",
+					"name":"Ornament",
+					"prompt":"Take ornament",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorBVignetteSideboard_Ornament01",
+			"rotation":[
+				0,
+				0.10452847927808762,
+				0,
+				0.9945219159126282
+			],
+			"translation":[
+				0.05999999865889549,
+				0.08601060509681702,
+				0.009999999776482582
+			]
+		},
+		{
+			"mesh":13,
+			"name":"DecorBVignetteSideboard_Vase01_CeramicCharcoal_NoCollide"
+		},
+		{
+			"mesh":14,
+			"name":"DecorBVignetteSideboard_Vase02_PaperWhite_NoCollide"
+		},
+		{
+			"children":[
+				21
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteSideboard_Vase02",
+			"translation":[
+				-0.699999988079071,
+				0,
+				0.07000000029802322
+			]
+		},
+		{
+			"mesh":15,
+			"name":"DecorBVignetteSideboard_Vase03_CeramicOat_NoCollide"
+		},
+		{
+			"children":[
+				23
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorBVignetteSideboard_Vase03",
+			"translation":[
+				-0.7900000214576721,
+				0,
+				0.15000000596046448
+			]
+		},
+		{
+			"mesh":16,
+			"name":"DecorBVignetteSideboard_Walnut_NoCollide"
 		},
 		{
 			"children":[
 				0,
-				1,
-				2,
 				3,
-				4,
-				5,
 				6,
-				7,
-				8,
 				9,
-				10,
-				11
+				11,
+				13,
+				15,
+				16,
+				19,
+				20,
+				22,
+				24,
+				25
 			],
 			"name":"DecorBVignetteSideboard"
 		}
@@ -106,19 +361,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Bronze",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.25999999046325684,
-					0.12999999523162842,
-					1
-				],
-				"roughnessFactor":0.3199999928474426
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Candle_Cream",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -133,34 +375,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Ceramic_Charcoal",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.05000000074505806,
-					0.05000000074505806,
-					0.054999999701976776,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.30000001192092896
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Ceramic_Oat",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.550000011920929,
-					0.5,
-					0.4000000059604645,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
-		{
-			"doubleSided":true,
 			"name":"M_Decor_Cloth_Rust",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -171,6 +385,33 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.8500000238418579
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Wool_Greige_Dining",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.20000000298023224,
+					0.18000000715255737,
+					0.15000000596046448,
+					1
+				],
+				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Picture_Mat",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.8799999952316284,
+					0.8700000047683716,
+					0.8299999833106995,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.9200000166893005
 			}
 		},
 		{
@@ -204,27 +445,57 @@
 		},
 		{
 			"doubleSided":true,
+			"name":"M_Bronze",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.41999998688697815,
+					0.25999999046325684,
+					0.12999999523162842,
+					1
+				],
+				"roughnessFactor":0.3199999928474426
+			}
+		},
+		{
+			"doubleSided":true,
 			"name":"M_Marble_White",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
+				"baseColorFactor":[
+					0.800000011920929,
+					0.7900000214576721,
+					0.7699999809265137,
+					1
+				],
 				"metallicFactor":0,
 				"roughnessFactor":0.30000001192092896
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Picture_Mat",
+			"name":"M_Ceramic_Charcoal",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.8799999952316284,
-					0.8700000047683716,
-					0.8299999833106995,
+					0.05000000074505806,
+					0.05000000074505806,
+					0.054999999701976776,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.9200000166893005
+				"roughnessFactor":0.30000001192092896
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Ceramic_Oat",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.550000011920929,
+					0.5,
+					0.4000000059604645,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.3499999940395355
 			}
 		},
 		{
@@ -238,33 +509,10 @@
 			"name":"M_Walnut",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":1
+					"index":0
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
-			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_sheen":{
-					"sheenColorFactor":[
-						1.0,
-						1.0,
-						1.0
-					],
-					"sheenRoughnessFactor":0.5
-				}
-			},
-			"name":"M_Wool_Greige_Dining",
-			"normalTexture":{
-				"index":2
-			},
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":3
-				},
-				"metallicFactor":0
 			}
 		}
 	],
@@ -276,8 +524,7 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -285,26 +532,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_Bronze_NoCollide",
+			"name":"DecorBVignetteSideboard_Book01_Candle_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -312,26 +557,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
+					"indices":7,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_Candle_NoCollide",
+			"name":"DecorBVignetteSideboard_Book01_ClothRust_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":8,
+						"NORMAL":9,
+						"TEXCOORD_0":10
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -339,26 +582,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":14,
+					"indices":11,
 					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_CeramicCharcoal_NoCollide",
+			"name":"DecorBVignetteSideboard_Book02_Candle_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -366,26 +607,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
-					"material":3,
+					"indices":7,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_CeramicOat_NoCollide",
+			"name":"DecorBVignetteSideboard_Book02_WoolGreige_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -393,8 +632,57 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":11,
+					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Book03_Candle_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":18,
+						"NORMAL":19,
+						"TEXCOORD_0":20
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":7,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Book03_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":21,
+						"NORMAL":22,
+						"TEXCOORD_0":23
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -405,55 +693,76 @@
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_ClothRust_NoCollide",
+			"name":"DecorBVignetteSideboard_Carafe01_GlassSmoke_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":25,
 						"NORMAL":26,
-						"TEXCOORD_0":27,
-						"COLOR_0":28
+						"TEXCOORD_0":27
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":7,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":29,
+					"indices":28,
 					"material":5,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_GlassSmoke_NoCollide",
+			"name":"DecorBVignetteSideboard_Glass01_GlassSmoke_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":30,
-						"NORMAL":31,
-						"TEXCOORD_0":32,
-						"COLOR_0":33
+						"POSITION":29,
+						"NORMAL":30,
+						"TEXCOORD_0":31
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":6,
+							"bufferView":8,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":34,
-					"material":6,
+					"indices":32,
+					"material":5,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Glass02_GlassSmoke_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":33,
+						"NORMAL":34,
+						"TEXCOORD_0":35
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":9,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":32,
+					"material":5,
 					"mode":4
 				}
 			]
@@ -463,78 +772,147 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":35,
-						"NORMAL":36,
-						"TEXCOORD_0":37,
-						"COLOR_0":38
+						"POSITION":36,
+						"NORMAL":37,
+						"TEXCOORD_0":38
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":7,
+							"bufferView":10,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
 					"indices":39,
+					"material":6,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Ornament01_Bronze_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":43,
 					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_Marble_NoCollide",
+			"name":"DecorBVignetteSideboard_Ornament01_Marble_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":40,
-						"NORMAL":41,
-						"TEXCOORD_0":42,
-						"COLOR_0":43
+						"POSITION":44,
+						"NORMAL":45,
+						"TEXCOORD_0":46
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":8,
+							"bufferView":12,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":44,
+					"indices":47,
 					"material":8,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorBVignetteSideboard_PaperWhite_NoCollide",
+			"name":"DecorBVignetteSideboard_Vase01_CeramicCharcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":45,
-						"NORMAL":46,
-						"TEXCOORD_0":47,
-						"COLOR_0":48
+						"POSITION":48,
+						"NORMAL":49,
+						"TEXCOORD_0":50
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":9,
+							"bufferView":13,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":49,
+					"indices":51,
 					"material":9,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Vase02_PaperWhite_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":52,
+						"NORMAL":53,
+						"TEXCOORD_0":54
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":55,
+					"material":4,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorBVignetteSideboard_Vase03_CeramicOat_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":56,
+						"NORMAL":57,
+						"TEXCOORD_0":58
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":59,
+					"material":10,
 					"mode":4
 				}
 			]
@@ -544,50 +922,21 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":50,
-						"NORMAL":51,
-						"TEXCOORD_0":52,
-						"COLOR_0":53
+						"POSITION":60,
+						"NORMAL":61,
+						"TEXCOORD_0":62
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":10,
+							"bufferView":16,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":54,
-					"material":10,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"DecorBVignetteSideboard_WoolGreige_NoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":55,
-						"NORMAL":56,
-						"TEXCOORD_0":57,
-						"COLOR_0":58
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":11,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":29,
+					"indices":63,
 					"material":11,
 					"mode":4
 				}
@@ -602,52 +951,13 @@
 				}
 			},
 			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":1
-				}
-			},
-			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":2
-				}
-			},
-			"sampler":0
-		},
-		{
-			"extensions":{
-				"EXT_texture_webp":{
-					"source":3
-				}
-			},
-			"sampler":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Marble_BaseColor",
-			"uri":"textures/T_Marble_BaseColor.webp"
-		},
-		{
-			"mimeType":"image/webp",
 			"name":"T_Walnut_BaseColor",
 			"uri":"textures/T_Walnut_BaseColor.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Dining_Rug_Normal",
-			"uri":"textures/T_Dining_Rug_Normal.webp"
-		},
-		{
-			"mimeType":"image/webp",
-			"name":"T_Dining_Rug_BaseColor",
-			"uri":"textures/T_Dining_Rug_BaseColor.webp"
 		}
 	],
 	"accessors":[
@@ -678,27 +988,216 @@
 		},
 		{
 			"componentType":5123,
-			"count":224,
-			"normalized":true,
-			"type":"VEC4"
+			"count":480,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.15957525372505188,
+				0.02492636814713478,
+				0.1252012997865677
+			],
+			"min":[
+				-0.15957523882389069,
+				0.00279999990016222,
+				-0.12576128542423248
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":480,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.16237524151802063,
+				0.027726370841264725,
+				0.12856131792068481
+			],
+			"min":[
+				-0.16237522661685944,
+				0,
+				-0.12856130301952362
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.14659780263900757,
+				0.030261194333434105,
+				0.114859439432621
+			],
+			"min":[
+				-0.14659780263900757,
+				0.002799997106194496,
+				-0.11541944742202759
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"max":[
+				0.1493978202342987,
+				0.0330611988902092,
+				0.11821944266557693
+			],
+			"min":[
+				-0.1493978202342987,
+				-1.862645149230957e-09,
+				-0.11821944266557693
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.1326925903558731,
+				0.02242303267121315,
+				0.10011088848114014
+			],
+			"min":[
+				-0.1326926052570343,
+				0.0027999989688396454,
+				-0.10067088901996613
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.13549259305000305,
+				0.025223035365343094,
+				0.10447090119123459
+			],
+			"min":[
+				-0.13549259305000305,
+				0,
+				-0.10347087681293488
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":144,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":366,
+			"max":[
+				0.05799996852874756,
+				0.2499999850988388,
+				0.057999998331069946
+			],
+			"min":[
+				-0.05799996852874756,
+				0,
+				-0.057999998331069946
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":366,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":366,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1440,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":148,
 			"max":[
-				0.10499496012926102,
-				0.21101060509681702,
-				0.05401663854718208
+				0.03600001335144043,
+				0.09000000357627869,
+				0.035097405314445496
 			],
 			"min":[
-				0.015005042776465416,
-				0.12101060152053833,
-				-0.034016646444797516
+				-0.03600001335144043,
+				0,
+				-0.035097405314445496
 			],
 			"type":"VEC3"
 		},
@@ -714,9 +1213,88 @@
 		},
 		{
 			"componentType":5123,
+			"count":420,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
 			"count":148,
-			"normalized":true,
-			"type":"VEC4"
+			"max":[
+				0.03600001335144043,
+				0.09000000357627869,
+				0.035097405314445496
+			],
+			"min":[
+				-0.03600001335144043,
+				0,
+				-0.035097405314445496
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":342,
+			"max":[
+				-0.7152261734008789,
+				0.7587217092514038,
+				0.15087556838989258
+			],
+			"min":[
+				-1.0553877353668213,
+				0.4759380519390106,
+				-0.21440555155277252
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":342,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":342,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":600,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"max":[
+				0.04387175664305687,
+				0.125,
+				0.04499998688697815
+			],
+			"min":[
+				-0.043871745467185974,
+				0.034999996423721313,
+				-0.04500000178813934
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":148,
+			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
@@ -725,38 +1303,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":96,
 			"max":[
-				0.2142942100763321,
-				0.08321060240268707,
-				0.13786976039409637
+				0.03500000759959221,
+				0.034999996423721313,
+				0.03500000387430191
 			],
 			"min":[
-				-0.11868063360452652,
-				0.00279999990016222,
-				-0.13092666864395142
+				-0.034999996423721313,
+				0,
+				-0.03500000014901161
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":72,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":108,
+			"count":132,
 			"type":"SCALAR"
 		},
 		{
@@ -786,27 +1358,51 @@
 		},
 		{
 			"componentType":5123,
-			"count":526,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":2052,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":280,
+			"count":470,
 			"max":[
-				-0.7400000095367432,
-				0.121799997985363,
-				0.19874639809131622
+				0.06821250915527344,
+				0.25224998593330383,
+				0.06821250170469284
 			],
 			"min":[
-				-0.8400000333786011,
+				-0.06821250915527344,
 				0,
-				0.10125361382961273
+				-0.06821250170469284
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":470,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":470,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":1728,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":280,
+			"max":[
+				0.050000011920928955,
+				0.121799997985363,
+				0.048746392130851746
+			],
+			"min":[
+				-0.050000011920928955,
+				0,
+				-0.048746392130851746
 			],
 			"type":"VEC3"
 		},
@@ -819,196 +1415,10 @@
 			"componentType":5126,
 			"count":280,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":280,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":840,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.21728169918060303,
-				0.027726370841264725,
-				0.14138434827327728
-			],
-			"min":[
-				-0.12163610756397247,
-				0,
-				-0.13388216495513916
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":108,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":662,
-			"max":[
-				0.9279999732971191,
-				0.257999986410141,
-				0.10509740561246872
-			],
-			"min":[
-				0.6439999938011169,
-				0.00800000037997961,
-				-0.09799999743700027
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":662,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":662,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":662,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":2280,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":342,
-			"max":[
-				-0.7152261734008789,
-				0.7587217092514038,
-				0.15087556838989258
-			],
-			"min":[
-				-1.0553877353668213,
-				0.4759380519390106,
-				-0.21440555155277252
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":342,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":342,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":342,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":600,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"max":[
-				0.1010962501168251,
-				0.12101060152053833,
-				0.05109625309705734
-			],
-			"min":[
-				0.018903743475675583,
-				0.08601060509681702,
-				-0.03109625354409218
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":96,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":132,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":566,
-			"max":[
-				0.18664556741714478,
-				0.25224998593330383,
-				0.13821250200271606
-			],
-			"min":[
-				-0.7682124972343445,
-				0,
-				-0.10907675325870514
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":566,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":566,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":566,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1872,
 			"type":"SCALAR"
 		},
 		{
@@ -1038,107 +1448,95 @@
 		},
 		{
 			"componentType":5123,
-			"count":144,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
 			"count":372,
 			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"max":[
-				0.21281276643276215,
-				0.06078756973147392,
-				0.1340547651052475
-			],
-			"min":[
-				-0.10185638815164566,
-				0.027726370841264725,
-				-0.12279285490512848
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":72,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":72,
-			"normalized":true,
-			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2932,
+			"byteLength":1898,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2017,
-			"byteOffset":2932
+			"byteLength":313,
+			"byteOffset":1900
 		},
 		{
 			"buffer":0,
-			"byteLength":988,
-			"byteOffset":4952
+			"byteLength":533,
+			"byteOffset":2216
 		},
 		{
 			"buffer":0,
-			"byteLength":5291,
-			"byteOffset":5940
+			"byteLength":314,
+			"byteOffset":2752
 		},
 		{
 			"buffer":0,
-			"byteLength":3480,
-			"byteOffset":11232
+			"byteLength":525,
+			"byteOffset":3068
 		},
 		{
 			"buffer":0,
-			"byteLength":1014,
-			"byteOffset":14712
+			"byteLength":314,
+			"byteOffset":3596
 		},
 		{
 			"buffer":0,
-			"byteLength":6109,
-			"byteOffset":15728
+			"byteLength":714,
+			"byteOffset":3912
 		},
 		{
 			"buffer":0,
-			"byteLength":4508,
-			"byteOffset":21840
+			"byteLength":3111,
+			"byteOffset":4628
 		},
 		{
 			"buffer":0,
-			"byteLength":1408,
-			"byteOffset":26348
+			"byteLength":1326,
+			"byteOffset":7740
 		},
 		{
 			"buffer":0,
-			"byteLength":5511,
-			"byteOffset":27756
+			"byteLength":1323,
+			"byteOffset":9068
 		},
 		{
 			"buffer":0,
-			"byteLength":1551,
-			"byteOffset":33268
+			"byteLength":3306,
+			"byteOffset":10392
 		},
 		{
 			"buffer":0,
-			"byteLength":1148,
-			"byteOffset":34820
+			"byteLength":1641,
+			"byteOffset":13700
+		},
+		{
+			"buffer":0,
+			"byteLength":852,
+			"byteOffset":15344
+		},
+		{
+			"buffer":0,
+			"byteLength":4382,
+			"byteOffset":16196
+		},
+		{
+			"buffer":0,
+			"byteLength":3886,
+			"byteOffset":20580
+		},
+		{
+			"buffer":0,
+			"byteLength":2602,
+			"byteOffset":24468
+		},
+		{
+			"buffer":0,
+			"byteLength":1184,
+			"byteOffset":27072
 		}
 	],
 	"samplers":[
@@ -1149,7 +1547,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":35968,
+			"byteLength":28256,
 			"uri":"decor_b_vignette_sideboard.bin"
 		}
 	]

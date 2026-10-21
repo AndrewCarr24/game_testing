@@ -16,38 +16,227 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				12
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorC_VignetteConsole_Bronze_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorC_VignetteConsole_Charcoal_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorC_VignetteConsole_Glaze_NoCollide"
-		},
-		{
-			"mesh":3,
-			"name":"DecorC_VignetteConsole_Spines_NoCollide"
+			"name":"DecorC_VignetteConsole_Book01_Spines_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_VignetteConsole_Book01",
+			"rotation":[
 				0,
+				0.9997591972351074,
+				0,
+				0.021946292370557785
+			],
+			"translation":[
+				-0.2807491719722748,
+				0,
+				0.006742935162037611
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorC_VignetteConsole_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_VignetteConsole_Book02",
+			"rotation":[
+				0,
+				-0.07535769790410995,
+				0,
+				0.99715656042099
+			],
+			"translation":[
+				-0.2785203456878662,
+				0.03867137059569359,
+				0.002030994277447462
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorC_VignetteConsole_Dish01_Bronze_NoCollide"
+		},
+		{
+			"children":[
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bronze_dish",
+					"name":"Bronze dish",
+					"prompt":"Take bronze dish",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.8,
+					"shatter":false
+				}
+			},
+			"name":"DecorC_VignetteConsole_Dish01",
+			"translation":[
+				-0.25999999046325684,
+				0.08102520555257797,
+				0.009999999776482582
+			]
+		},
+		{
+			"mesh":3,
+			"name":"DecorC_VignetteConsole_Vase01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				6
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorC_VignetteConsole_Vase01",
+			"rotation":[
+				0,
+				-0.873497724533081,
+				0,
+				0.4868282675743103
+			],
+			"translation":[
+				0.19850711524486542,
+				0,
+				-0.10177481174468994
+			]
+		},
+		{
+			"mesh":4,
+			"name":"DecorC_VignetteConsole_Vase02_Glaze_NoCollide"
+		},
+		{
+			"children":[
+				8
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorC_VignetteConsole_Vase02",
+			"rotation":[
+				0,
+				-0.05522219091653824,
+				0,
+				0.9984741806983948
+			],
+			"translation":[
+				0.3405584990978241,
+				0,
+				-0.0864102691411972
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorC_VignetteConsole_Vase03_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				10
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"ceramic_vase",
+					"name":"Vase",
+					"prompt":"Take vase",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorC_VignetteConsole_Vase03",
+			"rotation":[
+				0,
+				0.13860131800174713,
+				0,
+				0.9903482794761658
+			],
+			"translation":[
+				0.3080459237098694,
+				0,
+				0.03789348155260086
+			]
+		},
+		{
+			"children":[
 				1,
-				2,
-				3
+				3,
+				5,
+				7,
+				9,
+				11
 			],
 			"name":"DecorC_VignetteConsole"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Library_Spines",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Bronze",
@@ -88,29 +277,17 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.18000000715255737
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Spines",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"DecorC_VignetteConsole_Bronze_NoCollide",
+			"name":"DecorC_VignetteConsole_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -118,26 +295,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorC_VignetteConsole_Charcoal_NoCollide",
+			"name":"DecorC_VignetteConsole_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -145,26 +320,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorC_VignetteConsole_Glaze_NoCollide",
+			"name":"DecorC_VignetteConsole_Dish01_Bronze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -172,8 +345,32 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":10,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorC_VignetteConsole_Vase01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
@@ -184,28 +381,51 @@
 			]
 		},
 		{
-			"name":"DecorC_VignetteConsole_Spines_NoCollide",
+			"name":"DecorC_VignetteConsole_Vase02_Glaze_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":15,
 						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
+						"TEXCOORD_0":17
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":19,
+					"indices":18,
 					"material":3,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorC_VignetteConsole_Vase03_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":22,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -231,16 +451,71 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":271,
+			"count":64,
 			"max":[
-				-0.1849999874830246,
-				0.10552520304918289,
-				0.08500000089406967
+				0.15428513288497925,
+				0.03867137059569359,
+				0.1607222706079483
 			],
 			"min":[
-				-0.3349999785423279,
-				0.08102520555257797,
-				-0.0650000050663948
+				-0.15428508818149567,
+				0,
+				-0.1607222706079483
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.14515246450901031,
+				0.042353834956884384,
+				0.15672221779823303
+			],
+			"min":[
+				-0.14515244960784912,
+				0,
+				-0.15672223269939423
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":271,
+			"max":[
+				0.07500000298023224,
+				0.02449999749660492,
+				0.07500000298023224
+			],
+			"min":[
+				-0.07499998807907104,
+				0,
+				-0.07500000298023224
 			],
 			"type":"VEC3"
 		},
@@ -253,12 +528,6 @@
 			"componentType":5126,
 			"count":271,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":271,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -267,52 +536,46 @@
 		},
 		{
 			"componentType":5126,
-			"count":502,
+			"count":272,
 			"max":[
-				0.3609115481376648,
+				0.07819998264312744,
 				0.3990499973297119,
-				0.09075909107923508
+				0.07819999754428864
 			],
 			"min":[
-				0.12052363157272339,
+				-0.07819996774196625,
 				0,
-				-0.17975829541683197
+				-0.07820001989603043
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":502,
+			"count":272,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":502,
+			"count":272,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":502,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":2520,
+			"count":1380,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":251,
 			"max":[
-				0.4426271617412567,
+				0.10269498825073242,
 				0.2512750029563904,
-				0.01565840095281601
+				0.10269500315189362
 			],
 			"min":[
-				0.23848983645439148,
+				-0.10269498825073242,
 				0,
-				-0.18847894668579102
+				-0.10269500315189362
 			],
 			"type":"VEC3"
 		},
@@ -325,12 +588,6 @@
 			"componentType":5126,
 			"count":251,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":251,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
@@ -339,61 +596,65 @@
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":230,
 			"max":[
-				-0.11146317422389984,
-				0.08102520555257797,
-				0.1787877380847931
+				0.05290001630783081,
+				0.15985000133514404,
+				0.05290000140666962
 			],
 			"min":[
-				-0.4455775022506714,
+				-0.05290000140666962,
 				0,
-				-0.1747257560491562
+				-0.05290000140666962
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":230,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":230,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":128,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":192,
+			"count":1140,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3000,
+			"byteLength":529,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":5676,
-			"byteOffset":3000
+			"byteLength":536,
+			"byteOffset":532
 		},
 		{
 			"buffer":0,
-			"byteLength":3297,
-			"byteOffset":8676
+			"byteLength":2392,
+			"byteOffset":1068
 		},
 		{
 			"buffer":0,
-			"byteLength":1604,
-			"byteOffset":11976
+			"byteLength":2606,
+			"byteOffset":3460
+		},
+		{
+			"buffer":0,
+			"byteLength":2488,
+			"byteOffset":6068
+		},
+		{
+			"buffer":0,
+			"byteLength":2320,
+			"byteOffset":8556
 		}
 	],
 	"samplers":[
@@ -404,7 +665,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":13580,
+			"byteLength":10876,
 			"uri":"decor_c_vignette_console.bin"
 		}
 	]

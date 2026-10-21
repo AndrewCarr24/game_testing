@@ -16,33 +16,266 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				3
+				15
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"DecorATableCoffeeRect_charcoal_NoCollide"
-		},
-		{
-			"mesh":1,
-			"name":"DecorATableCoffeeRect_spines_NoCollide"
-		},
-		{
-			"mesh":2,
-			"name":"DecorATableCoffeeRect_stoneware_NoCollide"
+			"name":"DecorATableCoffeeRect_Book01_Spines_NoCollide"
 		},
 		{
 			"children":[
+				0
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCoffeeRect_Book01",
+			"rotation":[
 				0,
-				1,
+				0.06684476882219315,
+				0,
+				0.9977633953094482
+			],
+			"translation":[
+				0.19690439105033875,
+				0,
+				-0.06586680561304092
+			]
+		},
+		{
+			"mesh":1,
+			"name":"DecorATableCoffeeRect_Book02_Spines_NoCollide"
+		},
+		{
+			"children":[
 				2
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"book",
+					"name":"Book",
+					"prompt":"Take book",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.6,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCoffeeRect_Book02",
+			"rotation":[
+				0,
+				0.04679044336080551,
+				0,
+				0.998904824256897
+			],
+			"translation":[
+				0.20065785944461823,
+				0.029775789007544518,
+				-0.07555000483989716
+			]
+		},
+		{
+			"mesh":2,
+			"name":"DecorATableCoffeeRect_Bowl01_Charcoal_NoCollide"
+		},
+		{
+			"children":[
+				4
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"bowl",
+					"name":"Bowl",
+					"prompt":"Take bowl",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorATableCoffeeRect_Bowl01",
+			"translation":[
+				0.20999999344348907,
+				0.06848812848329544,
+				-0.07000000029802322
+			]
+		},
+		{
+			"mesh":3,
+			"name":"DecorATableCoffeeRect_Cup01_Charcoal_NoCollide"
+		},
+		{
+			"mesh":4,
+			"name":"DecorATableCoffeeRect_Cup01_Stoneware_NoCollide"
+		},
+		{
+			"children":[
+				6,
+				7
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"cup",
+					"name":"Cup",
+					"prompt":"Take cup",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.9,
+					"shatter":true
+				}
+			},
+			"name":"DecorATableCoffeeRect_Cup01",
+			"rotation":[
+				0,
+				0.342020183801651,
+				0,
+				0.9396926164627075
+			],
+			"translation":[
+				0.33000001311302185,
+				0,
+				0.1599999964237213
+			]
+		},
+		{
+			"mesh":5,
+			"name":"DecorATableCoffeeRect_Magazine01_Spines_NoCollide"
+		},
+		{
+			"children":[
+				9
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"magazine",
+					"name":"Magazine",
+					"prompt":"Take magazine",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCoffeeRect_Magazine01",
+			"rotation":[
+				0,
+				-0.10452847927808762,
+				0,
+				0.9945219159126282
+			],
+			"translation":[
+				-0.3400000035762787,
+				0,
+				0.05999999865889549
+			]
+		},
+		{
+			"mesh":6,
+			"name":"DecorATableCoffeeRect_Magazine02_Spines_NoCollide"
+		},
+		{
+			"children":[
+				11
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"magazine",
+					"name":"Magazine",
+					"prompt":"Take magazine",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCoffeeRect_Magazine02",
+			"rotation":[
+				0,
+				-0.026176918298006058,
+				0,
+				0.9996573328971863
+			],
+			"translation":[
+				-0.30056703090667725,
+				0.006200000178068876,
+				0.04282321780920029
+			]
+		},
+		{
+			"mesh":7,
+			"name":"DecorATableCoffeeRect_Magazine03_Spines_NoCollide"
+		},
+		{
+			"children":[
+				13
+			],
+			"extras":{
+				"interact":{
+					"type":"pickup",
+					"item":"magazine",
+					"name":"Magazine",
+					"prompt":"Take magazine",
+					"range":1.4,
+					"throwable":true,
+					"noise":0.3,
+					"shatter":false
+				}
+			},
+			"name":"DecorATableCoffeeRect_Magazine03",
+			"rotation":[
+				0,
+				0.052335891872644424,
+				0,
+				0.9986295104026794
+			],
+			"translation":[
+				-0.2611340880393982,
+				0.012400000356137753,
+				0.02564643695950508
+			]
+		},
+		{
+			"children":[
+				1,
+				3,
+				5,
+				8,
+				10,
+				12,
+				14
 			],
 			"name":"DecorATableCoffeeRect"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Library_Spines",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.6200000047683716
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Ceramic_Charcoal",
@@ -55,17 +288,6 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.30000001192092896
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Spines",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
 			}
 		},
 		{
@@ -85,14 +307,13 @@
 	],
 	"meshes":[
 		{
-			"name":"DecorATableCoffeeRect_charcoal_NoCollide",
+			"name":"DecorATableCoffeeRect_Book01_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2,
-						"COLOR_0":3
+						"TEXCOORD_0":2
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -100,26 +321,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":4,
+					"indices":3,
 					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCoffeeRect_spines_NoCollide",
+			"name":"DecorATableCoffeeRect_Book02_Spines_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":5,
-						"NORMAL":6,
-						"TEXCOORD_0":7,
-						"COLOR_0":8
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -127,26 +346,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
 							}
 						}
 					},
-					"indices":9,
-					"material":1,
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DecorATableCoffeeRect_stoneware_NoCollide",
+			"name":"DecorATableCoffeeRect_Bowl01_Charcoal_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":10,
-						"NORMAL":11,
-						"TEXCOORD_0":12,
-						"COLOR_0":13
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -154,13 +371,137 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":10,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCoffeeRect_Cup01_Charcoal_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":11,
+						"NORMAL":12,
+						"TEXCOORD_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":3,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
 							}
 						}
 					},
 					"indices":14,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCoffeeRect_Cup01_Stoneware_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":4,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":18,
 					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCoffeeRect_Magazine01_Spines_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":19,
+						"NORMAL":20,
+						"TEXCOORD_0":21
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":5,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCoffeeRect_Magazine02_Spines_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":22,
+						"NORMAL":23,
+						"TEXCOORD_0":24
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":6,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DecorATableCoffeeRect_Magazine03_Spines_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":7,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2
+							}
+						}
+					},
+					"indices":3,
+					"material":0,
 					"mode":4
 				}
 			]
@@ -186,88 +527,131 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":315,
+			"count":64,
 			"max":[
-				0.36773666739463806,
-				0.11071647703647614,
-				0.1984880268573761
+				0.1479731798171997,
+				0.029775789007544518,
+				0.11086438596248627
 			],
 			"min":[
-				0.12999999523162842,
+				-0.1479731649160385,
+				0,
+				-0.11086439341306686
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.12983563542366028,
+				0.038712337613105774,
+				0.10339339822530746
+			],
+			"min":[
+				-0.12983562052249908,
+				-1.862645149230957e-09,
+				-0.10339339822530746
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":300,
+			"max":[
+				0.07999999821186066,
+				0.042228348553180695,
+				0.07999999821186066
+			],
+			"min":[
+				-0.07999999821186066,
+				0,
+				-0.08000000566244125
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":300,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":300,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":960,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":15,
+			"max":[
+				0.038499996066093445,
 				0.05700000002980232,
-				-0.15000000596046448
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":315,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":315,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":315,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1002,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":320,
-			"max":[
-				0.3583434820175171,
-				0.06848812848329544,
-				0.19425851106643677
+				0.03753471374511719
 			],
 			"min":[
-				-0.49929118156433105,
-				0,
-				-0.1954786777496338
+				-0.03850000351667404,
+				0.05700000002980232,
+				-0.037534743547439575
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":15,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":15,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":320,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":480,
+			"count":42,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":459,
 			"max":[
-				0.40172603726387024,
+				0.07199999690055847,
 				0.07005000114440918,
-				0.2317260205745697
+				0.07199996709823608
 			],
 			"min":[
-				0.25827398896217346,
+				-0.07199999690055847,
 				0,
-				0.08827397972345352
+				-0.07199999690055847
 			],
 			"type":"VEC3"
 		},
@@ -280,34 +664,128 @@
 			"componentType":5126,
 			"count":459,
 			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":459,
-			"normalized":true,
-			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
 			"count":1548,
 			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.14000000059604645,
+				0.006000000052154064,
+				0.10750000178813934
+			],
+			"min":[
+				-0.14000001549720764,
+				0,
+				-0.10749998688697815
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.13999998569488525,
+				0.005999999586492777,
+				0.10750000923871994
+			],
+			"min":[
+				-0.14000001549720764,
+				0,
+				-0.10750000923871994
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"max":[
+				0.14000000059604645,
+				0.006000000052154064,
+				0.10750000923871994
+			],
+			"min":[
+				-0.13999998569488525,
+				0,
+				-0.10750000178813934
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":64,
+			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3689,
+			"byteLength":565,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":3138,
-			"byteOffset":3692
+			"byteLength":537,
+			"byteOffset":568
 		},
 		{
 			"buffer":0,
-			"byteLength":5682,
-			"byteOffset":6832
+			"byteLength":2854,
+			"byteOffset":1108
+		},
+		{
+			"buffer":0,
+			"byteLength":267,
+			"byteOffset":3964
+		},
+		{
+			"buffer":0,
+			"byteLength":4518,
+			"byteOffset":4232
+		},
+		{
+			"buffer":0,
+			"byteLength":546,
+			"byteOffset":8752
+		},
+		{
+			"buffer":0,
+			"byteLength":538,
+			"byteOffset":9300
+		},
+		{
+			"buffer":0,
+			"byteLength":537,
+			"byteOffset":9840
 		}
 	],
 	"samplers":[
@@ -318,7 +796,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":12516,
+			"byteLength":10380,
 			"uri":"decor_a_table_coffee_rect.bin"
 		}
 	]
