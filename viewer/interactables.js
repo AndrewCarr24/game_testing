@@ -497,6 +497,10 @@ export class Interactables {
         if (!onIt && angle > FOCUS_CONE) continue;   // (affordance) not where the player looks
         score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
       } else score = d - (pickup ? 10 : 0);
+      // (focus) what was just used stays in focus for 1.5 s while it's still in view and reach: an
+      // opened door swings out from under the crosshair, and the next E went to the light switch
+      // beside it instead of closing the door
+      if (this.lastUsed?.it === it && performance.now() - this.lastUsed.at < 1500) score -= 5;
       if (score < bestScore) { best = it; bestScore = score; }
     }
     return best;
@@ -607,6 +611,7 @@ export class Interactables {
 
   // press E on an item; returns a message to show, or null
   use(it, playerBox) {
+    this.lastUsed = { it, at: performance.now() };   // (focus) a door just opened keeps the focus a moment
     const d = it.def;
     if (d.type === 'pickup') {
       it.taken = true;
