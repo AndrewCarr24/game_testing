@@ -4,7 +4,7 @@
 // and blows the fuse; the garage goes dark, the motors (blinds, garage door) stop, the switches
 // say "no power", the isolator says "No main fuse"; the flashlight (picked up in the mudroom,
 // F) lights the dark and its beam on the Grimble sends a `light` cue (not through a wall); the
-// spare fuse is upstairs in the guest room's nightstand drawer; fuse in + isolator on = power
+// spare fuse is in the garage's steel locker (a key chain away); fuse in + isolator on = power
 // back, rooms lit; a timed trip later (fuse intact) is undone at the isolator alone.
 // Screenshots: <out>/power_*.png. Usage: node viewer/tools/power.mjs [out-dir=build/power] [real]
 import { chromium } from 'playwright-core';
@@ -25,7 +25,6 @@ const eyeBreaker = fromProp(breaker, [0, -0.85, 0.2]);         // in front of it
 const lookIso = fromProp(breaker, [0, 0, 0.275]);              // the isolator (top)
 const lookSlot = fromProp(breaker, [0, 0, -0.25]);             // the fuse carrier (bottom)
 const garage = room('garage');
-const ns = props('guest_nightstand')[0];
 const flash = prop('ix_flashlight');
 
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
@@ -137,7 +136,11 @@ await teleport(fromProp(flash, [0, -0.6, 0.73]), fromProp(flash, [0, 0, 0]));
 await p.waitForTimeout(200);
 const fh = await hint();
 if (fh.includes('Take') || fh.includes('Pick')) await press('KeyE');
-else await p.evaluate(() => { const it = window.__interact.items.find((i) => i.def.item === 'flashlight'); window.__interact.use(it, null); window.__inventory.changed(); });
+else {   // (it's in the garage locker, behind a key chain: open it as if unlocked)
+  await p.evaluate(() => { const I = window.__interact, it = I.items.find((i) => i.def.item === 'flashlight'); if (it.host) { it.host.locked = false; I.use(it.host, null); } });
+  await p.waitForTimeout(1500);
+  await p.evaluate(() => { const it = window.__interact.items.find((i) => i.def.item === 'flashlight'); window.__interact.use(it, null); window.__inventory.changed(); });
+}
 check('picked up the flashlight', (await S()).inv.includes('flashlight'), `hint was "${fh}"`);
 await teleport(view, viewLook); await p.waitForTimeout(200);
 check('the walk hint shows F for the flashlight', (await hint()).includes('F flashlight'), `hint="${await hint()}"`);
@@ -168,16 +171,18 @@ const cue = await p.evaluate(async ([gx, gz, wx, wz]) => {
 }, [viewLook[0], viewLook[2], garage.cx, garage.z0 - 3]);
 check('the beam on the Grimble sends a light cue; through a wall it does not', cue.inBeam >= 1 && cue.behind === 0, JSON.stringify(cue));
 
-// ---------------------------------------------------------------- the spare fuse, upstairs
-const nsEye = fromProp(ns, [0, -0.8, 1.7]);
-await teleport(nsEye, fromProp(ns, [0, 0, 0.4])); await p.waitForTimeout(300);
-await shot('4_guest_nightstand_dark');
-check('the nightstand drawer offers to open', (await hint()).includes('Open drawer'), `hint="${await hint()}"`);
-await press('KeyE', 700);
-await teleport(nsEye, fromProp(ns, [0, -0.15, 0.36])); await p.waitForTimeout(300);
-await shot('5_fuse_in_drawer');
-check('the fuse in the open drawer is offered', (await hint()).includes('fuse') || (await hint()).includes('Fuse'), `hint="${await hint()}"`);
-await press('KeyE');
+// ---------------------------------------------------------------- the spare fuse (in the garage locker)
+// (getting it is a key chain, blender/levels/caches.py, walked by locks.mjs; here: open the
+// locker as if unlocked and take the fuse)
+const fuseHost = await p.evaluate(() => {
+  const I = window.__interact, it = I.items.find((i) => i.def.item === 'fuse');
+  if (!it) return null;
+  if (it.host) { it.host.locked = false; I.use(it.host, null); }
+  return it.host ? it.host.node.name : 'none';
+});
+check('the spare fuse is in the garage locker', /Locker/i.test(fuseHost ?? ''), `host=${fuseHost}`);
+await p.waitForTimeout(1500);
+await p.evaluate(() => { const I = window.__interact, it = I.items.find((i) => i.def.item === 'fuse'); I.use(it, null); window.__inventory.changed(); });
 check('took the fuse', (await S()).inv.includes('fuse'), `toast="${await toast()}"`);
 
 // ---------------------------------------------------------------- fuse in, isolator on: power back
