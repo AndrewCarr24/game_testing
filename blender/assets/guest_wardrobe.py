@@ -47,8 +47,8 @@ P = dict(name=NAME, width=3.6, depth=0.62, height=2.7, plinth_h=0.10, doors=6,
          reed_normal=0.5,      # how much of the reeds' curvature their shading normals keep
          pull_finish="black",  # "black" (satin black: reads on the pale oak) or "bronze" (the suite's hardware)
          hide=(2, 3),          # the door pair that is a hiding spot (None: a solid interior)
-         coats=[(-0.42, "M_Guest_Coat_Sage", (0.10, 0.13, 0.085), 1.0),
-                (0.40, "M_Guest_Coat_Stone", (0.36, 0.33, 0.28), 0.9)])
+         coats=[(-0.42, "M_Entry_Coat_Olive", (0.07, 0.085, 0.04), 1.0),     # (the coat closet's materials)
+                (0.40, "M_Entry_Coat_Oat", (0.30, 0.26, 0.20), 0.9)])
 
 
 # T_Guest_Oak_BaseColor is a Poly Haven oak veneer scan (blender/tools/polyhaven_textures.py),

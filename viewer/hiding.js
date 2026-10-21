@@ -19,6 +19,49 @@ const seg = (t, a, b) => smooth(clamp01((t - a) / (b - a)));      // 0 -> 1 betw
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const DEG = THREE.MathUtils.degToRad;
 
+// Draw calls: a hiding spot's doors are batched with their room like any static furniture (on
+// their own per-room material copies, so a room's hide doors are one draw call per material). While
+// the player is in a spot, that room's batch of hide doors is switched off and the doors' own meshes
+// are put back under their hinges to swing; once out, the batch is back.
+export function batchHideDoors(interact, roomRoots) {
+  const roomOf = new Map();
+  for (const [room, roots] of Object.entries(roomRoots)) for (const r of roots) roomOf.set(r, room);
+  const groups = new Map();      // room -> {mats: Set, items: []}
+  for (const it of interact.items) {
+    if (it.def.type !== 'hide' || !it.doors.length || !roomOf.has(it.root)) continue;
+    const room = roomOf.get(it.root);
+    const g = groups.get(room) ?? groups.set(room, { mats: new Set(), items: [] }).get(room);
+    g.items.push(it);
+    it.doorGroup = g;
+    it.doorMeshes = [];
+    for (const d of it.doors) d.node.traverse((o) => {
+      if (!o.isMesh || Array.isArray(o.material)) return;
+      const shared = interact.sharedMaterial(o.material, `hidedoor|${room}`).m;
+      it.doorMeshes.push({ mesh: o, parent: o.parent, orig: o.material, shared });
+      o.material = shared;
+      g.mats.add(shared);
+    });
+  }
+}
+
+// the doors of every spot in `it`'s room as their own meshes (live = true) or back in the batch
+function liveDoors(it, live) {
+  const g = it.doorGroup;
+  if (!g || g.live === live) return;
+  g.live = live;
+  for (const m of g.mats) m.visible = !live;
+  for (const peer of g.items) for (const d of peer.doorMeshes) {
+    if (live) {
+      d.attached = !!d.mesh.parent;          // (a lone one isn't batched: it never left)
+      d.parent.add(d.mesh);
+      d.mesh.material = d.orig;
+    } else {
+      d.mesh.material = d.shared;
+      if (!d.attached) d.mesh.removeFromParent();
+    }
+  }
+}
+
 export class Hiding {
   constructor({ player, camera, interact, noise = null, walls = [], onMove = null }) {
     Object.assign(this, { player, camera, interact, noise, walls, onMove });
@@ -123,6 +166,7 @@ export class Hiding {
     if (it.disabled) return 'No room in there';
     if (this.spot || this.player.isDown) return null;
     this.spot = it;
+    liveDoors(it, true);
     this.phase = 'in';
     this.t = 0;
     this.from = { pos: this.camera.position.clone(), quat: this.camera.quaternion.clone() };
@@ -154,6 +198,7 @@ export class Hiding {
     const it = this.spot, p = this.player;
     this.poseDoors(it, 0);
     this.dim(it, 0);
+    liveDoors(it, false);
     p.pos.copy(it.pose.exit);
     p.vel.set(0, 0, 0);
     p.crouching = false;

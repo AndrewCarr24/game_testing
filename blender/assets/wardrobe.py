@@ -73,11 +73,13 @@ P = dict(
     oak_tile=1.2,              # metres one veneer image covers
     hide=True,                 # a hiding spot (hollow, doors on hinges)
     rail_z=1.98,
-    coats=[  # (x, material, linear rgb, length): pushed to the ends, the middle is the player's
-        (-0.70, "M_Wardrobe_Coat_Navy", (0.020, 0.026, 0.050), 1.05),
-        (-0.60, "M_Wardrobe_Coat_Camel", (0.30, 0.19, 0.09), 0.95),
-        (0.58, "M_Wardrobe_Coat_Charcoal", (0.035, 0.036, 0.04), 1.12),
-        (0.69, "M_Wardrobe_Coat_Oat", (0.30, 0.26, 0.20), 0.88),
+    # (x, material, linear rgb, length): pushed to the ends, the middle is the player's. The coat
+    # closet's materials (same name and colour = one material at load, no extra draw calls)
+    coats=[
+        (-0.70, "M_Entry_Coat_Navy", (0.020, 0.028, 0.055), 1.05),
+        (-0.60, "M_Entry_Coat_Camel", (0.31, 0.19, 0.085), 0.95),
+        (0.58, "M_Entry_Coat_Charcoal", (0.035, 0.036, 0.04), 1.12),
+        (0.69, "M_Entry_Coat_Oat", (0.30, 0.26, 0.20), 0.88),
     ],
 )
 

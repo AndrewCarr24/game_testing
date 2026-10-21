@@ -241,7 +241,10 @@ export class Interactables {
     if (!it.exits.length) it.exits = [it.node];
     it.doors = (def.doors ?? []).map((d) => ({ ...d, node: find(d.node), axis: axisOf(d.axis) })).filter((d) => d.node);
     for (const d of it.doors) d.restQuat = d.node.quaternion.clone();
-    it.parts = it.doors.map((d) => d.node);
+    it.parts = it.doors.map((d) => d.node);   // (index.html: batched per room, viewer/hiding.js batchHideDoors)
+    // (unbatched, so each door costs its own draw calls; shut, its shadow falls inside its own
+    // cabinet: skip the shadow pass)
+    for (const d of it.doors) d.node.traverse((o) => { if (o.isMesh) o.castShadow = false; });
     // the whole prop's box, now: its static parts are merged into the room's batch later
     it.area = new THREE.Box3().setFromObject(root);
   }

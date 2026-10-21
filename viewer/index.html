@@ -111,7 +111,7 @@
     import { createFx, governor } from './fx.js';
     import { Grimble, prepareGrimble } from './grimble.js';
     import { GrimbleHunt, shatter } from './grimble_hunt.js';
-    import { Hiding } from './hiding.js';   // hiding spots (interact type `hide`)
+    import { Hiding, batchHideDoors } from './hiding.js';   // hiding spots (interact type `hide`)
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -420,7 +420,7 @@
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
       for (const it of interact.items) it.node.traverse((o) => moving.add(o));
-      for (const it of interact.items) for (const n of it.parts ?? []) n.traverse((o) => moving.add(o));   // hiding spots' doors
+      batchHideDoors(interact, roomRoots);   // hiding spots' doors: batched per room, live only while in use
       // reactors that move (blinds, rockers' parts, doors) or carry a light keep their own nodes; the
       // ones that only change materials (glows, screens) batch per room: their shared materials do it
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
