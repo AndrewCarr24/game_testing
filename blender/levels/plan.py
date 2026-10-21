@@ -93,7 +93,9 @@ CUTS = [
     dict(kind="opening", axis="y", line=13.5, span=(2.95, 4.05), z=(0, 2.5), door="door_plain", swing="mudroom"),
     dict(kind="opening", axis="x", line=0, span=(19.2, 20.3), z=(0, 2.5), door="door_plain", swing="garage"),
     dict(kind="window", axis="y", line=26, span=(3, 7.5), z=(0.9, 3.3)),                     # mudroom
-    dict(kind="garage_door", axis="x", line=-20, span=(15.5, 24), z=(0, 3.2)),
+    # the garage door: an up-and-over door (ix_garage_door: a react on `garage_door`, driven by
+    # the ix_switch_garage by the mudroom door; it needs power) onto the drive
+    dict(kind="opening", axis="x", line=-20, span=(15.5, 24), z=(0, 3.2), door="ix_garage_door", swing="garage"),
     # ---- exterior doors (going outside): glass doors in the glass walls open outward, on the
     # glass line (inset 0, no reveals: each door's own surround meets the mullions), 3 m high
     # with a transom over them; they keep the walls' 1.5 m bay rhythm (the blinds' bays too)

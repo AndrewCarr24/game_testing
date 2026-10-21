@@ -1,9 +1,6 @@
 """Garage door (8.5 x 3.2 m): a canopy up-and-over door in charcoal powder-coated steel,
 four horizontal flush sections with shadow grooves, a slim bronze pull, black steel jamb and
-head trims. NOT placed yet: the plan's garage door is a closed panel in the shell
-(house.cut_fill "GarageDoor"); to use this, turn plan.py's garage_door cut into an opening
-with door="ix_garage_door" and swing="garage" (or place it at the opening and drop the shell
-panel and its collider).
+head trims. Placed by plan.py's garage opening (door="ix_garage_door", swing="garage").
 
 Interactivity: `<n>_Leaf` (an empty on the pivot line, 2.3 m up) carries a react on signal
 "garage_door": on = rotate -90 degrees about x, so the bottom swings out and up and the leaf
@@ -39,7 +36,8 @@ def build(**overrides):
     t, g = p["t"], 0.006
     leaf = common.empty(f"{n}_Leaf", col, (0, 0, p["pivot_z"]))
     leaf.parent = root
-    leaf["react"] = {"signal": p["signal"], "on": {"rotate": {"axis": "x", "angle": -90}}, "duration": 4.5}
+    # collide: the leaf is solid (a moving collider that follows it: closed, a wall; open, a canopy overhead)
+    leaf["react"] = {"signal": p["signal"], "on": {"rotate": {"axis": "x", "angle": -90}}, "duration": 4.5, "collide": True}
     lw, lh = W - 2 * g, H - g - 0.01
     sh = lh / p["sections"]
     secs = [((0, 0, 0.01 + (k + 0.5) * sh - p["pivot_z"]), (lw, t, sh - 0.012)) for k in range(p["sections"])]
