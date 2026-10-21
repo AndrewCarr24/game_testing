@@ -1299,43 +1299,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":13311,
+			"byteLength":13351,
 			"byteOffset":14772
 		},
 		{
 			"buffer":0,
-			"byteLength":3611,
-			"byteOffset":28084
+			"byteLength":3621,
+			"byteOffset":28124
 		},
 		{
 			"buffer":0,
-			"byteLength":5149,
-			"byteOffset":31696
+			"byteLength":5212,
+			"byteOffset":31748
 		},
 		{
 			"buffer":0,
-			"byteLength":4784,
-			"byteOffset":36848
+			"byteLength":4886,
+			"byteOffset":36960
 		},
 		{
 			"buffer":0,
 			"byteLength":1163,
-			"byteOffset":41632
+			"byteOffset":41848
 		},
 		{
 			"buffer":0,
 			"byteLength":9246,
-			"byteOffset":42796
+			"byteOffset":43012
 		},
 		{
 			"buffer":0,
-			"byteLength":3892,
-			"byteOffset":52044
+			"byteLength":3877,
+			"byteOffset":52260
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":55936,
+			"byteLength":56140,
 			"uri":"garage_vitrine.bin"
 		}
 	]

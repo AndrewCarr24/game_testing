@@ -74,12 +74,30 @@ export class RoomCuller {
       vertical: name.includes('gallery') || name === 'courtyard' || name === 'library' || r.height > 5,
       sun: r.sun !== false,                     // its furniture casts real-time sun shadows
       sees: r.sees ? new Set(r.sees) : null,    // rooms visible from here, doors closed (visibility.py)
+      outside: r.outside || null,               // its openings in the outer walls (going outside, below)
       seesOpen: r.seesOpen ? new Set(r.seesOpen) : null,   // ... with every door open
       box: new THREE.Box3(new THREE.Vector3(r.rect[0], r.floor, r.rect[1]),
                           new THREE.Vector3(r.rect[2], r.floor + (r.height || 4), r.rect[3])),
       objects: [...(roomRoots[name] || []), ...(batches[name] || [])],
     }));
     this.visible = this.rooms.length;
+    this.outdoors = !!level.grounds && this.rooms.some((r) => r.outside);    // (a level with walkable grounds)
+  }
+
+  // outdoors: one of r's outer-wall openings faces the eye (it's in front of the opening's plane)
+  facing(r, pos) {
+    if (!r.outside) return false;
+    return r.outside.some(([x0, z0, x1, z1, nx, nz]) => (pos.x - (x0 + x1) / 2) * nx + (pos.z - (z0 + z1) / 2) * nz > 0.05);
+  }
+
+  // outdoors: r is seen through a room whose opening faces the eye from within `near`
+  seenThrough(r, pos) {
+    for (const f of this.rooms) {
+      if (f === r || !f.sees?.has(r.name) || !this.facing(f, pos)) continue;
+      const [x0, z0, x1, z1] = f.rect;
+      if (Math.hypot(Math.max(x0 - pos.x, 0, pos.x - x1), Math.max(z0 - pos.z, 0, pos.z - z1)) < this.near) return true;
+    }
+    return false;
   }
 
   // returns true when the set of drawn sunlit rooms changed (the shadow map then needs
@@ -102,8 +120,12 @@ export class RoomCuller {
       const inView = !camera || this._frustum.intersectsBox(r.box);
       const sight = !here?.sees || here.sees.has(r.name);               // sight line, doors closed
       const reach = !here?.seesOpen || here.seesOpen.has(r.name);       // ... or through a door opened
-      const show = r.always || (sameFloor && d < this.near && reach) ||
+      let show = r.always || (sameFloor && d < this.near && reach) ||
         (d < this.far && inView && sight && (sameFloor || here?.sees));
+      // ---- going outside: outdoors (no room here) a room is seen only through its own windows
+      // and doorways in the outer walls (rooms[r].outside, ground_colliders.facades), from the
+      // side they face; close to one (within `near`) also the rooms it sees into
+      if (!here && this.outdoors) show = r.always || (d < this.far && inView && (this.facing(r, pos) || this.seenThrough(r, pos)));
       if (show !== r.shown) {
         for (const o of r.objects) o.visible = show;
         if (r.sun || r.shown === undefined) changed = true;

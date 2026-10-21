@@ -628,38 +628,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2073,
+			"byteLength":2196,
 			"byteOffset":3132
 		},
 		{
 			"buffer":0,
 			"byteLength":4277,
-			"byteOffset":5208
+			"byteOffset":5328
 		},
 		{
 			"buffer":0,
 			"byteLength":1994,
-			"byteOffset":9488
+			"byteOffset":9608
 		},
 		{
 			"buffer":0,
 			"byteLength":1930,
-			"byteOffset":11484
+			"byteOffset":11604
 		},
 		{
 			"buffer":0,
 			"byteLength":2883,
-			"byteOffset":13416
+			"byteOffset":13536
 		},
 		{
 			"buffer":0,
 			"byteLength":790,
-			"byteOffset":16300
+			"byteOffset":16420
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":17092,
+			"byteLength":17212,
 			"uri":"guest_floor_lamp.bin"
 		}
 	]

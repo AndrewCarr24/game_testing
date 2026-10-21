@@ -622,7 +622,10 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                 bpy.data.objects[f"{NAME}_{kind}_{i}"]["no_shadow"] = [ob.name for r, a, ob in prop_roots
                                                                        if r == room and a in names]
     # the grounds (after the rooms: they reuse assets the rooms already built)
-    out_root, _, zone_tris = grounds.build(h, plan, roots, zones_only)
+    # (walkable: the grounds' colliders, ground_colliders.py; the exterior doors lead out to them)
+    ext_doors = [{"asset": d["asset"], "room": d["room"], "position": common.to_gltf(d["pos"]), "rotationY": d["rot"]}
+                 for d in h.doors if d.get("exterior")]
+    out_root, _, zone_tris, (walk_meta, walk_boxes) = grounds.build(h, plan, roots, zones_only, ext_doors)
     if export:
         common.export_gltf(h.root, os.path.join(models, "mansion_shell.gltf"))
         common.export_gltf(out_root, os.path.join(models, "mansion_outdoor.gltf"))
@@ -649,6 +652,9 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         "colliders": h.colliders,
         "ramps": h.ramps,
         "breakables": h.breakables,
+        # the walkable outdoors (ground_colliders.py): lawn / terrace heights, bounds, the
+        # exterior doors; its colliders are in their own compact file
+        "grounds": dict(walk_meta, file=f"levels/{NAME.lower()}_grounds.json"),
         "lights": h.lights + [
             {"type": "sun", "direction": common.to_gltf(sun), "intensity": p["sun_strength"], "color": list(p["sun_color"])},
             {"type": "ambient_env", "intensity": 0.6},
@@ -659,6 +665,11 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                 "haze": list(p["haze"]), "light": list(p["sky"]), "light_strength": p["sky_strength"],
                 "sun_strength": p["sun_strength"], "sun_color": list(p["sun_color"])},
     }
+    # the openings in each room's outer walls: the culler draws a room's furniture from outdoors
+    # only while one of them faces the eye (ground_colliders.facades)
+    for r, segs in grounds.ground_colliders.facades(h, plan).items():
+        if r in rooms:
+            rooms[r]["outside"] = segs
     # rooms direct sunlight never reaches: their props skip real-time sun (sunlight.py)
     lit = sunlight.sunlit_rooms({r: h.interior(r) for r in rooms}, list(h.root.children_recursive), p["sun_dir"])
     for r, v in lit.items():
@@ -671,6 +682,8 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     if write_json:
         with open(os.path.join(levels, "mansion.json"), "w") as f:
             json.dump(level, f, indent=2)
+        with open(os.path.join(levels, f"{NAME.lower()}_grounds.json"), "w") as f:
+            json.dump(walk_boxes, f, separators=(",", ":"))
     shell_parts = [o for o in h.root.children_recursive if o.type == "MESH"]
     total = common.triangle_count(shell_parts) + sum(assets[e["asset"]]["tris"] for e in placed if e["asset"] in assets)
     print(f"{NAME}: {len(plan.ROOMS)} rooms, {len(placed)} props, {len(h.colliders)} colliders, "

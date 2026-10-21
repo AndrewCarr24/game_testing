@@ -25,6 +25,8 @@ const DEFAULTS = {
 };
 
 const NO_INPUT = {};
+const GRID = 4;                                     // broadphase cell (m) for fixed boxes
+const cellKey = (i, k) => (i + 4096) * 8192 + (k + 4096);
 const smooth = (t) => t * t * (3 - 2 * t);
 
 export const KEYS = {
@@ -64,10 +66,38 @@ export class Player {
 
   overlapping(p, h = this.height) {
     const b = this.boxAt(p, h), e = 1e-4;
-    return this.boxes.filter((c) =>
+    const hit = (c) =>
       b.max.x > c.min.x + e && b.min.x < c.max.x - e &&
       b.max.y > c.min.y + e && b.min.y < c.max.y - e &&
-      b.max.z > c.min.z + e && b.min.z < c.max.z - e);
+      b.max.z > c.min.z + e && b.min.z < c.max.z - e;
+    this.index();
+    const out = this._loose.filter(hit);
+    // the grounds' fixed boxes: only those in the grid cells under the player's box
+    const G = GRID, i0 = Math.floor(b.min.x / G), i1 = Math.floor(b.max.x / G);
+    const k0 = Math.floor(b.min.z / G), k1 = Math.floor(b.max.z / G);
+    for (let i = i0; i <= i1; i++) for (let k = k0; k <= k1; k++) {
+      const cell = this._grid.get(cellKey(i, k));
+      if (cell) for (const c of cell) if (hit(c) && (i === i0 && k === k0 || !out.includes(c))) out.push(c);
+    }
+    return out;
+  }
+
+  // Broadphase. Boxes marked `fixed` (the grounds' thousands of static boxes, see index.html)
+  // go into a GRID-metre grid; the rest (the shell, props, moving doors) are tested one by one.
+  // The colliders array only ever grows (props, doors, the Grimble's blockers push onto it):
+  // new entries are indexed as they appear.
+  index() {
+    if (!this._grid || this._indexed > this.boxes.length) { this._grid = new Map(); this._loose = []; this._indexed = 0; }
+    for (; this._indexed < this.boxes.length; this._indexed++) {
+      const c = this.boxes[this._indexed];
+      if (!c.fixed) { this._loose.push(c); continue; }
+      for (let i = Math.floor(c.min.x / GRID); i <= Math.floor(c.max.x / GRID); i++)
+        for (let k = Math.floor(c.min.z / GRID); k <= Math.floor(c.max.z / GRID); k++) {
+          const key = cellKey(i, k);
+          if (!this._grid.has(key)) this._grid.set(key, []);
+          this._grid.get(key).push(c);
+        }
+    }
   }
 
   // Knocked down (the Grimble's swipe): shoved away from `from`, the view drops to the floor and

@@ -679,38 +679,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2068,
+			"byteLength":2059,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":497,
-			"byteOffset":2068
+			"byteLength":478,
+			"byteOffset":2060
 		},
 		{
 			"buffer":0,
 			"byteLength":428,
-			"byteOffset":2568
+			"byteOffset":2540
 		},
 		{
 			"buffer":0,
 			"byteLength":444,
-			"byteOffset":2996
+			"byteOffset":2968
 		},
 		{
 			"buffer":0,
 			"byteLength":495,
-			"byteOffset":3440
+			"byteOffset":3412
 		},
 		{
 			"buffer":0,
-			"byteLength":596,
-			"byteOffset":3936
+			"byteLength":574,
+			"byteOffset":3908
 		},
 		{
 			"buffer":0,
 			"byteLength":215,
-			"byteOffset":4532
+			"byteOffset":4484
 		}
 	],
 	"samplers":[
@@ -721,7 +721,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":4748,
+			"byteLength":4700,
 			"uri":"ix_tablet_dock.bin"
 		}
 	]

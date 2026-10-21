@@ -831,43 +831,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2375,
+			"byteLength":2471,
 			"byteOffset":332
 		},
 		{
 			"buffer":0,
-			"byteLength":2734,
-			"byteOffset":2708
+			"byteLength":2775,
+			"byteOffset":2804
 		},
 		{
 			"buffer":0,
-			"byteLength":1122,
-			"byteOffset":5444
+			"byteLength":1150,
+			"byteOffset":5580
 		},
 		{
 			"buffer":0,
-			"byteLength":634,
-			"byteOffset":6568
+			"byteLength":630,
+			"byteOffset":6732
 		},
 		{
 			"buffer":0,
-			"byteLength":2352,
-			"byteOffset":7204
+			"byteLength":2319,
+			"byteOffset":7364
 		},
 		{
 			"buffer":0,
 			"byteLength":541,
-			"byteOffset":9556
+			"byteOffset":9684
 		},
 		{
 			"buffer":0,
-			"byteLength":2745,
-			"byteOffset":10100
+			"byteLength":2733,
+			"byteOffset":10228
 		},
 		{
 			"buffer":0,
-			"byteLength":7901,
-			"byteOffset":12848
+			"byteLength":7873,
+			"byteOffset":12964
 		}
 	],
 	"samplers":[
@@ -878,7 +878,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":20752,
+			"byteLength":20840,
 			"uri":"decor_b_vignette_cheese.bin"
 		}
 	]
