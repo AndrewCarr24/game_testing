@@ -18,6 +18,11 @@ from lib import common, materials  # noqa: E402
 importlib.reload(common)
 importlib.reload(materials)
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
 NAME = "DiningTable"
 
 
@@ -90,6 +95,7 @@ P = dict(
     plinth_h=0.03,
     stretcher=(0.09, 0.11),   # width (y), height (z)
     stretcher_z=0.48,
+    hide=True,                # a hiding spot under the table (out between two chairs)
 )
 
 
@@ -159,6 +165,12 @@ def build(**overrides):
     common.add_bevel(bar, 0.005, 2)
     common.box_uv(bar, 0.5)
 
+    if p["hide"]:
+        # hiding spot (open cover): under the top on the -Y side of the stretcher, looking out
+        # between the chairs (the dining room's are 0.8 m apart, a gap on the centre line)
+        y_out = -W / 2 - 0.85
+        ix_common.hide_spot(root, col, n, (0.0, -0.32, 0.5), [(0.0, y_out, 0.0), (0.8, y_out, 0.0), (-0.8, y_out, 0.0)],
+                            "Hide under the table", "Crawl out", cover="open", pitch=-2)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

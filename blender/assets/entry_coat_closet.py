@@ -4,6 +4,11 @@ hangers (cloth-simulated, so they drape and fold; see mud_common.hanger_coat), a
 doors runs across the whole width. Walnut throughout, a recessed black plinth, bronze
 bar pulls.
 
+The closed bay is a hiding spot (prompts/interactivity.md `hide`): hollow behind its doors (a
+black lining at the back, a shelf under the upper cupboards, a coat at either end of a rail),
+the two doors hung from empties on their hinge lines; E swings them open, the player steps in
+between the coats and they pull to, leaving a crack to peek through.
+
 Origin: floor centre. The doors face -Y (the wall is on +Y). Units are metres.
 """
 import importlib
@@ -37,6 +42,11 @@ P = dict(
     upper_h=0.58,
     rail_z=2.02,
     shelf_z=2.30,
+    hide=True,                  # the closed bay is a hiding spot
+    bay_coats=[  # (x from the bay's centre, material, rgb, length): at the ends, the player in between
+        (-0.40, "M_Entry_Coat_Charcoal", (0.035, 0.036, 0.04), 1.05),
+        (0.40, "M_Entry_Coat_Camel", (0.31, 0.19, 0.085), 0.92),
+    ],
     coats=[  # (colour name, rgb, length, x offset)
         ("M_Entry_Coat_Navy", (0.020, 0.028, 0.055), 1.22, -0.46),
         ("M_Entry_Coat_Camel", (0.31, 0.19, 0.085), 1.10, -0.23),
@@ -108,8 +118,9 @@ def build(**overrides):
     box("Divider", (0.03, y_back - y_front - dt, z_top - ph), (0, (y_front + dt + y_back) / 2, (z_top + ph) / 2), shift=(0.7, 0.3))
     box("Plinth", (cw - 0.08, y_back - 0.02 - (y_front + 0.05), ph), (0, ((y_front + 0.05) + y_back - 0.02) / 2, ph / 2), black,
         bevel=0)
-    # shadow gap above the doors: a dark recess behind them
-    box("Interior", ((cw - 2 * st) / 2 - 0.015, 0.006, z_top - ph), (-(cw - 2 * st) / 4 - 0.0075, y_front + dt + 0.03, (z_top + ph) / 2), black, bevel=0, uv=False)
+    # shadow gap above the doors: a dark recess behind them (a hiding spot: at the back of the bay)
+    y_int = y_back - bk - 0.006 if p["hide"] else y_front + dt + 0.03
+    box("Interior", ((cw - 2 * st) / 2 - 0.015, 0.006, z_top - ph), (-(cw - 2 * st) / 4 - 0.0075, y_int, (z_top + ph) / 2), black, bevel=0, uv=False)
 
     iw = cw - 2 * st
     half = iw / 2 - 0.015
@@ -198,9 +209,37 @@ def build(**overrides):
         ob.data.set_sharp_from_angle(angle=1.2)
     common.mesh_object(f"{n}_Hangers", hang, col, bronze, root)
 
+    if p["hide"]:
+        hiding(p, n, col, root, walnut, bronze, dict(dw=dw, g=g, dt=dt, ph=ph, y_front=y_front, y_back=y_back - bk,
+                                                     half=half, low_top=low_top), box)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     ix_common.tag_emissive(root)   # interactivity: glowing parts follow the room's light switch
     return root, parts
+
+
+def hiding(p, n, col, root, walnut, bronze, k, box):
+    """The closed bay as a hiding spot: its two doors (each with its pull) hung from empties on
+    their outer hinge lines, merged per material; a shelf under the upper cupboards, a rail with a
+    coat at either end; the eye between them a hand behind the doors, the exit in front."""
+    W, D, H = p["size"]
+    dw, g, dt = k["dw"], k["g"], k["dt"]
+    x_in = -(0.015 + g)                       # the inner door's hinge (by the divider)
+    x_out = -(0.015 + 2 * g + 2 * dw)         # the outer door's hinge
+    xb = -(0.015 + g + dw + g / 2)            # the meeting line = the bay's centre
+    doors = []
+    for name, door, pull, hx, sx in (("DoorIn", "Door_L0", "Pull_0_b", x_in, 1), ("DoorOut", "Door_L1", "Pull_0_a", x_out, -1)):
+        parts = [o for o in root.children if o.name in (f"{n}_{door}", f"{n}_{pull}")]
+        pv = ix_common.pivot(root, col, f"{n}_{name}", (hx, k["y_front"], 0.0), parts)
+        ix_common.merge_parts(pv, {"M_Walnut": "Leaf", "M_Bronze": "Pull"})
+        doors.append((pv, sx * 100, sx * 10))
+    yb = k["y_front"] + dt
+    box("BayShelf", (k["half"] - 0.01, k["y_back"] - yb - 0.01, 0.025), (xb, (yb + k["y_back"]) / 2, k["low_top"] + 0.012),
+        shift=(0.3, 0.7))
+    coats = [(xb + dx, m, rgb, ln) for dx, m, rgb, ln in p["bay_coats"]]
+    ix_common.closet_rail(root, col, f"{n}_Bay", xb - k["half"] / 2 + 0.03, xb + k["half"] / 2 - 0.03, (yb + k["y_back"]) / 2 + 0.02,
+                          k["low_top"] - 0.22, coats, bronze)
+    ix_common.hide_spot(root, col, n, (xb, yb + 0.15, 1.6), [(xb, -D / 2 - 0.55, 0.0), (xb, -D / 2 - 0.85, 0.0)],
+                        "Hide in the closet", "Leave the closet", doors=doors, pitch=-4)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,10 @@
 glass-fronted dry-goods cabinet in the middle (jars on shelves visible through the
 glass), solid oak doors either side and upper doors above a shadow gap.
 
+The left bank is a hiding spot (prompts/interactivity.md `hide`): a walk-in larder behind its
+two tall doors (kitchen_wall_run.larder), the doors hung from empties on their hinge lines; E
+swings them open, the player steps in and they pull to, leaving a crack to peek through.
+
 2.85 m (plus 25 mm end panels) long along X, 0.62 m deep, back against +Y, fronts face -Y. Origin is the
 floor centre."""
 import importlib
@@ -25,13 +29,16 @@ P = dict(
     tall_z=2.40,
     band_z=2.43,
     top_z=4.19,
+    hide=True,         # the left bank is a hiding spot (hollow, doors on hinges)
 )
 
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ix_common  # noqa: E402  (react definitions, prompts/interactivity.md)
+import kitchen_wall_run as KWR  # noqa: E402  (the larder behind a hiding spot's doors)
 
 importlib.reload(ix_common)
+importlib.reload(KWR)
 
 
 def build(**overrides):
@@ -63,6 +70,9 @@ def build(**overrides):
     dy = yb - (yf + t)
     ym = (yf + t + yb) / 2
     for tag, a, c in (("BodyL", x0, xa), ("BodyR", xb, x1)):
+        if tag == "BodyL" and p["hide"]:
+            KWR.larder(b, p, a, c, yf + t, yb, black, oak, "Larder")
+            continue
         b.box(tag, (c - a, dy, H), ((a + c) / 2, ym, (ph + p["top_z"]) / 2), black, bevel=0, tile=0)
     # open middle: back, floor and ceiling of the glass cabinet; the upper band is solid
     b.box("BodyM_Back", (xb - xa, 0.02, H), ((xa + xb) / 2, yb - 0.01, (ph + p["top_z"]) / 2), black, bevel=0, tile=0)
@@ -111,6 +121,8 @@ def build(**overrides):
         b.box(f"EndPanel{k}", (0.025, D, p["top_z"]), (sx * (Lx / 2 + 0.0125), 0.0, p["top_z"] / 2), oak, bevel=0.002, seg=1,
               shift=(0.4 * k, 0.1))
     ix_common.tag_emissive(b.root)   # interactivity: glowing parts follow the room's light switch
+    if p["hide"]:
+        KWR.hiding(b, x0, xa, yf, t, "SolidL", {oak.name: "Leaf", bronze.name: "Pull"})
     return b.finish()
 
 

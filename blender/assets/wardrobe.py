@@ -13,7 +13,10 @@ Construction (front faces -Y, origin at the floor centre):
 - bronze staple pulls on round roses at hand height on the meeting stiles
 - smoked oak: a Poly Haven crown-cut oak veneer scan (oak_veneer_01, CC0), graded to a
   warm fumed-oak brown, with its normal map, under a satin lacquer coat
-Doors are static (no interactable)."""
+A hiding spot (prompts/interactivity.md `hide`): the carcass is hollow (a black lining at the
+back and under the cornice, a bronze rail with coats hung at the ends), each door hangs from an
+empty on its hinge line, and E at the wardrobe swings them open, the player steps in, and they
+pull to with a crack at the meeting stiles to peek through."""
 import importlib
 import math
 import os
@@ -32,6 +35,10 @@ from lib import common, materials, textures  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+sys.path.insert(0, HERE)
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
 
 NAME = "Wardrobe"
 
@@ -64,6 +71,14 @@ P = dict(
     field_recess=0.007,        # flute ridges sit this far behind the frame face
     band_setback=0.010,        # bronze band behind the door faces
     oak_tile=1.2,              # metres one veneer image covers
+    hide=True,                 # a hiding spot (hollow, doors on hinges)
+    rail_z=1.98,
+    coats=[  # (x, material, linear rgb, length): pushed to the ends, the middle is the player's
+        (-0.70, "M_Wardrobe_Coat_Navy", (0.020, 0.026, 0.050), 1.05),
+        (-0.60, "M_Wardrobe_Coat_Camel", (0.30, 0.19, 0.09), 0.95),
+        (0.58, "M_Wardrobe_Coat_Charcoal", (0.035, 0.036, 0.04), 1.12),
+        (0.69, "M_Wardrobe_Coat_Oat", (0.30, 0.26, 0.20), 0.88),
+    ],
 )
 
 PROJECT = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -266,8 +281,13 @@ def build(**overrides):
         box(f"End_{side}", (x0, y_f, 0.0), (x1, y_wall, z_slab), oak, bevel=0.004,
             shift=(0.43 if sx > 0 else 0.0, 0.11 if sx > 0 else 0.0))
 
-    # --- dark interior behind the reveals, recessed toe-kick plinth
-    box("Interior", (-xi, y_f + dt + 0.012, ph), (xi, y_f + dt + 0.018, z_slab), black, bevel=0)
+    # --- dark interior behind the reveals, recessed toe-kick plinth (a hiding spot is hollow: the
+    #     lining sits at the back and under the cornice, the plinth's top is its floor)
+    if p["hide"]:
+        box("Interior", (-xi, y_wall - 0.018, ph), (xi, y_wall - 0.006, z_slab), black, bevel=0)
+        box("InteriorTop", (-xi, y_f + dt + 0.004, z_band - 0.014), (xi, y_wall - 0.018, z_band - 0.002), black, bevel=0)
+    else:
+        box("Interior", (-xi, y_f + dt + 0.012, ph), (xi, y_f + dt + 0.018, z_slab), black, bevel=0)
     box("Plinth", (-xi, y_f + p["plinth_recess"], 0.0), (xi, y_wall - 0.03, ph), black, bevel=0.001, seg=1)
 
     # --- doors: framed, fluted fields, bookmatched pair
@@ -313,8 +333,28 @@ def build(**overrides):
             common.add_bevel(ro, 0.0012, segments=1)
             common.box_uv(ro, 0.5)
 
+    if p["hide"]:
+        hiding(p, n, col, root, bronze, door_w, y_f, dt, y_wall, xi)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
+
+
+def hiding(p, n, col, root, bronze, door_w, y_f, dt, y_wall, xi):
+    """Hang each door (its frame, field, pull and roses) from an empty on its outer hinge line,
+    merged into one mesh per material (moving parts aren't batched), and make the wardrobe a hiding
+    spot: the eye between the coats a hand behind the doors, the exit in front."""
+    W, D, H = p["size"]
+    g = p["reveal"]
+    doors = []
+    for side, sx in (("L", -1), ("R", 1)):
+        parts = [o for o in root.children if o.name.startswith((f"{n}_Door_{side}_", f"{n}_Pull_{side}"))]
+        pv = ix_common.pivot(root, col, f"{n}_Door{side}", (sx * (g / 2 + door_w), y_f, 0.0), parts)
+        ix_common.merge_parts(pv, {"M_Wardrobe_OakSmoked": "Leaf", "M_Bronze": "Pull"})
+        doors.append((pv, sx * 100, sx * 10))        # R opens counter-clockwise; pulled to, a crack at the meeting stiles
+    yb = y_f + dt
+    ix_common.closet_rail(root, col, n, -xi + 0.03, xi - 0.03, (yb + y_wall) / 2 + 0.02, p["rail_z"], p["coats"], bronze)
+    ix_common.hide_spot(root, col, n, (0.0, yb + 0.15, 1.6), [(0.0, -D / 2 - 0.55, 0.0), (0.0, -D / 2 - 0.85, 0.0)],
+                        "Hide in the wardrobe", "Leave the wardrobe", doors=doors, pitch=-4)
 
 
 if __name__ == "__main__":

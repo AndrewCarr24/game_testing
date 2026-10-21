@@ -478,6 +478,8 @@ export class Interactables {
         dir.y = 0;
         if (off.dot(dir) <= 0) continue;
       }
+      // a hiding spot is entered from where the player comes out (not from across a sofa or table)
+      if (it.def.type === 'hide' && it.pose && Math.hypot(player.x - it.pose.exit.x, player.z - it.pose.exit.z) > this.range(it) + 0.7) continue;
       const small = it.def.type === 'switch' || it.def.type === 'use' || it.def.type === 'pickup';
       if (small && this.behindWall(player, box.clone())) continue;
       const pickup = it.def.type === 'pickup';

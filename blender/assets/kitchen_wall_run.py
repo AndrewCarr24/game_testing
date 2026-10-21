@@ -2,6 +2,10 @@
 bank, two integrated steel fridge-freezer columns, a double-oven tower and a run of
 base drawers with a Calacatta counter and slab backsplash under lit upper cabinets.
 
+The pantry bank is a hiding spot (prompts/interactivity.md `hide`): a walk-in larder behind its
+two tall doors (black lining, high shelves of jars, the doors hung from empties on their hinge
+lines); E swings them open, the player steps in and they pull to, leaving a crack to peek through.
+
 Run along X (left = counter end, right = pantry end), 6.7 m long, back against +Y,
 fronts face -Y. Origin is the floor centre of the footprint."""
 import importlib
@@ -31,6 +35,7 @@ P = dict(
     fridge_w=0.9,
     oven_w=0.8,
     pantry_w=1.0,
+    hide=True,             # the pantry is a hiding spot (hollow, doors on hinges)
 )
 
 
@@ -189,8 +194,11 @@ def build(**overrides):
     b.box("Fridge_Grille", (2 * fw - 0.1, 0.006, 0.05), ((x0 + x1) / 2, yf + 0.06, ph - 0.015), black, bevel=0, tile=0)
 
     # --- pantry bank
-    tall_body("pantry")
     x0, x1 = xs["pantry"]
+    if p["hide"]:
+        larder(b, p, x0, x1, yf + t, yb, black, walnut, "pantry")
+    else:
+        tall_body("pantry")
     fr.unit("d2", x0, x1, ph, p["tall_z"], "Pantry")
     fr_t.unit("d2", x0, x1, p["band_z"], p["top_z"], "PantryUpper")
 
@@ -202,7 +210,50 @@ def build(**overrides):
           dict(yf=yf, hinges=[(x0f, -90), (x1f, 90)]))
     ix_common.tag_emissive(b.root)
     ix_common.tag_emissive(b.root, "power", names=("Display", "FridgeLight"))
+    if p["hide"]:
+        hiding(b, x0, x1, yf, t, "Pantry", {walnut.name: "Leaf", bronze.name: "Pull"})
     return b.finish()
+
+
+def larder(b, p, x0, x1, y0, y1, black, walnut, tag):
+    """A tall bank hollow behind its doors (a walk-in larder; also kitchen_pantry's): black lining
+    (back, sides, a floor over the plinth), the upper cupboard solid above the doors, two high
+    walnut shelves of jars at the back. Parts are `<tag>_*`."""
+    ph, tz, top = p["plinth"], p["tall_z"], p["top_z"]
+    xc, w, d, lt = (x0 + x1) / 2, x1 - x0, y1 - y0, 0.018
+    b.box(f"{tag}_Back", (w, lt, tz - ph), (xc, y1 - lt / 2, (ph + tz) / 2), black, bevel=0, tile=0)
+    for k, x in (("L", x0 + lt / 2), ("R", x1 - lt / 2)):
+        b.box(f"{tag}_Side{k}", (lt, d - lt, tz - ph), (x, y0 + (d - lt) / 2, (ph + tz) / 2), black, bevel=0, tile=0)
+    b.box(f"{tag}_Floor", (w - 2 * lt, d - lt, 0.02), (xc, y0 + (d - lt) / 2, ph + 0.01), black, bevel=0, tile=0)
+    b.box(f"{tag}_BodyUpper", (w, d, top - tz), (xc, y0 + d / 2, (tz + top) / 2), black, bevel=0, tile=0)
+    sd = 0.24
+    jars = []
+    for i, z in enumerate((1.92, 2.18)):
+        b.box(f"{tag}_Shelf{i}", (w - 2 * lt, sd, 0.022), (xc, y1 - lt - sd / 2, z), walnut, bevel=0.0015, shift=(0.3 * i, 0.5))
+        for j, (dx, h) in enumerate(((-0.33, 0.16), (-0.18, 0.2), (0.0, 0.14), (0.17, 0.19), (0.32, 0.15))):
+            if (i + j) % 4 == 3:
+                continue
+            jars.append((xc + dx, y1 - lt - sd / 2, z + 0.011, h))
+    glass = L.black_glass()
+    for k, (x, y, z, h) in enumerate(jars):
+        r = 0.045 + 0.01 * (k % 2)
+        b.lathe(f"{tag}_Jar{k}", [(0.0, 0.0), (r, 0.0), (r, h * 0.86), (r * 0.7, h * 0.9), (r * 0.7, h), (0.0, h)],
+                glass, loc=(x, y, z), segs=14, uv_tile=0)
+
+
+def hiding(b, x0, x1, yf, t, tag, names):
+    """Hang a tall 'd2' unit's two doors (`<tag>_DoorL/R`, each with its pull) from empties on
+    their outer hinge lines, merged per material (`names`: material -> suffix), and make the larder
+    behind them a hiding spot: the eye a hand behind the doors, the exit in front."""
+    xc, root, col, n = (x0 + x1) / 2, b.root, b.col, b.n
+    doors = []
+    for side, hx, sx in (("L", x0, -1), ("R", x1, 1)):
+        parts = [o for o in root.children if o.name in (f"{n}_{tag}_Door{side}", f"{n}_{tag}_Pull{side}")]
+        pv = ix_common.pivot(root, col, f"{n}_{tag}Door{side}", (hx, yf, 0.0), parts)
+        ix_common.merge_parts(pv, names)
+        doors.append((pv, sx * 100, sx * 10))
+    ix_common.hide_spot(root, col, f"{n}_{tag}", (xc, yf + t + 0.15, 1.6), [(xc, yf - 0.55, 0.0), (xc, yf - 0.85, 0.0)],
+                        "Hide in the pantry", "Leave the pantry", doors=doors, pitch=-4)
 
 
 if __name__ == "__main__":

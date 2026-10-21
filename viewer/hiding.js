@@ -62,6 +62,9 @@ export class Hiding {
     it.node.updateWorldMatrix(true, true);
     P.eye = it.eye ? it.eye.getWorldPosition(new THREE.Vector3()) : it.node.getWorldPosition(new THREE.Vector3());
     if (this.walls.some((w) => w.containsPoint(P.eye))) { it.disabled = 'eye in a wall'; return; }
+    // (a sofa backed onto a console: the spot behind it is inside the console)
+    const head = new THREE.Box3().setFromCenterAndSize(P.eye, new THREE.Vector3(0.16, 0.16, 0.16));
+    if (p.boxes.some((c) => c.intersectsBox(head))) { it.disabled = 'eye inside something'; return; }
     for (const ex of it.exits) {
       const at = ex.getWorldPosition(new THREE.Vector3());
       const out = new THREE.Vector3(at.x - P.eye.x, 0, at.z - P.eye.z).normalize();
@@ -96,7 +99,7 @@ export class Hiding {
 
   info(it) {
     const P = it.pose;
-    return { name: it.def.name ?? it.root.name, cover: P.cover, eye: P.eye.clone(), exit: P.exit.clone(), node: it.node, root: it.root };
+    return { name: it.def.name ?? it.node.name.replace(/_Hide[^_]*$/, ''), cover: P.cover, eye: P.eye.clone(), exit: P.exit.clone(), node: it.node, root: it.root };
   }
 
   // every usable spot (for the Grimble: where a player could be)
@@ -184,7 +187,7 @@ export class Hiding {
       });
     }
     for (const { orig, m } of it.dimmed) {
-      m.color.copy(orig.color).multiplyScalar(1 - 0.8 * k);
+      m.color.copy(orig.color).multiplyScalar(1 - 0.7 * k);
       m.envMapIntensity = (orig.envMapIntensity ?? 1) * (1 - 0.85 * k);
     }
     if (k <= 0) { for (const { o, orig, m } of it.dimmed) { o.material = orig; m.dispose(); } it.dimmed = null; }
