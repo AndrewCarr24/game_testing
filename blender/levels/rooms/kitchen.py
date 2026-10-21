@@ -137,3 +137,9 @@ PLACEMENTS = list(PLACEMENTS) + [
     ('ix_battery', (-2.5, -4.05, 0.92), 75),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "kitchen")
+
+# --- distractions (viewer/devices.js): a blender on the wall run between the sink and the bread
+# board (6 s, loud, then it stops; also from the tablet)
+PLACEMENTS = list(PLACEMENTS) + [
+    ("ix_blender", (-3.42, -4.36, 0.92), 165, {"signal": {"blender": "blender_kitchen"}}),
+]

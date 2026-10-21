@@ -145,6 +145,7 @@
     import { Hand, Throwables, Flashlight } from './items.js';
     import { Signals, Noise } from './signals.js';
     import { Tablet } from './tablet.js';
+    import { Devices } from './devices.js';   // distractions: things that make noise on purpose
     import { batchRooms, RoomCuller } from './batching.js';
     import { loadSky, applyOutdoor } from './sky.js';
     import { Fire } from './fire.js';
@@ -434,6 +435,10 @@
       interact.walls = walls;            // (a switch behind a wall isn't in reach)
       window.__interact = interact;
       window.__inventory = inventory;
+      // distractions (viewer/devices.js): props with a `noisemaker` (TV, speaker, chime, alarm
+      // clock, blender, car alarm) emit noises the Grimble hears while their signal is on
+      const devices = new Devices({ signals, noise, interact, level });
+      window.__devices = devices;
       const fire = new Fire();
       const placed = {};   // asset -> first placed object, for attachments
       const roomRoots = {};   // room -> placed prop roots (for batching and culling)
@@ -471,6 +476,7 @@
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
           interact.collect(obj, { lock: p.lock, signal: p.signal, state: p.state });
+          devices.collect(obj, { signal: p.signal, state: p.state, room: p.room });   // (distractions)
           total += level.assets[p.asset].tris;
           continue;
         }
@@ -478,6 +484,7 @@
         placed[p.asset] ??= obj;
         obj.updateMatrixWorld(true);
         interact.collect(obj, { lock: p.lock, signal: p.signal, state: p.state });
+        devices.collect(obj, { signal: p.signal, state: p.state, room: p.room });     // (distractions)
         if (door) shared.push({ obj, rooms: roomsAt(p.position) });
         else (roomRoots[p.room] ??= []).push(obj);
         total += level.assets[p.asset].tris;
@@ -489,6 +496,7 @@
       interact.snapAll();      // a later placement's `state` may have set a signal earlier props use
       // lights off (viewer/baked.js): each room's baked light follows its lights_ signal and power
       if (baked) { baked.bindSignals(signals, level); window.__lighting = baked; }
+      devices.syncAll();       // (distractions: devices whose signal starts on start sounding)
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
       for (const it of interact.items) it.node.traverse((o) => moving.add(o));
@@ -496,6 +504,7 @@
       // ones that only change materials (glows, screens) batch per room: their shared materials do it
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
       for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
+      for (const n of devices.movingNodes()) n.traverse((o) => moving.add(o));   // (distractions: a blender's shaking jar)
       const { batches, before, after } = batchRooms(roomRoots, moving);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
       const culler = new RoomCuller(level, roomRoots, batches, { shared });
@@ -568,7 +577,7 @@
       // recompiles every material in the house
       if (inventory.has('flashlight') || interact.items.some((i) => i.def.item === 'flashlight')) flashlight.ensure();
       const batteryEl = document.getElementById('battery');
-      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet') });
+      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet'), devices });
       window.__tablet = tablet;
       // --- power and darkness as gameplay (viewer/house.js): the break-in trips the power,
       // the dark rooms, the flashlight's light cue to the Grimble
@@ -648,6 +657,8 @@
         // a `use` point that needs it (fuse box, car) or a lock it fits, in reach
         const msg = interact.useItem(id, camera.position);
         if (msg) { toast(msg); renderer.shadowMap.needsUpdate = true; return; }
+        const remote = devices.useRemote(entry.def);       // (distractions: the car key's panic button)
+        if (remote) { toast(remote); return; }
         if (id === 'flashlight') return toggleFlashlight();
         if (id === 'battery') return loadBattery();
         if (id === 'tablet') { if (tablet.show()) frozenLook.copy(camera.quaternion); return; }
@@ -686,6 +697,7 @@
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
         const moved = interact.update(dt, camera.position);
+        devices.update(dt);                      // (distractions: noise events, flashing, shaking)
         flashlight.update(dt);
         house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
@@ -757,6 +769,8 @@
       const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
       // what Enter does with an item that works anywhere
       function itemHint(id) {
+        const remote = devices.remoteHint(inventory.get(id)?.def);   // (distractions: "Car alarm on")
+        if (remote) return remote;
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
         if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';

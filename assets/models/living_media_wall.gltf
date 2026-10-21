@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				34
+				35
 			]
 		}
 	],
@@ -359,6 +359,23 @@
 		},
 		{
 			"extras":{
+				"noisemaker":{
+					"signal":"tv",
+					"loudness":1.0,
+					"every":1.5,
+					"source":"tv",
+					"label":"TV"
+				}
+			},
+			"name":"LivingMediaWall_TVSound",
+			"translation":[
+				0,
+				1.8200000524520874,
+				-0.08919999748468399
+			]
+		},
+		{
+			"extras":{
 				"react":{
 					"signal":"lights",
 					"on":{
@@ -411,7 +428,8 @@
 				29,
 				31,
 				32,
-				33
+				33,
+				34
 			],
 			"name":"LivingMediaWall"
 		}

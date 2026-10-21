@@ -117,3 +117,9 @@ PLACEMENTS = list(PLACEMENTS) + [
     # (a spare battery in the nightstand drawer, behind the keycard door: caches.py)
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "primary_bedroom")
+
+# --- distractions (viewer/devices.js): an alarm clock on the south nightstand, facing the bed
+# (set it, leave: it rings 10 s later for 12 s; also from the tablet, through the locked door)
+PLACEMENTS = list(PLACEMENTS) + [
+    ("ix_alarm_clock", (-7.5, -1.78, 0.55), 110),
+]

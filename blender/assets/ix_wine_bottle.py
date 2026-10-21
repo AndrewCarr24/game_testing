@@ -1,6 +1,6 @@
 """Wine bottle: a full Bordeaux bottle (300 mm), dark green glass with a punt, a plain cream
 label (no markings) and a deep claret foil capsule. A throwable pickup (item "wine_bottle",
-noise 1.0): it shatters where it lands. Standing; origin at the centre of its underside."""
+noise 1.2): it shatters where it lands. Standing; origin at the centre of its underside."""
 import importlib
 import os
 import sys
@@ -20,7 +20,7 @@ def build(**overrides):
     n = p["name"]
     col = common.fresh_collection(n)
     root = common.empty(n, col)
-    root["interact"] = ix_common.pickup("wine_bottle", "Wine bottle", throwable=True, noise=1.0, shatter=True)
+    root["interact"] = ix_common.pickup("wine_bottle", "Wine bottle", throwable=True, noise=1.2, shatter=True)
     glass = materials.glass("M_Glass_Bottle_Green", tint=(0.025, 0.07, 0.035), alpha=0.88, roughness=0.05)
     label = common.pbr_material(p["label"], p["label_color"], roughness=0.85)
     foil = common.pbr_material("M_Bottle_Foil", (0.17, 0.015, 0.03), roughness=0.3, metallic=0.8)

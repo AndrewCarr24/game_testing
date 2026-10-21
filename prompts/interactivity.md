@@ -179,3 +179,31 @@ Existing types keep working unchanged. New:
   does: throwable (smashes / thuds), a `use` point that needs it, a lock it fits.
 - Locked things say what's missing in the prompt: "Locked · needs the <item>" (or the
   authored `lockedPrompt`), "Locked · arm the <item> (I)" while carried but not armed.
+
+## Distractions: things that make noise on purpose (viewer/devices.js)
+- A node with the custom property `noisemaker = {signal, loudness?: 1, every?: 1.5, for?, delay?,
+  flash?, flashRest?: false, flashEvery?: 0.4, shake?: "<node>", sfx?, source?, label?, statusOn?,
+  tablet?: true, power?: true}` is a device. While `signal` is on (and `power`, unless
+  `power: false`) it *sounds*: every `every` s (the first at once) it emits
+  `window.__noise.emit({position, loudness, source, device, room, continuous, age})` from the
+  node's world position, and calls `window.__sfx?.play(sfx, position)`; `__sfx?.stop?.(sfx,
+  position)` when it falls silent. `for`: it sounds that long, then sets its own signal off (alarms,
+  a chime; `continuous` is false); without it, until switched off (TV, music: `continuous: true`,
+  `age` = seconds it has been sounding). `delay`: seconds from the signal coming on to the sound
+  starting (an alarm clock you set and run from). `flash`: a signal it toggles every `flashEvery`
+  s while sounding and leaves at `flashRest` otherwise (react nodes on it blink: the car's lamps,
+  the clock's digits). `shake`: a node jittered while it sounds (kept out of the room batches).
+  Placement `signal` renames `signal` / `flash` like a switch's. Switches on the same signal
+  (the device's button) follow it, so an alarm that stops itself flips its switch back.
+- A pickup with `remote: "<signal>"` (+ `remotePrompt`) toggles that signal when armed + Enter,
+  anywhere (the car key's panic button -> `car_alarm`). A `use` point or lock in reach wins.
+- The tablet's Devices page lists every device without `tablet: false` (one row per signal), and
+  Enter toggles it from anywhere (needs `power`).
+- In the level: `tv_den` (living_media_wall, starts off), `music_great_room` (two ix_speaker),
+  `doorbell` (ix_control_panel in the entry, tablet only), `blender_kitchen` (ix_blender),
+  `alarm` (ix_alarm_clock, primary bedroom; `alarm_display` = its digits), `car_alarm` (car_ev in
+  the garage, via the car key; `car_alarm_flash` = its lamps). sfx names (one play() per noise
+  pulse, for viewer/audio.js to add): music, doorbell, blender, alarm_clock, car_alarm; the TV
+  has none (audio.js loops its sound from the tv_* signal). Throwables' `noise`: vase 1.4, wine bottle 1.2, book 0.6.
+  The Grimble hears 30 m x loudness (grimble_hunt.js `hearing`): car alarm 2.0, doorbell 1.3,
+  music / alarm clock 1.2, blender 1.1, TV 1.0.
