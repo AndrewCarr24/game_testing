@@ -68,10 +68,10 @@ export class House {
     this.tripEvery = trips === null ? [150, 330] : +trips > 0 ? [+trips, +trips] : null;
     this.nextTrip = null;         // s of hunting left before the next timed trip
     this.breakTrip = params.get('breaktrip') !== '0';
-    // the lighting workstream's signal-driven off-state bake supersedes the fallback dimmer
-    const theirs = baked && (baked.signalDriven || typeof baked.setLights === 'function' ||
-      Object.values(baked.bake?.rooms ?? {}).some((r) => r.off || r.lightmapOff || r.dark));
-    this.dimmer = baked && !theirs && params.get('dark') !== '0' ? this.collect() : null;
+    // a room with a lights-off bake (bake.py --state off: baked.js fades it by its signal) needs
+    // no fallback; the dimmer only drives the rooms without one
+    this.baked = baked;
+    this.dimmer = baked && params.get('dark') !== '0' ? this.collect() : null;
     for (const [name] of this.rooms) this.levels.set(name, this.target(name));
     this.applyAll(true);
     signals.on('power', (on) => this.onPower(on));
@@ -118,13 +118,14 @@ export class House {
   // so the room is known from its env map (shell, props, rugs and the room batches share them)
   collect() {
     const byEnv = new Map();
-    for (const [room, r] of Object.entries(this.baked.rooms)) byEnv.set(r.envMap, room);
+    const hasOff = (room) => !!this.baked.bake?.rooms?.[room]?.off;
+    for (const [room, r] of Object.entries(this.baked.rooms)) if (!hasOff(room)) byEnv.set(r.envMap, room);
     const mats = new Map();     // room -> [{m, lm, env, em}]
     const seen = new Map();     // material -> room
     // the shell's glowing parts (ceiling strips: Mansion_<room>_M_LightStrip) have no room env:
     // the room is in the mesh name (longest room name first: "ugallery_s" before "gallery_s")
     const names = Object.keys(this.baked.rooms).sort((a, b) => b.length - a.length);
-    const byName = (n) => names.find((r) => n.startsWith(`Mansion_${r}_`));
+    const byName = (n) => names.find((r) => n.startsWith(`Mansion_${r}_`) && !hasOff(r));
     const glows = (m) => m.emissive && m.emissive.getHex() !== 0 && m.emissiveIntensity > 0;
     const leds = new Set(this.interact.items.map((i) => i.indicator?.material).filter(Boolean));   // (locks' lights: theirs)
     this.scene.traverse((o) => {
@@ -142,7 +143,7 @@ export class House {
     });
     // the props' diffuse light: the room's SH probe (uniform arrays shared by reference)
     const sh = new Map();
-    for (const [room, r] of Object.entries(this.baked.rooms)) if (r.sh) sh.set(room, { arr: r.sh, base: r.sh.map((v) => v.clone()) });
+    for (const [room, r] of Object.entries(this.baked.rooms)) if (r.sh && !hasOff(room)) sh.set(room, { arr: r.sh, base: r.sh.map((v) => v.clone()) });
     return { mats, sh, shown: new Map() };
   }
 
