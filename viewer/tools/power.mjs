@@ -35,7 +35,7 @@ p.on('response', (r) => { if (r.status() >= 400) console.log('http', r.status(),
 let fails = 0;
 const check = (label, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}  ${detail}`); if (!ok) fails++; };
 const real = mode === 'real';
-await p.goto(url(eyeBreaker, lookIso) + (real ? '&gdelay=0&hunt=now' : '&grimble=0') + '&trips=0');
+await p.goto(url(eyeBreaker, lookIso) + (real ? '&gdelay=0&hunt=now' : '&grimble=0') + '&trips=0&breaktrip=1');
 await p.waitForFunction(() => window.__loaded && window.__house, null, { timeout: 120000 });
 await p.evaluate(() => document.querySelectorAll('#hud,#stats').forEach((e) => (e.style.display = 'none')));
 await p.mouse.click(550, 350); await p.waitForTimeout(500);
