@@ -72,6 +72,9 @@ await p.evaluate(async ([y, fz]) => {
   door.userData.interact = { type: 'use', needs: 'fuse', consume: true, prompt: 'Insert fuse', promptDone: 'Power restored',
     signal: 'power', value: true, range: 1.2 };
   breaker.add(door);
+  // (the level's own garage breaker is placed with state true and claims `power` first; the
+  // fixture stands in for a level that starts dark, so it drops that claim)
+  it.claims.delete('power');
   it.register(place(breaker, 9, 1.3), { state: false });
   // a fuse on a stand beside it
   const fuse = box(0.03, 0.08, 0.03, new THREE.MeshStandardMaterial({ color: 0xc0a050 })); fuse.name = 'Test_Fuse';

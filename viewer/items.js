@@ -201,7 +201,7 @@ export class Throwables {
 }
 
 export class Flashlight {
-  constructor(camera, { drain = 240, intensity = 40, distance = 20, cone = 35 } = {}) {
+  constructor(camera, { drain = 240, intensity = 200, distance = 20, cone = 38 } = {}) {   // (200: reads as a torch in a dark baked room, house.js)
     this.camera = camera;
     this.o = { drain, intensity, distance, cone };   // drain: seconds of light per battery
     this.spot = null;
@@ -214,7 +214,7 @@ export class Flashlight {
   ensure() {
     if (this.spot) return this.spot;
     const o = this.o;
-    const spot = new THREE.SpotLight(0xfff0dc, 0, o.distance, THREE.MathUtils.degToRad(o.cone / 2), 0.35, 2);
+    const spot = new THREE.SpotLight(0xfff0dc, 0, o.distance, THREE.MathUtils.degToRad(o.cone / 2), 0.5, 2);
     spot.castShadow = false;
     spot.name = 'Flashlight';
     spot.position.set(0.12, -0.1, 0.05);        // held low and to the right

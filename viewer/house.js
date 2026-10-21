@@ -34,18 +34,20 @@ import * as THREE from 'three';
 // dimmer and lightAt(): from each room's glazing (blender/levels/room_info.py); windowless = ~0
 export const DAYLIGHT = {
   courtyard: 1.0,
-  entry: 0.45, great_room: 0.5, dining: 0.4, kitchen: 0.4,
-  gallery_s: 0.45, gallery_n: 0.45, gallery_w: 0.45, gallery_e: 0.45,
-  ugallery_s: 0.4, ugallery_n: 0.4, ugallery_w: 0.4, ugallery_e: 0.4,
-  library: 0.35, primary_bedroom: 0.3, office: 0.3, gym: 0.3, guest_room: 0.3, mudroom: 0.3,
+  // (low: the bake's look is a golden-hour evening, and the fallback scales the electric light
+  // in the lightmap by the same factor, so a high share leaves the coves and wall washes on)
+  entry: 0.3, great_room: 0.3, dining: 0.25, kitchen: 0.25,
+  gallery_s: 0.25, gallery_n: 0.25, gallery_w: 0.25, gallery_e: 0.25,
+  ugallery_s: 0.22, ugallery_n: 0.22, ugallery_w: 0.22, ugallery_e: 0.22,
+  library: 0.2, primary_bedroom: 0.18, office: 0.18, gym: 0.18, guest_room: 0.18, mudroom: 0.18,
   powder: 0.02, cloak: 0.02, den: 0.03, scullery: 0.03, wine_room: 0.02, garage: 0.02, primary_bath: 0.02,
 };
 const BLINDS = 0.3;           // daylight left with a room's blinds down
-const DEFAULT_DAYLIGHT = 0.25;
+const DEFAULT_DAYLIGHT = 0.2;
 
-// light level x time for a trip (the electric part of the light; ends dark) and a restore
+// light level x time for a trip (the electric part of the light; ends dark). Power coming back
+// just ramps the rooms up (update: ~0.3 s)
 const TRIP_FLICKER = [[0, 0.2], [0.07, 1], [0.22, 0.1], [0.3, 0.85], [0.55, 0.25], [0.62, 1], [0.9, 0.08], [0.97, 0.55], [1.1, 0.03], [1.3, 0]];
-const RESTORE_FLICKER = [[0, 0.5], [0.06, 0], [0.16, 0.8], [0.22, 0.2], [0.3, 1]];
 const sample = (curve, t) => {
   let v = curve[0][1];
   for (const [at, k] of curve) if (t >= at) v = k;
@@ -56,10 +58,9 @@ export class House {
   constructor({ signals, noise, level, baked, scene, camera, flashlight, interact, toast = () => {}, params = new URLSearchParams() }) {
     Object.assign(this, { signals, noise, baked, scene, camera, flashlight, interact, toast });
     this.rooms = Object.entries(level.rooms).sort((a, b) => b[1].floor - a[1].floor);   // upper floor first
-    this.levels = new Map();      // room -> current light level (what the fallback shows)
-    this.flick = 1;               // trip / restore flicker on the electric part of the light
+    this.levels = new Map();      // room -> how far its fittings are on now, 0..1 (eases to target())
+    this.flick = 1;               // the trip flicker on the electric part of the light
     this.tripping = null;         // { t, blowFuse, curve }
-    this.restoring = null;
     this.time = 0;
     this.cueT = 0;
     this.wasBroken = false;
@@ -94,21 +95,23 @@ export class House {
     return this.signals.get(`blinds_${room}`) === true ? d * BLINDS : d;
   }
 
-  // the level a room settles at: its fittings on (1) or only what daylight comes in
+  // are a room's fittings on (1) or off (0)? Off, only its daylight comes in
   target(room) {
-    const lit = this.signals.get('power') !== false && this.signals.get(`lights_${room}`) !== false;
-    return lit ? 1 : this.daylight(room);
+    return this.signals.get('power') !== false && this.signals.get(`lights_${room}`) !== false ? 1 : 0;
   }
+  // the fittings' share right now (with the trip flicker)
+  electric(room) { return (this.levels.get(room) ?? 1) * this.flick; }
 
   // how lit a spot is right now, 0..1 (outdoors 1: it's day). For the Grimble's eyes: the
   // player in a dark room is hard to see (unless the flashlight is on)
   lightAt(p) {
     const room = this.roomAt(p);
     if (!room) return 1;
-    const d = this.daylight(room), lvl = this.levels.get(room) ?? 1;
-    return Math.max(d, d + (lvl - d) * this.flick);
+    const d = this.daylight(room);
+    return d + (1 - d) * this.electric(room);
   }
-  level(room) { return this.levels.get(room); }
+  // a room's light level (without the flicker): 1 lit .. its daylight share
+  level(room) { const d = this.daylight(room); return d + (1 - d) * (this.levels.get(room) ?? 1); }
 
   // ------------------------------------------------------------ fallback dimmer
   // every material lit from a room's bake: its lightmap, probe and reflections are per room,
@@ -116,16 +119,26 @@ export class House {
   collect() {
     const byEnv = new Map();
     for (const [room, r] of Object.entries(this.baked.rooms)) byEnv.set(r.envMap, room);
-    const mats = new Map();     // room -> [{m, lm, env}]
-    const seen = new Set();
+    const mats = new Map();     // room -> [{m, lm, env, em}]
+    const seen = new Map();     // material -> room
+    // the shell's glowing parts (ceiling strips: Mansion_<room>_M_LightStrip) have no room env:
+    // the room is in the mesh name (longest room name first: "ugallery_s" before "gallery_s")
+    const names = Object.keys(this.baked.rooms).sort((a, b) => b.length - a.length);
+    const byName = (n) => names.find((r) => n.startsWith(`Mansion_${r}_`));
+    const glows = (m) => m.emissive && m.emissive.getHex() !== 0 && m.emissiveIntensity > 0;
+    const leds = new Set(this.interact.items.map((i) => i.indicator?.material).filter(Boolean));   // (locks' lights: theirs)
     this.scene.traverse((o) => {
-      if (!o.isMesh) return;
-      for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
-        const room = m && byEnv.get(m.envMap);
-        if (!room || seen.has(m)) continue;
-        seen.add(m);
-        (mats.get(room) ?? mats.set(room, []).get(room)).push({ m, lm: m.lightMapIntensity, env: m.envMapIntensity });
-      }
+      if (!o.isMesh || Array.isArray(o.material)) return;
+      let m = o.material;
+      // a reactor's material is the reactor's to drive (interactables.js); house.js flickers it
+      if (!m || m.userData.emissiveBase !== undefined || leds.has(m)) return;
+      const room = byEnv.get(m.envMap) ?? (glows(m) ? byName(o.name) : null);
+      if (!room) return;
+      if (seen.has(m) && seen.get(m) !== room) { m = o.material = m.clone(); }   // (a glow shared across rooms: one per room)
+      if (seen.has(m)) return;
+      seen.set(m, room);
+      (mats.get(room) ?? mats.set(room, []).get(room)).push({
+        m, lm: m.lightMapIntensity, env: m.envMapIntensity, em: glows(m) ? m.emissiveIntensity : null });
     });
     // the props' diffuse light: the room's SH probe (uniform arrays shared by reference)
     const sh = new Map();
@@ -133,13 +146,16 @@ export class House {
     return { mats, sh, shown: new Map() };
   }
 
-  apply(room, k) {
+  // k: the room's light level; el: its fittings' share (their glow)
+  apply(room, k, el) {
     const D = this.dimmer;
-    if (!D || Math.abs((D.shown.get(room) ?? 1) - k) < 1e-3) return;
-    D.shown.set(room, k);
+    const was = D?.shown.get(room);
+    if (!D || (was && Math.abs(was.k - k) < 1e-3 && Math.abs(was.el - el) < 1e-3)) return;
+    D.shown.set(room, { k, el });
     for (const e of D.mats.get(room) ?? []) {
       if (e.m.lightMap) e.m.lightMapIntensity = e.lm * k;
       e.m.envMapIntensity = e.env * (0.15 + 0.85 * k);   // reflections fade less: glass and metal still catch the windows
+      if (e.em !== null) e.m.emissiveIntensity = e.em * el;   // strips, LED lines no switch drives
     }
     const s = D.sh.get(room);
     if (s) s.arr.forEach((v, i) => v.copy(s.base[i]).multiplyScalar(k));
@@ -147,10 +163,9 @@ export class House {
 
   applyAll(force = false) {
     for (const [room] of this.rooms) {
-      const d = this.daylight(room), lvl = this.levels.get(room);
-      const k = d + (lvl - d) * this.flick;
-      if (force && this.dimmer) this.dimmer.shown.set(room, -1);
-      this.apply(room, k);
+      const d = this.daylight(room), el = this.electric(room);
+      if (force && this.dimmer) this.dimmer.shown.delete(room);
+      this.apply(room, d + (1 - d) * el, el);
     }
   }
 
@@ -164,7 +179,6 @@ export class House {
 
   onPower(on) {
     if (on) {
-      this.restoring = { t: 0 };
       this.toast('Power on');
       window.__sfx?.play?.('power_on', this.camera.position.clone());
       // a quiet spell after the lights come back
@@ -186,7 +200,7 @@ export class House {
     if (h && this.nextTrip !== null && this.signals.get('power') !== false && !this.tripping &&
         ['chase', 'search', 'prowl'].includes(h.state)) {
       this.nextTrip -= dt;
-      if (this.nextTrip <= 0) { this.trip({ blowFuse: false }); this.nextTrip = this.rand(); }
+      if (this.nextTrip <= 0) { this.trip({ blowFuse: false }); this.nextTrip = this.tripEvery ? this.rand() : null; }
     }
     if (this.tripping) {
       const tr = this.tripping;
@@ -208,14 +222,10 @@ export class House {
         // snap the rooms dark (the flicker already took them there)
         for (const [room] of this.rooms) this.levels.set(room, this.target(room));
       }
-    } else if (this.restoring) {
-      this.restoring.t += dt;
-      this.flick = sample(RESTORE_FLICKER, this.restoring.t);
-      if (this.restoring.t >= RESTORE_FLICKER.at(-1)[0]) { this.restoring = null; this.flick = 1; }
     }
   }
 
-  rand() { const [a, b] = this.tripEvery; return a + Math.random() * (b - a); }
+  rand() { const [a, b] = this.tripEvery ?? [Infinity, Infinity]; return a + Math.random() * (b - a); }
 
   // the electric fittings flicker with the room light (their materials and the point-light pool)
   flickerFittings() {

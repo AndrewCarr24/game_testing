@@ -47,7 +47,7 @@ const shot = (name) => p.screenshot({ path: `${out}/power_${name}.png` });
 const teleport = (pos, look) => p.evaluate(([pos, look]) => {
   window.__player.pos.set(pos[0], pos[1] - 1.65, pos[2]); window.__player.vel.set(0, 0, 0);
   window.__player.syncCamera(); window.__camera.lookAt(...look);
-}, [pos, look]);
+}, [pos, look]).then(() => p.waitForTimeout(250));   // (the hint follows on the next frames)
 const S = () => p.evaluate(() => {
   const s = window.__signals, h = window.__house;
   return { power: s.get('power'), fuse: s.get('fuse_garage'), flashlight: s.get('flashlight'),
@@ -117,16 +117,20 @@ await press('KeyE');
 check('E: "No main fuse", power stays off', (await toast()).includes('No main fuse') && (await S()).power === false, `toast="${await toast()}"`);
 await teleport(eyeBreaker, lookSlot);
 check('the empty carrier asks for a fuse', (await hint()).includes('needs a fuse'), `hint="${await hint()}"`);
+// motors: the office blinds (lowered from the tablet / a switch elsewhere) don't move without power
 const motor = await p.evaluate(async () => {
-  const it = window.__interact, door = it.reactors.find((r) => r.signal === 'garage_door');
-  window.__signals.set('garage_door', true);
-  await new Promise((ok) => setTimeout(ok, 1200));
-  return { t: door?.t, target: door?.target, motor: door?.motor };
+  const it = window.__interact, blinds = it.reactors.filter((r) => r.signal === 'blinds_office');
+  window.__signals.set('blinds_office', true);
+  await new Promise((ok) => setTimeout(ok, 1500));
+  return { n: blinds.length, t: Math.max(...blinds.map((r) => r.t)), motor: blinds.every((r) => r.motor) };
 });
-check('the garage door motor does nothing without power', motor.motor === true && motor.t === 0, JSON.stringify(motor));
-const sw = props('ix_switch_garage')[0];
+check('the blinds motor does nothing without power', motor.n > 0 && motor.motor && motor.t === 0, JSON.stringify(motor));
+const sw = props('ix_switch').find((q) => q.room === 'garage');
 await teleport(fromProp(sw, [0, -0.7, 0.55]), fromProp(sw, [0, 0, 0]));
-check('its switch says "no power"', (await hint()).includes('no power'), `hint="${await hint()}"`);
+check('the garage light switch says "no power"', (await hint()).includes('no power'), `hint="${await hint()}"`);
+await press('KeyE');
+check('E on it: "No power"', (await toast()).includes('No power'), `toast="${await toast()}"`);
+await press('KeyE');
 
 // ---------------------------------------------------------------- the flashlight in the dark
 await teleport(fromProp(flash, [0, -0.6, 0.73]), fromProp(flash, [0, 0, 0]));
@@ -165,8 +169,8 @@ const cue = await p.evaluate(async ([gx, gz, wx, wz]) => {
 check('the beam on the Grimble sends a light cue; through a wall it does not', cue.inBeam >= 1 && cue.behind === 0, JSON.stringify(cue));
 
 // ---------------------------------------------------------------- the spare fuse, upstairs
-const nsEye = fromProp(ns, [0, -0.8, 1.6]);
-await teleport(nsEye, fromProp(ns, [0, 0, 0.35])); await p.waitForTimeout(300);
+const nsEye = fromProp(ns, [0, -0.8, 1.7]);
+await teleport(nsEye, fromProp(ns, [0, 0, 0.4])); await p.waitForTimeout(300);
 await shot('4_guest_nightstand_dark');
 check('the nightstand drawer offers to open', (await hint()).includes('Open drawer'), `hint="${await hint()}"`);
 await press('KeyE', 700);
@@ -190,17 +194,19 @@ s = await S();
 check('E: power back on, the garage lit again', s.power === true && s.garage > 0.99, JSON.stringify(s));
 check('toast "Power on"', (await toast()).includes('Power on'), `toast="${await toast()}"`);
 const back = await p.evaluate(async () => {
-  await new Promise((ok) => setTimeout(ok, 5000));
-  return window.__interact.reactors.find((r) => r.signal === 'garage_door')?.t;
+  await new Promise((ok) => setTimeout(ok, 2500));
+  const t = Math.min(...window.__interact.reactors.filter((r) => r.signal === 'blinds_office').map((r) => r.t));
+  window.__signals.set('blinds_office', false);
+  return t;
 });
-check('the garage door the player called for opens once there is power', back === 1, `t=${back}`);
+check('the blinds called for in the dark come down once there is power', back === 1, `t=${back}`);
 await press('KeyF', 200);   // flashlight off
 await teleport(view, viewLook); await p.waitForTimeout(400);
 await shot('6_garage_restored');
 
 // ---------------------------------------------------------------- a timed trip: the isolator alone
 if (!real) {
-  await p.evaluate(() => { window.__house.nextTrip = 0.05; });
+  await p.evaluate(() => { const h = window.__house; h.tripEvery = [600, 600]; h.nextTrip = 0.05; });
   await p.waitForTimeout(2200);
   s = await S();
   check('a timed trip while it prowls: power out, the fuse survives', s.power === false && s.fuse === true, JSON.stringify(s));
