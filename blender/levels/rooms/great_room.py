@@ -78,7 +78,7 @@ PLACEMENTS = [
     ("living_plant_olive", (5.4, 6.3), 0),
     ("living_console", (5.89, -7.9), -90),
     ("art_curve_vermilion", (6.09, -7.9, 2.05), -90),       # one vermilion curve
-    ("living_sculpture", (5.4, -5.95), 0),
+    ("living_sculpture", (5.4, -6.6), 0),                    # clear of the light switch by the opening
     # ---- north wall flanks (the dining opening is x -3.25..2.75) -----------------------------
     ("living_console", (4.0, 10.14), 0),
     ("art_mono_ultramarine", (4.0, 10.34, 2.15), 0),        # ultramarine monochrome
@@ -152,7 +152,11 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-0.72, -10.35, 1.1), 180, {'signal': 'lights_great_room', 'state': True}),
-    ('ix_switch_blinds', (-0.82, -10.35, 1.1), 180, {'signal': 'blinds_great_room'}),
+    # (controls) a second light switch at the main way in, beside the gallery's south opening
+    # (the sculpture moved 0.65 m south to clear it), and the blinds switch on the west wall's
+    # solid end beside the glass it drives, not next to the light switch
+    ('ix_switch', (6.1, -5.67, 1.1), -90, {'signal': 'lights_great_room', 'state': True}),
+    ('ix_switch_blinds', (-6.1, -8.55, 1.1), 90, {'signal': 'blinds_great_room'}),
     ('ix_switch_fire', (5.88, 1.25, 1.1), -90, {'signal': 'fire_great_room', 'state': True}),
     ('ix_blind_great_room', (-6.25, -5.091), 90, {'signal': 'blinds_great_room'}),
     ('ix_blind_great_room', (-6.25, 5.091), 90, {'signal': 'blinds_great_room'}),

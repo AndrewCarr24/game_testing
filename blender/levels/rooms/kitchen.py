@@ -127,7 +127,10 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-8.85, 2.67, 1.1), 90, {'signal': 'lights_kitchen', 'state': True}),
-    ('ix_switch_blinds', (-8.85, 2.77, 1.1), 90, {'signal': 'blinds_kitchen'}),
+    # (controls) a second light switch on the cooking wall's end panel, right inside the
+    # gallery opening (the main way in); the blinds switch on the north wall beside the glass
+    ('ix_switch', (4.12, -4.15, 1.1), -90, {'signal': 'lights_kitchen', 'state': True}),
+    ('ix_switch_blinds', (7.4, 4.6, 1.1), 0, {'signal': 'blinds_kitchen'}),
     ('ix_blind_kitchen', (0.0, 4.75), 0, {'signal': 'blinds_kitchen'}),
     ('ix_tablet_dock', (-1.4, -1.35, 0.93), 0),
     ('ix_wine_bottle', (2.68, -1.62, 0.93), 0),

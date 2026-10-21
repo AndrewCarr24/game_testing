@@ -121,7 +121,9 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-0.72, 9.85, 1.1), 0, {'signal': 'lights_garage', 'state': True}),
-    ('ix_switch_garage', (-0.82, 9.85, 1.1), 0),
+    # (controls) the door opener on the other side of the house door from the light switch, at
+    # opener height (1.5 m), clear of the door's swing
+    ('ix_switch_garage', (1.25, 9.85, 1.5), 0),
     ('ix_breaker_panel', (-6.1, -0.95, 1.45), 90),
     # the spare main fuse, in the workbench's opening drawer (back side, middle top; drawer-local)
     ('ix_fuse', (0.06, -0.14, -0.059), 20, {'attach': ('garage_workbench', 'GarageWorkbench_Drawer')}),
