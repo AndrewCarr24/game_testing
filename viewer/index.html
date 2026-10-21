@@ -531,7 +531,23 @@
           sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
           opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
         });
-        grimble.hunt.onBreak = () => { const b = level.breakables?.[0]; if (b) shatterFx = shatter(scene, b); renderer.shadowMap.needsUpdate = true; };
+        grimble.hunt.onBreak = () => {
+          const b = level.breakables?.[0];
+          if (b) {
+            shatterFx = shatter(scene, b);
+            // the hole is open for the player too: cut the glazing's collider round the broken bays
+            const z0 = Math.min(b.min[2], b.max[2]), z1 = Math.max(b.min[2], b.max[2]);
+            const x0 = Math.min(b.min[0], b.max[0]), x1 = Math.max(b.min[0], b.max[0]);
+            for (const c of colliders.slice()) {
+              if (c.max.y < 0.5 || c.min.x > x1 + 0.01 || c.max.x < x0 - 0.01 || c.min.z >= z1 || c.max.z <= z0) continue;
+              if (c.max.x - c.min.x > 0.5) continue;                  // (glazing is thin; not the floors)
+              const right = c.max.z > z1 ? new THREE.Box3(new THREE.Vector3(c.min.x, c.min.y, z1), c.max.clone()) : null;
+              if (c.min.z < z0) c.max.z = z0; else { c.min.set(0, -101, 0); c.max.set(0, -100, 0); }
+              if (right) colliders.push(right);
+            }
+          }
+          renderer.shadowMap.needsUpdate = true;
+        };
       }
       window.__player = player;
       scene.add(camera);                       // so the held item (a child of the camera) renders
