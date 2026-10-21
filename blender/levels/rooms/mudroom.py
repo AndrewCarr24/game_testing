@@ -133,8 +133,6 @@ _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-6.1, -2.47, 1.1), 90, {'signal': 'lights_mudroom', 'state': True}),
     ('ix_switch', (-0.72, -5.1, 1.1), 180, {'signal': 'lights_mudroom', 'state': True}),   # (controls) by the garage door
-    ('ix_flashlight', (0.75, 0.55, 0.92), 12),
-    # in the keys vignette's walnut tray (tray centre (1.54, 0.84), floor z 0.927; the vignette has no keys of its own)
-    ('ix_car_key', (1.54, 0.86, 0.927), 80),
+    # (the flashlight is in the garage locker and the car key in the office safe: blender/levels/caches.py)
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "mudroom")

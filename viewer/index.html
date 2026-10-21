@@ -17,6 +17,8 @@
             border-radius: 6px; padding: 6px 10px; color: #eee; }
     .slot .card { width: 22px; height: 14px; border-radius: 2px; background: linear-gradient(90deg, #e9e9e6 72%, #1846a8 72%); }
     .slot .glass { width: 12px; height: 18px; border-radius: 4px 4px 3px 3px; background: linear-gradient(180deg, rgba(190,200,200,.5), rgba(120,115,110,.8)); }
+    /* locks, keys and caches: a key's icon (a round bow and a blade) */
+    .slot .key { width: 22px; height: 10px; background: radial-gradient(circle at 5px 5px, transparent 1.5px, #c9a35a 2px, #c9a35a 4.5px, transparent 5px), linear-gradient(#c9a35a, #c9a35a) 9px 4px / 13px 3px no-repeat; }
     .slot.armed { border-color: #f0c674; box-shadow: 0 0 0 1px #f0c674 inset; }
     .slot .tag { font-size: 10px; letter-spacing: .08em; color: #f0c674; }
     #inv-panel { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10,12,14,.55); }
@@ -386,8 +388,8 @@
       const inventoryEl = document.getElementById('inventory');
       const invPanel = document.getElementById('inv-panel');
       const invList = document.getElementById('inv-list');
-      // (affordance) each item's icon and the one line saying what it's for
-      const icon = (id) => itemInfo(id, inventory.get(id), interact).icon;
+      // (affordance) each item's icon and the one line saying what it's for (key_*: locks, keys and caches)
+      const icon = (id) => itemInfo(id, inventory.get(id), interact).icon || (/^key_/.test(id) ? '<span class="key"></span>' : '');
       const why = (id) => itemInfo(id, inventory.get(id), interact).purpose;
       let flashlight = null;
       const inventory = new Inventory((inv) => {

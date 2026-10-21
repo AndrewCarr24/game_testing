@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				21
+				26
 			]
 		}
 	],
@@ -85,14 +85,55 @@
 		},
 		{
 			"mesh":10,
-			"name":"DiningClimateWall_Foil"
+			"name":"DiningClimateWall_Door_Frame"
 		},
 		{
 			"mesh":11,
-			"name":"DiningClimateWall_Frames"
+			"name":"DiningClimateWall_Door_Glass"
 		},
 		{
 			"mesh":12,
+			"name":"DiningClimateWall_Door_Pull"
+		},
+		{
+			"children":[
+				10,
+				11,
+				12
+			],
+			"extras":{
+				"interact":{
+					"type":"rotate",
+					"axis":[
+						0,
+						1,
+						0
+					],
+					"angle":100,
+					"duration":0.8,
+					"range":1.5,
+					"side":"both",
+					"prompt":"Open cabinet",
+					"promptActive":"Close cabinet"
+				}
+			},
+			"name":"DiningClimateWall_Door",
+			"translation":[
+				-0.001500000013038516,
+				0.699999988079071,
+				0.2770000100135803
+			]
+		},
+		{
+			"mesh":13,
+			"name":"DiningClimateWall_Foil"
+		},
+		{
+			"mesh":14,
+			"name":"DiningClimateWall_Frames"
+		},
+		{
+			"mesh":15,
 			"name":"DiningClimateWall_Glass"
 		},
 		{
@@ -107,7 +148,7 @@
 					}
 				}
 			},
-			"mesh":13,
+			"mesh":16,
 			"name":"DiningClimateWall_Glow",
 			"translation":[
 				0,
@@ -116,8 +157,19 @@
 			]
 		},
 		{
-			"mesh":14,
+			"mesh":17,
 			"name":"DiningClimateWall_Handles"
+		},
+		{
+			"extras":{
+				"inside":"DiningClimateWall_Door"
+			},
+			"name":"DiningClimateWall_Inside",
+			"translation":[
+				-0.5,
+				1.1319999694824219,
+				0.11699999868869781
+			]
 		},
 		{
 			"extras":{
@@ -131,11 +183,11 @@
 					}
 				}
 			},
-			"mesh":15,
+			"mesh":18,
 			"name":"DiningClimateWall_LEDs"
 		},
 		{
-			"mesh":16,
+			"mesh":19,
 			"name":"DiningClimateWall_Plinth",
 			"translation":[
 				0,
@@ -144,11 +196,11 @@
 			]
 		},
 		{
-			"mesh":17,
+			"mesh":20,
 			"name":"DiningClimateWall_Shelves"
 		},
 		{
-			"mesh":18,
+			"mesh":21,
 			"name":"DiningClimateWall_SideL",
 			"translation":[
 				-1.9800000190734863,
@@ -157,7 +209,7 @@
 			]
 		},
 		{
-			"mesh":19,
+			"mesh":22,
 			"name":"DiningClimateWall_SideR",
 			"translation":[
 				1.9800000190734863,
@@ -177,7 +229,7 @@
 					}
 				}
 			},
-			"mesh":20,
+			"mesh":23,
 			"name":"DiningClimateWall_SoffitLED",
 			"translation":[
 				0,
@@ -197,9 +249,6 @@
 				7,
 				8,
 				9,
-				10,
-				11,
-				12,
 				13,
 				14,
 				15,
@@ -207,7 +256,12 @@
 				17,
 				18,
 				19,
-				20
+				20,
+				21,
+				22,
+				23,
+				24,
+				25
 			],
 			"name":"DiningClimateWall"
 		}
@@ -644,7 +698,7 @@
 			]
 		},
 		{
-			"name":"DiningClimateWall_Foil",
+			"name":"DiningClimateWall_Door_Frame",
 			"primitives":[
 				{
 					"attributes":{
@@ -664,21 +718,21 @@
 							}
 						}
 					},
-					"indices":53,
-					"material":1,
+					"indices":9,
+					"material":6,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningClimateWall_Frames",
+			"name":"DiningClimateWall_Door_Glass",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":54,
-						"NORMAL":55,
-						"TEXCOORD_0":56,
-						"COLOR_0":57
+						"POSITION":53,
+						"NORMAL":54,
+						"TEXCOORD_0":55,
+						"COLOR_0":56
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -691,21 +745,21 @@
 							}
 						}
 					},
-					"indices":58,
-					"material":6,
+					"indices":57,
+					"material":7,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningClimateWall_Glass",
+			"name":"DiningClimateWall_Door_Pull",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":59,
-						"NORMAL":60,
-						"TEXCOORD_0":61,
-						"COLOR_0":62
+						"POSITION":58,
+						"NORMAL":59,
+						"TEXCOORD_0":60,
+						"COLOR_0":61
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -718,14 +772,14 @@
 							}
 						}
 					},
-					"indices":9,
-					"material":7,
+					"indices":62,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningClimateWall_Glow",
+			"name":"DiningClimateWall_Foil",
 			"primitives":[
 				{
 					"attributes":{
@@ -746,13 +800,13 @@
 						}
 					},
 					"indices":67,
-					"material":8,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningClimateWall_Handles",
+			"name":"DiningClimateWall_Frames",
 			"primitives":[
 				{
 					"attributes":{
@@ -773,13 +827,13 @@
 						}
 					},
 					"indices":72,
-					"material":1,
+					"material":6,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"DiningClimateWall_LEDs",
+			"name":"DiningClimateWall_Glass",
 			"primitives":[
 				{
 					"attributes":{
@@ -800,6 +854,87 @@
 						}
 					},
 					"indices":77,
+					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningClimateWall_Glow",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":78,
+						"NORMAL":79,
+						"TEXCOORD_0":80,
+						"COLOR_0":81
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":82,
+					"material":8,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningClimateWall_Handles",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":83,
+						"NORMAL":84,
+						"TEXCOORD_0":85,
+						"COLOR_0":86
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":17,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":87,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"DiningClimateWall_LEDs",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":88,
+						"NORMAL":89,
+						"TEXCOORD_0":90,
+						"COLOR_0":91
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":18,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":92,
 					"material":9,
 					"mode":4
 				}
@@ -810,13 +945,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":78,
-						"NORMAL":79,
-						"COLOR_0":80
+						"POSITION":93,
+						"NORMAL":94,
+						"COLOR_0":95
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":16,
+							"bufferView":19,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -824,7 +959,7 @@
 							}
 						}
 					},
-					"indices":81,
+					"indices":96,
 					"material":6,
 					"mode":4
 				}
@@ -835,14 +970,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":82,
-						"NORMAL":83,
-						"TEXCOORD_0":84,
-						"COLOR_0":85
+						"POSITION":97,
+						"NORMAL":98,
+						"TEXCOORD_0":99,
+						"COLOR_0":100
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":17,
+							"bufferView":20,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -862,14 +997,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":86,
-						"NORMAL":87,
-						"TEXCOORD_0":88,
-						"COLOR_0":89
+						"POSITION":101,
+						"NORMAL":102,
+						"TEXCOORD_0":103,
+						"COLOR_0":104
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":18,
+							"bufferView":21,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -878,7 +1013,7 @@
 							}
 						}
 					},
-					"indices":90,
+					"indices":105,
 					"material":0,
 					"mode":4
 				}
@@ -889,14 +1024,14 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":91,
-						"NORMAL":92,
-						"TEXCOORD_0":93,
-						"COLOR_0":94
+						"POSITION":106,
+						"NORMAL":107,
+						"TEXCOORD_0":108,
+						"COLOR_0":109
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":19,
+							"bufferView":22,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -905,7 +1040,7 @@
 							}
 						}
 					},
-					"indices":90,
+					"indices":105,
 					"material":0,
 					"mode":4
 				}
@@ -916,13 +1051,13 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":95,
-						"NORMAL":96,
-						"COLOR_0":97
+						"POSITION":110,
+						"NORMAL":111,
+						"COLOR_0":112
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":20,
+							"bufferView":23,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
@@ -930,7 +1065,7 @@
 							}
 						}
 					},
-					"indices":81,
+					"indices":96,
 					"material":9,
 					"mode":4
 				}
@@ -1312,6 +1447,109 @@
 		},
 		{
 			"componentType":5126,
+			"count":96,
+			"max":[
+				6.984919309616089e-10,
+				2.1600000858306885,
+				0
+			],
+			"min":[
+				-0.996999979019165,
+				-5.960464477539063e-08,
+				-0.02799999713897705
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				-0.021000009030103683,
+				2.1337997913360596,
+				-0.015000015497207642
+			],
+			"min":[
+				-0.9759999513626099,
+				0.02619999647140503,
+				-0.020999997854232788
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":80,
+			"max":[
+				-0.9334999918937683,
+				1.3899998664855957,
+				0.023499995470046997
+			],
+			"min":[
+				-0.9484999775886536,
+				0.7700000405311584,
+				0
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":80,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":80,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":80,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":156,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
 			"count":4596,
 			"max":[
 				1.8142306804656982,
@@ -1348,7 +1586,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":432,
+			"count":336,
 			"max":[
 				2.015000104904175,
 				2.86299991607666,
@@ -1363,28 +1601,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":432,
+			"count":336,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":432,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":432,
+			"count":336,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":648,
+			"count":504,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":72,
 			"max":[
 				1.9774999618530273,
 				2.8337998390197754,
@@ -1399,19 +1637,24 @@
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":72,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":96,
+			"count":72,
 			"normalized":true,
 			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":108,
+			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
@@ -1451,7 +1694,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":240,
 			"max":[
 				1.065000057220459,
 				2.0899999141693115,
@@ -1466,23 +1709,23 @@
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":240,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":320,
+			"count":240,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":320,
+			"count":240,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":624,
+			"count":468,
 			"type":"SCALAR"
 		},
 		{
@@ -1730,58 +1973,73 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":35653,
+			"byteLength":1246,
 			"byteOffset":75284
 		},
 		{
 			"buffer":0,
-			"byteLength":3022,
-			"byteOffset":110940
+			"byteLength":329,
+			"byteOffset":76532
 		},
 		{
 			"buffer":0,
-			"byteLength":746,
-			"byteOffset":113964
+			"byteLength":1093,
+			"byteOffset":76864
+		},
+		{
+			"buffer":0,
+			"byteLength":35653,
+			"byteOffset":77960
+		},
+		{
+			"buffer":0,
+			"byteLength":2648,
+			"byteOffset":113616
+		},
+		{
+			"buffer":0,
+			"byteLength":669,
+			"byteOffset":116264
 		},
 		{
 			"buffer":0,
 			"byteLength":549,
-			"byteOffset":114712
+			"byteOffset":116936
 		},
 		{
 			"buffer":0,
-			"byteLength":2824,
-			"byteOffset":115264
+			"byteLength":2410,
+			"byteOffset":117488
 		},
 		{
 			"buffer":0,
 			"byteLength":1277,
-			"byteOffset":118088
+			"byteOffset":119900
 		},
 		{
 			"buffer":0,
 			"byteLength":226,
-			"byteOffset":119368
+			"byteOffset":121180
 		},
 		{
 			"buffer":0,
 			"byteLength":1121,
-			"byteOffset":119596
+			"byteOffset":121408
 		},
 		{
 			"buffer":0,
 			"byteLength":536,
-			"byteOffset":120720
+			"byteOffset":122532
 		},
 		{
 			"buffer":0,
 			"byteLength":564,
-			"byteOffset":121256
+			"byteOffset":123068
 		},
 		{
 			"buffer":0,
 			"byteLength":235,
-			"byteOffset":121820
+			"byteOffset":123632
 		}
 	],
 	"samplers":[
@@ -1792,7 +2050,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":122056,
+			"byteLength":123868,
 			"uri":"dining_climate_wall.bin"
 		}
 	]

@@ -378,3 +378,32 @@ def screen_quad(name, col, mat, parent, w, h, y):
     ob = common.mesh_object(name, bm, col, mat, parent, smooth=False)
     quad_uv(ob)
     return ob
+
+
+# ------------------------------------------------------------------ fewer draw calls
+
+def merge_by_material(parent, col, prefix):
+    """Join the meshes directly under `parent` (in its space) into one mesh per material, named
+    `<prefix>_<n>`: a moving part (a door, a pickup) isn't batched, so each mesh is a draw call.
+    Modifiers (bevels) are applied first. Returns the new objects. (Locks, keys and caches.)"""
+    import bpy
+    dg = bpy.context.evaluated_depsgraph_get()
+    groups = {}
+    for ob in [c for c in parent.children if c.type == "MESH" and not c.children]:
+        mat = ob.data.materials[0] if ob.data.materials else None
+        groups.setdefault(mat.name if mat else "", (mat, []))[1].append(ob)
+    out = []
+    for k, (name, (mat, obs)) in enumerate(sorted(groups.items())):
+        if len(obs) < 2:
+            continue
+        bm = bmesh.new()
+        for ob in obs:
+            me = bpy.data.meshes.new_from_object(ob.evaluated_get(dg))
+            me.transform(ob.matrix_parent_inverse @ ob.matrix_basis)
+            bm.from_mesh(me)
+            bpy.data.meshes.remove(me)
+        for ob in obs:
+            bpy.data.objects.remove(ob)
+        new = common.mesh_object(f"{prefix}_{k}", bm, col, mat, parent, smooth=False)   # (keeps each face's shading)
+        out.append(new)
+    return out

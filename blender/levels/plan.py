@@ -112,7 +112,8 @@ CUTS = [
     dict(kind="opening", axis="x", line=-10.5, span=(-11.3, -10.2), z=(4.6, 7.1), door="door_plain", swing="library"),
     dict(kind="opening", axis="x", line=10.5, span=(-12.3, -11.2), z=(4.6, 7.1), door="door", swing="ugallery_n",
          lock="keycard"),                                                                       # primary suite: keycard
-    dict(kind="opening", axis="x", line=10.5, span=(6.2, 7.3), z=(4.6, 7.1), door="door_plain", swing="office"),
+    dict(kind="opening", axis="x", line=10.5, span=(6.2, 7.3), z=(4.6, 7.1), door="door_plain", swing="office",
+         lock="key_office"),                                                                    # office: its key is in the guest room (caches.py)
     dict(kind="opening", axis="y", line=-10, span=(16.45, 17.55), z=(4.6, 7.1), door="door_plain", swing="primary_bath"),
     dict(kind="opening", axis="y", line=13.5, span=(16.45, 17.55), z=(4.6, 7.1), door="door_plain", swing="gym"),
     dict(kind="opening", axis="y", line=13.5, span=(2.95, 4.05), z=(4.6, 7.1), door="door_plain", swing="guest_room"),

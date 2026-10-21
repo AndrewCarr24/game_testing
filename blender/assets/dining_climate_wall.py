@@ -37,6 +37,7 @@ P = dict(
     case_top=2.86,
     shelves=5,
     doors=4,
+    open_door=1,          # this glass door opens (a lockable `rotate`, hinged at its right stile); None = all fixed
     pitch=0.15,           # bottle spacing along a shelf
     seed=11,
 )
@@ -177,6 +178,10 @@ def build(**overrides):
     # --- glass doors: each a slim black-metal frame (3 mm reveal to its neighbour) holding
     #     an inset pane, long bronze bar pulls on standoffs at the meeting stiles
     fb, gb, hb = bmesh.new(), bmesh.new(), bmesh.new()
+    # locks, keys and caches: the opening door's frame, pane and pull go in their own meshes,
+    # in its hinge's space (built in place, then moved under the hinge below)
+    od = p["open_door"]
+    ofb, ogb, ohb = bmesh.new(), bmesh.new(), bmesh.new()
     dwid = W / nd
     fz0, fz1 = bh + 0.04, ct
     gy = yf + 0.012
@@ -189,18 +194,19 @@ def build(**overrides):
                         ((fw, fd, fh), (cx + dw_ / 2 - fw / 2, gy, fz0 + fh / 2)),
                         ((dw_ - 2 * fw, fd, fw * 1.4), (cx, gy, fz0 + fw * 0.7)),
                         ((dw_ - 2 * fw, fd, fw), (cx, gy, fz1 - fw / 2))):
-            bmesh.ops.create_cube(fb, size=1.0, matrix=Matrix.Translation(c) @ Matrix.Diagonal((*size, 1)))
-        bmesh.ops.create_cube(gb, size=1.0, matrix=Matrix.Translation((cx, gy + 0.004, fz0 + fh / 2)) @
+            bmesh.ops.create_cube(ofb if i == od else fb, size=1.0, matrix=Matrix.Translation(c) @ Matrix.Diagonal((*size, 1)))
+        bmesh.ops.create_cube(ogb if i == od else gb, size=1.0, matrix=Matrix.Translation((cx, gy + 0.004, fz0 + fh / 2)) @
                               Matrix.Diagonal((dw_ - 2 * fw + 0.01, 0.006, fh - 2.4 * fw + 0.01, 1)))
     for i in range(nd):
         cx = -W / 2 + (i + 0.5) * dwid
         side = 1 if i % 2 == 0 else -1                     # pulls pair up at the meeting stiles
         x = cx + side * (dwid / 2 - rv - fw - 0.03)
         zc, hl = fz0 + fh * 0.5, 0.62
-        bmesh.ops.create_cone(hb, cap_ends=True, cap_tris=False, segments=8, radius1=0.0075, radius2=0.0075,
+        hbm = ohb if i == od else hb
+        bmesh.ops.create_cone(hbm, cap_ends=True, cap_tris=False, segments=8, radius1=0.0075, radius2=0.0075,
                               depth=hl, matrix=Matrix.Translation((x, gy - fd / 2 - 0.016, zc)))
         for dz in (-hl / 2 + 0.05, hl / 2 - 0.05):
-            bmesh.ops.create_cone(hb, cap_ends=False, segments=6, radius1=0.0045, radius2=0.0045, depth=0.016,
+            bmesh.ops.create_cone(hbm, cap_ends=False, segments=6, radius1=0.0045, radius2=0.0045, depth=0.016,
                                   matrix=Matrix.Translation((x, gy - fd / 2 - 0.008, zc + dz)) @
                                   Matrix.Rotation(math.pi / 2, 4, "X"))
     # the case's own black-metal jambs either side, just proud of the oak sides
@@ -212,6 +218,25 @@ def build(**overrides):
     handles = common.mesh_object(f"{n}_Handles", hb, col, bronze, root)
     for ob in (frames, panes, handles):
         common.box_uv(ob, 0.5)
+    if od is not None:
+        # hinge on the door's right stile (its pull is on the left, at the meeting stiles),
+        # on the frame's front face; it swings out 100 degrees
+        hx, hy = -W / 2 + (od + 1) * dwid - rv, gy - fd / 2
+        hinge = common.empty(f"{n}_Door", col, (hx, hy, fz0))
+        hinge.parent = root
+        hinge["interact"] = {
+            "type": "rotate", "axis": common.to_gltf((0, 0, 1)), "angle": 100, "duration": 0.8,
+            "range": 1.5, "side": "both", "prompt": "Open cabinet", "promptActive": "Close cabinet",
+        }
+        for bm_, nm, mat in ((ofb, "Door_Frame", dark), (ogb, "Door_Glass", glass), (ohb, "Door_Pull", bronze)):
+            bmesh.ops.translate(bm_, vec=(-hx, -hy, -fz0), verts=bm_.verts)
+            ob = common.mesh_object(f"{n}_{nm}", bm_, col, mat, hinge, smooth=(nm == "Door_Pull"))
+            common.box_uv(ob, 0.5)
+        # what the level puts in the cabinet sits on the first shelf behind that door, in front
+        # of the bottles (attach to <n>_Inside; takeable only while the door is open)
+        inside = common.empty(f"{n}_Inside", col, (-W / 2 + (od + 0.5) * dwid, yb - 0.012 - sd + 0.05, z_levels[1]))
+        inside.parent = root
+        inside["inside"] = f"{n}_Door"
     # a warm LED line in the case soffit, behind the door head
     soff = common.mesh_object(f"{n}_SoffitLED", common.box_bmesh((inner_w - 0.04, 0.012, 0.006)), col, led, root)
     soff.location = (0, gy + 0.05, ct - 0.003)

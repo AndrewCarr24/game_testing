@@ -125,9 +125,9 @@ PLACEMENTS = list(PLACEMENTS) + [
     # opener height (1.5 m), clear of the door's swing
     ('ix_switch_garage', (1.25, 9.85, 1.5), 0),
     # power as gameplay (viewer/house.js): the house starts powered with the main fuse in
-    # (`state` sets the panel's signals, power and fuse_garage); the Grimble's break-in blows it,
-    # and the spare is upstairs (guest_room.py: the nightstand drawer), not here
+    # (`state` sets the panel's signals, power and fuse_garage); the Grimble's break-in blows it
     ('ix_breaker_panel', (-6.1, -0.95, 1.45), 90, {'state': True}),
-    ('ix_battery', (-2.55, 6.34, 0.95), -15),
+    # (the spare main fuse and a battery are in the steel locker, its key in the wine room; the
+    # workbench drawer holds the cellar key: blender/levels/caches.py)
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "garage")

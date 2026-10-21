@@ -36,6 +36,7 @@ const PICKUP_CONE = THREE.MathUtils.degToRad(45);   // pickups this close to the
 // the prompt, highlight and crosshair match where the player looks (it used to offer the vase
 // behind you while you faced the wall)
 const FOCUS_CONE = THREE.MathUtils.degToRad(50);
+const LOCKABLE = new Set(['slide', 'rotate']);       // what a placement's `lock` applies to
 
 // "y", "-x", [0, 0, -1] -> unit vector
 export function axisOf(a, fallback = 'y') {
@@ -196,8 +197,10 @@ export class Interactables {
     const motion = def.type === 'switch' ? def.travel : def;
     const it = {
       node, def, root, t: 0, target: 0, taken: false,
-      lockKey: def.type === 'pickup' ? null : lock,
-      locked: def.type !== 'pickup' && !!lock,
+      // locks, keys and caches: a placement's `lock` locks only what opens (doors, drawers, lids),
+      // never a switch or `use` point that happens to be part of the same asset
+      lockKey: LOCKABLE.has(def.type) ? lock : null,
+      locked: LOCKABLE.has(def.type) && !!lock,
       axis: motion?.axis ? axisOf(motion.axis) : null,
       rest: node.position.clone(), restQuat: node.quaternion.clone(),
       host: def.type === 'pickup' ? this.hostOf(node) : null,
@@ -314,8 +317,21 @@ export class Interactables {
     for (let n = node.parent; n; n = n.parent) {
       const host = this.items.find((it) => it.node === n);
       if (host) return host;
+      // locks, keys and caches: a static interior node (a safe's floor, a locker's shelf) names
+      // the door that closes it with `inside`, so its contents don't swing with the door but can
+      // only be taken while that door is open
+      if (n.userData.inside) {
+        const door = this.items.find((it) => it.node.name === n.userData.inside && this.within(it.node, n));
+        if (door) return door;
+      }
     }
     return null;
+  }
+
+  // do a and b belong to the same placed prop (a common ancestor below the scene)?
+  within(a, b) {
+    const top = (o) => { while (o.parent && o.parent.parent) o = o.parent; return o; };
+    return top(a) === top(b);
   }
 
   setIndicator(it, color) {
@@ -487,16 +503,32 @@ export class Interactables {
   }
 
   itemName(id) {
-    return (this.inventory.name(id) ?? id.replace(/^key_/, 'key ').replace(/_/g, ' ')).toLowerCase();
+    // a pickup anywhere in the level names it before the player has one ("the office key")
+    const named = this.inventory.name(id) ?? this.items.find((it) => it.def.type === 'pickup' && it.def.item === id)?.def.name;
+    return (named ?? id.replace(/^key_(.*)/, '$1 key').replace(/_/g, ' ')).toLowerCase();
+  }
+
+  // what a lockable thing is called in messages: `kind` if authored, else the noun of its prompt
+  // ("Open drawer" -> drawer), else by how it moves
+  kindOf(it) {
+    return (it.def.kind ?? /^open\s+(.+)$/i.exec(it.def.prompt ?? '')?.[1] ?? (it.def.type === 'slide' ? 'drawer' : 'door')).toLowerCase();
+  }
+
+  // what E on a locked thing says: what it needs, and how to use it once the player has it
+  lockedMessage(it) {
+    const name = this.itemName(it.lockKey);
+    if (this.inventory.armed === it.lockKey) return `Locked · press Enter to use the ${name}`;
+    if (this.inventory.has(it.lockKey)) return `Locked · arm the ${name} (I, then Enter)`;
+    return `Locked · needs the ${name}`;
   }
 
   prompt(it) {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
     if (it.locked) {
-      // (affordance) carrying the key but not holding it: say so before E is pressed
-      if (it.lockKey && this.inventory.has(it.lockKey) && this.inventory.armed !== it.lockKey) return `Locked · arm the ${this.itemName(it.lockKey)} (I)`;
-      return d.lockedPrompt || (it.lockKey ? `Locked · needs the ${this.itemName(it.lockKey)}` : 'Locked');
+      // (affordance) carrying the key: how to use it, before E is pressed
+      if (it.lockKey && this.inventory.has(it.lockKey)) return this.lockedMessage(it);
+      return d.lockedPrompt || this.lockedMessage(it);
     }
     if (d.type === 'switch') {
       const on = truthy(this.signals.get(it.signal));
@@ -546,7 +578,7 @@ export class Interactables {
     const use = this.useTarget(itemId, player);
     if (use) return use.def.prompt;
     const lock = this.lockTarget(itemId, player);
-    if (lock) return lock.locked ? 'Unlock door' : 'Lock door';
+    if (lock) return `${lock.locked ? 'Unlock' : 'Lock'} ${this.kindOf(lock)}`;
     return null;
   }
 
@@ -565,10 +597,12 @@ export class Interactables {
     const it = this.lockTarget(itemId, player);
     const name = this.inventory.name(itemId);
     if (!it) return `Nothing to use the ${name.toLowerCase()} on here`;
-    if (!it.locked && (it.t > 0 || it.target > 0)) return 'Close the door first';
+    const kind = this.kindOf(it);
+    if (!it.locked && (it.t > 0 || it.target > 0)) return `Close the ${kind} first`;
     it.locked = !it.locked;
     this.setIndicator(it, it.locked ? RED : GREEN);
-    return it.locked ? 'Door locked' : 'Door unlocked';
+    const Kind = kind[0].toUpperCase() + kind.slice(1);
+    return it.locked ? `${Kind} locked` : `${Kind} unlocked`;
   }
 
   // press E on an item; returns a message to show, or null
@@ -580,14 +614,7 @@ export class Interactables {
       this.inventory.add(d.item, d.name, it.node, d);
       return `Picked up: ${d.name} · press I for inventory`;
     }
-    if (it.locked) {
-      if (this.inventory.has(it.lockKey)) {
-        const name = this.inventory.name(it.lockKey).toLowerCase();
-        return this.inventory.armed === it.lockKey ? `Locked · press Enter to use the ${name}`
-                                                   : `Locked · arm the ${name} (I, then Enter)`;
-      }
-      return d.lockedPrompt || 'Locked';
-    }
+    if (it.locked) return this.lockedMessage(it);
     if (d.type === 'switch') {
       // `requires`: another signal that must be on before this one can be switched on (the main
       // breaker needs its fuse); switching off always works
