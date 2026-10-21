@@ -201,6 +201,21 @@ export class Interactables {
     }));
   }
 
+  // a pickup added at runtime (a thrown book that landed) on top of other pickups: they wait for it
+  restOn(added) {
+    const c = new THREE.Vector3(), A = new THREE.Box3(), B = new THREE.Box3();
+    for (const b of added) {
+      if (b.isReactor || b.def?.type !== 'pickup') continue;
+      this.boxOf(b, B).getCenter(c);
+      for (const a of this.items) {
+        if (a === b || a.taken || a.def.type !== 'pickup' || a.root === b.root) continue;
+        this.boxOf(a, A);
+        if (c.x > A.min.x && c.x < A.max.x && c.z > A.min.z && c.z < A.max.z &&
+            B.min.y >= A.min.y + 0.005 && B.min.y <= A.max.y + 0.01) (a.load ??= []).push(b);
+      }
+    }
+  }
+
   // the item's own meshes, not its room batch (batching.js): before taking it, or any per-node
   // effect (a highlight). Resting pickups are drawn by the batch until then.
   unbatch(it) { if (it?.batched) unbatch(it); }
@@ -208,6 +223,7 @@ export class Interactables {
   // add a prop built at runtime (tests, scripted scenes): collect + pose everything on its signals
   register(root, opts = {}) {
     const added = this.collect(root, opts);
+    this.restOn(added);
     this.snapAll();
     return added;
   }
