@@ -5,10 +5,15 @@ import * as THREE from 'three';
 // open when it's inside an allowed area and no collider in the crawl's height band (it climbs
 // over sofas and tables, not cabinets and walls) comes within its body radius. The side rooms
 // need no rule of their own: their doorways are too narrow for it. A* over 8 neighbours.
+// Once it's in, flood() keeps only the cells connected to where it is (reach): every path, the
+// nearest-cell lookups and the random prowl spots stay inside that, so it never plans for a
+// pocket it can't get to (a player out of reach gets a path to the nearest place it can go).
 
 export const MAIN_SPACES = ['great_room', 'entry', 'gallery_s', 'gallery_n', 'gallery_w', 'gallery_e',
   'courtyard', 'kitchen', 'dining'];
 export const DOUBLE_HEIGHT = ['great_room', 'entry', 'courtyard'];
+
+const NB = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
 
 export class NavGrid {
   // boxes: THREE.Box3 colliders (shell + props); areas: [[x0, z0, x1, z1], ...] where it may be
@@ -46,13 +51,85 @@ export class NavGrid {
     const i = Math.floor((x - this.x0) / this.cell), j = Math.floor((z - this.z0) / this.cell);
     return i < 0 || j < 0 || i >= this.w || j >= this.h ? -1 : j * this.w + i;
   }
-  walkable(k) { return k >= 0 && this.open[k] && !this.blocked[k]; }
+  walkable(k) { return k >= 0 && this.open[k] && !this.blocked[k] && (!this.reach || this.reach[k] === 1); }
+
+  // the cells connected to (x, z) (8-neighbour, no corner cutting): `reach`, and a list of them
+  flood(x, z) {
+    this.reach = null;
+    const s = this.nearest(x, z);
+    if (s < 0) return 0;
+    const W = this.w, reach = new Uint8Array(this.open.length), list = [s];
+    reach[s] = 1;
+    for (let n = 0; n < list.length; n++) {
+      const k = list[n], i = k % W, j = Math.floor(k / W);
+      for (const [di, dj] of NB) {
+        const ii = i + di, jj = j + dj;
+        if (ii < 0 || jj < 0 || ii >= W || jj >= this.h) continue;
+        const kk = jj * W + ii;
+        if (reach[kk] || !this.walkable(kk)) continue;
+        if (di && dj && (!this.walkable(j * W + ii) || !this.walkable(jj * W + i))) continue;
+        reach[kk] = 1; list.push(kk);
+      }
+    }
+    this.reach = reach;
+    this.reachList = list;
+    return list.length;
+  }
+  // metres from each reachable cell to the nearest cell it can't stand on (8-neighbour steps):
+  // where there's room for it to turn round
+  clearance() {
+    const W = this.w, n = this.open.length, d = new Float32Array(n).fill(Infinity), q = [];
+    for (let k = 0; k < n; k++) if (!this.walkable(k)) { d[k] = 0; q.push(k); }
+    for (let h = 0; h < q.length; h++) {
+      const k = q[h], i = k % W, j = Math.floor(k / W);
+      for (const [di, dj, c] of NB) {
+        const ii = i + di, jj = j + dj;
+        if (ii < 0 || jj < 0 || ii >= W || jj >= this.h) continue;
+        const kk = jj * W + ii, v = d[k] + c * this.cell;
+        if (v < d[kk]) { d[kk] = v; q.push(kk); }
+      }
+    }
+    this.clear = d;
+    return d;
+  }
+
+  // breadth-first from (x, z) over walkable cells to the first one `accept`s (within maxCells)
+  search(x, z, accept, maxCells = 6000) {
+    const s = this.nearest(x, z);
+    if (s < 0) return -1;
+    const W = this.w, seen = new Uint8Array(this.open.length), list = [s];
+    seen[s] = 1;
+    for (let h = 0; h < list.length && h < maxCells; h++) {
+      const k = list[h];
+      if (accept(k)) return k;
+      const i = k % W, j = Math.floor(k / W);
+      for (const [di, dj] of NB) {
+        const ii = i + di, jj = j + dj;
+        if (ii < 0 || jj < 0 || ii >= W || jj >= this.h) continue;
+        const kk = jj * W + ii;
+        if (seen[kk] || !this.walkable(kk)) continue;
+        seen[kk] = 1; list.push(kk);
+      }
+    }
+    return -1;
+  }
+
   centre(k) { return new THREE.Vector2(this.x0 + ((k % this.w) + 0.5) * this.cell, this.z0 + (Math.floor(k / this.w) + 0.5) * this.cell); }
 
-  // the walkable cell nearest to (x, z), searching outward up to maxR metres
-  nearest(x, z, maxR = 12) {
+  // the walkable cell nearest to (x, z), searching outward up to maxR metres; with `prefer`
+  // (cell centre x, z -> bool) the nearest one it accepts, if there is one within maxR
+  nearest(x, z, maxR = 12, prefer = null) {
+    if (prefer) {
+      const k = this._nearest(x, z, maxR, prefer);
+      if (k >= 0) return k;
+    }
+    return this._nearest(x, z, maxR, null);
+  }
+
+  _nearest(x, z, maxR, prefer) {
+    const ok = (kk) => this.walkable(kk) && (!prefer || prefer(this.x0 + ((kk % this.w) + 0.5) * this.cell, this.z0 + (Math.floor(kk / this.w) + 0.5) * this.cell));
     const k = this.idx(x, z);
-    if (this.walkable(k)) return k;
+    if (ok(k)) return k;
     const ci = Math.floor((x - this.x0) / this.cell), cj = Math.floor((z - this.z0) / this.cell);
     const R = Math.ceil(maxR / this.cell);
     let best = -1, bd = Infinity;
@@ -62,7 +139,7 @@ export class NavGrid {
         const i = ci + di, j = cj + dj;
         if (i < 0 || j < 0 || i >= this.w || j >= this.h) continue;
         const kk = j * this.w + i;
-        if (!this.walkable(kk)) continue;
+        if (!ok(kk)) continue;
         const d = di * di + dj * dj;
         if (d < bd) { bd = d; best = kk; }
       }
@@ -70,9 +147,10 @@ export class NavGrid {
     return best;
   }
 
-  // A* from (x, z) to the walkable cell nearest the goal; a list of Vector2 waypoints, smoothed
-  path(from, to) {
-    const s = this.nearest(from.x, from.y), g = this.nearest(to.x, to.y);
+  // A* from (x, z) to the walkable cell nearest the goal; a list of Vector2 waypoints, smoothed.
+  // `prefer` picks the start cell (e.g. one in the room it's in, not the nearest across a wall)
+  path(from, to, prefer = null) {
+    const s = this.nearest(from.x, from.y, 12, prefer), g = this.nearest(to.x, to.y, 40);
     if (s < 0 || g < 0) return null;
     if (s === g) return [this.centre(g)];
     const W = this.w, n = this.open.length;
@@ -82,7 +160,7 @@ export class NavGrid {
     const hcost = (k) => { const dx = Math.abs((k % W) - gx), dy = Math.abs(Math.floor(k / W) - gy); return Math.max(dx, dy) + 0.414 * Math.min(dx, dy); };
     const heap = new MinHeap();
     gScore[s] = 0; heap.push(s, hcost(s));
-    const nb = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
+    const nb = NB;
     let found = false, iter = 0;
     while (heap.size && iter++ < 60000) {
       const k = heap.pop();

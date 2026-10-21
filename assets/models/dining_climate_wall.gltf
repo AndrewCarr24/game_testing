@@ -1725,63 +1725,63 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":570,
+			"byteLength":561,
 			"byteOffset":74720
 		},
 		{
 			"buffer":0,
 			"byteLength":35653,
-			"byteOffset":75292
+			"byteOffset":75284
 		},
 		{
 			"buffer":0,
 			"byteLength":3022,
-			"byteOffset":110948
+			"byteOffset":110940
 		},
 		{
 			"buffer":0,
 			"byteLength":746,
-			"byteOffset":113972
+			"byteOffset":113964
 		},
 		{
 			"buffer":0,
 			"byteLength":549,
-			"byteOffset":114720
+			"byteOffset":114712
 		},
 		{
 			"buffer":0,
 			"byteLength":2824,
-			"byteOffset":115272
+			"byteOffset":115264
 		},
 		{
 			"buffer":0,
 			"byteLength":1277,
-			"byteOffset":118096
+			"byteOffset":118088
 		},
 		{
 			"buffer":0,
 			"byteLength":226,
-			"byteOffset":119376
+			"byteOffset":119368
 		},
 		{
 			"buffer":0,
 			"byteLength":1121,
-			"byteOffset":119604
+			"byteOffset":119596
 		},
 		{
 			"buffer":0,
 			"byteLength":536,
-			"byteOffset":120728
+			"byteOffset":120720
 		},
 		{
 			"buffer":0,
-			"byteLength":551,
-			"byteOffset":121264
+			"byteLength":564,
+			"byteOffset":121256
 		},
 		{
 			"buffer":0,
 			"byteLength":235,
-			"byteOffset":121816
+			"byteOffset":121820
 		}
 	],
 	"samplers":[
@@ -1792,7 +1792,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":122052,
+			"byteLength":122056,
 			"uri":"dining_climate_wall.bin"
 		}
 	]

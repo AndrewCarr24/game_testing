@@ -269,18 +269,18 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":12025,
+			"byteLength":14638,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":4894,
-			"byteOffset":12028
+			"byteLength":5034,
+			"byteOffset":14640
 		},
 		{
 			"buffer":0,
-			"byteLength":2918,
-			"byteOffset":16924
+			"byteLength":2974,
+			"byteOffset":19676
 		}
 	],
 	"samplers":[
@@ -291,7 +291,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":19844,
+			"byteLength":22652,
 			"uri":"courtyard_maple.bin"
 		}
 	]

@@ -5,7 +5,7 @@ const p = await b.newPage({ viewport: { width: 1100, height: 700 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 let fails = 0;
 const check = (label, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}  ${detail}`); if (!ok) fails++; };
-await p.goto('http://localhost:8765/viewer/index.html?level=mansion');
+await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion');
 await p.waitForFunction(() => window.__loaded, null, { timeout: 60000 });
 await p.mouse.click(550, 350); await p.waitForTimeout(400);
 await p.evaluate(() => { const i = window.__inventory; i.add('a', 'Item A'); i.add('b', 'Item B'); i.add('c', 'Item C'); });

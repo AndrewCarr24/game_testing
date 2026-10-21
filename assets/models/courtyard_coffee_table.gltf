@@ -1495,93 +1495,93 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1114,
+			"byteLength":1128,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1134,
-			"byteOffset":1116
+			"byteLength":1144,
+			"byteOffset":1128
 		},
 		{
 			"buffer":0,
-			"byteLength":325,
-			"byteOffset":2252
+			"byteLength":353,
+			"byteOffset":2272
 		},
 		{
 			"buffer":0,
-			"byteLength":937,
-			"byteOffset":2580
+			"byteLength":938,
+			"byteOffset":2628
 		},
 		{
 			"buffer":0,
-			"byteLength":868,
-			"byteOffset":3520
+			"byteLength":895,
+			"byteOffset":3568
 		},
 		{
 			"buffer":0,
-			"byteLength":907,
-			"byteOffset":4388
+			"byteLength":909,
+			"byteOffset":4464
 		},
 		{
 			"buffer":0,
-			"byteLength":375,
-			"byteOffset":5296
+			"byteLength":400,
+			"byteOffset":5376
 		},
 		{
 			"buffer":0,
-			"byteLength":951,
-			"byteOffset":5672
+			"byteLength":941,
+			"byteOffset":5776
 		},
 		{
 			"buffer":0,
-			"byteLength":2745,
-			"byteOffset":6624
+			"byteLength":2937,
+			"byteOffset":6720
 		},
 		{
 			"buffer":0,
-			"byteLength":500,
-			"byteOffset":9372
+			"byteLength":408,
+			"byteOffset":9660
 		},
 		{
 			"buffer":0,
-			"byteLength":777,
-			"byteOffset":9872
+			"byteLength":647,
+			"byteOffset":10068
 		},
 		{
 			"buffer":0,
-			"byteLength":347,
-			"byteOffset":10652
+			"byteLength":383,
+			"byteOffset":10716
 		},
 		{
 			"buffer":0,
 			"byteLength":1164,
-			"byteOffset":11000
+			"byteOffset":11100
 		},
 		{
 			"buffer":0,
-			"byteLength":770,
-			"byteOffset":12164
+			"byteLength":803,
+			"byteOffset":12264
 		},
 		{
 			"buffer":0,
-			"byteLength":997,
-			"byteOffset":12936
+			"byteLength":1004,
+			"byteOffset":13068
 		},
 		{
 			"buffer":0,
-			"byteLength":1056,
-			"byteOffset":13936
+			"byteLength":1059,
+			"byteOffset":14072
 		},
 		{
 			"buffer":0,
-			"byteLength":954,
-			"byteOffset":14992
+			"byteLength":970,
+			"byteOffset":15132
 		},
 		{
 			"buffer":0,
-			"byteLength":960,
-			"byteOffset":15948
+			"byteLength":966,
+			"byteOffset":16104
 		}
 	],
 	"samplers":[
@@ -1592,7 +1592,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":16908,
+			"byteLength":17072,
 			"uri":"courtyard_coffee_table.bin"
 		}
 	]

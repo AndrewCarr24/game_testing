@@ -184,8 +184,12 @@ export class Grimble {
     } else if (this.state === 'inside') {
       this.hunt.update(dt, player, this.playerObj);
     }
-    this.root.rotation.y = this.heading;
+    // inside, the root lies along its hindquarters and the spine bends onto the head end
+    // (grimble_hunt.js: the body chain), applied on top of the animation
+    const inside = this.state === 'inside' && this.hunt.bodyYaw != null;
+    this.root.rotation.y = inside ? this.hunt.bodyYaw : this.heading;
     this.mixer.update(dt);
+    if (inside) this.hunt.pose();
     this.lookAt(player);
     this.blob.position.set(this.root.position.x, this.root.position.y + 0.02, this.root.position.z);
     this.blob.visible = this.root.visible;

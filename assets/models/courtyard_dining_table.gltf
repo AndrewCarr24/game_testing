@@ -891,18 +891,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":423,
+			"byteLength":587,
 			"byteOffset":8340
 		},
 		{
 			"buffer":0,
 			"byteLength":5585,
-			"byteOffset":8764
+			"byteOffset":8928
 		},
 		{
 			"buffer":0,
-			"byteLength":3880,
-			"byteOffset":14352
+			"byteLength":3885,
+			"byteOffset":14516
 		}
 	],
 	"samplers":[
@@ -913,7 +913,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":18232,
+			"byteLength":18404,
 			"uri":"courtyard_dining_table.bin"
 		}
 	]

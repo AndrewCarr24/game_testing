@@ -8,7 +8,7 @@ fs.mkdirSync(out, { recursive: true });
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 900, height: 600 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
-await p.goto('http://localhost:8765/viewer/index.html?level=mansion&gdelay=0&hunt=0&pos=-15,1.65,0&look=-20,1,0');
+await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion&gdelay=0&hunt=0&pos=-15,1.65,0&look=-20,1,0');
 await p.waitForFunction(() => window.__loaded && window.__grimble, null, { timeout: 90000 });
 const info = await p.evaluate(([action, time]) => {
   const g = window.__grimble;

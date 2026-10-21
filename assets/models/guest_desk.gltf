@@ -1226,7 +1226,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3636,
+			"byteLength":3742,
 			"byteOffset":15176
 		}
 	],
@@ -1238,7 +1238,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":18812,
+			"byteLength":18920,
 			"uri":"guest_desk.bin"
 		}
 	]

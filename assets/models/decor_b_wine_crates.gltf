@@ -646,7 +646,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1567,
+			"byteLength":1579,
 			"byteOffset":19448
 		}
 	],
@@ -658,7 +658,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":21016,
+			"byteLength":21028,
 			"uri":"decor_b_wine_crates.bin"
 		}
 	]

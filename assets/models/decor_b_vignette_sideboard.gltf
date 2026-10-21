@@ -1087,58 +1087,58 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1979,
+			"byteLength":2017,
 			"byteOffset":2932
 		},
 		{
 			"buffer":0,
 			"byteLength":988,
-			"byteOffset":4912
+			"byteOffset":4952
 		},
 		{
 			"buffer":0,
 			"byteLength":5291,
-			"byteOffset":5900
+			"byteOffset":5940
 		},
 		{
 			"buffer":0,
 			"byteLength":3480,
-			"byteOffset":11192
+			"byteOffset":11232
 		},
 		{
 			"buffer":0,
 			"byteLength":1014,
-			"byteOffset":14672
+			"byteOffset":14712
 		},
 		{
 			"buffer":0,
 			"byteLength":6109,
-			"byteOffset":15688
+			"byteOffset":15728
 		},
 		{
 			"buffer":0,
 			"byteLength":4508,
-			"byteOffset":21800
+			"byteOffset":21840
 		},
 		{
 			"buffer":0,
 			"byteLength":1408,
-			"byteOffset":26308
+			"byteOffset":26348
 		},
 		{
 			"buffer":0,
 			"byteLength":5511,
-			"byteOffset":27716
+			"byteOffset":27756
 		},
 		{
 			"buffer":0,
 			"byteLength":1551,
-			"byteOffset":33228
+			"byteOffset":33268
 		},
 		{
 			"buffer":0,
 			"byteLength":1148,
-			"byteOffset":34780
+			"byteOffset":34820
 		}
 	],
 	"samplers":[
@@ -1149,7 +1149,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":35928,
+			"byteLength":35968,
 			"uri":"decor_b_vignette_sideboard.bin"
 		}
 	]

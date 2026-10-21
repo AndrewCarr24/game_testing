@@ -919,43 +919,43 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2771,
+			"byteLength":2777,
 			"byteOffset":11108
 		},
 		{
 			"buffer":0,
 			"byteLength":689,
-			"byteOffset":13880
+			"byteOffset":13888
 		},
 		{
 			"buffer":0,
 			"byteLength":7351,
-			"byteOffset":14572
+			"byteOffset":14580
 		},
 		{
 			"buffer":0,
 			"byteLength":2164,
-			"byteOffset":21924
+			"byteOffset":21932
 		},
 		{
 			"buffer":0,
-			"byteLength":6002,
-			"byteOffset":24088
+			"byteLength":6011,
+			"byteOffset":24096
 		},
 		{
 			"buffer":0,
 			"byteLength":528,
-			"byteOffset":30092
+			"byteOffset":30108
 		},
 		{
 			"buffer":0,
 			"byteLength":2837,
-			"byteOffset":30620
+			"byteOffset":30636
 		},
 		{
 			"buffer":0,
 			"byteLength":3879,
-			"byteOffset":33460
+			"byteOffset":33476
 		}
 	],
 	"samplers":[
@@ -966,7 +966,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":37340,
+			"byteLength":37356,
 			"uri":"decor_b_vignette_bread.bin"
 		}
 	]

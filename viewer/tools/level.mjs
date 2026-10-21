@@ -27,4 +27,4 @@ export function room(name) {
 
 export const fmt = (v) => v.map((n) => n.toFixed(2)).join(',');
 export const url = (pos, look) =>
-  `http://localhost:8765/viewer/index.html?level=mansion&pos=${fmt(pos)}&look=${fmt(look)}`;
+  `${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&pos=${fmt(pos)}&look=${fmt(look)}`;

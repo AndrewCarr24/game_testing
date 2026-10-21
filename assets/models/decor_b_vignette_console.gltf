@@ -650,18 +650,18 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4384,
+			"byteLength":4357,
 			"byteOffset":7936
 		},
 		{
 			"buffer":0,
 			"byteLength":1098,
-			"byteOffset":12320
+			"byteOffset":12296
 		},
 		{
 			"buffer":0,
 			"byteLength":1624,
-			"byteOffset":13420
+			"byteOffset":13396
 		}
 	],
 	"samplers":[
@@ -672,7 +672,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":15044,
+			"byteLength":15020,
 			"uri":"decor_b_vignette_console.bin"
 		}
 	]

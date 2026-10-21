@@ -16,7 +16,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				5
 			]
 		}
 	],
@@ -31,10 +31,6 @@
 		},
 		{
 			"mesh":2,
-			"name":"CourtyardPotsDoor_Pot0Soil"
-		},
-		{
-			"mesh":3,
 			"name":"CourtyardPotsDoor_Pot1",
 			"translation":[
 				0.47999998927116394,
@@ -43,16 +39,7 @@
 			]
 		},
 		{
-			"mesh":4,
-			"name":"CourtyardPotsDoor_Pot1Soil",
-			"translation":[
-				0.47999998927116394,
-				0,
-				0.30000001192092896
-			]
-		},
-		{
-			"mesh":5,
+			"mesh":3,
 			"name":"CourtyardPotsDoor_Pot2",
 			"translation":[
 				-0.30000001192092896,
@@ -61,16 +48,7 @@
 			]
 		},
 		{
-			"mesh":6,
-			"name":"CourtyardPotsDoor_Pot2Soil",
-			"translation":[
-				-0.30000001192092896,
-				0,
-				0.41999998688697815
-			]
-		},
-		{
-			"mesh":7,
+			"mesh":4,
 			"name":"CourtyardPotsDoor_StemsNoCollide"
 		},
 		{
@@ -79,10 +57,7 @@
 				1,
 				2,
 				3,
-				4,
-				5,
-				6,
-				7
+				4
 			],
 			"name":"CourtyardPotsDoor"
 		}
@@ -90,42 +65,26 @@
 	"materials":[
 		{
 			"alphaMode":"MASK",
-			"doubleSided":true,
-			"name":"M_Courtyard_Foliage",
+			"name":"M_CourtyardPots_Foliage",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":0
 				},
 				"metallicFactor":0,
-				"roughnessFactor":0.699999988079071
+				"roughnessFactor":0.6000000238418579
 			}
 		},
 		{
-			"doubleSided":true,
-			"name":"M_Courtyard_Terracotta",
+			"name":"M_CourtyardPots_Terracotta",
+			"normalTexture":{
+				"index":1
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.41999998688697815,
-					0.16500000655651093,
-					0.08500000089406967,
-					1
-				],
+				"baseColorTexture":{
+					"index":2
+				},
 				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Courtyard_Soil",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.04500000178813934,
-					0.029999999329447746,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.9800000190734863
+				"roughnessFactor":0.8799999952316284
 			}
 		},
 		{
@@ -178,7 +137,8 @@
 					"attributes":{
 						"POSITION":5,
 						"NORMAL":6,
-						"COLOR_0":7
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -186,37 +146,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":8,
+					"indices":9,
 					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"CourtyardPotsDoor_Pot0Soil",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"COLOR_0":11
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":12,
-					"material":2,
 					"mode":4
 				}
 			]
@@ -226,9 +162,37 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":13,
-						"NORMAL":14,
-						"COLOR_0":15
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"CourtyardPotsDoor_Pot2",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -236,24 +200,25 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":16,
+					"indices":19,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"CourtyardPotsDoor_Pot1Soil",
+			"name":"CourtyardPotsDoor_StemsNoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":17,
-						"NORMAL":18,
-						"COLOR_0":19
+						"POSITION":20,
+						"NORMAL":21,
+						"COLOR_0":22
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -265,83 +230,8 @@
 							}
 						}
 					},
-					"indices":12,
+					"indices":23,
 					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"CourtyardPotsDoor_Pot2",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"COLOR_0":22
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":8,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"CourtyardPotsDoor_Pot2Soil",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":23,
-						"NORMAL":24,
-						"COLOR_0":25
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":6,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":12,
-					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"CourtyardPotsDoor_StemsNoCollide",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":26,
-						"NORMAL":27,
-						"COLOR_0":28
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":7,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":29,
-					"material":3,
 					"mode":4
 				}
 			]
@@ -355,235 +245,198 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":1
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":2
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Courtyard_Foliage_BaseColor",
-			"uri":"textures/T_Courtyard_Foliage_BaseColor.webp"
+			"name":"T_CourtyardPots_Foliage_BaseColor",
+			"uri":"textures/T_CourtyardPots_Foliage_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_CourtyardPots_Clay_Normal",
+			"uri":"textures/T_CourtyardPots_Clay_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_CourtyardPots_Clay_BaseColor",
+			"uri":"textures/T_CourtyardPots_Clay_BaseColor.webp"
 		}
 	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":264,
+			"count":2656,
 			"max":[
-				1.0170338153839111,
-				1.9092272520065308,
-				0.8267109990119934
+				1.0531120300292969,
+				1.8915717601776123,
+				0.8627133965492249
 			],
 			"min":[
-				-0.682246744632721,
-				0.029999999329447746,
-				-0.6293313503265381
+				-0.6731570363044739,
+				0.039481960237026215,
+				-0.5993467569351196
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":2656,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":264,
+			"count":2656,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":264,
+			"count":2656,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":462,
+			"count":3984,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":560,
 			"max":[
-				0.27292537689208984,
-				0.7480000257492065,
-				0.27292537689208984
+				0.28235501050949097,
+				0.7512313723564148,
+				0.27616047859191895
 			],
 			"min":[
-				-0.27292537689208984,
+				-0.27006950974464417,
 				0,
-				-0.27292537689208984
+				-0.26977863907814026
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":560,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":560,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":128,
+			"count":560,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":672,
+			"count":2784,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":33,
+			"count":494,
 			"max":[
-				0.23027999699115753,
-				0.699999988079071,
-				0.23027999699115753
+				0.24887260794639587,
+				0.44073641300201416,
+				0.24987775087356567
 			],
 			"min":[
-				-0.23027999699115753,
-				0.6800000071525574,
-				-0.23027999699115753
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":33,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":33,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":144,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":160,
-			"max":[
-				0.24901065230369568,
-				0.4505000114440918,
-				0.24901065230369568
-			],
-			"min":[
-				-0.24901065230369568,
+				-0.2478722333908081,
 				0,
-				-0.24901065230369568
+				-0.2415471374988556
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":160,
+			"count":494,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":494,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":160,
+			"count":494,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":864,
+			"count":2400,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":33,
+			"count":527,
 			"max":[
-				0.2103324979543686,
-				0.4180000126361847,
-				0.2103324979543686
+				0.30788469314575195,
+				0.21479977667331696,
+				0.30371028184890747
 			],
 			"min":[
-				-0.2103324979543686,
-				0.39800000190734863,
-				-0.2103324979543686
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":33,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":33,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":128,
-			"max":[
-				0.30527740716934204,
-				0.20960000157356262,
-				0.30527740716934204
-			],
-			"min":[
-				-0.30527740716934204,
+				-0.31335124373435974,
 				0,
-				-0.30527740716934204
+				-0.309493750333786
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":128,
+			"count":527,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":527,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":128,
+			"count":527,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
-			"componentType":5126,
-			"count":33,
-			"max":[
-				0.2666400074958801,
-				0.17800000309944153,
-				0.2666400074958801
-			],
-			"min":[
-				-0.2666400074958801,
-				0.15800000727176666,
-				-0.2666400074958801
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":33,
-			"type":"VEC3"
-		},
-		{
 			"componentType":5123,
-			"count":33,
-			"normalized":true,
-			"type":"VEC4"
+			"count":2592,
+			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
 			"count":48,
 			"max":[
-				0.10503868013620377,
-				1.2798265218734741,
-				0.1002124696969986
+				0.09981483221054077,
+				1.3291893005371094,
+				0.09203237295150757
 			],
 			"min":[
-				-0.0406009741127491,
-				0.6690361499786377,
-				-0.10396270453929901
+				-0.03314891830086708,
+				0.680479884147644,
+				-0.08579594641923904
 			],
 			"type":"VEC3"
 		},
@@ -607,43 +460,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2741,
+			"byteLength":31542,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1417,
-			"byteOffset":2744
+			"byteLength":5810,
+			"byteOffset":31544
 		},
 		{
 			"buffer":0,
-			"byteLength":508,
-			"byteOffset":4164
+			"byteLength":5003,
+			"byteOffset":37356
 		},
 		{
 			"buffer":0,
-			"byteLength":1894,
-			"byteOffset":4672
+			"byteLength":5489,
+			"byteOffset":42360
 		},
 		{
 			"buffer":0,
-			"byteLength":567,
-			"byteOffset":6568
-		},
-		{
-			"buffer":0,
-			"byteLength":1636,
-			"byteOffset":7136
-		},
-		{
-			"buffer":0,
-			"byteLength":545,
-			"byteOffset":8772
-		},
-		{
-			"buffer":0,
-			"byteLength":723,
-			"byteOffset":9320
+			"byteLength":774,
+			"byteOffset":47852
 		}
 	],
 	"samplers":[
@@ -654,7 +492,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":10044,
+			"byteLength":48628,
 			"uri":"courtyard_pots_door.bin"
 		}
 	]

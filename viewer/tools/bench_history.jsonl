@@ -62,3 +62,5 @@
 {"date":"2026-10-20T15:28:34.252Z","commit":"c65722d+dirty","label":"fixes3","profile":"soft","fps":3.6,"frameP95":767.5,"gpuP95":425.59,"hitches":99,"callsMax":457,"trisMax":517139,"downloadMB":19.78,"textureMB":327,"loadS":5.6}
 {"date":"2026-10-20T17:54:09.853Z","commit":"c65722d+dirty","label":"final4","profile":"gpu","fps":189.3,"frameP95":6.3,"gpuP95":15.17,"hitches":5,"callsMax":767,"trisMax":866953,"downloadMB":19.65,"textureMB":327,"loadS":1.6}
 {"date":"2026-10-20T17:55:24.266Z","commit":"c65722d+dirty","label":"final4","profile":"soft","fps":3.7,"frameP95":763.5,"gpuP95":412.04,"hitches":99,"callsMax":458,"trisMax":521759,"downloadMB":19.65,"textureMB":327,"loadS":5.6}
+{"date":"2026-10-20T22:59:42.267Z","commit":"1d557b3+dirty","label":"hero","profile":"gpu","fps":184.1,"frameP95":6.7,"gpuP95":15.58,"hitches":7,"callsMax":777,"trisMax":948209,"downloadMB":21.31,"textureMB":364,"loadS":2.1}
+{"date":"2026-10-20T23:00:57.789Z","commit":"1d557b3+dirty","label":"hero","profile":"soft","fps":3.6,"frameP95":927,"gpuP95":460.37,"hitches":84,"callsMax":469,"trisMax":555821,"downloadMB":21.31,"textureMB":364,"loadS":5.6}

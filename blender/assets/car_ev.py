@@ -37,6 +37,10 @@ from lib import common, materials, textures  # noqa: E402
 importlib.reload(common)
 importlib.reload(textures)
 importlib.reload(materials)
+sys.path.insert(0, HERE)
+import car_ev_interior as cabin  # noqa: E402
+
+importlib.reload(cabin)
 
 NAME = "CarEV"
 
@@ -118,15 +122,74 @@ TOP_D = (0.0, 0.012, 0.05, 0.055)
 TOP_G = (0.16, 0.36, 0.58, 0.8, 1.0)
 
 # wheel profiles (axial a, radius r); outer face at +a
-TYRE = [(-0.100, 0.262), (-0.130, 0.300), (-0.113, 0.352),     # inner sidewall: only seen from under the car
-        (-0.050, 0.360), (-0.047, 0.351), (-0.037, 0.351), (-0.034, 0.360),
-        (0.034, 0.360), (0.037, 0.351), (0.047, 0.351), (0.050, 0.360),
-        (0.113, 0.352), (0.128, 0.333), (0.1325, 0.305), (0.124, 0.278), (0.102, 0.262)]
-TYRE_GROOVE_RINGS = (3, 4, 5, 6, 7, 8, 9, 10)
+TYRE = [(-0.100, 0.262), (-0.113, 0.352),                       # inner sidewall: only seen from under the car
+        (-0.050, 0.360), (-0.042, 0.351), (-0.034, 0.360),       # tread with two circumferential grooves
+        (0.034, 0.360), (0.042, 0.351), (0.050, 0.360),
+        (0.104, 0.356), (0.118, 0.348), (0.129, 0.330), (0.1325, 0.309), (0.130, 0.293),
+        (0.1325, 0.286), (0.122, 0.272), (0.102, 0.262)]        # outer sidewall, rim protector rib, bead
+TYRE_GROOVE_RINGS = (2, 3, 4, 5, 6, 7)
+TYRE_SEGS = 40
+TYRE_REPEAT = 10            # tread texture tiles round the circumference (one tile ~ 0.2 m)
 RIM = [(0.098, 0.266), (0.114, 0.270), (0.121, 0.264), (0.119, 0.256), (0.108, 0.249),
        (0.092, 0.246), (-0.110, 0.246)]
 HUB = [(0.060, 0.092), (0.090, 0.092), (0.098, 0.083), (0.101, 0.055), (0.104, 0.050), (0.106, 0.0)]
-DISC = [(-0.004, 0.188), (0.026, 0.188), (0.026, 0.118), (0.045, 0.104), (0.062, 0.100), (0.062, 0.060)]
+DISC = [(-0.004, 0.188), (0.007, 0.188), (0.015, 0.188), (0.026, 0.188), (0.026, 0.118), (0.050, 0.100)]
+# outer band: plate, vent gap (dark), plate; then the face and the hat (hidden behind the hub)
+
+
+# ------------------------------------------------------------------- textures
+
+TYRE_TEX_VERSION = 1
+
+
+def _tyre_normal(n=1024, force=False):
+    """Tyre normal map: u runs round the tyre (one tile = 1/TYRE_REPEAT of it), v across
+    the TYRE profile (arc-length fraction): directional tread blocks and sipes on the tread,
+    fine ribs on the rim protector, a lightly stippled sidewall."""
+    import numpy as np
+    path = os.path.join(textures.TEX_DIR, "T_CarEV_Tyre_Normal.png")
+    stamp = os.path.join(textures.TEX_DIR, "..", "..", "build", "texture_stamps", f"T_CarEV_Tyre_Normal.v{TYRE_TEX_VERSION}")
+    os.makedirs(os.path.dirname(stamp), exist_ok=True)
+    if os.path.exists(path) and os.path.exists(stamp) and not force:
+        return path
+    vs = _profile_v(TYRE)
+    u = (np.arange(n) + 0.5)[None, :] / n * np.ones((n, 1))
+    v = 1.0 - (np.arange(n) + 0.5)[:, None] / n * np.ones((1, n))   # image row 0 = top = v 1
+    a = np.interp(v, vs, [q[0] for q in TYRE])           # axial position (m) at each row
+    r = np.interp(v, vs, [q[1] for q in TYRE])
+    on_tread = (r > 0.3505) & (np.abs(a) < 0.112)
+    h = np.zeros((n, n))
+    circ = 2 * math.pi * 0.36 / TYRE_REPEAT              # metres of tread per tile
+    x = u * circ                                         # metres round the tyre
+    # shoulder blocks: lateral grooves every 1/6 tile, slanted (directional), on |a| > 0.05
+    pitch = circ / 6
+    slant = 0.35 * np.sign(a) * (np.abs(a) - 0.05)
+    ph = np.mod(x + slant * 1.0, pitch) / pitch
+    groove = np.exp(-((ph - 0.5) / 0.06) ** 2)
+    outer = (np.abs(a) > 0.052) & on_tread
+    h -= groove * outer
+    # centre rib: thin sipes every 1/12 tile
+    ph2 = np.mod(x + 0.25 * a, pitch / 2) / (pitch / 2)
+    sipe = np.exp(-((ph2 - 0.5) / 0.035) ** 2)
+    centre = (np.abs(a) < 0.032) & on_tread
+    h -= 0.6 * sipe * centre
+    # middle ribs (between grooves and shoulders): short notches from the groove edges
+    mid = (np.abs(a) > 0.050) & (np.abs(a) < 0.07) & on_tread
+    h -= 0.5 * sipe * mid
+    # outer sidewall: fine radial ribs on the protector band, faint stipple elsewhere
+    side = (a > 0.115) & (r < 0.35)
+    band = (r > 0.280) & (r < 0.296) & side
+    h += 0.25 * band * (0.5 + 0.5 * np.cos(2 * math.pi * x / 0.004))
+    rng = np.random.default_rng(13)
+    h += 0.04 * side * textures._noise(n, 1.0, 1.0, 0.6, rng)
+    strength = 3.0
+    dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * strength
+    dy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * strength
+    nrm = np.stack([-dx, dy, np.ones_like(h)], axis=-1)
+    nrm /= np.linalg.norm(nrm, axis=-1, keepdims=True)
+    out = textures._save("T_CarEV_Tyre_Normal", nrm * 0.5 + 0.5, non_color=True)
+    open(stamp, "w").close()
+    return out
 
 
 # ---------------------------------------------------------------------- maths
@@ -397,6 +460,21 @@ class Body:
         n = a.cross(b)
         return n.normalized() if n.length > 1e-12 else Vector((self.frame(s).nx, self.frame(s).ny, 0))
 
+    def wall_z(self, F, z0, f):
+        """Height of flank row f (WALL_F). Rows stay at the same heights from station to
+        station (fixed spacing above the sill), and only the rows below a rising arch edge
+        bunch up just above it: rows that jump in height between neighbouring stations
+        made the reflections step in front of the wheel arches."""
+        p = self.p
+        if not F.side:
+            return z0 + f * (F.zA - z0)
+        zs = min(p["sill_z"] + 0.012, z0)
+        H = F.zA - z0
+
+        def S(t):
+            return _smax(zs + t * (F.zA - zs) - z0, 0.35 * t * H, 0.03)
+        return min(z0 + S(f) - S(0.0) * (1 - f), F.zA)
+
     def section(self, s):
         F = self.frame(s)
         p = self.p
@@ -407,7 +485,7 @@ class Body:
         nrms = [None] * 3                # exact normal where known (top surface)
         z0 = zb + 0.012
         for f in WALL_F:
-            z = z0 + f * (F.zA - z0)
+            z = self.wall_z(F, z0, f)
             cols.append(F.P(F.inset(z), z))
             tans.append(F.dP_dz(z))
             nrms.append(None)
@@ -447,7 +525,7 @@ class Body:
         z0 = F.zb + 0.012
         out = [nf, nf, (nf + self.wall_normal(s, z0)).normalized()]
         for f in WALL_F:
-            out.append(self.wall_normal(s, z0 + f * (F.zA - z0)))
+            out.append(self.wall_normal(s, self.wall_z(F, z0, f)))
         for t in CORNER_T:
             nn = (Fa.corner(t) - Fb.corner(t)).cross(F.dcorner(t))
             out.append(nn.normalized())
@@ -587,8 +665,9 @@ def build(**overrides):
     walnut = materials.walnut()
     steel = materials.steel()
     glass = materials.glass("M_Glass_CarEV", tint=(0.20, 0.22, 0.23), alpha=0.42, roughness=0.02)
-    roof_glass = materials.glass("M_Glass_CarEV_Roof", tint=(0.025, 0.028, 0.03), alpha=0.86, roughness=0.02)
+    roof_glass = materials.glass("M_Glass_CarEV_Roof", tint=(0.025, 0.028, 0.03), alpha=0.78, roughness=0.02)
     rubber = common.pbr_material("M_CarEV_Rubber", (0.016, 0.016, 0.017), roughness=0.86)
+    common.set_normal_map(rubber, textures.load(_tyre_normal(), non_color=True), 1.0)
     graphite = common.pbr_material("M_CarEV_WheelGraphite", (0.05, 0.052, 0.056), roughness=0.32, metallic=0.85)
     machined = common.pbr_material("M_CarEV_WheelMachined", (0.62, 0.63, 0.64), roughness=0.2, metallic=1.0)
     disc_m = common.pbr_material("M_CarEV_Disc", (0.30, 0.30, 0.31), roughness=0.5, metallic=1.0)
@@ -596,7 +675,8 @@ def build(**overrides):
     lens = common.pbr_material("M_CarEV_Lens", (0.006, 0.006, 0.008), roughness=0.05, coat=1.0)
     lamp_w = materials.emissive("M_CarEV_LampWhite", (1.0, 0.97, 0.92), 6.0)
     lamp_r = materials.emissive("M_CarEV_LampRed", (1.0, 0.03, 0.02), 5.0)
-    screen = materials.emissive("M_CarEV_Screen", (0.06, 0.09, 0.13), 1.0)
+    screen = cabin.screen_material("M_CarEV_Screen")
+    stitch = common.pbr_material("M_CarEV_Stitch", (0.40, 0.32, 0.22), roughness=0.7)
 
     # ---- body shell
     st = body.stations()
@@ -657,11 +737,13 @@ def build(**overrides):
     _mirrors(p, body, col, root, n, paint, gloss)
 
     # ---- wheels
-    _wheels(p, col, root, n, [rubber, graphite, machined, disc_m, caliper_m])
+    _wheels(p, col, root, n, [rubber, graphite, machined, disc_m, caliper_m, shut])
 
     # ---- interior
     before = set(col.objects)
-    _interior(p, body, col, root, n, leather, interior, walnut, screen, gloss, steel)
+    cabin.build(p, body, col, root, n, dict(lea=leather, dark=interior, satin=satin, wood=walnut, gloss=gloss,
+                                            steel=steel, stitch=stitch, screen=screen, shell=gloss,
+                                            screen_dark=lens))
     _merge(f"{n}_Interior", [o for o in col.objects if o not in before], col, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
@@ -921,8 +1003,16 @@ def _trim(p, body, col, root, n, mats):
     rows = wall_rows(lin(s_hl0, s_hl1, 16), hl_z, 4, 0.002)
     _grid(bm, rows, LENS, mirror=True)
     rows = wall_rows(lin(body.s_of_x(0.64), body.s_of_x(0.83), 8),
-                     lambda s: (body.frame(s).zA - 0.052, body.frame(s).zA - 0.044), 2, 0.003)
+                     lambda s: (body.frame(s).zA - 0.063, body.frame(s).zA - 0.057), 2, 0.003)
     _grid(bm, rows, WHITE, mirror=True)
+    # projector modules inside the lens: polished cups round dark domed lenses
+    for xp in (0.675, 0.728, 0.781):
+        sp = body.s_of_x(xp)
+        zp = body.frame(sp).zA - 0.037
+        _projector(bm, body.wall(sp, zp), _out_normal(body, sp, zp), 0.0115, STEEL, LENS)
+    # chrome bezel along the bottom edge of the lens
+    rows = wall_rows(lin(s_hl0, s_hl1, 16), lambda s: (hl_z(s)[0] - 0.0005, hl_z(s)[0] + 0.0025), 2, 0.0026)
+    _grid(bm, rows, STEEL, mirror=True)
     # lower intake and corner air curtains
     s_in = body.s_of_x(0.64)
 
@@ -933,6 +1023,10 @@ def _trim(p, body, col, root, n, mats):
         return zm - h, zm + h
     rows = wall_rows(lin(0.0, body.s_of_x(0.56), 12) + lin(body.s_of_x(0.56), s_in, 7)[1:], intake_z, 3, 0.0015)
     _grid(bm, rows, GLOSS, mirror=True)
+    # two satin slats across the intake (sensor/radar bar look)
+    for zz in (0.252, 0.298):
+        rows = wall_rows(lin(0.0, body.s_of_x(0.55), 12), lambda s, zz=zz: (zz - 0.0035, zz + 0.0035), 2, 0.0028)
+        _grid(bm, rows, SATIN, mirror=True)
 
     # ---- rear: full-width lamp band, diffuser
     s_r0 = body.s_of_x(0.93, front=False)
@@ -941,12 +1035,66 @@ def _trim(p, body, col, root, n, mats):
     _grid(bm, rows, LENS, mirror=True)
     rows = wall_rows(s_list, lambda s: (body.frame(s).zA - 0.058, body.frame(s).zA - 0.046), 2, 0.003)
     _grid(bm, rows, RED, mirror=True)
+    # layered light guides at the outer ends of the band (thin lines above and below the
+    # main bar, staggered) and a polished line along the band's top
+    for x0_, z0_, z1_ in ((0.80, 0.034, 0.031), (0.86, 0.040, 0.037), (0.80, 0.070, 0.067), (0.86, 0.064, 0.061)):
+        rows = wall_rows(lin(body.s_of_x(x0_, front=False), body.s_of_x(0.925, front=False), 8),
+                         lambda s, z0_=z0_, z1_=z1_: (body.frame(s).zA - z0_, body.frame(s).zA - z1_), 2, 0.0032)
+        _grid(bm, rows, RED, mirror=True)
+    rows = wall_rows(s_list, lambda s: (body.frame(s).zA - 0.0245, body.frame(s).zA - 0.0215), 2, 0.0026)
+    _grid(bm, rows, STEEL, mirror=True)
     s_d0 = body.s_of_x(0.78, front=False)
     rows = wall_rows(lin(s_d0, body.s_end, 16), lambda s: (body.frame(s).zb + 0.012, 0.40), 3, 0.0015)
     _grid(bm, rows, GLOSS, mirror=True)
+    # diffuser strakes
+    for xf in (0.16, 0.40, 0.62):
+        sf = body.s_of_x(xf, front=False)
+        F = body.frame(sf)
+        zs = [F.zb + 0.014, 0.25, 0.37]
+        rows = []
+        for z in zs:
+            w = body.wall(sf, z)
+            nrm = _out_normal(body, sf, z)
+            d = 0.035 * (1 - _smoothstep(0.25, 0.37, z))
+            t = (body.wall(sf + 0.004, z) - body.wall(sf - 0.004, z)).normalized()
+            rows.append([w - t * 0.003, w - t * 0.003 + nrm * (d + 0.002), w + t * 0.003 + nrm * (d + 0.002), w + t * 0.003])
+        _grid(bm, rows, GLOSS, mirror=True)
 
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
     _new_mesh(f"{n}_Trim", bm, mats, col, root)
+
+
+def _out_normal(body, s, z):
+    nrm = body.wall_normal(s, z)
+    F = body.frame(s)
+    if nrm.dot(Vector((F.nx, F.ny, 0.0))) < 0:
+        nrm = -nrm
+    return nrm
+
+
+def _projector(bm, P, N, r, m_cup, m_lens, segs=14):
+    """A headlamp projector on the lens surface at P (outward normal N): polished cup
+    ring and a dark domed lens (both x-mirrored)."""
+    t1 = N.cross(Vector((0, 0, 1)))
+    if t1.length < 1e-6:
+        t1 = N.cross(Vector((1, 0, 0)))
+    t1.normalize()
+    t2 = N.cross(t1).normalized()
+    prof = [(0.0021, r * 1.25, m_cup), (0.0032, r * 1.08, m_cup), (0.0026, r * 0.92, m_lens),
+            (0.0040, r * 0.60, m_lens), (0.0046, 0.0, m_lens)]
+    for sign in (1, -1):
+        rings = []
+        for h, rr, _ in prof:
+            ring = []
+            for k in range(segs):
+                a = 2 * math.pi * k / segs
+                c = P + N * h + (t1 * math.cos(a) + t2 * math.sin(a)) * rr
+                ring.append(bm.verts.new((sign * c.x, c.y, c.z)))
+            rings.append(ring)
+        for i in range(len(rings) - 1):
+            for k in range(segs):
+                k2 = (k + 1) % segs
+                _face(bm, [rings[i][k], rings[i][k2], rings[i + 1][k2], rings[i + 1][k]], prof[i][2], flip=sign < 0)
 
 
 # --------------------------------------------------------------------- mirrors
@@ -995,28 +1143,48 @@ def _mirrors(p, body, col, root, n, paint, gloss):
 
 # ---------------------------------------------------------------------- wheels
 
-def _revolve(bm, prof, segs, centre, side, mat, sharp=(), flatten=None, phase=0.0):
+def _profile_v(prof):
+    """Arc-length fraction of each profile point (texture v)."""
+    L = [0.0]
+    for (a0, r0), (a1, r1) in zip(prof, prof[1:]):
+        L.append(L[-1] + math.hypot(a1 - a0, r1 - r0))
+    return [x / L[-1] for x in L]
+
+
+def _revolve(bm, prof, segs, centre, side, mat, sharp=(), flatten=None, phase=0.0, uv_repeat=None):
     cx, cy, cz = centre
     rings = []
-    for a, r in prof:
-        if r < 1e-7:
-            v = bm.verts.new((cx + side * a, cy, cz))
+    idx = {}
+    for i_r, (a0, r0) in enumerate(prof):
+        if r0 < 1e-7:
+            v = bm.verts.new((cx + side * a0, cy, cz))
             rings.append([v] * segs)
             continue
         ring = []
         for k in range(segs):
+            a, r = a0, r0
             th = phase + 2 * math.pi * k / segs
             z = cz + r * math.sin(th)
             if flatten is not None:
                 z = max(z, flatten)
             ring.append(bm.verts.new((cx + side * a, cy + r * math.cos(th), z)))
+            idx[ring[-1]] = (i_r, k)
         rings.append(ring)
     mats = mat if isinstance(mat, (list, tuple)) else [mat] * (len(prof) - 1)
+    if uv_repeat:
+        vs = _profile_v(prof)
+        uvl = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
     for i in range(len(rings) - 1):
         A, B = rings[i], rings[i + 1]
         for k in range(segs):
             k2 = (k + 1) % segs
-            _face(bm, [A[k], A[k2], B[k2], B[k]], mats[i], flip=side < 0)
+            f = _face(bm, [A[k], A[k2], B[k2], B[k]], mats[i], flip=side < 0)
+            if f and uv_repeat:
+                for lp in f.loops:
+                    ir, kk = idx[lp.vert]
+                    if kk == 0 and k == segs - 1:
+                        kk = segs
+                    lp[uvl].uv = (uv_repeat * kk / segs, vs[ir])
     for i in sharp:
         ring = set(rings[i])
         for v in rings[i]:
@@ -1053,10 +1221,50 @@ def _spokes(bm, centre, side, m_face, m_side, phase=0.0):
                     _face(bm, [A[e], B[e], B[e2], A[e2]], m_face if e == 0 else m_side, flip=side < 0)
 
 
+def _disc_face(bm, centre, side, mat):
+    """Curved cooling slots on the disc's outer face (dark, a hair proud)."""
+    cx, cy, cz = centre
+    a = 0.0265
+    for k in range(10):
+        base = 2 * math.pi * k / 10
+        pts = []
+        for f in (0.0, 0.5, 1.0):
+            r = 0.128 + 0.050 * f
+            th = base + 0.22 * f
+            pts.append((r, th))
+        rows = []
+        for r, th in pts:
+            dth = 0.0028 / r
+            rows.append([bm.verts.new((cx + side * a, cy + r * math.cos(th + d), cz + r * math.sin(th + d))) for d in (-dth, dth)])
+        for i in range(len(rows) - 1):
+            _face(bm, [rows[i][0], rows[i][1], rows[i + 1][1], rows[i + 1][0]], mat, flip=side < 0)
+
+
+def _lug_nuts(bm, centre, side, mat):
+    cx, cy, cz = centre
+    for k in range(5):
+        th = math.pi / 2 + 2 * math.pi * k / 5
+        oy, oz = cy + 0.066 * math.cos(th), cz + 0.066 * math.sin(th)
+        rings = []
+        for a, rr in ((0.097, 0.0105), (0.108, 0.0105), (0.111, 0.007)):
+            rings.append([bm.verts.new((cx + side * a, oy + rr * math.cos(2 * math.pi * j / 6), oz + rr * math.sin(2 * math.pi * j / 6)))
+                          for j in range(6)])
+        for i in range(2):
+            for j in range(6):
+                j2 = (j + 1) % 6
+                f = _face(bm, [rings[i][j], rings[i][j2], rings[i + 1][j2], rings[i + 1][j]], mat, flip=side < 0)
+                if f:
+                    f.smooth = False
+        f = _face(bm, rings[-1], mat, flip=side < 0)
+        if f:
+            f.smooth = False
+
+
 def _caliper(bm, centre, side, mat, ang_c):
     cx, cy, cz = centre
-    span, nseg = 0.9, 6
-    sec = [(0.058, 0.158), (0.058, 0.205), (0.050, 0.214), (-0.030, 0.214), (-0.030, 0.150), (0.050, 0.150)]
+    span, nseg = 1.05, 10
+    sec = [(0.060, 0.150), (0.062, 0.168), (0.062, 0.200), (0.058, 0.212), (0.048, 0.218), (-0.030, 0.218),
+           (-0.036, 0.205), (-0.036, 0.155), (-0.030, 0.142), (0.052, 0.142)]
     rings = []
     for k in range(nseg + 1):
         th = ang_c - span / 2 + span * k / nseg
@@ -1068,7 +1276,7 @@ def _caliper(bm, centre, side, mat, ang_c):
             e2 = (e + 1) % m
             f = _face(bm, [A[e], A[e2], B[e2], B[e]], mat, flip=side > 0)
             if f:
-                f.smooth = False
+                f.smooth = e not in (0, 4, 5, 9)
     for ring, fl in ((rings[0], side < 0), (rings[-1], side > 0)):
         f = _face(bm, list(ring), mat, flip=fl)
         if f:
@@ -1076,133 +1284,25 @@ def _caliper(bm, centre, side, mat, ang_c):
 
 
 def _wheels(p, col, root, n, mats):
-    RUB, GRA, MAC, DISC_, CAL = range(5)
+    RUB, GRA, MAC, DISC_, CAL, SHUT_ = range(6)
     bm = bmesh.new()
-    segs = 28
+    segs = 40
     for ya, ang in ((p["front_axle"], 0.35), (p["rear_axle"], 0.35)):
         for sx in (1, -1):
             c = (sx * p["track"], ya, p["wheel_z"])
-            _revolve(bm, TYRE, segs, c, sx, RUB, sharp=TYRE_GROOVE_RINGS, flatten=0.0, phase=-math.pi / 2)
+            _revolve(bm, TYRE, TYRE_SEGS, c, sx, RUB, sharp=TYRE_GROOVE_RINGS, flatten=0.0, phase=-math.pi / 2,
+                     uv_repeat=TYRE_REPEAT)
             _revolve(bm, RIM, segs, c, sx, [GRA, MAC, MAC, GRA, GRA, GRA], sharp=(2,))
-            _revolve(bm, HUB, 12, c, sx, [GRA, GRA, GRA, MAC, MAC])
-            _revolve(bm, DISC, 16, c, sx, DISC_)
+            _revolve(bm, HUB, 24, c, sx, [GRA, GRA, GRA, MAC, MAC], sharp=(1, 3))
+            _revolve(bm, DISC, 28, c, sx, [DISC_, SHUT_, DISC_, DISC_, DISC_], sharp=(1, 2, 3, 4))
+            _disc_face(bm, c, sx, SHUT_)
+            _lug_nuts(bm, c, sx, MAC)
             _spokes(bm, c, sx, MAC, GRA, phase=math.pi / 2)
             _caliper(bm, c, sx, CAL, math.pi - ang if sx > 0 else math.pi - ang)
     _new_mesh(f"{n}_Wheels", bm, mats, col, root)
 
 
 # -------------------------------------------------------------------- interior
-
-def _cushion(name, size, crown, col, parent, mat, loc, rot=(0, 0, 0), subsurf=True, cuts=2, edge=0.03):
-    ob = common.mesh_object(name, common.cushion_bmesh(size, cuts=cuts, edge=edge, crown=crown), col, mat, parent)
-    ob.location = loc
-    ob.rotation_euler = rot
-    if subsurf:
-        common.add_subsurf(ob, levels=1, render_levels=1)
-    return ob
-
-
-def _interior(p, body, col, root, n, leather, fabric, walnut, screen, gloss, steel):
-    leather_parts, wood_parts = [], []
-    fz = p["floor_z"]
-    # seats: front (driver at +x: left-hand drive; the car faces -y so +x is its left)
-    # front seats, then a rear bench shaped as two seats (one cushion, one back)
-    seats = [("FrontL", 0.40, 0.14, 18, 0.50, (0.40,)), ("FrontR", -0.40, 0.14, 18, 0.50, (-0.40,)),
-             ("Rear", 0.0, 0.92, 24, 1.12, (-0.33, 0.33))]
-    for tag, x, y, tilt, w, heads in seats:
-        rear = tag == "Rear"
-        cz = fz + (0.12 if rear else 0.13)
-        cush = _cushion(f"{n}_Seat{tag}_Cushion", (w, 0.46 if rear else 0.50, 0.13),
-                        {"+z": 0.025, "-y": 0.01, "+x": 0.012, "-x": 0.012}, col, root, leather,
-                        (x, y, cz), (math.radians(-5), 0, 0))
-        leather_parts.append(cush)
-        pivot = common.empty(f"{n}_Seat{tag}_Back", col, (x, y + (0.25 if rear else 0.27), cz + 0.05))
-        pivot.parent = root
-        pivot.rotation_euler = (math.radians(-tilt), 0, 0)
-        hb = 0.55 if rear else 0.62
-        back = _cushion(f"{n}_Seat{tag}_Backrest", (w, 0.12, hb),
-                        {"-y": 0.03, "+x": 0.01, "-x": 0.01, "+z": 0.01}, col, pivot, leather, (0, 0.04, hb / 2))
-        leather_parts.append(back)
-        for hx in heads:
-            head = _cushion(f"{n}_Seat{tag}_Headrest", (0.28, 0.10, 0.15), {"-y": 0.015, "+z": 0.01}, col, pivot,
-                            leather, (hx - x, 0.05, hb + 0.10), subsurf=False, edge=0.025)
-            leather_parts.append(head)
-    # centre console with walnut top
-    cons = _cushion(f"{n}_Console", (0.24, 0.95, 0.26), {"+z": 0.01}, col, root, fabric, (0, -0.08, fz + 0.13),
-                    subsurf=False, edge=0.02)
-    top = common.mesh_object(f"{n}_ConsoleTop", common.box_bmesh((0.20, 0.70, 0.015)), col, walnut, root)
-    top.location = (0, -0.05, fz + 0.268)
-    wood_parts.append(top)
-    arm = _cushion(f"{n}_ArmrestRear", (0.20, 0.36, 0.08), {"+z": 0.01}, col, root, leather, (0, 0.92, fz + 0.26),
-                   subsurf=False, edge=0.02)
-    leather_parts.append(arm)
-
-    # dashboard: extruded side profile across the cabin
-    prof = [(-0.78, 0.70), (-0.77, 0.80), (-0.66, 0.835), (-0.46, 0.835), (-0.40, 0.80), (-0.39, 0.71),
-            (-0.45, 0.62), (-0.60, 0.58), (-0.76, 0.60)]
-    xd = 0.76
-    bm = bmesh.new()
-    L = [bm.verts.new((-xd, y, z)) for y, z in prof]
-    R = [bm.verts.new((xd, y, z)) for y, z in prof]
-    m = len(prof)
-    for k in range(m):
-        k2 = (k + 1) % m
-        _face(bm, [L[k], L[k2], R[k2], R[k]])
-    _face(bm, L)
-    _face(bm, R, flip=True)
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-    dash = _new_mesh(f"{n}_Dash", bm, [fabric], col, root, smooth=False)
-    common.add_bevel(dash, 0.012, 2)
-    # walnut band across the dash face and the pillar-to-pillar screen
-    band = common.mesh_object(f"{n}_DashWood", common.box_bmesh((2 * xd - 0.02, 0.01, 0.035)), col, walnut, root)
-    band.location = (0, -0.388, 0.735)
-    band.rotation_euler = (math.radians(-12), 0, 0)
-    wood_parts.append(band)
-    scr = common.mesh_object(f"{n}_Screen", common.box_bmesh((1.30, 0.012, 0.11)), col, screen, root)
-    scr.location = (0, -0.455, 0.885)
-    scr.rotation_euler = (math.radians(-18), 0, 0)
-    # steering wheel (left-hand drive)
-    c = Vector((0.40, -0.30, 0.80))
-    dcol = Vector((0, math.cos(math.radians(24)), math.sin(math.radians(24))))
-    ex = Vector((1, 0, 0))
-    ey = ex.cross(dcol).normalized()   # in the wheel plane, pointing up-forward
-    rim = [c + (ex * math.cos(2 * math.pi * k / 24) + ey * math.sin(2 * math.pi * k / 24)) * 0.175 for k in range(24)]
-    common.tube_object(f"{n}_SteeringRim", rim, 0.016, col, gloss, root, closed=True, profile_res=1)
-    for ang in (0.0, math.pi, -math.pi / 2):
-        e = c + (ex * math.cos(ang) + ey * math.sin(ang)) * 0.17
-        common.tube_object(f"{n}_SteeringSpoke", [c, e], 0.009, col, steel, root, closed=False, profile_res=1)
-    common.tube_object(f"{n}_SteeringColumn", [c - dcol * 0.02, c - dcol * 0.22], 0.035, col, gloss, root,
-                       closed=False, profile_res=1)
-    hub = common.mesh_object(f"{n}_SteeringHub", common.cushion_bmesh((0.10, 0.07, 0.04), cuts=2, edge=0.012),
-                             col, gloss, root)
-    hub.location = c
-    hub.rotation_euler = (math.radians(-66), 0, 0)
-
-    # door cards: walnut cap strip and leather armrests on the inner door walls
-    bm = bmesh.new()
-    rows = []
-    for y in [p["firewall_y"] + 0.06 + (p["bulkhead_y"] - 0.2 - p["firewall_y"] - 0.06) * k / 16 for k in range(17)]:
-        F = body.frame(body.s_of_y(y))
-        t = F.top(0.0525)
-        rows.append([Vector((t.x - 0.003, t.y, t.z - 0.075)), Vector((t.x - 0.003, t.y, t.z - 0.012))])
-    _grid(bm, rows, mirror=True)
-    trims = _new_mesh(f"{n}_DoorCaps", bm, [walnut], col, root)
-    wood_parts.append(trims)
-    for y0, y1 in ((-0.45, 0.12), (0.62, 1.10)):
-        ym = (y0 + y1) / 2
-        F = body.frame(body.s_of_y(ym))
-        xin = F.top(0.0525).x
-        for sx in (1, -1):
-            a = _cushion(f"{n}_DoorArmrest", (0.07, y1 - y0, 0.05), {"+z": 0.008}, col, root, leather,
-                         (sx * (xin - 0.035), ym, 0.66), subsurf=False, edge=0.015)
-            leather_parts.append(a)
-    for ob in leather_parts:
-        common.box_uv(ob, tile=0.2)
-    for ob in wood_parts:
-        common.box_uv(ob, tile=0.5)
-    common.box_uv(cons, tile=0.25)
-    common.box_uv(dash, tile=0.25)
-
 
 def _merge(name, objects, col, parent):
     """Join many small parts into one mesh (one draw call per material in the engine):

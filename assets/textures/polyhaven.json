@@ -250,5 +250,53 @@
     "url": "https://polyhaven.com/a/wicker_basket_02",
     "license": "CC0",
     "kind": "model textures (1k glTF), used by garage_lockers via mud_common"
+  },
+  "T_Wardrobe_OakSmoked_*": {
+    "polyhaven": "oak_veneer_01",
+    "url": "https://polyhaven.com/a/oak_veneer_01",
+    "license": "CC0",
+    "kind": "source for the wardrobe asset's textures (hero asset pass)"
+  },
+  "T_LivingOttoman_Leather_*": {
+    "polyhaven": "brown_leather",
+    "url": "https://polyhaven.com/a/brown_leather",
+    "license": "CC0",
+    "kind": "source for the living_ottoman asset's textures (hero asset pass)"
+  },
+  "T_LoungeChair_Leather_*": {
+    "polyhaven": "brown_leather",
+    "url": "https://polyhaven.com/a/brown_leather",
+    "license": "CC0",
+    "kind": "source for the lounge_chair asset's textures (hero asset pass)"
+  },
+  "T_EntryTree_Bark_*": {
+    "polyhaven": "bark_willow_02",
+    "url": "https://polyhaven.com/a/bark_willow_02",
+    "license": "CC0",
+    "kind": "source for the entry_tree asset's textures (hero asset pass)"
+  },
+  "T_GuestWardrobe_OakPale_*": {
+    "polyhaven": "oak_veneer_01",
+    "url": "https://polyhaven.com/a/oak_veneer_01",
+    "license": "CC0",
+    "kind": "source for the guest_wardrobe asset's textures (hero asset pass)"
+  },
+  "T_DiningBarrel_*": {
+    "polyhaven": "oak_veneer_01",
+    "url": "https://polyhaven.com/a/oak_veneer_01",
+    "license": "CC0",
+    "kind": "source for the dining_barrel asset's textures (hero asset pass)"
+  },
+  "T_CourtyardPots_Clay_*": {
+    "polyhaven": "planter_pot_clay",
+    "url": "https://polyhaven.com/a/planter_pot_clay",
+    "license": "CC0",
+    "kind": "source for the courtyard_pots asset's textures (hero asset pass)"
+  },
+  "T_CourtyardPots_Foliage_*": {
+    "polyhaven": "fern_02, periwinkle_plant, shrub_02, shrub_04",
+    "url": "https://polyhaven.com/a/fern_02",
+    "license": "CC0",
+    "kind": "source for the courtyard_pots asset's textures (hero asset pass)"
   }
 }

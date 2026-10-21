@@ -5,7 +5,6 @@
 	},
 	"extensionsUsed":[
 		"KHR_draco_mesh_compression",
-		"KHR_materials_clearcoat",
 		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
@@ -17,98 +16,187 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				11
+				22
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Wardrobe_Back",
+			"name":"Wardrobe_Band",
 			"translation":[
 				0,
-				1.2024999856948853,
-				-0.2827500104904175
+				2.3469998836517334,
+				0.23600000143051147
 			]
 		},
 		{
 			"mesh":1,
-			"name":"Wardrobe_Bottom",
+			"name":"Wardrobe_Cornice",
 			"translation":[
 				0,
-				0.07000000029802322,
-				0
+				2.377500057220459,
+				-0.012000000104308128
 			]
 		},
 		{
 			"mesh":2,
-			"name":"Wardrobe_Door_L",
-			"translation":[
-				-0.4282500147819519,
-				1.2170000076293945,
-				0.2777499854564667
-			]
+			"name":"Wardrobe_Door_L_Field"
 		},
 		{
 			"mesh":3,
-			"name":"Wardrobe_Door_R",
+			"name":"Wardrobe_Door_L_RailBottom",
 			"translation":[
-				0.4282500147819519,
-				1.2170000076293945,
-				0.2777499854564667
+				-0.43924999237060547,
+				0.14949999749660492,
+				0.24899999797344208
 			]
 		},
 		{
 			"mesh":4,
-			"name":"Wardrobe_Interior",
+			"name":"Wardrobe_Door_L_RailTop",
 			"translation":[
-				0,
-				1.222499966621399,
-				0.2317499965429306
+				-0.43924999237060547,
+				2.2934999465942383,
+				0.24899999797344208
 			]
 		},
 		{
 			"mesh":5,
-			"name":"Wardrobe_Plinth",
+			"name":"Wardrobe_Door_L_StileA",
 			"translation":[
-				0,
-				0.02500000037252903,
-				-0.014999999664723873
+				-0.8395000100135803,
+				1.2115000486373901,
+				0.24899999797344208
 			]
 		},
 		{
 			"mesh":6,
-			"name":"Wardrobe_Pull_L"
+			"name":"Wardrobe_Door_L_StileB",
+			"translation":[
+				-0.039000000804662704,
+				1.2115000486373901,
+				0.24899999797344208
+			]
 		},
 		{
 			"mesh":7,
-			"name":"Wardrobe_Pull_R"
+			"name":"Wardrobe_Door_R_Field"
 		},
 		{
 			"mesh":8,
-			"name":"Wardrobe_Side_L",
+			"name":"Wardrobe_Door_R_RailBottom",
 			"translation":[
-				-0.8759999871253967,
-				1.2024999856948853,
-				0
+				0.43924999237060547,
+				0.14949999749660492,
+				0.24899999797344208
 			]
 		},
 		{
 			"mesh":9,
-			"name":"Wardrobe_Side_R",
+			"name":"Wardrobe_Door_R_RailTop",
 			"translation":[
-				0.8759999871253967,
-				1.2024999856948853,
-				0
+				0.43924999237060547,
+				2.2934999465942383,
+				0.24899999797344208
 			]
 		},
 		{
 			"mesh":10,
-			"name":"Wardrobe_Top",
+			"name":"Wardrobe_Door_R_StileA",
+			"translation":[
+				0.039000000804662704,
+				1.2115000486373901,
+				0.24899999797344208
+			]
+		},
+		{
+			"mesh":11,
+			"name":"Wardrobe_Door_R_StileB",
+			"translation":[
+				0.8395000100135803,
+				1.2115000486373901,
+				0.24899999797344208
+			]
+		},
+		{
+			"mesh":12,
+			"name":"Wardrobe_End_L",
+			"translation":[
+				-0.9024999737739563,
+				1.1775000095367432,
+				-0.02199999988079071
+			]
+		},
+		{
+			"mesh":13,
+			"name":"Wardrobe_End_R",
+			"translation":[
+				0.9024999737739563,
+				1.1775000095367432,
+				-0.02199999988079071
+			]
+		},
+		{
+			"mesh":14,
+			"name":"Wardrobe_Interior",
 			"translation":[
 				0,
-				2.377500057220459,
-				0
+				1.2200000286102295,
+				0.22200000286102295
+			]
+		},
+		{
+			"mesh":15,
+			"name":"Wardrobe_Plinth",
+			"translation":[
+				0,
+				0.042500000447034836,
+				-0.03200000151991844
+			]
+		},
+		{
+			"mesh":16,
+			"name":"Wardrobe_Pull_L"
+		},
+		{
+			"mesh":17,
+			"name":"Wardrobe_Pull_L_RoseA",
+			"translation":[
+				-0.039000000804662704,
+				0.800000011920929,
+				0.2630000114440918
+			]
+		},
+		{
+			"mesh":18,
+			"name":"Wardrobe_Pull_L_RoseB",
+			"translation":[
+				-0.039000000804662704,
+				1.3600000143051147,
+				0.2630000114440918
+			]
+		},
+		{
+			"mesh":19,
+			"name":"Wardrobe_Pull_R"
+		},
+		{
+			"mesh":20,
+			"name":"Wardrobe_Pull_R_RoseA",
+			"translation":[
+				0.039000000804662704,
+				0.800000011920929,
+				0.2630000114440918
+			]
+		},
+		{
+			"mesh":21,
+			"name":"Wardrobe_Pull_R_RoseB",
+			"translation":[
+				0.039000000804662704,
+				1.3600000143051147,
+				0.2630000114440918
 			]
 		},
 		{
@@ -123,43 +211,23 @@
 				7,
 				8,
 				9,
-				10
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21
 			],
 			"name":"Wardrobe"
 		}
 	],
 	"materials":[
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448,
-					"clearcoatRoughnessFactor":0.33000001311302185
-				}
-			},
-			"name":"M_OakSmoked",
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
-				"metallicFactor":0,
-				"roughnessFactor":0.550000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
-			}
-		},
 		{
 			"doubleSided":true,
 			"name":"M_Bronze",
@@ -172,11 +240,39 @@
 				],
 				"roughnessFactor":0.3199999928474426
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Wardrobe_OakSmoked",
+			"normalTexture":{
+				"index":0,
+				"scale":0.6000000238418579
+			},
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5199999809265137
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_Felt_Black",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.012000000104308128,
+					0.012000000104308128,
+					0.013000000268220901,
+					1
+				],
+				"metallicFactor":0
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Wardrobe_Back",
+			"name":"Wardrobe_Band",
 			"primitives":[
 				{
 					"attributes":{
@@ -203,7 +299,7 @@
 			]
 		},
 		{
-			"name":"Wardrobe_Bottom",
+			"name":"Wardrobe_Cornice",
 			"primitives":[
 				{
 					"attributes":{
@@ -224,13 +320,13 @@
 						}
 					},
 					"indices":9,
-					"material":0,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Door_L",
+			"name":"Wardrobe_Door_L_Field",
 			"primitives":[
 				{
 					"attributes":{
@@ -251,13 +347,13 @@
 						}
 					},
 					"indices":14,
-					"material":0,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Door_R",
+			"name":"Wardrobe_Door_L_RailBottom",
 			"primitives":[
 				{
 					"attributes":{
@@ -278,19 +374,20 @@
 						}
 					},
 					"indices":19,
-					"material":0,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Interior",
+			"name":"Wardrobe_Door_L_RailTop",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":20,
 						"NORMAL":21,
-						"COLOR_0":22
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -298,24 +395,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":23,
+					"indices":24,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Plinth",
+			"name":"Wardrobe_Door_L_StileA",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"COLOR_0":26
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27,
+						"COLOR_0":28
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -323,25 +422,26 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":27,
+					"indices":29,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Pull_L",
+			"name":"Wardrobe_Door_L_StileB",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":28,
-						"NORMAL":29,
-						"TEXCOORD_0":30,
-						"COLOR_0":31
+						"POSITION":30,
+						"NORMAL":31,
+						"TEXCOORD_0":32,
+						"COLOR_0":33
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -354,21 +454,21 @@
 							}
 						}
 					},
-					"indices":32,
-					"material":2,
+					"indices":34,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Pull_R",
+			"name":"Wardrobe_Door_R_Field",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":33,
-						"NORMAL":34,
-						"TEXCOORD_0":35,
-						"COLOR_0":36
+						"POSITION":35,
+						"NORMAL":36,
+						"TEXCOORD_0":37,
+						"COLOR_0":38
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -381,21 +481,21 @@
 							}
 						}
 					},
-					"indices":32,
-					"material":2,
+					"indices":39,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Side_L",
+			"name":"Wardrobe_Door_R_RailBottom",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":37,
-						"NORMAL":38,
-						"TEXCOORD_0":39,
-						"COLOR_0":40
+						"POSITION":40,
+						"NORMAL":41,
+						"TEXCOORD_0":42,
+						"COLOR_0":43
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -408,21 +508,21 @@
 							}
 						}
 					},
-					"indices":41,
-					"material":0,
+					"indices":44,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Side_R",
+			"name":"Wardrobe_Door_R_RailTop",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":42,
-						"NORMAL":43,
-						"TEXCOORD_0":44,
-						"COLOR_0":45
+						"POSITION":45,
+						"NORMAL":46,
+						"TEXCOORD_0":47,
+						"COLOR_0":48
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -435,21 +535,21 @@
 							}
 						}
 					},
-					"indices":41,
-					"material":0,
+					"indices":49,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Wardrobe_Top",
+			"name":"Wardrobe_Door_R_StileA",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":46,
-						"NORMAL":47,
-						"TEXCOORD_0":48,
-						"COLOR_0":49
+						"POSITION":50,
+						"NORMAL":51,
+						"TEXCOORD_0":52,
+						"COLOR_0":53
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -462,7 +562,304 @@
 							}
 						}
 					},
-					"indices":50,
+					"indices":29,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Door_R_StileB",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":54,
+						"NORMAL":55,
+						"TEXCOORD_0":56,
+						"COLOR_0":57
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":11,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":49,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_End_L",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":58,
+						"NORMAL":59,
+						"TEXCOORD_0":60,
+						"COLOR_0":61
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":12,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":62,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_End_R",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":63,
+						"NORMAL":64,
+						"TEXCOORD_0":65,
+						"COLOR_0":66
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":13,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":67,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Interior",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":68,
+						"NORMAL":69,
+						"TEXCOORD_0":70,
+						"COLOR_0":71
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":14,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":72,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Plinth",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":73,
+						"NORMAL":74,
+						"TEXCOORD_0":75,
+						"COLOR_0":76
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":15,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":77,
+					"material":2,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_L",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":78,
+						"NORMAL":79,
+						"TEXCOORD_0":80,
+						"COLOR_0":81
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":16,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":82,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_L_RoseA",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":83,
+						"NORMAL":84,
+						"TEXCOORD_0":85,
+						"COLOR_0":86
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":17,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":87,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_L_RoseB",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":88,
+						"NORMAL":89,
+						"TEXCOORD_0":90,
+						"COLOR_0":91
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":18,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":87,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_R",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":92,
+						"NORMAL":93,
+						"TEXCOORD_0":94,
+						"COLOR_0":95
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":19,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":82,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_R_RoseA",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":96,
+						"NORMAL":97,
+						"TEXCOORD_0":98,
+						"COLOR_0":99
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":20,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":87,
+					"material":0,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Wardrobe_Pull_R_RoseB",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":100,
+						"NORMAL":101,
+						"TEXCOORD_0":102,
+						"COLOR_0":103
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":21,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":87,
 					"material":0,
 					"mode":4
 				}
@@ -477,28 +874,149 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":1
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_OakSmoked_BaseColor",
-			"uri":"textures/T_OakSmoked_BaseColor.webp"
+			"name":"T_Wardrobe_OakSmoked_Normal",
+			"uri":"textures/T_Wardrobe_OakSmoked_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_Wardrobe_OakSmoked_BaseColor",
+			"uri":"textures/T_Wardrobe_OakSmoked_BaseColor.webp"
 		}
 	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":96,
+			"count":52,
 			"max":[
-				0.8579999804496765,
-				1.152500033378601,
-				0.006000000052154064
+				0.8799999952316284,
+				0.00800000037997961,
+				0.014999999664723873
 			],
 			"min":[
-				-0.8579999804496765,
-				-1.152500033378601,
-				-0.006000000052154064
+				-0.8799999952316284,
+				-0.00800000037997961,
+				-0.014999999664723873
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":52,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":52,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":132,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"max":[
+				0.925000011920929,
+				0.02250000089406967,
+				0.2930000126361847
+			],
+			"min":[
+				-0.925000011920929,
+				-0.02250000089406967,
+				-0.2930000126361847
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":144,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":144,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":564,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":720,
+			"max":[
+				-0.07649999856948853,
+				2.250999927520752,
+				0.2540000081062317
+			],
+			"min":[
+				-0.8019999861717224,
+				0.21199999749660492,
+				0.24448943138122559
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":720,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":720,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":720,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1728,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.36274999380111694,
+				0.0625,
+				0.012000000104308128
+			],
+			"min":[
+				-0.36274999380111694,
+				-0.0625,
+				-0.012000000104308128
 			],
 			"type":"VEC3"
 		},
@@ -527,14 +1045,14 @@
 			"componentType":5126,
 			"count":96,
 			"max":[
-				0.8579999804496765,
-				0.019999999552965164,
-				0.2887499928474426
+				0.36274999380111694,
+				0.042500000447034836,
+				0.012000000104308128
 			],
 			"min":[
-				-0.8579999804496765,
-				-0.019999999552965164,
-				-0.2887499928474426
+				-0.36274999380111694,
+				-0.042500000447034836,
+				-0.012000000104308128
 			],
 			"type":"VEC3"
 		},
@@ -561,32 +1079,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"max":[
-				0.4267500042915344,
-				1.1239999532699585,
-				0.010999999940395355
+				0.03750000149011612,
+				1.124500036239624,
+				0.012000000104308128
 			],
 			"min":[
-				-0.4267500042915344,
-				-1.1239999532699585,
-				-0.010999999940395355
+				-0.03750000149011612,
+				-1.124500036239624,
+				-0.012000000104308128
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":104,
+			"count":96,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -597,32 +1115,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"max":[
-				0.4267500042915344,
-				1.1239999532699585,
-				0.010999999940395355
+				0.03750000149011612,
+				1.124500036239624,
+				0.012000000104308128
 			],
 			"min":[
-				-0.4267500042915344,
-				-1.1239999532699585,
-				-0.010999999940395355
+				-0.03750000149011612,
+				-1.124500036239624,
+				-0.012000000104308128
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":104,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":104,
+			"count":96,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -633,27 +1151,274 @@
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":720,
 			"max":[
-				0.8579999804496765,
-				1.1325000524520874,
+				0.8019999861717224,
+				2.250999927520752,
+				0.2540000081062317
+			],
+			"min":[
+				0.07649999856948853,
+				0.21199999749660492,
+				0.24448943138122559
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":720,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":720,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":720,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":1728,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.36274999380111694,
+				0.0625,
+				0.012000000104308128
+			],
+			"min":[
+				-0.36274999380111694,
+				-0.0625,
+				-0.012000000104308128
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.36274999380111694,
+				0.042500000447034836,
+				0.012000000104308128
+			],
+			"min":[
+				-0.36274999380111694,
+				-0.042500000447034836,
+				-0.012000000104308128
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.03750000149011612,
+				1.124500036239624,
+				0.012000000104308128
+			],
+			"min":[
+				-0.03750000149011612,
+				-1.124500036239624,
+				-0.012000000104308128
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.03750000149011612,
+				1.124500036239624,
+				0.012000000104308128
+			],
+			"min":[
+				-0.03750000149011612,
+				-1.124500036239624,
+				-0.012000000104308128
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.02250000089406967,
+				1.1775000095367432,
+				0.28299999237060547
+			],
+			"min":[
+				-0.02250000089406967,
+				-1.1775000095367432,
+				-0.28299999237060547
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"max":[
+				0.02250000089406967,
+				1.1775000095367432,
+				0.28299999237060547
+			],
+			"min":[
+				-0.02250000089406967,
+				-1.1775000095367432,
+				-0.28299999237060547
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":96,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":96,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":324,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.8799999952316284,
+				1.1349999904632568,
 				0.003000000026077032
 			],
 			"min":[
-				-0.8579999804496765,
-				-1.1325000524520874,
+				-0.8799999952316284,
+				-1.1349999904632568,
 				-0.003000000026077032
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":8,
+			"count":24,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -664,261 +1429,347 @@
 		},
 		{
 			"componentType":5126,
-			"count":56,
+			"count":48,
 			"max":[
-				0.8539999723434448,
-				0.02500000037252903,
-				0.2537499964237213
+				0.8799999952316284,
+				0.042500000447034836,
+				0.24300000071525574
 			],
 			"min":[
-				-0.8539999723434448,
-				-0.02500000037252903,
-				-0.2537499964237213
+				-0.8799999952316284,
+				-0.042500000447034836,
+				-0.24300000071525574
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":56,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":48,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":56,
+			"count":48,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":324,
+			"count":132,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":260,
 			"max":[
-				-0.026999998837709427,
-				2.237499952316284,
-				0.3252299726009369
+				-0.03150000050663948,
+				1.3671329021453857,
+				0.30961766839027405
 			],
 			"min":[
-				-0.04000000283122063,
-				0.1964999884366989,
-				0.2887499928474426
+				-0.04650000110268593,
+				0.7928670644760132,
+				0.2590000033378601
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":260,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":260,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":206,
+			"count":260,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":996,
+			"count":948,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":140,
 			"max":[
-				0.04000000283122063,
-				2.237499952316284,
-				0.3252299726009369
+				0.012500000186264515,
+				0.012500000186264515,
+				0.0020000010263174772
 			],
 			"min":[
-				0.026999998837709427,
-				0.1964999884366989,
-				0.2887499928474426
+				-0.012500000186264515,
+				-0.012500000186264515,
+				-0.0020000010263174772
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":140,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":206,
+			"count":140,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":206,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"max":[
-				0.017999999225139618,
-				1.152500033378601,
-				0.2887499928474426
-			],
-			"min":[
-				-0.017999999225139618,
-				-1.152500033378601,
-				-0.2887499928474426
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":96,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":96,
+			"count":140,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":324,
+			"count":372,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":140,
 			"max":[
-				0.017999999225139618,
-				1.152500033378601,
-				0.2887499928474426
+				0.012500000186264515,
+				0.012500000186264515,
+				0.0020000010263174772
 			],
 			"min":[
-				-0.017999999225139618,
-				-1.152500033378601,
-				-0.2887499928474426
+				-0.012500000186264515,
+				-0.012500000186264515,
+				-0.0020000010263174772
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":140,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":140,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":96,
+			"count":140,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":260,
 			"max":[
-				0.8999999761581421,
-				0.02250000089406967,
-				0.29475000500679016
+				0.04650000110268593,
+				1.3671329021453857,
+				0.30961766839027405
 			],
 			"min":[
-				-0.8999999761581421,
-				-0.02250000089406967,
-				-0.29475000500679016
+				0.03150000050663948,
+				0.7928670644760132,
+				0.2590000033378601
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":260,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":96,
+			"count":260,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":96,
+			"count":260,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
+			"componentType":5126,
+			"count":140,
+			"max":[
+				0.012500000186264515,
+				0.012500000186264515,
+				0.0020000010263174772
+			],
+			"min":[
+				-0.012500000186264515,
+				-0.012500000186264515,
+				-0.0020000010263174772
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":140,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":140,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":324,
-			"type":"SCALAR"
+			"count":140,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5126,
+			"count":140,
+			"max":[
+				0.012500000186264515,
+				0.012500000186264515,
+				0.0020000010263174772
+			],
+			"min":[
+				-0.012500000186264515,
+				-0.012500000186264515,
+				-0.0020000010263174772
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":140,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":140,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":140,
+			"normalized":true,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1379,
+			"byteLength":789,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1301,
-			"byteOffset":1380
+			"byteLength":1482,
+			"byteOffset":792
 		},
 		{
 			"buffer":0,
-			"byteLength":1457,
-			"byteOffset":2684
+			"byteLength":4177,
+			"byteOffset":2276
 		},
 		{
 			"buffer":0,
-			"byteLength":1450,
-			"byteOffset":4144
-		},
-		{
-			"buffer":0,
-			"byteLength":241,
-			"byteOffset":5596
-		},
-		{
-			"buffer":0,
-			"byteLength":487,
-			"byteOffset":5840
-		},
-		{
-			"buffer":0,
-			"byteLength":2081,
-			"byteOffset":6328
-		},
-		{
-			"buffer":0,
-			"byteLength":2201,
-			"byteOffset":8412
+			"byteLength":1381,
+			"byteOffset":6456
 		},
 		{
 			"buffer":0,
 			"byteLength":1308,
-			"byteOffset":10616
+			"byteOffset":7840
 		},
 		{
 			"buffer":0,
-			"byteLength":1226,
-			"byteOffset":11924
+			"byteLength":1352,
+			"byteOffset":9148
 		},
 		{
 			"buffer":0,
-			"byteLength":933,
-			"byteOffset":13152
+			"byteLength":1335,
+			"byteOffset":10500
+		},
+		{
+			"buffer":0,
+			"byteLength":4206,
+			"byteOffset":11836
+		},
+		{
+			"buffer":0,
+			"byteLength":1390,
+			"byteOffset":16044
+		},
+		{
+			"buffer":0,
+			"byteLength":1317,
+			"byteOffset":17436
+		},
+		{
+			"buffer":0,
+			"byteLength":1371,
+			"byteOffset":18756
+		},
+		{
+			"buffer":0,
+			"byteLength":1374,
+			"byteOffset":20128
+		},
+		{
+			"buffer":0,
+			"byteLength":1341,
+			"byteOffset":21504
+		},
+		{
+			"buffer":0,
+			"byteLength":1344,
+			"byteOffset":22848
+		},
+		{
+			"buffer":0,
+			"byteLength":499,
+			"byteOffset":24192
+		},
+		{
+			"buffer":0,
+			"byteLength":856,
+			"byteOffset":24692
+		},
+		{
+			"buffer":0,
+			"byteLength":2819,
+			"byteOffset":25548
+		},
+		{
+			"buffer":0,
+			"byteLength":2201,
+			"byteOffset":28368
+		},
+		{
+			"buffer":0,
+			"byteLength":2242,
+			"byteOffset":30572
+		},
+		{
+			"buffer":0,
+			"byteLength":2893,
+			"byteOffset":32816
+		},
+		{
+			"buffer":0,
+			"byteLength":2287,
+			"byteOffset":35712
+		},
+		{
+			"buffer":0,
+			"byteLength":2226,
+			"byteOffset":38000
 		}
 	],
 	"samplers":[
@@ -929,7 +1780,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":14088,
+			"byteLength":40228,
 			"uri":"wardrobe.bin"
 		}
 	]

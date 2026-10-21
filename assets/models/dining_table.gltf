@@ -933,7 +933,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":4657,
+			"byteLength":4542,
 			"byteOffset":11604
 		}
 	],
@@ -945,7 +945,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":16264,
+			"byteLength":16148,
 			"uri":"dining_table.bin"
 		}
 	]

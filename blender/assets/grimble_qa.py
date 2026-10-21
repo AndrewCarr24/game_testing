@@ -23,9 +23,9 @@ from mathutils.bvhtree import BVHTree
 
 ACTIONS = {"Walk": 2.8, "Knock": 3.5, "Wave": 2.5, "Idle": 4.0,
            "Smash": 3.0, "Crawl": 2.6, "CrawlFast": 1.1, "CrawlIdle": 6.0, "Swipe": 1.7, "ReachUp": 3.0}
-# the crawl family must pass the house's openings (3.6 m high doors, 3.2 m wide galleries):
-# (max height, max width), the held staff included
-ENVELOPE = {"Crawl": (3.3, 3.0), "CrawlFast": (3.3, 3.0), "CrawlIdle": (3.3, 3.0), "Swipe": (3.5, None)}
+# the crawl family must pass the house's openings (the courtyard door is 3.0 x 3.0 m, the galleries
+# 3.2 m wide) with room to spare for turning: (max height, max width), the held staff included
+ENVELOPE = {"Crawl": (2.85, 2.65), "CrawlFast": (2.85, 2.65), "CrawlIdle": (2.85, 2.65), "Swipe": (3.1, None)}
 CRAWL_LOOPS = ("Crawl", "CrawlFast", "CrawlIdle")
 
 

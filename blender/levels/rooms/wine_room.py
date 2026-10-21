@@ -74,7 +74,7 @@ PLACEMENTS = [
     # barrels in the north-west corner by the door wall
     ("dining_barrel", (-5.45, 3.72), 0),
     ("dining_wine_set", (-5.45, 3.72, 0.92), 20),
-    ("dining_barrel", (-4.55, 3.62), 0),
+    ("dining_barrel", (-4.55, 3.62), 100),   # turned: the pair mustn't show the same staves and bung
     # south: leather conversation nook
     ("bedroom_rug", (2.6, -2.9), 0),
     ("coffee_table", (2.6, -2.9), 90),
@@ -85,7 +85,7 @@ PLACEMENTS = [
     ("art_wine_rings", (-1.35, -4.6, 1.7), 180),          # pair: wine rings on paper ...
     ("art_oxblood_zip", (-2.35, -4.6, 1.7), 180),         # ... and an oxblood monochrome
     # south-west: two barrels as standing tables
-    ("dining_barrel", (-5.0, -3.8), 0),
+    ("dining_barrel", (-5.0, -3.8), 160),    # bung and stain toward the room
     ("dining_wine_set", (-5.0, -3.8, 0.92), 160),
     ("dining_stool", (-4.1, -3.9), 0),
     # lighting (see LIGHTS): up/down sconces either side of the photograph, a reading lamp

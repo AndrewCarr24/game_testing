@@ -16,33 +16,29 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				6
+				5
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"LibraryPlant_Branch0"
+			"name":"LibraryPlant_Leaves_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"LibraryPlant_Branch1"
-		},
-		{
-			"mesh":2,
-			"name":"LibraryPlant_Leaves"
-		},
-		{
-			"mesh":3,
 			"name":"LibraryPlant_Planter"
 		},
 		{
-			"mesh":4,
+			"mesh":2,
+			"name":"LibraryPlant_Shoots_NoCollide"
+		},
+		{
+			"mesh":3,
 			"name":"LibraryPlant_Soil"
 		},
 		{
-			"mesh":5,
+			"mesh":4,
 			"name":"LibraryPlant_Trunk"
 		},
 		{
@@ -51,8 +47,7 @@
 				1,
 				2,
 				3,
-				4,
-				5
+				4
 			],
 			"name":"LibraryPlant"
 		}
@@ -60,60 +55,52 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Plant_Bark",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.10000000149011612,
-					0.07000000029802322,
-					0.04500000178813934,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Library_Leaf",
+			"name":"M_LibraryPlant_Leaf",
+			"normalTexture":{
+				"index":0,
+				"scale":0.800000011920929
+			},
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":0
+					"index":1
 				},
 				"metallicFactor":0,
-				"roughnessFactor":0.3799999952316284
+				"roughnessFactor":0.41999998688697815
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Library_Planter",
+			"name":"M_LibraryPlant_Planter",
+			"normalTexture":{
+				"index":2,
+				"scale":0.800000011920929
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.46000000834465027,
-					0.41999998688697815,
-					0.3499999940395355,
-					1
-				],
+				"baseColorTexture":{
+					"index":3
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.7799999713897705
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"M_LibraryPlant_Bark",
+			"normalTexture":{
+				"index":4
+			},
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":5
+				},
 				"metallicFactor":0,
 				"roughnessFactor":0.8500000238418579
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Plant_Soil",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.02500000037252903,
-					0.01600000075995922,
-					0.009999999776482582,
-					1
-				],
-				"metallicFactor":0
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"LibraryPlant_Branch0",
+			"name":"LibraryPlant_Leaves_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
@@ -140,7 +127,7 @@
 			]
 		},
 		{
-			"name":"LibraryPlant_Branch1",
+			"name":"LibraryPlant_Planter",
 			"primitives":[
 				{
 					"attributes":{
@@ -160,21 +147,21 @@
 							}
 						}
 					},
-					"indices":4,
-					"material":0,
+					"indices":9,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LibraryPlant_Leaves",
+			"name":"LibraryPlant_Shoots_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
-						"COLOR_0":12
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -187,21 +174,21 @@
 							}
 						}
 					},
-					"indices":13,
-					"material":1,
+					"indices":14,
+					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LibraryPlant_Planter",
+			"name":"LibraryPlant_Soil",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"TEXCOORD_0":16,
-						"COLOR_0":17
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -214,21 +201,21 @@
 							}
 						}
 					},
-					"indices":18,
+					"indices":19,
 					"material":2,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"LibraryPlant_Soil",
+			"name":"LibraryPlant_Trunk",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":19,
-						"NORMAL":20,
-						"TEXCOORD_0":21,
-						"COLOR_0":22
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -241,35 +228,8 @@
 							}
 						}
 					},
-					"indices":23,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"LibraryPlant_Trunk",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"COLOR_0":27
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":28,
-					"material":0,
+					"indices":24,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -283,258 +243,277 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":1
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":2
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":3
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":0
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":1
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/webp",
-			"name":"T_Library_Leaf",
-			"uri":"textures/T_Library_Leaf.webp"
+			"name":"T_LibraryPlant_Atlas_Normal",
+			"uri":"textures/T_LibraryPlant_Atlas_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_LibraryPlant_Atlas",
+			"uri":"textures/T_LibraryPlant_Atlas.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_LibraryPlant_Stone_Normal",
+			"uri":"textures/T_LibraryPlant_Stone_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_LibraryPlant_Stone",
+			"uri":"textures/T_LibraryPlant_Stone.webp"
 		}
 	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":33,
+			"count":2166,
 			"max":[
-				0.06730696558952332,
-				1.5788257122039795,
-				0.015853775665163994
+				0.2868838906288147,
+				2.002225160598755,
+				0.3034053146839142
 			],
 			"min":[
-				-0.013112268410623074,
-				1.3343361616134644,
-				-0.03488105535507202
+				-0.3073538839817047,
+				0.9017541408538818,
+				-0.30864816904067993
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":33,
+			"count":2166,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":33,
+			"count":2166,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":33,
+			"count":2166,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":96,
+			"count":7980,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":33,
+			"count":461,
 			"max":[
-				-0.001505378633737564,
-				1.8105568885803223,
-				0.06981442868709564
-			],
-			"min":[
-				-0.06708115339279175,
-				1.565934181213379,
-				-0.0033150678500533104
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":33,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":33,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":33,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5126,
-			"count":680,
-			"max":[
-				0.3016522526741028,
-				2.015362501144409,
-				0.29664143919944763
-			],
-			"min":[
-				-0.301802396774292,
-				1.0862587690353394,
-				-0.286075234413147
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":680,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":680,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":680,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":1920,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":375,
-			"max":[
-				0.23804999887943268,
+				0.23776982724666595,
 				0.46000000834465027,
-				0.23804999887943268
+				0.23776982724666595
 			],
 			"min":[
-				-0.23804999887943268,
+				-0.23776982724666595,
 				0,
-				-0.23804999887943268
+				-0.23776982724666595
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":375,
+			"count":461,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":375,
+			"count":461,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":375,
+			"count":461,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":1152,
+			"count":2016,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":82,
+			"count":147,
 			"max":[
-				0.21389999985694885,
-				0.41499999165534973,
-				0.21389999985694885
+				0.11810203641653061,
+				1.6119961738586426,
+				0.0930841788649559
 			],
 			"min":[
-				-0.21389999985694885,
-				0.4020000100135803,
-				-0.21389999985694885
+				-0.11160974949598312,
+				1.1160327196121216,
+				-0.0565052293241024
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":82,
+			"count":147,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":82,
+			"count":147,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":82,
+			"count":147,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":144,
+			"count":594,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":61,
+			"count":80,
 			"max":[
-				0.02436729148030281,
-				1.800405740737915,
-				0.022309891879558563
+				0.21126653254032135,
+				0.42594286799430847,
+				0.21126653254032135
 			],
 			"min":[
-				-0.024407584220170975,
-				0.40954044461250305,
-				-0.02232837677001953
+				-0.21126653254032135,
+				0.40924543142318726,
+				-0.21126653254032135
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":61,
+			"count":80,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":61,
+			"count":80,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":61,
+			"count":80,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":240,
+			"count":360,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":126,
+			"max":[
+				0.02901911735534668,
+				1.8699921369552612,
+				0.023818299174308777
+			],
+			"min":[
+				-0.02779124304652214,
+				0.3892454504966736,
+				-0.03192378953099251
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":126,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":126,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":126,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":600,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":679,
+			"byteLength":20975,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":671,
-			"byteOffset":680
+			"byteLength":4216,
+			"byteOffset":20976
 		},
 		{
 			"buffer":0,
-			"byteLength":7940,
-			"byteOffset":1352
+			"byteLength":2239,
+			"byteOffset":25192
 		},
 		{
 			"buffer":0,
-			"byteLength":3795,
-			"byteOffset":9292
+			"byteLength":1268,
+			"byteOffset":27432
 		},
 		{
 			"buffer":0,
-			"byteLength":1340,
-			"byteOffset":13088
-		},
-		{
-			"buffer":0,
-			"byteLength":967,
-			"byteOffset":14428
+			"byteLength":1786,
+			"byteOffset":28700
 		}
 	],
 	"samplers":[
@@ -545,7 +524,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":15396,
+			"byteLength":30488,
 			"uri":"library_plant.bin"
 		}
 	]

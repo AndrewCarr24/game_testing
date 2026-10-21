@@ -479,38 +479,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":692,
+			"byteLength":702,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":469,
-			"byteOffset":692
+			"byteLength":460,
+			"byteOffset":704
 		},
 		{
 			"buffer":0,
-			"byteLength":463,
+			"byteLength":467,
 			"byteOffset":1164
 		},
 		{
 			"buffer":0,
-			"byteLength":463,
-			"byteOffset":1628
+			"byteLength":467,
+			"byteOffset":1632
 		},
 		{
 			"buffer":0,
 			"byteLength":2331,
-			"byteOffset":2092
+			"byteOffset":2100
 		},
 		{
 			"buffer":0,
-			"byteLength":2350,
-			"byteOffset":4424
+			"byteLength":2353,
+			"byteOffset":4432
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":6776,
+			"byteLength":6788,
 			"uri":"ix_car_key.bin"
 		}
 	]

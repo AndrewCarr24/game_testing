@@ -867,58 +867,58 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1581,
+			"byteLength":1449,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1454,
-			"byteOffset":1584
+			"byteLength":1735,
+			"byteOffset":1452
 		},
 		{
 			"buffer":0,
-			"byteLength":959,
-			"byteOffset":3040
+			"byteLength":1094,
+			"byteOffset":3188
 		},
 		{
 			"buffer":0,
-			"byteLength":925,
-			"byteOffset":4000
+			"byteLength":952,
+			"byteOffset":4284
 		},
 		{
 			"buffer":0,
-			"byteLength":898,
-			"byteOffset":4928
+			"byteLength":926,
+			"byteOffset":5236
 		},
 		{
 			"buffer":0,
-			"byteLength":783,
-			"byteOffset":5828
+			"byteLength":757,
+			"byteOffset":6164
 		},
 		{
 			"buffer":0,
-			"byteLength":13412,
-			"byteOffset":6612
+			"byteLength":15419,
+			"byteOffset":6924
 		},
 		{
 			"buffer":0,
-			"byteLength":351,
-			"byteOffset":20024
+			"byteLength":338,
+			"byteOffset":22344
 		},
 		{
 			"buffer":0,
-			"byteLength":2805,
-			"byteOffset":20376
+			"byteLength":3714,
+			"byteOffset":22684
 		},
 		{
 			"buffer":0,
-			"byteLength":927,
-			"byteOffset":23184
+			"byteLength":981,
+			"byteOffset":26400
 		},
 		{
 			"buffer":0,
-			"byteLength":794,
-			"byteOffset":24112
+			"byteLength":960,
+			"byteOffset":27384
 		}
 	],
 	"samplers":[
@@ -929,7 +929,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":24908,
+			"byteLength":28344,
 			"uri":"courtyard_bed_south.bin"
 		}
 	]

@@ -822,38 +822,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":10610,
+			"byteLength":10554,
 			"byteOffset":5652
 		},
 		{
 			"buffer":0,
-			"byteLength":1108,
-			"byteOffset":16264
+			"byteLength":1181,
+			"byteOffset":16208
 		},
 		{
 			"buffer":0,
-			"byteLength":1204,
-			"byteOffset":17372
+			"byteLength":1096,
+			"byteOffset":17392
 		},
 		{
 			"buffer":0,
 			"byteLength":1088,
-			"byteOffset":18576
+			"byteOffset":18488
 		},
 		{
 			"buffer":0,
 			"byteLength":1095,
-			"byteOffset":19664
+			"byteOffset":19576
 		},
 		{
 			"buffer":0,
 			"byteLength":1115,
-			"byteOffset":20760
+			"byteOffset":20672
 		},
 		{
 			"buffer":0,
 			"byteLength":823,
-			"byteOffset":21876
+			"byteOffset":21788
 		}
 	],
 	"samplers":[
@@ -864,7 +864,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":22700,
+			"byteLength":22612,
 			"uri":"guest_dumbbell_rack.bin"
 		}
 	]

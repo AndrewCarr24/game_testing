@@ -167,8 +167,9 @@ P = dict(
     face_texel_boost=1.25,         # face island scale relative to hands / feet before packing
     ao=True,
     rig=True,                      # skeleton, skin weights and the actions (grimble_rig.py)
-    crawl_scale=0.8,               # the crawl family's uniform scale (grimble_crawl.py): the house's
-                                   # openings are 3.0 m; at full size the hood alone is ~3.6 m wide
+    crawl_scale=0.68,              # the crawl family's uniform scale (grimble_crawl.py): the galleries
+                                   # are 3.2 m wide and the courtyard door 3.0 x 3.0 m; at full size the
+                                   # hood alone is ~3.6 m wide (0.8 left it 3.0 m wide: no room to turn)
     qa=True, qa_strict=True,       # run grimble_qa at the end; fail the build on errors
     lining_ao=0.35,                # occlusion floor of the cloak's lining (it's in shadow)
     force=False,                   # regenerate cached base mesh / textures
@@ -1136,7 +1137,7 @@ def _material(name, color, roughness, base=None, normal=None, normal_strength=1.
 
 # --------------------------------------------------------------------- rig
 
-def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.8):
+def _rig(n, col, root, objs, hand_info, shift, toe_info=(), crawl_scale=0.68):
     """Skeleton from the model's landmarks, skin weights, the four actions."""
     t0 = time.time()
     sh = np.array(shift)

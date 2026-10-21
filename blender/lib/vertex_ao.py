@@ -40,7 +40,7 @@ def bake(root, distance=0.3, samples=24, strength=0.6, max_face_area=0.25):
               if o.type == "MESH" and o.data.polygons and not o.hide_render]
     if not meshes:
         return 0
-    key = _key(meshes, (distance, samples, strength, max_face_area, "point", 16))
+    key = _key(meshes, (distance, samples, strength, max_face_area, "point", 16, "alpha-opaque"))
     path = os.path.join(CACHE, f"{root.name}.npz")
     if os.path.exists(path):
         z = np.load(path)
@@ -97,9 +97,24 @@ def _bake(root, meshes, distance, samples, strength, max_face_area):
     for o in vl.objects:
         o.select_set(o in meshes, view_layer=vl)
     vl.objects.active = meshes[0]
-    with bpy.context.temp_override(scene=tmp, view_layer=vl, active_object=meshes[0], object=meshes[0],
-                                   selected_objects=meshes, selected_editable_objects=meshes):
-        bpy.ops.object.bake(type="AO", target="VERTEX_COLORS")
+    # alpha-cut materials (leaf cards) bake opaque: Cycles treats a vertex on a transparent texel
+    # (every card corner) as fully occluded, which put every leaf at the AO floor (near black)
+    cut = []
+    for m in {m for o in meshes for m in o.data.materials if m and m.use_nodes}:
+        for nd in m.node_tree.nodes:
+            if nd.type == "BSDF_PRINCIPLED" and nd.inputs["Alpha"].is_linked:
+                lk = nd.inputs["Alpha"].links[0]
+                cut.append((m, lk.from_socket, nd.inputs["Alpha"], nd.inputs["Alpha"].default_value))
+                m.node_tree.links.remove(lk)
+                nd.inputs["Alpha"].default_value = 1.0
+    try:
+        with bpy.context.temp_override(scene=tmp, view_layer=vl, active_object=meshes[0], object=meshes[0],
+                                       selected_objects=meshes, selected_editable_objects=meshes):
+            bpy.ops.object.bake(type="AO", target="VERTEX_COLORS")
+    finally:
+        for m, src, dst, val in cut:
+            dst.default_value = val
+            m.node_tree.links.new(src, dst)
     # normalise to the asset's open surfaces (its 90th percentile reads as unoccluded; raw AO
     # is low on the many corners buried where parts intersect), then soften
     # Large faces are left unoccluded: a big panel has only a few corners, mostly where it

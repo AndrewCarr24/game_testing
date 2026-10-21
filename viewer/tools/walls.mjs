@@ -5,7 +5,7 @@ import { chromium } from 'playwright-core';
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 800, height: 500 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
-await p.goto('http://localhost:8765/viewer/index.html?level=mansion');
+await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion');
 await p.waitForFunction(() => window.__loaded, null, { timeout: 60000 });
 const result = await p.evaluate(async () => {
   const THREE = await import('three');

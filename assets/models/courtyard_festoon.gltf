@@ -581,28 +581,28 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":3778,
+			"byteLength":5107,
 			"byteOffset":8940
 		},
 		{
 			"buffer":0,
 			"byteLength":971,
-			"byteOffset":12720
+			"byteOffset":14048
 		},
 		{
 			"buffer":0,
 			"byteLength":977,
-			"byteOffset":13692
+			"byteOffset":15020
 		},
 		{
 			"buffer":0,
 			"byteLength":940,
-			"byteOffset":14672
+			"byteOffset":16000
 		},
 		{
 			"buffer":0,
-			"byteLength":987,
-			"byteOffset":15612
+			"byteLength":985,
+			"byteOffset":16940
 		}
 	],
 	"samplers":[
@@ -613,7 +613,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":16600,
+			"byteLength":17928,
 			"uri":"courtyard_festoon.bin"
 		}
 	]

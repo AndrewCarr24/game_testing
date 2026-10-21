@@ -11,7 +11,7 @@ import path from 'path';
 import { room } from './level.mjs';
 
 const [name, outDir = `build/review/${process.argv[2]}`, ...custom] = process.argv.slice(2);
-const base = process.env.REVIEW_BASE || 'http://localhost:8765';   // (another server: compare builds)
+const base = process.env.REVIEW_BASE || process.env.GT_BASE || 'http://localhost:8765';   // (another server: compare builds)
 const r = room(name);
 fs.mkdirSync(outDir, { recursive: true });
 

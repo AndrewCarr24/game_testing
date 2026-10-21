@@ -928,63 +928,63 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1412,
+			"byteLength":1507,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1485,
-			"byteOffset":1412
+			"byteLength":1332,
+			"byteOffset":1508
 		},
 		{
 			"buffer":0,
-			"byteLength":1560,
-			"byteOffset":2900
+			"byteLength":1424,
+			"byteOffset":2840
 		},
 		{
 			"buffer":0,
-			"byteLength":568,
-			"byteOffset":4460
+			"byteLength":815,
+			"byteOffset":4264
 		},
 		{
 			"buffer":0,
-			"byteLength":620,
-			"byteOffset":5028
+			"byteLength":916,
+			"byteOffset":5080
 		},
 		{
 			"buffer":0,
-			"byteLength":620,
-			"byteOffset":5648
+			"byteLength":898,
+			"byteOffset":5996
 		},
 		{
 			"buffer":0,
-			"byteLength":1341,
-			"byteOffset":6268
+			"byteLength":1431,
+			"byteOffset":6896
 		},
 		{
 			"buffer":0,
-			"byteLength":27634,
-			"byteOffset":7612
+			"byteLength":31720,
+			"byteOffset":8328
 		},
 		{
 			"buffer":0,
-			"byteLength":267,
-			"byteOffset":35248
+			"byteLength":317,
+			"byteOffset":40048
 		},
 		{
 			"buffer":0,
-			"byteLength":6748,
-			"byteOffset":35516
+			"byteLength":8514,
+			"byteOffset":40368
 		},
 		{
 			"buffer":0,
-			"byteLength":640,
-			"byteOffset":42264
+			"byteLength":1006,
+			"byteOffset":48884
 		},
 		{
 			"buffer":0,
-			"byteLength":569,
-			"byteOffset":42904
+			"byteLength":791,
+			"byteOffset":49892
 		}
 	],
 	"samplers":[
@@ -995,7 +995,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":43476,
+			"byteLength":50684,
 			"uri":"courtyard_bed_north.bin"
 		}
 	]

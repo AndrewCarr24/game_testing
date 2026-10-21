@@ -11,8 +11,11 @@
 		"KHR_draco_mesh_compression",
 		"EXT_texture_webp"
 	],
-	"scene":0,
+	"scene":1,
 	"scenes":[
+		{
+			"name":"_Denoise"
+		},
 		{
 			"name":"Scene",
 			"nodes":[
@@ -472,7 +475,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":79201,
+			"count":79198,
 			"max":[
 				71.27143096923828,
 				12.753400802612305,
@@ -487,17 +490,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":79201,
+			"count":79198,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":79201,
+			"count":79198,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":79201,
+			"count":79198,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -647,7 +650,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":16499,
+			"count":16481,
 			"max":[
 				64.8499984741211,
 				8.850000381469727,
@@ -662,17 +665,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":16499,
+			"count":16481,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":16499,
+			"count":16481,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":16499,
+			"count":16481,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -757,43 +760,43 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":746195,
+			"byteLength":746143,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":1511,
-			"byteOffset":746196
+			"byteOffset":746144
 		},
 		{
 			"buffer":0,
-			"byteLength":36020,
-			"byteOffset":747708
+			"byteLength":36006,
+			"byteOffset":747656
 		},
 		{
 			"buffer":0,
-			"byteLength":464689,
-			"byteOffset":783728
+			"byteLength":464869,
+			"byteOffset":783664
 		},
 		{
 			"buffer":0,
-			"byteLength":76997,
-			"byteOffset":1248420
+			"byteLength":77011,
+			"byteOffset":1248536
 		},
 		{
 			"buffer":0,
-			"byteLength":159282,
-			"byteOffset":1325420
+			"byteLength":159060,
+			"byteOffset":1325548
 		},
 		{
 			"buffer":0,
-			"byteLength":86018,
-			"byteOffset":1484704
+			"byteLength":86060,
+			"byteOffset":1484608
 		},
 		{
 			"buffer":0,
 			"byteLength":706,
-			"byteOffset":1570724
+			"byteOffset":1570668
 		}
 	],
 	"samplers":[
@@ -804,7 +807,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1571432,
+			"byteLength":1571376,
 			"uri":"mansion_outdoor.bin"
 		}
 	]

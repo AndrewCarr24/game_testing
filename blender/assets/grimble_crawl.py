@@ -541,8 +541,8 @@ def actions(sv):
 
 # measured off the deformed claws (grimble_qa.motion_checks re-measures them on every build and
 # fails if they drift): Smash's claw tips cross the glass plane; Swipe's cross the front centre
-# line (reach = distance in front of the origin); ReachUp's come over the top
-MEASURED = dict(smashHit=0.93, swipeHit=0.70, swipeReach=3.6, reachHit=1.55, reachUpHeight=6.4, reachUpReach=2.2)
+# line (reach = distance in front of the origin; it scales with crawl_scale); ReachUp's come over the top
+MEASURED = dict(smashHit=0.93, swipeHit=0.70, swipeReach=3.07, reachHit=1.55, reachUpHeight=6.4, reachUpReach=2.2)
 
 
 def metadata(sv):

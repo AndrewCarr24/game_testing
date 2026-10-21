@@ -4,43 +4,40 @@
 		"version":"2.0"
 	},
 	"extensionsUsed":[
-		"KHR_draco_mesh_compression"
+		"KHR_draco_mesh_compression",
+		"EXT_texture_webp"
 	],
 	"extensionsRequired":[
-		"KHR_draco_mesh_compression"
+		"KHR_draco_mesh_compression",
+		"EXT_texture_webp"
 	],
 	"scene":0,
 	"scenes":[
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"EntryFlowersSmall_BlossomBlush"
+			"name":"EntryFlowersSmall_Blossom_NoCollide"
 		},
 		{
 			"mesh":1,
-			"name":"EntryFlowersSmall_BlossomWhite"
+			"name":"EntryFlowersSmall_Vase"
 		},
 		{
 			"mesh":2,
-			"name":"EntryFlowersSmall_Stems"
-		},
-		{
-			"mesh":3,
-			"name":"EntryFlowersSmall_Vase"
+			"name":"EntryFlowersSmall_Water_NoCollide"
 		},
 		{
 			"children":[
 				0,
 				1,
-				2,
-				3
+				2
 			],
 			"name":"EntryFlowersSmall"
 		}
@@ -48,70 +45,54 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Entry_Blossom_Blush",
+			"name":"M_EntryFlowers_Blossom",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.6200000047683716,
-					0.36000001430511475,
-					0.3799999952316284,
-					1
-				],
+				"baseColorTexture":{
+					"index":0
+				},
 				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
+				"roughnessFactor":0.550000011920929
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Entry_Blossom_White",
+			"name":"M_EntryFlowers_Vase",
+			"normalTexture":{
+				"index":1
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.7799999713897705,
-					0.7400000095367432,
-					0.6800000071525574,
-					1
-				],
+				"baseColorTexture":{
+					"index":2
+				},
 				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
+				"roughnessFactor":0.5
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Entry_Twig",
+			"name":"M_EntryFlowers_Water",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.04500000178813934,
-					0.029999999329447746,
-					0.019999999552965164,
+					0.012000000104308128,
+					0.01600000075995922,
+					0.01600000075995922,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Entry_Stoneware",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.6000000238418579,
-					0.5600000023841858,
-					0.5,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.6200000047683716
+				"roughnessFactor":0.029999999329447746
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"EntryFlowersSmall_BlossomBlush",
+			"name":"EntryFlowersSmall_Blossom_NoCollide",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"COLOR_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -119,62 +100,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"EntryFlowersSmall_BlossomWhite",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"COLOR_0":6
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":1,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":7,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"EntryFlowersSmall_Stems",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"COLOR_0":10
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":2,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":11,
-					"material":2,
 					"mode":4
 				}
 			]
@@ -184,178 +116,235 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":12,
-						"NORMAL":13,
-						"COLOR_0":14
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":3,
+							"bufferView":1,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":15,
-					"material":3,
+					"indices":9,
+					"material":1,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"EntryFlowersSmall_Water_NoCollide",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":2,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":14,
+					"material":2,
 					"mode":4
 				}
 			]
 		}
 	],
+	"textures":[
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":0
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":1
+				}
+			},
+			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":2
+				}
+			},
+			"sampler":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/webp",
+			"name":"T_EntryFlowers_Blossom_BaseColor",
+			"uri":"textures/T_EntryFlowers_Blossom_BaseColor.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_EntryFlowers_Vase_Normal",
+			"uri":"textures/T_EntryFlowers_Vase_Normal.webp"
+		},
+		{
+			"mimeType":"image/webp",
+			"name":"T_EntryFlowers_Vase_BaseColor",
+			"uri":"textures/T_EntryFlowers_Vase_BaseColor.webp"
+		}
+	],
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":6126,
+			"count":9753,
 			"max":[
-				0.2737284302711487,
-				0.7752222418785095,
-				0.4642922282218933
+				0.25657373666763306,
+				0.8100000023841858,
+				0.3538242280483246
 			],
 			"min":[
-				-0.2657184898853302,
-				0.32886987924575806,
-				-0.19368796050548553
+				-0.2834262549877167,
+				0.0014858286594972014,
+				-0.30617576837539673
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":6126,
+			"count":9753,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":9753,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":6126,
+			"count":9753,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":6126,
+			"count":24381,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":4638,
+			"count":869,
 			"max":[
-				0.27247634530067444,
-				0.8117581605911255,
-				0.38148123025894165
+				0.10687648504972458,
+				0.36578628420829773,
+				0.10647353529930115
 			],
 			"min":[
-				-0.24037611484527588,
-				0.3554106652736664,
-				-0.14661090075969696
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":4638,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":4638,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":4638,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":2216,
-			"max":[
-				0.24958162009716034,
-				0.7784574627876282,
-				0.42121025919914246
-			],
-			"min":[
-				-0.23833435773849487,
-				0.23805776238441467,
-				-0.15319448709487915
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":2216,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":2216,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":3324,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":702,
-			"max":[
-				0.10640740394592285,
-				0.36000001430511475,
-				0.10640740394592285
-			],
-			"min":[
-				-0.10640740394592285,
+				-0.10595986247062683,
 				0,
-				-0.10640740394592285
+				-0.10619011521339417
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":702,
+			"count":869,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":869,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":702,
+			"count":869,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":3528,
+			"count":4788,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.047994982451200485,
+				0.3140000104904175,
+				0.047994982451200485
+			],
+			"min":[
+				-0.047994982451200485,
+				0.3140000104904175,
+				-0.047994982451200485
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":24,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":66,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":38854,
+			"byteLength":91751,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":30336,
-			"byteOffset":38856
+			"byteLength":7202,
+			"byteOffset":91752
 		},
 		{
 			"buffer":0,
-			"byteLength":15587,
-			"byteOffset":69192
-		},
+			"byteLength":388,
+			"byteOffset":98956
+		}
+	],
+	"samplers":[
 		{
-			"buffer":0,
-			"byteLength":4943,
-			"byteOffset":84780
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":89724,
+			"byteLength":99344,
 			"uri":"entry_flowers_small.bin"
 		}
 	]

@@ -1070,28 +1070,28 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6863,
+			"byteLength":6860,
 			"byteOffset":122880
 		},
 		{
 			"buffer":0,
 			"byteLength":231,
-			"byteOffset":129744
+			"byteOffset":129740
 		},
 		{
 			"buffer":0,
 			"byteLength":3103,
-			"byteOffset":129976
+			"byteOffset":129972
 		},
 		{
 			"buffer":0,
 			"byteLength":205,
-			"byteOffset":133080
+			"byteOffset":133076
 		},
 		{
 			"buffer":0,
 			"byteLength":885,
-			"byteOffset":133288
+			"byteOffset":133284
 		}
 	],
 	"samplers":[
@@ -1102,7 +1102,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":134176,
+			"byteLength":134172,
 			"uri":"dining_wine_rack_long.bin"
 		}
 	]

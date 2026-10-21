@@ -436,28 +436,28 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":32904,
+			"byteLength":40672,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":8908,
-			"byteOffset":32904
+			"byteLength":9320,
+			"byteOffset":40672
 		},
 		{
 			"buffer":0,
 			"byteLength":4872,
-			"byteOffset":41812
+			"byteOffset":49992
 		},
 		{
 			"buffer":0,
 			"byteLength":826,
-			"byteOffset":46684
+			"byteOffset":54864
 		},
 		{
 			"buffer":0,
 			"byteLength":7553,
-			"byteOffset":47512
+			"byteOffset":55692
 		}
 	],
 	"samplers":[
@@ -468,7 +468,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":55068,
+			"byteLength":63248,
 			"uri":"courtyard_olive_tree.bin"
 		}
 	]
