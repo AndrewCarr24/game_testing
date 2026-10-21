@@ -150,6 +150,7 @@
     import { GrimbleHunt, shatter } from './grimble_hunt.js';
     import { House } from './house.js';
     import { Affordance, itemInfo } from './affordance.js';
+    import { Sfx } from './audio.js';   // sound effects
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -528,6 +529,12 @@
       // the dark rooms, the flashlight's light cue to the Grimble
       const house = new House({ signals, noise, level, baked, scene, camera, flashlight, interact, toast: (m) => toast(m), params });
       window.__house = house;
+      // ---- sound effects (viewer/audio.js; ?sfx=0 silent, ?vol=0.5 quieter): it watches these each
+      // frame and plays what they imply; window.__sfx.play(name, position) for anything else
+      const sfx = params.get('sfx') === '0' ? null : new Sfx({ camera, level, base, shell: shell.scene, volume: +(params.get('vol') ?? 1) })
+        .attach({ interact, inventory, player, throwables, flashlight, tablet, culler, signals, noise, grimble: () => grimble });
+      window.__sfx = sfx;
+      // ---- (end sound effects)
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
@@ -565,6 +572,7 @@
         }
         if (e.code === 'KeyE' && focus && !inventory.open) {
           const msg = interact.use(focus, player.boxAt(player.pos).clone());
+          window.__sfx?.used?.(focus, msg);   // sound effects: a locked door's rattle, a dead switch
           if (msg) toast(msg);
           renderer.shadowMap.needsUpdate = true;
         }
@@ -677,6 +685,7 @@
           batteryEl.classList.toggle('low', flashlight.battery < 0.15);
           batteryEl.classList.toggle('on', flashlight.on);
         }
+        sfx?.update(dt);   // sound effects (viewer/audio.js)
       };
       const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
       // what Enter does with an item that works anywhere
