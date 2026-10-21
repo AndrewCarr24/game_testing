@@ -326,19 +326,33 @@ export class Player {
   // Out of `box` by the shortest exit that lands clear of everything: the plain shortest
   // exit could push the player out of a sofa into the glass wall beside it, and then out of
   // the glass on its far side, outside the house. Only if no exit is clear take the shortest.
+  // Exits must also not pass through anything on the way (the far side of a box the player's
+  // centre isn't in, i.e. a wall, or another wall beyond), nor be further than MAX_PUSH:
+  // wedged in a corner between a facade wall and a shelf, the only "clear" exits were through
+  // the facade (out of the house, falling forever) or 9 m across the room. "Clear" tolerates a
+  // sub-centimetre graze (the next depenetrate pass slides out of it).
   pushOut(box) {
-    const r = this.o.radius;
-    const moves = [
-      ['x', box.min.x - r - 1e-3], ['x', box.max.x + r + 1e-3],
-      ['z', box.min.z - r - 1e-3], ['z', box.max.z + r + 1e-3],
-    ].sort((m, n) => Math.abs(m[1] - this.pos[m[0]]) - Math.abs(n[1] - this.pos[n[0]]));
-    const t = this.pos.clone();
+    const r = this.o.radius, p = this.pos, MAX_PUSH = 1.5;
+    const moves = [];
+    if (p.x <= box.max.x) moves.push(['x', box.min.x - r - 1e-3]);
+    if (p.x >= box.min.x) moves.push(['x', box.max.x + r + 1e-3]);
+    if (p.z <= box.max.z) moves.push(['z', box.min.z - r - 1e-3]);
+    if (p.z >= box.min.z) moves.push(['z', box.max.z + r + 1e-3]);
+    moves.sort((m, n) => Math.abs(m[1] - p[m[0]]) - Math.abs(n[1] - p[n[0]]));
+    const depth = (b, c) => Math.min(b.max.x - c.min.x, c.max.x - b.min.x, b.max.z - c.min.z, c.max.z - b.min.z, b.max.y - c.min.y, c.max.y - b.min.y);
+    const here = new Set(this.overlapping(p));     // what the player is in now (being resolved)
+    const t = p.clone(), sweep = new THREE.Box3();
     for (const [axis, v] of moves) {
-      t.copy(this.pos);
+      if (Math.abs(v - p[axis]) > MAX_PUSH) break;
+      t.copy(p);
       t[axis] = v;
-      if (!this.overlapping(t).length) { this.pos.copy(t); return; }
+      sweep.copy(this.boxAt(p)).union(this.boxAt(t));
+      // (edges low enough to step onto, rugs, never block)
+      const blocked = this.boxes.some((c) => c.max.y - p.y > this.o.stepHeight && depth(sweep, c) > 0.01 &&
+        (!here.has(c) || depth(this._box, c) > 0.01));
+      if (!blocked) { p.copy(t); return; }          // (this._box = boxAt(t))
     }
-    this.pos[moves[0][0]] = moves[0][1];
+    p[moves[0][0]] = moves[0][1];
   }
 
   // a door that just finished opening may overlap the player: step clear of it

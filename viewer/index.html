@@ -12,7 +12,8 @@
     #toast { position: absolute; top: 38%; width: 100%; text-align: center; font-size: 17px; color: #fff;
              text-shadow: 0 1px 4px #000; opacity: 0; transition: opacity .25s; pointer-events: none; }
     #toast.show { opacity: 1; }
-    #inventory { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 8px; }
+    #inventory { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 8px;
+                 max-width: calc(100% - 28px); flex-wrap: wrap-reverse; justify-content: flex-end; }
     .slot { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.18);
             border-radius: 6px; padding: 6px 10px; color: #eee; }
     .slot .card { width: 22px; height: 14px; border-radius: 2px; background: linear-gradient(90deg, #e9e9e6 72%, #1846a8 72%); }
@@ -49,7 +50,7 @@
     #tablet .ttab.on { background: rgba(143,184,216,.18); color: #fff; }
     #tablet .ttab.sel { outline: 1px solid #8fb8d8; }
     #tablet .tstat { margin-left: auto; font-size: 10px; letter-spacing: .14em; color: #7c8; }
-    #tablet .tlist { max-height: 380px; overflow: hidden; }
+    #tablet .tlist { max-height: min(380px, calc(100vh - 200px)); overflow-y: auto; scrollbar-width: thin; }
     #tablet .trow { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 14px; }
     #tablet .trow.sel { background: rgba(143,184,216,.12); }
     #tablet .trow.live { color: #fff; }
@@ -418,7 +419,16 @@
           ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}<div class="txt"><div>${inv.label(id)}</div><div class="why">${why(id)}</div></div>${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
           : '<div class="empty">Nothing yet.</div>';
         hand?.show(inv.armed, inv.armed && inv.get(inv.armed).node);
+        layoutHud();
       });
+      // (playtest) the prompt line and the battery meter sit above the inventory row (however many
+      // rows it wraps to): with a few items carried it ran over the middle of the prompt
+      function layoutHud() {
+        const lift = `${inventoryEl.offsetHeight ? inventoryEl.offsetHeight + 22 : 14}px`;
+        hint.style.bottom = lift;
+        document.getElementById('battery').style.bottom = lift;
+      }
+      addEventListener('resize', layoutHud);
       let hand = null;
       const interact = new Interactables(inventory, colliders, signals, scene);
       interact.walls = walls;            // (a switch behind a wall isn't in reach)
@@ -560,6 +570,11 @@
       const playHint = 'WASD move · Shift run · Space jump · C crouch · E use · I inventory · Esc release';   // (affordance) while playing
       hint.textContent = walkHint;
       document.body.addEventListener('click', () => controls.lock());
+      // (playtest) the asset links and stats (dev HUD) only while paused; a click on a link meant to
+      // start playing left the level
+      const hudEl = document.getElementById('hud');
+      controls.addEventListener('lock', () => (hudEl.style.visibility = 'hidden'));
+      controls.addEventListener('unlock', () => (hudEl.style.visibility = ''));
       const keys = {};
       let focus = null;   // interactable the player can use right now
       addEventListener('keydown', (e) => {
@@ -604,7 +619,12 @@
         if (entry.def.throwable) {
           const dir = new THREE.Vector3();
           camera.getWorldDirection(dir);
-          const origin = camera.position.clone().addScaledVector(dir, 0.45).add(new THREE.Vector3(0, -0.15, 0));
+          // (playtest) released 0.45 m ahead, but never past the wall or glass the player stands
+          // against: from up close it started on the far side (outside the house, gone silently)
+          let reach = 0.45;
+          const ray = new THREE.Ray(camera.position, dir), hit = new THREE.Vector3();
+          for (const c of colliders) if (ray.intersectBox(c, hit)) reach = Math.min(reach, Math.max(0, hit.distanceTo(camera.position) - 0.12));
+          const origin = camera.position.clone().addScaledVector(dir, reach).add(new THREE.Vector3(0, -0.15 * reach / 0.45, 0));
           throwables.throw(entry.node, origin, dir, entry.def);
           inventory.remove(id);
           return;
@@ -624,6 +644,8 @@
       }
       function loadBattery() {
         if (!inventory.has('flashlight')) { toast('Nothing to put the battery in'); return; }
+        // (playtest) a fresh battery into a full flashlight was simply wasted
+        if (flashlight.battery > 0.95) { toast('The flashlight battery is still full'); return; }
         inventory.remove('battery');
         flashlight.refill();
         toast('New battery in the flashlight');
@@ -661,6 +683,9 @@
         baked?.setGlassSun(!culler.here || culler.here.name === 'courtyard');   // the sun's glint on glass only from outdoors
         baked?.update(dt);                       // lights off: rooms fade with their light switch / power
         tablet.update(dt);                       // the camera feed (~5 fps, while that page is open)
+        // (playtest) knocked down: the inventory screen and the tablet drop (keys are ignored while
+        // down, and getting up behind an open panel left the player frozen next to the Grimble)
+        if (player.isDown) { if (inventory.open) inventory.toggle(); tablet.close(); }
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
         const on = controls.isLocked && !inventory.open && !tablet.open;
@@ -669,6 +694,13 @@
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
         });
+        // (playtest) safety net: out of the level (nothing to stand on outdoors yet) -> back to the spawn
+        if (player.pos.y < -30) {
+          player.pos.set(level.spawn.position[0], level.spawn.position[1] - 1.65, level.spawn.position[2]);
+          player.vel.set(0, 0, 0);
+          player.syncCamera();
+          camera.lookAt(...level.spawn.lookAt);
+        }
         grimble?.shakeCamera(camera, dt);
         // what the crosshair is on (or nearest to it) among the things in reach
         focus = on && !player.isDown ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
@@ -688,7 +720,7 @@
         if (on && inventory.armed) parts.push(['Delete', 'put away', 'dim']);
         // (affordance) under the crosshair as key caps; textContent stays "E · Take vase   |   ..."
         const sub = parts.length && parts[0][0] === 'E' ? afford.subline(focus) : '';
-        const idle = (controls.isLocked ? playHint : walkHint).replace(' · I inventory', inventory.has('flashlight') ? ' · F flashlight · I inventory' : ' · I inventory');   // (house.js)
+        const idle = (!controls.isLocked ? walkHint : on && !player.isDown ? playHint : '').replace(' · I inventory', inventory.has('flashlight') ? ' · F flashlight · I inventory' : ' · I inventory');   // (house.js)
         const key = parts.length ? JSON.stringify([parts, sub]) : idle;
         if (key !== hintKey) {
           hintKey = key;
@@ -710,7 +742,7 @@
       // what Enter does with an item that works anywhere
       function itemHint(id) {
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
-        if (id === 'battery') return inventory.has('flashlight') ? 'Put in the flashlight' : null;
+        if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';
         return null;
       }
