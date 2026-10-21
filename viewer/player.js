@@ -51,6 +51,12 @@ export class Player {
     this.height = this.o.height;
     this.eye = this.o.eye;
     this._box = new THREE.Box3();
+    // hiding spots (viewer/hiding.js): `hidden` while settled in one (the Grimble can't see the
+    // player), `hideSpot` = {name, cover, eye, exit, node, root} while in one (climbing in and out
+    // too); the hiding module drives the camera then, and `onUnhide` pulls the player out
+    this.hidden = false;
+    this.hideSpot = null;
+    this.onUnhide = null;
     this.syncCamera();
   }
 
@@ -77,6 +83,7 @@ export class Player {
   // already down.
   knockDown(from, { duration = 2.5, shove = 4.5, roll = 70 } = {}) {
     if (this.down) return false;
+    if (this.hideSpot) this.onUnhide?.();       // in a hiding spot: dragged out first
     let dx, dz;
     if (from?.dir) { dx = -from.dir.x; dz = -from.dir.z; }
     else if (from) {
@@ -118,6 +125,7 @@ export class Player {
   }
 
   update(dt, input) {
+    if (this.hideSpot) return;              // in a hiding spot: viewer/hiding.js has the camera
     const o = this.o;
     if (this.down) input = NO_INPUT;        // lying on the floor: no moving, jumping or crouching
     // crouch: shrink now, stand up only when there's headroom

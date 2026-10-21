@@ -11,6 +11,8 @@ import { Signals } from './signals.js';
 //           ({axis, angle | distance}); every switch on a signal follows it (two-way switching)
 //   use     with item `needs` armed, Enter sets `signal` to `value` (fuse -> "power");
 //           `consume` uses the item up. Done while the signal holds that value.
+//   hide    a hiding spot (wardrobe, pantry, under a table): E climbs in, E again climbs out;
+//           `eye` / `exit` name empties, `doors` swing open and pull to (viewer/hiding.js)
 // Common fields: duration, range (m), prompt / promptActive, side ("axis" = only
 // from the side it opens toward, "both"), collide (moving collider), indicator
 // (node name of a status light). A level can lock an item with an inventory
@@ -220,6 +222,7 @@ export class Interactables {
       if (def.type === 'switch') this.setSwitchIndicator(it);
       else this.setIndicator(it, it.locked ? RED : GREEN);
     }
+    if (def.type === 'hide') this.addHide(it, def, root);
     if (def.collide) {
       it.collider = new THREE.Box3();
       this.colliders.push(it.collider);
@@ -227,6 +230,18 @@ export class Interactables {
     this.items.push(it);
     this.pose(it);
     return it;
+  }
+
+  // ---- hiding spots (type `hide`; viewer/hiding.js moves the player and the doors): the eye and
+  // exit empties, the door pivots that swing (`it.parts`: kept out of the room batch)
+  addHide(it, def, root) {
+    const find = (n) => (n ? root.getObjectByName(n) : null);
+    it.eye = find(def.eye);
+    it.exits = (Array.isArray(def.exit) ? def.exit : [def.exit]).map(find).filter(Boolean);
+    if (!it.exits.length) it.exits = [it.node];
+    it.doors = (def.doors ?? []).map((d) => ({ ...d, node: find(d.node), axis: axisOf(d.axis) })).filter((d) => d.node);
+    for (const d of it.doors) d.restQuat = d.node.quaternion.clone();
+    it.parts = it.doors.map((d) => d.node);
   }
 
   addReactor(node, def, opts) {
@@ -381,6 +396,7 @@ export class Interactables {
   done(it) { return it.def.type === 'use' && this.signals.get(it.signal) === it.value; }
 
   available(it) {
+    if (it.def.type === 'hide') return !it.disabled;
     if (it.def.type === 'use') return !this.done(it) || !!it.def.promptDone;
     if (it.def.type !== 'pickup') return true;
     return !it.taken && (!it.host || (it.host.t === 1 && it.host.target === 1));
@@ -389,6 +405,14 @@ export class Interactables {
   // the item's world box; an item with no mesh of its own (an empty marking a slot, e.g. the
   // breaker's fuse slot) is a 20 cm box round its origin (an empty box was never in reach)
   boxOf(it, box = new THREE.Box3()) {
+    if (it.def.type === 'hide') {
+      // a hiding spot is aimed at by its doors, else its own parts, else the whole prop (a table)
+      box.makeEmpty();
+      for (const d of it.doors) box.expandByObject(d.node);
+      if (box.isEmpty()) box.setFromObject(it.node);
+      if (box.isEmpty()) box.setFromObject(it.root);
+      return box;
+    }
     box.setFromObject(it.node);
     if (box.isEmpty()) box.setFromCenterAndSize(it.node.getWorldPosition(this._c), this._d.set(0.2, 0.2, 0.2));
     return box;
@@ -477,6 +501,7 @@ export class Interactables {
   prompt(it) {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
+    if (d.type === 'hide') return d.prompt || 'Hide';
     if (it.locked) return d.lockedPrompt || 'Locked';
     if (d.type === 'switch') {
       const on = truthy(this.signals.get(it.signal));
@@ -558,6 +583,7 @@ export class Interactables {
       this.inventory.add(d.item, d.name, it.node, d);
       return `Picked up: ${d.name} · press I for inventory`;
     }
+    if (d.type === 'hide') return this.onHide ? this.onHide(it) : null;   // (viewer/hiding.js)
     if (it.locked) {
       if (this.inventory.has(it.lockKey)) {
         const name = this.inventory.name(it.lockKey).toLowerCase();
