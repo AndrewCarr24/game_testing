@@ -140,7 +140,7 @@ Existing types keep working unchanged. New:
 - The house starts powered with the main fuse in (the garage breaker is placed with `state: true`:
   `power` and `fuse_garage` on). The Grimble's break-in flickers the lights for ~1.3 s, then
   `power` and `fuse_garage` go false (the isolator drops to off, its carrier is empty). The spare
-  fuse is upstairs in the guest room's nightstand drawer; fuse in, then the isolator, = power back.
+  fuse is in the garage's steel locker (its key is in the wine room's climate cabinet, whose key is in the garage workbench drawer: blender/levels/caches.py); fuse in, then the isolator, = power back.
   While the Grimble moves through the house the isolator trips again now and then (150-330 s
   apart, fuse intact). The player can switch it off on purpose. `?trips=0|N`, `?breaktrip=0`.
 - Motors: a moving react (slide / rotate / scale: blinds, the garage door) needs `power` to move;

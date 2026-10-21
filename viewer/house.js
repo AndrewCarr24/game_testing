@@ -5,8 +5,8 @@ import * as THREE from 'three';
 //
 //  Power trips   The Grimble's break-in blows the main fuse: the lights flicker and go, the
 //                isolator in the garage drops to off and its fuse carrier is empty (signals
-//                `power` and `fuse_garage` false). A spare fuse is upstairs (the guest room's
-//                nightstand drawer); with it in, the isolator switches back on. Later, while the
+//                `power` and `fuse_garage` false). A spare fuse is in the garage's steel locker
+//                (a key chain: blender/levels/caches.py); with it in, the isolator switches back on. Later, while the
 //                Grimble moves through the house, the isolator trips now and then (fuse intact:
 //                a walk to the garage in the dark). The player may switch it off on purpose.
 //  Power drives  every electric reactor (lamps, screens, LED strips, the chargers' light bars),
