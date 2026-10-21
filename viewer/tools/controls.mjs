@@ -63,7 +63,15 @@ try {
     const r = await p.evaluate(async ([at, n, floor, dist]) => {
       const THREE = await import('three');
       const pl = window.__player, cam = window.__camera, it = window.__interact;
-      pl.pos.set(at[0] + n[0] * dist, floor, at[2] + n[1] * dist); pl.vel.set(0, 0, 0);
+      // stand where a person would: straight out first, else a step to either side or closer
+      // (a switch near a corner or beside a plant); `crowded` if no spot in reach is clear
+      let crowded = 1;
+      for (const [o, s] of [[dist, 0], [dist, 0.3], [dist, -0.3], [0.65, 0], [0.65, 0.35], [0.65, -0.35], [dist, 0.5], [dist, -0.5]]) {
+        pl.pos.set(at[0] + n[0] * o + n[1] * s, floor, at[2] + n[1] * o - n[0] * s);
+        if (!pl.overlapping(pl.pos.clone().setY(floor + 0.05)).length) { crowded = 0; break; }
+      }
+      if (crowded) pl.pos.set(at[0] + n[0] * dist, floor, at[2] + n[1] * dist);
+      pl.vel.set(0, 0, 0);
       pl.syncCamera(); cam.lookAt(at[0], at[1], at[2]); cam.updateMatrixWorld(true);
       const eye = cam.position.clone(), target = new THREE.Vector3(...at);
       // the items of this control: interact items whose node is within 0.4 m of its origin
@@ -87,7 +95,7 @@ try {
       return {
         stood: [+pl.pos.x.toFixed(2), +pl.pos.y.toFixed(2), +pl.pos.z.toFixed(2)],
         // something solid where the player stands to use it (a cabinet, a sofa in the way)
-        crowded: pl.overlapping(pl.pos.clone().setY(floor + 0.05)).length,
+        crowded,
         eyeDist: +eye.distanceTo(target).toFixed(2),
         items: mine.map((i) => i.node.name),
         focus: focus ? focus.node.name : null,
@@ -133,7 +141,7 @@ try {
       if (toggled && want && !want.test(toggled.hint2)) problems.push(`prompt after E "${toggled.hint2}"`);
     }
     if (r.blocker) problems.push(`hidden behind ${r.blocker}`);
-    if (r.crowded) problems.push('no room to stand in front of it (0.85 m out)');
+    if (r.crowded) problems.push('no room to stand within reach of it');
     const ok = problems.length === 0;
     if (!ok) fails++;
     results.push({ label, asset: c.asset, room: c.room, position: c.position, rotationY: c.rotationY, hint, ...r, toggled, problems });
