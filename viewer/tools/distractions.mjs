@@ -33,7 +33,7 @@ const OFFICE = [7, 4.6, -15];
 async function openPage() {
   const p = await b.newPage({ viewport: { width: 960, height: 600 } });
   p.on('pageerror', (e) => console.log('pageerror:', e.message));
-  await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&hunt=now` +
+  await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&hunt=now&breaktrip=0&trips=0` +   // (power stays on: the break-in trips it, house.js)
     `&pos=${OFFICE[0]},${OFFICE[1] + 1.65},${OFFICE[2]}&look=7,5.6,-11`);
   await p.waitForFunction(() => window.__loaded && window.__grimble && window.__hunt && window.__devices, null, { timeout: 180000 });
   await p.evaluate(() => {
@@ -82,7 +82,9 @@ for (const dev of DEVICES) {
     if (!d) return { missing: true };
     // a pair of speakers is one source: the middle of the pair
     const pos = group.reduce((a, x) => a.add(D.position(x)), D.position(d).set(0, 0, 0)).divideScalar(group.length);
-    const k = h.nav.nearest(pos.x, pos.z, 40), goal = k >= 0 ? h.nav.centre(k) : null;
+    // where it would go for it: the Grimble's own choice (the doorway of a room it can't enter)
+    const V2 = h.chain.hd.constructor;
+    const k = h.goalCell ? h.goalCell(new V2(pos.x, pos.z), pos.y > 3.5 ? 0 : pos.y) : h.nav.nearest(pos.x, pos.z, 40), goal = k >= 0 ? h.nav.centre(k) : null;
     const T = window.__dt;
     T.events.length = 0;
     T.start = h.time;

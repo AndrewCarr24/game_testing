@@ -25,7 +25,7 @@ const eyeBreaker = fromProp(breaker, [0, -0.85, 0.2]);         // in front of it
 const lookIso = fromProp(breaker, [0, 0, 0.275]);              // the isolator (top)
 const lookSlot = fromProp(breaker, [0, 0, -0.25]);             // the fuse carrier (bottom)
 const garage = room('garage');
-const flash = prop('ix_flashlight');
+const flash = props('ix_flashlight')[0];
 
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 1100, height: 700 } });
@@ -132,9 +132,9 @@ check('E on it: "No power"', (await toast()).includes('No power'), `toast="${awa
 await press('KeyE');
 
 // ---------------------------------------------------------------- the flashlight in the dark
-await teleport(fromProp(flash, [0, -0.6, 0.73]), fromProp(flash, [0, 0, 0]));
+if (flash) await teleport(fromProp(flash, [0, -0.6, 0.73]), fromProp(flash, [0, 0, 0]));   // (none: it's attached inside the locker)
 await p.waitForTimeout(200);
-const fh = await hint();
+const fh = flash ? await hint() : '';
 if (fh.includes('Take') || fh.includes('Pick')) await press('KeyE');
 else {   // (it's in the garage locker, behind a key chain: open it as if unlocked)
   await p.evaluate(() => { const I = window.__interact, it = I.items.find((i) => i.def.item === 'flashlight'); if (it.host) { it.host.locked = false; I.use(it.host, null); } });

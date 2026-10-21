@@ -41,7 +41,7 @@ console.log('by room:', JSON.stringify(census.byRoom));
 console.log('stats:', census.stats);
 check('the house has hundreds of pickups', census.total > 300, `${census.total}`);
 check('resting pickups are drawn by their room batch', census.batched > census.total * 0.8, `${census.batched}/${census.total}`);
-const tools = ['keycard', 'car_key', 'fuse', 'battery', 'flashlight', 'tablet'];
+const tools = ['keycard', 'car_key', 'fuse', 'battery', 'flashlight', 'tablet', ...Object.keys(census.byItem).filter((id) => id.startsWith('key_'))];
 const loose = census.total - tools.reduce((n, id) => n + (census.byItem[id] ?? 0), 0);
 check('every loose thing is throwable (the tools are not)', census.throwable === loose, `${census.throwable}/${loose}`);
 fs.writeFileSync(`${out}/census.json`, JSON.stringify(census, null, 1));

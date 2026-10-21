@@ -777,7 +777,7 @@ def _alarm(p, col, root, n):
                       "power": False, "duration": 0.06}
     snd = common.empty(f"{n}_Alarm", col, (0, 0, 0.9))
     snd.parent = root
-    snd["noisemaker"] = {"signal": "car_alarm", "power": False, "loudness": 2.0, "every": 1.0, "for": 12,
+    snd["noisemaker"] = {"signal": "car_alarm", "power": False, "loudness": 5.0, "every": 1.0, "for": 12,
                          "flash": "car_alarm_flash", "flashEvery": 0.35, "sfx": "car_alarm",
                          "source": "car_alarm", "label": "Car alarm", "tablet": False}
 

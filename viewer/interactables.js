@@ -579,7 +579,7 @@ export class Interactables {
         // (focus) what was just used stays in focus for 1.5 s while it's still in view and reach: an
         // opened door swings out from under the crosshair, and the next E went to the light switch
         // beside it instead of closing the door
-        const sticky = this.lastUsed?.it === it && performance.now() - this.lastUsed.at < 1500 ? 5 : 0;
+        const sticky = this.lastUsed?.it === it && it.def.type === 'rotate' && performance.now() - this.lastUsed.at < 1500 ? 5 : 0;   // (doors only)
         const base = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - sticky;
         if (it.def.type === 'hide') { hides.push({ it, score: base, hit }); continue; }
         firstHit = Math.min(firstHit, hit);
@@ -632,9 +632,9 @@ export class Interactables {
     if (d.type === 'pickup') return d.prompt;
     if (d.type === 'hide') return d.prompt || 'Hide';
     if (it.locked) {
-      // (affordance) carrying the key: how to use it, before E is pressed
-      if (it.lockKey && this.inventory.has(it.lockKey)) return this.lockedMessage(it);
-      return d.lockedPrompt || this.lockedMessage(it);
+      // the key it needs, by name (an asset's authored lockedPrompt, e.g. door_plain's "keycard
+      // required", would be wrong for a door on another key); carrying it: how to use it
+      return it.lockKey ? this.lockedMessage(it) : (d.lockedPrompt || 'Locked');
     }
     if (d.type === 'switch') {
       const on = truthy(this.signals.get(it.signal));

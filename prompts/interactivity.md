@@ -224,7 +224,7 @@ Existing types keep working unchanged. New:
   the garage, via the car key; `car_alarm_flash` = its lamps). sfx names (one play() per noise
   pulse, for viewer/audio.js to add): music, doorbell, blender, alarm_clock, car_alarm; the TV
   has none (audio.js loops its sound from the tv_* signal). Throwables' `noise`: vase 1.4, wine bottle 1.2, book 0.6.
-  The Grimble hears 30 m x loudness (grimble_hunt.js `hearing`): car alarm 2.0, doorbell 1.3,
+  The Grimble hears 30 m x loudness (grimble_hunt.js `hearing`; muffled per wall): car alarm 5.0, doorbell 1.3,
   music / alarm clock 1.2, blender 1.1, TV 1.0.
 
 ## Loose things: which ones lift (blender/lib/pickups.py)

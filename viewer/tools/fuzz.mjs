@@ -27,6 +27,10 @@ for (const seed of seeds) {
         pl.update(1 / 60, input);
       }
     };
+    // out through an open exterior door (going outside) is fine: on the grounds, inside the hedge
+    // (getting pushed out through a wall is walls.mjs's to catch: it runs into every wall)
+    const B = L.grounds?.bounds;
+    const outByDoor = (p) => !!B && p.y > -0.2 && p.x > B[0] && p.x < B[2] && p.z > B[1] && p.z < B[3];
     const depth = (c) => { const b = pl.boxAt(pl.pos); return Math.min(b.max.x - c.min.x, c.max.x - b.min.x, b.max.z - c.min.z, c.max.z - b.min.z); };
     const bad = [];
     let runs = 0;
@@ -44,7 +48,7 @@ for (const seed of seeds) {
           step({ forward: rnd() < 0.8, left: rnd() < 0.2, right: rnd() < 0.2, run: rnd() < 0.5, jump: rnd() < 0.3, crouch: rnd() < 0.15 }, 0.2 + rnd() * 0.6, yaw);
           if (seg % 3 === 0) step({}, 0.05, yaw);
           const inside = pl.overlapping(pl.pos).filter((c) => c.max.y - pl.pos.y > 0.32 && depth(c) > 0.01);
-          if (inside.length || pl.pos.y < -0.3 || !roomAt(pl.pos.x, pl.pos.y, pl.pos.z)) {
+          if (inside.length || pl.pos.y < -0.3 || (!roomAt(pl.pos.x, pl.pos.y, pl.pos.z) && !outByDoor(pl.pos))) {
             bad.push({ room, why: inside.length ? 'inside a box' : pl.pos.y < -0.3 ? 'under the floor' : 'out of the house', pos: pl.pos.toArray().map((v) => +v.toFixed(2)) });
             break;
           }

@@ -101,7 +101,7 @@ if (!noDoor) check('back inside the entry', end[2] < fz - 1 && Math.abs(end[1]) 
 // every other exterior door: from outside, E opens it, walk in, walk back out
 const seen = new Set(['entry']);
 for (const d of G.doors) {
-  if (seen.has(d.room)) continue;
+  if (seen.has(d.room) || d.asset === 'ix_garage_door') continue;   // (the garage door opens from its switch inside)
   seen.add(d.room);
   const r = level.rooms[d.room], [x, , z] = d.position;
   const n = Math.abs(z - r.rect[1]) < 0.3 ? [0, -1] : Math.abs(z - r.rect[3]) < 0.3 ? [0, 1] : Math.abs(x - r.rect[0]) < 0.3 ? [-1, 0] : [1, 0];
