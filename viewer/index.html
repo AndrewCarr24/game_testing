@@ -83,7 +83,9 @@
     #cross.armed::before { background: #f0c674; transform: scale(1.5); }
     #cross.done::after { transform: scale(.75); opacity: .4; }
     #cross.throw::after { transform: scale(.8); opacity: 1; border: 1.5px dotted #f0c674; }
-    #hint.act { bottom: auto; top: calc(50% + 22px); white-space: normal; font-size: 15px; line-height: 1.25; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.7); }
+    #hint:not(.act) { left: 14px; width: auto; text-align: left; font-size: 12px; color: #ccc; }
+    #inventory { max-width: calc(100% - 560px); flex-wrap: wrap; justify-content: flex-end; }
+    #hint.act { bottom: auto; top: calc(50% + 28px); white-space: normal; font-size: 15px; line-height: 1.25; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.7); }
     #hint.act .p { margin: 3px 0; }
     #hint.act .sep { display: none; }
     #hint .k { display: inline-block; min-width: 12px; padding: 0 6px; margin-right: 8px; border: 1px solid rgba(255,255,255,.7); border-radius: 4px;
@@ -522,6 +524,7 @@
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
+      const playHint = 'WASD move · Shift run · Space jump · C crouch · E use · I inventory · Esc release';   // (affordance) while playing
       hint.textContent = walkHint;
       document.body.addEventListener('click', () => controls.lock());
       const keys = {};
@@ -647,11 +650,12 @@
         if (on && inventory.armed) parts.push(['Delete', 'put away', 'dim']);
         // (affordance) under the crosshair as key caps; textContent stays "E · Take vase   |   ..."
         const sub = parts.length && parts[0][0] === 'E' ? afford.subline(focus) : '';
-        const key = parts.length ? JSON.stringify([parts, sub]) : walkHint;
+        const idle = controls.isLocked ? playHint : walkHint;
+        const key = parts.length ? JSON.stringify([parts, sub]) : idle;
         if (key !== hintKey) {
           hintKey = key;
           hint.classList.toggle('act', parts.length > 0);
-          if (!parts.length) hint.textContent = walkHint;
+          if (!parts.length) hint.textContent = idle;
           else hint.innerHTML = parts.map(([k, t, c]) => `<div class="p ${c}"><span class="k">${k}</span><span class="sep"> · </span>${esc(t)}</div>`)
             .join('<span class="sep">   |   </span>') + (sub ? `<div class="sub">${esc(sub)}</div>` : '');
         }

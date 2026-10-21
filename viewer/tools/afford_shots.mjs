@@ -69,6 +69,46 @@ try {
       console.log(label, tag, JSON.stringify(info[`${label}_${tag}`]));
     }
   }
+  // the inventory screen with one of every kind of item the level has (their real definitions)
+  const shot = async (label) => {
+    await p.screenshot({ path: `${out}/${label}.png` });
+    info[label] = await p.evaluate(() => ({ hint: document.getElementById('hint')?.textContent, cross: document.getElementById('cross')?.className ?? null }));
+    console.log(label, JSON.stringify(info[label]));
+  };
+  await p.evaluate(() => {
+    const inv = window.__inventory, seen = new Set();
+    for (const it of window.__interact.items) {
+      const d = it.def;
+      if (d.type !== 'pickup' || seen.has(d.item)) continue;
+      seen.add(d.item);
+      inv.add(d.item, d.name, it.node.clone(true), d);
+      if (d.item === 'vase') inv.add(d.item, d.name, it.node.clone(true), d);
+    }
+  });
+  await p.keyboard.press('KeyI'); await p.waitForTimeout(300);
+  await shot('inventory_open');
+  await p.keyboard.press('KeyI'); await p.waitForTimeout(200);
+  // armed keycard at the locked door; armed vase looking down a room
+  const door = level.props.find((q) => q.lock === 'keycard');
+  const arm = (id) => p.evaluate((id) => { window.__inventory.armed = id; window.__inventory.changed(); }, id);
+  const view = async (pos, look) => {
+    await p.evaluate(([pos, look]) => {
+      window.__player.pos.set(pos[0], pos[1] - 1.65, pos[2]); window.__player.vel.set(0, 0, 0);
+      window.__player.syncCamera(); window.__camera.lookAt(...look);
+    }, [pos, look]);
+    await p.waitForTimeout(1200);
+  };
+  const a = (door.rotationY * Math.PI) / 180;   // the door's local +y (Blender) = the gallery side
+  const dz = -Math.cos(a) * 1.6, dx = -Math.sin(a) * 1.6;
+  await view([door.position[0] + dx, door.position[1] + 1.65, door.position[2] + dz], [door.position[0], door.position[1] + 1.2, door.position[2]]);
+  await shot('locked_door_have_key');
+  await arm('keycard');
+  await view([door.position[0] + dx, door.position[1] + 1.65, door.position[2] + dz], [door.position[0], door.position[1] + 1.2, door.position[2]]);
+  await shot('locked_door_armed_key');
+  await arm('vase');
+  const gr = level.rooms.great_room;
+  await view([(gr.rect[0] + gr.rect[2]) / 2, gr.floor + 1.65, (gr.rect[1] + gr.rect[3]) / 2], [gr.rect[0], gr.floor + 1.0, (gr.rect[1] + gr.rect[3]) / 2]);
+  await shot('armed_vase');
   fs.writeFileSync(`${out}/info.json`, JSON.stringify(info, null, 1));
 } finally {
   await b.close();

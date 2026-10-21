@@ -59,7 +59,7 @@ const GLINT_VERT = /* glsl */ `
     float ph = fract(uTime / 4.2 + aSeed);
     float tw = smoothstep(0.0, 0.07, ph) * (1.0 - smoothstep(0.07, 0.2, ph));
     vA = tw * aFade;
-    gl_PointSize = vA > 0.002 ? clamp(uScale * 0.055 / -mv.z, 7.0, 30.0) * (0.55 + 0.45 * tw) : 0.0;
+    gl_PointSize = vA > 0.002 ? clamp(uScale * 0.07 / -mv.z, 8.0, 34.0) * (0.55 + 0.45 * tw) : 0.0;
   }`;
 const GLINT_FRAG = /* glsl */ `
   uniform float uBright;
