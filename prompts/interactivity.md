@@ -157,11 +157,12 @@ Existing types keep working unchanged. New:
 
 ## Power and darkness as gameplay (viewer/house.js)
 - The house starts powered with the main fuse in (the garage breaker is placed with `state: true`:
-  `power` and `fuse_garage` on). The Grimble's break-in flickers the lights for ~1.3 s, then
-  `power` and `fuse_garage` go false (the isolator drops to off, its carrier is empty). The spare
+  `power` and `fuse_garage` on). The Grimble's break-in leaves the power on (the user's call);
+  with `?breaktrip=1` it flickers the lights for ~1.3 s, then `power` and `fuse_garage` go false
+  (the isolator drops to off, its carrier is empty). The spare
   fuse is in the garage's steel locker (its key is in the wine room's climate cabinet, whose key is in the garage workbench drawer: blender/levels/caches.py); fuse in, then the isolator, = power back.
   While the Grimble moves through the house the isolator trips again now and then (150-330 s
-  apart, fuse intact). The player can switch it off on purpose. `?trips=0|N`, `?breaktrip=0`.
+  apart, fuse intact). The player can switch it off on purpose. `?trips=0|N`, `?breaktrip=1`.
 - Motors: a moving react (slide / rotate / scale: blinds, the garage door) needs `power` to move;
   with it off it stops where it is and catches up when power is back. `"motor": false` (or an
   explicit `"power"`) in the react opts out. A switch whose signal drives electric or motorised

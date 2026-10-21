@@ -25,8 +25,8 @@ import * as THREE from 'three';
 //                between, a `light` cue goes out through the noise hook every second:
 //                window.__noise.emit({position: eye, loudness: 1, source: 'light'}).
 //
-// URL: ?trips=0 no timed trips, ?trips=N one every N s (tests), ?breaktrip=0 the break-in
-// leaves the power on, ?dark=0 no fallback dimming. window.__house: {lightAt, roomAt, trip,
+// URL: ?trips=0 no timed trips, ?trips=N one every N s (tests), ?breaktrip=1 the break-in
+// trips the power and blows the fuse (off by default), ?dark=0 no fallback dimming. window.__house: {lightAt, roomAt, trip,
 // level(room), state}. Sound hooks (optional): window.__sfx.play('power_flicker' | 'power_out'
 // | 'power_on' | 'fuse_blow', position).
 
@@ -67,7 +67,7 @@ export class House {
     const trips = params.get('trips');
     this.tripEvery = trips === null ? [150, 330] : +trips > 0 ? [+trips, +trips] : null;
     this.nextTrip = null;         // s of hunting left before the next timed trip
-    this.breakTrip = params.get('breaktrip') !== '0';
+    this.breakTrip = params.get('breaktrip') === '1';   // (off by default: the user doesn't want the break-in to cut the power)
     // a room with a lights-off bake (bake.py --state off: baked.js fades it by its signal) needs
     // no fallback; the dimmer only drives the rooms without one
     this.baked = baked;
