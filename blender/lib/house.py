@@ -342,7 +342,8 @@ class House:
             self.breakables.append({"name": brk, "min": common.to_gltf(lo_b), "max": common.to_gltf(hi_b)})
         lo, hi = ((a0, L - md / 2, z0), (a1, L + md / 2, z1)) if c["axis"] == "x" else \
                  ((L - md / 2, a0, z0), (L + md / 2, a1, z1))
-        self.colliders.append(common.aabb_gltf(lo, hi))
+        # glass: solid to bodies and swipes, but a sight line passes it (grimble_hunt.js)
+        self.colliders.append(dict(common.aabb_gltf(lo, hi), glass=True))
         self.solids.append((lo, hi))
 
     def jamb_overlap(self, c, a, md):
