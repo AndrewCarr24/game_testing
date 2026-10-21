@@ -144,7 +144,9 @@ try {
     // stand at the exit, look at the spot's eye
     await p.evaluate(([e, ey]) => {
       const pl = window.__player; pl.pos.set(e[0], e[1], e[2]); pl.vel.set(0, 0, 0); pl.syncCamera();
-      window.__camera.lookAt(ey[0], Math.min(ey[1], e[1] + 1.2), ey[2]);
+      // closed: at the doors; open: down into the crawl space, halfway between the exit and the eye
+      if (ey[1] > e[1] + 1.2) window.__camera.lookAt(ey[0], e[1] + 1.2, ey[2]);
+      else window.__camera.lookAt((ey[0] + e[0]) / 2, (e[1] + ey[1]) / 2, (ey[2] + e[2]) / 2);
     }, [sp.exit, sp.eye]);
     await p.waitForTimeout(500);
     const h = await hint();
@@ -156,10 +158,16 @@ try {
     check(`${sp.name}: in (${sp.cover})`, ok && s.hidden, `hint "${h.trim()}"`);
     await press('KeyE', 100); await settled(false);
     s = await st();
-    await p.keyboard.down('KeyW'); await p.waitForTimeout(400); await p.keyboard.up('KeyW');
-    const s4 = await st();
-    check(`${sp.name}: out and free to move`, !s.hidden && Math.hypot(s4.feet[0] - s.feet[0], s4.feet[2] - s.feet[2]) > 0.2,
-      `exit ${s.feet.map((v) => v.toFixed(2)).join(',')}`);
+    // not stuck: some direction (forward, left, right) walks away from the exit
+    let moved = 0;
+    for (const k of ['KeyW', 'KeyA', 'KeyD']) {
+      const a = await st();
+      await p.keyboard.down(k); await p.waitForTimeout(400); await p.keyboard.up(k);
+      const s4 = await st();
+      moved = Math.max(moved, Math.hypot(s4.feet[0] - a.feet[0], s4.feet[2] - a.feet[2]));
+      if (moved > 0.2) break;
+    }
+    check(`${sp.name}: out and free to move`, !s.hidden && moved > 0.2, `exit ${s.feet.map((v) => v.toFixed(2)).join(',')} moved ${moved.toFixed(2)}`);
   }
 } finally {
   await b.close();

@@ -261,7 +261,7 @@ def build(**overrides):
         # hiding spot (open cover): curled up in the knee space behind the modesty panel, under the
         # drawer, looking out on the sitter's side (beside the chair)
         d = p["top"][1]
-        ix_common.hide_spot(root, col, n, (0.32, -0.06, 0.48), [(0.42, d / 2 + 0.75, 0.0), (-0.42, d / 2 + 0.75, 0.0)],
+        ix_common.hide_spot(root, col, n, (0.32, -0.06, 0.42), [(0.42, d / 2 + 0.75, 0.0), (-0.42, d / 2 + 0.75, 0.0)],
                             "Hide under the desk", "Crawl out", cover="open", pitch=-2)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts

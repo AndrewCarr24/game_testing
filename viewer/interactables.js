@@ -103,7 +103,7 @@ export class Interactables {
     this.lights = null;           // [PointLight] once a `light` react exists
     this._box = new THREE.Box3();
     this._c = new THREE.Vector3(); this._d = new THREE.Vector3(); this._h = new THREE.Vector3();
-    this._ray = new THREE.Ray(); this._view = new THREE.Ray();
+    this._ray = new THREE.Ray(); this._view = new THREE.Ray(); this._hb = new THREE.Box3();
     this.walls = null;            // the shell's boxes (behindWall), set by the level
     // who set each signal's initial value: reactors and use points only name it (0), a switch's
     // authored state (1), a placement's `state` (2), the level's "signals" (3). The highest wins
@@ -412,12 +412,9 @@ export class Interactables {
       box.makeEmpty();
       for (const d of it.doors) box.expandByObject(d.node);
       if (box.isEmpty()) box.setFromObject(it.node);
-      if (box.isEmpty()) {
-        // (under a table / behind a sofa: the part of the prop below the spot's eye, so a vase on
-        // the table top is still the vase)
-        box.copy(it.area);
-        if (it.pose) box.max.y = Math.min(box.max.y, it.pose.eye.y + 0.15);
-      }
+      // (under a table / behind a sofa: the space the player crawls through, from the spot's eye
+      // out to its exit, below the eye; so a vase on the table top or the desk's drawer is still that)
+      if (box.isEmpty()) box.copy(it.pose?.mouthBox ?? it.area);
       return box;
     }
     box.setFromObject(it.node);
@@ -474,6 +471,8 @@ export class Interactables {
     const off = new THREE.Vector3(), dir = new THREE.Vector3(), to = new THREE.Vector3();
     const view = forward && this._view.set(player, forward.clone().normalize());
     let best = null, bestScore = Infinity;
+    const hides = [];      // hiding spots, decided after the loop (below)
+    let firstHit = Infinity;
     for (const it of this.items) {
       if (!this.available(it) || !this.inReach(it, player)) continue;
       const d = this.reach(it, player);
@@ -486,7 +485,8 @@ export class Interactables {
         if (off.dot(dir) <= 0) continue;
       }
       // a hiding spot is entered from where the player comes out (not from across a sofa or table)
-      if (it.def.type === 'hide' && it.pose && Math.hypot(player.x - it.pose.exit.x, player.z - it.pose.exit.z) > this.range(it) + 0.7) continue;
+      if (it.def.type === 'hide' && it.pose && (Math.hypot(player.x - it.pose.exit.x, player.z - it.pose.exit.z) > this.range(it) + 0.7 ||
+          this.behindWall(player, this._hb.setFromCenterAndSize(it.pose.mouth, this._d.set(0.1, 0.1, 0.1))))) continue;   // (not through a wall)
       const small = it.def.type === 'switch' || it.def.type === 'use' || it.def.type === 'pickup';
       if (small && this.behindWall(player, box.clone())) continue;
       const pickup = it.def.type === 'pickup';
@@ -495,11 +495,19 @@ export class Interactables {
         // 0 when the crosshair is on the item's box (2 cm margin: switch plates are small),
         // else the angle to its centre; a little distance and centre angle break ties
         const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
+        const hit = onIt ? to.distanceTo(player) : Infinity;
         const angle = forward.angleTo(to.subVectors(centre, player));
-        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0)
-          - (onIt && it.def.type === 'hide' ? 11 : 0);   // (looking under the table: hide, not the vase on it)
+        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
+        if (it.def.type === 'hide') { hides.push({ it, score, hit }); continue; }
+        firstHit = Math.min(firstHit, hit);
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
+    }
+    // a hiding spot under the crosshair, nearer than anything else the crosshair is on, wins (even
+    // over a vase in the pickup cone): looking under the table means hiding, not the vase on top
+    for (const h of hides) {
+      const score = h.score + (h.hit < firstHit ? -11 : firstHit < Infinity ? 1 : 0);   // (behind the drawer: the drawer)
+      if (score < bestScore) { best = h.it; bestScore = score; }
     }
     return best;
   }

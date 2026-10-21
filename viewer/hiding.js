@@ -88,6 +88,9 @@ export class Hiding {
     P.exitQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, P.yaw, 0, 'YXZ'));
     // the crouch point: outside at the eye's height, where the climb in starts / out ends
     P.mouth = new THREE.Vector3(P.exit.x, P.eye.y, P.exit.z);
+    P.mouthBox = new THREE.Box3().setFromPoints([P.eye, P.mouth]).expandByVector(new THREE.Vector3(0.22, 0, 0.22));
+    P.mouthBox.min.y = P.exit.y;
+    P.mouthBox.max.y = P.eye.y + 0.05;
     // in reach from wherever the exit ended up (pushed out past the chairs round a table)
     it.reachRange = Math.max(this.interact.range(it), this.interact.reach(it, P.exit) + 0.6);
   }
