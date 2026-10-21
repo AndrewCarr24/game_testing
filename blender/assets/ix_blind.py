@@ -7,7 +7,7 @@ Interactivity (prompts/interactivity.md), signal "blinds" (the level renames it 
   <n>_Fabric_NoCollide  one mesh for every bay's fabric, its origin at the roller inside the
                         cassette. Authored rolled up: squashed to a 3 cm sliver inside the
                         cassettes (object scale), so the bake and the room above never see a
-                        4-8 m panel. react: scale along y to full length; block_sight.
+                        4-8 m panel. react: scale along y to full length; block_sight; collide (solid when down).
   <n>_Rail_NoCollide    the bottom rails (one mesh): react slide down by the same travel,
                         same duration, so they stay on the fabric's bottom edge.
 The cassettes are static (batched with the room's other black metal).
@@ -107,7 +107,8 @@ def build(**overrides):
     fab.location = (0, p["fabric_y"], zp)
     s0 = STOW_H / hd
     fab["react"] = {"signal": p["signal"], "on": {"scale": {"axis": "y", "to": round(1.0 / s0, 4)}},
-                    "duration": duration, "block_sight": True}
+                    "duration": duration, "block_sight": True,
+                    "collide": True}   # (a lowered blind is solid: no walking through it, or out a glass door behind it)
 
     # bottom rails: hang just under the cassettes while rolled up
     rail = common.mesh_object(f"{n}_Rail_NoCollide",
