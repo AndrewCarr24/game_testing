@@ -88,6 +88,8 @@ FIXTURES = {
     "kitchen_wall_run", "kitchen_range_wall", "kitchen_island", "kitchen_pantry", "kitchen_scullery_run",
     "kitchen_coffee_station", "entry_coat_closet", "dining_climate_wall",
     "garage_cabinets", "garage_slatwall", "garage_vitrine", "living_media_wall",
+    # outdoor: the courtyard's festoon strings (its candles aren't electric: LIGHTS signal=None)
+    "courtyard_festoon",
 }
 
 

@@ -295,7 +295,7 @@
       RectAreaLightUniformsLib.init();
 
       // baked lighting replaces the stand-in fill lights; the sun stays real-time
-      const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer, level.rooms, params.get('box') !== '0', params.get('so') !== '0', params.get('sheen') !== '0');
+      const baked = params.get('bake') === '0' ? null : await loadBake(base, name, renderer, level.rooms, params.get('box') !== '0', params.get('so') !== '0', params.get('sheen') !== '0', params.get('loff') !== '0');
       if (baked) {
         scene.environment = baked.defaultEnv;
         renderer.toneMappingExposure = baked.bake.exposure;
@@ -457,6 +457,8 @@
           colliders.push(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)).applyMatrix4(obj.matrixWorld));
       }
       interact.snapAll();      // a later placement's `state` may have set a signal earlier props use
+      // lights off (viewer/baked.js): each room's baked light follows its lights_ signal and power
+      if (baked) { baked.bindSignals(signals, level); window.__lighting = baked; }
       // merge each room's static furniture, then draw only rooms near the player
       const moving = new Set();
       for (const it of interact.items) it.node.traverse((o) => moving.add(o));
@@ -630,6 +632,7 @@
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
         if (culler.update(camera.position, camera)) renderer.shadowMap.needsUpdate = true;
         baked?.setGlassSun(!culler.here || culler.here.name === 'courtyard');   // the sun's glint on glass only from outdoors
+        baked?.update(dt);                       // lights off: rooms fade with their light switch / power
         tablet.update(dt);                       // the camera feed (~5 fps, while that page is open)
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);

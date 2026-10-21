@@ -2,6 +2,10 @@
 
   /Applications/Blender.app/Contents/MacOS/Blender -b blender/levels/mansion.blend \
       --python blender/levels/bake.py -- mansion [samples] [--rooms a,b] [--outdoor-only]
+      [--state on|off|both]
+
+--state: on (default) bakes the rooms as lit; off bakes only their lights-off state (against
+the stored on state; no outdoor); both does on then off (the full bake: ~2x the time).
 
 For every room (shell meshes carry a "room" property and a "Lightmap" UV layer),
 writes (never saves the .blend):
@@ -11,6 +15,8 @@ writes (never saves the .blend):
                                                  point, sun hidden (the sun stays real-time),
                                                  sRGB of radiance / ENV_CLAMP; reflections only
                                                  (props' diffuse light comes from its SH)
+  assets/textures/T_<Level>_<Room>_LightmapOff.webp, _EnvOff.webp   the same with the room's
+                                                 own lights off (see "lights off" below)
   assets/models/<level>_outdoor.gltf             the grounds with their lighting baked into
                                                  vertex colours (bake_outdoor)
   assets/levels/<level>_bake.json                 what the engine needs to apply the above
@@ -49,11 +55,15 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 from lib import common, textures  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-# options: --rooms a,b,c (bake only these rooms; the others keep their current bake) and
-# --outdoor-only (only the grounds' vertex lighting, ~10 s); see CLAUDE.md "When to bake"
+# options: --rooms a,b,c (bake only these rooms; the others keep their current bake),
+# --outdoor-only (only the grounds' vertex lighting, ~10 s) and --state on|off|both (the
+# lighting state(s) to bake, default on: see "Lights off" below); see CLAUDE.md "When to bake"
 ONLY_ROOMS = set(args[args.index("--rooms") + 1].split(",")) if "--rooms" in args else None
 OUTDOOR_ONLY = "--outdoor-only" in args
-args = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] != "--rooms")]
+STATE = args[args.index("--state") + 1] if "--state" in args else "on"
+if STATE not in ("on", "off", "both"):
+    raise SystemExit(f"--state {STATE!r}: on, off or both")
+args = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] not in ("--rooms", "--state"))]
 LEVEL = args[0] if args else "mansion"
 SAMPLES = int(args[1]) if len(args) > 1 else 1024
 NAME = LEVEL.capitalize()
@@ -157,31 +167,6 @@ def room_scale(lin, mask):
     return float(np.percentile(lit, LM_PERCENTILE)) if lit.size else 1.0
 
 
-def save_lightmap(room, lin, scale, dither=True):
-    """sRGB 8-bit of lin / scale; over 1, a texel is scaled down as a whole (hue kept: a
-    per-channel clip turned clipped sun patches green). A light dither (half a level) hides
-    banding in dark gradients. Encoded with cwebp (lossy q95, sharp RGB->YUV, best method: the
-    q92 default made blocky patches on dark ceilings and bled colour across charts) when it's
-    installed, else Blender's WebP writer."""
-    x = lin / scale
-    peak = x.max(axis=2, keepdims=True)
-    x = np.where(peak > 1.0, x / np.maximum(peak, 1e-9), x)
-    srgb = textures._to_srgb(x)
-    if dither:
-        rng = np.random.default_rng(1)
-        srgb = srgb + (rng.random(srgb.shape[:2] + (1,)) - rng.random(srgb.shape[:2] + (1,))) * (0.5 / 255)
-    srgb = np.clip(srgb, 0, 1)
-    name = f"T_{NAME}_{room.capitalize()}_Lightmap"
-    cwebp = shutil.which("cwebp") or ("/opt/homebrew/bin/cwebp" if os.path.exists("/opt/homebrew/bin/cwebp") else None)
-    if cwebp:
-        tmp = os.path.join(PROJECT, "build", "lightmaps")
-        png = textures._save(name, srgb, fmt="PNG", folder=tmp)
-        out = os.path.join(textures.TEX_DIR, name + ".webp")
-        subprocess.run([cwebp, "-quiet", "-q", "95", "-sharp_yuv", "-m", "6", "-mt", png, "-o", out], check=True)
-        return out
-    return textures._save(name, srgb, fmt="WEBP", quality=95)
-
-
 def open_groups(plan):
     """Rooms joined without a wall (plan.OPEN), as connected groups: room -> set of rooms."""
     group = {r: {r} for r in plan.ROOMS}
@@ -248,10 +233,12 @@ def denoise(lin, mask=None):
     return np.maximum(out, 0)
 
 
-def render_environment(room, probe, width=512, hide=()):
+def render_environment(room, probe, width=512, hide=(), save=True, tag=""):
     """The room's panorama twice: everything visible for the SH (props need the lights' full
     energy), then with `hide` (glowing fixtures and the fixtures holding a light) invisible to
-    the camera for the reflection map (they flared as orbs and squares in glossy floors)."""
+    the camera for the reflection map (they flared as orbs and squares in glossy floors).
+    Returns (path or None, sh, rgb): rgb = the reflection map's radiance / ENV_CLAMP, rows
+    top-down; save=False leaves writing it to the caller."""
     cam_data = bpy.data.cameras.new(f"{NAME}_EnvProbe")
     cam_data.type = "PANO"
     try:
@@ -287,12 +274,12 @@ def render_environment(room, probe, width=512, hide=()):
         return px, w, hgt
 
     t = time.time()
-    full, w, hgt = render(os.path.join(PROJECT, "build", "env", f"T_{NAME}_{room.capitalize()}_EnvFull.hdr"), 128)
+    full, w, hgt = render(os.path.join(PROJECT, "build", "env", f"T_{NAME}_{room.capitalize()}_EnvFull{tag}.hdr"), 128)
     sh = sh9(full[:, :3].reshape(hgt, w, 3))       # unclamped, fixtures in: props need the lights' full energy
     raw_max = full[:, :3].max()
     for o in hide:
         o.visible_camera = False
-    px, w, hgt = render(os.path.join(PROJECT, "build", "env", f"T_{NAME}_{room.capitalize()}_Env.hdr"), 256)
+    px, w, hgt = render(os.path.join(PROJECT, "build", "env", f"T_{NAME}_{room.capitalize()}_Env{tag}.hdr"), 256)
     for o in hide:
         o.visible_camera = True
     print(f"environment render {room}: {time.time() - t:.0f}s ({len(hide)} fixtures hidden from the reflections)")
@@ -302,11 +289,11 @@ def render_environment(room, probe, width=512, hide=()):
     # 8-bit sRGB of radiance / ENV_CLAMP: a fraction of the .hdr's size, and it only feeds
     # blurred reflections (the engine scales it back up before prefiltering)
     rgb = px[:, :3].reshape(hgt, w, 3)[::-1] / ENV_CLAMP
-    out = textures._save(f"T_{NAME}_{room.capitalize()}_Env", textures._to_srgb(rgb), fmt="WEBP", quality=90)
+    out = textures._save(f"T_{NAME}_{room.capitalize()}_Env", textures._to_srgb(rgb), fmt="WEBP", quality=90) if save else None
     print(f"environment max {raw_max:.2f} -> {px[:, :3].max():.2f}, mean {px[:, :3].mean():.3f}")
     bpy.data.objects.remove(cam, do_unlink=True)
     bpy.data.cameras.remove(cam_data)
-    return out, sh
+    return out, sh, rgb
 
 
 def emits(mat):
@@ -451,7 +438,259 @@ def bake_outdoor(samples=256):
     return scales
 
 
+# ------------------------------------------------------------------ lights off
+# A second lighting state per room: the room's own lights off (its LIGHTS, its ceiling strips,
+# its fixtures' glow); the sun, the sky and the neighbours' lights still on. Written next to the
+# on state as T_<Level>_<Room>_LightmapOff.webp (same atlas and encoding: lin / the room's
+# scale) and T_<Level>_<Room>_EnvOff.webp, plus the off SH and a tint in the bake JSON's
+# rooms[r].off. The engine (viewer/baked.js) fades each room between the two from its light
+# signal (lights_<room>, or the group's, e.g. lights_galleries) and `power`. It packs the off
+# lightmap into the on lightmap's alpha as a luminance ratio (no second GPU texture: a ratio in
+# the WebP's own alpha cost 4x the download, lossless alpha of a noisy map), and the light that's
+# left keeps the room's tint (sky / sun bounce, bluer or redder than the lamps):
+#   off = on x ratio x mix(tint, 1, ratio)      (the bake logs how close that comes)
+LUM = np.array([0.2126, 0.7152, 0.0722], np.float32)
+OFF_QUALITY = 90        # the off maps are dim: q90 is ~60% of q95's size with no visible difference
+
+
+def to_linear(c):
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def lightmap_srgb(lin, scale, dither=True):
+    """sRGB of lin / scale, over 1 scaled down as a whole (hue kept: a per-channel clip turned
+    clipped sun patches green), lightly dithered (half a level: hides banding in dark gradients)."""
+    x = lin / scale
+    peak = x.max(axis=2, keepdims=True)
+    x = np.where(peak > 1.0, x / np.maximum(peak, 1e-9), x)
+    srgb = textures._to_srgb(x)
+    if dither:
+        rng = np.random.default_rng(1)
+        srgb = srgb + (rng.random(srgb.shape[:2] + (1,)) - rng.random(srgb.shape[:2] + (1,))) * (0.5 / 255)
+    return np.clip(srgb, 0, 1)
+
+
+def write_png(path, img8):
+    """8-bit RGB / RGBA PNG (rows top-down), written directly (no colour management)."""
+    import struct
+    import zlib
+    h, w, c = img8.shape
+    raw = b"".join(b"\x00" + img8[y].tobytes() for y in range(h))
+
+    def chunk(t, d):
+        return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xFFFFFFFF)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6 if c == 4 else 2, 0, 0, 0))
+                + chunk(b"IDAT", zlib.compress(raw, 6)) + chunk(b"IEND", b""))
+
+
+def write_webp(name, srgb, quality=95):
+    """srgb (h, w, 3) in 0..1 -> assets/textures/<name>.webp with cwebp (lossy, sharp RGB->YUV,
+    best method: the q92 default made blocky patches on dark ceilings and bled colour across
+    charts), else Blender's writer."""
+    cwebp = shutil.which("cwebp") or ("/opt/homebrew/bin/cwebp" if os.path.exists("/opt/homebrew/bin/cwebp") else None)
+    if cwebp is None:
+        return textures._save(name, srgb, fmt="WEBP", quality=quality)
+    png = os.path.join(PROJECT, "build", "lightmaps", name + ".png")
+    write_png(png, np.round(np.clip(srgb, 0, 1) * 255).astype(np.uint8))
+    out = os.path.join(textures.TEX_DIR, name + ".webp")
+    subprocess.run([cwebp, "-quiet", "-q", str(quality), "-sharp_yuv", "-m", "6", "-mt", png, "-o", out], check=True)
+    return out
+
+
+def decode(path):
+    """A stored 8-bit texture's values (sRGB-encoded, 0..1, rows top-down, RGB)."""
+    img = bpy.data.images.load(path)
+    w, h = img.size
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(h, w, -1)[::-1, :, :3]
+    bpy.data.images.remove(img)
+    return px
+
+
+def off_ratio(on, off, valid):
+    """on, off: linear (h, w, 3) in the same units; valid: texels that count. Returns the
+    luminance ratio (h, w) in 0..1, the tint (lum 1) of the light that's left, and the mean
+    relative error of the ratio-only and the ratio + tint reconstruction (for the log)."""
+    lon, loff = on @ LUM, off @ LUM
+    r = np.where(lon > 1e-5, np.clip(loff / np.maximum(lon, 1e-9), 0, 1), 1.0).astype(np.float32)
+    v = valid & (lon > 1e-4)
+    est = on * r[..., None]
+    w = v & (r < 0.6)
+    tint = np.ones(3, np.float32)
+    if w.sum() > 16:
+        k = (1 - r[w])[:, None]
+        tint = (off[w] * k).sum(0) / np.maximum((est[w] * k).sum(0), 1e-9)
+        tint = np.clip(tint / max(float(tint @ LUM), 1e-6), 0.3, 3.0)
+    est2 = est * (tint * (1 - r[..., None]) + r[..., None])
+    scale = max(float(off[v].mean()), 1e-9) if v.any() else 1.0
+    err = [float(np.abs(e[v] - off[v]).mean() / scale) if v.any() else 0.0 for e in (est, est2)]
+    return r, tint, err
+
+
+def light_signals(level):
+    """room -> the signal its lights follow: mansion.json rooms[r].lights (mansion.py writes it;
+    "" = none), else the lights signal most of the room's fixtures were wired to
+    (ix_common.wire), else lights_<room>."""
+    counts = {}
+    for p in level["props"]:
+        s = p.get("signal")
+        s = s.get("lights") if isinstance(s, dict) else (s if isinstance(s, str) and s.startswith("lights_") else None)
+        if s:
+            c = counts.setdefault(p["room"], {})
+            c[s] = c.get(s, 0) + 1
+    out = {}
+    for r, info in level["rooms"].items():
+        if "lights" in info:
+            out[r] = info["lights"]
+        elif r in counts:
+            out[r] = max(counts[r], key=counts[r].get)
+        else:
+            out[r] = f"lights_{r}"
+    return out
+
+
+def room_at(level, pt):
+    """The (smallest) room whose box holds the Blender point pt."""
+    gx, gy, gz = pt[0], pt[2], -pt[1]
+    best = None
+    for r, info in level["rooms"].items():
+        x0, z0, x1, z1 = info["rect"]
+        if x0 - 0.05 <= gx <= x1 + 0.05 and z0 - 0.05 <= gz <= z1 + 0.05 and \
+                info["floor"] - 0.05 <= gy <= info["floor"] + info["height"] + 0.3:
+            a = (x1 - x0) * (z1 - z0)
+            if best is None or a < best[0]:
+                best = (a, r)
+    return best[1] if best else None
+
+
+def react_signals(ob):
+    """The signals an object's `react` custom property (one or a list) follows."""
+    r = ob.get("react")
+    if r is None:
+        return set()
+    items = [r] if hasattr(r, "keys") else list(r)
+    return {it.get("signal") for it in items if hasattr(it, "keys") and it.get("signal")}
+
+
+class LightsOff:
+    """Context: everything that follows light signal `sig` off for the bake: its light
+    objects (custom property "signal" from mansion.py, else by the room they're in), the
+    ceiling strips of its rooms (hidden) and the glowing parts of the fixtures wired to it
+    (react on "lights"; emission 0 through object-level material copies)."""
+    _dark = {}
+
+    def __init__(self, sig, level, room_sig):
+        self.sig, self.level, self.room_sig = sig, level, room_sig
+
+    def light_signal(self, L):
+        if "signal" in L.keys():
+            return L["signal"]
+        room = L.get("room") or room_at(self.level, L.matrix_world.translation)
+        return self.room_sig.get(room)
+
+    @classmethod
+    def dark(cls, m):
+        if m.name not in cls._dark:
+            d = m.copy()
+            d.name = m.name + "_LightsOff"
+            for n in d.node_tree.nodes if d.node_tree is not None else []:
+                if n.type == "BSDF_PRINCIPLED":
+                    n.inputs["Emission Strength"].default_value = 0
+                elif n.type == "EMISSION":
+                    n.inputs["Strength"].default_value = 0
+            cls._dark[m.name] = d
+        return cls._dark[m.name]
+
+    def prop_roots(self):
+        """(root, lights signal) of every placed prop: the root's "lights" property (mansion.py),
+        else matched by position to mansion.json's props."""
+        want = []
+        for p in self.level["props"]:
+            s = p.get("signal")
+            s = s.get("lights") if isinstance(s, dict) else None
+            if s and not p.get("attach"):
+                want.append((p["position"], s))
+        skip = {f"{NAME}_Shell", f"{NAME}_Outdoor", f"{NAME}_PreviewLights"}
+        out = []
+        for o in bpy.data.objects:
+            if o.parent is not None or o.type not in ("EMPTY", "MESH") or any(c.name in skip for c in o.users_collection):
+                continue
+            if "lights" in o.keys():
+                if o["lights"]:
+                    out.append((o, o["lights"]))
+                continue
+            x, y, z = o.location
+            for (px, py, pz), s in want:
+                if abs(px - x) < 0.003 and abs(py - z) < 0.003 and abs(pz + y) < 0.003:
+                    out.append((o, s))
+                    break
+        return out
+
+    def __enter__(self):
+        sig = self.sig
+        lights = [o for o in bpy.data.collections[f"{NAME}_PreviewLights"].objects
+                  if o.type == "LIGHT" and o.data.type != "SUN"]
+        self.lights = [L for L in lights if self.light_signal(L) == sig and not L.hide_render]
+        for L in self.lights:
+            L.hide_render = True
+        self.strips = [o for o in bpy.data.collections[f"{NAME}_Shell"].all_objects
+                       if o.type == "MESH" and self.room_sig.get(o.get("room")) == sig and not o.hide_render
+                       and any(m is not None and m.name.startswith("M_LightStrip") for m in o.data.materials)]
+        for o in self.strips:
+            o.hide_render = True
+        self.slots, roots = [], self.prop_roots()
+        for root, s in roots:
+            if s != sig:
+                continue
+            for o in [root] + list(root.children_recursive):
+                if o.type != "MESH" or "lights" not in react_signals(o):
+                    continue
+                for slot in o.material_slots:
+                    m = slot.material
+                    if m is None:
+                        continue
+                    self.slots.append((slot, slot.link))
+                    slot.link = "OBJECT"
+                    slot.material = self.dark(m)
+        print(f"lights off {sig}: {len(self.lights)} lights, {len(self.strips)} strip meshes, "
+              f"{len(self.slots)} glowing material slots ({sum(1 for _, s in roots if s == sig)} fixtures)")
+        return self
+
+    def __exit__(self, *exc):
+        for L in self.lights:
+            L.hide_render = False
+        for o in self.strips:
+            o.hide_render = False
+        for slot, link in self.slots:
+            slot.link = link
+        return False
+
+
+def write_off(room, lm_srgb, mask, off):
+    """Write a room's lights-off lightmap + panorama (off: lightmap = off lightmap / the room's
+    scale, env = off panorama / ENV_CLAMP, both linear; sh, signal) next to its on state
+    (lm_srgb: the on lightmap as stored). Returns the bake JSON's rooms[room].off entry."""
+    R = room.capitalize()
+    lm_off = lightmap_srgb(off["lightmap"], 1.0)
+    # the engine rebuilds off as on x ratio x mix(tint, 1, ratio): fit the tint, log the error
+    r, tint, err = off_ratio(to_linear(lm_srgb), to_linear(lm_off), mask)
+    print(f"lights off {room}: mean ratio {r[mask].mean():.3f}, tint {np.round(tint, 3).tolist()}, "
+          f"rebuild error {err[0]:.3f} (ratio only) / {err[1]:.3f} (with tint)")
+    write_webp(f"T_{NAME}_{R}_LightmapOff", lm_off, quality=OFF_QUALITY)
+    write_webp(f"T_{NAME}_{R}_EnvOff", textures._to_srgb(off["env"]), quality=OFF_QUALITY)
+    return {"signal": off["signal"],
+            "lightmap": f"textures/T_{NAME}_{R}_LightmapOff.webp",
+            "environment": f"textures/T_{NAME}_{R}_EnvOff.webp",
+            "sh": off["sh"],              # the props' diffuse light with the room's lights off
+            "tint": [round(float(t), 4) for t in tint],
+            "ratio": round(float(r[mask].mean()), 4), "samples": SAMPLES, "date": time.strftime("%Y-%m-%d %H:%M")}
+
+
 if __name__ == "__main__":
+    sys.path.insert(0, os.path.join(PROJECT, "blender", "tools"))
+    import slots  # noqa: E402
+    slots.acquire("level", 2)            # a bake loads the whole house and renders on the GPU, like a house build
     scene.render.engine = "CYCLES"
     print("device:", use_gpu())
     sys.path.insert(0, HERE)
@@ -462,55 +701,99 @@ if __name__ == "__main__":
     shell = [o for o in bpy.data.collections[f"{NAME}_Shell"].all_objects
              if o.type == "MESH" and "Lightmap" in o.data.uv_layers]
     out = os.path.join(PROJECT, "assets", "levels", f"{LEVEL}_bake.json")
-    partial = ONLY_ROOMS is not None or OUTDOOR_ONLY
-    previous = json.load(open(out)) if partial and os.path.exists(out) else {}
+    partial = ONLY_ROOMS is not None or OUTDOOR_ONLY or STATE == "off"
+    stored = json.load(open(out)) if os.path.exists(out) else {}
+    previous = stored if partial else {}
     rooms = dict(previous.get("rooms", {})) if partial else {}
     hide = setup_fixtures() if not OUTDOOR_ONLY else []
-    baked = {}
-    for room, info in level["rooms"].items():
-        if OUTDOOR_ONLY or (ONLY_ROOMS is not None and room not in ONLY_ROOMS):
-            continue
-        objs = [o for o in shell if o.get("room") == room]
-        if not objs:
-            continue
-        names, lin, mask = bake_lightmap(room, objs, info.get("lightmap") or p["lightmap_res"])
-        gx, gy, gz = info["probe"]
-        probe = (gx, -gz, gy)                     # glTF -> Blender
-        # the environment only lights props and blurry reflections: small rooms get a small one
-        x0, z0, x1, z1 = info["rect"]
-        big = (x1 - x0) * (z1 - z0) > 150 or info.get("height", 0) > 5
-        _, sh = render_environment(room, probe, width=512 if big else 256, hide=hide)
-        baked[room] = (names, lin, mask, sh)
-    # one scale per open group (rooms joined without a wall): the group's brightest room's
-    # scale (rooms of the group not baked now keep theirs, so the new ones match them)
-    import plan  # noqa: E402
-    groups = open_groups(plan)
-    own = {room: room_scale(lin, mask) for room, (_, lin, mask, _) in baked.items()}
-    for room, (names, lin, mask, sh) in baked.items():
-        scale = max([own[r] for r in groups.get(room, {room}) if r in own] +
-                    [rooms[r]["lightmap"]["intensity"] / math.pi for r in groups.get(room, {room})
-                     if r not in own and r in rooms])
-        if scale != own[room]:
-            print(f"lightmap {room}: scale {own[room]:.3f} -> {scale:.3f} (shared with {sorted(groups[room] - {room})})")
-        save_lightmap(room, lin, scale)
-        R = room.capitalize()
-        rooms[room] = {
-            "lightmap": {
-                "file": f"textures/T_{NAME}_{R}_Lightmap.webp",
-                "uv": 1,
-                # three.js lightMap is irradiance; Cycles' diffuse bake is irradiance / pi
-                "intensity": round(math.pi * scale, 4),
-                "objects": names,
-            },
-            "environment": {"file": f"textures/T_{NAME}_{R}_Env.webp", "scale": ENV_CLAMP, "position": info["probe"]},
-            "sh": sh,            # diffuse light for the room's props (three.js SH order, glTF axes)
-        }
-    outdoor = bake_outdoor() if (ONLY_ROOMS is None or OUTDOOR_ONLY) else previous.get("outdoor")
+    room_sig = light_signals(level)
+
+    def todo():
+        for room, info in level["rooms"].items():
+            if OUTDOOR_ONLY or (ONLY_ROOMS is not None and room not in ONLY_ROOMS):
+                continue
+            objs = [o for o in shell if o.get("room") == room]
+            if objs:
+                gx, gy, gz = info["probe"]
+                x0, z0, x1, z1 = info["rect"]
+                # the environment only lights props and blurry reflections: small rooms get a small one
+                big = (x1 - x0) * (z1 - z0) > 150 or info.get("height", 0) > 5
+                yield room, info, objs, (gx, -gz, gy), 512 if big else 256      # (probe: glTF -> Blender)
+
+    baked, written = {}, {}
+    if STATE in ("on", "both"):
+        for room, info, objs, probe, env_w in todo():
+            names, lin, mask = bake_lightmap(room, objs, info.get("lightmap") or p["lightmap_res"])
+            _, sh, env_rgb = render_environment(room, probe, width=env_w, hide=hide, save=False)
+            baked[room] = (names, lin, mask, sh, env_rgb)
+        # one scale per open group (rooms joined without a wall): the group's brightest room's
+        # scale (rooms of the group not baked now keep theirs, so the new ones match them)
+        import plan  # noqa: E402
+        groups = open_groups(plan)
+        own = {room: room_scale(b[1], b[2]) for room, b in baked.items()}
+        for room, (names, lin, mask, sh, env_rgb) in baked.items():
+            scale = max([own[r] for r in groups.get(room, {room}) if r in own] +
+                        [rooms[r]["lightmap"]["intensity"] / math.pi for r in groups.get(room, {room})
+                         if r not in own and r in rooms])
+            if scale != own[room]:
+                print(f"lightmap {room}: scale {own[room]:.3f} -> {scale:.3f} (shared with {sorted(groups[room] - {room})})")
+            R = room.capitalize()
+            lm_srgb = lightmap_srgb(lin, scale)
+            write_webp(f"T_{NAME}_{R}_Lightmap", lm_srgb)
+            write_webp(f"T_{NAME}_{R}_Env", textures._to_srgb(env_rgb), quality=90)
+            written[room] = (lm_srgb, mask, scale)
+            rooms[room] = {
+                "lightmap": {
+                    "file": f"textures/T_{NAME}_{R}_Lightmap.webp",
+                    "uv": 1,
+                    # three.js lightMap is irradiance; Cycles' diffuse bake is irradiance / pi
+                    "intensity": round(math.pi * scale, 4),
+                    "objects": names,
+                },
+                "environment": {"file": f"textures/T_{NAME}_{R}_Env.webp", "scale": ENV_CLAMP, "position": info["probe"]},
+                "sh": sh,            # diffuse light for the room's props (three.js SH order, glTF axes)
+            }
+            # an on-only re-bake keeps the room's lights-off state (stale if the room's light changed)
+            old_off = stored.get("rooms", {}).get(room, {}).get("off")
+            if STATE == "on" and old_off:
+                rooms[room]["off"] = old_off
+                print(f"WARN {room}: kept the lights-off state of {old_off.get('date')}; re-bake it "
+                      f"(--state off --rooms {room}) if this room's light changed")
+    if STATE in ("off", "both"):
+        # one pass per light signal: its lights, strips and glows off, its rooms baked
+        by_sig = {}
+        for item in todo():
+            if room_sig.get(item[0]):
+                by_sig.setdefault(room_sig[item[0]], []).append(item)
+        for sig, items in by_sig.items():
+            with LightsOff(sig, level, room_sig):
+                for room, info, objs, probe, env_w in items:
+                    R = room.capitalize()
+                    if room in written:
+                        lm_srgb, mask, scale = written[room]
+                    elif room in rooms:
+                        # off only: against the stored on state, as the engine shows it
+                        scale = rooms[room]["lightmap"]["intensity"] / math.pi
+                        lm_srgb = decode(os.path.join(textures.TEX_DIR, f"T_{NAME}_{R}_Lightmap.webp"))
+                        mask = None
+                    else:
+                        print(f"WARN {room}: no on state to go with the off one (bake it with --state both)")
+                        continue
+                    names, lin, mask_off = bake_lightmap(room, objs, info.get("lightmap") or p["lightmap_res"])
+                    mask = mask_off if mask is None else mask
+                    _, sh_off, env_off = render_environment(room, probe, width=env_w, hide=hide, save=False, tag="_Off")
+                    rooms[room]["off"] = write_off(room, lm_srgb, mask, dict(lightmap=lin / scale, env=env_off,
+                                                                             sh=sh_off, signal=sig))
+    outdoor = bake_outdoor() if (ONLY_ROOMS is None or OUTDOOR_ONLY) and STATE != "off" else previous.get("outdoor")
     bake = {"rooms": rooms, "exposure": p.get("exposure", 1.0), "samples": SAMPLES if not partial else previous.get("samples", SAMPLES)}
     if partial:
-        bake["partial"] = {"rooms": sorted(ONLY_ROOMS or []), "outdoor": OUTDOOR_ONLY, "samples": SAMPLES}
+        bake["partial"] = {"rooms": sorted(ONLY_ROOMS or []), "outdoor": OUTDOOR_ONLY, "samples": SAMPLES, "state": STATE}
     if outdoor:
         bake["outdoor"] = outdoor      # vertex-colour scale per kind (flat: colour x light, textured: light)
     with open(out, "w") as f:
         json.dump(bake, f, indent=2)
     print("wrote", out, {r: v["lightmap"]["intensity"] for r, v in rooms.items()})
+    print("lights off (mean ratio):", {r: v["off"]["ratio"] for r, v in rooms.items() if v.get("off")})
+    missing = sorted(r for r in level["rooms"] if room_sig.get(r) and r in rooms and not rooms[r].get("off"))
+    if missing:
+        print("no lights-off state yet:", ",".join(missing))
