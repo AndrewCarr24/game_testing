@@ -233,6 +233,15 @@ export class Flashlight {
   }
   refill() { this.battery = 1; }
 
+  // where the beam is (house.js: the light cue the Grimble notices): world position and
+  // direction of the lit beam, its range (m) and half-angle (degrees); on = false when it's dark
+  beam() {
+    const position = new THREE.Vector3(), direction = new THREE.Vector3();
+    this.camera.getWorldPosition(position);
+    this.camera.getWorldDirection(direction);
+    return { on: this.on && this.battery > 0, position, direction, range: this.o.distance, cone: this.o.cone / 2 };
+  }
+
   update(dt) {
     if (!this.spot) return;
     if (this.on) {

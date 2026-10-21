@@ -95,3 +95,27 @@ Existing types keep working unchanged. New:
   come from mansion.json `"cameras": [{name, position, lookAt, fov?}]` (glTF coords) if present,
   else defaults in the great room, entry, courtyard and kitchen. Optional `"signals": {...}`
   in mansion.json sets initial values.
+
+## Power and darkness as gameplay (viewer/house.js)
+- The house starts powered with the main fuse in (the garage breaker is placed with `state: true`:
+  `power` and `fuse_garage` on). The Grimble's break-in flickers the lights for ~1.3 s, then
+  `power` and `fuse_garage` go false (the isolator drops to off, its carrier is empty). The spare
+  fuse is upstairs in the guest room's nightstand drawer; fuse in, then the isolator, = power back.
+  While the Grimble moves through the house the isolator trips again now and then (150-330 s
+  apart, fuse intact). The player can switch it off on purpose. `?trips=0|N`, `?breaktrip=0`.
+- Motors: a moving react (slide / rotate / scale: blinds, the garage door) needs `power` to move;
+  with it off it stops where it is and catches up when power is back. `"motor": false` (or an
+  explicit `"power"`) in the react opts out. A switch whose signal drives electric or motorised
+  things says "· no power" in its prompt (and "No power" when pressed) while the power is off.
+- Darkness: `window.__house.lightAt(position)` = how lit a spot is (0..1): its room is lit while
+  `power` and `lights_<room>` are on, else only its daylight share (house.js DAYLIGHT; x0.3 with
+  `blinds_<room>` down; windowless rooms ~0); outdoors 1. Until the lights-off bake exists a
+  fallback dims each room's baked light (lightmap, SH probe, reflections) to that level; it
+  stands down when the bake provides signal-driven off states (`baked.signalDriven`,
+  `baked.setLights`, or bake-JSON rooms with `off` / `lightmapOff` / `dark`), or with `?dark=0`.
+- Flashlight: F toggles it (no need to arm it); signal `flashlight` mirrors whether it's lit;
+  `window.__flashlight.beam()` -> {on, position, direction, range, cone (half-angle, deg)}.
+  The light cue: while it's on in a dark spot (lightAt < 0.6), and the Grimble is inside, in the
+  beam (within range + 6 m) or within 10 m, with no shell wall between, once a second:
+  `window.__noise.emit({position: eye, loudness: 1, source: 'light'})`.
+- Sound hooks (optional): `window.__sfx.play('power_flicker' | 'power_out' | 'power_on' | 'fuse_blow', position)`.

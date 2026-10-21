@@ -115,5 +115,8 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-6.1, -2.47, 1.1), 90, {'signal': 'lights_guest_room', 'state': True}),
+    # power as gameplay (viewer/house.js): the spare main fuse for the garage breaker, in the
+    # first nightstand's drawer (drawer-local: on its floor, middle; a trip across the dark house)
+    ('ix_fuse', (0.06, 0.17, -0.0575), 20, {'attach': ('guest_nightstand', 'GuestNightstand_Drawer')}),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "guest_room")

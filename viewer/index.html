@@ -111,6 +111,7 @@
     import { createFx, governor } from './fx.js';
     import { Grimble, prepareGrimble } from './grimble.js';
     import { GrimbleHunt, shatter } from './grimble_hunt.js';
+    import { House } from './house.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -476,6 +477,10 @@
       const batteryEl = document.getElementById('battery');
       const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet') });
       window.__tablet = tablet;
+      // --- power and darkness as gameplay (viewer/house.js): the break-in trips the power,
+      // the dark rooms, the flashlight's light cue to the Grimble
+      const house = new House({ signals, noise, level, baked, scene, camera, flashlight, interact, toast: (m) => toast(m), params });
+      window.__house = house;
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
@@ -489,6 +494,8 @@
         if (!controls.isLocked || e.repeat) return;
         if (player.isDown) return;                       // knocked down: nothing until they're up
         if (tablet.open) { tablet.key(e.code); return; } // the tablet takes the keys while it's open
+        // (house.js) F: the flashlight on / off without arming it
+        if (e.code === 'KeyF' && inventory.has('flashlight') && !inventory.open) { toggleFlashlight(); return; }
         if (e.code === 'KeyI') { inventory.toggle(); if (inventory.open) frozenLook.copy(camera.quaternion); return; }
         // with the inventory open, the up/down arrows step through it (movement is paused then)
         if (inventory.open && (e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
@@ -567,6 +574,7 @@
         const dt = Math.min(clock.getDelta(), 0.05);
         const moved = interact.update(dt, camera.position);
         flashlight.update(dt);
+        house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
         grimble?.update(dt, camera.position);
         if (shatterFx && !shatterFx(dt)) shatterFx = null;
@@ -595,7 +603,8 @@
         if (focusPrompt && !((focus.locked || focus.def.type === 'use') && armedHint)) parts.push(`E · ${focusPrompt}`);
         if (armedHint) parts.push(`Enter · ${armedHint}`);
         if (on && inventory.armed) parts.push('Delete · put away');
-        hint.textContent = parts.length ? parts.join('   |   ') : walkHint;
+        hint.textContent = parts.length ? parts.join('   |   ')
+          : inventory.has('flashlight') ? walkHint.replace(' · I inventory', ' · F flashlight · I inventory') : walkHint;   // (house.js)
         // the flashlight's battery, while the player has one
         batteryEl.classList.toggle('show', inventory.has('flashlight'));
         if (inventory.has('flashlight')) {
