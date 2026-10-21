@@ -54,8 +54,9 @@ import plan  # noqa: E402
 import grounds  # noqa: E402
 import sunlight  # noqa: E402
 import visibility  # noqa: E402
+import caches  # noqa: E402  (locks, keys and caches: blender/levels/caches.py)
 
-for m in (common, textures, materials, outdoor, vertex_ao, house, plan, grounds, sunlight, visibility):
+for m in (common, textures, materials, outdoor, vertex_ao, house, plan, grounds, sunlight, visibility, caches):
     importlib.reload(m)
 
 NAME = "Mansion"
@@ -137,6 +138,11 @@ def per_room(mod, attr, room, default):
     if isinstance(v, dict):
         return v.get(room, default)
     return v
+
+
+def room_placements(mods, room):
+    """A room's PLACEMENTS plus the locks, keys and caches of caches.py."""
+    return caches.apply(room, per_room(mods[room], "PLACEMENTS", room, []) or [])
 
 
 def finishes_for(room, mod, base):
@@ -492,7 +498,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     for room in plan.ROOMS:
         if rooms_only and room not in rooms_only:
             continue
-        for i, (asset, loc, rot, *rest) in enumerate(per_room(mods[room], "PLACEMENTS", room, []) or []):
+        for i, (asset, loc, rot, *rest) in enumerate(room_placements(mods, room)):
             mode = baked_prop(asset)
             if mode and "attach" not in (rest[0] if rest else {}) and bake_into_shell(h, room, asset, loc, rot, mode):
                 in_shell.add((room, i))
@@ -515,7 +521,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     for room in plan.ROOMS:
         if rooms_only and room not in rooms_only:
             continue
-        for i, (asset, loc, rot, *rest) in enumerate(per_room(mods[room], "PLACEMENTS", room, []) or []):
+        for i, (asset, loc, rot, *rest) in enumerate(room_placements(mods, room)):
             if (room, i) in in_shell:
                 continue
             opts = rest[0] if rest else {}

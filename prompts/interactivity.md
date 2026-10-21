@@ -73,6 +73,21 @@ Existing types keep working unchanged. New:
   attacker's world position (Vector3 or [x, y, z]); `{dir}` gives the direction toward it instead.
   `player.isDown` while on the floor.
 
+## Locks, keys and caches (blender/levels/caches.py)
+- A placement's `lock` (an item id) locks only what opens in it (`slide` / `rotate`), never its
+  switches or `use` points. Locked things say what they need, named from the key's pickup
+  anywhere in the level: "Locked · needs the office key"; carrying it, "Locked · arm the office
+  key (I, then Enter)"; armed, Enter unlocks ("Cabinet unlocked") and locks again once shut.
+  Messages call the thing by `kind` if the interact has one, else by its prompt's noun ("Open
+  safe" -> safe), else door / drawer.
+- Containers with a hinged door: a static node inside (`<Asset>_Inside`, e.g. a safe's shelf)
+  carries `inside: "<door node name>"`; a pickup attached to it can only be taken while that
+  door is open, and doesn't swing with it (`attach: (asset, "<Asset>_Inside")`). Drawers need
+  nothing: what's attached to the drawer rides in it.
+- Keys are pickups `key_<id>` (one thin module per key: `ix_key_office`, `ix_key_safe`, ...).
+  `caches.py` holds the whole design (every key, its lock, what's inside); `mansion.py` merges it
+  into the rooms' PLACEMENTS. Locked doors take `lock=` in `plan.CUTS`.
+
 ## Engine as built (viewer/signals.js, interactables.js, items.js, tablet.js, player.js)
 - `window.__signals` {get, set, toggle, on(name | '*', fn) -> off, define, names};
   `window.__noise` {on(fn) -> off, emit({position, loudness, source?, item?})}.
