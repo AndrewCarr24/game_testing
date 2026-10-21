@@ -116,9 +116,9 @@ def wire(placements, room, fixtures=None, state=None):
 
 # ------------------------------------------------------------------ wall switch
 
-def plate_bmesh(w, h, t, corner):
+def plate_bmesh(w, h, t, corner, segments=3):
     """A flat plate, back at y = 0, front face at y = -t (rounded in plan, so the z extent is h)."""
-    bm = common.rounded_slab_bmesh(w, h, t, corner, segments=3)   # x by y by z
+    bm = common.rounded_slab_bmesh(w, h, t, corner, segments=segments)   # x by y by z
     # rounded_slab is w (x) by h (y) by t (z, from 0 up): turn it to stand on the wall
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0),
                      matrix=Matrix.Rotation(math.radians(90), 3, "X"))
@@ -126,47 +126,140 @@ def plate_bmesh(w, h, t, corner):
     return bm
 
 
+def _marks(bm, marks, y):
+    """Raised marks on a face at depth y: (x, z, w, h[, angle]) thin boxes; angle (degrees)
+    turns a mark about the face normal (two turned bars make a chevron)."""
+    for g in marks:
+        gx, gz, gw, gh = g[:4]
+        m = Matrix.Translation((gx, y, gz))
+        if len(g) > 4 and g[4]:
+            m = m @ Matrix.Rotation(math.radians(g[4]), 4, "Y")
+        bmesh.ops.create_cube(bm, size=1.0, matrix=m @ Matrix.Diagonal((gw, 0.0008, gh, 1.0)))
+    return bm
+
+
+def _disc(r, depth, y, segments=24):
+    """A cylinder facing -Y (its axis along y), centred at depth y."""
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=segments, radius1=r, radius2=r, depth=depth,
+                          matrix=Matrix.Translation((0, y, 0)) @ Matrix.Rotation(math.radians(90), 4, "X"))
+    return bm
+
+
+def chevron(x, z, up=True, size=0.011, bar=0.0018, spread=40):
+    """Two glyph bars making a ^ (up) or a v (down), centred on (x, z)."""
+    c, s = math.cos(math.radians(spread)), math.sin(math.radians(spread))
+    a = 1 if up else -1
+    # the bars meet at the tip, half the chevron's height above (below) the centre, so each
+    # bar's own centre is level with it
+    return [(x - c * size / 2, z, size, bar, -a * spread),
+            (x + c * size / 2, z, size, bar, a * spread)]
+
+
+# a control's kind reads from across the room: plate shape and finish, the moving part, its light
+PLATES = {
+    "graphite": lambda: common.pbr_material("M_Switch_Plate_Graphite", (0.035, 0.034, 0.033), roughness=0.42,
+                                            metallic=0.6),
+    "bronze": lambda: materials.bronze(),
+}
+
+
 def switch(n, col, root, p):
-    """A single-gang rocker switch on a wall plate. Origin: the plate's back centre (on the
-    wall surface); the front faces -Y. The rocker is its own empty (`<n>_Rocker`) carrying
-    the `switch` interact; a pin-prick locator LED under it is the switch's indicator."""
-    plate_m = materials.bronze() if p.get("plate") == "bronze" else common.pbr_material(
-        "M_Switch_Plate_Graphite", (0.035, 0.034, 0.033), roughness=0.42, metallic=0.6)
-    rocker_m = common.pbr_material("M_Switch_Rocker", (0.012, 0.012, 0.013), roughness=0.3, coat=0.4)
-    led_m = materials.emissive("M_Switch_Locator", (1.0, 0.62, 0.28), 2.0)
+    """A single-gang wall control. Origin: the plate's back centre (on the wall surface); the
+    front faces -Y. The moving part is its own empty (`<n>_Rocker`) carrying the `switch`
+    interact; a locator LED (`<n>_Locator`) is the switch's indicator.
+
+    p: plate_size (w, h, t), plate ("graphite" | "bronze"), plate_shape ("rect" | "round"),
+    part ("paddle": a rocker that tips | "knob": turns a quarter | "button": pushes in),
+    rocker_size (the moving part's w, h, t; a knob's / button's diameter is w),
+    glyphs (raised marks on the paddle / button), paddle ((name, colour) of the moving part's
+    material), plate_marks (marks printed on the plate: their own static mesh, material
+    marks = (name, colour)), led ((name, colour, strength)), led_at ((x, z) on the plate,
+    static; default: under the paddle, moving with it), ring (radius of a lit ring round a
+    button, the indicator), travel (overrides the part's)."""
+    plate_m = PLATES[p.get("plate", "graphite")]()
+    pname, pcol = p.get("paddle", ("M_Switch_Rocker", (0.012, 0.012, 0.013)))
+    rocker_m = common.pbr_material(pname, pcol, roughness=0.3, coat=0.4)
+    lname, lcol, lstr = p.get("led", ("M_Switch_Locator", (1.0, 0.62, 0.28), 2.0))
+    led_m = materials.emissive(lname, lcol, lstr)
+    part = p.get("part", "paddle")
 
     pw, ph, pt = p["plate_size"]
-    plate = common.mesh_object(f"{n}_Plate", plate_bmesh(pw, ph, pt, 0.004), col, plate_m, root)
+    round_ = p.get("plate_shape") == "round"
+    plate = common.mesh_object(f"{n}_Plate", plate_bmesh(pw, ph, pt, pw / 2 - 1e-4 if round_ else 0.004,
+                                                         segments=8 if round_ else 3), col, plate_m, root)
     common.add_bevel(plate, 0.0012, segments=1)
+    if p.get("plate_marks"):
+        mname, mcol = p["marks"]
+        marks_m = common.pbr_material(mname, mcol, roughness=0.5)
+        common.mesh_object(f"{n}_Plate_Marks", _marks(bmesh.new(), p["plate_marks"], -pt - 0.0003), col,
+                           marks_m, root, smooth=False)
 
     rw, rh, rt = p["rocker_size"]
     pivot = common.empty(f"{n}_Rocker", col, (0, -pt, 0))
     pivot.parent = root
+    travel = p.get("travel") or {"paddle": {"axis": "x", "angle": 12}, "knob": {"axis": "z", "angle": 90},
+                                 "button": {"axis": "-z", "distance": 0.003}}[part]
     pivot["interact"] = {
         "type": "switch", "signal": p["signal"], "state": bool(p["state"]),
         "prompt": p["prompt"], "promptActive": p["promptActive"],
-        "range": 1.3, "duration": 0.15,
-        "travel": {"axis": "x", "angle": 12},
+        "range": 1.3, "duration": 0.3 if part == "knob" else 0.15,
+        "travel": travel,
         "indicator": f"{n}_Locator",
     }
-    # the rocker: a slightly crowned paddle standing proud of the plate
-    # one mesh (one draw call: the rocker moves, so it isn't batched): the paddle, bevelled
-    # here rather than by a modifier, plus its raised marks (a split line, the glyphs)
-    y0 = -rt / 2 + 0.001
-    bm = common.box_bmesh((rw, rt, rh))
-    bmesh.ops.translate(bm, vec=(0, y0, 0), verts=bm.verts)
-    bmesh.ops.bevel(bm, geom=list(bm.edges), offset=0.0015, segments=2, affect="EDGES", profile=0.5)
-    marks = [(0, 0, rw * 0.86, 0.0010)] + list(p.get("glyphs", []))
-    for gx, gz, gw, gh in marks:
-        m = Matrix.Translation((gx, y0 - rt / 2 - 0.0003, gz)) @ Matrix.Diagonal((gw, 0.0008, gh, 1.0))
-        bmesh.ops.create_cube(bm, size=1.0, matrix=m)
-    common.mesh_object(f"{n}_Rocker_Paddle", bm, col, rocker_m, pivot, smooth=False)
-    bm = bmesh.new()
-    bmesh.ops.create_cone(bm, cap_ends=True, segments=10, radius1=0.0016, radius2=0.0016, depth=0.0008,
-                          matrix=Matrix.Rotation(math.radians(90), 4, "X"))
-    led = common.mesh_object(f"{n}_Locator", bm, col, led_m, pivot, smooth=False)
-    led.location = (0, -0.0006, -rh / 2 - 0.0065)
+    if part == "paddle":
+        # the rocker: a slightly crowned paddle standing proud of the plate
+        # one mesh (one draw call: the rocker moves, so it isn't batched): the paddle, bevelled
+        # here rather than by a modifier, plus its raised marks (a split line, the glyphs)
+        y0 = -rt / 2 + 0.001
+        bm = common.box_bmesh((rw, rt, rh))
+        bmesh.ops.translate(bm, vec=(0, y0, 0), verts=bm.verts)
+        bmesh.ops.bevel(bm, geom=list(bm.edges), offset=0.0015, segments=2, affect="EDGES", profile=0.5)
+        _marks(bm, [(0, 0, rw * 0.86, 0.0010)] + list(p.get("glyphs", [])), y0 - rt / 2 - 0.0003)
+        common.mesh_object(f"{n}_Rocker_Paddle", bm, col, rocker_m, pivot, smooth=False)
+    elif part == "knob":
+        # a gas-valve knob: a round skirt with a grip bar across it, turned a quarter when on
+        r, d = rw / 2, rt
+        bm = _disc(r, d, -d / 2)
+        grip = common.box_bmesh((0.0065, 0.006, r * 1.9))
+        bmesh.ops.translate(grip, vec=(0, -d - 0.0025, 0), verts=grip.verts)
+        bmesh.ops.bevel(grip, geom=list(grip.edges), offset=0.0012, segments=2, affect="EDGES", profile=0.5)
+        _append(bm, grip)
+        common.mesh_object(f"{n}_Rocker_Knob", bm, col, rocker_m, pivot, smooth=False)
+    else:
+        # a round push button, in 3 mm while on
+        r, d = rw / 2, rt
+        bm = _disc(r, d, -d / 2, segments=28)
+        _marks(bm, list(p.get("glyphs", [])), -d - 0.0003)
+        common.mesh_object(f"{n}_Rocker_Button", bm, col, rocker_m, pivot, smooth=False)
+
+    if p.get("ring"):
+        # a lit ring round the button, on the plate (static: the button moves inside it)
+        common.mesh_object(f"{n}_Locator", _disc(p["ring"], 0.0016, -pt - 0.0008, segments=28), col, led_m,
+                           root, smooth=False)
+    elif p.get("led_at"):
+        lx, lz = p["led_at"]
+        led = common.mesh_object(f"{n}_Locator", _disc(0.0019, 0.0008, 0.0, segments=10), col, led_m, root,
+                                 smooth=False)
+        led.location = (lx, -pt - 0.0004, lz)
+    else:
+        bm = bmesh.new()
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=10, radius1=0.0016, radius2=0.0016, depth=0.0008,
+                              matrix=Matrix.Rotation(math.radians(90), 4, "X"))
+        led = common.mesh_object(f"{n}_Locator", bm, col, led_m, pivot, smooth=False)
+        led.location = (0, -0.0006, -rh / 2 - 0.0065)
     return pivot
+
+
+def _append(a, b):
+    """Copy bmesh b's geometry into a (b is freed)."""
+    import bpy
+    me = bpy.data.meshes.new("_ix_tmp")
+    b.to_mesh(me)
+    b.free()
+    a.from_mesh(me)
+    bpy.data.meshes.remove(me)
+    return a
 
 
 # ------------------------------------------------------------------ small-prop helpers
