@@ -15,35 +15,13 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				7
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"IX_KeyOffice_Blade",
-			"translation":[
-				0,
-				0.00023999999393709004,
-				0
-			]
-		},
-		{
-			"mesh":1,
-			"name":"IX_KeyOffice_Bow",
-			"translation":[
-				0,
-				0.0012000000569969416,
-				0
-			]
-		},
-		{
-			"mesh":2,
-			"name":"IX_KeyOffice_Eyelet"
-		},
-		{
-			"mesh":3,
 			"name":"IX_KeyOffice_Fob",
 			"translation":[
 				-0.04500000178813934,
@@ -52,31 +30,18 @@
 			]
 		},
 		{
-			"mesh":4,
-			"name":"IX_KeyOffice_Hole",
-			"translation":[
-				-0.007499999832361937,
-				0.0012000000569969416,
-				0
-			]
+			"mesh":1,
+			"name":"IX_KeyOffice_Part_0"
 		},
 		{
-			"mesh":5,
-			"name":"IX_KeyOffice_Ring"
-		},
-		{
-			"mesh":6,
-			"name":"IX_KeyOffice_Stitch"
+			"mesh":2,
+			"name":"IX_KeyOffice_Part_2"
 		},
 		{
 			"children":[
 				0,
 				1,
-				2,
-				3,
-				4,
-				5,
-				6
+				2
 			],
 			"extras":{
 				"interact":{
@@ -91,6 +56,26 @@
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"extensions":{
+				"KHR_materials_clearcoat":{
+					"clearcoatFactor":0.15000000596046448,
+					"clearcoatRoughnessFactor":0.33000001311302185
+				}
+			},
+			"name":"M_KeyFob_KeyOffice",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.20000000298023224,
+					0.07500000298023224,
+					0.029999999329447746,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.550000011920929
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Brass",
@@ -116,59 +101,11 @@
 				],
 				"roughnessFactor":0.30000001192092896
 			}
-		},
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":0.15000000596046448,
-					"clearcoatRoughnessFactor":0.33000001311302185
-				}
-			},
-			"name":"M_KeyFob_KeyOffice",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.20000000298023224,
-					0.07500000298023224,
-					0.029999999329447746,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.550000011920929
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Key_Hole",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.009999999776482582,
-					0.009999999776482582,
-					0.009999999776482582,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.8999999761581421
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_KeyFob_Stitch",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.550000011920929,
-					0.5,
-					0.41999998688697815,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.800000011920929
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"IX_KeyOffice_Blade",
+			"name":"IX_KeyOffice_Fob",
 			"primitives":[
 				{
 					"attributes":{
@@ -195,7 +132,7 @@
 			]
 		},
 		{
-			"name":"IX_KeyOffice_Bow",
+			"name":"IX_KeyOffice_Part_0",
 			"primitives":[
 				{
 					"attributes":{
@@ -216,13 +153,13 @@
 						}
 					},
 					"indices":9,
-					"material":0,
+					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"IX_KeyOffice_Eyelet",
+			"name":"IX_KeyOffice_Part_2",
 			"primitives":[
 				{
 					"attributes":{
@@ -243,229 +180,13 @@
 						}
 					},
 					"indices":14,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"IX_KeyOffice_Fob",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16,
-						"TEXCOORD_0":17,
-						"COLOR_0":18
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":19,
 					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"IX_KeyOffice_Hole",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":20,
-						"NORMAL":21,
-						"TEXCOORD_0":22,
-						"COLOR_0":23
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":4,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":14,
-					"material":3,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"IX_KeyOffice_Ring",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":24,
-						"NORMAL":25,
-						"TEXCOORD_0":26,
-						"COLOR_0":27
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":5,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":28,
-					"material":1,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"IX_KeyOffice_Stitch",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":29,
-						"NORMAL":30,
-						"TEXCOORD_0":31,
-						"COLOR_0":32
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":6,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
-							}
-						}
-					},
-					"indices":33,
-					"material":4,
 					"mode":4
 				}
 			]
 		}
 	],
 	"accessors":[
-		{
-			"componentType":5126,
-			"count":120,
-			"max":[
-				0.04699999839067459,
-				0.0019199999514967203,
-				0.010250000283122063
-			],
-			"min":[
-				0.010999999940395355,
-				0,
-				-0.0037499999161809683
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":120,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":120,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":120,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":240,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":180,
-			"max":[
-				0.01300000213086605,
-				0.0012000000569969416,
-				0.012000001035630703
-			],
-			"min":[
-				-0.01300000213086605,
-				-0.0012000000569969416,
-				-0.012000001035630703
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":180,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":180,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":180,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":564,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":60,
-			"max":[
-				-0.02202725224196911,
-				0.003599999938160181,
-				0.0026000000070780516
-			],
-			"min":[
-				-0.02697274647653103,
-				0,
-				-0.0026000000070780516
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":60,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":60,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":60,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":108,
-			"type":"SCALAR"
-		},
 		{
 			"componentType":5126,
 			"count":176,
@@ -504,148 +225,97 @@
 		},
 		{
 			"componentType":5126,
-			"count":60,
+			"count":300,
 			"max":[
-				0.0020923244301229715,
-				0.0013500000350177288,
-				0.002199999988079071
+				0.04699999839067459,
+				0.002400000113993883,
+				0.012000001035630703
 			],
 			"min":[
-				-0.0020923244301229715,
-				-0.0013500000350177288,
-				-0.002199999988079071
+				-0.01300000213086605,
+				0,
+				-0.012000001035630703
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":60,
+			"count":300,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":60,
+			"count":300,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":60,
+			"count":300,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
+			"componentType":5123,
+			"count":804,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
-			"count":276,
+			"count":336,
 			"max":[
 				-0.003100073430687189,
-				0.0022357176057994366,
+				0.003599999938160181,
 				0.011226439848542213
 			],
 			"min":[
-				-0.02589992806315422,
-				0.00017109228065237403,
+				-0.02697274647653103,
+				0,
 				-0.011226823553442955
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":276,
+			"count":336,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":276,
+			"count":336,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":276,
+			"count":336,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":1080,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":248,
-			"max":[
-				-0.022652992978692055,
-				0.003632869804278016,
-				0.008847006596624851
-			],
-			"min":[
-				-0.06734700500965118,
-				0.002967130159959197,
-				-0.008847006596624851
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":248,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":248,
-			"type":"VEC2"
-		},
-		{
-			"componentType":5123,
-			"count":248,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":960,
+			"count":1188,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1665,
+			"byteLength":2451,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":2847,
-			"byteOffset":1668
+			"byteLength":3593,
+			"byteOffset":2452
 		},
 		{
 			"buffer":0,
-			"byteLength":945,
-			"byteOffset":4516
-		},
-		{
-			"buffer":0,
-			"byteLength":2481,
-			"byteOffset":5464
-		},
-		{
-			"buffer":0,
-			"byteLength":804,
-			"byteOffset":7948
-		},
-		{
-			"buffer":0,
-			"byteLength":3040,
-			"byteOffset":8752
-		},
-		{
-			"buffer":0,
-			"byteLength":2825,
-			"byteOffset":11792
+			"byteLength":3914,
+			"byteOffset":6048
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":14620,
+			"byteLength":9964,
 			"uri":"ix_key_office.bin"
 		}
 	]

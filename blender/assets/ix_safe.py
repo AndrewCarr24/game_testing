@@ -153,6 +153,7 @@ def build(**overrides):
     for zc in ((-dh / 2 + 0.12, dh / 2 - 0.12) if H < 1 else (-dh / 2 + 0.2, 0.0, dh / 2 - 0.2)):
         _cyl(hb, 0.012, 0.09, (-iw / 2, yf - 0.006, z0 + t + ih / 2 + zc), axis="Z", segs=12)
     common.mesh_object(f"{n}_Hinges", hb, col, body, root)
+    ix_common.merge_by_material(hinge, col, f"{n}_Door_Part")   # the door draws unbatched: one mesh per material
     _ = slab
     return ix_common.finish(root)
 

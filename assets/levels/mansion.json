@@ -15806,7 +15806,7 @@
         ]
       },
       "colliders": [],
-      "tris": 1192
+      "tris": 836
     },
     "garage_lockers": {
       "file": "models/garage_lockers.gltf",
@@ -17079,7 +17079,7 @@
         ]
       },
       "colliders": [],
-      "tris": 1208
+      "tris": 852
     },
     "ix_gun_locker": {
       "file": "models/ix_gun_locker.gltf",
@@ -20443,7 +20443,7 @@
         ]
       },
       "colliders": [],
-      "tris": 1304
+      "tris": 948
     },
     "bed": {
       "file": "models/bed.gltf",
@@ -25586,7 +25586,7 @@
         ]
       },
       "colliders": [],
-      "tris": 1208
+      "tris": 852
     }
   },
   "props": [

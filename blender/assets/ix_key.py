@@ -82,12 +82,11 @@ def build(**overrides):
     metal = common.pbr_material(mname, mcol, roughness=mrough, metallic=1.0)
     ring_m = common.pbr_material("M_Steel_Satin", (0.62, 0.62, 0.63), roughness=0.3, metallic=1.0)
     leather = common.pbr_material(f"M_KeyFob_{n.split('_')[-1]}", p["fob"], roughness=0.55, coat=0.15)
-    stitch = common.pbr_material("M_KeyFob_Stitch", (0.55, 0.50, 0.42), roughness=0.8)
 
     t = p["t"]
     bw, bh = p["bow"]
-    # the head: a rounded slab with a hole for the ring (the hole is a dark inset disc on
-    # both faces: a real through-hole would cost more triangles than it's worth at 3 cm)
+    # the head: a rounded slab (no through-hole: it would cost more triangles than it shows
+    # at 3 cm; the ring passes over its end)
     bow = common.mesh_object(f"{n}_Bow", common.rounded_slab_bmesh(bw, bh, t, min(bw, bh) * 0.42, segments=5),
                              col, metal, root)
     bow.location = (0, 0, t / 2)
@@ -100,23 +99,12 @@ def build(**overrides):
     ring = [(hx - rr + 0.0035 + rr * math.cos(a), rr * math.sin(a), t * 0.5 + 0.0002 * math.sin(3 * a))
             for a in [2 * math.pi * k / 18 for k in range(18)]]
     common.tube_object(f"{n}_Ring", ring, 0.0009, col, ring_m, root, closed=True)
-    hole = bmesh.new()
-    bmesh.ops.create_cone(hole, cap_ends=True, segments=10, radius1=0.0022, radius2=0.0022, depth=t + 0.0003)
-    dark = common.pbr_material("M_Key_Hole", (0.01, 0.01, 0.01), roughness=0.9)
-    h = common.mesh_object(f"{n}_Hole", hole, col, dark, root, smooth=False)
-    h.location = (hx, 0, t / 2)
     fl, fw = p["fob_size"]
     fx = hx - 2 * rr + 0.0085 - fl / 2         # the eyelet sits on the ring
     fob = common.mesh_object(f"{n}_Fob", common.rounded_slab_bmesh(fl, fw, 0.0032, fw * 0.45, segments=5),
                              col, leather, root)
     fob.location = (fx, 0, 0.0016)
     common.add_bevel(fob, 0.0008, segments=1)
-    # stitching: a thin inset loop on the fob's top face
-    st = common.fillet_polyline([(fx - fl / 2 + 0.003, -fw / 2 + 0.0025, 0), (fx + fl / 2 - 0.003, -fw / 2 + 0.0025, 0),
-                                 (fx + fl / 2 - 0.003, fw / 2 - 0.0025, 0), (fx - fl / 2 + 0.003, fw / 2 - 0.0025, 0)],
-                                fw * 0.3, segments=3, closed=True)
-    st = [(v.x, v.y, 0.0033) for v in st]
-    common.tube_object(f"{n}_Stitch", st, 0.00035, col, stitch, root, closed=True)
     # the fob's eyelet, where the ring passes
     ey = bmesh.new()
     bmesh.ops.create_cone(ey, cap_ends=True, segments=10, radius1=0.0026, radius2=0.0026, depth=0.0036,
@@ -124,6 +112,7 @@ def build(**overrides):
     common.mesh_object(f"{n}_Eyelet", ey, col, ring_m, root, smooth=False)
     for ob in root.children:
         common.box_uv(ob, 0.2) if ob.type == "MESH" else None
+    ix_common.merge_by_material(root, col, f"{n}_Part")   # a pickup draws unbatched: 3 meshes, not 6
     return ix_common.finish(root)
 
 
