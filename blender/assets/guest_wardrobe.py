@@ -340,8 +340,13 @@ def build(**overrides):
     zb = ph + 0.022                                 # top of the bottom rail
 
     # ---- carcass: sides to the floor, top, bottom rail; oak, grain up the sides
-    _part(own, "Sides", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t)),
-                         ((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
+    if p["hide"]:
+        # (one part per side: a part is one collider box, and one round both would fill the hollow)
+        _part(own, "SideL", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
+        _part(own, "SideR", [((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2, seed=7)
+    else:
+        _part(own, "Sides", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t)),
+                             ((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
     _part(own, "Top", [((-W / 2, y0, H - t), (W / 2, y1, H))], oak, "x", bevel=0.0022, segments=2)
     _part(own, "BottomRail", [((-W / 2 + t, y0, ph), (W / 2 - t, y1 - 0.02, zb))], oak, "x", bevel=0.0015)
     # recessed black plinth between the sides, dark interior behind the reveals, a back
@@ -419,9 +424,10 @@ def hiding(p, n, col, root, oak, black, brass, k):
         parts = [o for o in root.children if o.name.startswith(f"{n}_Door{d}_") or o.name == f"{n}_Pull_{d}"]
         pv = ix_common.pivot(root, col, f"{n}_Door{d}", (hx, k["yf"], 0.0), parts)
         ix_common.merge_parts(pv, {oak.name: "Leaf", black.name: "Pull", brass.name: "Pull"})
-        doors.append((pv, sx * 100, sx * 10))
+        doors.append((pv, sx * 100, sx * ix_common.crack(dw)))
     D = k["D"]
-    ix_common.hide_spot(root, col, n, (xc, k["yb"] + 0.15, 1.6), [(xc, -D / 2 - 0.55, 0.0), (xc, -D / 2 - 0.85, 0.0)],
+    ix_common.hide_spot(root, col, n, (xc, k["yb"] + 0.15, 1.6), [(xc, -D / 2 - 0.55, 0.0), (xc + 0.7, -D / 2 - 0.55, 0.0),
+                                                                   (xc - 0.7, -D / 2 - 0.55, 0.0)],
                         "Hide in the wardrobe", "Leave the wardrobe", doors=doors, pitch=-4)
 
 

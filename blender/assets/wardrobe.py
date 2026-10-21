@@ -350,7 +350,7 @@ def hiding(p, n, col, root, bronze, door_w, y_f, dt, y_wall, xi):
         parts = [o for o in root.children if o.name.startswith((f"{n}_Door_{side}_", f"{n}_Pull_{side}"))]
         pv = ix_common.pivot(root, col, f"{n}_Door{side}", (sx * (g / 2 + door_w), y_f, 0.0), parts)
         ix_common.merge_parts(pv, {"M_Wardrobe_OakSmoked": "Leaf", "M_Bronze": "Pull"})
-        doors.append((pv, sx * 100, sx * 10))        # R opens counter-clockwise; pulled to, a crack at the meeting stiles
+        doors.append((pv, sx * 100, sx * ix_common.crack(door_w)))   # R opens counter-clockwise; a crack at the meeting stiles
     yb = y_f + dt
     ix_common.closet_rail(root, col, n, -xi + 0.03, xi - 0.03, (yb + y_wall) / 2 + 0.02, p["rail_z"], p["coats"], bronze)
     ix_common.hide_spot(root, col, n, (0.0, yb + 0.15, 1.6), [(0.0, -D / 2 - 0.55, 0.0), (0.0, -D / 2 - 0.85, 0.0)],

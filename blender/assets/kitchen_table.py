@@ -58,7 +58,7 @@ def build(**overrides):
         # hiding spot (open cover): under the top beside a pier, looking out between the chairs
         # (the kitchen's are 0.7 m apart: gaps at x = +-0.35)
         y_out = -d / 2 - 0.8
-        ix_common.hide_spot(b.root, b.col, b.n, (0.33, -0.24, 0.5), [(0.33, y_out, 0.0), (-0.33, y_out, 0.0)],
+        ix_common.hide_spot(b.root, b.col, b.n, (0.28, -0.24, 0.5), [(0.33, y_out, 0.0), (-0.33, y_out, 0.0)],
                             "Hide under the table", "Crawl out", cover="open", pitch=-2)
     return b.finish()
 

@@ -251,8 +251,8 @@ def hiding(b, x0, x1, yf, t, tag, names):
         parts = [o for o in root.children if o.name in (f"{n}_{tag}_Door{side}", f"{n}_{tag}_Pull{side}")]
         pv = ix_common.pivot(root, col, f"{n}_{tag}Door{side}", (hx, yf, 0.0), parts)
         ix_common.merge_parts(pv, names)
-        doors.append((pv, sx * 100, sx * 10))
-    ix_common.hide_spot(root, col, f"{n}_{tag}", (xc, yf + t + 0.15, 1.6), [(xc, yf - 0.55, 0.0), (xc, yf - 0.85, 0.0)],
+        doors.append((pv, sx * 100, sx * ix_common.crack((x1 - x0) / 2)))
+    ix_common.hide_spot(root, col, f"{n}_{tag}", (xc, yf + t + 0.15, 1.6), [(xc, yf - 0.55, 0.0), (xc + 0.6, yf - 0.55, 0.0), (xc - 0.6, yf - 0.55, 0.0)],
                         "Hide in the pantry", "Leave the pantry", doors=doors, pitch=-4)
 
 

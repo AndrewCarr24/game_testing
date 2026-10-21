@@ -128,8 +128,12 @@ try {
 
   // ---------------------------------------------------------------- the level's hiding spots
   const spots = await p.evaluate(() => {
-    const disabled = window.__interact.items.filter((i) => i.def.type === 'hide' && i.disabled).map((i) => `${i.root.name}: ${i.disabled}`);
-    return { disabled, spots: window.__hiding.spots().filter((s) => s.name !== 'TestWardrobe').map((s) => ({ name: s.name, cover: s.cover, eye: s.eye.toArray(), exit: s.exit.toArray() })) };
+    const roomOf = (v) => Object.entries(window.__level.rooms).find(([, r]) => v.y >= r.floor - 0.1 && v.y <= r.floor + r.height &&
+      v.x >= r.rect[0] && v.x <= r.rect[2] && v.z >= r.rect[1] && v.z <= r.rect[3])?.[0] ?? 'outside';
+    const disabled = window.__interact.items.filter((i) => i.def.type === 'hide' && i.disabled)
+      .map((i) => `${i.node.name} in ${roomOf(i.node.getWorldPosition(i.node.position.clone()))}: ${i.disabled}`);
+    return { disabled, spots: window.__hiding.spots().filter((s) => s.name !== 'TestWardrobe')
+      .map((s) => ({ name: `${s.name}@${roomOf(s.exit)}`, cover: s.cover, eye: s.eye.toArray(), exit: s.exit.toArray() })) };
   });
   for (const d of spots.disabled) console.log(`note  disabled: ${d}`);
   console.log(`${spots.spots.length} hiding spots in the level`);

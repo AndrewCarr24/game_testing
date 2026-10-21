@@ -231,7 +231,7 @@ def hiding(p, n, col, root, walnut, bronze, k, box):
         parts = [o for o in root.children if o.name in (f"{n}_{door}", f"{n}_{pull}")]
         pv = ix_common.pivot(root, col, f"{n}_{name}", (hx, k["y_front"], 0.0), parts)
         ix_common.merge_parts(pv, {"M_Walnut": "Leaf", "M_Bronze": "Pull"})
-        doors.append((pv, sx * 100, sx * 10))
+        doors.append((pv, sx * 100, sx * ix_common.crack(dw)))
     yb = k["y_front"] + dt
     box("BayShelf", (k["half"] - 0.01, k["y_back"] - yb - 0.01, 0.025), (xb, (yb + k["y_back"]) / 2, k["low_top"] + 0.012),
         shift=(0.3, 0.7))

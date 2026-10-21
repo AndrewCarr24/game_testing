@@ -588,6 +588,7 @@
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
         const on = controls.isLocked && !inventory.open && !tablet.open;
+        hand.group.visible = !hiding.active;         // (a held item would poke through the wardrobe door)
         if (!hiding.update(dt)) player.update(dt, {   // (in a hiding spot the hiding module has the camera)
           forward: on && held(KEYS.forward), back: on && held(KEYS.back),
           left: on && held(KEYS.left), right: on && held(KEYS.right),

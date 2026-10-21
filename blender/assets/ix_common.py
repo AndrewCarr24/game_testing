@@ -372,6 +372,12 @@ def closet_rail(root, col, n, x0, x1, y, z, coats, rail_mat, tris=420):
     common.mesh_object(f"{n}_Hangers_NoCollide", hang, col, rail_mat, root)
 
 
+def crack(door_w, gap=0.14):
+    """The angle (deg) a door of width `door_w` is left ajar so its free edge stands `gap` m
+    proud: the crack a hidden player peeks through is about the same on a wide or a narrow door."""
+    return math.degrees(math.asin(min(1.0, gap / door_w)))
+
+
 def hide_spot(root, col, n, eye, exit, prompt, leave, cover="closed", doors=(), facing=None, pitch=0.0,
               look=None, tag="Hide", **extra):
     """A hiding spot (interact type `hide`, viewer/hiding.js; prompts/interactivity.md): empties
@@ -398,6 +404,8 @@ def hide_spot(root, col, n, eye, exit, prompt, leave, cover="closed", doors=(), 
     if doors:
         d["doors"] = [{"node": pv.name, "axis": common.to_gltf((0, 0, 1)), "angle": a, "ajar": j}
                       for pv, a, j in doors]
+    if facing is None and doors:
+        facing = (0, -1, 0)          # shut in: out through the doors (the asset's front), whichever exit is used
     if facing is not None:
         d["facing"] = common.to_gltf(facing)
     if look:

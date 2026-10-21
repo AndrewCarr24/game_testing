@@ -242,6 +242,8 @@ export class Interactables {
     it.doors = (def.doors ?? []).map((d) => ({ ...d, node: find(d.node), axis: axisOf(d.axis) })).filter((d) => d.node);
     for (const d of it.doors) d.restQuat = d.node.quaternion.clone();
     it.parts = it.doors.map((d) => d.node);
+    // the whole prop's box, now: its static parts are merged into the room's batch later
+    it.area = new THREE.Box3().setFromObject(root);
   }
 
   addReactor(node, def, opts) {
@@ -410,7 +412,12 @@ export class Interactables {
       box.makeEmpty();
       for (const d of it.doors) box.expandByObject(d.node);
       if (box.isEmpty()) box.setFromObject(it.node);
-      if (box.isEmpty()) box.setFromObject(it.root);
+      if (box.isEmpty()) {
+        // (under a table / behind a sofa: the part of the prop below the spot's eye, so a vase on
+        // the table top is still the vase)
+        box.copy(it.area);
+        if (it.pose) box.max.y = Math.min(box.max.y, it.pose.eye.y + 0.15);
+      }
       return box;
     }
     box.setFromObject(it.node);
@@ -431,7 +438,7 @@ export class Interactables {
     return Math.hypot(dx, dz);
   }
 
-  range(it) { return it.def.range ?? (it.def.type === 'switch' || it.def.type === 'use' ? 1.2 : 1.5); }
+  range(it) { return it.reachRange ?? it.def.range ?? (it.def.type === 'switch' || it.def.type === 'use' ? 1.2 : 1.5); }
 
   // in reach from the eye: within range horizontally (reach), and level with it: the item's box
   // overlaps [eye - BELOW, eye + ABOVE]. Without the height test a switch on the floor above
@@ -489,7 +496,8 @@ export class Interactables {
         // else the angle to its centre; a little distance and centre angle break ties
         const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
         const angle = forward.angleTo(to.subVectors(centre, player));
-        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
+        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0)
+          - (onIt && it.def.type === 'hide' ? 11 : 0);   // (looking under the table: hide, not the vase on it)
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
     }

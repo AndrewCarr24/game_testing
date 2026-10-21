@@ -88,6 +88,8 @@ export class Hiding {
     P.exitQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, P.yaw, 0, 'YXZ'));
     // the crouch point: outside at the eye's height, where the climb in starts / out ends
     P.mouth = new THREE.Vector3(P.exit.x, P.eye.y, P.exit.z);
+    // in reach from wherever the exit ended up (pushed out past the chairs round a table)
+    it.reachRange = Math.max(this.interact.range(it), this.interact.reach(it, P.exit) + 0.6);
   }
 
   // something to stand on just under q (an exit over the stairwell / the courtyard void isn't one)
@@ -187,7 +189,7 @@ export class Hiding {
       });
     }
     for (const { orig, m } of it.dimmed) {
-      m.color.copy(orig.color).multiplyScalar(1 - 0.7 * k);
+      m.color.copy(orig.color).multiplyScalar(1 - 0.6 * k);
       m.envMapIntensity = (orig.envMapIntensity ?? 1) * (1 - 0.85 * k);
     }
     if (k <= 0) { for (const { o, orig, m } of it.dimmed) { o.material = orig; m.dispose(); } it.dimmed = null; }
