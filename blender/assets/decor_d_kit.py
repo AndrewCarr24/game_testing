@@ -28,11 +28,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
-from lib import common, materials, textures  # noqa: E402
+from lib import common, materials, pickups, textures  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
 importlib.reload(textures)
+importlib.reload(pickups)
 import bath_common as bc  # noqa: E402
 import bath_vanity as bv  # noqa: E402  (soft_extrude, round_outline)
 
@@ -190,6 +191,9 @@ class Builder:
         src.free()
 
     def finish(self):
+        # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
+        pickups.emit(self, self.n, self.col, self.root, list(self.meshes.values()), lambda b: b,
+                     lambda key: mat(key.split("@")[0]), self.collide)
         for key, b in self.meshes.items():
             if not b.faces:
                 b.free()
@@ -1002,3 +1006,14 @@ def basket(B, M, key, r=0.2, h=0.34, ribs=9, segs=14, part="Basket"):
              (r * 0.92 - 0.012, 0.05), (r * 0.6, 0.03), (0.0, 0.03)]
     B.add(key + "@" + part, lathe(prof, segs, sharp=50), M)
     return 0.03
+
+
+# ------------------------------------------------------------------ pickups
+# the loose things a player expects to lift (lib/pickups.py has the rule): each call of these
+# becomes its own pickup; trays, plants and sprays, towels, slippers and baskets stay furniture
+pickups.wrap(sys.modules[__name__], "meshes", items=dict(
+    book="book", vessel="vase", bowl="bowl", candle="candle", candle_jar="candle", carafe="carafe",
+    tumbler="glass", wine_glass="wine_glass", perfume="perfume", glasses="spectacles", cup_saucer="cup",
+    mug="mug", open_book="book", tent_book="book", notebook="notebook", pebbles="ornament",
+    ring_sculpture="ornament", soap="soap", pump_bottle="soap_pump",
+), fixed=("small_plant", "sprig", "branch_spray", "stem_sprig"))

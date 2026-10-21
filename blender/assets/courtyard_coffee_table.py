@@ -1,7 +1,7 @@
 """Low outdoor coffee table: a stepped honed-limestone plinth (recessed foot, block, and an
 overhanging top slab, each a single stone with eased edges) styled with a wide ceramic
-bowl of sedge and a pair of cloth-bound books (covers, spine, page block) on a rimmed
-teak tray.
+bowl of sedge and a pair of cloth-bound books (covers, spine, page block; throwable pickups)
+on a rimmed teak tray.
 
 Origin: floor centre. Long axis along X. Units are metres."""
 import importlib
@@ -80,8 +80,15 @@ def build(**overrides):
             ob.matrix_world = m @ Matrix.Translation(ob.location)
         return parts
 
-    book(f"{n}_BookA", (0.28, 0.21, 0.035), (tx, ty, tz + tb + 0.0175), math.radians(-3), sand)
-    book(f"{n}_BookB", (0.24, 0.18, 0.028), (tx + 0.01, ty + 0.005, tz + tb + 0.035 + 0.014), math.radians(11), clay)
+    # each book is a throwable pickup (lib/pickups.py); the tray and the bowl of sedge stay
+    from lib import pickups
+    importlib.reload(pickups)
+    for nm, size, loc, rz, cover in (("BookA", (0.28, 0.21, 0.035), (tx, ty, tz + tb + 0.0175), -3, sand),
+                                     ("BookB", (0.24, 0.18, 0.028), (tx + 0.01, ty + 0.005, tz + tb + 0.035 + 0.014),
+                                      11, clay)):
+        obs = book(f"{n}_{nm}", size, loc, math.radians(rz), cover)
+        pickups.adopt(f"{n}_{nm}_Pickup", col, root, "book", obs, (loc[0], loc[1], loc[2] - size[2] / 2),
+                      math.radians(rz))
     # wide ceramic bowl
     prof = [(0.0, 0.0), (0.07, 0.0), (0.075, 0.006), (0.12, 0.04), (0.16, 0.085), (0.165, 0.095), (0.158, 0.098),
             (0.15, 0.094), (0.115, 0.05), (0.0, 0.02)]

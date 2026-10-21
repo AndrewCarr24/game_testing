@@ -13,10 +13,11 @@ from mathutils import Matrix
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
-from lib import common, materials  # noqa: E402
+from lib import common, materials, pickups  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+importlib.reload(pickups)
 
 NAME = "DiningCenterpiece"
 
@@ -67,21 +68,20 @@ def build(**overrides):
             (0.100, 0.052), (0.074, 0.024), (0.0, 0.016)]
     lathe(bm, prof, 24, (-0.38, 0, T))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-    bowl = common.mesh_object(f"{n}_Bowl", bm, col, glaze, root)
-    common.box_uv(bowl, 0.5)
-
     fm = bmesh.new()
     pos = [(-0.40, 0.01, 0.05), (-0.35, -0.02, 0.05), (-0.37, 0.045, 0.05), (-0.345, 0.04, 0.05),
            (-0.39, -0.04, 0.05), (-0.37, 0.0, 0.095), (-0.405, 0.015, 0.085)]
     for x, y, z in pos:
         bmesh.ops.create_uvsphere(fm, u_segments=10, v_segments=7, radius=0.036,
                                   matrix=Matrix.Translation((x, y, T + z)) @ Matrix.Diagonal((1, 1, 1.12, 1)))
-    fruit = common.mesh_object(f"{n}_Quinces", fm, col, quince, root)
-    common.box_uv(fruit, 0.5)
+    # the bowl with its quinces, and each candlestick, are throwable pickups (lib/pickups.py)
+    # (the middle of a table for 14, chairs all round: reached by leaning over it, range 1.9 m)
+    pickups.make(f"{n}_Bowl", col, root, "bowl", [("Bowl", bm, glaze), ("Quinces", fm, quince)], (-0.38, 0, T),
+                 uv_tile=0.5, range=1.9)
 
     # candlesticks
-    cb, cw, wk = bmesh.new(), bmesh.new(), bmesh.new()
     for i, (x, h) in enumerate(((0.12, 0.11), (0.30, 0.17), (0.48, 0.23))):
+        cb, cw, wk = bmesh.new(), bmesh.new(), bmesh.new()
         base_r = 0.035
         prof = [(0.0, 0.0), (base_r, 0.0), (base_r, 0.006), (0.014, 0.012), (0.0105, 0.03),
                 (0.0105, h - 0.05), (0.017, h - 0.035), (0.022, h - 0.02), (0.022, h), (0.0, h - 0.008)]
@@ -92,11 +92,8 @@ def build(**overrides):
         lathe(cw, [(0.0, h - 0.01), (0.0145, h - 0.01), (0.0145, ct), (0.0125, ct + 0.0015), (0.004, ct - 0.003),
                    (0.0, ct - 0.0035)], 12, (x, 0, T))
         lathe(wk, [(0.0016, ct - 0.004), (0.0014, ct + 0.009), (0.0, ct + 0.0105)], 5, (x, 0, T))
-    sticks = common.mesh_object(f"{n}_Candlesticks", cb, col, bronze, root)
-    candles = common.mesh_object(f"{n}_Candles", cw, col, wax, root)
-    wicks = common.mesh_object(f"{n}_Wicks_NoCollide", wk, col, materials.black_metal(), root)
-    for ob in (sticks, candles, wicks):
-        common.box_uv(ob, 0.5)
+        pickups.make(f"{n}_Candle{i + 1:02d}", col, root, "candle", [("Candlestick", cb, bronze), ("Candle", cw, wax),
+                     ("Wick", wk, materials.black_metal())], (x, 0, T), uv_tile=0.5, range=1.9)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

@@ -22,10 +22,11 @@ from mathutils import Matrix, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
-from lib import common, materials, textures  # noqa: E402
+from lib import common, materials, pickups, textures  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+importlib.reload(pickups)
 
 
 # ------------------------------------------------------------------ materials
@@ -165,7 +166,8 @@ class Acc:
     def finish(self, name, col, root, collide=()):
         """collide: keys whose mesh may be a collider (a floor plant's pot); the rest are
         named _NoCollide."""
-        parts = []
+        # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
+        parts = pickups.emit(self, name, col, root, [bm for bm, _ in self.parts.values()], lambda v: v[0], mat, collide)
         for key, (bm, _) in self.parts.items():
             if not bm.faces:
                 bm.free()
@@ -547,17 +549,25 @@ def plate(acc, M, key="ceramic_white", r=0.13, segs=20):
 def lemons(acc, M, rnd, key, pts, r=0.032):
     """Lemon-ish fruit (ellipsoid with tips) at pts [(x, y, z)], lying on their side."""
     for x, y, z in pts:
-        Mf = M @ T(x, y, z + r * 0.9, rz=rnd.uniform(0, 180), ry=90 + rnd.uniform(-20, 20))
-        lathe(acc, key, Mf, [(0.0, -r * 1.35), (r * 0.3, -r * 1.2), (r * 0.85, -r * 0.7), (r, 0.0), (r * 0.85, r * 0.7),
-                             (r * 0.3, r * 1.2), (0.0, r * 1.35)], 10, sharp=None)
+        lemon(acc, M @ T(x, y, z + r * 0.9, rz=rnd.uniform(0, 180), ry=90 + rnd.uniform(-20, 20)), key, r)
+
+
+def lemon(acc, Mf, key, r=0.032):
+    """One lemon, centred at Mf's origin (each is its own pickup)."""
+    lathe(acc, key, Mf, [(0.0, -r * 1.35), (r * 0.3, -r * 1.2), (r * 0.85, -r * 0.7), (r, 0.0), (r * 0.85, r * 0.7),
+                         (r * 0.3, r * 1.2), (0.0, r * 1.35)], 10, sharp=None)
 
 
 def apples(acc, M, rnd, key, pts, r=0.036, stem="bark"):
     for x, y, z in pts:
-        Mf = M @ T(x, y, z, rz=rnd.uniform(0, 360), rx=rnd.uniform(-15, 15))
-        lathe(acc, key, Mf, [(0.0, 0.004), (r * 0.45, 0.0), (r * 0.9, r * 0.35), (r, r * 0.9), (r * 0.85, r * 1.45),
-                             (r * 0.4, r * 1.75), (0.0, r * 1.6)], 10, sharp=None)
-        tube(acc, stem, Mf, [(0, 0, r * 1.55), (0.002, 0.001, r * 1.95)], 0.0018, sides=3)
+        apple(acc, M @ T(x, y, z, rz=rnd.uniform(0, 360), rx=rnd.uniform(-15, 15)), key, r, stem)
+
+
+def apple(acc, Mf, key, r=0.036, stem="bark"):
+    """One apple standing at Mf's origin (each is its own pickup)."""
+    lathe(acc, key, Mf, [(0.0, 0.004), (r * 0.45, 0.0), (r * 0.9, r * 0.35), (r, r * 0.9), (r * 0.85, r * 1.45),
+                         (r * 0.4, r * 1.75), (0.0, r * 1.6)], 10, sharp=None)
+    tube(acc, stem, Mf, [(0, 0, r * 1.55), (0.002, 0.001, r * 1.95)], 0.0018, sides=3)
 
 
 def grapes(acc, M, rnd, key, n=16, r=0.0085, spread=0.05, stem="bark"):
@@ -929,3 +939,22 @@ def spray_bottle(acc, M, body="white_lacquer", head="accent", h=0.22, r=0.035):
     lathe(acc, body, M, [(0.0, 0.0), (r * 0.9, 0.0), (r, 0.008), (r, h * 0.7), (r * 0.5, h * 0.8), (r * 0.42, h * 0.84), (0.0, h * 0.84)], 12)
     box(acc, head, M @ T(z=h * 0.84), 0.03, 0.06, 0.035, bevel=0.004)
     box(acc, head, M @ T(0, -0.02, h * 0.84 - 0.03, rx=12), 0.012, 0.012, 0.04, bevel=0.002)
+
+
+# ------------------------------------------------------------------ pickups
+# the loose things a player expects to lift (lib/pickups.py has the rule): each call of these
+# becomes its own pickup; trays, boards, plants, textiles, crates and baskets stay furniture
+
+def _vessel_kind(args, kwargs):
+    kind = args[2] if len(args) > 2 else kwargs.get("kind")
+    return {"bowl": "bowl", "dish": "dish", "pot": None}.get(kind, "vase")
+
+
+pickups.wrap(sys.modules[__name__], "parts", items=dict(
+    vessel=_vessel_kind, book="book", magazine="magazine", open_book="book", candle="candle",
+    carafe="carafe", tumbler="glass", wine_glass="wine_glass", cup_saucer="cup", plate="plate",
+    lemon="lemon", apple="apple", grapes="grapes", boule="bread", baguette="bread", crock="crock",
+    bottle=lambda a, kw: "wine_bottle" if (a[6] if len(a) > 6 else kw.get("kind", "wine")) == "wine" else "bottle",
+    sculpture="ornament", glasses="spectacles", knife="knife", mortar="mortar", mill="pepper_mill",
+    salt_cellar="salt_cellar", soap_pump="soap_pump", brush="brush", mug="mug", spray_bottle="spray_bottle",
+), fixed=("herb_pot", "plant_paddle", "sprigs"))

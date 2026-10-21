@@ -1,5 +1,6 @@
 """Tasting set on a slim oak board: a crystal decanter with a little red wine, a standing
-bottle, and three stemmed glasses (one with wine). Glass is alpha-blended.
+bottle, and three stemmed glasses (one with wine). Glass is alpha-blended. The decanter, the
+bottle and each glass are throwable pickups (lib/pickups.py); the board stays.
 
 Origin: centre of the underside of the board (z = 0). Board along X. Units are metres.
 """
@@ -12,10 +13,11 @@ import bmesh
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
-from lib import common, materials  # noqa: E402
+from lib import common, materials, pickups  # noqa: E402
 
 importlib.reload(common)
 importlib.reload(materials)
+importlib.reload(pickups)
 
 NAME = "DiningWineSet"
 
@@ -69,15 +71,22 @@ def build(**overrides):
     lathe(gb, dec_out, 16, -0.2, 0.0, z0)
     wb = bmesh.new()
     lathe(wb, [(0.0, 0.026), (0.067, 0.03), (0.07, 0.05), (0.055, 0.09), (0.0, 0.092)], 16, -0.2, 0.0, z0)
+    pickups.make(f"{n}_Decanter", col, root, "decanter", [("Glass", gb, glass), ("Wine", wb, wine)],
+                 (-0.2, 0.0, z0), uv_tile=0.5)
 
     # stemmed glasses
     glass_prof = [(0.0, 0.0), (0.04, 0.0), (0.04, 0.004), (0.006, 0.008), (0.005, 0.09), (0.02, 0.1), (0.04, 0.125),
                   (0.045, 0.15), (0.042, 0.19), (0.036, 0.215), (0.0345, 0.213), (0.0405, 0.19), (0.0435, 0.15),
                   (0.0385, 0.125), (0.019, 0.108), (0.0, 0.104)]
     for i, (gx, gy) in enumerate(((0.1, -0.04), (0.2, 0.05), (0.27, -0.045))):
+        gb = bmesh.new()
         lathe(gb, glass_prof, 14, gx, gy, z0)
+        parts_ = [("Glass", gb, glass)]
         if i == 1:
+            wb = bmesh.new()
             lathe(wb, [(0.0, 0.108), (0.036, 0.13), (0.04, 0.15), (0.0, 0.153)], 14, gx, gy, z0)
+            parts_.append(("Wine", wb, wine))
+        pickups.make(f"{n}_WineGlass{i + 1:02d}", col, root, "wine_glass", parts_, (gx, gy, z0), uv_tile=0.5)
 
     # bottle (opaque green with label and foil)
     bt_bm = bmesh.new()
@@ -87,10 +96,8 @@ def build(**overrides):
     lathe(lb, [(0.0382, 0.05), (0.0382, 0.15)], 14, -0.04, 0.02, z0)
     fb = bmesh.new()
     lathe(fb, [(0.0132, 0.285), (0.0132, 0.325), (0.0, 0.325)], 12, -0.04, 0.02, z0)
-    for nm, bm_, mat in (("Glass", gb, glass), ("Wine", wb, wine), ("Bottle", bt_bm, bottle_mat),
-                         ("Label", lb, label), ("Foil", fb, foil)):
-        ob = common.mesh_object(f"{n}_{nm}", bm_, col, mat, root)
-        common.box_uv(ob, 0.5)
+    pickups.make(f"{n}_Bottle", col, root, "wine_bottle", [("Bottle", bt_bm, bottle_mat), ("Label", lb, label),
+                                                           ("Foil", fb, foil)], (-0.04, 0.02, z0), uv_tile=0.5)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

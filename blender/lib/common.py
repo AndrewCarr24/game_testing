@@ -318,6 +318,12 @@ def export_gltf(root, filepath, texture_dir="textures", image_format="WEBP", qua
                 export_vertex_color="NAME", export_vertex_color_name="AO")
     opts.update(extra)
     _export(root, filepath, **opts)
+    # the exporter indents its JSON (a third of a decor vignette's .gltf is whitespace): minify it
+    import json
+    with open(filepath) as fh:
+        doc = json.load(fh)
+    with open(filepath, "w") as fh:
+        json.dump(doc, fh, separators=(",", ":"))
 
 
 def export_glb(root, filepath):
