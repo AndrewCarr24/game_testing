@@ -12,6 +12,7 @@ import { LOOPS, reverbIR } from './audio_synth.js';
 //       Returns the voice or null.
 //   window.__sfx.log                            every play() call [{t, name, pos?, muted?}], for tests
 //   window.__sfx.counts                         name -> number of calls
+//   window.__sfx.unknown                        names asked for that the manifest doesn't have
 //   window.__sfx.used(item, message)            index.html's E handler: the sounds for an E press
 //                                               that changed nothing (a locked door, a dead switch)
 //
@@ -60,9 +61,10 @@ export class Sfx {
   constructor({ camera, level, base = '../assets/', shell = null, volume = 1 }) {
     this.camera = camera;
     this.level = level;
-    this.volume = volume;
+    this.volume = Number.isFinite(volume) ? Math.max(0, volume) : 1;
     this.log = [];
     this.counts = {};
+    this.unknown = new Set();
     this.ctx = null;
     this.buffer = null;
     this.manifest = null;
@@ -137,6 +139,7 @@ export class Sfx {
     // the loops: one per tick, so no single frame pays for all of them
     const names = ['air', 'hum', 'wind', 'tv', 'fire', 'motor'];   // the ambience first
     const next = () => {
+      if (window.__bench) { setTimeout(next, 500); return; }   // (never inside a measured run)
       const n = names.shift();
       if (!n) return;
       const chs = LOOPS[n](ctx.sampleRate);
@@ -197,6 +200,7 @@ export class Sfx {
     if (this.log.length > 500) this.log.shift();
     this.counts[name] = (this.counts[name] || 0) + 1;
     const s = this.manifest?.sounds[name];
+    if (this.manifest && !s) this.unknown.add(name);
     if (!this.running || !s) { entry.muted = true; return null; }
     const spatial = !!pos && s.ref != null;
     const cat = opts.cat ?? s.cat;

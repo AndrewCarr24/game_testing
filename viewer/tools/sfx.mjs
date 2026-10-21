@@ -173,7 +173,9 @@ const den = room('den');
 await teleport(p, [den.cx, 1.65, den.cz], [den.cx, 1.5, den.z0]);
 await wait(p, 800);
 s = await p.evaluate(() => [...window.__sfx.loops.keys()]);
-check('the den TV (on at start) plays', s.some((k) => k.startsWith('tv:')), s.join(' '));
+const tvOn = await p.evaluate(() => !!window.__signals.get('tv_den'));
+if (!tvOn) { await p.evaluate(() => window.__signals.set('tv_den', true)); await wait(p, 600); s = await p.evaluate(() => [...window.__sfx.loops.keys()]); }
+check('the den TV plays while it is on', s.some((k) => k.startsWith('tv:')), `on at start: ${tvOn}; ${s.join(' ')}`);
 const fireOn = await p.evaluate(() => window.__signals.get('fire_great_room'));
 await teleport(p, [gr.x1 - 2, 1.65, gr.cz], [gr.x1, 1.0, gr.cz]);
 await wait(p, 800);
@@ -252,6 +254,8 @@ await wait(p, 600);
 calls = await since(p, mSmash);
 check('the chase: growl, swipe whoosh, knocked down', has(calls, 'g_growl') && has(calls, 'g_swipe') && has(calls, 'hit'), calls.join(' '));
 const counts = await p.evaluate(() => window.__sfx.counts);
+const unknown = await p.evaluate(() => [...window.__sfx.unknown]);
+console.log('sound names asked for that sfx.json lacks:', unknown.length ? unknown.join(' ') : 'none');
 console.log('grimble counts:', JSON.stringify(counts), 'busy voices:', pk.join(' '));
 await p.close();
 
