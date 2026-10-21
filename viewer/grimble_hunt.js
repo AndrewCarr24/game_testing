@@ -327,6 +327,7 @@ export class GrimbleHunt {
     if (state !== this.state) {
       this.t = 0;
       this.pause = null;
+      this.goalFailed = false;
       if (state !== 'chase') { this.pursuit = null; this.turnAt = null; }
       if (state !== 'wait') this.waiting = null;
       if (state !== 'search') this.search = null;
@@ -1072,7 +1073,7 @@ export class GrimbleHunt {
     if (P.y > o.upperY) { this.pursueUpper(dt, P); return; }
     if (P.phase === 'go') {
       const r = this.travel(dt, P.target, true);
-      if (r === 'nopath' && this.time - P.t0 > 1.5) { this.startSearch(P.target, null); return; }
+      if ((r === 'nopath' && this.time - P.t0 > 1.5) || this.goalFailed) { this.goalFailed = false; this.startSearch(P.target, null); return; }
       if (r === 'arrived' || this.time - P.t0 > o.pursueMax) {
         // they went somewhere it can't follow (a side room): wait at the door, facing in
         // (or it peeked from the nearest place it could get to quickly: a look, then a search)
