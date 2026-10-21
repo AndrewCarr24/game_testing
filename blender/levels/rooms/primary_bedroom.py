@@ -112,7 +112,7 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (5.53, -4.6, 1.1), 180, {'signal': 'lights_primary_bedroom', 'state': True}),
-    ('ix_switch_blinds', (5.43, -4.6, 1.1), 180, {'signal': 'blinds_primary_bedroom'}),
+    ('ix_switch_blinds', (-6.45, 4.6, 1.1), 0, {'signal': 'blinds_primary_bedroom'}),   # (controls) glass, bed side
     ('ix_blind_bedroom', (0.0, 4.75), 0, {'signal': 'blinds_primary_bedroom'}),
     # power as gameplay (viewer/house.js): a spare flashlight battery in the first nightstand's
     # drawer (behind the keycard door; drawer-local, on its floor)

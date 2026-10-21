@@ -121,7 +121,9 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (-0.72, 9.85, 1.1), 0, {'signal': 'lights_garage', 'state': True}),
-    ('ix_switch_garage', (-0.82, 9.85, 1.1), 0),
+    # (controls) the door opener on the other side of the house door from the light switch, at
+    # opener height (1.5 m), clear of the door's swing
+    ('ix_switch_garage', (1.25, 9.85, 1.5), 0),
     # power as gameplay (viewer/house.js): the house starts powered with the main fuse in
     # (`state` sets the panel's signals, power and fuse_garage); the Grimble's break-in blows it,
     # and the spare is upstairs (guest_room.py: the nightstand drawer), not here

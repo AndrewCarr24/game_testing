@@ -107,7 +107,10 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (1.17, -4.6, 1.1), 180, {'signal': 'lights_dining', 'state': True}),
-    ('ix_switch_blinds', (1.27, -4.6, 1.1), 180, {'signal': 'blinds_dining'}),
+    # (controls) a second light switch in the return beside the gallery opening; the blinds
+    # switch on the north wall beside the glass, not next to the light switch
+    ('ix_switch', (7.68, -4.6, 1.1), 180, {'signal': 'lights_dining', 'state': True}),
+    ('ix_switch_blinds', (6.45, 4.6, 1.1), 0, {'signal': 'blinds_dining'}),
     ('ix_blind_dining', (0.0, 4.75), 0, {'signal': 'blinds_dining'}),
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "dining")

@@ -129,7 +129,7 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (0.72, -4.6, 1.1), 180, {'signal': 'lights_office', 'state': True}),
-    ('ix_switch_blinds', (0.82, -4.6, 1.1), 180, {'signal': 'blinds_office'}),
+    ('ix_switch_blinds', (6.17, 4.6, 1.1), 0, {'signal': 'blinds_office'}),   # (controls) beside the glass
     ('ix_blind_office', (0.0, 4.75), 0, {'signal': 'blinds_office'}),
     ('ix_book_b', (-3.56, -0.62, 0.38), 84),
 ]

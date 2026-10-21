@@ -121,8 +121,14 @@ for _room in _RUNS:
     LIGHTS[_room] = _l
 
 
-# --- interactivity (prompts/interactivity.md): no doors, so no switch: the ring's fixtures share
-# lights_galleries, on at the start (the tablet can switch it)
+# --- interactivity (prompts/interactivity.md): the ring's fixtures share lights_galleries, on at
+# the start (the tablet can switch it too). (controls) Its switches: one beside the entry
+# opening (ground floor, west jamb) and one on the upper south gallery's pier between the
+# balustrade and the window, the nearest wall to the top of the stair; both on the one signal
+# (two-way switching: each follows the other)
+PLACEMENTS["gallery_s"].append(("ix_switch", (2.33, -1.6, 1.1), 180, {"signal": "lights_galleries", "state": True}))
+PLACEMENTS["ugallery_s"].append(("ix_switch", (8.25, -1.6, 1.1), 180, {"signal": "lights_galleries", "state": True}))
+
 import importlib as _il  # noqa: E402
 import ix_common  # noqa: E402
 
