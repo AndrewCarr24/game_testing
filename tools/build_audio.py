@@ -32,11 +32,11 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "build" / "audio_src"
 OUT = ROOT / "assets" / "audio"
 SR = 44100
-BITRATE = 64            # kbps, mono CBR
+VBR = "5"               # lame -V (mono VBR: ~50 kbps on these; silence costs next to nothing)
 MARK = 0.05             # s: the marker click's position in the sprite
-GAP = 0.08              # s of silence before each sound
+GAP = 0.04              # s of silence before each sound (> an MP3 frame of pre-echo)
 TARGET = -14.0          # dBFS short-term loudness every sound is normalised to
-CEIL = -1.0             # dBFS peak ceiling
+CEIL = -1.5             # dBFS peak ceiling (the encoder overshoots a little on clicks)
 
 PACKS = {
     "impact": "https://kenney.nl/media/pages/assets/impact-sounds/87b4ddecda-1677589768/kenney_impact-sounds.zip",
@@ -606,7 +606,7 @@ def build():
     wav = ROOT / "build" / "sfx.wav"
     write_wav(wav, sprite)
     mp3 = OUT / "sfx.mp3"
-    subprocess.run(["lame", "--silent", "-m", "m", "-b", str(BITRATE), "-q", "2", "--resample", "44.1", str(wav), str(mp3)], check=True)
+    subprocess.run(["lame", "--silent", "-m", "m", "-V", VBR, "-q", "2", "--resample", "44.1", str(wav), str(mp3)], check=True)
     # A short click can't reach the target loudness under the peak ceiling, and the encoder
     # shaves a little off the rest: each variant's shortfall, measured on the decoded MP3, is
     # made up at playback (its third value, dB)
