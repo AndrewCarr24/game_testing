@@ -9,7 +9,12 @@ half-rounds with a narrow fillet between them). The reeds' light and shade (the 
 each valley) is painted into the wardrobe's own pale-oak texture, mip-filtered, because the
 room's soft probe light alone hardly separates them (see soften_normals). Meeting pairs carry
 long T-bar pulls (satin black, or bronze) on round posts and roses; a recessed black plinth
-between the sides. Faces -Y; origin is the floor centre."""
+between the sides. Faces -Y; origin is the floor centre.
+
+The middle pair is a hiding spot (prompts/interactivity.md `hide`): the carcass is hollow (a black
+lining at the back, partitions between the bays, a rail with a coat at either end of the middle
+bay), the middle doors hang from empties on their hinge lines; E swings them open, the player
+steps in and they pull to, leaving a crack at the meeting stiles to peek through."""
 import importlib
 import math
 import os
@@ -25,6 +30,9 @@ import guest_mats  # noqa: E402
 importlib.reload(guest_mats)
 common = guest_mats.common
 textures = guest_mats.textures
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
 
 NAME = "GuestWardrobe"
 
@@ -37,7 +45,10 @@ P = dict(name=NAME, width=3.6, depth=0.62, height=2.7, plinth_h=0.10, doors=6,
          stile=0.052, rail_top=0.068, rail_bottom=0.085,
          pull_len=0.56, pull_r=0.008, pull_z=1.12,
          reed_normal=0.5,      # how much of the reeds' curvature their shading normals keep
-         pull_finish="black")  # "black" (satin black: reads on the pale oak) or "bronze" (the suite's hardware)
+         pull_finish="black",  # "black" (satin black: reads on the pale oak) or "bronze" (the suite's hardware)
+         hide=(2, 3),          # the door pair that is a hiding spot (None: a solid interior)
+         coats=[(-0.42, "M_Entry_Coat_Olive", (0.07, 0.085, 0.04), 1.0),     # (the coat closet's materials)
+                (0.40, "M_Entry_Coat_Oat", (0.30, 0.26, 0.20), 0.9)])
 
 
 # T_Guest_Oak_BaseColor is a Poly Haven oak veneer scan (blender/tools/polyhaven_textures.py),
@@ -329,13 +340,22 @@ def build(**overrides):
     zb = ph + 0.022                                 # top of the bottom rail
 
     # ---- carcass: sides to the floor, top, bottom rail; oak, grain up the sides
-    _part(own, "Sides", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t)),
-                         ((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
+    if p["hide"]:
+        # (one part per side: a part is one collider box, and one round both would fill the hollow)
+        _part(own, "SideL", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
+        _part(own, "SideR", [((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2, seed=7)
+    else:
+        _part(own, "Sides", [((-W / 2, y0, 0), (-W / 2 + t, y1, H - t)),
+                             ((W / 2 - t, y0, 0), (W / 2, y1, H - t))], oak, "z", bevel=0.0022, segments=2)
     _part(own, "Top", [((-W / 2, y0, H - t), (W / 2, y1, H))], oak, "x", bevel=0.0022, segments=2)
     _part(own, "BottomRail", [((-W / 2 + t, y0, ph), (W / 2 - t, y1 - 0.02, zb))], oak, "x", bevel=0.0015)
     # recessed black plinth between the sides, dark interior behind the reveals, a back
     _part(own, "Plinth", [((-W / 2 + t, y0 + 0.045, 0), (W / 2 - t, y1 - 0.03, ph))], black, "x", bevel=0.001)
-    _part(own, "Interior", [((-W / 2 + t, yb + 0.003, zb), (W / 2 - t, yb + 0.008, H - t))], black, "x", bevel=0.0008)
+    hide = p["hide"]
+    if hide:
+        _part(own, "Interior", [((-W / 2 + t, y1 - 0.014, zb), (W / 2 - t, y1 - 0.004, H - t))], black, "x", bevel=0.0008)
+    else:
+        _part(own, "Interior", [((-W / 2 + t, yb + 0.003, zb), (W / 2 - t, yb + 0.008, H - t))], black, "x", bevel=0.0008)
 
     # ---- doors: stile-and-rail frames around reeded panels
     xi0, xi1 = -W / 2 + t + g, W / 2 - t - g
@@ -348,8 +368,19 @@ def build(**overrides):
     for d in range(nd):
         xa = xi0 + d * (dw + g)
         xb = xa + dw
-        stiles += [((xa, yf, zd0), (xa + sw, yb, zd1)), ((xb - sw, yf, zd0), (xb, yb, zd1))]
-        rails += [((xa + sw, yf, zd0), (xb - sw, yb, zd0 + rb)), ((xa + sw, yf, zd1 - rt), (xb - sw, yb, zd1))]
+        st_ = [((xa, yf, zd0), (xa + sw, yb, zd1)), ((xb - sw, yf, zd0), (xb, yb, zd1))]
+        ra_ = [((xa + sw, yf, zd0), (xb - sw, yb, zd0 + rb)), ((xa + sw, yf, zd1 - rt), (xb - sw, yb, zd1))]
+        if hide and d in hide:
+            # a door that swings: its own frame and reeds (hung from its hinge below)
+            _part(own, f"Door{d}_Stiles", st_, oak, "z", bevel=0.002, segments=1, seed=1 + d)
+            _part(own, f"Door{d}_Rails", ra_, oak, "x", bevel=0.002, segments=1, seed=2 + d)
+            rb_ = bmesh.new()
+            reed_field(rb_, xa + sw, xb - sw, zd0 + rb, zd1 - rt, yf + 0.003, pitch, p["slat_gap"],
+                       p["reed_depth"], uoff=0.37 * d)
+            soften_normals(common.mesh_object(f"{n}_Door{d}_Reeds", rb_, col, oak, root), p["reed_normal"])
+            continue
+        stiles += st_
+        rails += ra_
         # panel: reed crowns 3 mm behind the frame face
         reed_field(reeds, xa + sw, xb - sw, zd0 + rb, zd1 - rt, yf + 0.003, pitch, p["slat_gap"],
                    p["reed_depth"], uoff=0.37 * d)
@@ -367,8 +398,37 @@ def build(**overrides):
         px = (xa + dw - sw / 2) if d % 2 == 0 else (xa + sw / 2)
         ob = common.mesh_object(f"{n}_Pull_{d}", pull_bmesh(px, yf, zc, L, pr, span, proj), col, black if p["pull_finish"] == "black" else brass, root)
         common.box_uv(ob, 0.5)
+    if hide:
+        hiding(p, n, col, root, oak, black, brass, dict(xi0=xi0, dw=dw, g=g, yf=yf, yb=yb, y1=y1, zb=zb, H=H, t=t, W=W, D=D))
     parts = guest_mats.consolidate(root, max_dim=0.7)
     return root, parts
+
+
+def hiding(p, n, col, root, oak, black, brass, k):
+    """The middle pair as a hiding spot: partitions closing its bay, a rail with a coat at either
+    end, the two doors (frame, reeds, pull) hung from empties on their outer hinge lines, merged
+    per material; the eye a hand behind the doors, the exit in front."""
+    a, b = p["hide"]
+    xi0, dw, g = k["xi0"], k["dw"], k["g"]
+    xa = xi0 + a * (dw + g)                 # the bay: the left door's outer edge ..
+    xb = xi0 + b * (dw + g) + dw            # .. the right door's
+    xc = (xa + xb) / 2
+    y_in, y_bk, zb, ztop = k["yb"] + 0.004, k["y1"] - 0.014, k["zb"], k["H"] - k["t"]
+    # (two parts: one part = one collider box, and one round both would fill the bay)
+    _part((col, root, n), "BayWallL", [((xa - g - 0.012, y_in, zb), (xa - g, y_bk, ztop))], black, "z", bevel=0.0008)
+    _part((col, root, n), "BayWallR", [((xb + g, y_in, zb), (xb + g + 0.012, y_bk, ztop))], black, "z", bevel=0.0008)
+    coats = [(xc + dx, m, rgb, ln) for dx, m, rgb, ln in p["coats"]]
+    ix_common.closet_rail(root, col, f"{n}_Bay", xa + 0.03, xb - 0.03, (y_in + y_bk) / 2 + 0.02, 1.98, coats, brass)
+    doors = []
+    for d, hx, sx in ((a, xa, -1), (b, xb, 1)):
+        parts = [o for o in root.children if o.name.startswith(f"{n}_Door{d}_") or o.name == f"{n}_Pull_{d}"]
+        pv = ix_common.pivot(root, col, f"{n}_Door{d}", (hx, k["yf"], 0.0), parts)
+        ix_common.merge_parts(pv, {oak.name: "Leaf", black.name: "Pull", brass.name: "Pull"})
+        doors.append((pv, sx * 100, sx * ix_common.crack(dw)))
+    D = k["D"]
+    ix_common.hide_spot(root, col, n, (xc, k["yb"] + 0.15, 1.6), [(xc, -D / 2 - 0.55, 0.0), (xc + 0.7, -D / 2 - 0.55, 0.0),
+                                                                   (xc - 0.7, -D / 2 - 0.55, 0.0)],
+                        "Hide in the wardrobe", "Leave the wardrobe", doors=doors, pitch=-4)
 
 
 if __name__ == "__main__":

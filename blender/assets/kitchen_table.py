@@ -10,6 +10,9 @@ import kitchen_lib as L  # noqa: E402
 
 importlib.reload(L)
 common, materials = L.common, L.materials
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
 
 NAME = "KitchenTable"
 
@@ -19,6 +22,7 @@ P = dict(
     height=0.75,
     pier_x=0.62,
     pier_r=0.2,
+    hide=True,                # a hiding spot under the table (out between two chairs)
 )
 
 
@@ -50,6 +54,12 @@ def build(**overrides):
         L.cylindrical_uv(pier, 1.5)
     # slim black steel stretcher hidden in the shadow line under the top
     b.box("Stretcher", (2 * p["pier_x"], 0.05, 0.03), (0, 0, h - t - 0.015), black, bevel=0.002, tile=0)
+    if p["hide"]:
+        # hiding spot (open cover): under the top beside a pier, looking out between the chairs
+        # (the kitchen's are 0.7 m apart: gaps at x = +-0.35)
+        y_out = -d / 2 - 0.8
+        ix_common.hide_spot(b.root, b.col, b.n, (0.28, -0.24, 0.5), [(0.33, y_out, 0.0), (-0.33, y_out, 0.0)],
+                            "Hide under the table", "Crawl out", cover="open", pitch=-2)
     return b.finish()
 
 

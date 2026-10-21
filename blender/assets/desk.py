@@ -15,6 +15,10 @@ from lib import common, materials, textures  # noqa: E402
 importlib.reload(common)
 importlib.reload(textures)
 importlib.reload(materials)
+sys.path.insert(0, HERE)
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
 
 NAME = "Desk"
 
@@ -40,6 +44,7 @@ P = dict(
     tray_x=(-0.62, 0.66),
     pad=(0.86, 0.44, 0.003),
     pad_y=0.17,
+    hide=True,                 # a hiding spot in the knee space (out on the sitter's side)
 )
 
 
@@ -252,6 +257,12 @@ def build(**overrides):
     for ob in wood:
         common.box_uv(ob, tile=0.5)
         grain_uv(ob)
+    if p["hide"]:
+        # hiding spot (open cover): curled up in the knee space behind the modesty panel, under the
+        # drawer, looking out on the sitter's side (beside the chair)
+        d = p["top"][1]
+        ix_common.hide_spot(root, col, n, (0.32, -0.06, 0.42), [(0.42, d / 2 + 0.75, 0.0), (-0.42, d / 2 + 0.75, 0.0)],
+                            "Hide under the desk", "Crawl out", cover="open", pitch=-2)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

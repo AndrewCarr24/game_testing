@@ -20,6 +20,11 @@ from lib import common, materials  # noqa: E402
 importlib.reload(common)
 importlib.reload(materials)
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ix_common  # noqa: E402  (hiding spot, prompts/interactivity.md)
+
+importlib.reload(ix_common)
+
 NAME = "LivingSofa"
 
 P = dict(
@@ -43,6 +48,7 @@ P = dict(
     cuts_small=2,
     leg="black",              # recessed plinth colour: "black" or "bronze"
     throw=("M_Fabric_Cognac", (0.20, 0.085, 0.035)),   # folded throw over the right arm (None: no throw)
+    hide=True,                # a hiding spot: crouched behind the back (where there's room, the engine checks)
 )
 
 
@@ -355,6 +361,12 @@ def build(**overrides):
         pillow(col, root, pmat, f"{n}_Pillow{i}",
                (sx * (w / 2 - p["arm_w"] - 0.27), 0.0, z_seat + 0.20),
                (-math.radians(12), 0, math.radians(-8 if i == 0 else 7)))
+    if p.get("hide") and w >= 1.8:
+        # hiding spot (open cover; sofas, not the armchairs built from this): crouched a hand behind the back, peeking over it; out behind it
+        ix_common.hide_spot(root, col, n, (0.0, d / 2 + 0.3, 0.74), [(0.0, d / 2 + 0.85, 0.0), (0.6, d / 2 + 0.85, 0.0),
+                                                                   (-0.6, d / 2 + 0.85, 0.0)],
+                            "Hide behind the sofa", "Stand up", cover="open", facing=(0, -1, 0), pitch=8,
+                            look={"yaw": 55, "pitch": 22})
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

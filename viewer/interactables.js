@@ -12,6 +12,8 @@ import { unbatch } from './batching.js';
 //           ({axis, angle | distance}); every switch on a signal follows it (two-way switching)
 //   use     with item `needs` armed, Enter sets `signal` to `value` (fuse -> "power");
 //           `consume` uses the item up. Done while the signal holds that value.
+//   hide    a hiding spot (wardrobe, pantry, under a table): E climbs in, E again climbs out;
+//           `eye` / `exit` name empties, `doors` swing open and pull to (viewer/hiding.js)
 // Common fields: duration, range (m), prompt / promptActive, side ("axis" = only
 // from the side it opens toward, "both"), collide (moving collider), indicator
 // (node name of a status light). A level can lock an item with an inventory
@@ -107,7 +109,7 @@ export class Interactables {
     this.lights = null;           // [PointLight] once a `light` react exists
     this._box = new THREE.Box3();
     this._c = new THREE.Vector3(); this._d = new THREE.Vector3(); this._h = new THREE.Vector3();
-    this._ray = new THREE.Ray(); this._view = new THREE.Ray();
+    this._ray = new THREE.Ray(); this._view = new THREE.Ray(); this._hb = new THREE.Box3();
     this.walls = null;            // the shell's boxes (behindWall), set by the level
     // who set each signal's initial value: reactors and use points only name it (0), a switch's
     // authored state (1), a placement's `state` (2), the level's "signals" (3). The highest wins
@@ -267,6 +269,7 @@ export class Interactables {
       if (def.type === 'switch') this.setSwitchIndicator(it);
       else this.setIndicator(it, it.locked ? RED : GREEN);
     }
+    if (def.type === 'hide') this.addHide(it, def, root);
     if (def.collide) {
       it.collider = new THREE.Box3();
       this.colliders.push(it.collider);
@@ -274,6 +277,23 @@ export class Interactables {
     this.items.push(it);
     this.pose(it);
     return it;
+  }
+
+  // ---- hiding spots (type `hide`; viewer/hiding.js moves the player and the doors): the eye and
+  // exit empties, the door pivots that swing (`it.parts`: kept out of the room batch)
+  addHide(it, def, root) {
+    const find = (n) => (n ? root.getObjectByName(n) : null);
+    it.eye = find(def.eye);
+    it.exits = (Array.isArray(def.exit) ? def.exit : [def.exit]).map(find).filter(Boolean);
+    if (!it.exits.length) it.exits = [it.node];
+    it.doors = (def.doors ?? []).map((d) => ({ ...d, node: find(d.node), axis: axisOf(d.axis) })).filter((d) => d.node);
+    for (const d of it.doors) d.restQuat = d.node.quaternion.clone();
+    it.parts = it.doors.map((d) => d.node);   // (index.html: batched per room, viewer/hiding.js batchHideDoors)
+    // (unbatched, so each door costs its own draw calls; shut, its shadow falls inside its own
+    // cabinet: skip the shadow pass)
+    for (const d of it.doors) d.node.traverse((o) => { if (o.isMesh) o.castShadow = false; });
+    // the whole prop's box, now: its static parts are merged into the room's batch later
+    it.area = new THREE.Box3().setFromObject(root);
   }
 
   addReactor(node, def, opts) {
@@ -452,6 +472,7 @@ export class Interactables {
   done(it) { return it.def.type === 'use' && this.signals.get(it.signal) === it.value; }
 
   available(it) {
+    if (it.def.type === 'hide') return !it.disabled;
     if (it.def.type === 'use') return !this.done(it) || !!it.def.promptDone;
     if (it.def.type !== 'pickup') return true;
     if (it.load?.some((o) => !o.taken)) return false;     // something still rests on it
@@ -461,6 +482,16 @@ export class Interactables {
   // the item's world box; an item with no mesh of its own (an empty marking a slot, e.g. the
   // breaker's fuse slot) is a 20 cm box round its origin (an empty box was never in reach)
   boxOf(it, box = new THREE.Box3()) {
+    if (it.def.type === 'hide') {
+      // a hiding spot is aimed at by its doors, else its own parts, else the whole prop (a table)
+      box.makeEmpty();
+      for (const d of it.doors) box.expandByObject(d.node);
+      if (box.isEmpty()) box.setFromObject(it.node);
+      // (under a table / behind a sofa: the space the player crawls through, from the spot's eye
+      // out to its exit, below the eye; so a vase on the table top or the desk's drawer is still that)
+      if (box.isEmpty()) box.copy(it.pose?.mouthBox ?? it.area);
+      return box;
+    }
     box.setFromObject(it.node);
     if (box.isEmpty()) box.setFromCenterAndSize(it.node.getWorldPosition(this._c), this._d.set(0.2, 0.2, 0.2));
     return box;
@@ -479,7 +510,7 @@ export class Interactables {
     return Math.hypot(dx, dz);
   }
 
-  range(it) { return it.def.range ?? (it.def.type === 'switch' || it.def.type === 'use' ? 1.2 : 1.5); }
+  range(it) { return it.reachRange ?? it.def.range ?? (it.def.type === 'switch' || it.def.type === 'use' ? 1.2 : 1.5); }
 
   // in reach from the eye: within range horizontally (reach), and level with it: the item's box
   // overlaps [eye - BELOW, eye + ABOVE]. Without the height test a switch on the floor above
@@ -516,6 +547,8 @@ export class Interactables {
     const view = forward && this._view.set(player, forward.clone().normalize());
     let best = null, bestScore = Infinity;
     const cands = [];
+    const hides = [];      // hiding spots, decided after the loop (below)
+    let firstHit = Infinity;
     for (const it of this.items) {
       // (hundreds of pickups: skip far ones before measuring their boxes)
       if (it.def.type === 'pickup' && this._c.setFromMatrixPosition(it.node.matrixWorld).distanceToSquared(player) > (this.range(it) + 2.5) ** 2) continue;
@@ -529,6 +562,9 @@ export class Interactables {
         dir.y = 0;
         if (off.dot(dir) <= 0) continue;
       }
+      // a hiding spot is entered from where the player comes out (not from across a sofa or table)
+      if (it.def.type === 'hide' && it.pose && (Math.hypot(player.x - it.pose.exit.x, player.z - it.pose.exit.z) > this.range(it) + 0.7 ||
+          this.behindWall(player, this._hb.setFromCenterAndSize(it.pose.mouth, this._d.set(0.1, 0.1, 0.1))))) continue;   // (not through a wall)
       const small = it.def.type === 'switch' || it.def.type === 'use' || it.def.type === 'pickup';
       if (small && this.behindWall(player, box.clone())) continue;
       const pickup = it.def.type === 'pickup';
@@ -537,13 +573,17 @@ export class Interactables {
         // 0 when the crosshair is on the item's box (2 cm margin: switch plates are small),
         // else the angle to its centre; a little distance and centre angle break ties
         const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
+        const hit = onIt ? to.distanceTo(player) : Infinity;
         const angle = forward.angleTo(to.subVectors(centre, player));
         if (!onIt && angle > FOCUS_CONE) continue;   // (affordance) not where the player looks
         // (focus) what was just used stays in focus for 1.5 s while it's still in view and reach: an
         // opened door swings out from under the crosshair, and the next E went to the light switch
         // beside it instead of closing the door
         const sticky = this.lastUsed?.it === it && performance.now() - this.lastUsed.at < 1500 ? 5 : 0;
-        cands.push({ it, onIt, score: (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - sticky, bonus: pickup && angle < PICKUP_CONE });
+        const base = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - sticky;
+        if (it.def.type === 'hide') { hides.push({ it, score: base, hit }); continue; }
+        firstHit = Math.min(firstHit, hit);
+        cands.push({ it, onIt, score: base, bonus: pickup && angle < PICKUP_CONE });
         continue;
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
@@ -556,6 +596,12 @@ export class Interactables {
       const bonus = c.bonus && (!aimed || c.onIt || c.it.host === aimed.it);
       const score = c.score - (bonus ? 10 : 0);
       if (score < bestScore) { best = c.it; bestScore = score; }
+    }
+    // a hiding spot under the crosshair, nearer than anything else the crosshair is on, wins (even
+    // over a vase in the pickup cone): looking under the table means hiding, not the vase on top
+    for (const h of hides) {
+      const score = h.score + (h.hit < firstHit ? -11 : firstHit < Infinity ? 1 : 0);   // (behind the drawer: the drawer)
+      if (score < bestScore) { best = h.it; bestScore = score; }
     }
     this.unbatch(best);       // the focused pickup draws itself (ready for a highlight, or to be taken)
     return best;
@@ -584,6 +630,7 @@ export class Interactables {
   prompt(it) {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
+    if (d.type === 'hide') return d.prompt || 'Hide';
     if (it.locked) {
       // (affordance) carrying the key: how to use it, before E is pressed
       if (it.lockKey && this.inventory.has(it.lockKey)) return this.lockedMessage(it);
@@ -675,6 +722,7 @@ export class Interactables {
       this.inventory.add(d.item, d.name, it.node, d);
       return `Picked up: ${d.name} · press I for inventory`;
     }
+    if (d.type === 'hide') return this.onHide ? this.onHide(it) : null;   // (viewer/hiding.js)
     if (it.locked) return this.lockedMessage(it);
     if (d.type === 'switch') {
       // `requires`: another signal that must be on before this one can be switched on (the main

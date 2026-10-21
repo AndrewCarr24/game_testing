@@ -52,6 +52,25 @@ Existing types keep working unchanged. New:
   camera, Enter toggles it, battery drains), `battery`, `fuse`, `key_<id>` / `keycard`,
   `car_key`, `tablet` (opens the smart-home screen), and any `throwable: true` item
   (`noise: 1.0` loudness when it lands or shatters).
+- `interact = {type: "hide", prompt: "Hide in the wardrobe", promptActive: "Leave the wardrobe",
+  eye: "<node>", exit: "<node>" | ["<node>", ...], cover: "closed" | "open", doors?: [{node, axis,
+  angle, ajar}], facing?: [x, y, z], pitch?: deg, look?: {yaw, pitch}, duration?: s, noise?: 0..1,
+  range?: 1.4}` on an empty (a hiding spot: wardrobe, pantry, under a table, behind a sofa).
+  `eye` / `exit` name empties in the asset: the camera inside, the feet outside (with a list the
+  first exit clear for a standing player wins; each is pushed up to 1.2 m further out if a chair
+  is in the way). E (from near the exit) climbs in: the doors (pivot empties, NOT interactables,
+  so their parts keep static colliders) swing open to `angle` (deg about `axis` in the pivot's
+  parent space, like `rotate`), the camera crouches at the exit and moves to the eye, the doors
+  pull to and rest at `ajar` (the crack to peek through). Inside, movement is locked, the view
+  turns only `look` degrees (default 28/18 closed, 50/25 open) from `facing` (glTF direction in
+  the asset; default eye -> exit) tilted by `pitch`, and the prompt line says `E · promptActive`;
+  E climbs back out to the exit. A spot whose eye is in a wall or inside another collider, or
+  with no clear exit, is disabled at load (`it.disabled` says why). Enter / leave emit a noise
+  (`source: "hide_in" | "hide_out"`, loudness `noise`, default 0.3 with doors, 0.15 without) and
+  `window.__sfx?.play("hide_door_in" | "hide_door_out" | "hide_in" | "hide_out", position)`.
+  Blender helpers: `ix_common.hide_spot()`, `ix_common.pivot()` (hang door parts from a hinge
+  empty), `ix_common.merge_parts()` (one mesh per material: moving parts are drawn unbatched),
+  `ix_common.closet_rail()` (rail + cloth coats for a wardrobe's inside).
 
 ## Level side (room modules' PLACEMENTS options)
 - `{"signal": "power_kitchen"}` overrides a switch's or reactor's signal for that placement (a
@@ -231,3 +250,16 @@ Existing types keep working unchanged. New:
   an outline) must call `window.__interact.unbatch(item)` first. A pickup with other pickups
   resting on it (`item.load`: books under a candle, a bowl under lemons) can't be taken until
   they are.
+
+- Hiding (viewer/hiding.js, `window.__hiding`): `player.hidden` is true only while settled inside
+  a spot (the Grimble must not see a hidden player); `player.hideSpot` = `{name, cover, eye,
+  exit, node, root}` (Vector3s, world) from the moment E is pressed until the player is out, so
+  the Grimble can see the climb in / out and remember the spot ("it saw you get into that
+  wardrobe"). `cover: "open"` spots (under a table, behind a sofa) are weaker than `"closed"`
+  ones (shut in): the Grimble may treat them differently (e.g. finds you up close). While in a
+  spot `player.pos` = the spot's exit (the floor in front of it). `player.knockDown()` on a
+  player in a spot drags them out to the exit first (the Grimble pulling you out). The hiding
+  module: `spots()` -> every usable spot's info (where a player could be), `active`, `hidden`,
+  `leave({instant})`. Inside a closed spot its doors get dimmed material copies (the probe lights
+  props as if in the open room); a thrown item can't be thrown from a closed spot. The tablet,
+  inventory and flashlight work while hidden (watch the cameras from the wardrobe).

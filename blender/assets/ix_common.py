@@ -407,3 +407,133 @@ def merge_by_material(parent, col, prefix):
         new = common.mesh_object(f"{prefix}_{k}", bm, col, mat, parent, smooth=False)   # (keeps each face's shading)
         out.append(new)
     return out
+
+
+# ------------------------------------------------------------------ hiding spots
+
+def pivot(root, col, name, at, parts):
+    """Hang `parts` (objects, children of `root`) under a new empty at `at` (a door's hinge line),
+    keeping their place. Not an interactable: the parts keep their static colliders (a shut door
+    stays solid); a `hide` spot swings the empty (viewer/hiding.js)."""
+    e = common.empty(name, col, at)
+    e.parent = root
+    for ob in parts:
+        ob.parent = e
+        ob.location = ob.location - e.location
+    return e
+
+
+def merge_parts(parent, names=None):
+    """Apply the modifiers of `parent`'s mesh children and join them into one mesh per material.
+    Moving parts are drawn unbatched, so a door hung from many parts would cost a draw call per
+    part; merged it's one per material. `names`: material name -> suffix of the merged object
+    (default: the material's last word). Returns the merged objects."""
+    import bpy
+    dg = bpy.context.evaluated_depsgraph_get()
+    kids = [o for o in parent.children if o.type == "MESH"]
+    for ob in kids:
+        if ob.modifiers:
+            me = bpy.data.meshes.new_from_object(ob.evaluated_get(dg), preserve_all_data_layers=True, depsgraph=dg)
+            old = ob.data
+            ob.modifiers.clear()
+            ob.data = me
+            if old.users == 0:
+                bpy.data.meshes.remove(old)
+    groups = {}
+    for ob in kids:
+        groups.setdefault(ob.data.materials[0].name if ob.data.materials else "", []).append(ob)
+    out = []
+    for i, (mname, obs) in enumerate(groups.items()):
+        head = obs[0]
+        if len(obs) > 1:
+            with bpy.context.temp_override(active_object=head, object=head, selected_objects=obs,
+                                           selected_editable_objects=obs):
+                bpy.ops.object.join()
+        tag = (names or {}).get(mname) or mname.split("_")[-1] or str(i)
+        head.name = f"{parent.name}_{tag}"
+        head.data.name = head.name
+        out.append(head)
+    return out
+
+
+def closet_rail(root, col, n, x0, x1, y, z, coats, rail_mat, tris=420):
+    """Inside a wardrobe: a hanging rail from x0 to x1 at (y, z) on two end brackets, and coats on
+    hangers hung edge-on along it (cloth-simulated, mud_common.hanger_coat), pushed to the ends so
+    a player can stand in the middle. `coats`: [(x, material name, rgb, length)]. The coats are
+    _NoCollide (no colliders: the doors and carcass already close the wardrobe)."""
+    import bpy
+    import mud_common as mc
+    import table_lamp
+    rb = bmesh.new()
+    table_lamp.cylinder_between(rb, (x0, y, z), (x1, y, z), 0.011, segs=12)
+    for x in (x0, x1):
+        table_lamp.cylinder_between(rb, (x, y, z + 0.035), (x, y, z), 0.016, segs=10)
+    common.mesh_object(f"{n}_Rail_NoCollide", rb, col, rail_mat, root)
+    hang = bmesh.new()
+    by_mat = {}
+    for k, (x, mname, rgb, length) in enumerate(coats):
+        top = z + 0.03
+        cb = mc.hanger_coat(length=length, width=0.2, depth=0.03, sleeve=0.55, tris=tris,
+                            stiff=0.7 + 0.1 * (k % 3), pockets="flap" if k % 2 == 0 else None, seed=k % 3)
+        bmesh.ops.transform(cb, matrix=Matrix.Translation((x, y, top)) @ Matrix.Rotation(math.pi / 2, 4, "Z"),
+                            verts=cb.verts)
+        me = bpy.data.meshes.new("tmp_coat")
+        cb.to_mesh(me)
+        cb.free()
+        by_mat.setdefault(mname, (rgb, bmesh.new()))[1].from_mesh(me)
+        bpy.data.meshes.remove(me)
+        neck = (x, y, top - 0.12)
+        table_lamp.cylinder_between(hang, (x, y + 0.02, z + 0.016), (x, y + 0.004, z + 0.028), 0.0025, segs=5)
+        table_lamp.cylinder_between(hang, (x, y + 0.004, z + 0.028), neck, 0.0025, segs=5)
+        for sy in (-1, 1):
+            table_lamp.cylinder_between(hang, neck, (x, y + sy * 0.18, top - 0.12 - 0.06), 0.0035, segs=5)
+    for mname, (rgb, bm) in by_mat.items():
+        for f in bm.faces:
+            f.material_index = 0
+        ob = common.mesh_object(f"{n}_{mname[2:]}_NoCollide", bm, col, materials.fabric(mname, rgb, roughness=0.95), root)
+        common.box_uv(ob, tile=0.25)
+        ob.data.set_sharp_from_angle(angle=1.2)
+    common.mesh_object(f"{n}_Hangers_NoCollide", hang, col, rail_mat, root)
+
+
+def crack(door_w, gap=0.14):
+    """The angle (deg) a door of width `door_w` is left ajar so its free edge stands `gap` m
+    proud: the crack a hidden player peeks through is about the same on a wide or a narrow door."""
+    return math.degrees(math.asin(min(1.0, gap / door_w)))
+
+
+def hide_spot(root, col, n, eye, exit, prompt, leave, cover="closed", doors=(), facing=None, pitch=0.0,
+              look=None, tag="Hide", **extra):
+    """A hiding spot (interact type `hide`, viewer/hiding.js; prompts/interactivity.md): empties
+    `<n>_<tag>` (the interactable), `<n>_<tag>Eye` (the camera inside) and `<n>_<tag>Exit[i]` (the
+    feet outside; with a list of points the first clear one wins), in the asset's own Blender
+    coords (the root at the origin). `doors`: [(pivot empty, angle, ajar)] swung about the vertical
+    through the pivot (degrees, + = counter-clockwise seen from above): open to `angle` while the
+    player climbs in or out, left at `ajar` (the crack to peek through) while inside.
+    `facing`: the direction the view faces inside (default: from the eye toward the exit);
+    `pitch`: its tilt (deg, + up); `look`: {yaw, pitch} how far it may turn (deg); `cover`:
+    "closed" (shut in) or "open" (under a table, behind a sofa)."""
+    spot = common.empty(f"{n}_{tag}", col, eye)
+    spot.parent = root
+    e = common.empty(f"{n}_{tag}Eye", col, eye)
+    e.parent = root
+    exits = list(exit) if isinstance(exit[0], (list, tuple)) else [exit]
+    names = []
+    for i, x in enumerate(exits):
+        o = common.empty(f"{n}_{tag}Exit{i if i else ''}", col, x)
+        o.parent = root
+        names.append(o.name)
+    d = {"type": "hide", "prompt": prompt, "promptActive": leave, "eye": e.name,
+         "exit": names if len(names) > 1 else names[0], "cover": cover, "range": 1.4, "pitch": pitch}
+    if doors:
+        d["doors"] = [{"node": pv.name, "axis": common.to_gltf((0, 0, 1)), "angle": a, "ajar": j}
+                      for pv, a, j in doors]
+    if facing is None and doors:
+        facing = (0, -1, 0)          # shut in: out through the doors (the asset's front), whichever exit is used
+    if facing is not None:
+        d["facing"] = common.to_gltf(facing)
+    if look:
+        d["look"] = look
+    d.update(extra)
+    spot["interact"] = d
+    return spot

@@ -155,6 +155,7 @@
     import { House } from './house.js';
     import { Affordance, itemInfo } from './affordance.js';
     import { Sfx } from './audio.js';   // sound effects
+    import { Hiding, batchHideDoors } from './hiding.js';   // hiding spots (interact type `hide`)
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -504,6 +505,7 @@
       const restingOk = (it) => it.def.type === 'pickup' && !it.host && params.get('pbatch') !== '0';
       for (const it of interact.items) if (!restingOk(it)) it.node.traverse((o) => moving.add(o));
       for (const it of interact.items) if (restingOk(it)) it.node.traverse((o) => { if (o.isMesh && !moving.has(o)) restingPickups.set(o, it); });
+      batchHideDoors(interact, roomRoots);   // hiding spots' doors: batched per room, live only while in use
       // reactors that move (blinds, rockers' parts, doors) or carry a light keep their own nodes; the
       // ones that only change materials (glows, screens) batch per room: their shared materials do it
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
@@ -563,6 +565,10 @@
         };
       }
       window.__player = player;
+      // hiding spots (viewer/hiding.js): E climbs into a wardrobe / pantry / under a table, E climbs
+      // out; movement locked, the view only turns a little, player.hidden while inside
+      const hiding = new Hiding({ player, camera, interact, noise, walls, onMove: () => (renderer.shadowMap.needsUpdate = true) });
+      window.__hiding = hiding;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
       // (affordance) focus highlight, near-range glints, crosshair states (viewer/affordance.js)
@@ -633,6 +639,7 @@
           toast(`${inventory.name(inventory.holster())} put away`);
           return;
         }
+        if (e.code === 'KeyE' && hiding.active) { if (!inventory.open) hiding.leave(); return; }   // (hiding: E climbs out)
         if (e.code === 'KeyE' && focus && !inventory.open) {
           const msg = interact.use(focus, player.boxAt(player.pos).clone());
           window.__sfx?.used?.(focus, msg);   // sound effects: a locked door's rattle, a dead switch
@@ -645,6 +652,7 @@
       function useArmed() {
         const id = inventory.armed;
         const entry = inventory.get(id);
+        if (entry.def.throwable && hiding.active && hiding.spot.pose.cover !== 'open') { toast('No room to throw in here'); return; }
         if (entry.def.throwable) {
           const dir = new THREE.Vector3();
           camera.getWorldDirection(dir);
@@ -721,7 +729,8 @@
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
         const on = controls.isLocked && !inventory.open && !tablet.open;
-        player.update(dt, {
+        hand.group.visible = !hiding.active;         // (a held item would poke through the wardrobe door)
+        if (!hiding.update(dt)) player.update(dt, {   // (in a hiding spot the hiding module has the camera)
           forward: on && held(KEYS.forward), back: on && held(KEYS.back),
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
@@ -735,7 +744,7 @@
         }
         grimble?.shakeCamera(camera, dt);
         // what the crosshair is on (or nearest to it) among the things in reach
-        focus = on && !player.isDown ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
+        focus = on && !player.isDown && !hiding.active ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
         const armedAct = armed ? interact.armedPrompt(armed, camera.position) : null;
         const armedHint = armed ? armedAct ?? itemHint(armed) : null;
@@ -750,9 +759,11 @@
         if (focusPrompt && !((focus.locked || focus.def.type === 'use') && armedHint)) parts.push(['E', focusPrompt, cue === 'blocked' ? 'blocked' : '']);
         if (armedHint) parts.push(['Enter', armedHint, armedAct ? 'armed' : '']);
         if (on && inventory.armed) parts.push(['Delete', 'put away', 'dim']);
+        const hideHint = hiding.hint();      // (hiding spots) how to leave, while inside
+        if (hideHint) parts.unshift(['E', hideHint, '']);
         // (affordance) under the crosshair as key caps; textContent stays "E · Take vase   |   ..."
         const sub = parts.length && parts[0][0] === 'E' ? afford.subline(focus) : '';
-        const idle = (!controls.isLocked ? walkHint : on && !player.isDown ? playHint : '').replace(' · I inventory', inventory.has('flashlight') ? ' · F flashlight · I inventory' : ' · I inventory');   // (house.js)
+        const idle = (!controls.isLocked ? walkHint : on && !player.isDown && !hiding.active ? playHint : '').replace(' · I inventory', inventory.has('flashlight') ? ' · F flashlight · I inventory' : ' · I inventory');   // (house.js)
         const key = parts.length ? JSON.stringify([parts, sub]) : idle;
         if (key !== hintKey) {
           hintKey = key;
