@@ -68,7 +68,8 @@ const DEFAULTS = {
   lossBias: 60,            // s over which a loss's pull on its prowling widens out
   lossKeep: 240,           // s a loss keeps pulling it back
   cooldown: 3.5,           // s after a hit before it can hit again
-  getaway: 2.0,            // ... and s after the player is back on their feet
+  getaway: 3.5,            // ... and s after the player is back on their feet (2 s felt relentless:
+                           //   standing still, the player was knocked down every ~5 s)
   crawlRate: 2.0,          // playback rate of Crawl / CrawlFast (speed scales with it, so no sliding):
   fastRate: 2.6,           //   ~1.2 m/s prowling, ~4.7 m/s chasing (the player walks 3.4, runs 6.8)
   upperY: 3.5,             // player feet above this = on the upper floor
@@ -214,7 +215,9 @@ export class GrimbleHunt {
     this.reset();
     // the player can't walk into it: three boxes round the chain's points, added to the shared
     // colliders (so thrown things bounce off it too); parked under the ground until it's inside
-    this.blockers = [0, 1, 2].map(() => new THREE.Box3(new THREE.Vector3(0, -101, 0), new THREE.Vector3(0, -100, 0)));
+    // (a fourth round its face: the head reaches past the front box, and a player pressed up to it
+    // ended up with the camera inside its head)
+    this.blockers = [0, 1, 2, 3].map(() => new THREE.Box3(new THREE.Vector3(0, -101, 0), new THREE.Vector3(0, -100, 0)));
     colliders.push(...this.blockers);
     window.__noise?.on?.((n) => this.hear(n));
     this._ray = new THREE.Ray();
@@ -1427,6 +1430,11 @@ export class GrimbleHunt {
       this.blockers[i].max.set(p.x + s, h, p.y + s);
       player?.pushOutOf?.(this.blockers[i]);
     });
+    const t = this.tip(), f = c.hd.clone().sub(c.q).normalize(), fs = 0.55;
+    const fx = t.x - f.x * 0.35, fz = t.y - f.y * 0.35;
+    this.blockers[3].min.set(fx - fs, 0, fz - fs);
+    this.blockers[3].max.set(fx + fs, h, fz + fs);
+    player?.pushOutOf?.(this.blockers[3]);
   }
 
   strike(kind) {
