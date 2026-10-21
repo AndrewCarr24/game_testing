@@ -119,3 +119,23 @@ Existing types keep working unchanged. New:
   beam (within range + 6 m) or within 10 m, with no shell wall between, once a second:
   `window.__noise.emit({position: eye, loudness: 1, source: 'light'})`.
 - Sound hooks (optional): `window.__sfx.play('power_flicker' | 'power_out' | 'power_on' | 'fuse_blow', position)`.
+
+## Affordance (viewer/affordance.js): what's usable reads at a glance
+- Focus = what E acts on: only things within 50 degrees of the view (or under the crosshair),
+  in reach. The crosshair is a dot; a ring over something usable (`take` for pickups, `use`);
+  amber dashes when it's `blocked` (locked, needs an item, a switch whose `requires` is off);
+  gold when the armed item works on it (`armed`) or a throwable is aimed (`throw`). The prompt
+  sits under it as key caps (`#hint` textContent is still "E · <prompt>   |   Enter · ...").
+- The focused thing gets a faint fresnel rim (overlay meshes sharing its geometry; it
+  brightens what's lit, plus a small lift in the dark). An interact node with no mesh (the
+  breaker's fuse slot) borrows the asset's small meshes that overlap it.
+- Usable things within ~5 m (pickups, `use` points not done, switches, drawers; not doors)
+  twinkle briefly every ~4 s: one Points draw call for the house, hidden by walls and closed
+  drawers. Frozen under `window.__bench`. `?afford=0` turns highlight and glints off;
+  `?rim=`, `?rimgain=`, `?glint=` tune them.
+- Pickups may carry `purpose`: one plain line (what it's FOR, how to use it; no story) shown
+  in the inventory and under the pickup prompt. Without it the line comes from a table in
+  affordance.js (keycard, flashlight, battery, fuse, tablet, car_key) or from what the item
+  does: throwable (smashes / thuds), a `use` point that needs it, a lock it fits.
+- Locked things say what's missing in the prompt: "Locked · needs the <item>" (or the
+  authored `lockedPrompt`), "Locked · arm the <item> (I)" while carried but not armed.

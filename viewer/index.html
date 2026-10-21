@@ -66,6 +66,42 @@
     #tablet .tmsg { min-height: 18px; margin-top: 10px; font-size: 12px; color: #f0c674; }
     #tablet .thelp { font-size: 11px; color: #7d858c; margin-top: 4px; }
     #tablet .tempty { color: #888; padding: 10px; }
+    /* (affordance) crosshair + the prompt under it (viewer/affordance.js): a dot; a ring over
+       something usable; amber dashes when it's locked / needs an item; gold when the armed item works */
+    #cross { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; pointer-events: none; display: none; }
+    #cross.show { display: block; }
+    #cross::before { content: ''; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%;
+                     background: rgba(255,255,255,.62); box-shadow: 0 0 2px rgba(0,0,0,.9); transition: transform .12s, background .12s; }
+    #cross::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.9);
+                    box-shadow: 0 0 3px rgba(0,0,0,.55), inset 0 0 3px rgba(0,0,0,.45); transform: scale(.3); opacity: 0;
+                    transition: transform .14s ease-out, opacity .14s, border-color .14s; }
+    #cross.take::after, #cross.use::after, #cross.blocked::after, #cross.armed::after { transform: scale(1); opacity: 1; }
+    #cross.take::before { transform: scale(1.5); background: #fff; }
+    #cross.blocked::after { border: 1.5px dashed rgba(236,160,96,.95); }
+    #cross.blocked::before { background: rgba(236,160,96,.95); }
+    #cross.armed::after { border-color: #f0c674; }
+    #cross.armed::before { background: #f0c674; transform: scale(1.5); }
+    #cross.done::after { transform: scale(.75); opacity: .4; }
+    #cross.throw::after { transform: scale(.8); opacity: 1; border: 1.5px dotted #f0c674; }
+    #hint:not(.act) { left: 14px; width: auto; text-align: left; font-size: 12px; color: #ccc; }
+    #inventory { max-width: calc(100% - 560px); flex-wrap: wrap; justify-content: flex-end; }
+    #hint.act { bottom: auto; top: calc(50% + 28px); white-space: normal; font-size: 15px; line-height: 1.25; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.7); }
+    #hint.act .p { margin: 3px 0; }
+    #hint.act .sep { display: none; }
+    #hint .k { display: inline-block; min-width: 12px; padding: 0 6px; margin-right: 8px; border: 1px solid rgba(255,255,255,.7); border-radius: 4px;
+               background: rgba(0,0,0,.35); font-size: 12px; font-weight: 600; line-height: 19px; text-shadow: none; }
+    #hint .p.blocked { color: #f3c49a; }
+    #hint .p.blocked .k { border-color: rgba(236,160,96,.9); }
+    #hint .p.armed .k { border-color: #f0c674; color: #f0c674; }
+    #hint .p.dim { font-size: 11px; color: #aaa; }
+    #hint .p.dim .k { font-size: 10px; line-height: 15px; }
+    #hint .sub { max-width: 440px; margin: 2px auto 0; font-size: 12px; color: #c9c4b8; }
+    .ico { flex: none; display: block; color: #e8e2d4; }
+    #inv-panel .row { align-items: flex-start; }
+    #inv-panel .row .ico { margin-top: 1px; }
+    #inv-panel .row .txt { display: flex; flex-direction: column; gap: 3px; }
+    #inv-panel .row .why { font-size: 12px; color: #a9a49a; max-width: 360px; line-height: 1.3; }
+    #inv-panel .row.sel .why { color: #d8d2c4; }
   </style>
   <script type="importmap">
     { "imports": {
@@ -84,6 +120,7 @@
     <a href="?asset=rug">rug</a>
     <span id="stats"></span>
   </div>
+  <div id="cross" class="hud"></div>
   <div id="hint"></div>
   <div id="toast"></div>
   <div id="inventory"></div>
@@ -112,6 +149,7 @@
     import { Grimble, prepareGrimble } from './grimble.js';
     import { GrimbleHunt, shatter } from './grimble_hunt.js';
     import { House } from './house.js';
+    import { Affordance, itemInfo } from './affordance.js';
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -347,7 +385,9 @@
       const inventoryEl = document.getElementById('inventory');
       const invPanel = document.getElementById('inv-panel');
       const invList = document.getElementById('inv-list');
-      const icon = (id) => (id === 'keycard' ? '<span class="card"></span>' : id === 'vase' ? '<span class="glass"></span>' : '');
+      // (affordance) each item's icon and the one line saying what it's for
+      const icon = (id) => itemInfo(id, inventory.get(id), interact).icon;
+      const why = (id) => itemInfo(id, inventory.get(id), interact).purpose;
       let flashlight = null;
       const inventory = new Inventory((inv) => {
         if (flashlight && inv.has('flashlight')) flashlight.ensure();
@@ -355,7 +395,7 @@
           `<div class="slot${inv.armed === id ? ' armed' : ''}">${icon(id)}${inv.label(id)}${inv.armed === id ? ' <span class="tag">ARMED</span>' : ''}</div>`).join('');
         invPanel.classList.toggle('open', inv.open);
         invList.innerHTML = inv.items.size
-          ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}${inv.label(id)}${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
+          ? inv.ids().map((id, i) => `<div class="row${i === inv.sel ? ' sel' : ''}">${icon(id)}<div class="txt"><div>${inv.label(id)}</div><div class="why">${why(id)}</div></div>${inv.armed === id ? '<span class="tag">ARMED</span>' : ''}</div>`).join('')
           : '<div class="empty">Nothing yet.</div>';
         hand?.show(inv.armed, inv.armed && inv.get(inv.armed).node);
       });
@@ -464,6 +504,11 @@
       window.__player = player;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
+      // (affordance) focus highlight, near-range glints, crosshair states (viewer/affordance.js)
+      const afford = new Affordance({ scene, camera, renderer, interact, inventory });
+      window.__afford = afford;
+      const crossEl = document.getElementById('cross');
+      let hintKey = '';
       const throwables = new Throwables(scene, colliders, (at, n) => {
         if (!n.thud) toast('Smash!');
         noise.emit({ position: at.clone(), loudness: n.loudness, source: n.thud ? 'thud' : 'shatter', item: n.item });
@@ -484,6 +529,7 @@
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
+      const playHint = 'WASD move · Shift run · Space jump · C crouch · E use · I inventory · Esc release';   // (affordance) while playing
       hint.textContent = walkHint;
       document.body.addEventListener('click', () => controls.lock());
       const keys = {};
@@ -597,14 +643,30 @@
         // what the crosshair is on (or nearest to it) among the things in reach
         focus = on && !player.isDown ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
-        const armedHint = armed ? interact.armedPrompt(armed, camera.position) ?? itemHint(armed) : null;
-        const parts = [];
+        const armedAct = armed ? interact.armedPrompt(armed, camera.position) : null;
+        const armedHint = armed ? armedAct ?? itemHint(armed) : null;
+        // (affordance) the crosshair's state, the highlight on the focus, glints on usable things near
+        afford.update(dt, focus, camera.position);
+        let cue = afford.cue(focus, armed);
+        if (!cue && armedAct) cue = inventory.get(armed)?.def.throwable ? 'throw' : 'armed';
+        const crossCls = on && !player.isDown ? `hud show ${cue ?? ''}` : 'hud';
+        if (crossEl.className !== crossCls) crossEl.className = crossCls;
+        const parts = [];   // [key, text, style]
         const focusPrompt = focus && interact.prompt(focus);
-        if (focusPrompt && !((focus.locked || focus.def.type === 'use') && armedHint)) parts.push(`E · ${focusPrompt}`);
-        if (armedHint) parts.push(`Enter · ${armedHint}`);
-        if (on && inventory.armed) parts.push('Delete · put away');
-        hint.textContent = parts.length ? parts.join('   |   ')
-          : inventory.has('flashlight') ? walkHint.replace(' · I inventory', ' · F flashlight · I inventory') : walkHint;   // (house.js)
+        if (focusPrompt && !((focus.locked || focus.def.type === 'use') && armedHint)) parts.push(['E', focusPrompt, cue === 'blocked' ? 'blocked' : '']);
+        if (armedHint) parts.push(['Enter', armedHint, armedAct ? 'armed' : '']);
+        if (on && inventory.armed) parts.push(['Delete', 'put away', 'dim']);
+        // (affordance) under the crosshair as key caps; textContent stays "E · Take vase   |   ..."
+        const sub = parts.length && parts[0][0] === 'E' ? afford.subline(focus) : '';
+        const idle = (controls.isLocked ? playHint : walkHint).replace(' · I inventory', inventory.has('flashlight') ? ' · F flashlight · I inventory' : ' · I inventory');   // (house.js)
+        const key = parts.length ? JSON.stringify([parts, sub]) : idle;
+        if (key !== hintKey) {
+          hintKey = key;
+          hint.classList.toggle('act', parts.length > 0);
+          if (!parts.length) hint.textContent = idle;
+          else hint.innerHTML = parts.map(([k, t, c]) => `<div class="p ${c}"><span class="k">${k}</span><span class="sep"> · </span>${esc(t)}</div>`)
+            .join('<span class="sep">   |   </span>') + (sub ? `<div class="sub">${esc(sub)}</div>` : '');
+        }
         // the flashlight's battery, while the player has one
         batteryEl.classList.toggle('show', inventory.has('flashlight'));
         if (inventory.has('flashlight')) {
@@ -613,6 +675,7 @@
           batteryEl.classList.toggle('on', flashlight.on);
         }
       };
+      const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
       // what Enter does with an item that works anywhere
       function itemHint(id) {
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';

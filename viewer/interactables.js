@@ -32,6 +32,10 @@ const truthy = (v) => v === true || v === 1 || v === 'true' || v === '1';
 const AXES = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
 const REACH_BELOW = 1.9, REACH_ABOVE = 0.9;   // m from the eye: the floor at your feet .. a high shelf
 const PICKUP_CONE = THREE.MathUtils.degToRad(45);   // pickups this close to the crosshair win (nearest())
+// (affordance) nothing further than this off the view is in focus unless the crosshair is on it:
+// the prompt, highlight and crosshair match where the player looks (it used to offer the vase
+// behind you while you faced the wall)
+const FOCUS_CONE = THREE.MathUtils.degToRad(50);
 
 // "y", "-x", [0, 0, -1] -> unit vector
 export function axisOf(a, fallback = 'y') {
@@ -474,6 +478,7 @@ export class Interactables {
         // else the angle to its centre; a little distance and centre angle break ties
         const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
         const angle = forward.angleTo(to.subVectors(centre, player));
+        if (!onIt && angle > FOCUS_CONE) continue;   // (affordance) not where the player looks
         score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
@@ -488,7 +493,11 @@ export class Interactables {
   prompt(it) {
     const d = it.def;
     if (d.type === 'pickup') return d.prompt;
-    if (it.locked) return d.lockedPrompt || 'Locked';
+    if (it.locked) {
+      // (affordance) carrying the key but not holding it: say so before E is pressed
+      if (it.lockKey && this.inventory.has(it.lockKey) && this.inventory.armed !== it.lockKey) return `Locked · arm the ${this.itemName(it.lockKey)} (I)`;
+      return d.lockedPrompt || (it.lockKey ? `Locked · needs the ${this.itemName(it.lockKey)}` : 'Locked');
+    }
     if (d.type === 'switch') {
       const on = truthy(this.signals.get(it.signal));
       if (!on && d.requires && !truthy(this.signals.get(d.requires))) return d.requiresPrompt || 'Nothing happens';
@@ -503,7 +512,8 @@ export class Interactables {
       if (this.inventory.has(d.needs)) return `${d.prompt} · arm the ${name}`;
       return `${d.prompt} · needs a ${name}`;
     }
-    return it.target ? d.promptActive : d.prompt;
+    // (affordance) an authored prompt, else the plain verb
+    return it.target ? (d.promptActive || 'Close') : (d.prompt || 'Open');
   }
 
   // the lockable item the armed key works on from here, if any
