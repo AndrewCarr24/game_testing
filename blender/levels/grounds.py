@@ -24,7 +24,10 @@ from mathutils import Matrix, Vector
 
 from lib import common, outdoor, textures
 
+import ground_colliders
+
 HERE = os.path.dirname(os.path.abspath(__file__))
+importlib.reload(ground_colliders)
 if os.path.join(HERE, "outdoor") not in sys.path:
     sys.path.insert(0, os.path.join(HERE, "outdoor"))
 
@@ -351,11 +354,14 @@ def merge(objs, col, name, root):
     return merged
 
 
-def build(h, plan, roots, zones_only=None):
-    """roots: asset -> root already built for the rooms. Returns (outdoor root, objects, report)."""
+def build(h, plan, roots, zones_only=None, doors=()):
+    """roots: asset -> root already built for the rooms. Returns (outdoor root, objects, report,
+    walkable) with walkable = ground_colliders.build's (meta, boxes): the colliders that make
+    the grounds walkable, from the zones' placed geometry before it's merged."""
     col = common.fresh_collection(f"{h.name}_Outdoor")
     root = common.empty(f"{h.name}_Outdoor", col)
     objs = base(plan, col) + house_exterior(h, plan, col)
     placed, report = place_zones(plan, col, roots, zones_only)
+    walkable = ground_colliders.build(plan, placed, doors)
     merged = merge(objs + placed, col, h.name, root)
-    return root, merged, report
+    return root, merged, report, walkable

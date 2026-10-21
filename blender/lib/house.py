@@ -256,22 +256,55 @@ class House:
             # the opening's reveals (the cut through both linings) skinned dark, like the door's
             # black stops; 3 mm, inside the slab's 4 mm clearance
             T2, sk = 2 * self.plan.T, 0.003
+            # exterior doors (going outside): the wall is one lining, L..L+-T on the room's side;
+            # a solid door sits in its middle (inset), a glass door on the glass line (inset 0,
+            # no reveals: its own surround meets the window mullions)
+            ext = self.exterior_side(c)
+            Lc = L
+            if ext:
+                T2 = self.plan.T
+                Lc = L + ext * c.get("inset", self.plan.T / 2)
             for nm, (b0, b1, h0, h1) in (("L", (a0, a0 + sk, z0, z1)), ("R", (a1 - sk, a1, z0, z1)),
                                          ("Head", (a0, a1, z1 - sk, z1))):
-                self.wall_box(None, f"DoorReveal_{int(a0 * 10)}_{int(L * 10)}_{nm}", c["axis"], L, b0, b1, h0, h1,
-                              T2, self.frame, collide=False)
+                if not c.get("reveal", True):
+                    break
+                self.wall_box(None, f"DoorReveal_{int(a0 * 10)}_{int(L * 10)}_{nm}", c["axis"], L + (ext or 0) * self.plan.T / 2,
+                              b0, b1, h0, h1, T2, self.frame, collide=False)
             rot = self.door_rotation(c)
-            pos = ((a0 + a1) / 2, L, z0) if c["axis"] == "x" else (L, (a0 + a1) / 2, z0)
+            pos = ((a0 + a1) / 2, Lc, z0) if c["axis"] == "x" else (Lc, (a0 + a1) / 2, z0)
             self.doors.append(dict(asset=c["door"], pos=pos, rot=rot, lock=c.get("lock"),
-                                   room=c["swing"]))
+                                   room=c["swing"], exterior=bool(ext)))
 
     def door_rotation(self, c):
-        """Door assets swing toward their local +Y; turn that toward the `swing` room."""
+        """Door assets swing toward their local +Y; turn that toward the `swing` room (away
+        from it with swing_out: an exterior door opening outward)."""
         x0, y0, x1, y1 = self.plan.ROOMS[c["swing"]]["rect"]
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        flip = 180 if c.get("swing_out") else 0
         if c["axis"] == "x":
-            return 0 if cy > c["line"] else 180
-        return -90 if cx > c["line"] else 90
+            return (0 if cy > c["line"] else 180) + flip
+        return (-90 if cx > c["line"] else 90) + flip
+
+    def exterior_side(self, c):
+        """For a cut in an outer wall (rooms on one side of its line only): the direction
+        (+1 / -1 along the wall's normal axis) toward the room; None for an inner wall."""
+        sides = set()
+        for r in self.plan.ROOMS.values():
+            if self.plan.LEVEL_Z[r["level"]] > c["z"][0] + 1e-6 or self.z_range_of(r)[1] < c["z"][1] - 1e-6:
+                continue
+            x0, y0, x1, y1 = r["rect"]
+            lo, hi, b0, b1 = (y0, y1, x0, x1) if c["axis"] == "x" else (x0, x1, y0, y1)
+            if b0 >= c["span"][1] - 1e-6 or b1 <= c["span"][0] + 1e-6:
+                continue
+            if abs(lo - c["line"]) < 1e-6:
+                sides.add(1)
+            if abs(hi - c["line"]) < 1e-6:
+                sides.add(-1)
+        return sides.pop() if len(sides) == 1 else None
+
+    def z_range_of(self, r):
+        z0 = self.plan.LEVEL_Z[r["level"]]
+        return (z0, self.plan.TOP) if r.get("double") or r.get("kind") == "courtyard" else (z0, z0 + self.plan.HEIGHT[r["level"]])
 
     def wall_box(self, room, name, axis, L, a0, a1, z0, z1, depth, mat, collide=True):
         if axis == "x":

@@ -12,6 +12,7 @@ the main block and an opening on the facade line.
 """
 
 T = 0.15                 # wall lining thickness, per room side
+KB = 14.0 / 9.0          # the kitchen's glass wall (14 m) is nine window bays
 LEVEL_Z = {0: 0.0, 1: 4.6}
 HEIGHT = {0: 4.2, 1: 3.8}    # floor to ceiling
 TOP = 8.4                # roof underside; double-height rooms go from 0 to here
@@ -69,7 +70,9 @@ CUTS = [
     dict(kind="opening", axis="x", line=-10.5, span=(2.5, 7.0), z=(0, 3.6)),                 # entry -> gallery
     dict(kind="opening", axis="y", line=-8, span=(-18.05, -16.95), z=(0, 2.5), door="door_plain", swing="powder"),
     dict(kind="opening", axis="y", line=8, span=(-18.05, -16.95), z=(0, 2.5), door="door_plain", swing="cloak"),
-    dict(kind="window", axis="x", line=-20, span=(-6, 6), z=(0, TOP)),                         # 8.4 m glass front
+    # 8.4 m glass front, with the front doors in its middle two bays (see "exterior doors" below)
+    dict(kind="window", axis="x", line=-20, span=(-6, -1.5), z=(0, TOP)),
+    dict(kind="window", axis="x", line=-20, span=(1.5, 6), z=(0, TOP)),
     # great room
     dict(kind="opening", axis="y", line=-13.5, span=(-5.5, -1.5), z=(0, 3.6)),               # -> west gallery
     dict(kind="opening", axis="y", line=-13.5, span=(1.5, 5.5), z=(0, 3.6)),
@@ -82,13 +85,37 @@ CUTS = [
     dict(kind="opening", axis="x", line=10.5, span=(-3, 3), z=(0, 3.6)),                     # kitchen -> gallery
     dict(kind="opening", axis="y", line=8, span=(14.25, 16.25), z=(0, 3.0)),                 # kitchen <-> scullery
     dict(kind="opening", axis="y", line=13.5, span=(16.45, 17.55), z=(0, 2.5), door="door_plain", swing="wine_room"),
-    dict(kind="window", axis="x", line=20, span=(-24, -12), z=(0, 4.2)),                     # dining
-    dict(kind="window", axis="x", line=20, span=(-8, 6), z=(0, 4.2)),                        # kitchen
+    dict(kind="window", axis="x", line=20, span=(-24, -19.5), z=(0, 4.2)),                   # dining (doors in the middle)
+    dict(kind="window", axis="x", line=20, span=(-16.5, -12), z=(0, 4.2)),
+    dict(kind="window", axis="x", line=20, span=(-8, -8 + 4 * KB), z=(0, 4.2)),               # kitchen (a door in bay 5 of 9)
+    dict(kind="window", axis="x", line=20, span=(-8 + 5 * KB, 6), z=(0, 4.2)),
     # mudroom, garage
     dict(kind="opening", axis="y", line=13.5, span=(2.95, 4.05), z=(0, 2.5), door="door_plain", swing="mudroom"),
     dict(kind="opening", axis="x", line=0, span=(19.2, 20.3), z=(0, 2.5), door="door_plain", swing="garage"),
     dict(kind="window", axis="y", line=26, span=(3, 7.5), z=(0.9, 3.3)),                     # mudroom
     dict(kind="garage_door", axis="x", line=-20, span=(15.5, 24), z=(0, 3.2)),
+    # ---- exterior doors (going outside): glass doors in the glass walls open outward, on the
+    # glass line (inset 0, no reveals: each door's own surround meets the mullions), 3 m high
+    # with a transom over them; they keep the walls' 1.5 m bay rhythm (the blinds' bays too)
+    # front doors, a pair on the entry's centre line, onto the motor court
+    dict(kind="opening", axis="x", line=-20, span=(-1.5, 0.0), z=(0, 3.0), door="door_glass_r", swing="entry",
+         swing_out=True, inset=0.0, reveal=False),
+    dict(kind="opening", axis="x", line=-20, span=(0.0, 1.5), z=(0, 3.0), door="door_glass", swing="entry",
+         swing_out=True, inset=0.0, reveal=False),
+    dict(kind="window", axis="x", line=-20, span=(-1.5, 1.5), z=(3.0, TOP)),
+    # dining room: a pair onto the north terrace, on the fire garden's axis (x = -18)
+    dict(kind="opening", axis="x", line=20, span=(-19.5, -18.0), z=(0, 3.0), door="door_glass", swing="dining",
+         swing_out=True, inset=0.0, reveal=False),
+    dict(kind="opening", axis="x", line=20, span=(-18.0, -16.5), z=(0, 3.0), door="door_glass_r", swing="dining",
+         swing_out=True, inset=0.0, reveal=False),
+    dict(kind="window", axis="x", line=20, span=(-19.5, -16.5), z=(3.0, 4.2)),
+    # kitchen: one door in the middle bay, onto the north terrace and the pool
+    dict(kind="opening", axis="x", line=20, span=(-8 + 4 * KB, -8 + 5 * KB), z=(0, 3.0), door="door_glass_wide",
+         swing="kitchen", swing_out=True, inset=0.0, reveal=False),
+    dict(kind="window", axis="x", line=20, span=(-8 + 4 * KB, -8 + 5 * KB), z=(3.0, 4.2)),
+    # mudroom: a side door in the east wall, north of the window seat (the tennis lawn, the
+    # kitchen garden); an ordinary door, in the middle of the 0.15 m lining
+    dict(kind="opening", axis="y", line=26, span=(8.35, 9.45), z=(0, 2.5), door="door_plain", swing="mudroom"),
     # courtyard: glass on all four sides, both floors; a doorway on the south side
     dict(kind="window", axis="x", line=-7, span=(-10, -1.5), z=(0, 4.2)),
     dict(kind="window", axis="x", line=-7, span=(1.5, 10), z=(0, 4.2)),
@@ -127,7 +154,8 @@ STAIR = dict(room="entry", x=(-6.0, 1.5), y=(-13.05, -10.65), landing=(1.5, 4.5)
 
 SPAWN = dict(position=(0.0, -17.0), look=(0.0, 0.0, 1.5))   # in the entry, facing the courtyard
 
-# Grounds around the main block, seen through the windows (not walkable yet). The lawn
+# Grounds around the main block, seen through the windows and walkable (ground_colliders.py:
+# the exterior doors above lead out; the perimeter hedge bounds it). The lawn
 # (z = 0 of every zone, 8 cm below the house floor) reaches past the perimeter hedge so the
 # upper floor looks over it; a stone terrace rings the house; there is a gap in the hedge
 # for the drive. Everything beyond the hedge is the horizon panorama (horizon.py).

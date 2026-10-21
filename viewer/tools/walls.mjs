@@ -1,6 +1,6 @@
 // Stress the character controller against every wall: walk/sprint/jump into walls,
 // corners, doors and picture frames from many angles; flag any impossible position
-// (on top of a wall or ceiling, below the floor). Usage: node walls.mjs
+// (on top of a wall or ceiling, below the floor), indoors and on the grounds. Usage: node walls.mjs
 import { chromium } from 'playwright-core';
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 800, height: 500 } });
@@ -29,6 +29,21 @@ const result = await p.evaluate(async () => {
     starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2]]
       .map(([x, z]) => clearNear(x, z, r.floor)).filter(Boolean);
   }
+  // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
+  // on the lawn); outside the house the floor is the lawn, not 0
+  const G = window.__level.grounds;
+  if (G) {
+    for (const [name, [x0, z0, x1, z1]] of Object.entries(G.zones)) {
+      if (name === 'planting') continue;
+      const [bx0, bz0, bx1, bz1] = G.bounds;          // (a zone may reach past the hedge: the drive)
+      starts['zone ' + name] = [[(x0 + x1) / 2, (z0 + z1) / 2], [x0 + 2, z0 + 2], [x1 - 2, z1 - 2]]
+        .map(([x, z]) => [Math.min(bx1 - 1, Math.max(bx0 + 1, x)), Math.min(bz1 - 1, Math.max(bz0 + 1, z))])
+        .map(([x, z]) => clearNear(x, z, G.lawn)).filter(Boolean);
+    }
+    starts.terrace = [[0, 22.5], [0, -22.5], [-28.5, 0], [28.5, 0]].map(([x, z]) => clearNear(x, z, G.terrace)).filter(Boolean);
+  }
+  const [hx0, hz0, hx1, hz1] = G ? G.house : [-1e9, -1e9, 1e9, 1e9];
+  const floorAt = (x, z) => (x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
   const bad = [];
   let runs = 0;
   for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
@@ -48,7 +63,7 @@ const result = await p.evaluate(async () => {
         // than a jump above where we took off, on the roof, under the ground floor, or
         // left inside a box
         const why = y - prevY > 0.65 ? 'teleported up' : y > takeoff + 1.2 ? 'above jump' : y > 8.4 ? 'on the roof'
-                  : y < -0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
+                  : y < floorAt(pl.pos.x, pl.pos.z) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
         prevY = y;
         if (why) { worst = { why, f, y: +y.toFixed(2), takeoff: +takeoff.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
       }

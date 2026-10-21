@@ -301,6 +301,9 @@
       // load each asset once, clone per placement (geometry + materials shared)
       const names = [...new Set(level.props.map((p) => p.asset))];
       const outdoorLoad = level.outdoor && sky ? loadGltf(base + level.outdoor) : null;
+      // the walkable grounds' colliders (blender/levels/ground_colliders.py): ?outside=0 leaves them out
+      const groundsLoad = level.grounds?.file && params.get('outside') !== '0'
+        ? fetch(base + level.grounds.file).then((r) => (r.ok ? r.json() : null)).catch(() => null) : null;
       const [shell, ...protos] = await Promise.all(
         [level.shell, ...names.map((n) => level.assets[n].file)].map((f) => loadGltf(base + f)));
       let total = prepare(shell.scene, envIntensity).tris;
@@ -343,6 +346,20 @@
       const colliders = level.colliders.map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
       window.__colliders = colliders;
       const walls = colliders.slice();   // the shell's boxes (props add theirs below)
+      // ---- going outside: the grounds (lawn, terrace, hedge, the zones' furniture, water blockers).
+      // Thousands of static boxes: `fixed` puts them in the player's broadphase grid; `seeThrough`
+      // ones (the boundary, water) don't block a sight line
+      {
+        const g = groundsLoad && await groundsLoad;
+        const see = new Set(level.grounds?.seeThrough || []);
+        for (const [kind, list] of Object.entries(g || {})) for (const b of list) {
+          const box = new THREE.Box3(new THREE.Vector3(b[0], b[1], b[2]), new THREE.Vector3(b[3], b[4], b[5]));
+          box.fixed = true;
+          box.kind = kind;
+          if (see.has(kind)) box.seeThrough = true;
+          colliders.push(box);
+        }
+      }
       const inventoryEl = document.getElementById('inventory');
       const invPanel = document.getElementById('inv-panel');
       const invList = document.getElementById('inv-list');
