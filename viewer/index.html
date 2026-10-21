@@ -563,6 +563,8 @@
       }
       function loadBattery() {
         if (!inventory.has('flashlight')) { toast('Nothing to put the battery in'); return; }
+        // (playtest) a fresh battery into a full flashlight was simply wasted
+        if (flashlight.battery > 0.95) { toast('The flashlight battery is still full'); return; }
         inventory.remove('battery');
         flashlight.refill();
         toast('New battery in the flashlight');
@@ -638,7 +640,7 @@
       // what Enter does with an item that works anywhere
       function itemHint(id) {
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
-        if (id === 'battery') return inventory.has('flashlight') ? 'Put in the flashlight' : null;
+        if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';
         return null;
       }
