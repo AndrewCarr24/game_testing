@@ -236,7 +236,7 @@ def build(**overrides):
     # from the middle of the picture, until it's switched off (here or from the tablet)
     snd = common.empty(f"{n}_TVSound", col, (0, fy - 0.05, sz0 + sh / 2))
     snd.parent = root
-    snd["noisemaker"] = {"signal": "tv", "loudness": 1.0, "every": 1.5, "sfx": "tv", "source": "tv", "label": "TV"}
+    snd["noisemaker"] = {"signal": "tv", "loudness": 1.0, "every": 1.5, "source": "tv", "label": "TV"}   # (no sfx: audio.js loops the TV sound)
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     return root, parts
 

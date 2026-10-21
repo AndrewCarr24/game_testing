@@ -5,7 +5,6 @@
 	},
 	"extensionsUsed":[
 		"KHR_draco_mesh_compression",
-		"KHR_materials_clearcoat",
 		"KHR_materials_emissive_strength",
 		"EXT_texture_webp"
 	],
@@ -33,13 +32,6 @@
 			]
 		},
 		{
-			"mesh":1,
-			"name":"IX_Speaker_Button_Disc"
-		},
-		{
-			"children":[
-				1
-			],
 			"extras":{
 				"interact":{
 					"type":"switch",
@@ -48,18 +40,23 @@
 					"prompt":"Play music",
 					"promptActive":"Stop music",
 					"range":1.3,
-					"duration":0.12,
-					"travel":{
-						"axis":"y",
-						"distance":-0.0015
-					}
+					"duration":0.12
 				}
 			},
 			"name":"IX_Speaker_Button",
 			"translation":[
 				0,
-				1.0908000469207764,
+				1.0920000076293945,
 				0
+			]
+		},
+		{
+			"mesh":1,
+			"name":"IX_Speaker_Button_Disc",
+			"scale":[
+				1,
+				1,
+				0.800000011920929
 			]
 		},
 		{
@@ -150,6 +147,7 @@
 		{
 			"children":[
 				0,
+				1,
 				2,
 				3,
 				4,
@@ -164,50 +162,30 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"M_Fabric_Speaker",
+			"name":"M_Fabric_Ink",
 			"normalTexture":{
 				"index":0,
 				"scale":0.5
 			},
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.02199999988079071,
-					0.02199999988079071,
+					0.017999999225139618,
 					0.024000000208616257,
+					0.03999999910593033,
 					1
 				],
 				"metallicFactor":0,
-				"roughnessFactor":0.949999988079071
+				"roughnessFactor":0.800000011920929
 			}
 		},
 		{
 			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_clearcoat":{
-					"clearcoatFactor":1,
-					"clearcoatRoughnessFactor":0.07999999821186066
-				}
-			},
-			"name":"M_Glass_Black",
+			"name":"M_Bronze",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.006000000052154064,
-					0.006000000052154064,
-					0.007000000216066837,
-					1
-				],
-				"metallicFactor":0,
-				"roughnessFactor":0.05999999865889549
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Satin",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.699999988079071,
-					0.7099999785423279,
-					0.7200000286102295,
+					0.41999998688697815,
+					0.25999999046325684,
+					0.12999999523162842,
 					1
 				],
 				"roughnessFactor":0.3199999928474426
@@ -222,7 +200,7 @@
 			],
 			"extensions":{
 				"KHR_materials_emissive_strength":{
-					"emissiveStrength":4
+					"emissiveStrength":8
 				}
 			},
 			"name":"M_IX_SpeakerLED",
@@ -235,20 +213,6 @@
 				],
 				"metallicFactor":0,
 				"roughnessFactor":0.6000000238418579
-			}
-		},
-		{
-			"doubleSided":true,
-			"name":"M_Aluminium_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.02199999988079071,
-					1
-				],
-				"metallicFactor":0.699999988079071,
-				"roughnessFactor":0.3499999940395355
 			}
 		}
 	],
@@ -287,7 +251,8 @@
 					"attributes":{
 						"POSITION":5,
 						"NORMAL":6,
-						"COLOR_0":7
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -295,12 +260,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":8,
-					"material":1,
+					"indices":9,
+					"material":0,
 					"mode":4
 				}
 			]
@@ -310,9 +276,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"COLOR_0":11
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -320,12 +287,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":12,
-					"material":2,
+					"indices":14,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -335,9 +303,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":13,
-						"NORMAL":14,
-						"COLOR_0":15
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -345,12 +314,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":16,
-					"material":3,
+					"indices":19,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -360,9 +330,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":17,
-						"NORMAL":18,
-						"COLOR_0":19
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
+						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -370,12 +341,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":20,
-					"material":2,
+					"indices":24,
+					"material":1,
 					"mode":4
 				}
 			]
@@ -385,9 +357,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":21,
-						"NORMAL":22,
-						"COLOR_0":23
+						"POSITION":25,
+						"NORMAL":26,
+						"TEXCOORD_0":27,
+						"COLOR_0":28
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -395,12 +368,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":24,
-					"material":3,
+					"indices":29,
+					"material":2,
 					"mode":4
 				}
 			]
@@ -410,9 +384,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":25,
-						"NORMAL":26,
-						"COLOR_0":27
+						"POSITION":30,
+						"NORMAL":31,
+						"TEXCOORD_0":32,
+						"COLOR_0":33
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -420,12 +395,13 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":8,
-					"material":4,
+					"indices":34,
+					"material":0,
 					"mode":4
 				}
 			]
@@ -487,27 +463,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":50,
+			"count":102,
 			"max":[
 				0.026000000536441803,
-				0.004000000189989805,
+				1.0924999713897705,
 				0.026000000536441803
 			],
 			"min":[
 				-0.026000000536441803,
-				0,
+				1.090000033378601,
 				-0.026000000536441803
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":50,
+			"count":102,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":102,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":50,
+			"count":102,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -518,7 +499,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":162,
+			"count":200,
 			"max":[
 				0.09700000286102295,
 				1.090000033378601,
@@ -533,12 +514,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":162,
+			"count":200,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":200,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":162,
+			"count":200,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -549,27 +535,32 @@
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":24,
 			"max":[
-				0.0024999999441206455,
-				0.18000000715255737,
+				0.004000000189989805,
+				0.25,
 				0.0010000000474974513
 			],
 			"min":[
-				-0.0024999999441206455,
-				-0.18000000715255737,
+				-0.004000000189989805,
+				-0.25,
 				-0.0010000000474974513
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":8,
+			"count":24,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -580,7 +571,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":248,
+			"count":328,
 			"max":[
 				0.125,
 				0.010999999940395355,
@@ -595,12 +586,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":248,
+			"count":328,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":328,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":248,
+			"count":328,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -611,7 +607,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":200,
 			"max":[
 				0.035999998450279236,
 				1.0908000469207764,
@@ -626,12 +622,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":192,
+			"count":200,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":200,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":192,
+			"count":200,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -642,7 +643,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":50,
+			"count":102,
 			"max":[
 				0.054999999701976776,
 				0.04500000178813934,
@@ -657,51 +658,61 @@
 		},
 		{
 			"componentType":5126,
-			"count":50,
+			"count":102,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":102,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":50,
+			"count":102,
 			"normalized":true,
 			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":288,
+			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2728,
+			"byteLength":2749,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":714,
-			"byteOffset":2728
+			"byteLength":1292,
+			"byteOffset":2752
 		},
 		{
 			"buffer":0,
-			"byteLength":1340,
-			"byteOffset":3444
+			"byteLength":1980,
+			"byteOffset":4044
 		},
 		{
 			"buffer":0,
-			"byteLength":234,
-			"byteOffset":4784
+			"byteLength":401,
+			"byteOffset":6024
 		},
 		{
 			"buffer":0,
-			"byteLength":1772,
-			"byteOffset":5020
+			"byteLength":3025,
+			"byteOffset":6428
 		},
 		{
 			"buffer":0,
-			"byteLength":1660,
-			"byteOffset":6792
+			"byteLength":1556,
+			"byteOffset":9456
 		},
 		{
 			"buffer":0,
-			"byteLength":649,
-			"byteOffset":8452
+			"byteLength":1284,
+			"byteOffset":11012
 		}
 	],
 	"samplers":[
@@ -712,7 +723,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9104,
+			"byteLength":12296,
 			"uri":"ix_speaker.bin"
 		}
 	]

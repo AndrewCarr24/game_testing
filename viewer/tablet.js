@@ -2,15 +2,15 @@ import * as THREE from 'three';
 
 // The smart-home tablet (item "tablet"; armed + Enter opens it). A HUD panel driven by the
 // keyboard like the inventory: ↑/↓ choose a row, ←/→ choose within it, Enter toggles, I (or
-// Esc, which also releases the mouse) closes. Two pages:
+// Esc, which also releases the mouse) closes. Pages (← → on the tab row):
 //   Rooms    every room with a lights_<room> or blinds_<room> signal in the level, with its
 //            toggles (setting the signal, exactly like the wall switch)
-//   Devices  the hub's noisy devices (viewer/devices.js: TV, speaker, doorbell chime, blender,
-//            alarm clock): Enter switches one on / off, wherever the player is (distractions)
 //   Cameras  one security-camera feed at a time: the scene from a fixed camera rendered at
 //            320x180, ~5 times a second, into a canvas in the panel. Cameras come from the
 //            level (mansion.json "cameras": [{name, position, lookAt, fov?}]) or, without
 //            them, the defaults below (great room, entry, courtyard, kitchen).
+//   Devices  (distractions) the hub's noisy devices (viewer/devices.js: TV, speakers, doorbell
+//            chime, blender, alarm clock): Enter switches one on / off, wherever the player is
 // The hub needs house power: with `power` off the pages are offline (and nothing renders).
 //
 // The feed is drawn into a corner of the main canvas before the frame (so it gets the same
@@ -98,9 +98,9 @@ export class Tablet {
   offline() { return this.signals.get('power') === false; }
   rowCount() { return this.page === 'rooms' ? this.rooms().length : this.page === 'devices' ? this.deviceRows().length : this.cams.length; }
 
-  // (distractions) the Devices page sits between Rooms and Cameras when the level has devices
+  // (distractions) the Devices page comes after Cameras (→ from Rooms is still Cameras) when the level has devices
   deviceRows() { return this.devices ? this.devices.tabletList() : []; }
-  pages() { return this.deviceRows().length ? ['rooms', 'devices', 'cameras'] : ['rooms', 'cameras']; }
+  pages() { return this.deviceRows().length ? ['rooms', 'cameras', 'devices'] : ['rooms', 'cameras']; }
   nextPage(step = 1) {
     const ps = this.pages(), i = Math.max(0, ps.indexOf(this.page));
     return ps[(i + step + ps.length) % ps.length];
@@ -209,7 +209,7 @@ export class Tablet {
       const list = this.cams.map((c, i) => `<div class="trow${this.row === i + 1 ? ' sel' : ''}${this.cam === i ? ' live' : ''}">CAM ${String(i + 1).padStart(2, '0')} · ${c.name}</div>`).join('');
       body = `<div class="tcams"><div class="tfeed"><div class="tover">${off ? 'NO SIGNAL' : ''}</div><div class="tlabel"></div></div><div class="tlist">${list}</div></div>`;
     }
-    this.el.innerHTML = `<div class="tbox"><div class="thead"><span class="ttitle">HOME</span>${tab('rooms', 'Rooms')}${this.pages().includes('devices') ? tab('devices', 'Devices') : ''}${tab('cameras', 'Cameras')}` +
+    this.el.innerHTML = `<div class="tbox"><div class="thead"><span class="ttitle">HOME</span>${tab('rooms', 'Rooms')}${tab('cameras', 'Cameras')}${this.pages().includes('devices') ? tab('devices', 'Devices') : ''}` +
       `<span class="tstat">${off ? 'OFFLINE' : 'ONLINE'}</span></div>${body}<div class="tmsg">${this.msg}</div>` +
       `<div class="thelp">↑ ↓ · choose &nbsp; ${this.page === 'devices' ? '' : `← → · ${this.page === 'rooms' ? 'lights / blinds' : 'camera'} &nbsp; `}Enter · ${this.page === 'devices' ? 'on / off' : 'toggle'} &nbsp; I · close</div></div>`;
     const feed = this.el.querySelector('.tfeed');

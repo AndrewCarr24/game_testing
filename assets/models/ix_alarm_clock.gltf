@@ -18,7 +18,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				7
 			]
 		}
 	],
@@ -74,15 +74,6 @@
 		},
 		{
 			"mesh":3,
-			"name":"IX_AlarmClock_Feet",
-			"translation":[
-				0,
-				0.0005000000237487257,
-				0
-			]
-		},
-		{
-			"mesh":4,
 			"name":"IX_AlarmClock_Glass",
 			"translation":[
 				0,
@@ -91,13 +82,6 @@
 			]
 		},
 		{
-			"mesh":5,
-			"name":"IX_AlarmClock_Snooze_Bar"
-		},
-		{
-			"children":[
-				5
-			],
 			"extras":{
 				"interact":{
 					"type":"switch",
@@ -106,19 +90,19 @@
 					"prompt":"Set alarm (10 s)",
 					"promptActive":"Cancel alarm",
 					"range":1.3,
-					"duration":0.12,
-					"travel":{
-						"axis":"y",
-						"distance":-0.002
-					}
+					"duration":0.12
 				}
 			},
 			"name":"IX_AlarmClock_Snooze",
 			"translation":[
 				0,
-				0.07199999690055847,
+				0.07699999958276749,
 				-0.004000000189989805
 			]
+		},
+		{
+			"mesh":4,
+			"name":"IX_AlarmClock_Snooze_Bar"
 		},
 		{
 			"extras":{
@@ -151,8 +135,8 @@
 				2,
 				3,
 				4,
-				6,
-				7
+				5,
+				6
 			],
 			"name":"IX_AlarmClock"
 		}
@@ -228,19 +212,6 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"M_Felt_Black",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.019999999552965164,
-					0.019999999552965164,
-					0.019999999552965164,
-					1
-				],
-				"metallicFactor":0
-			}
-		},
-		{
-			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_clearcoat":{
 					"clearcoatFactor":1,
@@ -281,7 +252,8 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"COLOR_0":2
+						"TEXCOORD_0":2,
+						"COLOR_0":3
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -289,11 +261,12 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":3,
+					"indices":4,
 					"material":0,
 					"mode":4
 				}
@@ -304,10 +277,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6,
-						"COLOR_0":7
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -320,7 +293,7 @@
 							}
 						}
 					},
-					"indices":8,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
@@ -331,10 +304,10 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
-						"COLOR_0":12
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"COLOR_0":13
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -347,33 +320,8 @@
 							}
 						}
 					},
-					"indices":13,
+					"indices":14,
 					"material":2,
-					"mode":4
-				}
-			]
-		},
-		{
-			"name":"IX_AlarmClock_Feet",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":14,
-						"NORMAL":15,
-						"COLOR_0":16
-					},
-					"extensions":{
-						"KHR_draco_mesh_compression":{
-							"bufferView":3,
-							"attributes":{
-								"POSITION":0,
-								"NORMAL":1,
-								"COLOR_0":2
-							}
-						}
-					},
-					"indices":17,
-					"material":3,
 					"mode":4
 				}
 			]
@@ -383,22 +331,24 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":18,
-						"NORMAL":19,
-						"COLOR_0":20
+						"POSITION":15,
+						"NORMAL":16,
+						"TEXCOORD_0":17,
+						"COLOR_0":18
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":4,
+							"bufferView":3,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":17,
-					"material":4,
+					"indices":19,
+					"material":3,
 					"mode":4
 				}
 			]
@@ -408,22 +358,24 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":21,
-						"NORMAL":22,
+						"POSITION":20,
+						"NORMAL":21,
+						"TEXCOORD_0":22,
 						"COLOR_0":23
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
-							"bufferView":5,
+							"bufferView":4,
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":17,
-					"material":5,
+					"indices":24,
+					"material":4,
 					"mode":4
 				}
 			]
@@ -462,7 +414,7 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":8,
+			"count":20,
 			"max":[
 				0.001500000013038516,
 				0.001500000013038516,
@@ -477,12 +429,17 @@
 		},
 		{
 			"componentType":5126,
-			"count":8,
+			"count":20,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":20,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":8,
+			"count":20,
 			"normalized":true,
 			"type":"VEC4"
 		},
@@ -565,38 +522,7 @@
 		},
 		{
 			"componentType":5126,
-			"count":32,
-			"max":[
-				0.06000000238418579,
-				0.0005000000237487257,
-				0.026000000536441803
-			],
-			"min":[
-				-0.06000000238418579,
-				-0.0005000000237487257,
-				-0.026000000536441803
-			],
-			"type":"VEC3"
-		},
-		{
-			"componentType":5126,
-			"count":32,
-			"type":"VEC3"
-		},
-		{
-			"componentType":5123,
-			"count":32,
-			"normalized":true,
-			"type":"VEC4"
-		},
-		{
-			"componentType":5123,
-			"count":180,
-			"type":"SCALAR"
-		},
-		{
-			"componentType":5126,
-			"count":32,
+			"count":72,
 			"max":[
 				0.05700000002980232,
 				0.026000000536441803,
@@ -611,72 +537,87 @@
 		},
 		{
 			"componentType":5126,
-			"count":32,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":32,
+			"count":72,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
+			"componentType":5123,
+			"count":180,
+			"type":"SCALAR"
+		},
+		{
 			"componentType":5126,
-			"count":32,
+			"count":72,
 			"max":[
 				0.040300000458955765,
-				0.004999999888241291,
-				0.008000001311302185
+				0.07699999958276749,
+				0.00400000112131238
 			],
 			"min":[
 				-0.040300000458955765,
-				0,
-				-0.008000001311302185
+				0.07200000435113907,
+				-0.012000001966953278
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":32,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
+			"componentType":5126,
+			"count":72,
+			"type":"VEC2"
+		},
+		{
 			"componentType":5123,
-			"count":32,
+			"count":72,
 			"normalized":true,
 			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":180,
+			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":232,
+			"byteLength":388,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
 			"byteLength":2687,
-			"byteOffset":232
+			"byteOffset":388
 		},
 		{
 			"buffer":0,
 			"byteLength":215,
-			"byteOffset":2920
+			"byteOffset":3076
 		},
 		{
 			"buffer":0,
-			"byteLength":469,
-			"byteOffset":3136
+			"byteLength":1079,
+			"byteOffset":3292
 		},
 		{
 			"buffer":0,
-			"byteLength":515,
-			"byteOffset":3608
-		},
-		{
-			"buffer":0,
-			"byteLength":471,
-			"byteOffset":4124
+			"byteLength":1032,
+			"byteOffset":4372
 		}
 	],
 	"samplers":[
@@ -687,7 +628,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":4596,
+			"byteLength":5404,
 			"uri":"ix_alarm_clock.bin"
 		}
 	]

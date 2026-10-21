@@ -79,7 +79,6 @@ def build(**overrides):
     walnut = materials.walnut()
     alu = common.pbr_material("M_Aluminium_Satin", (0.70, 0.71, 0.72), roughness=0.32, metallic=1.0)
     glass = common.pbr_material("M_Glass_Black", (0.006, 0.006, 0.007), roughness=0.06, coat=1.0)
-    felt = common.pbr_material("M_Felt_Black", (0.02, 0.02, 0.02), roughness=1.0)
     led = materials.emissive("M_IX_ClockAlarmLED", (1.0, 0.18, 0.04), 3.0)
     from lib import textures
     face_m = common.pbr_material("M_IX_ClockDigits", (0.0, 0.0, 0.0), roughness=0.1)
@@ -95,8 +94,6 @@ def build(**overrides):
     body.location = (0, 0, h / 2)
     common.add_bevel(body, 0.003, segments=2)
     common.box_uv(body, 0.5)
-    pad = common.mesh_object(f"{n}_Feet", common.rounded_slab_bmesh(w - 0.01, d - 0.01, 0.001, 0.008, 3), col, felt, root)
-    pad.location = (0, 0, 0.0005)
     # the face: black glass, the digits glowing just behind it (both follow the display signal)
     fw, fh = w - 0.022, h - 0.026
     front = common.mesh_object(f"{n}_Glass", ix_common.plate_bmesh(fw + 0.006, fh + 0.006, 0.0015, 0.004), col, glass, root)
@@ -107,15 +104,16 @@ def build(**overrides):
     dot = common.mesh_object(f"{n}_AlarmLED", common.box_bmesh((0.003, 0.001, 0.003)), col, led, root)
     dot.location = (fw / 2 - 0.004, -d / 2 - 0.0012, h * 0.48 + fh / 2 - 0.004)
     dot["react"] = ix_common.glow(p["signal"])        # on while the alarm is set or ringing
-    # snooze bar: its own empty on the top (the switch)
-    bar = common.empty(f"{n}_Snooze", col, (0, 0.004, h))
+    # snooze bar on the top; the switch is an empty over it with no mesh of its own (the bar
+    # stays put, so the clock is one batch with the room)
+    bm = common.rounded_slab_bmesh(w * 0.62, 0.016, 0.005, 0.004, 3)
+    bmesh.ops.translate(bm, vec=(0, 0.004, h + 0.0025), verts=bm.verts)
+    common.mesh_object(f"{n}_Snooze_Bar", bm, col, alu, root)
+    bar = common.empty(f"{n}_Snooze", col, (0, 0.004, h + 0.005))
     bar.parent = root
     bar["interact"] = {"type": "switch", "signal": p["signal"], "state": False,
                        "prompt": f"Set alarm ({int(p['delay'])} s)", "promptActive": "Cancel alarm",
-                       "range": 1.3, "duration": 0.12, "travel": {"axis": "y", "distance": -0.002}}
-    bm = common.rounded_slab_bmesh(w * 0.62, 0.016, 0.005, 0.004, 3)
-    bmesh.ops.translate(bm, vec=(0, 0, 0.0025), verts=bm.verts)
-    common.mesh_object(f"{n}_Snooze_Bar", bm, col, alu, bar)
+                       "range": 1.3, "duration": 0.12}
 
     snd = common.empty(f"{n}_Sound", col, (0, 0, h / 2))
     snd.parent = root
@@ -123,4 +121,7 @@ def build(**overrides):
                          "for": p["ring"], "flash": p["display"], "flashRest": True, "flashEvery": 0.5,
                          "sfx": "alarm_clock", "source": "alarm_clock", "label": "Alarm clock",
                          "statusOn": "RINGING"}
+    for ob in root.children_recursive:      # UVs everywhere: batches group by vertex layout too
+        if ob.type == "MESH" and not ob.data.uv_layers:
+            common.box_uv(ob, 0.25)
     return ix_common.finish(root)

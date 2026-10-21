@@ -183,9 +183,35 @@ const tab = await p.evaluate(() => {
 check('tablet: Devices page lists the hub devices once each', new Set(tab.rows).size === tab.rows.length && tab.rows.length >= 5 && !tab.rows.includes('car_alarm'), tab.rows.join(', '));
 check('tablet: offline without power', /offline/i.test(tab.offline), tab.offline);
 
-// the car key the way a player uses it: take it (E), arm it (I, Enter), then Enter = the panic button
+// throwables: loudness per item (glass is loud, a book thuds)
+const loud = await p.evaluate(() => {
+  const out = {};
+  for (const it of window.__interact.items) if (it.def.throwable) out[it.def.item] = +(it.def.noise ?? 1);
+  return out;
+});
+check('throwables: vase 1.4, wine bottle 1.2, book 0.6', loud.vase === 1.4 && loud.wine_bottle === 1.2 && loud.book === 0.6, JSON.stringify(loud));
+
 await p.mouse.click(480, 300);
 await p.waitForTimeout(300);
+// each device's own switch, from where a player would stand: the prompt says what it does
+for (const [signal, want] of [['tv_den', 'Turn on TV'], ['music_great_room', 'Play music'], ['blender_kitchen', 'Run the blender'], ['alarm', 'Set alarm']]) {
+  const at = await p.evaluate((signal) => {
+    const I = window.__interact, it = I.items.find((x) => x.def.type === 'switch' && x.signal === signal);
+    const c = I.centre(it), room = Object.values(window.__level.rooms).find((r) => c.x >= r.rect[0] && c.x <= r.rect[2] &&
+      c.z >= r.rect[1] && c.z <= r.rect[3] && c.y >= r.floor && c.y < r.floor + r.height);
+    const dx = (room.rect[0] + room.rect[2]) / 2 - c.x, dz = (room.rect[1] + room.rect[3]) / 2 - c.z, l = Math.hypot(dx, dz);
+    const eye = [c.x + (dx / l) * 0.75, room.floor + 1.65, c.z + (dz / l) * 0.75];
+    const pl = window.__player;
+    pl.pos.set(eye[0], eye[1] - 1.65, eye[2]); pl.vel.set(0, 0, 0);
+    window.__camera.position.set(...eye); window.__camera.lookAt(c.x, c.y, c.z);
+    return { eye, c: [c.x, c.y, c.z] };
+  }, signal);
+  await p.waitForTimeout(400);
+  const hint = await p.textContent('#hint');
+  check(`${signal}: its switch's prompt`, hint.includes(`E · ${want}`), `"${hint}" from ${at.eye.map((v) => v.toFixed(2)).join(', ')}`);
+}
+
+// the car key the way a player uses it: take it (E), arm it (I, Enter), then Enter = the panic button
 await p.evaluate(() => {
   const I = window.__interact, inv = window.__inventory;
   const key = I.items.find((x) => x.def.item === 'car_key');

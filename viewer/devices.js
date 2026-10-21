@@ -20,7 +20,8 @@ import * as THREE from 'three';
 //               clock digits)
 //   shake       node name(s) jittered (a few mm) while it sounds (the blender's jar)
 //   sfx         window.__sfx?.play(sfx, position) on every noise event, __sfx?.stop?.(sfx, position)
-//               when it falls silent (the audio workstream provides __sfx)
+//               when it falls silent (viewer/audio.js provides __sfx); no sfx = no call (the TV:
+//               audio.js already loops its sound from the tv_* signal)
 //   source      the noise event's `source` (default sfx, else the signal)
 //   label       its name on the tablet's Devices page; tablet: false keeps it off that page
 //   statusOn    what the tablet shows while it sounds (default ON, or RINGING with `for`)
@@ -128,7 +129,7 @@ export class Devices {
     d.t = 0;
     if (d.flash) { d.flashOn = false; this.signals.set(d.flash, d.flashRest); }
     for (const s of d.shake) s.node.position.copy(s.rest);
-    if (was === 'sounding') window.__sfx?.stop?.(d.def.sfx, this.position(d));
+    if (was === "sounding" && d.def.sfx) window.__sfx?.stop?.(d.def.sfx, this.position(d));
   }
 
   position(d) { return d.node.getWorldPosition(new THREE.Vector3()); }
@@ -176,7 +177,7 @@ export class Devices {
   pulse(d) {
     const position = this.position(d);
     const source = d.def.source ?? d.def.sfx ?? d.signal;
-    window.__sfx?.play?.(d.def.sfx ?? source, position);
+    if (d.def.sfx) window.__sfx?.play?.(d.def.sfx, position);   // (none for the TV: audio.js loops it from its signal)
     // devices sharing a signal (a pair of speakers) are one source: the first of them emits one
     // noise from the middle of those sounding, the rest only play their sound effect
     const group = this.devices.filter((x) => x.signal === d.signal && x.state === 'sounding');

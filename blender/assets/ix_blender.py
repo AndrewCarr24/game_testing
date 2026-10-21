@@ -4,8 +4,8 @@ jar (1.6 l) with a black lid, half full of a green smoothie.
 
 Interactive (prompts/interactivity.md, viewer/devices.js): the dial is a switch on signal
 "blender" (renamed per room: {"signal": {"blender": "blender_kitchen"}}). On (with power) it
-runs for 6 s, very loud, then stops by itself: the LED ring glows and the jar (`<n>_Jar`, its
-own empty) shakes on the base. A `noisemaker` the Grimble hears; also on the tablet's
+runs for 6 s, very loud, then stops by itself: the LED ring glows and the smoothie churns in
+the jar (`<n>_Jar_Smoothie` shakes). A `noisemaker` the Grimble hears; also on the tablet's
 Devices page.
 
 Origin: the centre of the base's underside; front faces -Y."""
@@ -31,8 +31,8 @@ def build(**overrides):
     root = common.empty(n, col)
     steel = materials.steel()
     dark = materials.black_metal()
-    rubber = common.pbr_material("M_Rubber_Black", (0.015, 0.015, 0.016), roughness=0.85)
-    glass = materials.glass("M_Glass_Jar", tint=(0.86, 0.9, 0.9), alpha=0.16, roughness=0.03)
+    rubber = dark         # (few materials: each is a draw call in the kitchen's batch)
+    glass = materials.glass("M_Glass_Jar", (0.9, 0.95, 0.92), 0.25)      # (as the kitchen's jars: one batch)
     smoothie = common.pbr_material("M_Smoothie_Green", (0.20, 0.36, 0.06), roughness=0.55)
     led = materials.emissive("M_IX_BlenderLED", (0.55, 0.85, 1.0), 3.0)
 
@@ -48,26 +48,27 @@ def build(**overrides):
     seat = common.mesh_object(f"{n}_Seat", ix_common.lathe_bmesh(
         [(0.0, bh), (0.062, bh), (0.062, bh + 0.016), (0.0, bh + 0.016)], segments=24, sharp=[1, 2]), col, dark, root)
 
-    # dial: its own empty on the front face (the switch); the LED ring round it
+    # dial on the front face, the LED ring round it; the switch is an empty on the dial with no
+    # mesh of its own (the dial stays put, so it joins the room's batch: a moving part couldn't)
     fy = -bd / 2
-    dial = common.empty(f"{n}_Dial", col, (0, fy, bh * 0.5))
-    dial.parent = root
-    dial["interact"] = {"type": "switch", "signal": p["signal"], "state": False, "prompt": "Run the blender",
-                        "promptActive": "Stop the blender", "range": 1.3, "duration": 0.15,
-                        "travel": {"axis": "z", "angle": -40}}
     knob = common.mesh_object(f"{n}_Dial_Knob", ix_common.lathe_bmesh(
         [(0.0, 0.0), (0.024, 0.0), (0.024, 0.014), (0.02, 0.018), (0.0, 0.018)], segments=24, sharp=[1]),
-        col, dark, dial)
+        col, dark, root)
     knob.rotation_euler = (math.radians(90), 0, 0)     # lathed along +z -> sticking out along -y
-    tick = common.mesh_object(f"{n}_Dial_Tick", common.box_bmesh((0.003, 0.002, 0.014)), col, steel, dial)
-    tick.location = (0, -0.0185, 0.011)
+    knob.location = (0, fy, bh * 0.5)
+    tick = common.mesh_object(f"{n}_Dial_Tick", common.box_bmesh((0.003, 0.002, 0.014)), col, steel, root)
+    tick.location = (0, fy - 0.0185, bh * 0.5 + 0.011)
+    dial = common.empty(f"{n}_Dial", col, (0, fy - 0.01, bh * 0.5))
+    dial.parent = root
+    dial["interact"] = {"type": "switch", "signal": p["signal"], "state": False, "prompt": "Run the blender",
+                        "promptActive": "Stop the blender", "range": 1.3, "duration": 0.15}
     ring = common.mesh_object(f"{n}_Ring", ix_common.lathe_bmesh(
         [(0.029, 0.0), (0.029, 0.0012), (0.033, 0.0012), (0.033, 0.0)], segments=32, sharp=[1, 2]), col, led, root)
     ring.rotation_euler = (math.radians(90), 0, 0)
     ring.location = (0, fy, bh * 0.5)
     ring["react"] = ix_common.glow(p["signal"])
 
-    # the jar: its own empty (shaken while it runs), glass walls, smoothie, lid
+    # the jar: glass walls, the smoothie (its own mesh: it churns while the blender runs), lid
     jar = common.empty(f"{n}_Jar", col, (0, 0, bh + 0.016))
     jar.parent = root
     jh = 0.235
@@ -93,5 +94,8 @@ def build(**overrides):
     snd = common.empty(f"{n}_Sound", col, (0, 0, bh + 0.08))
     snd.parent = root
     snd["noisemaker"] = {"signal": p["signal"], "loudness": p["loudness"], "every": 1.0, "for": p["run"],
-                         "shake": f"{n}_Jar", "sfx": "blender", "source": "blender", "label": "Blender"}
+                         "shake": f"{n}_Jar_Smoothie", "sfx": "blender", "source": "blender", "label": "Blender"}
+    for ob in root.children_recursive:      # UVs everywhere: batches group by vertex layout too
+        if ob.type == "MESH" and not ob.data.uv_layers:
+            common.box_uv(ob, 0.25)
     return ix_common.finish(root)

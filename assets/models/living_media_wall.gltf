@@ -363,7 +363,6 @@
 					"signal":"tv",
 					"loudness":1.0,
 					"every":1.5,
-					"sfx":"tv",
 					"source":"tv",
 					"label":"TV"
 				}

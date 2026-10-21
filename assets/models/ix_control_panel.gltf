@@ -464,13 +464,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":397,
+			"byteLength":424,
 			"byteOffset":1184
 		},
 		{
 			"buffer":0,
 			"byteLength":235,
-			"byteOffset":1584
+			"byteOffset":1608
 		}
 	],
 	"samplers":[
@@ -481,7 +481,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1820,
+			"byteLength":1844,
 			"uri":"ix_control_panel.bin"
 		}
 	]
