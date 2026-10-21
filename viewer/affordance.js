@@ -158,7 +158,14 @@ export class Affordance {
   meshesOf(it) {
     const out = [];
     const ok = (o) => o.isMesh && !o.isSkinnedMesh && !o.isInstancedMesh && !Array.isArray(o.material) && o.geometry?.attributes.normal;
-    it.node.traverse((o) => { if (ok(o) && o.visible && o.material.visible) out.push(o); });
+    // (not what's inside it that is its own interactable: the keycard in the desk drawer)
+    const others = new Set(this.interact.items.filter((x) => x !== it).map((x) => x.node));
+    const walk = (o) => {
+      if (others.has(o)) return;
+      if (ok(o) && o.visible && o.material.visible) out.push(o);
+      for (const c of o.children) walk(c);
+    };
+    walk(it.node);
     if (out.length) return out;
     const box = this.interact.boxOf(it).clone().expandByScalar(0.03), b = new THREE.Box3(), s = new THREE.Vector3();
     it.root.traverse((o) => {
@@ -213,7 +220,7 @@ export class Affordance {
       if (this.interact.behindWall(eye, box)) continue;
       const s = box.getSize(new THREE.Vector3());
       this.gPos.set([c.x, c.y + s.y * 0.25, c.z], n * 3);     // nearer the top, where light catches
-      this.gSeed[n] = seedOf(it);
+      this.gSeed[n] = it.glintSeed ??= seedOf(it);   // (once: where it was placed)
       this.gLift[n] = Math.min(0.5 * Math.max(s.x, s.z), 0.22) + 0.01;
       this.gFade[n] = w * (1 - THREE.MathUtils.smoothstep(d, GLINT_NEAR, GLINT_FAR));
       n++;
@@ -249,8 +256,11 @@ export class Affordance {
   }
 }
 
+// each thing's beat: from its name and where it is (not its uuid, which changes every load, so
+// the frozen bench frame shows the same glints every run)
 function seedOf(it) {
-  const s = it.node.uuid;
+  const p = it.node.getWorldPosition(new THREE.Vector3());
+  const s = `${it.node.name}|${Math.round(p.x * 100)}|${Math.round(p.y * 100)}|${Math.round(p.z * 100)}`;
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
   return (h % 1000) / 1000;
