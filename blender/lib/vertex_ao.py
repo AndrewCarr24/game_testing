@@ -42,8 +42,14 @@ def bake(root, distance=0.3, samples=24, strength=0.6, max_face_area=0.25):
         return 0
     key = _key(meshes, (distance, samples, strength, max_face_area, "point", 16, "alpha-opaque"))
     path = os.path.join(CACHE, f"{root.name}.npz")
+    z = None
     if os.path.exists(path):
-        z = np.load(path)
+        try:                      # (the cache is shared by parallel builds: a half-written file is a miss)
+            z = np.load(path)
+            z["key"]
+        except Exception:
+            z = None
+    if z is not None:
         if str(z["key"]) == key:
             for o in meshes:
                 me = o.data
@@ -58,7 +64,9 @@ def bake(root, distance=0.3, samples=24, strength=0.6, max_face_area=0.25):
         v = np.zeros(4 * len(o.data.vertices), np.float32)
         o.data.color_attributes[ATTR].data.foreach_get("color", v)
         arrays[o.name] = v
-    np.savez_compressed(path, key=np.array(key), **arrays)
+    tmp = f"{path}.{os.getpid()}.tmp.npz"
+    np.savez_compressed(tmp, key=np.array(key), **arrays)
+    os.replace(tmp, path)         # atomic: another build never reads it half-written
     return corners
 
 

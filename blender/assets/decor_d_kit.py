@@ -193,7 +193,7 @@ class Builder:
     def finish(self):
         # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
         pickups.emit(self, self.n, self.col, self.root, list(self.meshes.values()), lambda b: b,
-                     lambda key: mat(key.split("@")[0]))
+                     lambda key: mat(key.split("@")[0]), self.collide)
         for key, b in self.meshes.items():
             if not b.faces:
                 b.free()

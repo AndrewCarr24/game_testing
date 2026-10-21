@@ -468,6 +468,7 @@ export class Interactables {
     const off = new THREE.Vector3(), dir = new THREE.Vector3(), to = new THREE.Vector3();
     const view = forward && this._view.set(player, forward.clone().normalize());
     let best = null, bestScore = Infinity;
+    const cands = [];
     for (const it of this.items) {
       // (hundreds of pickups: skip far ones before measuring their boxes)
       if (it.def.type === 'pickup' && this._c.setFromMatrixPosition(it.node.matrixWorld).distanceToSquared(player) > (this.range(it) + 2.5) ** 2) continue;
@@ -490,9 +491,19 @@ export class Interactables {
         // else the angle to its centre; a little distance and centre angle break ties
         const onIt = !!view.intersectBox(box.expandByScalar(0.02), to);
         const angle = forward.angleTo(to.subVectors(centre, player));
-        score = (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d - (pickup && angle < PICKUP_CONE ? 10 : 0);
+        cands.push({ it, onIt, score: (onIt ? 0 : angle) + 0.15 * angle + 0.05 * d, bonus: pickup && angle < PICKUP_CONE });
+        continue;
       } else score = d - (pickup ? 10 : 0);
       if (score < bestScore) { best = it; bestScore = score; }
+    }
+    // a door, drawer or switch under the crosshair beats the pickups round it (with vases and books
+    // on every console and desk, the cone bonus otherwise stole the desk drawer, the light switch
+    // beside a console...), except what's inside it (the card in the open drawer) or also under it
+    const aimed = cands.find((c) => c.onIt && ['slide', 'rotate', 'switch'].includes(c.it.def.type));
+    for (const c of cands) {
+      const bonus = c.bonus && (!aimed || c.onIt || c.it.host === aimed.it);
+      const score = c.score - (bonus ? 10 : 0);
+      if (score < bestScore) { best = c.it; bestScore = score; }
     }
     this.unbatch(best);       // the focused pickup draws itself (ready for a highlight, or to be taken)
     return best;

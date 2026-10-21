@@ -185,10 +185,11 @@ def _label(key):
     return key.split("@")[0].replace("M_", "").replace("_", " ").title().replace(" ", "")
 
 
-def emit(acc, name, col, root, fixed_bms, bm_of, mat_of):
+def emit(acc, name, col, root, fixed_bms, bm_of, mat_of, collide=()):
     """Turn every pickup bucket gathered on `acc` into an item under `root`. `fixed_bms`: the
     bmeshes of the vignette's fixed geometry (in asset space), for the 'covered' test;
-    `bm_of(value)` -> the bmesh of a store value; `mat_of(key)` -> its material.
+    `bm_of(value)` -> the bmesh of a store value; `mat_of(key)` -> its material; `collide`: the
+    kit's keys that may be colliders (a floor vase that stays fixed keeps its box).
     Returns the new mesh objects."""
     from lib import common
 
@@ -241,7 +242,8 @@ def emit(acc, name, col, root, fixed_bms, bm_of, mat_of):
         if not keep[i]:
             # fixed after all: plain static meshes (the room batch merges them like the rest)
             for key, value in it["bucket"].items():
-                out.append(common.mesh_object(f"{name}_{label}_{_label(key)}_NoCollide", bm_of(value), col,
+                tag = "" if key in collide else "_NoCollide"
+                out.append(common.mesh_object(f"{name}_{label}_{_label(key)}{tag}", bm_of(value), col,
                                               mat_of(key), root, smooth=False))
             continue
         # the item's frame: its base centre (under the authored origin if there is one), turned

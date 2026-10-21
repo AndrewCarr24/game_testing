@@ -176,7 +176,7 @@ class Builder:
 
     def finish(self):
         # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
-        pickups.emit(self, self.n, self.col, self.root, list(self.meshes.values()), lambda b: b, mat)
+        pickups.emit(self, self.n, self.col, self.root, list(self.meshes.values()), lambda b: b, mat, self.collide)
         for key, b in self.meshes.items():
             suffix = key.replace("M_", "").replace("_", "")
             name = f"{self.n}_{suffix}" + ("" if key in self.collide else "_NoCollide")

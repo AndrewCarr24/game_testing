@@ -299,7 +299,8 @@ class Kit:
         """One mesh object per material: `<n>_<Key>_NoCollide`, or `<n>_<Key>` for keys in
         `collide` (benches, consoles, planters)."""
         # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
-        out = pickups.emit(self, n, col, root, [a.bm for a in self.accs.values()], lambda a: a.bm, lambda key: MATS[key]())
+        out = pickups.emit(self, n, col, root, [a.bm for a in self.accs.values()], lambda a: a.bm, lambda key: MATS[key](),
+                           collide)
         for key, acc in self.accs.items():
             if not acc.bm.faces:
                 acc.bm.free()

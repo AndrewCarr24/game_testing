@@ -167,7 +167,7 @@ class Acc:
         """collide: keys whose mesh may be a collider (a floor plant's pot); the rest are
         named _NoCollide."""
         # loose things become pickups (lib/pickups.py), the rest stays one mesh per material
-        parts = pickups.emit(self, name, col, root, [bm for bm, _ in self.parts.values()], lambda v: v[0], mat)
+        parts = pickups.emit(self, name, col, root, [bm for bm, _ in self.parts.values()], lambda v: v[0], mat, collide)
         for key, (bm, _) in self.parts.items():
             if not bm.faces:
                 bm.free()
