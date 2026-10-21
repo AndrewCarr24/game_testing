@@ -18,9 +18,10 @@ import * as THREE from 'three';
 
 const FEED_W = 320, FEED_H = 180;
 
-// [room, corner (0..3 = x0z0, x1z0, x1z1, x0z1), label]
+// [room, corner (0..3 = x0z0, x1z0, x1z1, x0z1), label]. (The kitchen's corner 3 was inside the
+// tall cabinets of the wall run: its feed showed the inside of a cupboard.)
 const DEFAULT_CAMS = [
-  ['great_room', 2, 'Great room'], ['entry', 1, 'Entry'], ['courtyard', 0, 'Courtyard'], ['kitchen', 3, 'Kitchen'],
+  ['great_room', 2, 'Great room'], ['entry', 1, 'Entry'], ['courtyard', 0, 'Courtyard'], ['kitchen', 0, 'Kitchen'],
 ];
 
 export const roomLabel = (room) => {
@@ -191,6 +192,8 @@ export class Tablet {
       `<div class="thelp">↑ ↓ · choose &nbsp; ← → · ${this.page === 'rooms' ? 'lights / blinds' : 'camera'} &nbsp; Enter · toggle &nbsp; I · close</div></div>`;
     const feed = this.el.querySelector('.tfeed');
     if (feed) { feed.prepend(this.canvas); this.label(); }
+    // the room list scrolls (18 rooms don't fit): keep the chosen row in view
+    this.el.querySelector('.trow.sel')?.scrollIntoView({ block: 'nearest' });
   }
 
   label() {
