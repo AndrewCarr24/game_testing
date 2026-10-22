@@ -239,6 +239,18 @@ The design is below. The townspeople's AI is not built in this workstream: the p
 - **The cove's backdrop still shows its own guess at the town**: a flat basin at -191 and 38 random houses (`laurel_fork_world.town_meta`). It should read `build/wilderness/laurel_town/world/world.json` `town.buildings` and the town's heights. That is a small marked block in laurel_fork_world, left for the merge (it is the cove's file).
 - **Golden hour only**: the bar's dusk shot needs a dusk LOOK.
 
+**Build order (merge).**
+- `laurel_town.py` reads three things from other workstreams:
+  - the cove's terrain run (`build/wilderness/laurel_fork/terrain.npz`, for the seam);
+  - `laurel_fork.terrain_overrides` (its backdrop holes);
+  - the kit's sidecars (`assets/models/town_*.json`, for the footprints).
+- So rebuild the town **after** the cove is rebuilt and **after** the kit branch is merged. Otherwise the seam patch is stale, or the lots revert to the v2 placeholder sizes.
+- Two constants are other workstreams' to move:
+  - the river leaves the cove at estate y ≈ -736 (`RIVER[0]`, the hydrology inflow at (-800, -742));
+  - the road grade meets the seam at (-768, -786), z -164.8 (`ROAD_IN`, `ROAD_GORGE[0:2]`).
+
+  If the river or landscape agent moves either, these move with it.
+
 ## 8. Kit coordination
 - `kit_request.md` v2 (the user's modern-town update) is what the kit agent built to. `kit_status.md` lives in the kit agent's worktree and is the source of truth for sizes.
 - The layout reads the kit's sidecars (`assets/models/<name>.json`: footprint, colliders, `below_m`) at build time, and places the kit by footprint centre with the asset origin's offset.

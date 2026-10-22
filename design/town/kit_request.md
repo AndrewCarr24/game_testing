@@ -128,6 +128,7 @@ So:
 | `town_bench`, `town_planter`, `town_flower_basket` (on a lamp arm), `town_bollard`, `town_trash_can` | the too-tidy street furniture | | ~60 |
 | `town_menu_board`, `town_pump`, `town_ice_chest` | drive-through / gas station props | | |
 | `town_crate_stack` | crates and pallets wrapped in plastic | 2.4 x 1.2 x 1.6 | 10 |
+| `town_phone_box` | the telephone junction box on a utility pole (`town_pole` + box), the one the player cuts to stop the townspeople's reports (brief section 6) | 0.4 x 0.3 x 0.7 (box), pole 10 m | 1 (behind the depot) |
 | `town_table_phones` | a folding table with ~30 phones laid out in rows, screens dark | 2.4 x 0.8 x 0.75 | 1 (the church hall) |
 | `town_crt_wall` | a wall of 20 stacked old TV monitors (emissive screens) | 4 x 0.6 x 2.4 | 1 (the video store's back room) |
 | `town_estate_model` | a museum vitrine with a scale model of the estate: the house's footprint, the lawn, the hedge, tiny figures | 3 x 2 x 1.2 | 1 (the museum) |
