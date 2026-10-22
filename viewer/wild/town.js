@@ -157,7 +157,8 @@ export class Town {
     };
     for (const s of T.streets) {
       const w = s.width / 2;
-      if (s.kind === 'road') {
+      // (the county road through town is road.js's concrete slab when the world has its road.json)
+      if (s.kind === 'road' && T.county_road && params0().get('road') !== '0') { /* drawn by road.js */ } else if (s.kind === 'road') {
         ribbon(s.pts, -w, w, 0.07, C.asphalt);
         ribbon(s.pts, -0.2, -0.08, 0.085, C.yellow); ribbon(s.pts, 0.08, 0.2, 0.085, C.yellow);
         ribbon(s.pts, -w + 0.9, -w + 1.02, 0.085, C.line); ribbon(s.pts, w - 1.02, w - 0.9, 0.085, C.line);
@@ -225,7 +226,7 @@ export class Town {
       }
     }
     // ---- the tunnel portal: a stone face with a dark bore into the hill
-    if (T.tunnel) {
+    if (T.tunnel && !kitHas.has('town_tunnel_portal')) {
       const t = T.tunnel, M = place(t.x, t.y, t.z, t.yaw);
       abox(M, -6, -0.8, -0.5, -3, 0.8, 10, C.stone); abox(M, 3, -0.8, -0.5, 6, 0.8, 10, C.stone); abox(M, -3, -0.8, 7.5, 3, 0.8, 10, C.stone);
       abox(M, -3, -0.5, -0.5, 3, 25, 7.5, C.black);
@@ -331,6 +332,7 @@ export class Town {
     }
     for (const v of T.vehicles) if (models[`town_${v.kind}`]) P.push({ kind: `town_${v.kind}`, M: place(v.x, v.y, v.z, v.yaw - 90) });
     for (const e of T.evidence) { const k = EVIDENCE_KIT[e.kind]; if (models[k]) P.push({ kind: k, M: place(e.x, e.y, e.z, e.yaw - 90) }); }
+    if (T.tunnel && models.town_tunnel_portal) P.push({ kind: 'town_tunnel_portal', M: place(T.tunnel.x, T.tunnel.y, T.tunnel.z, T.tunnel.yaw) });
     for (const br of T.bridges) {
       if (br.kind !== 'truss' || !models.town_truss_span) continue;
       const yaw = Math.atan2(-(br.b[0] - br.a[0]), br.b[1] - br.a[1]) * 180 / Math.PI;     // (the span's +y along a -> b)

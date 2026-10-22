@@ -274,7 +274,8 @@ def run(name=LT.NAME):
         x, y = tx(b["x"]), b["y"]
         # the pad as built (the final surface's median over the footprint; the piers' cottages: the front)
         m = rect_mask(R, x, y, b["w"], b["d"], b["yaw"])
-        z = float(np.median(R.H[m])) if m.any() else float(R.h(x, y))
+        # (the pad as the guide laid it: the ground under the footprint sits 8 cm below it)
+        z = float(b["z"]) if "z" in b else float(np.median(R.H[m])) if m.any() else float(R.h(x, y))
         if b["kind"].startswith("town_cottage"):
             z = b["z"]
             b["below_m"] = round(max(0.0, z - float(R.H[m].min())) if m.any() else 0.0, 2)
@@ -483,6 +484,26 @@ def run(name=LT.NAME):
         files["light.webp"] = os.path.getsize(os.path.join(out_dir, "light.webp"))
     except Exception as e_:
         print("  light.webp not written:", e_)
+    # ---- the county road continued (viewer/wild/road.js draws it: the landscape workstream's
+    # concrete slab, joints and lines): the cove's own last metres in the overlap, then the gorge
+    # road and Main Street on their graded corridors, all in this world's frame
+    county = None
+    cove_road = os.path.join(terrain.OUT_ROOT, LT.COVE, "world", "road.json")
+    if os.path.exists(cove_road):
+        CR = json.load(open(cove_road))
+        pts3 = [[round(p[0] - CX, 2), p[1], p[2]] for p in CR["points"] if p[0] >= LT.SEAM_X - 0.5][-40:]
+        for nm in ("road_gorge", "main_street"):
+            P = terrain.spline([(x, y) for x, y in routed[nm]], 2.0)[:, :2]
+            z = R.h(P[:, 0], P[:, 1])
+            for (x, y), zz in zip(P, z):
+                if pts3 and x >= pts3[-1][0] - 0.5:          # (keep the line running west)
+                    continue
+                pts3.append([round(float(x), 2), round(float(zz) + 0.02, 2), round(float(-(y + OY)), 2)])
+        county = dict(CR, name="county_road_town", points=pts3, ring=[], rails=[], culverts=[], length_m=None,
+                      note="the cove's county road (laurel_fork_road.py) continued through Sourwood as Main Street")
+        with open(os.path.join(out_dir, "road.json"), "w") as fh:
+            json.dump(county, fh, separators=(",", ":"))
+    town["county_road"] = county is not None
     # ---- views, routes, the river out west
     vw = make_views(R)
     rts = routes(R, routed, bridges)
@@ -629,7 +650,7 @@ def routes(R, routed, bridges):
     to = lambda P: [[round(float(x), 2), round(float(-(y + OY)), 2)] for x, y in P]
     tr = next(b for b in bridges if b["kind"] == "truss")
     span = np.linspace(tr["a"], tr["b"], 30)
-    road = np.vstack([pl("road_gorge"), span, pl("main_street")])
+    road = np.vstack([pl("road_gorge"), pl("main_street")])     # (the county road runs straight into Main Street)
     # (Main Street to the bar's lot: stop where the highway passes the lot)
     bar = next(b for b in LT.layout_buildings() if b["id"] == "bar")
     k = int(np.argmin(np.hypot(road[:, 0] - tx(bar["x"]), road[:, 1] - (bar["y"] + 30))))

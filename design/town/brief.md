@@ -2,7 +2,7 @@
 
 Status: design + playable blockout, 2026-10-22 (wave 2, the town workstream).
 The buildings come from the kit workstream (`design/town/kit_status.md`, built to `kit_request.md` v2).
-75 of the 85 placements are real kit glTFs; the rest are massing boxes until the kit has them.
+All 85 building placements are the kit's glTFs, and so are the vehicles, the train, the tunnel portal and the evidence props; massing boxes remain only as the fallback (`&kit=0`).
 
 ![the plan](map.png)
 
@@ -65,27 +65,27 @@ Per the user, Sourwood is **a present-day, well-kept, quaint mountain town**. It
   - walking east past x -750 in the town reloads it into the cove.
   - The fade is 0.35 s and the load is about 1.3 s.
   - The cove needs no rebuild: its exit is a fallback table in `town.js`.
-- **`wild_seam.mjs`: PASS.** Cove (-763.1, -785.9) at ground -164.74 → town (-765.0, -785.9) at ground -164.80; town (-748.9) → cove (-748.0), dz 0.006 m. The player lands on the ground in both directions, with no page errors.
+- **`wild_seam.mjs`: PASS**, walking the county road itself:
+  - cove (-763.0, -703.4) at ground -174.82 → town (-765.0, -703.4) at ground -174.97;
+  - town (-748.9, -702.9) → cove (-748.0), dz 0.08 m;
+  - the player lands on the ground both ways, with no page errors.
 
-**The road from the estate** (the user: a real road, lane markings, from the gate down the valley, along the river, into town). The mansion-landscape workstream builds the road from the gate to the cove square's west edge. **Handoff point** (`laurel_town.ROAD_IN`):
-- estate (-768, -786), z -164.8, on the old river road's grade (laurel_fork `river_road`);
-- heading 265° (west);
-- two 3.6 m lanes and 1.5 m shoulders.
-
-From there the town carries it:
-1. **Down the gorge** on a bench cut into the south wall, at 2-5% (842 m), with double yellow centre lines and white edge lines.
-2. **Across the south flats**, past the brewery's yard, and onto the **green truss bridge**: two 39 m Pratt spans on a stone pier, the kit's `town_truss_span`. The cove's backdrop already shows it.
-3. **Into downtown** as Main Street: angle parking, sidewalks, acorn lamps.
+**The road from the estate** (the user: a real road, lane markings, from the gate down the valley, along the river, into town). The landscape workstream's **county road** (`laurel_fork_road.py`, `viewer/wild/road.js`) arrives at the cove square's west edge on the **north bank**: estate (-767, -703), z -175.0, heading west. It is 7.0 m of concrete (two 3.35 m lanes) with 1.2 m shoulders. The town continues it as the same road. Its world step writes the town's own `world/road.json`, so `road.js` draws the same concrete slab, joints and lines:
+1. The cove's last 40 m in the overlap.
+2. **Down the gorge** on a bench at the north wall's foot, 36 m off the river's centre (the cove's ring preview runs close to that line), at about 1% (800 m).
+3. **Straight into downtown** as Main Street: angle parking, sidewalks, acorn lamps.
 4. **Out west** as the highway: past the strip and the motel, past the roadhouse, round the toe of Tunnel Knob, out of the square.
 
-If the landscape agent's road ends somewhere else on the seam, only `ROAD_IN` and the first two points of `ROAD_GORGE` move.
+The **green truss bridge** (two 39 m Pratt spans on a stone pier, the kit's `town_truss_span`; the cove's backdrop already shows it) now carries the south bank's road over to Main Street's corner: the brewery, the water tower, Mill Hill.
+
+The cove's ring preview of the road dips to -186.8 down the corridor, which is below the town's river. It is only a far preview from the cove, and the town's road is the real one. The ring should follow `build/wilderness/laurel_town/world/road.json` when the landscape workstream next touches it.
 
 **The river.** The Laurel River leaves the cove's Narrows at x -768 (water -184.7) and runs through the gorge (a riffle at the gorge mouth) onto the town's flats. It is 34-37 m wide, with water at -188.3 by the bridge and -190.4 at the west edge, and continues west as a ribbon beyond the square.
 - A **fishermen's path** follows the north bank down the gorge, low by the water, wading the shallows in two places (15 s). It comes up onto the road at the truss bridge's north end and becomes the **river walk** (the greenway) along downtown's back.
 - The river walk ends at the outfitter's raft racks and the footbridge to Mill Hill.
 
 **Two arrivals, two first impressions** (the shots below):
-- **By the road**, the player comes out of the trees at the gorge mouth (the "reveal") and sees the town in the order the sightline gives it: the steeple, the green truss, the water tower and the mill stack over the trees, then the shopfronts across the bridge. Then they cross the bridge **in full view of the sheriff's window**.
+- **By the road**, the player comes out of the trees at the gorge mouth (the "reveal") and sees the town in the order the sightline gives it: the steeple, the green truss, the water tower and the mill stack over the trees, then the shopfronts. They pass the end of the truss bridge into Main Street **in full view of the sheriff's window** on that corner.
 - **By the river**, they arrive low and unseen at the town's back: the river walk behind the south-side shops and the depot's freight platform. The first thing they see of Sourwood is its back lots.
 
 ![arrival](blockout/arrival.png)
@@ -100,9 +100,9 @@ If the landscape agent's road ends somewhere else on the seam, only `ROAD_IN` an
 
 | place | where | what |
 |---|---|---|
-| **The gorge** | x -768..-1450 | river in the bottom, the road on a bench on the south wall, the fishermen's path on the north bank; walls 37-42°, unwalkable (the 40° limit) |
+| **The gorge** | x -768..-1450 | river in the bottom, the county road on a bench at the north wall's foot, the fishermen's path below it by the water; walls 37-42°, unwalkable (the 40° limit) |
 | **The reveal** | (-1405, -828) on the road | the valley opens; the sightline to the steeple, the truss and the tower |
-| **Truss bridge** | x -1585, y -842..-762 | the road into town; deck about 5 m over the water; the south abutment's bank is a hiding place |
+| **Truss bridge** | x -1585, y -842..-762 | Main Street's corner to the south bank (brewery, Mill Hill); deck about 5 m over the water; the south abutment's bank is a hiding place |
 | **Downtown** | Main Street, y -725, x -1590..-1850 | north side: 10 shopfronts (gear, coffee, sweets, bank, gallery, bakery, books, pharmacy), **the church** (steeple 21.9 m) and its fellowship hall, the outfitter, the realty, the inn. South side (backs to the river walk): **the sheriff's office** on the bridge corner, four shops (diner, ice cream, antiques, wine bar), **the depot museum** with the heritage train, a tasting room |
 | **Church Street** | y -662 | restored houses (Victorian, foursquare, craftsman), garages (**the loot garage**: the estate's own furniture), the school on the bench above |
 | **The strip** | x -1860..-2090, the highway | **gas station + convenience store**, **burger drive-through**, **strip plaza** (vacant, laundromat, pharmacy, **video store**), **motor lodge** (two wings, an L; the back lot against the hill is where the vans are) |
@@ -211,20 +211,20 @@ The design is below. The townspeople's AI is not built in this workstream: the p
 **Checks (final build).**
 - **Seam**: `wild_seam.mjs` PASS (numbers in section 2).
 - **Routes** (`wild_routes.mjs`, the real player, 60 Hz, running):
-  - **road**: seam → gorge → truss bridge → Main Street → the strip → the bar's lot. 1,489 m in 3.7 min; 0 stuck, 0 falls. The feet are up to 7.7 m over the terrain on the bridge deck, over the river.
-  - **river**: fishermen's path → river walk. 1,271 m in 3.3 min; 0 stuck, 0 falls; 15 s wading.
+  - **road**: seam → the county road down the gorge → Main Street → the strip → the bar's lot. 1,375 m in 3.4 min; 0 stuck, 0 falls.
+  - **river**: fishermen's path → river walk. 1,271 m in 3.4 min; 0 stuck, 0 falls; 25 s wading.
 - **Walk-ins** (`wild_walkin.mjs`): the bar, gas station, drive-through, sheriff's office, depot museum and church are entered through their front doors. PASS.
 - **Terrain seams**: `wild_cracks.mjs --world laurel_town`: 0 of 120 views.
-- **Cost** (`wild_bench.mjs town_kit`, six views incl. the bar room):
+- **Cost** (`wild_bench.mjs town_final`, six views incl. the bar room; the full kit and the concrete road):
 
   | | measured | budget (runtime.md) |
   |---|---|---|
-  | M4 Metal 2400x1350 q3, render | 1.5-3.0 ms | ≤ 5 ms |
-  | draw calls | ≤ 45 | ≤ 40-50 |
-  | triangles | ≤ 0.90M | ≤ 1.5M |
-  | SwiftShader 1280x720 q0 | 51-124 ms (max direction 162) | ≤ 200 ms |
-  | download | 13.3 MB | ≤ 15 MB |
-  | GPU textures | 136 MB | ≤ 150 MB |
+  | M4 Metal 2400x1350 q3, render | 1.6-2.7 ms | ≤ 5 ms |
+  | draw calls | ≤ 45 (30-45) | ≤ 40-50 |
+  | triangles | ≤ 0.86M | ≤ 1.5M |
+  | SwiftShader 1280x720 q0 | 45-97 ms (max direction 118) | ≤ 200 ms |
+  | download | 14.0 MB | ≤ 15 MB |
+  | GPU textures | 138 MB | ≤ 150 MB |
   | load (M4) | 1.3 s | |
 
   - The kit is 4-6 draw calls in view: one atlas mesh and one glow mesh per zone in range.
@@ -232,7 +232,7 @@ The design is below. The townspeople's AI is not built in this workstream: the p
 
 **What doesn't work yet.**
 - **The townspeople are stand-ins** (boxes at their posts). There is no reporting AI, no alarm signal, no porch-light chain and no bell. Section 6 is the contract for the invader-behaviour workstream. They could be the invader character with an everyday outfit and no mask (`outfits` in `design/invaders/character.md`): ask that workstream for an unmasked head.
-- **The kit hasn't built yet**: the church hall, inn, motel, school, garages, sheds, footbridge, tunnel portal and train. They are massing boxes. Evidence the kit has built (crates, CRT wall, phone table, estate model) is placed from it; masks and the loot are boxes until the invader mask and the mansion's furniture glTFs are placed.
+- **From the kit, still massing or approximate**: the greenway footbridge is my plain deck (the kit's is 66 m with 6 m piers and needs its own banks); masks and the loot are boxes until the invader mask and the mansion's furniture glTFs are placed. The walk-ins' door openings have no collider (open doorways; closed doors as interactables later). The bar's porch post stands 0.3 m in front of its door's approach (the walker goes round it).
 - **Evidence placement inside the walk-ins is approximate.** The kit gives spots (`crt_wall_spot` in the plaza, the depot's model table, the bar's hook rail); move `EVIDENCE` onto them.
 - **The tunnel** is a portal with a dark bore against the hill. The heightfield can't hold a real bore, so the exit is the portal mouth.
 - **The river is wadeable everywhere**, as in the cove: there is no swimming and no rafts to ride yet.
@@ -247,7 +247,7 @@ The design is below. The townspeople's AI is not built in this workstream: the p
 - So rebuild the town **after** the cove is rebuilt and **after** the kit branch is merged. Otherwise the seam patch is stale, or the lots revert to the v2 placeholder sizes.
 - Two constants are other workstreams' to move:
   - the river leaves the cove at estate y ≈ -736 (`RIVER[0]`, the hydrology inflow at (-800, -742));
-  - the road grade meets the seam at (-768, -786), z -164.8 (`ROAD_IN`, `ROAD_GORGE[0:2]`).
+  - the county road meets the seam at (-767, -703), z -175.0 (`ROAD_IN`; `ROAD_GORGE` is generated from it).
 
   If the river or landscape agent moves either, these move with it.
 
@@ -255,4 +255,5 @@ The design is below. The townspeople's AI is not built in this workstream: the p
 - `kit_request.md` v2 (the user's modern-town update) is what the kit agent built to. `kit_status.md` lives in the kit agent's worktree and is the source of truth for sizes.
 - The layout reads the kit's sidecars (`assets/models/<name>.json`: footprint, colliders, `below_m`) at build time, and places the kit by footprint centre with the asset origin's offset.
 - When the kit adds an asset: re-run `laurel_town.py`. That is the full build, because footprints change the lots.
-- Kit numbers to watch: 75 placements, about 0.4M kit triangles at LOD0 when everything is in range. One 2048 atlas, now shared: the first pass uploaded one copy per glTF material (158 MB of textures, 13 MB downloaded) until `town.js` loaded it once.
+- Kit numbers to watch: 85 buildings + vehicles, train, portal and props, about 0.4M kit triangles at LOD0 when everything is in range. One 2048 atlas, now shared: the first pass uploaded one copy per glTF material (158 MB of textures, 13 MB downloaded) until `town.js` loaded it once.
+- Pads: the terrain under every footprint sits 8 cm below the pad (the kit's floors are at z = 0; a pad flattened to exactly that z-fought).

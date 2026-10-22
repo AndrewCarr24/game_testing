@@ -159,14 +159,32 @@ def valley_field(X, Y, noise):
 # road's grade (laurel_fork river_road), heading west; from there the town carries it: down the
 # gorge's south wall at <= 3%, across the south flats, over the green truss bridge into downtown,
 # and through town as Main Street, then out west as the highway past the strip.
-ROAD_IN = dict(x=-768.0, y=-786.0, z=-164.8, heading_deg=265.0, lanes=2, lane_m=3.6, shoulder_m=1.5)
-ROAD_GORGE = [(-770, -786), (-800, -790), (-860, -797), (-950, -806), (-1050, -812), (-1150, -817), (-1250, -821),
-              (-1350, -826), (-1430, -832), (-1480, -842), (-1520, -860), (-1550, -874), (-1572, -866), (-1583, -850),
-              (-1585, -842)]
-ROAD_Z0, ROAD_Z1 = -164.8, -183.6          # the bench: from the cove's grade down to the south flats
+# (merged 2026-10-22) the landscape workstream's county road (laurel_fork_road.py, world/road.json)
+# ends at the cove square's west edge on the NORTH bank: (-767, -703), z -175.0, heading west. The
+# town continues it down the gorge on a bench at the north wall's foot, 36 m off the river's centre
+# (the cove's ring preview runs close to that line), at ~1%, straight into Main Street; the truss
+# bridge now carries the south bank's road (the brewery, Mill Hill) over to it.
+ROAD_IN = dict(x=-767.0, y=-703.0, z=-175.0, heading_deg=270.0, lanes=2, lane_m=3.35, shoulder_m=1.2,
+               source="laurel_fork_road.py: world/road.json points[-1]")
+
+
+def _gorge_road():
+    xs = list(np.arange(-770.0, -1450.0, -40.0)) + [-1450.0, -1500.0, -1545.0]
+    pts = []
+    for x in xs:
+        t = float(np.clip((-770.0 - x) / 160.0, 0, 1)); t = t * t * (3 - 2 * t)
+        y = -703.0 * (1 - t) + (float(river_y(x)) + 36.0) * t
+        pts.append((round(float(x), 1), round(y, 1)))
+    return pts + [(-1566.0, -761.0)]
+
+
+ROAD_GORGE = _gorge_road()
+ROAD_Z0, ROAD_Z1 = -175.0, -183.6          # the bench: from the county road's end down to the town's flats
 BRIDGE = dict(a=(-1585.0, -842.0), b=(-1585.0, -762.0), deck=-182.0, spans=2, width=10.0)   # the truss bridge (road)
 MAIN_Y = -725.0
-ROAD_TOWN = [(-1585, -762), (-1585, -748), (-1592, -731), (-1610, -725), (-1700, -725), (-1800, -725),
+# (the bridge's south end: down off the deck, round the brewery's yard to the Mill Road)
+BRIDGE_SOUTH = [(-1585, -842), (-1583, -850), (-1572, -866), (-1552, -874), (-1520, -866)]
+ROAD_TOWN = [(-1566, -761), (-1580, -757), (-1588, -746), (-1596, -731), (-1610, -725), (-1700, -725), (-1800, -725),
              (-1860, -725), (-1950, -727), (-2050, -736), (-2120, -758), (-2165, -790), (-2200, -820), (-2240, -836), (-2275, -846)]
 
 # ------------------------------------------------------------------ buildings
@@ -284,6 +302,7 @@ STREETS = [
     # (name, points, width, kind) — the road from the estate is "road" (painted lanes)
     ("road_gorge", ROAD_GORGE, 10.0, "road"),
     ("main_street", ROAD_TOWN, 10.0, "road"),
+    ("bridge_south", BRIDGE_SOUTH, 8.0, "street"),
     ("church_street", [(-1592, -731), (-1594, -700), (-1600, -662), (-1700, -662), (-1800, -662), (-1880, -664)], 7.0, "street"),
     ("depot_street", [(-1782, -725), (-1782, -662), (-1786, -630)], 6.5, "street"),
     # the county road north up the Gap Branch: it climbs the hollow at 12% and bends out of sight
@@ -297,8 +316,9 @@ STREETS = [
     ("mill_stair_w", [(-1870, -912), (-1866, -940), (-1866, -968), (-1866, -996)], 3.0, "walk"),
     # the river walk (greenway) along the north bank, and the fishermen's path up the gorge
     ("river_walk", [(-1594, -756), (-1606, -770), (-1625, -779), (-1700, -783), (-1800, -786), (-1900, -790), (-2000, -800)], 3.0, "walk"),
-    ("gorge_path", [(-745, -712), (-800, -720), (-900, -731), (-1000, -740), (-1100, -746), (-1200, -752),
-                    (-1300, -757), (-1400, -763), (-1480, -770), (-1540, -772), (-1566, -762), (-1578, -756)], 1.8, "trail"),
+    # (low on the north bank, under the road's bench: 20 m off the river's centre)
+    ("gorge_path", [(-745, -715)] + [(float(x), round(float(river_y(x)) + 20.0, 1)) for x in range(-800, -1520, -60)]
+     + [(-1540, -775), (-1562, -768), (-1578, -764)], 1.8, "trail"),
     # (both meet the road at the truss bridge's north end: the river walk doesn't pass under the low first span)
     # the Tannery Branch trail behind Mill Hill, up the hollow to the south ridge
     ("tannery_trail", [(-1652, -996), (-1630, -1060), (-1615, -1150), (-1608, -1260), (-1600, -1380), (-1595, -1500), (-1592, -1570)], 1.8, "trail"),
@@ -353,7 +373,7 @@ VEHICLES = [   # (kind, x, y, yaw deg): townspeople's cars, the cruiser, the her
     ("cruiser", -1598, -735, 90), ("suv", -1640, -717, 0), ("car", -1660, -717, 0), ("pickup", -1690, -717, 0),
     ("suv", -1720, -717, 0), ("car", -1760, -717, 0), ("car", -1668, -733, 180), ("suv", -1700, -733, 180),
     ("pickup", -1868, -713, 0), ("car", -1915, -703, 0), ("suv", -2004, -712, 0), ("car", -2020, -712, 0),
-    ("pickup", -2112, -790, 0), ("train", -1745, -752, 90),
+    ("pickup", -2112, -790, 0), ("train", -1745, -752, 0),
 ]
 PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate deg, 0 = north)
     dict(role="sheriff", x=-1612, y=-733, face=180, note="on the bench outside his office, watching the bridge"),
@@ -364,18 +384,19 @@ PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate 
     dict(role="bartender", x=-2105, y=-806, face=0), dict(role="man on a porch", x=-1678, y=-647, face=180),
     dict(role="woman watering baskets", x=-1650, y=-716, face=180), dict(role="jogger", x=-1700, y=-783, face=90),
 ]
-SPAWN = dict(pos=(-760.0, -786.5), look=(-860.0, -797.0))      # the road at the seam, looking down the gorge
+SPAWN = dict(pos=(-760.0, -703.0), look=(-860.0, -712.0))      # the road at the seam, looking down the gorge
 
 
 def views():
     """Named eye-height views (estate frame): pos (x, y[, z over ground]), look (x, y, z abs or None)."""
     return dict(
         spawn=dict(pos=SPAWN["pos"], look=(*SPAWN["look"], None)),
-        seam_road=dict(pos=(-760, -786.5), look=(-860, -797, -166.5)),
+        seam_road=dict(pos=(-760, -703), look=(-860, -712, -175.0)),
         seam_river=dict(pos=(-758, -718), look=(-900, -735, None)),
-        gorge_mouth=dict(pos=(-1405, -828), look=(-1700, -760, -175.0)),
+        gorge_mouth=dict(pos=(-1405, -749), look=(-1700, -735, -176.0)),
         gorge_mouth_river=dict(pos=(-1420, -766), look=(-1700, -760, -178.0)),
         bridge_approach=dict(pos=(-1572, -872), look=(-1585, -760, -176.0)),
+        bridge_corner=dict(pos=(-1580, -752), look=(-1585, -850, -180.0)),
         bridge_deck=dict(pos=(-1585, -830, 1.65), look=(-1600, -700, -178.0)),
         main_street=dict(pos=(-1605, -726), look=(-1800, -724, -180.0)),
         church_street=dict(pos=(-1605, -662), look=(-1800, -664, -178.0)),
@@ -462,6 +483,10 @@ def lot_pads(H, grid, buildings, streets_z=None):
             clamped = np.clip(Hs, z - e * t33, z + e * t45)
             wgt = 1 - terrain.smoothstep(10.0, 16.0, e)
             Hs = Hs + (clamped - Hs) * wgt
+        # (the ground 8 cm under the footprint itself: the kit's floors sit at z = 0 and would
+        # z-fight a pad flattened to exactly that)
+        strict = (np.abs(u) <= b["w"] / 2) & (np.abs(v) <= b["d"] / 2)
+        Hs = np.where(strict, np.minimum(Hs, z - 0.08), Hs)
         b["z"] = round(z, 2)
         H[sl] = Hs
     return H

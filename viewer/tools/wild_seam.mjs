@@ -52,7 +52,7 @@ try {
   const page = await (await b.newContext({ viewport: { width: 640, height: 360 } })).newPage();
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   // the cove's road 12 m east of its exit, facing west
-  await page.goto(`${BASE}/viewer/wild.html?world=laurel_fork&hud=0&q=0&grass=0&epos=-750,-785.5&elook=-800,-788`);
+  await page.goto(`${BASE}/viewer/wild.html?world=laurel_fork&hud=0&q=0&grass=0&epos=-750,-703&elook=-800,-703`);
   await loaded(page);
   for (const [dx, dy] of [[-1, -0.03], [1, 0.03]]) {
     const leg = await walk(page, dx, dy, 60);
