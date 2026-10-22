@@ -266,9 +266,10 @@ STREETS = [
     ("mill_stair_e", [(-1650, -912), (-1652, -940), (-1652, -968), (-1652, -996)], 3.0, "walk"),
     ("mill_stair_w", [(-1870, -912), (-1866, -940), (-1866, -968), (-1866, -996)], 3.0, "walk"),
     # the river walk (greenway) along the north bank, and the fishermen's path up the gorge
-    ("river_walk", [(-1600, -778), (-1700, -783), (-1800, -786), (-1900, -790), (-2000, -800)], 3.0, "walk"),
+    ("river_walk", [(-1594, -756), (-1606, -770), (-1625, -779), (-1700, -783), (-1800, -786), (-1900, -790), (-2000, -800)], 3.0, "walk"),
     ("gorge_path", [(-745, -712), (-800, -720), (-900, -731), (-1000, -740), (-1100, -746), (-1200, -752),
-                    (-1300, -757), (-1400, -763), (-1480, -770), (-1550, -776), (-1600, -778)], 1.8, "trail"),
+                    (-1300, -757), (-1400, -763), (-1480, -770), (-1540, -772), (-1566, -762), (-1578, -756)], 1.8, "trail"),
+    # (both meet the road at the truss bridge's north end: the river walk doesn't pass under the low first span)
     # the Tannery Branch trail behind Mill Hill, up the hollow to the south ridge
     ("tannery_trail", [(-1652, -996), (-1630, -1060), (-1615, -1150), (-1608, -1260), (-1600, -1380), (-1595, -1500), (-1592, -1570)], 1.8, "trail"),
 ]
@@ -277,7 +278,7 @@ STREETS = [
 RAIL = [(-1705, -752), (-1800, -754), (-1900, -757), (-2000, -763), (-2060, -768), (-2110, -770),
         (-2150, -768), (-2172, -764)]
 TUNNEL = dict(x=-2176.0, y=-764.0, yaw=90.0)       # portal face at the end of the cut, facing east
-FOOTBRIDGE = dict(a=(-1795.0, -786.0), b=(-1795.0, -830.0))
+FOOTBRIDGE = dict(a=(-1795.0, -790.5), b=(-1795.0, -830.0))      # (its north end clear of the river walk)
 
 # ------------------------------------------------------------------ gameplay: exits, hiding, evidence, people
 # exits (estate frame rects x0, y0, x1, y1): the runtime reloads into `to` at the same point;

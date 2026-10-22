@@ -360,6 +360,14 @@ def run(name=LT.NAME):
     C, dw, slope = communities(R, town_clear, street_d)
     excl = (C == LFW.CID["water"]) | (C == LFW.CID["rock"]) | (C == LFW.CID["estate"]) | (dw < 3) | (street_d < 6) | (trail_d < 2.5)
     trees = LFW.scatter_trees(R, C, dw, np.where(np.isfinite(trail_d), trail_d, 1e9), excl, r)
+    # (the town's views look across open flats at whole hillsides, where the cove's look into a
+    # closed forest: the forest's impostors were most of a SwiftShader frame. Beyond 60 m of the
+    # valley floor the stand is thinned to 55%: the canopy shell (terrain.js) fills the far slopes)
+    xe_t = trees["x"] + CX
+    e_t = np.abs(trees["y"] - LT.river_y(xe_t)) - LT.RIVER_HW
+    F_t = np.where(trees["y"] > LT.river_y(xe_t), LT._ix(xe_t, LT.FLOOR_X, LT.FLOOR_N), LT._ix(xe_t, LT.FLOOR_X, LT.FLOOR_S))
+    thin = (e_t > F_t + 60) & (r.random(len(xe_t)) > 0.55)
+    trees = {k: v[~thin] for k, v in trees.items()}
     # yard and street trees in town: maples, oaks, dogwoods, a few hemlocks, off the lots and streets
     yx, yy = LFW.jitter_grid(R, 9.0, r)
     keep = LFW.sample_grid(R, town_clear & ~lots & (street_d > 4.5) & (dw > 6), yx, yy) & (r.random(len(yx)) < 0.22)
