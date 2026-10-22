@@ -65,17 +65,62 @@ try {
   await press('KeyE', 500);
   const st = await p.evaluate(() => ({ has: window.__inventory.has('kitchen_knife'), armed: window.__inventory.armed, def: window.__weapons.def?.id }));
   check('picked up and armed', st.has && st.armed === 'kitchen_knife' && st.def === 'kitchen_knife', JSON.stringify(st));
+  await p.evaluate(() => window.__weapons.vm.ready);
   await p.waitForTimeout(600);
-  const cost = await p.evaluate(() => {
-    let meshes = 0, tris = 0;
-    window.__weapons.vm.root.traverse((o) => { if (o.isMesh && o.visible) { meshes++; tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
-    return { meshes, tris: Math.round(tris) };
+  // the view model: the arm asset (skinned, 3 bones) holding the knife, lit like the kitchen
+  const vmInfo = await p.evaluate(() => {
+    const vm = window.__weapons.vm;
+    let meshes = 0, tris = 0, skinned = 0;
+    vm.root.traverse((o) => { if (o.isMesh && o.visible) { meshes++; if (o.isSkinnedMesh) skinned++; tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+    return { meshes, tris: Math.round(tris), skinned, bones: Object.keys(vm.arm?.bones ?? {}), room: vm.room, socket: !!vm.weapon?.parent?.name?.includes('Socket') };
   });
-  console.log(`view model cost: ${cost.meshes} draw calls, ${cost.tris} triangles`);
-  check('view model is cheap (<= 8 draw calls, < 12k triangles)', cost.meshes <= 8 && cost.tris < 12000, JSON.stringify(cost));
-  await p.evaluate(() => (document.getElementById('hint').style.visibility = 'hidden'));
-  await p.screenshot({ path: `${out}/viewmodel_idle.png` });
-  await p.evaluate(() => (document.getElementById('hint').style.visibility = ''));
+  console.log(`view model cost: ${vmInfo.meshes} draw calls, ${vmInfo.tris} triangles`);
+  check('the arm asset holds the knife (skinned, Forearm/Twist/Hand, the knife in its socket)',
+    vmInfo.skinned === 1 && ['Forearm', 'Twist', 'Hand'].every((b) => vmInfo.bones.includes(b)) && vmInfo.socket, JSON.stringify(vmInfo));
+  check('view model is cheap (<= 6 draw calls idle, < 12k triangles)', vmInfo.meshes <= 6 && vmInfo.tris < 12000, JSON.stringify(vmInfo));
+  // nothing of it nearer than the near plane (0.1 m) inside the view, at idle and through the slash
+  const near = await p.evaluate(() => {
+    const w = window.__weapons, vm = w.vm, cam = window.__camera, a = w.def.attack;
+    const clip = { duration: a.duration, keys: a.keys, trail: a.sweep };
+    const v = new (cam.position.constructor)();
+    let worst = 1e9;
+    for (let t = 0; t <= a.duration; t += 0.02) {
+      vm.scrub(clip, t); vm.update(0); vm.root.updateMatrixWorld(true);
+      vm.root.traverse((o) => {
+        if (!o.isMesh || o === vm.trail) return;
+        const pos = o.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i += 7) {
+          if (o.isSkinnedMesh) { v.fromBufferAttribute(pos, i); o.applyBoneTransform(i, v); v.applyMatrix4(o.matrixWorld); } else v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld);
+          const c = cam.worldToLocal(v.clone());
+          const ndc = v.clone().project(cam);
+          if (Math.abs(ndc.x) <= 1 && Math.abs(ndc.y) <= 1) worst = Math.min(worst, -c.z);
+        }
+      });
+    }
+    vm.scrub(null);
+    return +worst.toFixed(3);
+  });
+  check('never clips the near plane (nearest visible vertex > 0.1 m)', near > 0.1, `nearest ${near} m`);
+  // screenshots (the clip held at fixed times, so they repeat): idle, mid-slash, follow-through,
+  // in the lit kitchen, then with the power off (the room's lights-off bake)
+  const vmShots = async (tag) => {
+    await p.evaluate(() => { for (const id of ['hint', 'toast']) document.getElementById(id).style.visibility = 'hidden'; });
+    for (const [name, t] of [['idle', null], ['midslash', 0.205], ['followthrough', 0.3]]) {
+      await p.evaluate((t) => { const w = window.__weapons, a = w.def.attack; w.vm.scrub(t == null ? null : { duration: a.duration, keys: a.keys, trail: a.sweep }, t ?? 0); }, t);
+      await p.waitForTimeout(300);
+      await p.screenshot({ path: `${out}/viewmodel_${tag}_${name}.png` });
+    }
+    await p.evaluate(() => { window.__weapons.vm.scrub(null); for (const id of ['hint', 'toast']) document.getElementById(id).style.visibility = ''; });
+  };
+  await vmShots('lit');
+  const litSH = await p.evaluate(() => window.__weapons.vm.arm && window.__weapons.baked?.rooms?.kitchen?.sh?.[0]?.toArray?.());
+  await p.evaluate(() => window.__signals.set('power', false));
+  await p.waitForTimeout(2000);
+  await vmShots('dark');
+  const darkSH = await p.evaluate(() => window.__weapons.baked?.rooms?.kitchen?.sh?.[0]?.toArray?.());
+  if (litSH && darkSH) check('dark room: the arm is lit by the dark state (its SH dims)', darkSH[1] < litSH[1] * 0.6, JSON.stringify({ litSH, darkSH }));
+  await p.evaluate(() => window.__signals.set('power', true));
+  await p.waitForTimeout(800);
   check('hint names the one attack (Enter · Slash, no right-click)', /Enter · Slash/.test(await hint()) && !/right-click|Stab/i.test(await hint()), `hint="${(await hint()).trim()}"`);
 
   // ---- the rest in the north gallery (open floor), looking east (+x)
@@ -159,6 +204,47 @@ try {
   });
   check('untagged character box: stab and shot still land', (await health('d5')).h === 25 && shot5 === 'd5', JSON.stringify({ h: await health('d5'), shot5 }));
   await p.evaluate(() => window.__combat.get('d5').remove());
+  // the sweep: two dummies, one on each side of the view (~25 deg): one slash hits both, the one
+  // on the right first (the blade travels right to left), 55 each
+  const side = (deg, d) => [spot[0] + d * Math.cos(deg * Math.PI / 180), 0, spot[2] + d * Math.sin(deg * Math.PI / 180)];
+  await dummy(side(25, 0.95), -90, true, 'dR');               // +z is the right when looking +x
+  await dummy(side(-25, 0.95), -90, true, 'dL');
+  await p.waitForTimeout(300);
+  const order = await p.evaluate(async () => {
+    const seen = [];
+    const off = window.__combat.on('hit', (e) => seen.push({ id: e.target.id, t: performance.now() }));
+    window.__weapons.attack();
+    await new Promise((r) => setTimeout(r, 700));
+    off?.();
+    return seen;
+  });
+  const hR = await health('dR'), hL = await health('dL');
+  check('one slash sweeps both, right to left', hR.h === 45 && hL.h === 45 && order.length === 2 && order[0].id === 'dR' && order[1].t >= order[0].t,
+    JSON.stringify({ hR, hL, order: order.map((o) => o.id) }));
+  await p.evaluate(() => { window.__combat.get('dR').remove(); window.__combat.get('dL').remove(); });
+  // a target behind the view's edge (70 deg off) is outside the arc
+  await dummy(side(70, 0.9), -90, true, 'dOut');
+  await p.waitForTimeout(300);
+  await press('Enter', 700);
+  check('outside the arc: no hit', (await health('dOut')).h === 100, JSON.stringify(await health('dOut')));
+  await p.evaluate(() => window.__combat.get('dOut').remove());
+  // the blade meets a wall (looking at the gallery's north wall from 0.45 m): a clink, it stops
+  // and springs back; no target hurt
+  const wallAt = await p.evaluate(() => {
+    const c = window.__combat, cam = window.__camera;
+    const THREE_V = cam.position.constructor;
+    for (const dz of [-1, 1]) { const hit = c.raycast(cam.position.clone(), new THREE_V(0, 0, dz), 6); if (hit) return { dz, d: hit.distance }; }
+    return null;
+  });
+  if (wallAt) {
+    await teleport([spot[0], 1.65, spot[2] + wallAt.dz * (wallAt.d - 0.45)], [spot[0], 1.55, spot[2] + wallAt.dz * 5]);
+    await p.waitForTimeout(300);
+    swings.length = 0;
+    const sounds = await p.evaluate(async () => { const n0 = window.__sfx?.log?.length ?? 0; window.__weapons.attack(); await new Promise((r) => setTimeout(r, 600)); return (window.__sfx?.log ?? []).slice(n0).map((e) => e.name); });
+    check('a wall in the blade\'s path: a clink, the swing stops', swings.length === 1 && swings[0].wall && swings[0].hits === 0, JSON.stringify({ swings, sounds }));
+    await teleport([spot[0], 1.65, spot[2]], ahead(3, 1.3));
+    await p.waitForTimeout(300);
+  }
   // a target shaped like the invaders workstream's (alive a getter, facing() a yaw, unaware()):
   // the takedown works and nothing throws
   const inv = await p.evaluate(async ([x, z]) => {

@@ -57,7 +57,7 @@ export function viewModelMaterial(src, { skin = false } = {}) {
       .replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\nreflectedLight.directDiffuse *= vmDirect;\nreflectedLight.directSpecular *= vmDirect;' +
         // skin: light scatters under it, so its shading is softer and warmer than a surface's:
         // the darker the ambient light, the more of it comes back reddened (a cheap subsurface)
-        (skin ? '\n{ float l = dot( reflectedLight.indirectDiffuse, vec3( 0.333 ) );\n  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 0.10, 0.025, 0.01 ) * l * 2.0; }' : ''));
+        (skin ? '\n{ float l = dot( reflectedLight.indirectDiffuse, vec3( 0.333 ) );\n  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 0.06, 0.014, 0.005 ) * l * 2.0; }' : ''));
   };
   m.customProgramCacheKey = () => 'viewmodel' + (skin ? '-skin' : '');
   return m;
@@ -246,7 +246,7 @@ const newPose = () => ({ p: [0, 0, 0], r: [0, 0, 0], w: [0, 0, 0] });
 // the streak: a ribbon swept by the outer part of the blade over the last few hundredths of a
 // second (positions re-evaluated from the clip, so it doesn't depend on the frame rate); faint,
 // brighter toward the tip and the newest edge, as bright as the room
-const TRAIL_N = 10, TRAIL_SPAN = 0.075;
+const TRAIL_N = 10, TRAIL_SPAN = 0.06;
 function makeTrail() {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(new Float32Array((TRAIL_N + 1) * 2 * 3), 3));
@@ -408,7 +408,7 @@ export class ViewModel {
     this.wrist(pose.w[0] + this.baseWrist[0], pose.w[1] + this.baseWrist[1], pose.w[2] + this.baseWrist[2]);
   }
 
-  // the wrist: flex (palm-ward +) and deviation (toward the little finger +) bend the Hand bone,
+  // the wrist: flex (palm-ward +) and deviation (toward the thumb +) bend the Hand bone,
   // the twist rolls the forearm (half of it at the Twist bone, all of it at the hand)
   wrist(flex, dev, twist) {
     const a = this.arm;
@@ -480,7 +480,7 @@ export class ViewModel {
       al.setX(i * 2, age * age); al.setX(i * 2 + 1, 0);
     }
     pos.needsUpdate = al.needsUpdate = true;
-    tr.material.uniforms.strength.value = 0.32 * fade;
+    tr.material.uniforms.strength.value = 0.16 * fade;
     tr.visible = true;
     // back to this frame's pose
     lerpPose(this.clip.keys, t, this._tp);
@@ -516,7 +516,7 @@ function fitWeapon(node, def) {
     tip = V(0, tp.distanceTo(gp) + (def.hold?.slide ?? 0), 0);
   }
   const group = mergeByMaterial(holder);
-  return { group, tip, mid: tip.clone().multiplyScalar(0.6) };
+  return { group, tip, mid: tip.clone().multiplyScalar(0.72) };
 }
 
 // one mesh per material (a knife's blade, bolster, handle, rivets: 8 meshes -> 3 draw calls)

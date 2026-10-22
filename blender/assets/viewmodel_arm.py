@@ -68,7 +68,7 @@ P = dict(
     preview_knife=True,
     # the knife's handle (kitchen_knife.py): half extents across (X: thickness, Y: height)
     handle=(0.0185 / 2 * 1.04, 0.0245 / 2 * 1.04, 0.122 / 2),
-    skin=(0.78, 0.615, 0.535),        # sRGB base skin
+    skin=(0.745, 0.605, 0.54),        # sRGB base skin
     sleeve=(0.30, 0.31, 0.33),        # heather charcoal knit
 )
 
@@ -106,7 +106,7 @@ FINGERS = dict(
 )
 # thumb: CMC (base), MCP, IP, tip; radii
 THUMB = dict(cmc=(0.016, -0.050, 0.024), mcp=(-0.0035, -0.0205, 0.0565), ip=(-0.0335, -0.0065, 0.0515),
-             tip=(-0.0355, 0.0160, 0.0330), r=(0.0128, 0.0106, 0.0097, 0.0084))
+             tip=(-0.0352, 0.0150, 0.0338), r=(0.0128, 0.0104, 0.0094, 0.0078))
 
 
 def finger_joints(f):
@@ -356,6 +356,11 @@ def _mesh(name, verts, faces, col, parent=None):
     bm = bmesh.new()
     bm.from_mesh(me)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    # (recalc_face_normals turns the decimated arm inside out: settle it by the signed volume)
+    bm.faces.ensure_lookup_table()
+    vol = sum(f.verts[0].co.dot(f.verts[i].co.cross(f.verts[i + 1].co)) for f in bm.faces for i in range(1, len(f.verts) - 1))
+    if vol < 0:
+        bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
     bm.to_mesh(me)
     bm.free()
     for poly in me.polygons:
@@ -489,11 +494,41 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     T = {k: np.array(v) for k, v in THUMB.items() if k != "r"}
     tips = np.maximum(tips, np.exp(-(np.linalg.norm(P - T["tip"], axis=1) / 0.011) ** 2))
     warm = np.maximum(warm, np.exp(-(np.linalg.norm(P - T["ip"], axis=1) / 0.009) ** 2) * 0.7)
-    col *= (1 + warm[:, None] * np.array([0.03, -0.12, -0.12]))
+    col *= (1 + warm[:, None] * np.array([0.05, -0.15, -0.15]))
     col *= (1 + tips[:, None] * np.array([0.04, -0.09, -0.07]))
+    # knuckle wrinkles: lines across the back of each bent joint (PIP, DIP, the thumb's IP),
+    # ~1.5 mm apart round the joint's outer corner, fading away from its middle
+    wr = np.zeros(len(P))
+    joints = []
+    for f in FINGERS.values():
+        j, dirs = finger_joints(f)
+        rr = f["r"][0]
+        joints.append((j[1], dirs[0], dirs[1], rr, 1.0))
+        joints.append((j[2], dirs[1], dirs[2], rr * 0.9, 0.7))
+    td_in, td_out = _n(T["ip"] - T["mcp"]), _n(T["tip"] - T["ip"])
+    joints.append((T["ip"], td_in, td_out, THUMB["r"][2], 1.0))
+    for J, din, dout, rr, w in joints:
+        axis = np.cross(din, dout)
+        if np.linalg.norm(axis) < 1e-6:
+            continue
+        axis = axis / np.linalg.norm(axis)
+        corner = _n(din - dout)                       # the joint's outer corner (the back of the finger)
+        q = P - J
+        qa = q @ axis
+        qp = q - qa[:, None] * axis
+        rad = np.linalg.norm(qp, axis=1) + 1e-9
+        cosang = np.clip((qp @ corner) / rad, -1, 1)
+        side = np.sign(qp @ np.cross(axis, corner))
+        arc = np.arccos(cosang) * side * rad           # m along the skin from the corner's middle
+        near = (np.abs(qa) < rr * 0.95) & (rad > rr * 0.6) & (rad < rr * 1.6) & (cosang > 0.2)
+        ph = arc / 0.0015
+        lines = np.exp(-((ph - np.round(ph)) * 0.0015 / 0.00034) ** 2 / 2)
+        fade = np.exp(-(arc / 0.0042) ** 2) * np.clip(1 - (np.abs(qa) / (rr * 0.95)) ** 4, 0, 1)
+        wr = np.maximum(wr, np.where(near, lines * fade * w, 0))
+    col *= (1 - wr[:, None] * np.array([0.10, 0.14, 0.14]))
     # mottling (large, faint) and freckles (small, sparse) on the back of the hand and the forearm
     mott = sdf.vnoise(P, 45.0, 3) * 0.5 + sdf.vnoise(P, 140.0, 4) * 0.5
-    col *= (1 + mott[:, None] * np.array([0.035, 0.05, 0.05]))
+    col *= (1 + mott[:, None] * np.array([0.05, 0.075, 0.075]))
     frk = np.clip((sdf.vnoise(P, 420.0, 9) - 0.62) * 4, 0, 1) * (1 - palmar) * 0.18
     col *= (1 - frk[:, None] * np.array([0.25, 0.4, 0.5]))
     # faint veins: thin winding lines on the back of the hand and up the inner wrist
@@ -506,10 +541,10 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     col = np.where(nail[:, None], nl * (1 + 0.04 * sdf.vnoise(P, 900.0, 2)[:, None]), col)
     # occlusion tinted red: light in the creases has gone through skin
     aoc = ao.reshape(-1)
-    tint = np.array([1.0, 0.70, 0.64])
+    tint = np.array([1.0, 0.78, 0.72])
     col *= tint + (1 - tint) * np.clip(aoc, 0, 1)[:, None] ** 0.6
     rough = 0.56 + 0.06 * palmar - 0.05 * tips + 0.04 * warm + 0.04 * sdf.vnoise(P, 300.0, 6)
-    rough = np.where(nail, 0.30, rough)
+    rough = np.where(nail, 0.30, rough) + wr * 0.08
     # ---- the sleeve: heathered charcoal knit (light and dark fibres), the cuff a shade darker
     sb = srgb_to_lin(p["sleeve"])
     fib = rng.random(len(P))
@@ -529,7 +564,7 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     knit = _blur(rng.random((H, W)), 1)
     knit = knit - _blur(knit, 3)
     sl = sleeve.reshape(H, W)
-    h = np.where(sl, knit * 0.9, -np.abs(pores) * 0.28 + _blur(pores, 2) * 0.22)
+    h = np.where(sl, knit * 0.9, -np.abs(pores) * 0.28 + _blur(pores, 2) * 0.22 - _blur(wr.reshape(H, W), 1) * 0.9)
     gy, gx = np.gradient(h)
     n = tan_n * 2 - 1
     n[..., 0] -= gx
@@ -731,7 +766,7 @@ def build(**overrides):
         "wrist": common.to_gltf(WRIST), "elbow": common.to_gltf(ELBOW),
         "forearm": common.to_gltf(FORE),                 # wrist -> elbow
         "flex": common.to_gltf(U_M),                     # the wrist bends (palm-ward +) about this
-        "deviation": common.to_gltf((1.0, 0, 0)),        # side to side (toward the little finger +)
+        "deviation": common.to_gltf((1.0, 0, 0)),        # side to side (toward the thumb +)
         "twist": common.to_gltf(A_M),                    # the forearm rolls about this
     }
     bpy.context.view_layer.update()

@@ -18,7 +18,7 @@ import { makeTarget } from './combat.js';
 //
 // Times are seconds, distances metres, angles degrees. An attack's keys are view-model poses
 // relative to the hold pose: [t, { p: [x, y, z] (camera space), r: [pitch, yaw, roll] (the arm
-// about the grip), w: [flex, deviation, twist] (the wrist bone, when the arm is rigged) }, ease],
+// about the grip), w: [flex (palm-ward +), deviation (toward the thumb +), twist] (the wrist bones) }, ease],
 // ease = 'linear' | 'in' (accelerating) | 'out' (decelerating) | smoothstep (default).
 // Its `sweep` is where the blade travels in the view while it can hit: from / to = [yaw, pitch]
 // (degrees off the view's centre, + = right / up) between t0 and t1; each frame the step swept
@@ -29,10 +29,10 @@ import { makeTarget } from './combat.js';
 // the left of the view (the wrist rolls over), a beat, the recovery back to the guard
 const SLASH_KEYS = [
   [0.0, {}],
-  [0.13, { p: [0.075, 0.05, 0.03], r: [6, -28, -24], w: [-26, 22, -8] }, 'out'],   // anticipation
-  [0.2, { p: [-0.02, 0.0, -0.1], r: [-2, 8, 10], w: [4, -6, 6] }, 'in'],           // the cut, mid-arc
-  [0.27, { p: [-0.2, -0.065, -0.07], r: [-10, 46, 36], w: [24, -24, 18] }, 'out'],  // follow-through
-  [0.36, { p: [-0.215, -0.08, -0.05], r: [-12, 50, 40], w: [28, -26, 20] }],        // the beat
+  [0.13, { p: [0.055, 0.045, 0.0], r: [8, -26, -22], w: [-30, 20, -10] }, 'out'],   // anticipation: drawn back, wrist cocked
+  [0.2, { p: [-0.03, 0.005, -0.07], r: [-2, 10, 8], w: [0, -4, 4] }, 'in'],          // the cut, mid-arc (fastest)
+  [0.27, { p: [-0.15, -0.04, -0.05], r: [-8, 38, 26], w: [22, -22, 16] }, 'out'],    // follow-through
+  [0.36, { p: [-0.16, -0.05, -0.04], r: [-9, 41, 29], w: [25, -24, 18] }],           // the beat
   [0.66, {}],                                                                         // recovery
 ];
 const SWING_KEYS = [   // a club (bat, pan, poker): big wind-up over the shoulder, a heavy sweep
@@ -50,10 +50,10 @@ export const WEAPONS = {
     // the view model (camera space, m): the grip (the handle's centre) at `pos`, the forearm leaving
     // the wrist along `arm`, the back of the hand toward `back`; `wrist` = the guard's wrist bend
     // [flex, deviation, twist] deg; `run` = the pose added while running
-    hold: { pos: [0.14, -0.12, -0.32], arm: [0.38, -0.5, 0.78], back: [0.65, 0.45, 0.6], wrist: [0, 0, 0], gripRadius: 0.0115 },
+    hold: { pos: [0.13, -0.108, -0.33], arm: [0.38, -0.5, 0.78], back: [0.28, 0.75, 0.6], wrist: [0, 3, 0], gripRadius: 0.0115 },
     // one attack, Enter: the slash. 55 a hit (two kill), up to 2 targets in its arc
     attack: { name: 'slash', damage: 55, range: 1.25, maxTargets: 2, duration: 0.66, cooldown: 0.62, keys: SLASH_KEYS,
-      sweep: { t0: 0.15, t1: 0.27, from: [34, 9], to: [-42, -11] }, swingSfxAt: 0.12 },
+      sweep: { t0: 0.15, t1: 0.27, from: [34, 9], to: [-42, -11] }, swingSfxAt: 0.12, view: [-0.5, 1.1, 0.9] },
     // the same slash from behind an unaware target (combat.canTakedown): it dies outright
     takedown: { damage: 100, range: 1.3, arc: 60 },
     hitStop: 0.075,            // the view model holds still for this long on a hit (0.13 takedown)
@@ -328,11 +328,20 @@ export class Weapons {
   }
   endView(dt) {
     const k = this.viewKick, r = this.recoil;
-    const pitch = THREE.MathUtils.degToRad(k.y + r.y), yaw = THREE.MathUtils.degToRad(k.x + r.x);
+    // the body goes with a swing: the view leans a degree or so the way the blade travels (the
+    // attack's `view`: [pitch, yaw, roll] deg at the cut's middle, a bell over the sweep)
+    const vm = this.vm, a = this.def?.attack, sv = a?.view;
+    let sp = 0, sy = 0, sr = 0;
+    if (sv && vm.clip?.trail && !vm.scrubbing && !window.__bench) {
+      const sw = a.sweep, mid = (sw.t0 + sw.t1) / 2, w = (sw.t1 - sw.t0) * 0.9;
+      const g = Math.exp(-(((vm.clipT - mid) / w) ** 2));
+      sp = sv[0] * g; sy = sv[1] * g; sr = sv[2] * g;
+    }
+    const pitch = THREE.MathUtils.degToRad(k.y + r.y + sp), yaw = THREE.MathUtils.degToRad(k.x + r.x + sy), roll = THREE.MathUtils.degToRad(sr);
     k.multiplyScalar(Math.max(0, 1 - dt * 14));
     r.multiplyScalar(Math.max(0, 1 - dt * (this.def?.recoil?.recover ?? 9)));
-    if (Math.abs(pitch) + Math.abs(yaw) < 1e-5 || this.player.isDown) return;
-    this._applied = new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ'));
+    if (Math.abs(pitch) + Math.abs(yaw) + Math.abs(roll) < 1e-5 || this.player.isDown) return;
+    this._applied = new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yaw, roll, 'YXZ'));
     this.camera.quaternion.multiply(this._applied);
   }
 
