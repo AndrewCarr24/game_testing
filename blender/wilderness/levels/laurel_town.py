@@ -207,6 +207,9 @@ KIT = {
     # (flattened pad) and nothing drawn until its building exists
     "site_bar": (30, 18, 6, True, "site"), "site_gas_station": (36, 28, 6, True, "site"), "site_diner": (24, 16, 6, True, "site"),
 }
+# [gas] the gas station's lot (blender/assets/town2_gas.py, design/town/gas.md): canopy + forecourt,
+# the store behind it, the side lot and the back lot: 44 x 40 m, its front on the road's edge
+KIT["site_gas_station"] = (44, 40, 6, True, "site")
 
 
 PROJECT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
@@ -252,7 +255,7 @@ def F(id_, kind, x, front_y, yaw=0.0, role=None, setback=0.0, **kw):
 def layout_buildings():
     return [
         B("bar", "site_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn", site=True),
-        F("gas", "site_gas_station", -1880, -721, 0, "gas station + convenience store", site=True),
+        F("gas", "site_gas_station", -1880, -720.6, 0, "gas station + convenience store", site=True),   # [gas] front on the road's edge
         F("diner", "site_diner", -1935, -719, 0, "the diner", site=True),
     ]
 
@@ -425,6 +428,9 @@ def views():
         bar_room=dict(pos=(-2100.5, -799.5, 2.4), look=(-2114.0, -812.0, -184.3)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
+        # [gas] the gas station (town2_gas): under the canopy toward the store; inside, down the aisle to the coolers
+        gas_lot=dict(pos=(-1887.0, -710.1), look=(-1886.0, -697.6, -182.3)),
+        gas_store=dict(pos=(-1886.5, -695.6, 2.0), look=(-1888.0, -684.6, -182.8)),
     )
 
 
