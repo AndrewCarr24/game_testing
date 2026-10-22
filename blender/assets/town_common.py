@@ -57,6 +57,9 @@ def material(glow=False):
     img.colorspace_settings.name = "sRGB"
     m = common.pbr_material("M_Town_Glow" if glow else "M_Town_Atlas", (1, 1, 1), roughness=0.75)
     common.set_base_color_map(m, img)
+    # single-sided (glTF doubleSided false): a window's painted glass hides the room from the
+    # street, while from inside the room its back face culls and the street shows through
+    m.use_backface_culling = True
     if glow:
         bsdf = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
         tex = next(n for n in m.node_tree.nodes if n.type == "TEX_IMAGE")
@@ -119,6 +122,31 @@ def _clip(poly, axis, val, keep_ge):
     return out
 
 
+def _cells(P, uvs):
+    """Clip polygon P (with uvs) at every integer line of its uvs: yields (pieces as
+    [(pos, uv)], cell u index, cell v index)."""
+    us = [a for a, _ in uvs]
+    vs = [b for _, b in uvs]
+    iu0, iu1 = math.floor(min(us) + EPS), math.ceil(max(us) - EPS)
+    iv0, iv1 = math.floor(min(vs) + EPS), math.ceil(max(vs) - EPS)
+    poly0 = list(zip(P, uvs))
+    for iu in range(iu0, max(iu1, iu0 + 1)):
+        pu = _clip(_clip(poly0, 0, iu, True), 0, iu + 1, False)
+        if len(pu) < 3:
+            continue
+        for iv in range(iv0, max(iv1, iv0 + 1)):
+            pc = _clip(_clip(pu, 1, iv, True), 1, iv + 1, False)
+            if len(pc) < 3 or newell([q for q, _ in pc]).length < 0.5:
+                continue
+            area = 0.0
+            for k in range(len(pc)):
+                a_, b_ = pc[k][1], pc[(k + 1) % len(pc)][1]
+                area += a_[0] * b_[1] - b_[0] * a_[1]
+            if abs(area) < 1e-7:
+                continue
+            yield pc, iu, iv
+
+
 class Part:
     """Faces in one surface. face() takes world points (through the part's transform)."""
 
@@ -153,9 +181,15 @@ class Part:
             P = P[::-1]
             if uvs:
                 uvs = uvs[::-1]
+        sub = getattr(self.kit, "sub", None)
         if self.kind == "swatch" or self.kind == "palette":
             u = tt.swatch_uv(self.surf)
-            self._emit(P, [u] * len(P))
+            if sub:                       # split for vertex-light resolution only
+                for pc, _, _ in _cells(P, auto_uv(P, sub)):
+                    pc = [q for q, _ in pc]
+                    self._emit(pc, [u] * len(pc))
+            else:
+                self._emit(P, [u] * len(P))
             return self
         u0, v0, du, dv = tt.region_rect(self.surf)
         if self.kind == "cells":
@@ -163,30 +197,12 @@ class Part:
             self._emit(P, [(u0 + a * du, v0 + b * dv) for a, b in uvs])
             return self
         uvs = uvs or auto_uv(P, self.tile)
-        uvs = [(a + uv_offset[0], b + uv_offset[1]) for a, b in uvs]
-        us = [a for a, _ in uvs]
-        vs = [b for _, b in uvs]
-        iu0, iu1 = math.floor(min(us) + EPS), math.ceil(max(us) - EPS)
-        iv0, iv1 = math.floor(min(vs) + EPS), math.ceil(max(vs) - EPS)
-        poly0 = list(zip(P, uvs))
-        for iu in range(iu0, max(iu1, iu0 + 1)):
-            pu = _clip(_clip(poly0, 0, iu, True), 0, iu + 1, False)
-            if len(pu) < 3:
-                continue
-            for iv in range(iv0, max(iv1, iv0 + 1)):
-                pc = _clip(_clip(pu, 1, iv, True), 1, iv + 1, False)
-                if len(pc) < 3:
-                    continue
-                if newell([p for p, _ in pc]).length < 0.5:     # degenerate
-                    continue
-                area = 0.0
-                for k in range(len(pc)):
-                    a_, b_ = pc[k][1], pc[(k + 1) % len(pc)][1]
-                    area += a_[0] * b_[1] - b_[0] * a_[1]
-                if abs(area) < 1e-7:
-                    continue
-                self._emit([p for p, _ in pc],
-                           [(u0 + min(max(a - iu, 0), 1) * du, v0 + min(max(b - iv, 0), 1) * dv) for _, (a, b) in pc])
+        m = max(1, round(self.tile / sub)) if sub else 1
+        uvs = [((a + uv_offset[0]) * m, (b + uv_offset[1]) * m) for a, b in uvs]
+        for pc, iu, iv in _cells(P, uvs):
+            tu, tv = iu // m, iv // m              # the tile this (fine) cell lies in
+            self._emit([q for q, _ in pc],
+                       [(u0 + min(max(a / m - tu, 0), 1) * du, v0 + min(max(b / m - tv, 0), 1) * dv) for _, (a, b) in pc])
         return self
 
     def tris(self):
@@ -308,6 +324,13 @@ class Kit:
         self.colliders = []
         self.entrances = []
         self.info = {}
+        self.sub = None              # set while building interiors: finer faces for the light bake
+        self.lights = []
+
+    def light(self, pos, colour=(1.0, 0.72, 0.42), power=40.0, radius=0.1, kind="POINT", direction=None):
+        """A lamp for the interior light bake (and the sidecar's "lights")."""
+        self.lights.append(dict(pos=[round(c, 3) for c in pos], colour=list(colour), power=power, radius=radius,
+                                kind=kind, **({"dir": list(direction)} if direction else {})))
 
     def p(self, part, surf, glow=None):
         """Part `part` in surface `surf` (parts merge by name and material at finish)."""
@@ -572,7 +595,7 @@ def door(kit, side, plane, a, w, h, z=0.0, leaf="door_wood", trim="trim", depth=
         for zz, t in ((z + 0.4, 0.02), (z + 1.1, -0.03), (z + 1.75, 0.01)):
             wbox(Wd, side, plane, a0 - 0.12, a1 + 0.12, zz - 0.1 + t, zz + 0.1 - t, proud, proud + 0.022, skip="back")
         return
-    L = kit.p("Door", leaf)
+    L = kit.p("ClosedDoor", leaf)
     dl = -depth + 0.045
     wbox(L, side, plane, a0, a1, z, z1, -depth, dl, skip="back")
     if style == "glass":
@@ -604,7 +627,7 @@ def hinged_door(kit, col, root, side, plane, a, w, h, z=0.0, depth=0.10, leaf="d
     hinge = common.empty(nm, col, hp)
     hinge.parent = root
     # the angle sign that turns the leaf inwards (about +Z) for each wall side
-    inward = {"S": -1, "E": -1, "N": -1, "W": -1}[side]
+    inward = {"S": 1, "E": 1, "N": -1, "W": -1}[side]     # +Z rotation that swings the leaf indoors
     hinge["interact"] = {"type": "rotate", "axis": common.to_gltf((0, 0, 1)), "angle": 95 * inward * swing,
                          "duration": 0.9, "range": 1.8, "side": "both", "collide": True,
                          "prompt": prompt, "promptActive": "Close door"}
@@ -1046,3 +1069,133 @@ class Far:
 
     def tris(self):
         return self.part.tris()
+
+
+# ===================================================================== walk-in interiors
+
+def room(kit, x0, x1, y0, y1, z0, z1, walls="plaster", floor="woodfloor", ceiling="trim_black", openings=None,
+         wainscot=None, wainscot_h=1.05, name="Room", sides="SNEW", ceiling_on=True, floor_on=True, base=None):
+    """The inner linings of a rectangular room (faces looking in), floor and ceiling.
+    openings: {side: [(a0, a1, z0, z1)]} in world coords along the wall (S/N: x, E/W: y);
+    sides: which walls to line. wainscot: a surface for the lower band. base: skirting swatch."""
+    openings = openings or {}
+    W = kit.p(f"{name}Walls", walls)
+    Wl = kit.p(f"{name}Wainscot", wainscot) if wainscot else None
+    for side, plane, a0, a1 in (("S", y0, x0, x1), ("N", y1, x0, x1), ("E", x1, y0, y1), ("W", x0, y0, y1)):
+        if side not in sides:
+            continue
+        op = openings.get(side, [])
+        if Wl:
+            wall(Wl, side, plane, a0, a1, z0, z0 + wainscot_h, op, inward=True)
+            wall(W, side, plane, a0, a1, z0 + wainscot_h, z1, op, inward=True)
+            Cap = kit.p(f"{name}Rail", base or "trim_black")
+            segs = _segments(a0, a1, [o for o in op if o[2] < z0 + wainscot_h < o[3]])
+            for s0, s1 in segs:
+                wbox(Cap, side, plane, s0, s1, z0 + wainscot_h - 0.03, z0 + wainscot_h + 0.03, 0, -0.03, skip="back")
+        else:
+            wall(W, side, plane, a0, a1, z0, z1, op, inward=True)
+        if base:
+            B = kit.p(f"{name}Base", base)
+            for s0, s1 in _segments(a0, a1, [o for o in op if o[2] <= z0 + 0.01]):
+                wbox(B, side, plane, s0, s1, z0, z0 + 0.12, 0, -0.02, skip="back")
+    if floor_on:
+        kit.p(f"{name}Floor", floor).face([V(x0, y0, z0), V(x1, y0, z0), V(x1, y1, z0), V(x0, y1, z0)], toward=(0, 0, 1))
+    if ceiling_on:
+        kit.p(f"{name}Ceiling", ceiling).face([V(x0, y0, z1), V(x1, y0, z1), V(x1, y1, z1), V(x0, y1, z1)], toward=(0, 0, -1))
+
+
+def _segments(a0, a1, cuts):
+    """[a0, a1] minus the along-ranges of `cuts` (openings)."""
+    segs = [(min(a0, a1), max(a0, a1))]
+    for o in cuts:
+        c0, c1 = min(o[0], o[1]), max(o[0], o[1])
+        segs = [s for s_ in segs for s in ((s_[0], min(s_[1], c0)), (max(s_[0], c1), s_[1])) if s[1] - s[0] > 1e-3]
+    return segs
+
+
+def wall_collider(kit, axis, coord, a0, a1, thick, z1, doors=(), z0=0.0, side_in=0):
+    """Collider boxes for a wall line (axis "x": runs along x at y = coord; "y": along y at
+    x = coord), split at door openings [(a0, a1)]. side_in: 0 = centred on coord, +1/-1 =
+    the wall's body lies on that side of coord."""
+    lo_off = -thick / 2 if side_in == 0 else (0 if side_in > 0 else -thick)
+    for s0, s1 in _segments(a0, a1, [(d[0], d[1]) for d in doors]):
+        if axis == "x":
+            kit.collide((s0, coord + lo_off, z0), (s1, coord + lo_off + thick, z1))
+        else:
+            kit.collide((coord + lo_off, s0, z0), (coord + lo_off + thick, s1, z1))
+
+
+def shell(kit, x0, x1, y0, y1, z_top, openings, ext, base=None, base_h=0.0, gables=None, thick=0.2,
+          reveal_part=None):
+    """The outer faces of a rectangular building (looking out) with openings
+    {side: [(a0, a1, z0, z1)]}, reveals through the wall thickness and colliders split at
+    the doors (openings that start at the floor). gables: {side: apex z}."""
+    gables = gables or {}
+    E = kit.p("Walls", ext)
+    Bp = kit.p("Base", base) if base else None
+    R = reveal_part or kit.p("Reveals", "trim")
+    for side, plane, a0, a1 in (("S", y0, x0, x1), ("N", y1, x0, x1), ("E", x1, y0, y1), ("W", x0, y0, y1)):
+        op = openings.get(side, [])
+        if Bp and base_h > 0:
+            wall(Bp, side, plane, a0, a1, 0.0, base_h, op)
+            wall(E, side, plane, a0, a1, base_h, z_top, op, gable=gables.get(side))
+        else:
+            wall(E, side, plane, a0, a1, 0.0, z_top, op, gable=gables.get(side))
+        reveals(R, side, plane, op, thick, sill=True)
+        doors = [(o[0], o[1]) for o in op if o[2] <= 0.05]
+        if side in "SN":
+            wall_collider(kit, "x", plane, x0, x1, thick, z_top, doors, side_in=1 if side == "S" else -1)
+        else:
+            wall_collider(kit, "y", plane, y0, y1, thick, z_top, doors, side_in=-1 if side == "E" else 1)
+
+
+# ===================================================================== interior furniture
+
+def stool(kit, x, y, h=0.76, seat="vinyl_red", post="chrome", r=0.2):
+    kit.p("Stools", post).cyl((x, y), 0.22, 0.0, 0.03, sides=8)
+    kit.p("Stools", post).cyl((x, y), 0.035, 0.03, h - 0.08, sides=6, caps="")
+    kit.p("Stools", post).tube(V(x - 0.17, y, 0.3), V(x + 0.17, y, 0.3), 0.012, 4)
+    kit.p("StoolSeats", seat).cyl((x, y), r, h - 0.08, h, sides=10)
+    kit.collide((x - r, y - r, 0), (x + r, y + r, h))
+
+
+def table(kit, x, y, w=1.2, d=0.75, h=0.76, top="varnish", base="metal_dark", round_=False, collide=True):
+    T = kit.p("Tables", top)
+    if round_:
+        T.cyl((x, y), w / 2, h - 0.04, h, sides=12, caps="tb")
+    else:
+        T.box((x - w / 2, y - d / 2, h - 0.04), (x + w / 2, y + d / 2, h))
+    B = kit.p("TableBases", base)
+    B.cyl((x, y), 0.04, 0.03, h - 0.04, sides=6, caps="")
+    B.box((x - 0.25, y - 0.25, 0.0), (x + 0.25, y + 0.25, 0.03), skip="b")
+    if collide:
+        kit.collide((x - w / 2, y - d / 2, 0), (x + w / 2, y + d / 2, h))
+
+
+def booth_bench(kit, x0, x1, y_back, facing, h_seat=0.46, h_back=1.15, depth=0.55, seat="vinyl_red", frame="darkwood"):
+    """A high-backed booth bench along x, its back at y_back, facing +1 (+Y) or -1."""
+    s = facing
+    yb, yf = y_back, y_back + s * depth
+    lo_y, hi_y = min(yb, yf), max(yb, yf)
+    F = kit.p("BoothFrames", frame)
+    F.box((x0, lo_y, 0.0), (x1, hi_y, h_seat - 0.1), skip="b")
+    S = kit.p("BoothSeats", seat)
+    S.box((x0 + 0.03, lo_y + (0.08 if s > 0 else 0.0), h_seat - 0.1), (x1 - 0.03, hi_y - (0.0 if s > 0 else 0.08), h_seat), skip="b")
+    by0, by1 = sorted((yb, yb + s * 0.12))
+    F.box((x0, by0 - (0.0 if s > 0 else 0.0), 0.0), (x1, by1, h_back), skip="b")
+    cy0, cy1 = sorted((yb + s * 0.12, yb + s * 0.2))
+    S.box((x0 + 0.03, cy0, h_seat), (x1 - 0.03, cy1, h_back - 0.06), skip="b")
+    kit.collide((x0, lo_y, 0), (x1, hi_y, h_seat))
+    kit.collide((x0, by0, 0), (x1, by1, h_back))
+
+
+def bottle(kit, x, y, z, kind=0, glow=True):
+    """A bottle on a shelf (6 sides, ~30 tris). kind picks the glass colour / shape."""
+    cols = ("bottle_amber", "bottle_green", "bottle_clear", "bottle_amber", "neon_amber")
+    col = cols[kind % len(cols)]
+    B = kit.p("Bottles", col, glow=glow)
+    h = (0.30, 0.28, 0.33, 0.24, 0.30)[kind % 5]
+    r = (0.04, 0.038, 0.035, 0.05, 0.036)[kind % 5]
+    B.cyl((x, y), r, z, z + h * 0.62, sides=5, caps="", r1=r)
+    B.cyl((x, y), r, z + h * 0.62, z + h * 0.75, sides=5, caps="", r1=r * 0.35)
+    B.cyl((x, y), r * 0.35, z + h * 0.75, z + h, sides=4, caps="t")
