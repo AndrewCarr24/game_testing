@@ -309,18 +309,39 @@ export class Town {
       try {
         const g = await gl.loadAsync(`../assets/models/${b.model}.gltf`);
         const root = g.scene;
+        // [town2 sites: shared textures, reflections, LOD] (prompts/town_building.md; added by the
+        // gas station workstream, generic for every site): a lightmap or panorama path is loaded
+        // once (one GPU copy, however many materials name it); a material's extras `envMap` (an
+        // equirect panorama, path relative to assets/models/) + `envMapIntensity` give it
+        // reflections only (its diffuse light is the lightmap: the panorama's irradiance is
+        // zeroed); nodes named `<Root>_LOD1` / `<Root>_LOD0` swap at the LOD1 node's extras
+        // `lodDistance` (m, default 140; update() below).
+        const texs = this._siteTex || (this._siteTex = new Map());
+        const tex = (p, f) => { if (!texs.has(p)) { const t = tl.load(`../assets/models/${p}`); f(t); texs.set(p, t); } return texs.get(p); };
+        const lod = { near: [], far: [], dist: 140 };
         root.traverse((o) => {
+          if (/_LOD1$/.test(o.name)) { lod.far.push(o); if (o.userData?.lodDistance) lod.dist = o.userData.lodDistance; } else if (/_LOD0$/.test(o.name)) lod.near.push(o);
           if (!o.isMesh) return;
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
             const lm = m.userData?.lightmap;
             if (lm && !m.lightMap) {
-              const tx = tl.load(`../assets/models/${lm}`);
-              tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace;
-              m.lightMap = tx; m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              m.lightMap = tex(lm, (tx) => { tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace; });
+              m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              m.needsUpdate = true;
+            }
+            const ep = m.userData?.envMap;
+            if (ep && !m.envMap) {
+              m.envMap = tex(ep, (tx) => { tx.mapping = THREE.EquirectangularReflectionMapping; tx.colorSpace = THREE.SRGBColorSpace; });
+              m.envMapIntensity = m.userData.envMapIntensity ?? 1;
+              m.onBeforeCompile = (sh) => {
+                sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_maps>', '#include <lights_fragment_maps>\n\tiblIrradiance = vec3( 0.0 );');
+              };
+              m.customProgramCacheKey = () => 'town2-site-env';
               m.needsUpdate = true;
             }
           }
         });
+        // [/town2 sites]
         const [ox, oyk] = b.kit_offset || [0, 0];
         root.position.set(b.x, b.z, -(b.y - oy));
         root.rotation.y = b.yaw * Math.PI / 180;
@@ -328,7 +349,7 @@ export class Town {
         const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
         root.name = `Town_${b.id}`;
         this.group.add(root);
-        this.sites.push({ id: b.id, root });
+        this.sites.push({ id: b.id, root, lod });
       } catch (e) { console.warn('town site', b.id, e.message); }
     }
   }
@@ -438,6 +459,14 @@ export class Town {
 
   update(camera) {
     const c = camera.position;
+    // [town2 sites: LOD] (see loadSites)
+    for (const st of this.sites || []) {
+      if (!st.lod?.far.length) continue;
+      const near = Math.hypot(c.x - st.root.position.x, c.z - st.root.position.z) < st.lod.dist;
+      for (const o of st.lod.near) o.visible = near;
+      for (const o of st.lod.far) o.visible = !near;
+    }
+    // [/town2 sites]
     for (const z of this.zones) {
       const near = Math.hypot(c.x - z.c.x, c.z - z.c.z) < 260;
       for (const m of z.lods[0]) m.visible = near;
