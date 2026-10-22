@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wilderness Prototype</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #1d1f22; overflow: hidden; font: 13px system-ui, sans-serif; color: #ccc; }
+    #hud { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,.45); padding: 6px 10px; border-radius: 6px; }
+    #overlay { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.55); padding: 8px 12px; border-radius: 6px;
+               font: 12px ui-monospace, Menlo, monospace; white-space: pre; color: #e6e6e6; pointer-events: none; }
+    canvas { display: block; }
+  </style>
+  <script type="importmap">
+    { "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <div id="overlay"></div>
+  <div id="hud">loading...</div>
+  <script type="module" src="./wild/main.js"></script>
+</body>
+</html>

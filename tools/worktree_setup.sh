@@ -14,6 +14,12 @@ for d in locks polyhaven ao_cache grimble_cache texture_originals; do
   [ -e "build/$d" ] || ln -s "$MAIN/build/$d" "build/$d"
 done
 [ -e node_modules ] || ln -s "$MAIN/node_modules" node_modules
+# the wilderness: the plant kit and ground textures are shared (read them; rebuild them only if
+# it's your job, and then copy, don't write through the link); each worktree gets its own copy of
+# the generated Laurel Fork world (regenerate it with blender/wilderness/levels/laurel_fork.py)
+mkdir -p build/wilderness
+for d in veg ground; do [ -e "build/wilderness/$d" ] || ln -s "$MAIN/build/wilderness/$d" "build/wilderness/$d"; done
+[ -e build/wilderness/laurel_fork ] || rsync -a --exclude shots --exclude bench "$MAIN/build/wilderness/laurel_fork/" build/wilderness/laurel_fork/
 if ! curl -s -o /dev/null "http://localhost:$PORT/viewer/index.html"; then
   nohup python3 -m http.server "$PORT" > build/http_$PORT.log 2>&1 &
   sleep 1
