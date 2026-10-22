@@ -31,8 +31,8 @@ const SLASH_KEYS = [
   [0.0, {}],
   [0.13, { p: [0.055, 0.045, 0.0], r: [8, -26, -22], w: [-30, 20, -10] }, 'out'],   // anticipation: drawn back, wrist cocked
   [0.2, { p: [-0.03, 0.005, -0.07], r: [-2, 10, 8], w: [0, -4, 4] }, 'in'],          // the cut, mid-arc (fastest)
-  [0.27, { p: [-0.15, -0.04, -0.05], r: [-8, 38, 26], w: [22, -22, 16] }, 'out'],    // follow-through
-  [0.36, { p: [-0.16, -0.05, -0.04], r: [-9, 41, 29], w: [25, -24, 18] }],           // the beat
+  [0.27, { p: [-0.1, 0.0, -0.04], r: [-6, 32, 22], w: [22, -22, 16] }, 'out'],    // follow-through
+  [0.36, { p: [-0.11, -0.01, -0.03], r: [-7, 35, 25], w: [25, -24, 18] }],           // the beat
   [0.66, {}],                                                                         // recovery
 ];
 const SWING_KEYS = [   // a club (bat, pan, poker): big wind-up over the shoulder, a heavy sweep
@@ -48,9 +48,10 @@ export const WEAPONS = {
   kitchen_knife: {
     id: 'kitchen_knife', kind: 'melee', name: "Chef's knife",
     // the view model (camera space, m): the grip (the handle's centre) at `pos`, the forearm leaving
-    // the wrist along `arm`, the back of the hand toward `back`; `wrist` = the guard's wrist bend
+    // the wrist along `arm`, the back of the hand toward `back` (then rolled `roll` deg about the
+    // forearm: the fingers face the eye, the blade leans up-left); `wrist` = the guard's wrist bend
     // [flex, deviation, twist] deg; `run` = the pose added while running
-    hold: { pos: [0.13, -0.108, -0.33], arm: [0.38, -0.5, 0.78], back: [0.28, 0.75, 0.6], wrist: [0, 3, 0], gripRadius: 0.0115 },
+    hold: { pos: [0.17, -0.18, -0.44], arm: [0.45, -0.4, 0.8], back: [0.85, -0.35, -0.4], roll: 35, wrist: [0, -25, 0], gripRadius: 0.0115 },
     // one attack, Enter: the slash. 55 a hit (two kill), up to 2 targets in its arc
     attack: { name: 'slash', damage: 55, range: 1.25, maxTargets: 2, duration: 0.66, cooldown: 0.62, keys: SLASH_KEYS,
       sweep: { t0: 0.15, t1: 0.27, from: [34, 9], to: [-42, -11] }, swingSfxAt: 0.12, view: [-0.5, 1.1, 0.9] },

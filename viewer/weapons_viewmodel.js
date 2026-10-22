@@ -51,13 +51,15 @@ export function viewModelMaterial(src, { skin = false } = {}) {
         '#include <lights_fragment_maps>',
         'if ( vmUseSH > 0.5 ) {',
         '  iblIrradiance = vec3( 0.0 );',
-        '  irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), vmSH );',
+        '  vec3 shI = shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), vmSH );',
+        skin ? '  shI = mix( shI, vec3( dot( shI, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 0.35 );' : '',
+        '  irradiance += shI;',
         '}',
       ].join('\n'))
       .replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\nreflectedLight.directDiffuse *= vmDirect;\nreflectedLight.directSpecular *= vmDirect;' +
         // skin: light scatters under it, so its shading is softer and warmer than a surface's:
         // the darker the ambient light, the more of it comes back reddened (a cheap subsurface)
-        (skin ? '\n{ float l = dot( reflectedLight.indirectDiffuse, vec3( 0.333 ) );\n  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 0.06, 0.014, 0.005 ) * l * 2.0; }' : ''));
+        (skin ? '\n{ float l = dot( reflectedLight.indirectDiffuse, vec3( 0.333 ) );\n  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 0.035, 0.008, 0.003 ) * l * 2.0; }' : ''));
   };
   m.customProgramCacheKey = () => 'viewmodel' + (skin ? '-skin' : '');
   return m;
@@ -326,6 +328,7 @@ export class ViewModel {
       const arm = V(...(hold.arm || [0.38, -0.5, 0.78])).normalize();
       const back = V(...(hold.back || [0.65, 0.45, 0.6]));
       back.addScaledVector(arm, -back.dot(arm)).normalize();
+      if (hold.roll) back.applyAxisAngle(arm, D(hold.roll));     // the hand rolled about the forearm (+ = the blade leans left)
       const Rg = new THREE.Matrix4().makeBasis(fG, xG, fG.clone().cross(xG));
       const Rc = new THREE.Matrix4().makeBasis(arm, back, arm.clone().cross(back));
       grip.quaternion.setFromRotationMatrix(Rc.multiply(Rg.transpose()));
