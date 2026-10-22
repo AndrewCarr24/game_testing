@@ -182,7 +182,10 @@ try {
     await page.evaluate(() => window.__signals.set('garage_door', true));   // (its switch's signal)
     await page.waitForTimeout(5200);
     const p0 = await page.evaluate(() => ({ p: window.__vehicle.pos.toArray(), yaw: window.__vehicle.yaw }));
-    await page.keyboard.down('KeyW'); await page.keyboard.down('KeyA'); await page.waitForTimeout(800); await page.keyboard.up('KeyA'); await page.keyboard.up('KeyW');
+    await page.keyboard.down('KeyW'); await page.keyboard.down('KeyA'); await page.waitForTimeout(800);
+    const snd = await page.evaluate(() => { const N = window.__car.audio.nodes; return N && { state: N.ctx.state, sfx: N.ctx === window.__sfx?.ctx, whine: N.w1.frequency.value, road: N.rg.gain.value, v: window.__vehicle.speed }; });
+    check(snd && snd.state === 'running' && snd.whine > 150, `sound: the EV synth on ${snd?.sfx ? "window.__sfx's" : 'its own'} context (${snd?.state}), whine ${snd?.whine?.toFixed(0)} Hz at ${snd?.v?.toFixed(1)} m/s`);
+    await page.keyboard.up('KeyA'); await page.keyboard.up('KeyW');
     await page.keyboard.down('KeyS'); await page.waitForTimeout(900); await page.keyboard.up('KeyS');
     await page.waitForFunction(() => window.__vehicle.speed < 0.3, null, { timeout: 5000 }).catch(() => {});
     const p1 = await page.evaluate(() => ({ p: window.__vehicle.pos.toArray(), yaw: window.__vehicle.yaw, v: window.__vehicle.speed }));
@@ -192,9 +195,12 @@ try {
     await page.waitForTimeout(900);
     const p2 = await page.evaluate(() => ({ p: window.__vehicle.pos.toArray(), v: window.__vehicle.speed, g: window.__vehicle.gear }));
     check(p2.p[2] < p1.p[2] - 0.3, `S from a standstill: reversed ${(p1.p[2] - p2.p[2]).toFixed(2)} m`);
+    await page.keyboard.down('KeyA'); await page.waitForTimeout(500);
+    await shot('02b_garage_seat_steering_left');
     await page.keyboard.press('KeyV'); await frames(20);
     check(await page.evaluate(() => window.__vehicle.camMode === 'chase'), 'V: the chase camera');
     await shot('03_garage_chase_cam');
+    await page.keyboard.up('KeyA');
     await page.keyboard.press('KeyV'); await frames(5);
     await page.keyboard.press('KeyE'); await page.waitForTimeout(400);
     const outd = await page.evaluate(() => { const c = window.__vehicle, p = window.__player; return { driving: c.driving, d: Math.hypot(p.pos.x - c.pos.x, p.pos.z - c.pos.z), y: p.pos.y }; });
@@ -284,6 +290,37 @@ try {
     await shot('gate_wild_side');
   }
 
+  if (stages.includes('cost')) {
+    // what the car costs where it's drawn: the same views with the car shown and hidden (draw calls,
+    // triangles, frame time over 120 uncapped-ish frames) and the vehicle's own CPU per frame
+    const measure = (label) => W(async (label) => {
+      const r = window.__three.renderer, c = window.__vehicle;
+      const run = async (show) => {
+        c.root.visible = show;
+        await new Promise((ok) => { let n = 20; const f = () => (n-- > 0 ? requestAnimationFrame(f) : ok()); f(); });
+        let calls = 0, tris = 0, n = 0; const t = []; let last = performance.now();
+        await new Promise((ok) => { const f = () => { const now = performance.now(); t.push(now - last); last = now; calls += r.info.render.calls; tris += r.info.render.triangles; if (++n < 120) requestAnimationFrame(f); else ok(); }; requestAnimationFrame(f); });
+        t.sort((a, b) => a - b);
+        return { calls: Math.round(calls / n), tris: Math.round(tris / n), p50: +t[60].toFixed(2), p95: +t[114].toFixed(2) };
+      };
+      const on = await run(true), off = await run(false);
+      c.root.visible = true;
+      // the vehicle's CPU: 200 updates at 60 Hz with the keys held
+      const t0 = performance.now();
+      for (let i = 0; i < 200; i++) c.update(1 / 60, { forward: true });
+      const cpu = (performance.now() - t0) / 200;
+      return { label, on, off, cpuMs: +cpu.toFixed(3) };
+    }, label);
+    const say = (m) => console.log(`     ${m.label}: car shown ${m.on.calls} calls / ${(m.on.tris / 1000).toFixed(0)}k tris / p50 ${m.on.p50} ms, hidden ${m.off.calls} / ${(m.off.tris / 1000).toFixed(0)}k / ${m.off.p50} ms -> +${m.on.calls - m.off.calls} calls, +${((m.on.tris - m.off.tris) / 1000).toFixed(1)}k tris; vehicle update ${m.cpuMs} ms/frame`);
+    await page.goto(`${BASE}/viewer/wild.html?world=laurel_fork&car=s:1300&hud=0`);
+    await carReady('laurel_fork');
+    await page.waitForTimeout(3000);
+    const m1 = await measure('wild (the road, seat view)'); say(m1);
+    await W(() => { window.__vehicle.toggleCamera(); return true; });
+    const m2 = await measure('wild (the road, chase view)'); say(m2);
+    legs.push({ cost: [m1, m2] });
+  }
+
   if (stages.includes('road')) {
     // the cove road on its own (stand-alone wild.html): out to the seam, and back from the far end
     const t0 = Date.now();
@@ -293,8 +330,16 @@ try {
     legOk(r1, 'the cove road, gate to the seam');
     await page.goto(`${BASE}/viewer/wild.html?world=laurel_fork&car=back:2870&hud=0`);
     check(!!(await carReady('laurel_fork')), 'wild.html?car=back:2870: at the seam, facing the gate');
-    const r2 = await drive('cove road (back)', LANE, { back: true }, { shots: [[1500, 'road_back_hairpin']] });
-    legOk(r2, 'the cove road, seam to the gate');
+    const r2 = await drive('cove road (back)', LANE, { back: true, extra: [[19.75, -752], [19.75, -760]] }, { shots: [[1500, 'road_back_hairpin']],
+      until: () => page.evaluate(() => /index\.html/.test(location.pathname)) });
+    legOk(r2, 'the cove road, seam to the gate', { reach: false });
+    // stand-alone, the gate leads to the house by navigating (sessionStorage): the car comes too
+    await page.waitForFunction(() => window.__loaded && window.__car, null, { timeout: 240000 }).catch(() => {});
+    await page.waitForTimeout(1000);
+    const h = await page.evaluate(() => ({ url: location.search, d: window.__car?.driving, p: window.__vehicle?.pos.toArray().map((v) => +v.toFixed(1)) }));
+    check(/from=wild/.test(h.url) && h.d, `stand-alone: in through the gate to index.html?from=wild, driving the car (at ${h.p})`);
+    await frames(10);
+    await shot('road_back_in_the_house');
   }
   fs.writeFileSync(path.join(out, 'legs.json'), JSON.stringify(legs, null, 1));
 } finally {

@@ -188,6 +188,7 @@ export class Vehicle {
     dt *= this.timeScale || 1;                      // (tests: faster than real time)
     const ctl = this.controls(input);
     this._thr = ctl.throttle;
+    this._brk = ctl.brake > 0 || ctl.handbrake || (this.driving && ctl.reverse);
     this.gather();
     this.acc += Math.min(dt, 0.2);
     let n = 0;
@@ -501,6 +502,12 @@ export class Vehicle {
   // wheel spin + steer, steering wheel (if the model has the nodes: car_ev's CarEV_Wheel_* / CarEV_SteeringWheel)
   animate(dt) {
     const S = this.spec;
+    // brake lights (and reversing): the red lamps brighter; `brakeMats` are this car's own copies
+    const brk = !!this._brk && this.driving;
+    if (brk !== this._brkOn && this.brakeMats) {
+      this._brkOn = brk;
+      for (const m of this.brakeMats) m.emissiveIntensity = (m.userData.e0 ??= m.emissiveIntensity) * (brk ? 3.2 : 1);
+    }
     this.spin += (this.forwardSpeed / S.wheelRadius) * dt;
     if (!this.wheelNodes) {
       const find = (re) => { let o = null; this.root.traverse((n) => { if (!o && re.test(n.name)) o = n; }); return o; };

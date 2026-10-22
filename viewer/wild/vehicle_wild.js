@@ -137,6 +137,8 @@ export class WildCar {
       this.car = new Vehicle({ root, camera: this.camera, env: env2, player, hooks });
       this.car.rails = this.rails;
       void half;
+      const red = new Set(); root.traverse((o) => { if (o.isMesh && /LampRed/.test(o.material.name)) red.add(o.material); });
+      this.car.brakeMats = [...red];
       window.__vehicle = this.car;
       return this.car;
     });

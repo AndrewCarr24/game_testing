@@ -28,7 +28,7 @@ import sys
 
 import bmesh
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
@@ -747,7 +747,8 @@ def build(**overrides):
     cabin.build(p, body, col, root, n, dict(lea=leather, dark=interior, satin=satin, wood=walnut, gloss=gloss,
                                             steel=steel, stitch=stitch, screen=screen, shell=gloss,
                                             screen_dark=lens))
-    _merge(f"{n}_Interior", [o for o in col.objects if o not in before], col, root)
+    # (the steering wheel stays its own object: it turns with the steering)
+    _merge(f"{n}_Interior", [o for o in col.objects if o not in before and not o.name.endswith("_SteeringWheel")], col, root)
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
     _checks(p, body)
@@ -1315,12 +1316,16 @@ def _caliper(bm, centre, side, mat, ang_c):
 
 
 def _wheels(p, col, root, n, mats):
+    """Four wheels, each its own object with its origin on the hub (the engine spins and steers
+    them: viewer/vehicle.js, `<n>_Wheel_FL/FR/RL/RR`; +x is the car's left), and the four
+    calipers in one static mesh (they stay put while the wheels turn)."""
     RUB, GRA, MAC, DISC_, CAL, SHUT_ = range(6)
-    bm = bmesh.new()
     segs = 40
-    for ya, ang in ((p["front_axle"], 0.35), (p["rear_axle"], 0.35)):
+    brakes = bmesh.new()
+    for ya, ang, axle in ((p["front_axle"], 0.35, "F"), (p["rear_axle"], 0.35, "R")):
         for sx in (1, -1):
             c = (sx * p["track"], ya, p["wheel_z"])
+            bm = bmesh.new()
             _revolve(bm, TYRE, TYRE_SEGS, c, sx, RUB, sharp=TYRE_GROOVE_RINGS, flatten=0.0, phase=-math.pi / 2,
                      uv_repeat=TYRE_REPEAT)
             _revolve(bm, RIM, segs, c, sx, [GRA, MAC, MAC, GRA, GRA, GRA], sharp=(2,))
@@ -1329,8 +1334,11 @@ def _wheels(p, col, root, n, mats):
             _disc_face(bm, c, sx, SHUT_)
             _lug_nuts(bm, c, sx, MAC)
             _spokes(bm, c, sx, MAC, GRA, phase=math.pi / 2)
-            _caliper(bm, c, sx, CAL, math.pi - ang if sx > 0 else math.pi - ang)
-    _new_mesh(f"{n}_Wheels", bm, mats, col, root)
+            _caliper(brakes, c, sx, CAL, math.pi - ang if sx > 0 else math.pi - ang)
+            ob = _new_mesh(f"{n}_Wheel_{axle}{'L' if sx > 0 else 'R'}", bm, mats, col, root)
+            ob.data.transform(Matrix.Translation(-Vector(c)))
+            ob.location = c
+    _new_mesh(f"{n}_Brakes", brakes, mats, col, root)
 
 
 # -------------------------------------------------------------------- interior

@@ -18,7 +18,7 @@ import os
 import bmesh
 import bpy
 import numpy as np
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 from lib import common, textures
 
@@ -687,8 +687,8 @@ def screen_material(name):
 
 def _wheel(bm, M):
     SATIN, STEEL, GLOSS, STITCH = M["satin"], M["steel"], M["gloss"], M["stitch"]
-    c = Vector((0.40, -0.30, 0.80))
-    tilt = math.radians(24)
+    c = Vector(WHEEL_C)
+    tilt = math.radians(WHEEL_TILT)
     nz = Vector((0, math.cos(tilt), math.sin(tilt)))       # towards the driver
     ex = Vector((1, 0, 0))
     ey = nz.cross(ex).normalized()                          # wheel "up"
@@ -751,6 +751,22 @@ def _wheel(bm, M):
     Rm = Matrix(np.array([ex, ey, nz]).T.tolist())
     rbox(bm, (0.125, 0.092, 0.040), 0.016, c + nz * 0.012, seg=2, mat=SATIN, rot=Rm, crown={"+z": 0.006})
     rbox(bm, (0.040, 0.010, 0.004), 0.002, c + nz * 0.035 - ey * 0.02, seg=1, mat=STEEL, rot=Rm)
+
+
+WHEEL_C = (0.40, -0.30, 0.80)          # the steering wheel's hub (it turns about its column)
+WHEEL_TILT = 24                        # degrees: the column's tilt toward the driver
+
+
+def _column(bm, M):
+    """The steering column's shroud and the two stalks (static: the wheel turns in front of them)."""
+    SATIN = M["satin"]
+    c = Vector(WHEEL_C)
+    tilt = math.radians(WHEEL_TILT)
+    nz = Vector((0, math.cos(tilt), math.sin(tilt)))
+    ex = Vector((1, 0, 0))
+    ey = nz.cross(ex).normalized()
+    if ey.z < 0:
+        ey = -ey
     # column shroud + stalks
     rs = []
     for f, (w, h) in zip((0.0, 0.5, 1.0), ((0.07, 0.06), (0.085, 0.072), (0.10, 0.085))):
@@ -980,7 +996,14 @@ def build(p, body, col, root, n, mats):
     ob = part("Screens", screens)
     # keep the screen UVs exact (box_uv would overwrite them): redo the lit faces
     _fix_screen_uv(ob, M["screen"])
-    part("Wheel", _wheel)
+    sw = part("SteeringWheel", _wheel)
+    # its origin on the hub, the column axis (glTF frame: x, z, -y) for the engine to turn it about
+    c = Vector(WHEEL_C)
+    sw.data.transform(Matrix.Translation(-c))
+    sw.location = c
+    t = math.radians(WHEEL_TILT)
+    sw["axis"] = [0.0, round(math.sin(t), 4), round(-math.cos(t), 4)]
+    part("Column", _column)
     part("Console", _console)
     part("DoorCards", lambda bm, M: _door_cards(bm, M, p, body))
     part("Floor", lambda bm, M: _floor_bits(bm, M, p))

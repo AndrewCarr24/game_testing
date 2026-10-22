@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Vehicle, BoxGrid, CarAudio, CarHud, blobShadow } from './vehicle.js';
 import { linkRegistry, GATE } from './estate_link.js';
+import { unbatch } from './batching.js';
 
 // The car in the house level (viewer/vehicle.js has the vehicle): the estate's car_ev, parked in
 // the garage's west bay, is driven out of the garage (its door opens from the switch by the
@@ -9,7 +10,8 @@ import { linkRegistry, GATE } from './estate_link.js';
 // registry's 'vehicle' entry), and back.
 //
 // What the house does differently for it:
-//   - it isn't merged into the garage's batch (index.html adds its nodes to `moving`) and is
+//   - parked in its bay it's merged into the garage's batch like a resting pickup (index.html; no
+//     draw calls of its own), taken out of it the first time it's driven (batching.js unbatch), and
 //     culled with the garage only while parked inside it
 //   - its nine part colliders (from mansion.json) are taken out while it's driven (it would hit
 //     itself) and put back round it wherever it's parked
@@ -24,8 +26,8 @@ import { linkRegistry, GATE } from './estate_link.js';
 const _d = new THREE.Vector3();
 
 export class HouseCar {
-  constructor({ root, proto, asset, level, scene, camera, player, colliders, culler, sky, renderer, toast, params }) {
-    Object.assign(this, { root, scene, camera, player, colliders, culler, renderer, toast, level });
+  constructor({ root, proto, asset, batch = null, level, scene, camera, player, colliders, culler, sky, renderer, toast, params }) {
+    Object.assign(this, { root, scene, camera, player, colliders, culler, renderer, toast, level, batch });
     this.enabled = params?.get('car') !== '0';
     root.updateMatrixWorld(true);
     // its own part boxes (pushed by index.html's prop loop): found by value
@@ -73,7 +75,7 @@ export class HouseCar {
     const pm = [];
     proto.traverse((o) => { if (o.isMesh) pm.push(o); });
     let k = 0;
-    const outCache = new Map();
+    const outCache = new Map(), brakeCache = new Map();
     const env2 = sky?.getEnv ? sky.getEnv() : null;
     root.traverse((o) => {
       if (!o.isMesh) return;
@@ -84,8 +86,19 @@ export class HouseCar {
         m.envMapIntensity = 1;
         outCache.set(src, m);
       }
-      this.meshes.push({ mesh: o, garage: o.material, outdoor: outCache.get(src) });
+      let garage = o.material;
+      // (the red lamps: this car's own copies, so its brake lights don't light the other car's)
+      if (/LampRed/.test(garage.name)) {
+        if (!brakeCache.has(garage)) {
+          const m = garage.clone();
+          m.onBeforeCompile = garage.onBeforeCompile; m.customProgramCacheKey = garage.customProgramCacheKey;
+          brakeCache.set(garage, m);
+        }
+        garage = o.material = brakeCache.get(garage);
+      }
+      this.meshes.push({ mesh: o, garage, outdoor: outCache.get(src) });
     });
+    this.car.brakeMats = [...new Set(this.meshes.flatMap((m) => [m.garage, m.outdoor]).filter((m) => /LampRed/.test(m.name)))];
     this.inside = true;
     this.garage = level.rooms?.garage?.rect || [13.5, 0, 26, 20];
     this.cullRoom = culler?.rooms.find((r) => r.name === 'garage') || null;
@@ -135,6 +148,7 @@ export class HouseCar {
   }
 
   entered() {
+    if (this.batch?.batched) unbatch(this.batch);   // (out of the garage's batch: its own meshes from now on)
     this.asleep = false;
     this.moved = true;
     for (const b of this.own) { b.min.set(0, -101, 0); b.max.set(0, -100, 0); }
@@ -254,6 +268,8 @@ export class HouseCar {
 
   arriving(s) {
     if (!s?.driving) return;
+    if (this.batch?.batched) unbatch(this.batch);
+    if (this.cullRoom) this.cullRoom.objects = this.cullRoom.objects.filter((o) => o !== this.root);
     this.away = false;
     this.root.visible = true;
     this.asleep = false;

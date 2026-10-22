@@ -524,7 +524,10 @@
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
       for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
       for (const n of devices.movingNodes()) n.traverse((o) => moving.add(o));   // (distractions: a blender's shaking jar)
-      if (placed.car_ev) placed.car_ev.traverse((o) => moving.add(o));   // (vehicle) the drivable car keeps its own nodes
+      // (vehicle) the drivable car, parked, batches with the garage like a resting pickup (its meshes kept, hidden;
+      // vehicle_house.js unbatches it when it's first driven)
+      const carBatch = placed.car_ev ? {} : null;
+      if (carBatch) placed.car_ev.traverse((o) => { if (o.isMesh) restingPickups.set(o, carBatch); });
       const { batches, before, after } = batchRooms(roomRoots, moving, restingPickups);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
       const culler = new RoomCuller(level, roomRoots, batches, { shared });
@@ -671,7 +674,7 @@
       // wilderness (viewer/estate_gate.js: the wild loads into an iframe, the house suspends)
       // (vehicle) the car in the garage, drivable: E at the driver's door (viewer/vehicle_house.js); made before the
       // gate, which hands it over with the player (its link registry's 'vehicle')
-      const car = placed.car_ev ? new HouseCar({ root: placed.car_ev, proto: proto.car_ev, asset: level.assets.car_ev, level, scene, camera, player,
+      const car = placed.car_ev ? new HouseCar({ root: placed.car_ev, proto: proto.car_ev, asset: level.assets.car_ev, batch: carBatch, level, scene, camera, player,
         colliders, culler, sky, renderer, toast: (m) => toast(m), params }) : null;
       const estateGate = level.outdoor ? new EstateGate({ scene, camera, player, controls, inventory, flashlight, colliders, renderer, params, toast: (m) => toast(m) }) : null;
       const keys = {};
