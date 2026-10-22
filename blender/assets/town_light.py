@@ -22,7 +22,7 @@ CACHE = os.path.join(tc.PROJECT, "build", "town_light")
 
 
 def _key(kit, meshes, inner_boxes, params):
-    h = hashlib.sha1(repr((kit.lights, inner_boxes, params, "v2")).encode())
+    h = hashlib.sha1(repr((kit.lights, sorted(kit.tints.items()), inner_boxes, params, "v3")).encode())
     for o in sorted(meshes, key=lambda o: o.name):
         co = np.zeros(3 * len(o.data.vertices), np.float32)
         o.data.vertices.foreach_get("co", co)
@@ -49,6 +49,11 @@ def bake(kit, root, meshes, inner_boxes, samples=96, glow_boost=6.0, floor=0.10,
                 return
         except Exception:
             pass
+    pre = {}
+    for o in meshes:                          # what's there (tints) stays outside the rooms
+        v = np.zeros(4 * len(o.data.vertices), np.float32)
+        o.data.color_attributes["AO"].data.foreach_get("color", v)
+        pre[o] = v.reshape(-1, 4)[:, :3].copy()
     tmp = bpy.data.scenes.new("_TownLight")
     coll = bpy.data.collections.new("_TownLightObjects")
     tmp.collection.children.link(coll)
@@ -140,7 +145,7 @@ def bake(kit, root, meshes, inner_boxes, samples=96, glow_boost=6.0, floor=0.10,
         c = np.clip(r[:, :3] / ref, 0, 1.0)
         c = floor + (1 - floor) * c
         c = np.round(c * 32) / 32
-        c[~inside[o]] = 1.0
+        c[~inside[o]] = pre[o][~inside[o]]
         r[:, :3] = c
         r[:, 3] = 1
         o.data.color_attributes["AO"].data.foreach_set("color", r.ravel())

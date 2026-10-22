@@ -326,6 +326,7 @@ class Kit:
         self.info = {}
         self.sub = None              # set while building interiors: finer faces for the light bake
         self.lights = []
+        self.tints = {}              # part name -> rgb written into COLOR_0 (see finish)
 
     def light(self, pos, colour=(1.0, 0.72, 0.42), power=40.0, radius=0.1, kind="POINT", direction=None):
         """A lamp for the interior light bake (and the sidecar's "lights")."""
@@ -408,11 +409,16 @@ def finish(kit, col, root, far=None, extra_info=None):
     }
     # every mesh carries COLOR_0 ("AO", 1 = unchanged) so the town can merge kit meshes; walk-ins
     # overwrite it with their baked interior light (town_light.bake)
+    # kit.tints {part name: rgb} colour whole parts this way (one white lap region becomes a
+    # row of pastel cottages, one brick region several brick tones)
     import numpy as np
     for o in [root] + list(root.children_recursive):
         if o.type == "MESH" and "AO" not in o.data.color_attributes:
             attr = o.data.color_attributes.new("AO", "FLOAT_COLOR", "POINT")
-            attr.data.foreach_set("color", np.ones(4 * len(attr.data), np.float32))
+            tint = next((t for k, t in kit.tints.items() if o.name == f"{kit.name}_{k}"), (1.0, 1.0, 1.0))
+            attr.data.foreach_set("color", np.tile(np.array([*tint, 1.0], np.float32), len(attr.data)))
+    if kit.tints:
+        info["tints"] = {k: [round(c, 3) for c in v] for k, v in kit.tints.items()}
     root["town"] = json.dumps(info)
     if kit.module:
         os.makedirs(MODELS, exist_ok=True)
