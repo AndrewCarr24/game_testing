@@ -1,7 +1,8 @@
-"""Fast-food drive-through (generic, no brand): a low flat-roofed box in the town's mountain
-dress (ledgestone base, charcoal board-and-batten, cedar panels) with a brick entry tower
-carrying a lit burger pictogram; a drive-through window on the east side under a black
-canopy, a lit menu board, a speaker post and a clearance bar on the lane.
+"""Fast-food drive-through (generic, chain-style, no brand): a flat-roofed box (ledgestone base,
+charcoal board-and-batten, cedar panels) under a tilted red-brown metal band round the
+roofline with a lit underside and a lit burger pictogram, big windows, an entry canopy, a
+drive-through window on the east side under a black canopy (the menu board, speaker and
+clearance bar are town_menu_board / town_clearance_bar, placed on the layout's lane).
 
 Walk-in: the dining room (booths under the windows, tables and chairs, a drink station),
 the order counter under three lit menu boards, a pass-through to the kitchen (grills,
@@ -25,7 +26,7 @@ importlib.reload(town_light)
 V = tc.V
 
 NAME = "TownFastFood"
-P = dict(name=NAME, module="town_fastfood", x0=-8.0, x1=8.0, y0=-5.5, y1=5.5, thick=0.2, height=4.2, ceiling=3.2,
+P = dict(name=NAME, module="town_fastfood", x0=-9.0, x1=9.0, y0=-7.0, y1=7.0, thick=0.2, height=4.2, ceiling=3.2,
          partition=0.0, bake=True)
 
 
@@ -51,8 +52,8 @@ def build(**overrides):
 
     # ================================================================ shell
     door = (-5.1, -3.9, 0.0, 2.3)
-    win_s = [(-2.2, -0.6, 0.9, 2.6)]
-    win_w = [(-4.6, -1.6, 0.9, 2.6), (1.6, 4.6, 0.9, 2.6)]
+    win_s = [(-8.3, -6.0, 0.9, 2.6), (-3.0, -0.6, 0.9, 2.6)]
+    win_w = [(-5.8, -2.2, 0.9, 2.6), (1.0, 4.6, 0.9, 2.6)]
     dt_win = (-2.6, -1.2, 1.0, 2.2)                      # the drive-through window (E)
     k_door = (5.5, 6.5, 0.0, 2.2)                        # kitchen back door (N)
     openings = {"S": [door] + win_s, "W": win_w, "E": [dt_win], "N": [k_door]}
@@ -72,60 +73,43 @@ def build(**overrides):
                depth=0.1)
     tc.hinged_door(kit, col, root, "S", y0, -4.5, 1.2, 2.3, depth=0.1, leaf="trim_black", index=1, style="glass", glass="bk_cafe")
     tc.hinged_door(kit, col, root, "N", y1, 6.0, 1.0, 2.2, depth=0.1, leaf="metal_galv", index=2)
-    # the entry tower: brick, a black cap, the burger pictogram lit high up
-    tx0, tx1, ty0, ty1 = -6.6, -2.4, y0 - 0.5, y0 + 1.5
-    tc.wall(kit.p("Tower", "brick_red"), "S", ty0, tx0, tx1, 0.0, 6.8, [(-5.1, -3.9, 0.0, 2.3)])
-    for side, plane, a0, a1 in (("E", tx1, ty0, y0), ("W", tx0, ty0, y0)):
-        tc.wall(kit.p("Tower", "brick_red"), side, plane, a0, a1, 0.0, 6.8)
-    for side, plane, a0, a1 in (("E", tx1, y0, ty1), ("W", tx0, y0, ty1), ("N", ty1, tx0, tx1)):
-        tc.wall(kit.p("Tower", "brick_red"), side, plane, a0, a1, Hh + 0.6, 6.8)
-    tc.reveals(kit.p("Reveals", "trim_black"), "S", ty0, [(-5.1, -3.9, 0.0, 2.3)], 0.5, sill=False)
-    kit.p("TowerCap", "trim_black").box((tx0 - 0.1, ty0 - 0.1, 6.8), (tx1 + 0.1, ty1 + 0.1, 7.0))
-    kit.p("TowerCap", "trim_black").face([(tx0, ty0, 6.8), (tx1, ty0, 6.8), (tx1, ty1, 6.8), (tx0, ty1, 6.8)], toward=(0, 0, -1))
-    tc.sign(kit, "S", ty0, (tx0 + tx1) / 2, 4.4, 3.0, 1.5, "burger", glow=True)
-    kit.collide((tx0, ty0, 0), (-5.1, y0, 6.8))
-    kit.collide((-3.9, ty0, 0), (tx1, y0, 6.8))
-    kit.p("Awning", "trim_black").box((tx0 - 0.2, ty0 - 1.2, 2.6), (tx1 + 0.2, ty0, 2.75))
-    kit.p("AwningGlow", "glow_white").face([(tx0, ty0 - 1.0, 2.595), (tx1, ty0 - 1.0, 2.595), (tx1, ty0 - 0.9, 2.595),
-                                            (tx0, ty0 - 0.9, 2.595)], toward=(0, 0, -1))
-    kit.p("Walk", "concrete").box((x0 - 1.0, y0 - 2.5, 0.0), (x1, y0, 0.02), skip="b")
-    # the drive-through: a canopy over the window, a menu board, speaker post, clearance bar
+    # the chain-style tilted band round the roofline (red-brown metal), the burger pictogram on it
+    zb0, zb1, tilt = Hh - 0.6, Hh + 1.6, 0.55
+    Bd = kit.p("Band", "trim_red")
+    for side, plane, a0, a1 in (("S", y0, x0, x1), ("N", y1, x0, x1), ("E", x1, y0, y1), ("W", x0, y0, y1)):
+        Pf, u, nn = tc.frame(side, plane)
+        lo, hi = min(a0, a1), max(a0, a1)
+        e = tilt
+        q = [Pf(lo - e, zb0, e), Pf(hi + e, zb0, e), Pf(hi, zb1, 0.0), Pf(lo, zb1, 0.0)]
+        if side in "NE":
+            q = [Pf(hi + e, zb0, e), Pf(lo - e, zb0, e), Pf(lo, zb1, 0.0), Pf(hi, zb1, 0.0)]
+        Bd.face(q, toward=nn + V(0, 0, 0.4))
+        kit.p("BandSoffit", "trim_black").face([Pf(lo - e, zb0, e), Pf(hi + e, zb0, e), Pf(hi, zb0, 0.0), Pf(lo, zb0, 0.0)],
+                                               toward=(0, 0, -1))
+        kit.p("BandGlow", "glow_white").face([Pf(lo - e, zb0 - 0.001, e - 0.02), Pf(hi + e, zb0 - 0.001, e - 0.02),
+                                              Pf(hi + e - 0.06, zb0 - 0.001, e - 0.08), Pf(lo - e + 0.06, zb0 - 0.001, e - 0.08)],
+                                             toward=(0, 0, -1))
+    kit.p("RoofDeckTop", "tar").face([(x0, y0, zb1), (x1, y0, zb1), (x1, y1, zb1), (x0, y1, zb1)], toward=(0, 0, 1))
+    tc.sign(kit, "S", y0 - tilt * 0.5, -4.5, zb0 + 0.35, 2.6, 1.3, "burger", glow=True, d=0.05) if False else None
+    Pf, u, nn = tc.frame("S", y0)
+    sq = [Pf(-6.0, zb0 + 0.3, tilt * 0.9 + 0.05), Pf(-3.0, zb0 + 0.3, tilt * 0.9 + 0.05), Pf(-3.0, zb0 + 1.8, 0.05 - 0.1),
+          Pf(-6.0, zb0 + 1.8, 0.05 - 0.1)]
+    kit.p("Sign", "signs", glow=True).face(sq, uvs=tc.sign_uv("burger"), toward=nn + V(0, 0, 0.4))
+    # the entry canopy over the door, the drive-through window's canopy
+    kit.p("Awning", "trim_black").box((-6.4, y0 - 1.4, 2.6), (-2.6, y0, 2.75))
+    kit.p("AwningGlow", "glow_white").face([(-6.2, y0 - 1.2, 2.595), (-2.8, y0 - 1.2, 2.595), (-2.8, y0 - 1.1, 2.595),
+                                            (-6.2, y0 - 1.1, 2.595)], toward=(0, 0, -1))
+    kit.p("Walk", "concrete").box((x0, y0 - 2.0, 0.0), (x1, y0, 0.02), skip="b")
     kit.p("DTCanopy", "trim_black").box((x1, -3.4, 2.9), (x1 + 2.2, -0.4, 3.1))
     kit.p("DTCanopy", "glow_white").face([(x1 + 0.2, -3.2, 2.895), (x1 + 2.0, -3.2, 2.895), (x1 + 2.0, -0.6, 2.895),
                                           (x1 + 0.2, -0.6, 2.895)], toward=(0, 0, -1))
     kit.p("DTCanopy", "trim_black").beam((x1, -1.9, 3.8), (x1 + 2.1, -1.9, 3.1), 0.04, 0.04)
     kit.p("DTShelf", "metal_galv").box((x1, dt_win[0], 0.95), (x1 + 0.4, dt_win[1], 1.0))
-    mbx, mby = x1 + 3.6, 3.5
-    M = kit.p("MenuBoard", "trim_black")
-    M.box((mbx, mby - 1.3, 0.6), (mbx + 0.25, mby + 1.3, 2.6))
-    for k, kind in enumerate(("burger", "cafe")):
-        a = mby - 0.6 + k * 1.2
-        kit.p("MenuGlow", "signs", glow=True).face([(mbx - 0.005, a + 0.55, 1.2), (mbx - 0.005, a - 0.55, 1.2),
-                                                    (mbx - 0.005, a - 0.55, 1.75), (mbx - 0.005, a + 0.55, 1.75)],
-                                                   uvs=tc.sign_uv(kind), toward=(-1, 0, 0))
-        kit.p("MenuGlow", "glow_white").face([(mbx - 0.005, a + 0.55, 0.75), (mbx - 0.005, a - 0.55, 0.75),
-                                              (mbx - 0.005, a - 0.55, 1.15), (mbx - 0.005, a + 0.55, 1.15)], toward=(-1, 0, 0))
-    M.box((mbx + 0.05, mby - 0.1, 0.0), (mbx + 0.2, mby + 0.1, 0.6), skip="b")
-    kit.p("MenuBoard", "ledgestone").box((mbx - 0.1, mby - 1.4, 0.0), (mbx + 0.35, mby + 1.4, 0.6), skip="b")
-    kit.collide((mbx - 0.1, mby - 1.4, 0), (mbx + 0.35, mby + 1.4, 2.6))
-    sp = kit.p("Speaker", "trim_black")
-    sp.box((mbx - 0.05, 1.4, 0.0), (mbx + 0.25, 1.75, 1.45), skip="b")
-    kit.p("Speaker", "neon_amber").box((mbx - 0.06, 1.5, 1.2), (mbx - 0.05, 1.65, 1.3))
-    kit.collide((mbx - 0.05, 1.4, 0), (mbx + 0.25, 1.75, 1.45))
-    G = kit.p("Clearance", "paint_yellow")
-    for gx in (x1 + 0.4, x1 + 4.4):
-        G.box((gx - 0.08, 7.9, 0.0), (gx + 0.08, 8.1, 3.1), skip="b")
-        kit.collide((gx - 0.08, 7.9, 0), (gx + 0.08, 8.1, 3.1))
-    G.box((x1 + 0.4, 7.92, 2.8), (x1 + 4.4, 8.08, 2.95))
-    kit.p("Clearance", "trim_black").box((x1 + 1.6, 7.91, 2.8), (x1 + 2.0, 8.09, 2.95))
-    kit.p("Clearance", "trim_black").box((x1 + 2.8, 7.91, 2.8), (x1 + 3.2, 8.09, 2.95))
     tc.hvac(kit, 2.5, 2.5, z=Hh, w=1.4, d=1.1, h=0.9)
     kit.p("Exhaust", "metal_galv").cyl((5.5, 4.0), 0.35, Hh, Hh + 1.1, sides=8)
     kit.p("Exhaust", "metal_galv").cyl((5.5, 4.0), 0.5, Hh + 1.1, Hh + 1.3, sides=8, r1=0.1)
     D = kit.p("Dumpster", "trim_green")
-    D.box((1.0, y1 + 0.8, 0.15), (3.0, y1 + 2.2, 1.3))
-    kit.p("Dumpster", "rubber").box((0.95, y1 + 0.75, 1.3), (3.05, y1 + 2.25, 1.38))
-    kit.collide((1.0, y1 + 0.8, 0), (3.0, y1 + 2.2, 1.38))
+    D.box((1.0, y1 - 1.6, 0.15), (3.0, y1 - 0.2, 1.3)) if False else None
 
     # ================================================================ dining room
     pass_op = (-2.2, 2.2, 1.15, 2.4)
@@ -140,7 +124,7 @@ def build(**overrides):
     tc.reveals(kit.p("Reveals", "trim_black"), "E", XP + T / 2, [pass_op, k_in], T, sill=True)
     tc.wall_collider(kit, "y", XP, y0, y1, T, C, [(3.4, 4.4)])
     # booths under the south windows, tables + chairs, a drink station
-    for xc in (-6.5, -1.4):
+    for xc in (-7.15, -1.8):
         for s in (-1, 1):
             xb = xc + s * 0.4
             lo, hi = sorted((xb, xc + s * 0.95))
@@ -150,7 +134,7 @@ def build(**overrides):
             kit.p("BoothFrames", "darkwood").box((bl, yi0, 0.0), (bh, yi0 + 1.3, 1.1), skip="b")
             kit.collide((min(lo, bl), yi0, 0), (max(hi, bh), yi0 + 1.3, 1.1))
         tc.table(kit, xc, yi0 + 0.65, w=0.75, d=1.1, h=0.75, top="formica")
-    for (tx, ty) in ((-6.0, 0.5), (-6.0, 3.0), (-3.2, 0.5), (-3.2, 3.0)):
+    for (tx, ty) in ((-7.0, -0.5), (-7.0, 2.5), (-4.0, -0.5), (-4.0, 2.5), (-6.2, 5.2)):
         tc.table(kit, tx, ty, w=0.75, d=0.75, h=0.75, top="formica")
         chair(kit, tx - 0.6, ty, 1)
         chair(kit, tx + 0.6, ty, -1)
@@ -204,17 +188,15 @@ def build(**overrides):
     far = tc.Far(n)
     far.box((x0, y0, 0), (x1, y1, Hh + 0.6), "bb_charcoal", top="tar")
     far.box((x0, y0, 0), (x1, y1, 0.9), "ledgestone", skip="bt")
-    far.box((tx0, ty0, 0), (tx1, ty1, 7.0), "brick_red", top="trim_black")
-    far.quad("S", ty0, tx0 + 0.6, tx1 - 0.6, 4.4, 5.9, "paint_orange", d=0.05)
+    far.box((x0 - 0.55, y0 - 0.55, Hh - 0.6), (x1 + 0.55, y1 + 0.55, Hh + 1.6), "trim_red", top="tar", skip="")
     for a0, a1, z0, z1 in win_s:
         far.quad("S", y0, a0, a1, z0, z1, "window_lit", d=0.02)
-    far.box((mbx, mby - 1.3, 0.0), (mbx + 0.25, mby + 1.3, 2.6), "trim_black", skip="b")
 
-    kit.entrance((-4.5, ty0 - 0.1, 0.0), "-Y", 1.2, kind="door", note="TownFastFood_Door_1, in the tower")
+    kit.entrance((-4.5, y0 - 0.1, 0.0), "-Y", 1.2, kind="door", note="TownFastFood_Door_1, under the entry canopy")
     kit.entrance((6.0, y1 + 0.1, 0.0), "+Y", 1.0, kind="door", note="TownFastFood_Door_2, kitchen back door")
     kit.info.update(walk_in=True, storeys=1, rooms=["dining 7.7 x 10.6", "kitchen 7.6 x 10.6"],
-                    footprint=[round(x0 - 1.0, 3), round(y0 - 2.5, 3), round(mbx + 0.35, 3), round(y1 + 2.3, 3)],
-                    lane="drive-through lane along +X: clearance bar at y 8, menu board at x 11.6..11.95, window at x 8, y -2.6..-1.2")
+                    footprint=[round(x0 - 0.55, 3), round(y0 - 2.0, 3), round(x1 + 2.2, 3), round(y1 + 0.55, 3)],
+                    lane=f"drive-through window on +X at x {x1}, y -2.6..-1.2 (sill 1.0); menu board / speaker / clearance bar: town_menu_board")
     parts = tc.finish(kit, col, root, far)
     if p["bake"]:
         meshes = [o for o in root.children_recursive if o.type == "MESH" and not o.name.endswith("_LOD1")]

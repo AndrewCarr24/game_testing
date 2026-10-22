@@ -1,0 +1,37 @@
+{
+ "asset": "town_flower_basket",
+ "root": "TownFlowerBasket",
+ "size": [
+  0.763,
+  0.786,
+  0.752
+ ],
+ "bounds": [
+  [
+   -0.419,
+   -0.34,
+   0.0
+  ],
+  [
+   0.344,
+   0.446,
+   0.752
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 230,
+ "tris_lod1": 10,
+ "colliders": [],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "prop": true,
+ "footprint": [
+  -0.2,
+  -0.2,
+  0.2,
+  0.2
+ ]
+}

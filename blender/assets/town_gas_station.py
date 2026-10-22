@@ -1,10 +1,10 @@
 """Modern gas station: a walk-in convenience store (ledgestone base, charcoal board-and-batten,
 a flat roof behind a parapet, a black-framed glass front) and, to the street, a flat canopy on
-four stone-clad columns over two pump islands (four dispensers), LED panels underneath, a
+four stone-clad columns over three pump islands (six dispensers), LED panels underneath, a
 price pylon with blank lit panels, an ice chest, a propane cage, an air pump. Brand-neutral:
 white fascia with a teal stripe, a pump pictogram, no lettering.
 
-Inside: three gondola aisles, a wall of lit coolers, the counter (register, a wall of
+Inside: two gondola aisles, a wall of lit coolers, the counter (register, a wall of
 cigarette packs), a coffee station, restroom and stock-room doors (closed); its fluorescent
 panels and coolers are baked into COLOR_0.
 
@@ -29,7 +29,7 @@ V = tc.V
 NAME = "TownGasStation"
 
 P = dict(name=NAME, module="town_gas_station", x0=-9.0, x1=9.0, y0=-6.0, y1=6.0, thick=0.2, height=4.6,
-         ceiling=3.4, canopy=(-10.5, 10.5, -20.0, -9.5), canopy_z=4.9, bake=True)
+         ceiling=3.4, canopy=(-13.5, 13.5, -20.0, -9.5), canopy_z=4.9, bake=True)
 
 
 def dispenser(kit, x, y, facing_x=True):
@@ -135,14 +135,14 @@ def build(**overrides):
     kit.p("Stripe", "paint_teal").box((cx0 - 0.01, cy0 - 0.01, cz + 0.55), (cx1 + 0.01, cy1 + 0.01, cz + 0.75), skip="tb")
     kit.p("FasciaGlow", "glow_white").box((cx0 - 0.015, cy0 - 0.015, cz + 0.02), (cx1 + 0.015, cy1 + 0.015, cz + 0.06), skip="tb")
     tc.sign(kit, "S", cy0, -6.0, cz + 0.15, 1.4, 0.7, "gas", d=0.0, glow=True, thick=0.03)
-    for i in range(3):
+    for i in range(4):
         for j in range(2):
-            px_ = cx0 + 2.5 + i * 7.75
+            px_ = cx0 + 3.4 + i * 6.75
             py_ = cy0 + 2.5 + j * 5.5
             kit.p("CanopyLEDs", "glow_white").face([(px_ - 0.6, py_ - 0.6, cz - 0.005), (px_ + 0.6, py_ - 0.6, cz - 0.005),
                                                    (px_ + 0.6, py_ + 0.6, cz - 0.005), (px_ - 0.6, py_ + 0.6, cz - 0.005)],
                                                   toward=(0, 0, -1))
-    for x in (-4.0, 4.0):
+    for x in (-8.0, 0.0, 8.0):
         for y in (cy0 + 2.6, cy1 - 2.6):
             kit.p("Columns", "ledgestone").box((x - 0.4, y - 0.4, 0.0), (x + 0.4, y + 0.4, 1.2), skip="b")
             kit.p("Columns", "trim_black").box((x - 0.42, y - 0.42, 1.2), (x + 0.42, y + 0.42, 1.28), skip="b")
@@ -181,7 +181,7 @@ def build(**overrides):
     tc.room(kit, xi0, xi1, yi0, yi1, 0.0, C, walls="block", floor="tile_floor", ceiling="paint_white", name="Store",
             base="trim_black", openings={"S": [door] + front_glass, "N": [back_door], "W": side_w})
     kit.sub = None
-    for x in (-5.0, -2.2, 0.6):
+    for x in (-4.6, -1.0):                      # two aisles
         gondola(kit, x, -2.6, 2.4)
     # coolers along the back wall: glowing glass doors over lit shelves of drinks
     for k in range(8):
@@ -234,7 +234,7 @@ def build(**overrides):
     for a0, a1, z0, z1 in front_glass:
         far.quad("S", y0, a0, a1, z0, z1, "window_lit", d=0.02)
     far.box((cx0, cy0, cz), (cx1, cy1, cz + 1.0), "paint_white", top="paint_white", skip="")
-    for x in (-4.0, 4.0):
+    for x in (-8.0, 0.0, 8.0):
         for y in (cy0 + 2.6, cy1 - 2.6):
             far.box((x - 0.35, y - 0.35, 0), (x + 0.35, y + 0.35, cz), "paint_white", skip="bt")
         far.box((x - 0.6, cy0 + 1.2, 0), (x + 0.6, cy1 - 1.2, 2.1), "paint_white", skip="b")
