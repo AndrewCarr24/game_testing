@@ -417,6 +417,8 @@ def finish(kit, col, root, far=None, extra_info=None):
             attr = o.data.color_attributes.new("AO", "FLOAT_COLOR", "POINT")
             tint = next((t for k, t in kit.tints.items() if o.name == f"{kit.name}_{k}"), (1.0, 1.0, 1.0))
             attr.data.foreach_set("color", np.tile(np.array([*tint, 1.0], np.float32), len(attr.data)))
+    if kit.lights:
+        info["lights"] = kit.lights
     if kit.tints:
         info["tints"] = {k: [round(c, 3) for c in v] for k, v in kit.tints.items()}
     root["town"] = json.dumps(info)
