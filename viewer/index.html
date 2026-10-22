@@ -602,7 +602,7 @@
       window.__combat = combat;
       const vitals = new PlayerVitals({ combat, player, camera, god: params.get('god') === '1' });
       window.__vitals = vitals;
-      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
+      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level, load: loadGltf,
         canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown,
         hidden: () => hiding.active });
       window.__weapons = weapons;
@@ -711,7 +711,7 @@
       function useArmed() {
         const id = inventory.armed;
         const entry = inventory.get(id);
-        if (weapons.isWeapon(id)) { weapons.attack('primary'); return; }   // (combat) Enter = the primary attack
+        if (weapons.isWeapon(id)) { weapons.attack(); return; }   // (combat) Enter = the weapon's attack (the knife: a slash; no mouse buttons)
         if (entry.def.throwable && hiding.active && hiding.spot.pose.cover !== 'open') { toast('No room to throw in here'); return; }
         if (entry.def.throwable) {
           const dir = new THREE.Vector3();
@@ -858,7 +858,7 @@
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
         if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';
-        if (weapons.isWeapon(id)) return weapons.hint();   // (combat) "Stab · right-click slash", "Takedown"
+        if (weapons.isWeapon(id)) return weapons.hint();   // (combat) "Slash", "Takedown"
         return null;
       }
     }

@@ -34,6 +34,9 @@ import * as THREE from 'three';
 //                                   aim; range m (to the target's surface), arc = full cone in
 //                                   degrees; takedown = damage from behind an unaware target
 //                                   (default: weapon.takedown); maxTargets default 1
+//                                   (knife) exclude = a Set of targets to skip (already hit by this
+//                                   swing: a slash sweeps in steps), quiet = no 'attack' event
+//                                   (the swing emits one itself when it ends)
 //     .shoot({ from, origin, dir, spread, range, damage, weapon, pellets })
 //                                   hitscan vs the level's colliders (window.__colliders: walls,
 //                                   props, glass; `seeThrough` rails / boundaries are passed) and
@@ -153,13 +156,14 @@ export class Combat {
 
   attack({ from = null, origin, dir, weapon = null, range = weapon?.range ?? 1.4, arc = weapon?.arc ?? 60,
     damage = weapon?.damage ?? 25, takedown = weapon?.takedown ?? 0, maxTargets = weapon?.maxTargets ?? 1,
-    height = 0.6 } = {}) {
+    height = 0.6, exclude = null, quiet = false } = {}) {
     from = from != null ? this.get(from) : null;
     const aim = _w.copy(dir).normalize().clone();
     const cosHalf = Math.cos((arc / 2) * DEG);
     const cands = [];
     for (const t of this.targets) {
       if (!t.alive || t === from || (from && t.team === from.team && !weapon?.friendly)) continue;
+      if (exclude?.has(t)) continue;            // (knife) already hit by this swing
       const p = t.position();
       // nearest point of the target's vertical axis to the swing's origin (clamped to its body)
       const y = THREE.MathUtils.clamp(origin.y, p.y + Math.min(t.radius, t.height / 2), p.y + t.height - Math.min(t.radius, t.height / 2));
@@ -186,7 +190,7 @@ export class Combat {
         from, dir: dirTo.clone().setY(0).normalize(), weapon: weapon?.id ?? weapon, part, point, stealth, kind: 'melee' });
       if (r) hits.push({ target: t, point, damage: r.damage, part, stealth, killed: r.killed });
     }
-    this.emit('attack', { from, origin: origin.clone(), dir: aim, weapon: weapon?.id ?? weapon, hits });
+    if (!quiet) this.emit('attack', { from, origin: origin.clone(), dir: aim, weapon: weapon?.id ?? weapon, hits });
     return hits;
   }
 
