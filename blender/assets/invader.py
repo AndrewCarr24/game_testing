@@ -37,8 +37,9 @@ import invader_rig as rig  # noqa: E402
 import invader_anims as anims  # noqa: E402
 import invader_gear as gear  # noqa: E402
 import invader_paint as paint  # noqa: E402
+import invader_qa as qa  # noqa: E402
 
-for _m in (common, body, rig, anims, gear, paint):
+for _m in (common, body, rig, anims, gear, paint, qa):
     importlib.reload(_m)
 
 NAME = "Invader"
@@ -545,8 +546,14 @@ def _build(p):
     sv.sockets = {k: (e.parent_bone, arm.data.bones[e.parent_bone].matrix_local.inverted() @ e.matrix_world)
                   for k, e in sockets.items()}
     sv.weapons = {k: m for k, (o, m) in weapons.items()}
+    sub = np.arange(0, len(vco), 3)
+    sv.skin = (vco[sub], W[sub], names)            # for the falls' floor clamp
     acts, info = anims.bake_all(sv)
     md = dict(anims.metadata(sv))
+    measured = qa.run(L, sv, info, lods, part, weapons, sockets)
+    for k in ("DeathForward", "DeathBack"):
+        md["events"][k].update(measured.pop(k))
+    md.update(measured)
     md.update(
         height=round(float(verts[:, 2].max()), 3), radius=0.3,
         lods=[dict(mesh=o.name, tris=_tri_count(o)) for o in lods], lodDistance=list(p["lod_distance"]),

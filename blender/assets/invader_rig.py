@@ -204,7 +204,7 @@ def _chain_weights(s, joints_s, blends):
     return np.clip(W, 0, 1)
 
 
-def weights(verts, faces, part, bone_names, L, body_labels, hand_labels, hand_frames, smooth_iter=6):
+def weights(verts, faces, part, bone_names, L, body_labels, hand_labels, hand_frames, smooth_iter=10):
     """Weight matrix (nverts, nbones). part: per vertex 0 body, 1 left hand, 2 right hand.
     body_labels(P) / hand_labels(P_local, side) -> soft membership {bone: (N,) array}."""
     bi = {n: i for i, n in enumerate(bone_names)}
@@ -251,6 +251,32 @@ def weights(verts, faces, part, bone_names, L, body_labels, hand_labels, hand_fr
         tw_ = smoothstep(by + 0.02, by - 0.025, P[:, 1])
         Wb[:, bi["Foot_" + s]] += region["foot_" + s] * (1 - tw_)
         Wb[:, bi["Toe_" + s]] += region["foot_" + s] * tw_
+    # broad blends across the hip crease and the armpit / shoulder (linear blend skinning tears
+    # narrow ones when the thigh or the upper arm swings far): the limb's share of (trunk + limb)
+    # runs along the limb's axis from its joint
+    for s in "LR":
+        sg = 1 if s == "L" else -1
+        for joint, nxt, trunk, limb, a, b, rad in (
+                ("hip_" + s, "knee_" + s, ("Hips",), "Thigh_" + s, -0.07, 0.09, 0.22),
+                ("shoulder_" + s, "elbow_" + s, ("Chest", "Shoulder_" + s), "UpperArm_" + s, -0.06, 0.07, 0.17)):
+            J = L[joint]
+            u = L[nxt] - J
+            u /= np.linalg.norm(u)
+            near = (np.linalg.norm(P - J, axis=1) < rad) & (P[:, 0] * sg > 0.01)
+            if not near.any():
+                continue
+            ti = [bi[t] for t in trunk]
+            li = bi[limb]
+            tot = Wb[near][:, ti].sum(1) + Wb[near, li]
+            share = smoothstep(a, b, (P[near] - J) @ u)
+            tw = Wb[near][:, ti]
+            tsum = np.maximum(tw.sum(1, keepdims=True), 1e-9)
+            frac = np.where(tw.sum(1, keepdims=True) > 1e-6, tw / tsum, 1.0 / len(ti))
+            new_t = frac * (tot * (1 - share))[:, None]
+            rows = np.nonzero(near)[0]
+            for k, j in enumerate(ti):
+                Wb[rows, j] = new_t[:, k]
+            Wb[rows, li] = tot * share
     W[m] = Wb
     # hands
     for pi, s in ((1, "L"), (2, "R")):
@@ -446,7 +472,16 @@ def ankle_for_pivot(sv, side, pivot, rest_pivot, q):
     return np.asarray(pivot, float) - npv(off)
 
 
-def key_clip(sv, name, fn, T, loop=True, fps=FPS, extra_bones=()):
+def lowest_point(sv, PM):
+    """Lowest z of the skinned body (a vertex subsample, sv.skin = (V, W, bone names))."""
+    V, W, names = sv.skin
+    S = np.array([np.array(PM[n] @ sv.Ri[n]) for n in names])
+    M = np.einsum("nb,bij->nij", W, S)
+    Z = np.einsum("nj,nj->n", M[:, 2, :3], V) + M[:, 2, 3]
+    return float(Z.min())
+
+
+def key_clip(sv, name, fn, T, loop=True, fps=FPS, extra_bones=(), floor=False):
     """Solve fn(t) every frame and key it as action `name` (rotations on every bone, Hips
     location too), pushed to an NLA track so the exporter writes one animation per clip."""
     arm = sv.arm
@@ -463,7 +498,16 @@ def key_clip(sv, name, fn, T, loop=True, fps=FPS, extra_bones=()):
     frames = []
     for f in range(nf + 1):
         t = (f % nf) / fps if loop else min(f / fps, T)
-        PM = sv.solve(fn(t))
+        c = fn(t)
+        PM = sv.solve(c)
+        if floor and getattr(sv, "skin", None) is not None:
+            # keep the body on the floor (falls): lift the hips by however far it sank
+            z = lowest_point(sv, PM)
+            if z < 0.0:
+                c["hips"] = dict(c["hips"])
+                p = c["hips"]["pos"]
+                c["hips"]["pos"] = (p[0], p[1], p[2] - z)
+                PM = sv.solve(c)
         frames.append({k: v.copy() for k, v in PM.items()})
         for bn, B in sv.basis(PM).items():
             if bn == "Root":

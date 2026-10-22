@@ -135,7 +135,8 @@ def foot_track(u, G):
         return dy, dz, pitch, True
     s = (u - beta) / (1 - beta)
     m = (yb - yf) / beta * (1 - beta)                # the stance's speed, in swing-phase units
-    dy = _hermite(yb, yf, m * 0.35, m * 0.35, s)
+    k = G.get("swing_tan", 1.0)        # 1: leaves and lands at the stance speed (no pop at contact)
+    dy = _hermite(yb, yf, m * k, m * k, s)
     dz = h * math.sin(math.pi * min(s * 1.08, 1.0)) ** 1.2 * (1.0 - 0.5 * s)
     pitch = G["toe_off"] * (1 - rig.smoothstep(0.0, 0.45, s)) + G["heel_strike"] * rig.smoothstep(0.55, 1.0, s) - 6 * math.sin(math.pi * s)
     return dy, dz, pitch, False
@@ -196,11 +197,11 @@ def gait(sv, lib, t, G, upper=None):
     return c
 
 
-WALK = dict(cycle=1.12, stride=1.4, duty=0.62, lift=0.075, heel_strike=-14.0, toe_off=30.0, heel_off=0.55,
+WALK = dict(cycle=34 / 30, stride=1.42, duty=0.62, lift=0.075, heel_strike=-14.0, toe_off=30.0, heel_off=0.55,
             bob=0.02, sway=0.022, hips_z=-0.05, lean=3.0, roll=3.0, yaw=6.0, lean_spine=1.0,
             arm_swing=16.0, elbow=10.0, elbow_swing=10.0, width=0.0)
-RUN = dict(cycle=0.72, stride=3.6, duty=0.3, lift=0.24, heel_strike=-10.0, toe_off=38.0, heel_off=0.35,
-           bob=0.04, bob_phase=0.6, sway=0.012, hips_z=-0.12, lean=9.0, roll=2.0, yaw=9.0, lean_spine=4.0,
+RUN = dict(cycle=22 / 30, stride=3.3, duty=0.3, lift=0.24, swing_tan=0.85, heel_strike=-10.0, toe_off=38.0, heel_off=0.35,
+           bob=0.04, bob_phase=0.6, sway=0.012, hips_z=-0.16, lean=9.0, roll=2.0, yaw=9.0, lean_spine=4.0,
            lean_chest=2.0, head=-8.0, arm_swing=40.0, arm_back=0.0, arm_in=-8.0, elbow=70.0, elbow_swing=20.0,
            fist=True, width=-0.01)
 CROUCH_WALK = dict(cycle=1.4, stride=1.1, duty=0.68, lift=0.09, heel_strike=-10.0, toe_off=26.0, heel_off=0.5,
@@ -308,6 +309,10 @@ class Lib:
         """A leg in IK with the foot flat on the floor at its rest place (+ offsets)."""
         A = self.L["ankle_" + s]
         d = dict(ankle=(A[0] + dx, A[1] + dy, A[2] + lift), foot=(pitch, 0, yaw), toe=0.0)
+        if pitch > 0:          # heel up: the ball stays on the floor, the toes flat
+            ball = self.L["ball_" + s] - np.array([0, 0, 0.028])
+            an = rig.ankle_for_pivot(self.sv, s, ball + np.array([dx, dy, lift]), ball, E(pitch, 0, yaw))
+            d = dict(ankle=tuple(an), foot=(pitch, 0, yaw), toe=-pitch)
         if pole is not None:
             d["pole"] = pole
         return d
@@ -945,7 +950,7 @@ def bake_all(sv, only=None):
         name, fn, T, loop = mk(sv, lib)
         if only and name not in only:
             continue
-        act, frames = rig.key_clip(sv, name, fn, T, loop=loop)
+        act, frames = rig.key_clip(sv, name, fn, T, loop=loop, floor=name.startswith("Death"))
         info[name] = dict(T=T, loop=loop, frames=frames, gap=sv.gap)
         rig.log(f"clip {name}: {T:.2f} s {'loop' if loop else 'once'}, IK gap {sv.gap * 100:.1f} cm "
                 + " ".join(f"{k} {v * 100:.0f}" for k, v in sv.gaps.items() if v > 0.01))
