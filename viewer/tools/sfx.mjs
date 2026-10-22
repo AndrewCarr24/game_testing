@@ -230,7 +230,7 @@ await p.close();
 
 // ================================================================ the Grimble
 // (fast-forwarded: its walk in is cut to the last few metres, its stare at the glass to a second)
-p = await open('&gdelay=0&hunt=now', [-19, 1.65, 0.5], [-26, 2.5, 0]);
+p = await open('&grimble=house&gdelay=0&hunt=now', [-19, 1.65, 0.5], [-26, 2.5, 0]);
 await p.waitForFunction(() => window.__grimble?.state === 'walk', null, { timeout: 20000 });
 await p.evaluate(() => { const g = window.__grimble; g.s = g.total - 5; });
 m = await now(p);

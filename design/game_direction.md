@@ -34,9 +34,15 @@ billionaire lives near an old mill town): a fast-food place, a gas station, mayb
 maybe a video store, and a **very cinematic bar**.
 
 ## The Grimble
-A 7.3 m cloaked creature (built; `viewer/grimble*.js`). It becomes an **easter egg**: if the
-player stays in the house long enough, the Grimble comes. (It walks in over the west lawn from
-the horizon today.)
+A 7.3 m cloaked creature (built; `viewer/grimble*.js`). **Now a friendly forest giant** (2026-10-22,
+the user: "the grimble should go deep in the forest and make it friendly"): it lives deep in Laurel
+Fork Cove, among the old-growth tulip poplars of Poplar Cove, across the Poplar branch from the
+creek trail (`viewer/wild/grimble_wild.js`). A curious player who leaves the trail finds it: it
+ambles among the giant trees, looks up into their crowns, pats a trunk so leaves come down, rests;
+it notices you, tilts its head, waves, follows you a little way at a respectful distance, waves
+goodbye and goes home. Never a threat. The invaders are the house's threat; the old house easter
+egg (it walks in over the west lawn, knocks, waves, breaks in and hunts) is gone unless opted in
+(`?grimble=house`).
 
 ## Rules that stand
 - No notes, lore or story text in the game (environmental storytelling only).

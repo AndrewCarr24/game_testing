@@ -1,6 +1,7 @@
 // The game's default path: no ?invaders in the URL and navigator.webdriver spoofed false (as a
-// player's browser): the squad must be there with the real wave schedule, no overlay, next to the
-// Grimble. Then the sounds asked for that the sound sprite lacks, and the bodies' cost per frame.
+// player's browser): the squad must be there with the real wave schedule, no overlay, and no
+// Grimble (it lives in the forest now; ?grimble=house brings the old visit back). Then the
+// sounds asked for that the sound sprite lacks, and the bodies' cost per frame.
 // Usage: GT_BASE=http://localhost:8827 node viewer/tools/invaders_default.mjs
 import { withPage } from './invaders_lib.mjs';
 const r = await withPage('&fx=0&waves=fast&god=1', async (p) => {

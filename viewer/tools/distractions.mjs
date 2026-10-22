@@ -33,7 +33,7 @@ const OFFICE = [7, 4.6, -15];
 async function openPage() {
   const p = await b.newPage({ viewport: { width: 960, height: 600 } });
   p.on('pageerror', (e) => console.log('pageerror:', e.message));
-  await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&hunt=now&breaktrip=0&trips=0` +   // (power stays on: the break-in trips it, house.js)
+  await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&grimble=house&gdelay=0&hunt=now&breaktrip=0&trips=0` +   // (power stays on: the break-in trips it, house.js)
     `&pos=${OFFICE[0]},${OFFICE[1] + 1.65},${OFFICE[2]}&look=7,5.6,-11`);
   await p.waitForFunction(() => window.__loaded && window.__grimble && window.__hunt && window.__devices, null, { timeout: 180000 });
   await p.evaluate(() => {

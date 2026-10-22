@@ -34,7 +34,7 @@ await p.addInitScript((seed) => {
   let a = seed >>> 0;
   Math.random = () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }, +seed * 7919 + 13);
-await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&hunt=now&fx=0&pos=-18,1.65,3.5&look=-26,1.5,0${process.env.QS || ''}`);
+await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&grimble=house&gdelay=0&hunt=now&fx=0&pos=-18,1.65,3.5&look=-26,1.5,0${process.env.QS || ''}`);
 await p.waitForFunction(() => window.__loaded && window.__grimble && window.__hunt, null, { timeout: 180000 });
 await p.evaluate(`(${pageSrc})()`);
 await p.waitForFunction(() => window.__grimble.state === 'inside' && window.__hunt.state !== 'smash' && window.__hunt.chain, null, { timeout: 120000, polling: 250 });

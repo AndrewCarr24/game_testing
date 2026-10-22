@@ -26,7 +26,7 @@ const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal']
 const p = await b.newPage({ viewport: { width: 960, height: 600 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 p.on('console', (m) => { if (m.type() === 'error' && !/404/.test(m.text())) console.log('console:', m.text()); });
-await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&fx=0&pos=-18,1.65,3.5&look=-26,1.5,0`);
+await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&grimble=house&gdelay=0&fx=0&pos=-18,1.65,3.5&look=-26,1.5,0`);
 await p.waitForFunction(() => window.__loaded && window.__grimble && window.__hunt, null, { timeout: 180000 });
 await p.evaluate(async ([grounds, groundsUrl]) => {
   const g = window.__grimble, pl = window.__player, cam = window.__camera, L = window.__level, C = window.__colliders;

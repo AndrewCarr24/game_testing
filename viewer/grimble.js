@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 
-// The Grimble (specs.md "grimble"): a 7.3 m cloaked creature that walks in from far out on the
+// The Grimble (specs.md "grimble"). Its home is the forest now (viewer/wild/grimble_wild.js, a
+// friendly giant in Laurel Fork Cove); this house visit is opt-in (index.html ?grimble=house).
+// A 7.3 m cloaked creature that walks in from far out on the
 // west garden's axis, up to the great room's glass, then over and over: knocks three times,
 // waves, stands staring at the player (head and eyes follow them) for a while.
 //
@@ -239,7 +241,7 @@ export class Grimble {
 // rotate `node` (forward = `localFwd` in its own axes) toward a world point, at most `limit`
 // radians away from where the animation left it
 const _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _w = new THREE.Quaternion();
-function turnToward(node, target, limit, localFwd = new THREE.Vector3(0, 0, 1)) {
+export function turnToward(node, target, limit, localFwd = new THREE.Vector3(0, 0, 1)) {
   node.getWorldPosition(_p);
   node.getWorldQuaternion(_w);
   const fwd = localFwd.clone().applyQuaternion(_w);
@@ -255,7 +257,7 @@ function turnToward(node, target, limit, localFwd = new THREE.Vector3(0, 0, 1)) 
   node.updateMatrixWorld(true);
 }
 
-function blobShadow(scene) {
+export function blobShadow(scene) {
   const c = document.createElement('canvas');
   c.width = c.height = 128;
   const g = c.getContext('2d');

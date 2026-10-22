@@ -20,6 +20,7 @@ import { Town, Exits } from './town.js';   // [town] Sourwood (world=laurel_town
 import { waterField, prepareWater, waterWetTexture } from './water.js';   // [water] (design/wilderness/blue_ridge/water.md)
 import { buildRoad } from './road.js';   // (estate_link) the county road: gate -> river -> town
 import { loadEstate, wildGate } from './estate.js';   // (estate_link) the real estate + the gate back to the house
+import { HOMES as GRIMBLE_HOMES, loadWildGrimble } from './grimble_wild.js';   // (grimble) the friendly giant of Poplar Cove
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -42,6 +43,8 @@ import { loadEstate, wildGate } from './estate.js';   // (estate_link) the real 
 //   kitprops=0 (stand-in logs and rocks), split=1 (opaque + leaf draws for every tree LOD), shell=0 (no canopy
 //   shell on far forested ground), ground=0 (the house's ground textures, not the Poly Haven scans),
 //   shrubs=0 / canopy=0 (A/B costs)
+//   grimble=0 no Grimble (viewer/wild/grimble_wild.js: it lives in Poplar Cove's old growth); view=grimble the creek
+//   trail where it can first be seen across the Poplar branch, view=grimble_home its bench; gpos=x,z[,rotDeg] starts it there
 // Keys: click to look; WASD, Shift run, Space jump, C crouch; F fly (Space/C up/down, Shift fast);
 // 1-4 jump to the open / forest / ridge / spawn views; H overlay.
 
@@ -322,6 +325,12 @@ async function main() {
     }
     if (world.estate) colliders.push(...estateColliders(world));   // [town]
   } else colliders = forest.colliders();
+  // (grimble) its home's views (world.views has the level's own; y = null: eye height over the ground)
+  const gHome = level ? (world.meta?.grimble || GRIMBLE_HOMES[worldName]) : null;
+  if (gHome) for (const [k, v] of Object.entries(gHome.views || {})) if (!world.views[k]) {
+    world.views[k] = { pos: [v.pos[0], v.pos[1] ?? world.heightAt(v.pos[0], v.pos[2]) + 1.65, v.pos[2]],
+      look: [v.look[0], v.look[1] ?? world.heightAt(v.look[0], v.look[2]) + 4, v.look[2]] };
+  }
   const estateView = () => {
     if (!params.has('epos')) return null;
     const p = params.get('epos').split(',').map(Number), l = (params.get('elook') || '').split(',').map(Number);
@@ -532,6 +541,13 @@ async function main() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
   // (estate_link) walking in through the estate's gate goes back to the house (viewer/wild/estate.js)
   const gate = level ? wildGate({ world, camera, player, wild: window.__wild, params }) : null;
+  // (grimble) loaded after the first frame (it isn't near the gate; ~2.9 MB): its shaders compile
+  // off the render loop before it joins the scene. window.__grimble once it's in
+  let grimble = null;
+  const grimbleLoad = gHome && params.get('grimble') !== '0'
+    ? () => loadWildGrimble({ scene, world, worldName, uniforms, tex, sky, colliders, player, camera, params, renderer })
+      .then((g) => { grimble = g; window.__wild.grimble = g; }, (e) => console.warn('grimble:', e))
+    : null;
 
   renderer.setAnimationLoop(loop = () => {
     const b = window.__bench;
@@ -539,6 +555,7 @@ async function main() {
     const dt = Math.min(clock.getDelta(), 0.1);
     uniforms.uTime.value = frozen ?? uniforms.uTime.value + dt;
     update(dt);
+    grimble?.update(Math.min(dt, 0.05), camera);   // (grimble)
     gate?.update();                    // (estate_link)
     b?.drive();
     if (level) {                       // forest air: the forest-floor weight of the splat under the camera
@@ -574,6 +591,7 @@ async function main() {
   // first frame drawn (shaders compiled) before reporting loaded
   cull(); renderer.render(scene, camera);
   window.__loaded = true;
+  grimbleLoad?.();
 }
 
 // (the wet / cobble mask of a level is water.js waterWetTexture)

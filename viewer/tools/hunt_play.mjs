@@ -41,7 +41,7 @@ const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal']
 const p = await b.newPage({ viewport: { width: 960, height: 600 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 p.on('console', (m) => { if (m.type() === 'error') console.log('console:', m.text()); });
-await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&gdelay=0&hunt=now&pos=-18,1.65,3.5&look=-26,1.5,0${process.env.QS || ''}`);
+await p.goto(`${process.env.GT_BASE || 'http://localhost:8765'}/viewer/index.html?level=mansion&grimble=house&gdelay=0&hunt=now&pos=-18,1.65,3.5&look=-26,1.5,0${process.env.QS || ''}`);
 await p.waitForFunction(() => window.__loaded && window.__grimble && window.__hunt, null, { timeout: 120000 });
 
 await p.evaluate((route) => {

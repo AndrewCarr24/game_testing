@@ -364,13 +364,17 @@
         applyOutdoor(outdoor.scene, sky, baked?.bake.outdoor);
         scene.add(outdoor.scene);
       }
-      // the Grimble (viewer/grimble.js): walks in from the west after a short delay; ?grimble=0
-      // leaves it out, ?grimble=x,z[,rotY,y] just stands it there (for screenshots)
+      // the Grimble (viewer/grimble.js). It lives in the forest now (viewer/wild/grimble_wild.js:
+      // a friendly giant in Laurel Fork Cove); the house's threat is the invaders. Its old house
+      // visit is opt-in: ?grimble=house walks it in from the west after a short delay (knock,
+      // wave, stare, then the break-in and hunt: viewer/grimble_hunt.js); ?grimble=x,z[,rotY,y]
+      // just stands it there (for screenshots); absent or ?grimble=0: no Grimble (not loaded)
       let grimble = null;
-      if (params.get('grimble') !== '0') {
+      const gParam = params.get('grimble');
+      if (gParam && gParam !== '0') {
         const gltf = await loadGltf(base + 'models/grimble.gltf');
         const envMap = sky ? sky.getEnv() : scene.environment;
-        if (params.get('grimble')) {
+        if (gParam !== 'house') {
           const [gx, gz, gr = 90, gy = -0.08] = params.get('grimble').split(',').map(Number);
           gltf.scene.position.set(gx, gy, gz);
           gltf.scene.rotation.y = THREE.MathUtils.degToRad(gr);
@@ -544,8 +548,8 @@
       camera.lookAt(...vec('look', level.spawn.lookAt));
       const player = new Player(camera, colliders, [eyePos[0], eyePos[1] - 1.65, eyePos[2]], { ramps: level.ramps });
       window.__player = window.__player || player;
-      // inside: after a few rounds at the glass it breaks in and hunts (viewer/grimble_hunt.js);
-      // ?hunt=0 keeps it outside
+      // inside (?grimble=house only): after a few rounds at the glass it breaks in and hunts
+      // (viewer/grimble_hunt.js); ?hunt=0 keeps it outside, ?hunt=now breaks in after one round
       let shatterFx = null, footsteps = null;
       let invaders = null;   // (invaders: viewer/invaders.js, made further down)
       // (invaders) the great room's glass breaking, shared by the Grimble's smash and an invader's bat

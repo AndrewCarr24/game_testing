@@ -118,11 +118,12 @@ switchbacks (legs visible from the leg above); the Knob bald; the Gap's open ove
   arrives by vehicle on the estate road, east of the spur. They climb onto the crest at the
   Knob, which puts them ahead of a slow ridge runner. Nobody waits at the Gap. A parkway
   vehicle at about 10 min can be a soft limit (optional).
-- **Grimble (easter egg; it comes only if the house timer fired).** It is the one place the
-  7.3 m creature is small: it walks under 40 m crowns. It travels the creek, the only open
-  corridor, and the water makes it deaf there. On the dry ridge it is keen. From a lookout
-  you see it only as a wake of shaking treetops moving up the cove, which is a local boost of
-  the `_WIND` sway uniform.
+- **Grimble (a friendly forest giant, 2026-10-22).** It lives here now, not in the house: in
+  Poplar Cove's old growth on the bench east of the Poplar branch (three.js (62, -380), estate
+  (62, -430)), ~70 m off the creek trail across the water. Under 40 m crowns the 7.3 m creature is
+  small. It ambles, looks, pats a poplar, rests; it notices the player, waves, follows a little way
+  and goes home; it never hurts anyone (`viewer/wild/grimble_wild.js`; CLAUDE.md "Characters").
+  (The earlier idea, a pursuer travelling the creek with a wake of shaking treetops, is dropped.)
 
 ## Player verbs and systems
 Already built: walk, run, crouch, jump, the Noise bus, the senses and search AI, throwables
