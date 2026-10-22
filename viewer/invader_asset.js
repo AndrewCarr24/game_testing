@@ -154,7 +154,12 @@ export class Invader {
     act.clampWhenFinished = once;
     act.timeScale = opts.timeScale ?? 1;
     act.enabled = true;
+    const prev = this.current;
     act.reset().play();
+    // layering over (or dropping the layer from) the same lower-body clip: keep its phase, so a
+    // walking invader raising a rifle doesn't restart its stride
+    if (prev && prev !== act && !once && prev.getClip().duration === clip.duration
+        && (label.split('|')[0] === (this.currentName || '').split('|')[0])) act.time = prev.time;
     if (this.current && this.current !== act) {
       act.crossFadeFrom(this.current, opts.fade ?? 0.25, false);
     }

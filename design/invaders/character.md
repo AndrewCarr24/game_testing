@@ -9,6 +9,16 @@ A ~1.8 m adult in dark work clothes (work jacket with zip and chest pockets, car
 gloves) with a balaclava (eye opening: skin and eyes painted); variants: 3 outfits x head
 attachments (hard white mask, cap, hood, combinations) x 4 weapons.
 
+## Changed since the draft (66bf299)
+- Head attachments are skinned meshes (children of the armature), not children of `Socket_Head`;
+  same names, toggled by visibility.
+- Bat and knife run along the socket's **+Y** (guns: barrel +Z); use the `_Tip` markers.
+- Weapons export visible; the engine hides all but one (`Invader.setWeapon`).
+- `lods` entries are `{mesh, tris}`; switch distances are `lodDistance`.
+- Added: `*Speed`, `*StrideMeasured`, `crouchEyeHeight`, `events.*.duration`, `Vault.rootCurve`,
+  `Stagger.{distance, rootCurve}`, corpse `footprint` / `height`, more event times (grab, plant,
+  clear, land, magOut, magIn, sound, point).
+
 ## Files
 - Generator (rebuild: `Blender -b --factory-startup --python blender/tools/build_asset.py -- invader`,
   ~20 s; caches in `build/invader_cache/`):
