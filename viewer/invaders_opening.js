@@ -141,7 +141,7 @@ export class Opening {
     this.sq.clear();
     this.t = 0; this.phaseT = 0; this.timeline = []; this.trail = [];
     this.rings = 0; this.knocks = 0; this.handles = 0; this.heardN = 0; this.reason = null;
-    this.knowsHome = false; this.seenBy = null; this.stareT = 0;
+    this.knowsHome = false; this.seenBy = null; this.stareT = 0; this.bellDead = false; this.lastSeenT = null; this.heardAt = null; this.jobs = null;
     this.latch(true);
     const lead0 = from === 'court' ? P.court : P.gate;
     const head = yawTo(lead0, P.via);

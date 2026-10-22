@@ -139,6 +139,9 @@ leader in front all the way, never closer than 0.9 m to each other, each within 
 place), `ring_heard` (the signal, the chime played flat from the kitchen, not unknown, nobody
 investigates), `answer`, `glass` (seen, stare, kicked in, no shot before), `hide` (2 rings, 2
 knocks, 4 handles, the break-in at 94 s with waits x0.4, nobody found before it, then sweeping),
+`glass_left` (seen through a bay west of the door: the kicker turns to fight; still in within 7 s
+of the break-in), `invaders_chime.mjs` (the chime and knocks really played through Web Audio,
+autoplay allowed; no page errors),
 `heard`, `power_off`, `blinds`, `outside`. Real time with photos from inside:
 `invaders_opening_live.mjs [from] [ghost|entry]`. The game's default path:
 `invaders_default.mjs`.
