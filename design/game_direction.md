@@ -23,9 +23,15 @@ slopes, ferns and moss, fallen giants; a ridge with rock outcrops and long views
 estate. The user wants **a much larger river** (not a creek) that **leads the player to a
 town**. No fog gimmick, no fire; a cabin may come later.
 
-## The town (not designed yet)
-Downstream along the river. It is not the goal of the game, just a town: it seems safe at first,
-but it turns out the town is in cahoots with the invaders.
+## The road
+A real, drivable two-lane road (concrete/asphalt with lane paint) leaves the estate's gate and
+winds down the valley along the river to the town. The road and the river both lead there.
+
+## The town
+Downstream along the river and the road. Not the goal of the game, just a town: it seems safe at
+first, but it turns out the town is in cahoots with the invaders. **Modern and quaint** (no
+billionaire lives near an old mill town): a fast-food place, a gas station, maybe a small museum,
+maybe a video store, and a **very cinematic bar**.
 
 ## The Grimble
 A 7.3 m cloaked creature (built; `viewer/grimble*.js`). It becomes an **easter egg**: if the

@@ -12,6 +12,8 @@ import { Forest, TIERS, TIERS_VEG, meanColor } from './trees.js';
 import { Grass } from './grass.js';
 import { loadVegKit } from './veg.js';
 import { HeightfieldPlayer } from './player_hf.js';
+import { makeWaterStandin } from './water_standin.js';   // [river] water physics (until water.js lands)
+import { SwimFx } from './swim.js';                         // [river]
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
 
@@ -325,6 +327,20 @@ async function main() {
   camera.lookAt(...v0.look);
   let fly = params.get('fly') === '1' || (params.has('pos') && Math.abs(v0.pos[1] - world.heightAt(v0.pos[0], v0.pos[2]) - 1.65) > 0.5);
   window.__player = player;
+  // ---- [river] being in the river: the water-look workstream's field (water.js waterField(world),
+  // cached as world.waterField: {surfaceAt, depthAt, flowAt}) when it's there, else the stand-in
+  // from the level's water raster (water_standin.js, same functions)
+  let swimFx = null;
+  if (level && world.water) {
+    // (?water=standin forces the stand-in: A/B the physics against either field)
+    const theirs = params.get('water') === 'standin' ? null : world.waterField?.surfaceAt ? world.waterField : window.__water?.surfaceAt ? window.__water : null;
+    const water = theirs || makeWaterStandin(world);
+    // (a wipeout hurts through the combat contract's player target, once viewer/combat.js is in)
+    const hurt = (dmg, info) => { const c = window.__combat; (c?.player || c?.targets?.find?.((t) => t.kind === 'player'))?.hit?.(dmg, info); };
+    player.setWater(water, { river: world.meta.river, onHurt: hurt });
+    swimFx = new SwimFx(player, { uniforms });
+  }
+  // ---- [/river]
 
   const setView = (name) => {
     const v = typeof name === 'string' ? world.views[name] : name;
@@ -367,6 +383,7 @@ async function main() {
       camera.position.y = Math.max(camera.position.y, world.heightAt(camera.position.x, camera.position.z) + 0.3);
     } else if (controls.isLocked || held.size) {
       player.update(Math.min(dt, 0.05), input());
+      swimFx?.update(Math.min(dt, 0.05));                    // [river]
     }
   };
   const cull = () => {

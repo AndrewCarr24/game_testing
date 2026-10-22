@@ -156,6 +156,8 @@
     import { Affordance, itemInfo } from './affordance.js';
     import { Sfx } from './audio.js';   // sound effects
     import { Hiding, batchHideDoors } from './hiding.js';   // hiding spots (interact type `hide`)
+    import { Combat, PlayerVitals } from './combat.js';      // (combat) health, damage, death: window.__combat
+    import { Weapons, spawnDummy } from './weapons.js';     // (combat) the player's weapons + view model
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -583,6 +585,23 @@
       window.__hiding = hiding;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
+      // ---- (combat) viewer/combat.js + viewer/weapons.js: targets, the player's health and death,
+      // the armed weapon (view model, attacks). ?god=1 never dies; ?dummy=x,y,z[,rotY[,aware]] (repeatable)
+      // stands a practice mannequin there
+      const combat = new Combat({ colliders });
+      window.__combat = combat;
+      const vitals = new PlayerVitals({ combat, player, camera, god: params.get('god') === '1' });
+      window.__vitals = vitals;
+      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
+        canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown,
+        hidden: () => hiding.active });
+      window.__weapons = weapons;
+      hand.provider = (id, node) => weapons.show(id, node);   // a weapon is drawn by the view model
+      for (const d of params.getAll('dummy')) {
+        const [x, y, z, rotY = 0, aware = 0] = d.split(',').map(Number);
+        spawnDummy({ scene, combat, colliders, position: new THREE.Vector3(x, y, z), rotationY: rotY, aware: !!aware });
+      }
+      // ---- (end combat)
       // (affordance) focus highlight, near-range glints, crosshair states (viewer/affordance.js)
       const afford = new Affordance({ scene, camera, renderer, interact, inventory });
       window.__afford = afford;
@@ -599,7 +618,7 @@
       // recompiles every material in the house
       if (inventory.has('flashlight') || interact.items.some((i) => i.def.item === 'flashlight')) flashlight.ensure();
       const batteryEl = document.getElementById('battery');
-      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet'), devices });
+      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group, weapons.vm.root], el: document.getElementById('tablet'), devices });
       window.__tablet = tablet;
       // --- power and darkness as gameplay (viewer/house.js): the break-in trips the power,
       // the dark rooms, the flashlight's light cue to the Grimble
@@ -644,6 +663,7 @@
         if (!controls.isLocked || e.repeat) return;
         if (player.isDown) return;                       // knocked down: nothing until they're up
         if (tablet.open) { tablet.key(e.code); return; } // the tablet takes the keys while it's open
+        if (!inventory.open && weapons.key(e.code)) return;   // (combat) 1-4 arm a weapon, R reload
         // (house.js) F: the flashlight on / off without arming it
         if (e.code === 'KeyF' && inventory.has('flashlight') && !inventory.open) { toggleFlashlight(); return; }
         if (e.code === 'KeyI') { inventory.toggle(); if (inventory.open) frozenLook.copy(camera.quaternion); return; }
@@ -678,6 +698,7 @@
       function useArmed() {
         const id = inventory.armed;
         const entry = inventory.get(id);
+        if (weapons.isWeapon(id)) { weapons.attack('primary'); return; }   // (combat) Enter = the primary attack
         if (entry.def.throwable && hiding.active && hiding.spot.pose.cover !== 'open') { toast('No room to throw in here'); return; }
         if (entry.def.throwable) {
           const dir = new THREE.Vector3();
@@ -734,6 +755,7 @@
       const viewDir = new THREE.Vector3();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
+        weapons.beginView(); vitals.beginView();   // (combat) last frame's jolts off the view
         const moved = interact.update(dt, camera.position);
         devices.update(dt);                      // (distractions: noise events, flashing, shaking)
         flashlight.update(dt);
@@ -780,6 +802,7 @@
         afford.update(dt, focus, camera.position);
         let cue = afford.cue(focus, armed);
         if (!cue && armedAct) cue = inventory.get(armed)?.def.throwable ? 'throw' : 'armed';
+        if (!cue && armed && weapons.target()) cue = 'armed';   // (combat) a takedown is on
         const crossCls = on && !player.isDown ? `hud show ${cue ?? ''}` : 'hud';
         if (crossEl.className !== crossCls) crossEl.className = crossCls;
         const parts = [];   // [key, text, style]
@@ -807,6 +830,9 @@
           batteryEl.classList.toggle('low', flashlight.battery < 0.15);
           batteryEl.classList.toggle('on', flashlight.on);
         }
+        // (combat) health, regeneration, death; the weapon's attacks and view model; then this frame's jolts
+        combat.update(dt); vitals.update(dt); weapons.update(dt);
+        vitals.endView(dt); weapons.endView(dt);
         sfx?.update(dt);   // sound effects (viewer/audio.js)
       };
       const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
@@ -817,6 +843,7 @@
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
         if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';
+        if (weapons.isWeapon(id)) return weapons.hint();   // (combat) "Stab · right-click slash", "Takedown"
         return null;
       }
     }

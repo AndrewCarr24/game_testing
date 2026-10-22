@@ -11018,7 +11018,7 @@
           ]
         }
       ],
-      "tris": 4644
+      "tris": 4524
     },
     "kitchen_stool": {
       "file": "models/kitchen_stool.gltf",
@@ -11606,6 +11606,23 @@
         }
       ],
       "tris": 740
+    },
+    "kitchen_knife": {
+      "file": "models/kitchen_knife.gltf",
+      "aabb": {
+        "min": [
+          -0.1675,
+          0.0006,
+          -0.0213
+        ],
+        "max": [
+          0.1675,
+          0.0208,
+          0.026
+        ]
+      },
+      "colliders": [],
+      "tris": 1732
     },
     "ix_blind_kitchen": {
       "file": "models/ix_blind_kitchen.gltf",
@@ -29410,6 +29427,16 @@
         -19.3
       ],
       "rotationY": 200
+    },
+    {
+      "asset": "kitchen_knife",
+      "room": "kitchen",
+      "position": [
+        -1.31,
+        0.965,
+        -13.73
+      ],
+      "rotationY": 12
     },
     {
       "asset": "ix_switch",
