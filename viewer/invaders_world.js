@@ -30,7 +30,8 @@ export function buildWorld({ level, colliders, interact, signals }) {
   const rest = colliders.slice(nLevel).filter((c) => !own.has(c) && !c.isEmpty() && c.max.y > -50 && !leaves.some((l) => l.containsBox(c)));
   const floorOf = (c) => (c.min.y > UPPER_Y - 0.4 ? UPPER_Y : 0);
   const cover = rest.filter((c) => !c.seeThrough && c.kind !== 'ground' && c.max.y - floorOf(c) > 0.5);
-  const nav = new HouseNav({ boxes: [...shell, ...colliders.slice(0, nLevel).filter((c) => c.rail), ...rest], level, doors });
+  // (the ground layer reaches the drive's gate at z 62: the opening's five walk up from there)
+  const nav = new HouseNav({ boxes: [...shell, ...colliders.slice(0, nLevel).filter((c) => c.rail), ...rest], level, doors, ground: [-50, -45, 50, 61.5] });
   const world = {
     level, interact, signals, nav, doors,
     sight: new BoxGrid(sight),

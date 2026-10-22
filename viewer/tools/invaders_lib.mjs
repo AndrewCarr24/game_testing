@@ -23,7 +23,8 @@ export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = (
   try {
     b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
     const p = await b.newPage({ viewport: { width: w, height: h } });
-    p.on('pageerror', (e) => console.log('pageerror:', e.message));
+    p.on('pageerror', (e) => console.log('pageerror:', e.message, (e.stack ?? '').split('\n').slice(1, 4).join(' | ')));
+    p.on('requestfailed', (r) => console.log('requestfailed:', r.url(), r.failure()?.errorText));
     p.on('console', (m) => { if (m.type() === 'error' || m.text().startsWith('[inv]')) console.log('console:', m.text()); });
     if (seed != null) {
       await p.addInitScript((seed) => {

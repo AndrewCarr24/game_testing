@@ -23,7 +23,7 @@ import { UPPER_Y } from './invaders_nav.js';
 // door or the windows of one side; going out that way gets you shot).
 //
 // States: arrive (walk in to the entry) -> enter -> sweep (room by room: points, hiding spots)
-// | post (watcher) | hold (a sightline the leader gave it) | respond (intel: go there) | engage
+// | scene (the opening drives it: invaders_opening.js) | post (watcher) | hold (a sightline the leader gave it) | respond (intel: go there) | engage
 // (gun: sees you) | chase (melee: sees you) | strike | pursue (to where you were) | search
 // (rooms round the loss) | investigate (a noise) | check (a hiding spot) | breach (kicks in a
 // locked door) | cover | stagger | flee | dead.
@@ -263,6 +263,8 @@ export class Invader {
     this.perceive(dt, ctx);
     if (ctx.playerGone) { if (!['post', 'sweep', 'idle'].includes(this.state)) { this.set('idle', 'player dead'); this.stop(); } return; }
     const st = this.state;
+    // the opening (invaders_opening.js) drives it: its senses still run (above), the script decides
+    if (st === 'scene') { if (this.sq.opening) this.sq.opening.think(this, dt, ctx); else this.set('sweep'); return; }
     if (st === 'flee') return this.flee(dt, ctx);
     if (st === 'strike') return this.strike(dt, ctx);
     if (st === 'breach') { if (this.seenNow) this.react(dt, ctx); else this.breach(dt, ctx); return; }
@@ -454,9 +456,18 @@ export class Invader {
       if ((S.n ?? 0) >= 2 || this.sq.glassBroken) { this.sq.breakGlass(); S.phase = 'in'; }
       return;
     }
+    // its door is locked (to them: the outer doors while the opening ran): kick it in
+    if (E.door?.locked?.()) {
+      const at = _b.set(E.centre.x + E.normal.x * 0.85, this.pos.y, E.centre.y + E.normal.y * 0.85);
+      const r = this.goTo(at, this.speeds.walk, { moveTol: 0.35 });
+      if (r === 'arrived' || (r === 'nopath' && this.planFail > 2)) this.startBreach(E.door);
+      else this.lookAlong(dt);
+      return;
+    }
     const r = this.goTo(E.inside, this.speeds.jog, { moveTol: 0.6 });
     this.lookAlong(dt);
-    if (r === 'arrived' || (r === 'nopath' && this.planFail > 4)) { this.inside = true; this.set(this.task ?? 'sweep', 'in'); this.sq.arrived(this); }
+    // (in: after the player if it knows where they were lately, else a room to sweep)
+    if (r === 'arrived' || (r === 'nopath' && this.planFail > 4)) { this.inside = true; this.set(this.task ?? (this.know && this.time - this.know.t < 30 ? 'respond' : 'sweep'), 'in'); this.sq.arrived(this); }
   }
 
   // ---- watcher: at its post, facing what it covers, looking round a little
@@ -682,7 +693,7 @@ export class Invader {
     if (!this.alive) { this.moveSpeed = 0; return; }
     if (this.staggerUntil > this.time) { this.moveSpeed = 0; return; }
     const P = this.path;
-    if (!P) { this.moveSpeed *= Math.max(0, 1 - dt * 8); this.settle(dt); return; }
+    if (!P) { if (!this.steering) this.moveSpeed *= Math.max(0, 1 - dt * 8); this.settle(dt); return; }
     let w = P[this.pathI];
     // a door on the way: open it first (wait while it swings); a locked one: kick it in, or round
     if (w.door && !w.door.isOpen()) {
