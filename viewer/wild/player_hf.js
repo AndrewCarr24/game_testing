@@ -18,13 +18,15 @@ import { Player } from '../player.js';
 // In the water (imm = how deep the feet are under the surface):
 //   wading    slower with depth (ankle x0.85, knee x0.6, waist x0.4, chest x0.3; no running past
 //             the knee), jumps lower, the current pushes (ankle 3% of its speed .. chest 60%);
-//             a push over FOOTING m/s, waist deep or more, takes the feet out: swept
+//             a push over FOOTING m/s (waist deep or more) or depth x speed over DV_FOOTING
+//             (knee deep or more: a rapid's tongue) takes the feet out: swept
 //   swimming  past FLOAT (1.35 m) of depth the body floats, the eye ~0.3 m over the water: swim
 //             at 1.3 m/s (no sprint), carried by the whole current; C dives (down to the bed,
 //             BREATH s of air, then back up), Space + forward climbs out onto a rock or bank up
 //             to REACH over the water (a mantle; also from wading)
-//   swept     a current over SWEPT m/s while swimming (the shoals, the Narrows), or lost footing:
-//             tumbling with the water, barely any control, until it slows
+//   swept     a current over SWEPT m/s while swimming (the mean over the body: rapids, the
+//             Narrows), or lost footing: tumbling with the water (in a shallow rapid too), barely
+//             any control, until it slows
 //   wipeout   swept in the Narrows (the ledge and the 18 m cascade below the bridge) or carried
 //             out of the square: the screen goes dark, you come to on the last dry ground you
 //             stood on upstream (a hit of WIPEOUT_DAMAGE through window.__combat when it exists).
@@ -36,6 +38,9 @@ const FLOAT = 1.35;          // m of water over the feet when floating
 const SWIM_SPEED = 1.3, DIVE_SPEED = 1.1, BREATH = 20;
 const REACH = 0.95;          // a mantle climbs onto tops up to this far over the water
 const FOOTING = 0.95;        // m/s of push that takes the feet out (waist deep or more)
+const DV_FOOTING = 1.2;      // or depth x speed (m²/s) over this, knee deep or more (adults lose
+                             // their feet at ~0.6-1.2 in flood studies: a 0.63 m rapid at 2 m/s)
+const NEAR = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]];
 const SWEPT = 2.1;           // m/s of current a swimmer can't fight
 const WIPEOUT_SPEED = 3.2, WIPEOUT_DAMAGE = 35;
 const IMM = [0, 0.3, 0.7, 1.05, FLOAT];
@@ -68,6 +73,8 @@ export class HeightfieldPlayer extends Player {
     this.wading = false;
     this.water = null;
     this._flow = { x: 0, z: 0, speed: 0 };
+    this._f1 = { x: 0, z: 0, speed: 0 };
+    this._near = { x: 0, z: 0, speed: 0, max: 0, n: 0 };
     this._eyeLag = 0; this._bobT = 0; this._roll = 0;
     this.waterState = { inWater: false, imm: 0, depth: 0, surface: NaN, band: 'dry', swimming: false, swept: false, diving: false,
       submerged: false, breath: 1, flow: this._flow, hazard: false, wipeout: null, wipeouts: 0, climbed: 0, entered: 0, t: 0 };
@@ -155,6 +162,18 @@ export class HeightfieldPlayer extends Player {
     // (on the bridge deck, a footlog or a rock top the feet are over the water: dry)
     S.inWater = S.depth > 0.1 && S.imm > 0.1;
     flowXZ(S.inWater ? this.water.flowAt(p.x, p.z) : null, this._flow);
+    // the current over the body's size (the centre and 1 m round it): a tumbling body rides the
+    // mean (it doesn't stall in a rock's dead cell inside a rapid); the sweep and the Narrows read
+    // the mean and the fastest, so a lee eddy or a zero cell in a chute doesn't read as calm water
+    const N = this._near;
+    N.x = N.z = N.max = 0; N.n = 0;
+    if (S.inWater) for (const [dx, dz] of NEAR) {
+      const f = flowXZ(this.water.flowAt(p.x + dx, p.z + dz), this._f1);
+      if (!(this.water.depthAt(p.x + dx, p.z + dz) > 0.05)) continue;
+      N.x += f.x; N.z += f.z; N.max = Math.max(N.max, f.speed); N.n++;
+    }
+    if (N.n) { N.x /= N.n; N.z /= N.n; }
+    N.speed = Math.hypot(N.x, N.z);
     S.hazard = S.inWater && this.hazards.some((h) => Math.hypot(p.x - h.x, p.z - h.z) < h.r);
     return S;
   }
@@ -176,21 +195,23 @@ export class HeightfieldPlayer extends Player {
     const floatY = S.surface - FLOAT;
     const buoyant = S.inWater && (this.swimming ? S.depth > FLOAT - 0.05 : S.depth > FLOAT + 0.05 && p.y <= floatY + 0.3);
     this.swimming = buoyant || (S.swept && S.depth > 0.7);
-    const push = this.swimming ? 1 : tab(S.imm, PUSH_K);
-    const pushV = this._flow.speed * push;
+    // (swept in shallow water: tumbling down the rapid with it)
+    const push = this.swimming ? 1 : S.swept ? 0.85 : tab(S.imm, PUSH_K);
+    const pushV = this._flow.speed * tab(S.imm, PUSH_K), Nr = this._near;
+    const dv = S.imm * Math.max(this._flow.speed, Nr.speed);
 
     // swept: by a current a swimmer can't fight, or off the feet (waist deep, a strong push)
     if (S.swept) {
       S.sweptT += dt;
-      if (S.sweptT > 1.5 && (this.swimming ? this._flow.speed < SWEPT * 0.8 : pushV < FOOTING * 0.6)) S.swept = false;
-    } else if (S.inWater && ((this.swimming && this._flow.speed > SWEPT) || (!this.swimming && S.imm > 0.55 && pushV > FOOTING))) {
+      if (S.sweptT > 1.5 && (this.swimming ? Nr.speed < SWEPT * 0.8 : pushV < FOOTING * 0.6 && dv < DV_FOOTING * 0.5)) S.swept = false;
+    } else if (S.inWater && ((this.swimming && Nr.speed > SWEPT) || (!this.swimming && ((S.imm > 0.55 && pushV > FOOTING) || (S.imm > 0.45 && dv > DV_FOOTING))))) {
       this._loseFooting = (this._loseFooting || 0) + dt;
       if (this.swimming || this._loseFooting > 0.3) { S.swept = true; S.sweptT = 0; this.crouching = false; }
     } else this._loseFooting = 0;
     // into the Narrows, or out of the square, with the water: no way back
     const half = this.world.size / 2, edge = Math.max(Math.abs(p.x), Math.abs(p.z)) > half - 4;
     // (pinned on the ledge's rocks counts: a strainer)
-    if (S.inWater && (this.swimming || S.swept) && ((S.hazard && (this._flow.speed > WIPEOUT_SPEED || (this._pinned > 2 && this._flow.speed > 0.8))) || edge)) {
+    if (S.inWater && (this.swimming || S.swept) && ((S.hazard && (Nr.max > WIPEOUT_SPEED || (this._pinned > 2 && Nr.max > 0.8))) || edge)) {
       this._doom = (this._doom || 0) + dt;
       if (this._doom > 0.4 || edge) { this.startWipeout(); return this.wipeoutStep(0); }
     } else this._doom = 0;
@@ -242,7 +263,8 @@ export class HeightfieldPlayer extends Player {
 
     // the current: a push along the flow (collides like walking: rocks stop it; a floating body
     // pinned on a rock is carried round it, the side that's open, as the water goes)
-    const ox = this._flow.x * push * dt, oz = this._flow.z * push * dt;
+    const F = (S.swept || this.swimming) && Nr.n ? Nr : this._flow;   // (a floating body rides the mean over its size; feet on the bed feel the local water, eddies and all)
+    const ox = F.x * push * dt, oz = F.z * push * dt;
     if (S.inWater && (ox || oz)) {
       const carry = (dx, dz) => {
         const x0 = p.x, z0 = p.z, n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / 0.04));
@@ -250,7 +272,7 @@ export class HeightfieldPlayer extends Player {
         return ((p.x - x0) * dx + (p.z - z0) * dz) / (dx * dx + dz * dz);      // the fraction made
       };
       const made = carry(ox, oz);
-      if (this.swimming && made < 0.4) {
+      if ((this.swimming || S.swept) && made < 0.4) {
         // round the rock in the way by its nearer side (kept while pinned; flipped if that's shut)
         if (!this._pinned) {
           const L = Math.hypot(ox, oz), ux = ox / L, uz = oz / L, px = -uz, pz = ux;
