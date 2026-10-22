@@ -272,10 +272,10 @@ PALETTE = {
     "soil": ((58, 46, 36), 1.0), "leaf": ((52, 74, 38), 0.8), "leaf_light": ((86, 110, 52), 0.8),
     "grout": ((120, 116, 110), 0.9), "cream": ((236, 226, 202), 0.5), "brown": ((96, 62, 40), 0.5),
     "coffee": ((46, 28, 18), 0.3), "orange": ((222, 110, 30), 0.45), "tan": ((196, 170, 132), 0.6),
-    "van": ((34, 36, 40), 0.35), "van_trim": ((18, 18, 20), 0.6), "tyre": ((22, 22, 23), 0.85),
+    "van": ((88, 90, 96), 0.3), "stain": ((126, 122, 116), 0.7), "van_trim": ((18, 18, 20), 0.6), "tyre": ((22, 22, 23), 0.85),
     "chrome": ((196, 198, 200), 0.2), "glass_dark": ((14, 16, 18), 0.1), "porcelain": ((242, 242, 240), 0.15),
     "tile_wall": ((206, 204, 198), 0.3), "partition": ((92, 96, 100), 0.35), "concrete_grey": ((150, 148, 142), 0.9),
-    "asphalt_patch": ((40, 40, 42), 0.9), "oil": ((22, 22, 24), 0.6), "paint_white_road": ((222, 222, 214), 0.7),
+    "asphalt_patch": ((70, 70, 72), 0.9), "oil": ((22, 22, 24), 0.6), "paint_white_road": ((222, 222, 214), 0.7),
     "paint_yellow_road": ((214, 170, 40), 0.7), "mat": ((40, 42, 44), 0.95), "foam": ((210, 206, 196), 0.8),
     "lid_black": ((30, 30, 32), 0.4), "cup_white": ((240, 238, 232), 0.5), "sausage": ((150, 72, 44), 0.35),
     "bun": ((206, 156, 96), 0.7), "mustard": ((214, 170, 40), 0.5),
@@ -306,27 +306,52 @@ def _col(c):
 
 def goods():
     """The packaging atlas: 8 x 8 cells of 128 px; returns the Atlas (cells by kind_index)."""
-    A = Atlas("T_Town2_Gas_Goods", 1024, 1024)
-    cv = Canvas(1024, 1024, (0.2, 0.2, 0.2))
+    A = Atlas("T_Town2_Gas_Goods", 1024, 1280)
+    cv = Canvas(1024, 1280, (0.2, 0.2, 0.2))
     rng = np.random.default_rng(42)
     S = 128
     bag_cols = [(206, 36, 34), (236, 186, 30), (30, 92, 176), (40, 140, 70), (120, 40, 140), (236, 110, 30), (24, 24, 26), (200, 200, 196),
                 (180, 30, 90), (30, 160, 180), (150, 190, 40), (220, 70, 50), (70, 50, 40), (40, 60, 120), (238, 214, 60), (190, 40, 40)]
-    for i in range(16):                       # rows 0-1: chip bags
+    for i in range(16):                       # rows 0-1: chip bags (six designs over sixteen colours)
         x, y = (i % 8) * S, (i // 8) * S
-        c = _col(bag_cols[i])
-        cv.rect(x, y, x + S, y + S, (0.12, 0.12, 0.12))
-        cv.rect(x + 6, y + 4, x + S - 6, y + S - 2, c, r=10)
-        cv.rect(x + 6, y + 4, x + S - 6, y + 16, tuple(np.array(c) * 0.7), r=4)     # crimp
-        cv.rect(x + 6, y + S - 14, x + S - 6, y + S - 2, tuple(np.array(c) * 0.7), r=4)
+        c = np.array(_col(bag_cols[i]))
         acc = _col(bag_cols[(i * 5 + 3) % 16])
-        cv.ellipse(x + S / 2, y + S * 0.42, S * 0.3, S * 0.2, (0.95, 0.93, 0.88))
-        cv.ellipse(x + S / 2, y + S * 0.42, S * 0.24, S * 0.14, acc)
-        # the chips in the window
-        cv.ellipse(x + S * 0.5, y + S * 0.76, S * 0.2, S * 0.09, (0.86, 0.66, 0.30))
-        cv.ellipse(x + S * 0.42, y + S * 0.72, S * 0.12, S * 0.07, (0.92, 0.74, 0.36))
-        cv.rect(x + 14, y + S * 0.6, x + S - 14, y + S * 0.63, (0.97, 0.97, 0.95), r=2)
-        cv.shade(x + 6, y, x + S - 6, y + S, k=0.45, gloss=0.08)
+        dk = tuple(c * 0.62)
+        cv.rect(x, y, x + S, y + S, (0.1, 0.1, 0.1))
+        cv.rect(x + 5, y + 3, x + S - 5, y + S - 2, tuple(c), r=12)
+        d = i % 6
+        if d == 0:     # the big oval "window" with chips in it
+            cv.ellipse(x + S / 2, y + S * 0.62, S * 0.33, S * 0.24, (0.95, 0.93, 0.88))
+            cv.ellipse(x + S * 0.5, y + S * 0.66, S * 0.24, S * 0.13, (0.86, 0.64, 0.28))
+            cv.ellipse(x + S * 0.42, y + S * 0.62, S * 0.13, S * 0.08, (0.93, 0.75, 0.36))
+            cv.rect(x + 18, y + 26, x + S - 18, y + 44, acc, r=8)
+        elif d == 1:   # a diagonal ribbon across
+            cv.poly([(x + 5, y + 70), (x + S - 5, y + 30), (x + S - 5, y + 56), (x + 5, y + 96)], acc)
+            cv.ellipse(x + S * 0.62, y + S * 0.78, S * 0.18, S * 0.1, (0.88, 0.7, 0.32))
+        elif d == 2:   # split: a dark lower half, a sun burst
+            cv.rect(x + 5, y + S * 0.55, x + S - 5, y + S - 2, dk, r=10)
+            cv.ellipse(x + S / 2, y + S * 0.42, S * 0.2, S * 0.2, acc)
+            cv.ellipse(x + S / 2, y + S * 0.42, S * 0.12, S * 0.12, (0.97, 0.95, 0.9))
+        elif d == 3:   # stripes (kettle style), a white label
+            for k in range(5):
+                cv.rect(x + 5, y + 18 + k * 22, x + S - 5, y + 26 + k * 22, dk)
+            cv.rect(x + 20, y + 40, x + S - 20, y + 78, (0.95, 0.94, 0.9), r=6)
+            cv.rect(x + 28, y + 50, x + S - 28, y + 60, acc, r=3)
+        elif d == 4:   # a tortilla-chip triangle pile on a colour field
+            cv.vgrad(x + 5, y + 3, x + S - 5, y + S - 2, tuple(np.array(bag_cols[i]) * 1.0), tuple(np.array(bag_cols[i]) * 0.55))
+            for k in range(4):
+                bx = x + 24 + k * 22
+                cv.poly([(bx, y + 104), (bx + 20, y + 66 + 6 * (k % 2)), (bx + 34, y + 104)], (0.88, 0.7, 0.3))
+            cv.rect(x + 16, y + 22, x + S - 16, y + 46, acc, r=10)
+        else:          # pretzels / popcorn: a kraft panel
+            cv.rect(x + 16, y + 30, x + S - 16, y + S - 20, (0.62, 0.46, 0.28), r=14)
+            for k in range(7):
+                cv.ring(x + 34 + (k % 4) * 20, y + 60 + (k // 4) * 26, 8, 4, (0.45, 0.26, 0.12))
+            cv.rect(x + 5, y + 10, x + S - 5, y + 24, acc, r=4)
+        cv.rect(x + 5, y + 3, x + S - 5, y + 13, dk, r=4)                    # crimps
+        cv.rect(x + 5, y + S - 12, x + S - 5, y + S - 2, dk, r=4)
+        cv.shade(x + 5, y, x + S - 5, y + S, k=0.5, gloss=0.1)
+        cv.shade(x, y + 3, x + S, y + S - 2, k=0.25, horizontal=False)
         A.add(f"bag{i}", x, y, x + S, y + S)
     candy = [(120, 60, 30), (200, 30, 40), (240, 200, 40), (30, 60, 140), (90, 40, 20), (230, 120, 30), (250, 250, 245), (40, 120, 60)]
     for i in range(8):                        # row 2: candy display boxes (a row of bars)
@@ -422,9 +447,34 @@ def goods():
             cv.poly([(x + 64, y + 14), (x + 92, y + 60), (x + 96, y + 90), (x + 64, y + 116), (x + 32, y + 90), (x + 38, y + 56), (x + 50, y + 70)], (1, 1, 1))
             cv.poly([(x + 64, y + 66), (x + 76, y + 88), (x + 64, y + 104), (x + 52, y + 88)], _col((30, 70, 150)))
         A.add(k, x, y, x + S, y + S)
+    mural(cv, 0, 1024, 1024, 256, np.random.default_rng(23))
+    A.add("mural", 0, 1024, 1024, 1280)
     cv.noise(0.02, seed=3)
+    # (a touch less saturated: packaging under store light, not a cartoon)
+    lum = cv.px.mean(axis=2, keepdims=True)
+    cv.px = lum + (cv.px - lum) * 0.85
     A.save(cv, 512)
     return A
+
+
+def mural(cv, x, y, w, h, rng):
+    """The Blue Ridge from an overlook, as a wall mural: layered ridgelines fading into haze
+    under a late sky, a stand of pines dark in the foreground."""
+    cv.vgrad(x, y, x + w, y + h, (236, 196, 150), (150, 178, 206))
+    X = np.arange(w, dtype=np.float32)
+    layers = [((120, 150, 186), 0.35, 0.55), ((96, 124, 164), 0.45, 0.6), ((72, 96, 136), 0.55, 0.7), ((52, 70, 104), 0.66, 0.8), ((34, 46, 64), 0.8, 0.9)]
+    for k, (col, base_, amp) in enumerate(layers):
+        ph = rng.random(4) * 6.28
+        ridge = base_ * h - amp * h * 0.22 * (0.6 * np.sin(X / w * 6.28 * (1.2 + k * 0.4) + ph[0]) + 0.3 * np.sin(X / w * 6.28 * (3.1 + k) + ph[1])
+                                               + 0.15 * np.sin(X / w * 6.28 * (7.3 + 2 * k) + ph[2]))
+        Ys = np.arange(h, dtype=np.float32)[:, None]
+        cov = np.clip(Ys - ridge[None, :] + 0.5, 0, 1)
+        c = to_lin(np.array(col, np.float32) / 255)
+        cv.px[y:y + h, x:x + w] = cv.px[y:y + h, x:x + w] * (1 - cov[..., None]) + c * cov[..., None]
+    for k in range(26):
+        px_ = x + rng.random() * w
+        hh = h * (0.2 + 0.25 * rng.random())
+        cv.poly([(px_ - hh * 0.18, y + h), (px_, y + h - hh), (px_ + hh * 0.18, y + h)], (0.05, 0.07, 0.06))
 
 
 def drinks():
@@ -567,7 +617,7 @@ def signs(feeds=None):
     cv.rect(x + 54, y + 206, x + 176, y + 222, (1, 1, 1), r=3)
     A.add("logo", x, y, x + 256, y + 256)
     # the fascia's accent band (256..512 x 256..288): green light
-    cv.rect(256, 256, 512, 288, _col((60, 190, 130)))
+    cv.rect(256, 256, 512, 288, _col((46, 160, 108)))
     A.add("band", 256, 256, 512, 288, inset=6)
     # exit (256..384 x 288..352): the green running man; restrooms (384..512 x 288..416)
     x, y = 256, 288
@@ -760,7 +810,7 @@ def build_all(feeds=None):
     # (target mean colours, sRGB)
     P["concrete"] = scan("T_Town2_Gas_Concrete", "brushed_concrete_03", 512, (178, 174, 166), 0.9,
                          post=lambda l: joints_concrete(l, 512, w=2, dark=0.5))
-    P["asphalt"] = scan("T_Town2_Gas_Asphalt", "clean_asphalt", 512, (88, 87, 86), 1.0)
+    P["asphalt"] = scan("T_Town2_Gas_Asphalt", "clean_asphalt", 256, (104, 103, 101), 1.0)
     P["stone"] = scan("T_Town2_Gas_Stone", "rustic_stone_wall_02", 512, (156, 144, 126), 1.0)
     P["oak"] = scan("T_Town2_Gas_Oak", "white_oak_veneer", 256, (176, 140, 100), 1.0)
     P["floor"] = scan("T_Town2_Gas_Floor", "terrazzo_tiles", 512, (184, 180, 172), 0.55, post=grout_grid(2, w=1, col=(0.52, 0.50, 0.47)))

@@ -102,14 +102,15 @@ def lot(kit, p, rng):
     for a0, a1 in drives:
         Wp.box((a0 + 0.5, y0 + 2.2, 0.0), (a0 + (a1 - a0) / 2 - 0.2, y0 + 2.6, 0.004), skip="zxXyY")
     # the forecourt's oil spots and tyre wear (dark, irregular, just above the slab)
-    O = kit.p("oil", "ext", lmw=0.15)
+    O = kit.p("stain", "ext", lmw=0.15)
     for x in p["islands"]:
         for s in (-1, 1):
             for k in range(2):
                 cx, cy = x + s * 1.9 + rng.uniform(-0.3, 0.3), p["island_y"] + rng.uniform(-1.5, 1.5)
                 blot(O, rng, cx, cy, rng.uniform(0.25, 0.5))
+    O2 = kit.p("asphalt_patch", "ext", lmw=0.15)
     for k in range(5):
-        blot(O, rng, 8.3 + rng.uniform(-0.5, 0.5), 13.0 + k * 0.9, rng.uniform(0.3, 0.6))
+        blot(O2, rng, 8.3 + rng.uniform(-0.5, 0.5), 11.0 + k * 1.1, rng.uniform(0.3, 0.6))
 
 
 def blot(brush, rng, cx, cy, r):
@@ -155,7 +156,7 @@ def canopy(kit, p):
     for cx in xs:
         for cy in (y0 + 2.0, (y0 + y1) / 2, y1 - 2.0):
             T.box((cx - 0.36, cy - 0.36, z - 0.03), (cx + 0.36, cy + 0.36, z), skip="Z")
-            G.panel((cx, cy, z - 0.031), "z", 0.62, 0.62, cell=cell)
+            G.panel((cx, cy, z - 0.037), "z", 0.62, 0.62, cell=cell)
             kit.light("area", (cx, cy, z - 0.05), size=(0.6, 0.6), energy=55.0, color=(1.0, 0.97, 0.92))
     # columns on the outer islands; the islands, dispensers and stands
     yi, L = p["island_y"], p["island_len"]
@@ -174,6 +175,9 @@ def canopy(kit, p):
     for cx in (x0 + 0.6, x1 - 0.6):
         kit.p("black", "ext", lmw=0.1).lathe([(0.0, 0.0), (0.08, 0.0), (0.075, -0.05), (0.0, -0.08)], c=(cx, y1 - 0.6), z=z, seg=10)
     kit.mark("probe_ext", (-7.0, -11.0, 1.6))
+    # the security cameras whose feeds the monitors show (make.py renders them)
+    kit.mark("cam_pumps", (x1 - 0.6, y1 - 0.6, z - 0.15))
+    kit.mark("cam_pumps_at", (-5.0, -12.5, 0.6))
 
 
 # ------------------------------------------------------------------ the store's shell
@@ -211,7 +215,9 @@ def wall(kit, p, a0, a1, axis, c, inward, openings=(), ext="siding", base="stone
         kit.collide((b0, q0, z0), (b1, q1, z1)) if axis == 0 else kit.collide((q0, b0, z0), (q1, b1, z1))
     # the stone base's cast cap (a drip edge) and the battens, outside, round the openings
     Cc = kit.p("concrete", "ext", lmw=0.4)
-    Bt = kit.p("siding", "ext", lmw=0.25)
+    # (the battens share one lightmap chart per wall, projected on the wall: thin faces of their
+    # own came out as dark, bled lines)
+    Bt = kit.p("siding", "ext", lmw=0.7, group=kit.group(1 if axis == 0 else 0))
     o = -inward
     for (b0, b1, z0, z1) in slices(a0, a1, bh - 0.001, bh + 0.06, openings):
         q0, q1 = sorted((c + o * 0.035, c + inward * 0.02))
@@ -276,22 +282,97 @@ def store_shell(kit, p, rng):
     ax0, ax1, ay0 = ba[0] - 0.4, bb[1] + 0.4, y0 - 1.75
     az = 3.18
     Bk2 = kit.p("black", "ext", lmw=0.5)
-    Bk2.box((ax0, ay0, az), (ax1, y0, az + 0.06), skip="")
-    Bk2.box((ax0, ay0, az - 0.12), (ax1, ay0 + 0.06, az + 0.14), bevel=0.01)
-    for x in [ax0 + 0.3 + k * (ax1 - ax0 - 0.6) / 5 for k in range(6)]:
-        kit.p("black", "ext", lmw=0.1).tube([(x, ay0 + 0.05, az + 0.12), (x, y0 - 0.02, 4.35)], 0.012, sides=5)
-        Bk2.box((x - 0.04, y0 - 0.02, 4.3), (x + 0.04, y0, 4.42))
-    for x in (-13.0, -6.6, -1.5):
+    px0, px1 = p["entry"][0] - 0.35, p["entry"][1] + 0.35          # the entry's timber portico
+    for (a0, a1) in ((ax0, px0), (px1, ax1)):
+        Bk2.box((a0, ay0, az), (a1, y0, az + 0.06), skip="")
+        Bk2.box((a0, ay0, az - 0.12), (a1, ay0 + 0.06, az + 0.14), bevel=0.01)
+        for x in [a0 + 0.3 + k * (a1 - a0 - 0.6) / 2 for k in range(3)]:
+            kit.p("black", "ext", lmw=0.1).tube([(x, ay0 + 0.05, az + 0.12), (x, y0 - 0.02, 4.35)], 0.012, sides=5)
+            Bk2.box((x - 0.04, y0 - 0.02, 4.3), (x + 0.04, y0, 4.42))
+    portico(kit, p, px0, px1, ay0 - 0.3)
+    for x in (-13.0, -1.5):
         kit.p("signs", "ext").panel((x, ay0 + 0.85, az - 0.002), "z", 0.14, 0.14, cell=kit.cell("signs", "led_warm"))
         kit.light("spot", (x, ay0 + 0.85, az - 0.03), energy=40.0, color=(1.0, 0.86, 0.68), aim=(x, ay0 + 0.85, 0.0), angle=90, blend=0.7)
-    # the lit pump mark over the entry, two gooseneck barn lights on the sign band
-    kit.p("charcoal", "ext", lmw=0.3).box((-7.6, y0 - 0.06, 3.55), (-5.6, y0, 5.0), bevel=0.01)
-    kit.p("signs", "ext").panel((-6.6, y0 - 0.061, 4.27), "y", 1.3, 1.3, cell=kit.cell("signs", "logo"))
+    # two gooseneck barn lights on the sign band
     for x in (-12.0, -1.2):
         gooseneck(kit, (x, y0, 4.6))
     # the east wall's service door (steel, propped open), its lamp, the meters; the back stoop
     service_door(kit, p)
     kit.mark("probe_int", (-7.0, 10.0, 1.7))
+    kit.mark("cam_door", (-9.2, y0 + 0.5, 3.15))
+    kit.mark("cam_door_at", (-6.0, 9.0, 0.6))
+    kit.mark("cam_register", (x1 - 0.5, y0 + 0.5, 3.15))
+    kit.mark("cam_register_at", (-0.5, 7.0, 0.9))
+    kit.mark("cam_back", (x1 + 0.15, y1 - 0.2, 3.6))
+    kit.mark("cam_back_at", (8.0, 12.5, 0.8))
+    # (the back lot's camera on the wall: a small black bullet camera)
+    with kit.at((x1 + 0.12, y1 - 0.2, 3.6)):
+        kit.p("black", "ext", lmw=0.1).box((-0.05, -0.05, -0.04), (0.05, 0.05, 0.04))
+        kit.p("lightgrey", "ext", lmw=0.1).box((0.03, -0.18, -0.04), (0.1, -0.02, 0.03))
+
+
+def portico(kit, p, x0, x1, yf):
+    """The entry's heavy-timber gable (the mountain-town touch, as on Blowing Rock's and Highlands'
+    newer storefronts): two cedar posts on ledgestone piers, a beam, a king-post truss under a
+    black standing-seam gable roof; its gable infilled with dark boards and the lit pump mark."""
+    y0 = p["sy0"]
+    S = kit.p("stone", "ext", lmw=0.8)
+    C = kit.p("concrete", "ext", lmw=0.5)
+    Wd = kit.p("wood_dark", "ext", lmw=0.8)
+    R = kit.p("black", "ext", lmw=0.5)
+    f = p["floor"]
+    xm = (x0 + x1) / 2
+    hw = (x1 - x0) / 2
+    ze, zr = 3.55, 5.15                                       # eave and ridge
+    for x in (x0 + 0.25, x1 - 0.25):
+        S.box((x - 0.3, yf - 0.3 + 0.3, f), (x + 0.3, yf + 0.3 + 0.3, 0.95), skip="z")
+        C.box((x - 0.34, yf - 0.04, 0.95), (x + 0.34, yf + 0.64, 1.01), bevel=0.01)
+        Wd.box((x - 0.13, yf + 0.17, 1.01), (x + 0.13, yf + 0.43, ze - 0.3), bevel=0.012)
+        # knee braces to the beam
+        Wd.extrude([(x - 0.06, yf + 0.25, ze - 0.95), (x + 0.06, yf + 0.25, ze - 0.95), (x + (0.55 if x < xm else -0.55) + 0.06, yf + 0.25, ze - 0.3),
+                    (x + (0.55 if x < xm else -0.55) - 0.06, yf + 0.25, ze - 0.3)][::1 if x < xm else -1], (0, 0.12, 0))
+        kit.collide((x - 0.3, yf, 0), (x + 0.3, yf + 0.6, ze))
+    Wd.box((x0, yf + 0.12, ze - 0.3), (x1, yf + 0.48, ze), bevel=0.015)               # the beam
+    Wd.box((x0, y0 - 0.25, ze - 0.3), (x1, y0, ze), bevel=0.015)                      # the ledger at the wall
+    # the truss in the gable face: rafters, the king post, the infill boards
+    yt = yf + 0.2
+    for s in (-1, 1):
+        a = (xm + s * (hw + 0.25), yt, ze - 0.05)
+        b = (xm, yt, zr)
+        d = V2(a, b)
+        n = (-d[1], d[0])
+        Wd.extrude([(a[0] - 0.1 * n[0], yt, a[2] - 0.1 * n[1]), (b[0] - 0.1 * n[0], yt, b[2] - 0.1 * n[1]),
+                    (b[0] + 0.1 * n[0], yt, b[2] + 0.1 * n[1]), (a[0] + 0.1 * n[0], yt, a[2] + 0.1 * n[1])][::-1 if s < 0 else 1], (0, 0.18, 0))
+    Wd.box((xm - 0.1, yt, ze), (xm + 0.1, yt + 0.18, zr - 0.1))
+    # infill (behind the truss): dark vertical boards in the triangle
+    tri = [(xm - hw, yt + 0.19, ze), (xm + hw, yt + 0.19, ze), (xm, yt + 0.19, zr - 0.12)]
+    kit.p("wood_dark", "ext", lmw=0.6).face([(x, y, z) for x, y, z in tri][::-1])
+    kit.p("signs", "ext").panel((xm, yt + 0.17, ze + 0.55), "y", 0.78, 0.78, cell=kit.cell("signs", "logo"))
+    kit.light("spot", (xm, yt - 0.6, ze - 0.2), energy=18.0, color=(1.0, 0.85, 0.66), aim=(xm, yt, ze + 0.6), angle=70, blend=0.6)
+    # the roof: two standing-seam planes from the gable to the wall, the ridge cap
+    yb = y0 + 0.05
+    for s in (-1, 1):
+        e = (xm + s * (hw + 0.45), ze - 0.18)
+        r = (xm, zr + 0.12)
+        quad = [(e[0], yf - 0.15, e[1]), (r[0], yf - 0.15, r[1]), (r[0], yb, r[1]), (e[0], yb, e[1])]
+        if s > 0:
+            quad = quad[::-1]
+        R.face(quad)
+        R.face([(x, y, z - 0.06) for x, y, z in quad[::-1]])
+        for k in range(1, 9):
+            t = k / 9
+            xx, zz = e[0] + (r[0] - e[0]) * t, e[1] + (r[1] - e[1]) * t
+            R.box((xx - 0.012, yf - 0.15, zz - 0.005), (xx + 0.012, yb, zz + 0.035))
+    R.box((xm - 0.08, yf - 0.16, zr + 0.06), (xm + 0.08, yb, zr + 0.16), bevel=0.02)
+    # downlight in the beam over the doors
+    kit.p("signs", "ext").panel((xm, yf + 0.3, ze - 0.305), "z", 0.12, 0.12, cell=kit.cell("signs", "led_warm"))
+    kit.light("spot", (xm, yf + 1.0, ze - 0.35), energy=40.0, color=(1.0, 0.86, 0.68), aim=(xm, yf + 1.0, 0.0), angle=90, blend=0.7)
+
+
+def V2(a, b):
+    dx, dz = b[0] - a[0], b[2] - a[2]
+    L = math.hypot(dx, dz)
+    return (dx / L, dz / L)
 
 
 def gooseneck(kit, at):

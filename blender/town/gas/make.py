@@ -49,7 +49,7 @@ NO_BAKE = "--no-bake" in argv
 NO_EXPORT = "--no-export" in argv
 SHOTS = "--shots" in argv
 ZONES = opt("--zones", "ext,int,lod1").split(",")
-RES = dict(ext=(1536, 1024), int=(2048, 1024), lod1=(256, 256))
+RES = dict(ext=(1024, 1024), int=(2048, 1024), lod1=(256, 256))
 for kv in (opt("--res", "") or "").split(","):
     if "=" in kv:
         k, v = kv.split("=")
@@ -114,7 +114,10 @@ def lightmap_uvs(objs, W, H, pad=2):
         groups, rest = {}, []
         for f in bm.faces:
             if lg is not None and f[lg]:
-                groups.setdefault(f[lg], []).append(f)
+                # (front and back faces of a group get separate charts: projected together, the
+                # backs - against a shelf or a wall, dark - overwrote the fronts' texels)
+                ax = f[la]
+                groups.setdefault((f[lg], f.normal[ax] >= 0), []).append(f)
             else:
                 rest.append(f)
         for gid, faces in groups.items():
@@ -253,15 +256,21 @@ def setup_world(kit, col):
     ramp = nt.nodes.new("ShaderNodeValToRGB")
     nt.links.new(geo.outputs["Generated"], sep.inputs[0])
     nt.links.new(sep.outputs["Z"], ramp.inputs["Fac"])
-    sky = Vector(LOOK["sky"])
-    hz, zn = Vector(LOOK["sky_horizon"]), Vector(LOOK["sky_zenith"])
+    # (the LOOK's colours a third of the way to grey: the full-blue sky turned the shaded lot and
+    # the back of the store blue next to the town's own ground)
+    def grey(c):
+        return Vector(c) * 0.5 + Vector((1, 1, 1)) * (sum(c) / 3) * 0.5
+    sky = grey(LOOK["sky"])
+    hz, zn = grey(LOOK["sky_horizon"]), grey(LOOK["sky_zenith"])
     k = sky.length / ((hz + zn) / 2).length
     e0, e1 = ramp.color_ramp.elements[0], ramp.color_ramp.elements[1]
     e0.position, e1.position = 0.0, 0.7
     e0.color = (*(hz * k * 0.9), 1)
     e1.color = (*(zn * k * 1.1), 1)
     nt.links.new(ramp.outputs["Color"], bg.inputs["Color"])
-    bg.inputs["Strength"].default_value = LOOK["sky_strength"]
+    # (x 1.5: the wilderness runtime lights its ground with more sky than the house bake; at the
+    # LOOK's own strength the lot's shade read near-black next to the town)
+    bg.inputs["Strength"].default_value = LOOK["sky_strength"] * 1.5
     # the ground round the lot (the town's mown grass and road), for bounce and the sky's horizon
     me = bpy.data.meshes.new("Town2Gas_Surround")
     bm = bmesh.new()
@@ -270,7 +279,8 @@ def setup_world(kit, col):
     bm.faces.new(vs)
     bm.to_mesh(me)
     bm.free()
-    m = common.pbr_material("M_Town2Gas_BakeGround", (0.11, 0.12, 0.07), roughness=1.0)
+    # (the town round the lot: mown grass in sun, the road; it bounces warm light into the shade)
+    m = common.pbr_material("M_Town2Gas_BakeGround", (0.2, 0.18, 0.12), roughness=1.0)
     me.materials.append(m)
     g = bpy.data.objects.new("Town2Gas_Surround", me)
     col.objects.link(g)
@@ -367,7 +377,7 @@ def chart_mask(objs, W, H):
     return mask[::-1]
 
 
-def env_panorama(name, probe, width=512):
+def env_panorama(name, probe, width=256):
     """A 360-degree radiance panorama (reflections only) -> T_Town2_Gas_<name>_Env.webp; returns
     (file, clamp)."""
     cam_data = bpy.data.cameras.new(f"Town2Gas_Env_{name}")
@@ -404,6 +414,51 @@ def env_panorama(name, probe, width=512):
     return f"textures/{fname}.webp", clamp
 
 
+# ------------------------------------------------------------------ the security monitor's feeds
+def render_feeds(kit, w=256, h=128):
+    """The four cameras the monitors show (pumps, door, register, the back lot with the van),
+    rendered in the station's own light and made to look like a cheap DVR's quad view: washed,
+    greenish, vignetted, scan lines, a white time bar. Returns a (2h, 2w, 3) linear image."""
+    out = np.zeros((2 * h, 2 * w, 3), np.float32)
+    cam_data = bpy.data.cameras.new("Town2Gas_CCTV")
+    cam_data.lens = 14.0
+    cam = bpy.data.objects.new("Town2Gas_CCTV", cam_data)
+    scene.collection.objects.link(cam)
+    scene.camera = cam
+    scene.render.engine = "CYCLES"
+    scene.render.resolution_x, scene.render.resolution_y, scene.render.resolution_percentage = w, h, 100
+    scene.cycles.samples = 48
+    scene.cycles.use_denoising = True
+    scene.render.image_settings.file_format = "HDR"
+    rng = np.random.default_rng(3)
+    for i, key in enumerate(("cam_pumps", "cam_door", "cam_register", "cam_back")):
+        if key not in kit.marks:
+            continue
+        cam.location = kit.marks[key]
+        cam.rotation_euler = (Vector(kit.marks[key + "_at"]) - Vector(kit.marks[key])).to_track_quat("-Z", "Y").to_euler()
+        path = os.path.join(BUILD, f"feed_{key}.hdr")
+        scene.render.filepath = path
+        bpy.ops.render.render(write_still=True)
+        img = bpy.data.images.load(path)
+        px = np.array(img.pixels[:], dtype=np.float32).reshape(h, w, 4)[::-1, :, :3]
+        bpy.data.images.remove(img)
+        px = px / (1.0 + px) * 1.6                                  # a soft roll-off (auto exposure)
+        lum = px @ np.array([0.3, 0.59, 0.11], np.float32)
+        px = lum[..., None] * np.array([0.82, 1.0, 0.86], np.float32) * 0.8 + px * 0.2
+        yy, xx = np.mgrid[0:h, 0:w]
+        vig = 1 - 0.45 * (((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)
+        px *= np.clip(vig, 0.3, 1)[..., None]
+        px *= (0.9 + 0.1 * (yy % 2))[..., None]
+        px += rng.normal(0, 0.012, px.shape).astype(np.float32)
+        px[4:12, 6:70] = px[4:12, 6:70] * 0.3 + 0.55               # the time bar (blank: no text)
+        r, c = divmod(i, 2)
+        out[r * h:(r + 1) * h, c * w:(c + 1) * w] = np.clip(px, 0, 1)
+    out[h - 1:h + 1, :] = 0.0
+    out[:, w - 1:w + 1] = 0.0
+    bpy.data.objects.remove(cam, do_unlink=True)
+    return out
+
+
 # ------------------------------------------------------------------ main
 def main():
     t0 = time.time()
@@ -433,6 +488,12 @@ def main():
     meta = dict(triangles=tris, texels_per_m=dens, zones={})
     if not NO_BAKE:
         log("cycles:", use_gpu())
+        # the monitors' feeds, rendered from the station itself, into the sign atlas
+        import town2_gas_tex as TX
+        feeds = render_feeds(kit)
+        TX.signs(feeds)
+        bpy.data.images["T_Town2_Gas_Signs"].reload()
+        log("cctv feeds rendered")
         glow = [o for z, v in by_zone.items() if z.endswith("_g") for o in v]
         lod0 = [o for z, v in by_zone.items() if not z.startswith("lod1") for o in v]
         for zone in ZONES:

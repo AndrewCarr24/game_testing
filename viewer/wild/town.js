@@ -325,7 +325,8 @@ export class Town {
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
             const lm = m.userData?.lightmap;
             if (lm && !m.lightMap) {
-              m.lightMap = tex(lm, (tx) => { tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace; });
+              // (no mip chain: a lightmap is smooth, and its mips were a quarter more GPU memory)
+              m.lightMap = tex(lm, (tx) => { tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; });
               m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
               m.needsUpdate = true;
             }

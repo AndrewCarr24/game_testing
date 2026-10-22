@@ -39,7 +39,7 @@ def dispenser(kit, diesel=False):
         # the electronics head: dark glass bezel
         gx = s * (hw + 0.02)
         B.box((min(gx, gx + s * 0.012), -hl + 0.04, 1.06), (max(gx, gx + s * 0.012), hl - 0.04, 1.84), bevel=0.01)
-        fx2 = gx + s * 0.0135
+        fx2 = gx + s * 0.016
         face = "X" if s > 0 else "x"
         # the screens (y runs the other way on the -x face: the panel helper keeps them readable)
         S.panel((fx2, 0.06 * s, 1.62), face, 0.40, 0.20, cell=kit.cell("signs", "pump_screen"))
@@ -174,7 +174,7 @@ def monument_sign(kit):
         fy = s * 0.241
         face = "Y" if s > 0 else "y"
         G.panel((0.0, fy, 2.62), face, 2.36, 1.02, cell=kit.cell("signs", "band"))
-        G.panel((-0.62 * s, fy + s * 0.001, 2.62), face, 0.9, 0.9, cell=kit.cell("signs", "logo"))
+        G.panel((-0.62 * s, fy + s * 0.006, 2.62), face, 0.9, 0.9, cell=kit.cell("signs", "logo"))
         G.panel((0.0, fy, 1.55), face, 2.36, 1.18, cell=kit.cell("signs", "price"))
     kit.collide((-1.52, -0.48, 0), (1.52, 0.48, 3.36))
 

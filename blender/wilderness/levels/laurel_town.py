@@ -428,6 +428,9 @@ def views():
         bar_room=dict(pos=(-2100.5, -799.5, 2.4), look=(-2114.0, -812.0, -184.3)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
+        # [gas] the gas station (town2_gas): under the canopy toward the store; inside, down the aisle to the coolers
+        gas_lot=dict(pos=(-1887.0, -710.1), look=(-1886.0, -697.6, -182.3)),
+        gas_store=dict(pos=(-1886.5, -695.6, 2.0), look=(-1888.0, -684.6, -182.8)),
     )
 
 

@@ -162,6 +162,8 @@ def back_rooms(kit, p, q, rng):
     yw = 13.4
     dM, dW = (-3.85, -2.95), (-1.45, -0.55)
     partition(kit, -4.6, 0.36, 0, yw, f, c, holes=[(*dM, f, 2.15), (*dW, f, 2.15)])
+    # the Blue Ridge mural over the restroom doors (the store's one picture: no words)
+    kit.p("goods", "int", lmw=0.8).panel((-2.15, yw - 0.065, 2.82), "y", 4.8, 1.0, cell=kit.cell("goods", "mural"))
     partition(kit, yw, Y1, 1, -2.15, f, c)
     partition(kit, 9.6, Y1, 1, 0.3, f, c)
     sd = (1.2, 2.1)
@@ -412,8 +414,8 @@ def gondola(kit, rng, x, ya, yb, kind, f, h=1.45):
     hd = 0.475
     W.box((x - 0.03, ya, f), (x + 0.03, yb, f + h), skip="z")
     Bk.box((x - hd, ya, f), (x + hd, yb, f + 0.12), skip="z")
-    kit.p("charcoal", "int", lmw=0.15).box((x - 0.045, ya + 0.01, f + h), (x + 0.045, yb - 0.01, f + h + 0.15))
-    kit.collide((x - hd, ya, 0), (x + hd, yb, f + h + 0.15))
+    W.box((x - 0.04, ya + 0.01, f + h), (x + 0.04, yb - 0.01, f + h + 0.03), bevel=0.01)
+    kit.collide((x - hd, ya, 0), (x + hd, yb, f + h + 0.03))
     zs = [f + 0.12, f + 0.48, f + 0.84, f + 1.2]
     for s in (-1, 1):
         face = "X" if s > 0 else "x"
@@ -442,15 +444,20 @@ def gondola(kit, rng, x, ya, yb, kind, f, h=1.45):
                     run = rng.randint(2, 5)
                 run -= 1
                 cell = kit.cell("goods", f"{name}{cell_i}")
-                hh = gh * rng.uniform(0.95, 1.03)
+                hh = gh * rng.uniform(0.92, 1.06)
+                if name == "bag":
+                    gw = rng.choice((0.19, 0.22, 0.25))
+                    hh = gw * 1.35 * rng.uniform(0.95, 1.05)
+                    if yy + gw >= yb - 0.03:
+                        break
                 rows = 3 if depth > 0.3 else 2
                 # the front facing, and the rows behind it (only tops and the front are seen)
                 fx = x + s * (depth - 0.01)
                 bx = x + s * (depth - 0.01 - gd * rows)
                 lo = (min(fx, bx), yy, z)
                 hi = (max(fx, bx), yy + gw, z + hh)
-                Gd.box(lo, hi, cell=cell, front=face, skip="z")
-                yy += gw + 0.008
+                Gd.box(lo, hi, cell=cell, front=face, skip="z", bevel=0.02 if name == "bag" else 0.004)
+                yy += gw + rng.uniform(0.004, 0.02)
         # the pegboard side of the spine
         W.box((min(x + s * 0.03, x + s * 0.035), ya, zs[0]), (max(x + s * 0.03, x + s * 0.035), yb, f + h), skip="zZ")
     # end caps: a display of cases at each end (water, chips)
@@ -563,11 +570,11 @@ def cash_wrap(kit, p, q, rng):
     kit.p("signs", "int").panel((X1 - 0.31, (tw0 + tw1) / 2, f + 2.45), "x", tw1 - tw0 - 0.1, 0.08, cell=kit.cell("signs", "led"))
     kit.light("area", (X1 - 0.6, (tw0 + tw1) / 2, f + 2.3), size=(0.2, tw1 - tw0), energy=14.0, color=(1.0, 0.96, 0.9), rot=(0, 60, 0))
     # the security monitor on its arm over the back counter's north end, facing the store
-    with kit.at((X1 - 0.12, 9.05, f + 1.75), rot=90):
-        kit.p("black", "int", lmw=0.2).box((-0.03, 0.0, 0.2), (0.03, 0.12, 0.26))
-        monitor(kit, 0.58, 0.34)
+    with kit.at((X1 - 0.12, 9.05, f + 1.75), rot=-90):
+        kit.p("black", "int", lmw=0.2).box((-0.03, 0.0, 0.25), (0.03, 0.12, 0.31))
+        monitor(kit, 0.72, 0.41)
     # the CB radio on the back counter: the set, its mic on a coiled cord, a power supply; a mug
-    with kit.at((X1 - 0.3, 9.0, f + 0.9), rot=90):
+    with kit.at((X1 - 0.3, 9.0, f + 0.9), rot=-90):
         R = kit.p("black", "int", lmw=0.3)
         R.box((-0.1, -0.12, 0.0), (0.1, 0.12, 0.06), bevel=0.006)
         kit.p("chrome", "int", lmw=0.1).box((-0.095, -0.121, 0.008), (0.095, -0.12, 0.052))
