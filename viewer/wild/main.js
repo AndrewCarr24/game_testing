@@ -327,11 +327,14 @@ async function main() {
   camera.lookAt(...v0.look);
   let fly = params.get('fly') === '1' || (params.has('pos') && Math.abs(v0.pos[1] - world.heightAt(v0.pos[0], v0.pos[2]) - 1.65) > 0.5);
   window.__player = player;
-  // ---- [river] being in the river: the water-look workstream's water.js ({surfaceAt, depthAt, flowAt},
-  // as window.__water) when it lands, else the stand-in from the level's water raster
+  // ---- [river] being in the river: the water-look workstream's field (water.js waterField(world),
+  // cached as world.waterField: {surfaceAt, depthAt, flowAt}) when it's there, else the stand-in
+  // from the level's water raster (water_standin.js, same functions)
   let swimFx = null;
   if (level && world.water) {
-    const water = window.__water?.surfaceAt ? window.__water : makeWaterStandin(world);
+    // (?water=standin forces the stand-in: A/B the physics against either field)
+    const theirs = params.get('water') === 'standin' ? null : world.waterField?.surfaceAt ? world.waterField : window.__water?.surfaceAt ? window.__water : null;
+    const water = theirs || makeWaterStandin(world);
     // (a wipeout hurts through the combat contract's player target, once viewer/combat.js is in)
     const hurt = (dmg, info) => { const c = window.__combat; (c?.player || c?.targets?.find?.((t) => t.kind === 'player'))?.hit?.(dmg, info); };
     player.setWater(water, { river: world.meta.river, onHurt: hurt });
