@@ -49,7 +49,7 @@ export class HouseCar {
     this.grid = new BoxGrid(colliders);
     const env = {
       boxes: (x0, z0, x1, z1, out) => this.grid.query(x0, z0, x1, z1, out),
-      skip: (b) => b.kind === 'bound' || ownSet.has(b),
+      skip: (b) => ownSet.has(b) || (b.kind === 'bound' && this.gateOpen()),
       toEstate: (x, z) => [x, -z],
       fromEstate: (ex, ey) => [ex, -ey],
     };
@@ -127,6 +127,13 @@ export class HouseCar {
 
   get driving() { return this.car.driving && !this.away; }
 
+  // the gate stands open and leads into the wilderness (not failed, not ?wild=0): only then is the
+  // see-through boundary behind it no wall for the car (else it would drive off the edge of the lawn)
+  gateOpen() {
+    const g = window.__estateGate;
+    return !!g && g.t >= 1 && !g.failed && g.params?.get('wild') !== '0';
+  }
+
   // ---- keys (index.html's keydown, while the pointer is locked); true = taken
   key(code, busy = false) {
     if (!this.enabled || this.away) return false;
@@ -163,6 +170,7 @@ export class HouseCar {
   }
 
   exited(feet) {
+    this.car.seatCull(false);
     const p = this.player;
     p.pos.copy(feet); p.vel.set(0, 0, 0);
     p.crouching = false;
@@ -222,6 +230,7 @@ export class HouseCar {
       // the gate's exit sensor sees a car sooner than a walker (estate_gate.js opens it at 10 m)
       const g = window.__estateGate, p = car.pos;
       if (g && g.t < 1 && !g.opening && !window.__bench && p.x > 12 && p.x < 28 && p.z > GATE.z - 28 && p.z < GATE.line) { g.opening = true; g.preload?.(); }
+      car.hold = !!g?.waiting;
       // the player rides in the seat: everything that follows the player (the gate, the culler,
       // the invaders' senses) follows the car
       const seat = car.seatWorld(_d);
@@ -260,6 +269,7 @@ export class HouseCar {
     for (const b of this.own) { b.min.set(0, -101, 0); b.max.set(0, -100, 0); }
     this.audio.stop();
     this.audio.update(this.car);
+    this.car.seatCull(false);
     this.hud.update(this.car, false);
     if (this.hintEl) this.hintEl.style.visibility = '';
     if (this.crossEl) this.crossEl.style.visibility = '';

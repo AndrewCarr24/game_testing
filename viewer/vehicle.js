@@ -267,6 +267,7 @@ export class Vehicle {
   }
 
   controls(i) {
+    if (this.hold) return { throttle: 0, brake: 1, steer: 0, handbrake: false };   // (held: the gate's wilderness still loading)
     if (this.auto && !this.auto.done && this.driving) return this.autoControls();
     if (i.throttle !== undefined) return { throttle: clamp(i.throttle, 0, 1), brake: clamp(i.brake || 0, 0, 1), steer: clamp(i.steer || 0, -1, 1), handbrake: !!i.handbrake, reverse: !!i.reverse };
     if (!this.driving) return { throttle: 0, brake: 0, steer: 0, handbrake: false };
@@ -397,6 +398,14 @@ export class Vehicle {
       if (over > lift) lift = over;
     }
     if (lift > 0) { this.pos.y += lift; if (this.vel.y < 0) this.vel.y = 0; }
+    // safety net: off the edge of the world (no ground at all): back to the last place it stood
+    if (contact >= 3 && this.stats.steps % 60 === 0) (this.lastGood ??= { pos: new THREE.Vector3() }).pos.copy(this.pos), this.lastGood.yaw = this.yaw;
+    if (this.lastGood && this.pos.y < this.lastGood.pos.y - 40) {
+      this.pos.copy(this.lastGood.pos); this.yaw = this.lastGood.yaw;
+      this.vel.set(0, 0, 0); this.yawRate = this.pitchRate = this.rollRate = 0;
+      this.stats.rescues = (this.stats.rescues || 0) + 1;
+      this.settle();
+    }
     // ---- walls
     this.collide(h);
   }
@@ -638,6 +647,19 @@ export class Vehicle {
       cam.lookAt(this.pos.x + fx * 3, this.pos.y + 1.0, this.pos.z + fz * 3);
     }
     this._prevQ.copy(this._q);
+    this.seatCull(true);
+  }
+
+  // the wheels, brakes and underbody aren't seen from the driver's seat: not drawn there
+  seatCull(on) {
+    if (!this._unseen) {
+      this._unseen = [];
+      this.root.traverse((o) => { if (o !== this.root && /_(Wheel_[FR][LR]|Brakes|Underbody)$/.test(o.name)) this._unseen.push(o); });
+    }
+    const hide = on && this.driving && this.camMode === 'seat';
+    if (hide === this._hidden) return;
+    this._hidden = hide;
+    for (const o of this._unseen) o.visible = !hide;
   }
 
   toggleCamera() {
@@ -648,12 +670,14 @@ export class Vehicle {
 
   // ---- the car's state in the estate frame (house x, north y), for the gate and the seam
   state() {
+    this.auto = null;
     const [ex, ey] = this.env.toEstate(this.pos.x, this.pos.z);
     return { v: 1, driving: this.driving, ex, ey, y: this.pos.y, yaw: this.yaw, vx: this.vel.x, vz: this.vel.z,
       yawRate: this.yawRate, steer: this.steer, cam: this.camMode, look: this.driving ? this.lookLocal() : null, t: Date.now() };
   }
   lookLocal() { return _q.copy(this._q).invert().multiply(this.camera.quaternion).toArray(); }
   restore(s) {
+    this.auto = null;                               // (an autopilot doesn't cross levels)
     const [x, z] = this.env.fromEstate(s.ex, s.ey);
     const gy = this.env.ground ? this.env.ground(x, z, Infinity) : NaN;
     this.pos.set(x, s.y ?? (Number.isFinite(gy) ? gy : this.pos.y), z);

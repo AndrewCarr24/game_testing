@@ -288,6 +288,15 @@ try {
     console.log('     wild car:', JSON.stringify(st));
     await frames(10);
     await shot('gate_wild_side');
+    // and straight back in (fast: the gate's line must catch a car at speed); turned round on the spot first
+    await W(() => { const c = window.__vehicle; c.pos.z += 12; c.yaw = Math.PI; c.vel.set(0, 0, 0); c.yawRate = 0; c.settle(); c.applyTransform(); c._prevQ.copy(c._q); window.__three.camera.quaternion.copy(c._q); return true; });
+    await drive('wild -> gate', FIXED, { pts: [[19.75, -735], [19.75, -760], [19.75, -790]] }, { speed: 16, stop: false,
+      until: () => page.evaluate(() => window.__suspended === false && window.__car?.driving) });
+    const hb = await page.evaluate(() => ({ s: window.__suspended, d: window.__car?.driving, p: window.__vehicle.pos.toArray().map((v) => +v.toFixed(2)), yaw: +window.__vehicle.yaw.toFixed(2), v: window.__vehicle.vel.toArray().map((v) => +v.toFixed(2)), hold: window.__vehicle.hold, auto: !!window.__vehicle.auto, asleep: window.__car.asleep }));
+    check(hb.s === false && hb.d && hb.p[2] > 58, `back in through the gate, driving, the car at the gate (${JSON.stringify(hb)})`);
+    await page.evaluate(() => window.__signals.set('garage_door', true));
+    const r5 = await drive('gate -> garage', FIXED, { pts: [[19.75, 50], [19.75, 31], [17.5, 26], [16.75, 21], [16.75, 15.5]] }, { speed: 8 });
+    legOk(r5, 'up the drive into the garage');
   }
 
   if (stages.includes('cost')) {

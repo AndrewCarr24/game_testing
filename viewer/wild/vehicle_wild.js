@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { ATMOSPHERE_PARS } from './atmosphere.js';
 import { Vehicle, BoxGrid, CarAudio, CarHud, railSegments, blobShadow } from '../vehicle.js';
-import { linkRegistry } from '../estate_link.js';
+import { linkRegistry, GATE, OFFSET_Z } from '../estate_link.js';
 
 // The estate's car in the wilderness worlds (viewer/vehicle.js has the vehicle). It arrives three ways:
 //   - through the estate's gate from the house, with the player driving (the link registry's
@@ -33,6 +33,7 @@ export class WildCar {
   constructor({ world, worldName, scene, camera, player, colliders, uniforms, tex, sky, params, exits, embedded }) {
     Object.assign(this, { world, worldName, scene, camera, player, colliders, uniforms, tex, sky, params, exits, embedded });
     const [ox, oy] = world.meta?.estate_offset || [0, -810];
+    this.estate = !!world.estate;
     this.ox = ox; this.oy = oy;
     this.car = null;
     this.away = true;                    // not in this world (until it arrives or is parked here)
@@ -130,6 +131,7 @@ export class WildCar {
           this.camera.quaternion.setFromEuler(e);
           player.syncCamera?.();
           this.audio.stop();
+          this.car.seatCull(false);
           this.quiet = 0;
         },
         onImpact: (hit) => this.audio.thump(hit),
@@ -194,6 +196,7 @@ export class WildCar {
     this.car.root.visible = false;
     if (this.blob) this.blob.visible = false;
     this.audio.stop(); this.audio.update(this.car);
+    this.car.seatCull(false);
     this.hud.update(this.car, false);
     write(PARK_KEY, null);
     return s;
@@ -248,6 +251,12 @@ export class WildCar {
       const seat = car.seatWorld(_d);
       this.player.pos.set(seat.x, seat.y - (this.player.eye ?? 1.65), seat.z);
       this.player.vel.copy(car.vel);
+      // (the estate's gate looks for the player in a 3.6 m band inside its line: a car can cross that
+      // between two frames, so the crossing frame reports the driver in it)
+      const hz = seat.z - OFFSET_Z;
+      if (this.estate && this.prevHz > GATE.back && hz <= GATE.back && seat.x > GATE.mouth[0] && seat.x < GATE.mouth[1])
+        this.player.pos.z = Math.max(seat.z, GATE.back - 0.4 + OFFSET_Z);
+      this.prevHz = hz;
     }
     this.audio.update(car);
     this.prompt = !car.driving && car.inReach(this.camera.position, this.camera.getWorldDirection(_d));
