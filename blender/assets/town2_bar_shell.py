@@ -13,8 +13,8 @@ from town2_bar_kit import arc_pts, place, rounded_rect
 
 T_BLOCK = (1.0, 1.0, 1.0)
 T_STEM = (0.62, 0.6, 0.56)
-T_GABLE = (0.34, 0.13, 0.1)        # board-and-batten: a faded oxblood stain (x the Siding scan)
-T_TRIM = (0.09, 0.16, 0.12)        # window / door trim: old dark green paint
+T_GABLE = (0.13, 0.075, 0.055)     # board-and-batten: a dark brown stain (x the Siding scan)
+T_TRIM = (0.92, 0.82, 0.6)         # window / door trim, porch posts: old cream paint
 T_HAINT = (0.42, 0.66, 0.72)       # the porch ceiling: haint blue
 T_CEIL = (0.42, 0.36, 0.32)        # ceiling boards (x the Pine scan): smoke-darkened
 T_BEAM = (0.55, 0.5, 0.46)
@@ -156,7 +156,7 @@ def build_shell(k, P):
     # the corridor / back room line (y = PC) and the restroom line (y = PR), x0..PX
     hpc = [(a0, a1, z0, z1) for (w, a0, a1, z0, z1, kd) in ops if w == "p_cor"]
     wall_run(k, "Pine", "x", None, PC - pt / 2, PC + pt / 2, ix0, PX - pt / 2, f, ci, hpc, tint=(0.8, 0.8, 0.8))
-    wall_colliders(k, "x", PC - pt / 2, PC + pt / 2, ix0, PX - pt / 2, f, ci, [])
+    wall_colliders(k, "x", PC - pt / 2, PC + pt / 2, ix0, PX - pt / 2, f, ci, [(a0, a1) for a0, a1, _, _ in hpc])
     hpr = [(a0, a1, z0, z1) for (w, a0, a1, z0, z1, kd) in ops if w == "p_rr"]
     wall_run(k, "Pine", "x", None, PR - pt / 2, PR + pt / 2, ix0, PX - pt / 2, f, ci, hpr, tint=(0.8, 0.8, 0.8))
     wall_colliders(k, "x", PR - pt / 2, PR + pt / 2, ix0, PX - pt / 2, f, ci, [])

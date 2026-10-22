@@ -18,6 +18,7 @@ from mathutils import Matrix, Vector
 
 from town2_bar_kit import arc_pts, place, rot_z, rounded_rect
 import town2_bar_tex as tex
+import town2_bar_glow as glow
 from town2_bar_shell import _beam
 
 WARM = (1.0, 0.68, 0.40)           # 2700 K incandescent
@@ -78,23 +79,29 @@ def neon_shape(name):
                 (-0.14, 0.1), (-0.22, 0.02), (-0.18, -0.1), (-0.26, -0.28), (-0.2, -0.45)]
         S.append(("pink", True, body))
         S.append(("white", False, [(0.0, -0.2), (0.0, 0.5)]))
-    elif name == "BAR":
-        x = -0.5
+    elif name in ("BAR", "BAR_pink"):
+        # letters a unit tall, 0.62 wide, 0.22 apart: the word 2.3 wide, centred
+        col = "pink" if name == "BAR_pink" else "red"
+        x = -1.15
         for ch in "BAR":
             for st in LETTERS[ch]:
-                S.append(("red", False, [(x + a * 0.36, -0.5 + z) for a, z in st]))
-            x += 0.36 * 0.62 + 0.12
+                S.append((col, False, [(x + a, -0.5 + z) for a, z in st]))
+            x += 0.62 + 0.22
     return S
 
 
-def neon_sign(k, origin, right, up, size, shape, mat="Props", lights=True, power=7.0, backing=True, lmw=0.2, mounts=True):
-    """A neon pictogram at `origin` in the plane (right, up), `size` m tall; tubes 12 mm."""
+def neon_sign(k, origin, right, up, size, shape, mat="Props", lights=True, power=7.0, backing=True, lmw=0.2, mounts=True,
+              tube=0.008, halo=None):
+    """A neon pictogram at `origin` in the plane (right, up), `size` m tall; the tubes `tube`
+    radius, a soft glow band along every stroke (halo: its width, default from the size)."""
     o, r, u = Vector(origin), Vector(right).normalized(), Vector(up).normalized()
     n = r.cross(u)
     cols = {}
+    hw = halo if halo is not None else 0.05 + 0.07 * size
     for colour, closed, pts in neon_shape(shape):
         pts3 = [tuple(o + r * (a * size) + u * (z * size)) for a, z in smooth_poly(pts, closed, 2)]
-        k.tube(mat, pts3, 0.0065, sides=5, closed=closed, uv=("cell", f"neon_{colour}"), lmw=lmw)
+        k.tube(mat, pts3, tube, sides=5, closed=closed, uv=("cell", f"neon_{colour}"), lmw=lmw)
+        glow.ribbon(k, pts3, n, hw, colour, closed=closed)
         cols[colour] = cols.get(colour, 0) + len(pts3)
         if mounts:
             for q in pts3[:: max(4, len(pts3) // 3)]:
@@ -229,7 +236,7 @@ def tufted_panel_x(k, y0, y1, x, z0, z1):
         puff = math.sin(min(1.0, d) * math.pi / 2) ** 0.7
         e = min(1.0, min(u, 1 - u, v, 1 - v) * 18)
         return (x + 0.035 * puff * e, y0 + W * (1 - u), z0 + H * v)
-    k.grid("Vinyl", fn, 10, 16, lmw=0.8, vlit=True)
+    k.grid("Vinyl", fn, 10, 16, lmw=0.8, vlit=True, flip=True)
 
 
 def _yz_to_x():
@@ -293,21 +300,32 @@ def back_bar(k, P):
     d = 0.58
     zc = f + 0.95
     # lower cabinet: doors, a lit glass-door beer cooler in the middle
-    k.box("Wood", (x0, yb - d, f), (x1, yb, zc - 0.04), bevel=0.01, tint=(0.7, 0.7, 0.7), lmw=0.5, skip=("-z", "+y"))
-    k.box("Wood", (x0, yb - d + 0.02, f), (x1, yb - d + 0.06, f + 0.12), tint=(0.3, 0.3, 0.3), lmw=0.2)
     cx0, cx1 = -4.2, -0.6
-    k.box("Props", (cx0, yb - d - 0.01, f + 0.12), (cx1, yb - d + 0.02, zc - 0.06), uv=("cell", "stainless"), lmw=0.3)
+    for (a, b) in ((x0, cx0), (cx1, x1)):
+        k.box("Wood", (a, yb - d, f), (b, yb, zc - 0.04), bevel=0.01, tint=(0.7, 0.7, 0.7), lmw=0.5, skip=("-z", "+y"))
+        k.box("Wood", (a, yb - d + 0.02, f), (b, yb - d + 0.06, f + 0.12), tint=(0.3, 0.3, 0.3), lmw=0.2)
+    # the beer cooler: a lit, shelved box behind three glass doors in a stainless frame
+    k.box("Props", (cx0, yb - 0.1, f + 0.12), (cx1, yb - 0.08, zc - 0.06), uv=("cell", "cooler_glow"), lmw=0.0)
+    k.box("Props", (cx0, yb - d, f), (cx1, yb, f + 0.14), uv=("cell", "stainless"), lmw=0.2)
+    k.box("Props", (cx0, yb - d, zc - 0.1), (cx1, yb, zc - 0.04), uv=("cell", "stainless"), lmw=0.2)
+    for z_ in (f + 0.44,):
+        k.box("Props", (cx0, yb - d + 0.06, z_ - 0.01), (cx1, yb - 0.1, z_), uv=("cell", "chrome"), lmw=0.0)
+    for i in range(4):
+        xx = cx0 + i * (cx1 - cx0) / 3
+        k.box("Props", (xx - 0.03, yb - d - 0.02, f + 0.12), (xx + 0.03, yb - d + 0.03, zc - 0.06), uv=("cell", "stainless"), lmw=0.1)
     for i in range(3):
-        a = cx0 + 0.05 + i * (cx1 - cx0 - 0.1) / 3
-        b = a + (cx1 - cx0 - 0.1) / 3 - 0.04
-        k.box("Props", (a, yb - d - 0.025, f + 0.17), (b, yb - d - 0.01, zc - 0.11), uv=("cell", "led_white"), lmw=0.05)
-        k.box("Glass", (a + 0.03, yb - d - 0.04, f + 0.2), (b - 0.03, yb - d - 0.03, zc - 0.14), lmw=0.05)
-        # bottles standing in the cooler, seen through the glass
-        for j in range(5):
+        a = cx0 + i * (cx1 - cx0) / 3 + 0.03
+        b = cx0 + (i + 1) * (cx1 - cx0) / 3 - 0.03
+        k.box("Glass", (a, yb - d - 0.01, f + 0.14), (b, yb - d, zc - 0.1), lmw=0.05)
+        k.box("Props", (b - 0.06, yb - d - 0.05, f + 0.3), (b - 0.04, yb - d - 0.01, zc - 0.3), uv=("cell", "chrome"), lmw=0.0)
+        # bottles standing in the cooler, two shelves of them
+        for j in range(6):
             for r_ in range(2):
-                bx = a + 0.06 + j * (b - a - 0.1) / 4
-                bz = f + 0.21 + r_ * 0.3
-                k.cyl("Props", (bx, yb - d + 0.02, bz), (bx, yb - d + 0.02, bz + 0.21), 0.03, sides=6, uv=("cell", "glass_amber" if (i + j) % 2 else "glass_green"), lmw=0.02)
+                bx = a + 0.07 + j * (b - a - 0.14) / 5
+                bz = f + 0.15 + r_ * 0.3
+                k.lathe("Props", [(0.03, 0.0), (0.031, 0.13), (0.013, 0.19), (0.012, 0.23), (0.0, 0.235)], sides=6,
+                        M=Matrix.Translation((bx, yb - d + 0.18 + 0.1 * ((j + r_) % 2), bz)),
+                        uv=("cell", "glass_amber" if (i + j) % 2 else "glass_green"), lmw=0.02)
     k.light("AREA", ((cx0 + cx1) / 2, yb - d - 0.06, f + 0.5), (0.85, 0.9, 1.0), 6.0, size=(cx1 - cx0, 0.55), aim=((cx0 + cx1) / 2, yb - 2, f + 0.5))
     # cabinet doors on the rest
     for (a, b) in ((x0 + 0.05, cx0 - 0.05), (cx1 + 0.05, x1 - 0.05)):
@@ -452,11 +470,21 @@ def booths(k, P):
             # the end panel facing the aisle: a curved-top board
             k.collider(e - 0.06, yw, f, e + 0.06, ye, zb)
     # neon in the windows (the outward face is -y)
-    signs = ["star", "cocktail", "BAR", "bottle", "mug", "horseshoe", "guitar"]
+    signs = ["star", "cocktail", "bottle", "BAR_pink", "mug", "horseshoe", "guitar"]
     for i, xw in enumerate(P["front_windows"]):
         shp = signs[i % len(signs)]
-        size = 0.5 if shp != "BAR" else 0.42
-        neon_sign(k, (xw, yw - 0.16, f + 1.62), (-1, 0, 0), (0, 0, 1), size, shp, power=6.0)
+        size = 0.62 if not shp.startswith("BAR") else 0.3
+        neon_sign(k, (xw, yw - 0.16, f + 1.62), (1, 0, 0), (0, 0, 1), size, shp, power=12.0)
+    # a small shaded sconce on the wall pier between each pair of booths (the booths' own light)
+    for xw in [x for x in P["front_windows"] if x < 6][:-1]:
+        sx_ = xw + 0.975
+        M = Matrix.Translation((sx_, yw + 0.02, f + 1.72))
+        k.box("Props", (sx_ - 0.05, yw, f + 1.62), (sx_ + 0.05, yw + 0.02, f + 1.78), uv=("cell", "brass"), lmw=0.0)
+        k.cyl("Props", (sx_, yw + 0.02, f + 1.7), (sx_, yw + 0.14, f + 1.7), 0.008, sides=5, uv=("cell", "brass"), lmw=0.0)
+        k.lathe("Props", [(0.09, 0.0), (0.075, 0.06), (0.04, 0.13)], sides=12, M=Matrix.Translation((sx_, yw + 0.15, f + 1.62)),
+                uv=("cell", "glow_red"), lmw=0.0, cap0=False, cap1=False)
+        k.light("POINT", (sx_, yw + 0.16, f + 1.66), (1.0, 0.42, 0.22), 9.0, radius=0.05)
+        glow.halo(k, (sx_, yw + 0.16, f + 1.66), 0.3, "warm", normal=(0, 1, 0))
 
 
 def _cushion(size, crown):
@@ -469,7 +497,8 @@ def _candle(k, x, y, z):
     k.lathe("Props", [(0.035, 0.0), (0.045, 0.02), (0.048, 0.07), (0.04, 0.1), (0.033, 0.105)], sides=10, M=Matrix.Translation((x, y, z)),
             uv=("cell", "glow_red"), lmw=0.02, cap1=False)
     k.lathe("Props", [(0.0, 0.05), (0.006, 0.05), (0.004, 0.075), (0.0, 0.08)], sides=5, M=Matrix.Translation((x, y, z)), uv=("cell", "bulb"), lmw=0.01)
-    k.light("POINT", (x, y, z + 0.08), (1.0, 0.22, 0.1), 2.2, radius=0.04)
+    k.light("POINT", (x, y, z + 0.08), (1.0, 0.22, 0.1), 5.0, radius=0.04)
+    glow.halo(k, (x, y, z + 0.07), 0.22, "red")
 
 
 # ------------------------------------------------------------------ pool table
@@ -541,6 +570,7 @@ def pool_table(k, P):
         k.lathe("Props", [(0.0, 0.04), (0.035, 0.06), (0.03, 0.1), (0.0, 0.11)], sides=8, M=M, uv=("cell", "bulb"), lmw=0.0)
         k.cyl("Props", (cx + sx, cy, zl + 0.15), (cx + sx, cy, zl + 0.12), 0.02, sides=8, uv=("cell", "brass"), lmw=0.0)
         k.light("SPOT", (cx + sx, cy, zl + 0.05), (1.0, 0.84, 0.62), 45.0, radius=0.05, angle=95.0, blend=0.35, aim=(cx + sx, cy, f))
+        glow.cone(k, (cx + sx, cy, zl + 0.0), 0.8, 0.19, 0.5, "warm", planes=2)
     # the cue rack on the partition by the entrance, cues in it
     rxp = P["px"] + 0.09
     ry0 = -3.9
@@ -621,13 +651,13 @@ def stage(k, P):
         ph = u * folds * 2 * math.pi
         a = 0.075 * (0.55 + 0.45 * v)
         return (xc - a * (0.5 + 0.5 * math.sin(ph)) - 0.02 * (1 - v) * math.sin(ph * 0.5 + 1.3), y, zs + 0.01 + (zt - zs - 0.01) * v)
-    k.grid("Props", cur, folds * 4, 8, uv=("cell", "velvet"), lmw=0.9, vlit=True)
+    k.grid("Props", cur, folds * 4, 8, uv=("cell", "velvet"), lmw=0.9, vlit=True, flip=True)
     # the valance (tighter pleats) and the side legs
     def val(u, v):
         y = -hy - 0.3 + (span + 0.3) * u
         ph = u * folds * 3 * math.pi
         return (xc - 0.16 - 0.05 * (0.5 + 0.5 * math.sin(ph)), y, zt - 0.4 + 0.4 * v - 0.03 * math.sin(math.pi * v) * 0)
-    k.grid("Props", val, folds * 4, 2, uv=("cell", "velvet"), lmw=0.4)
+    k.grid("Props", val, folds * 4, 2, uv=("cell", "velvet"), lmw=0.4, flip=True)
     for s in (-1, 1):
         def leg(u, v, s=s):
             x = xs0 + 0.5 + (xc - 0.2 - xs0 - 0.5) * u
@@ -666,7 +696,7 @@ def stage(k, P):
     k.cyl("Props", (bx, -3.0, ci - 0.4), (bx, 3.0, ci - 0.4), 0.024, sides=8, uv=("cell", "iron_black"), lmw=0.05)
     for yy in (-3.0, 3.0):
         k.cyl("Props", (bx, yy, ci - 0.4), (bx, yy, ci), 0.012, sides=6, uv=("cell", "iron_black"), lmw=0.02)
-    for yy, col, pw in ((-1.8, (1.0, 0.08, 0.05), 55.0), (0.2, (1.0, 0.45, 0.12), 40.0), (2.1, (0.2, 0.3, 1.0), 40.0)):
+    for yy, col, pw in ((-1.8, (1.0, 0.08, 0.05), 160.0), (0.2, (1.0, 0.45, 0.12), 120.0), (2.1, (0.2, 0.3, 1.0), 130.0)):
         a = Vector((bx, yy, ci - 0.5))
         t = Vector((xw - 1.0, yy * 0.4, zs + 0.6))
         dvec = (t - a).normalized()
@@ -746,9 +776,11 @@ def floor_dressing(k, P):
         z = f + 2.25
         k.cyl("Props", (x, yp, z + 0.2), (x, yp, ci), 0.004, sides=4, uv=("cell", "plastic_black"), lmw=0.0)
         k.lathe("Props", [(0.02, 0.2), (0.05, 0.19), (0.09, 0.1), (0.12, 0.03), (0.125, 0.0)], sides=16, M=Matrix.Translation((x, yp, z)),
-                uv=("cell", "glow_amber"), lmw=0.05, cap0=False, cap1=False)
+                uv=("cell", "amber_glass"), lmw=0.05, cap0=False, cap1=False)
         k.cyl("Props", (x, yp, z + 0.2), (x, yp, z + 0.25), 0.025, sides=8, uv=("cell", "brass"), lmw=0.0)
-        k.light("POINT", (x, yp, z + 0.08), WARM, 32.0, radius=0.06)
+        k.lathe("Props", [(0.0, 0.03), (0.035, 0.05), (0.03, 0.1), (0.0, 0.12)], sides=8, M=Matrix.Translation((x, yp, z)), uv=("cell", "bulb"), lmw=0.0)
+        k.light("POINT", (x, yp, z + 0.08), WARM, 48.0, radius=0.06)
+        glow.halo(k, (x, yp, z + 0.04), 0.5, "amber")
     # lit beer signs (pictogram mirrors) on the walls; booth-side wall sconces between windows
     yb = D / 2 - W - 0.05
     k.box("Props", (5.0, yb - 0.02, f + 1.75), (6.2, yb, f + 2.45), uv=("cell", "beer_mirror"), lmw=0.2)
@@ -818,10 +850,12 @@ def corridor(k, P):
         k.box("Wood", (x - 0.42, y - 0.02, f + 0.01), (x + 0.42, y + 0.025, f + 2.08), bevel=0.006, tint=(0.55, 0.55, 0.55), lmw=0.4)
         k.box("Props", (x + 0.3, y + 0.025, f + 0.95), (x + 0.36, y + 0.06, f + 1.0), uv=("cell", "brass"), lmw=0.01)
         k.box("Props", (x - 0.08, y + 0.025, f + 1.5), (x + 0.08, y + 0.03, f + 1.66), uv=("cell", "plastic_white"), lmw=0.02)
-    x, y = -13.425, P["pc"] - 0.075
-    k.box("Wood", (x - 0.42, y - 0.025, f + 0.01), (x + 0.42, y + 0.02, f + 2.08), bevel=0.006, tint=(0.55, 0.55, 0.55), lmw=0.4)
-    k.box("Props", (x + 0.3, y - 0.06, f + 0.95), (x + 0.36, y - 0.025, f + 1.0), uv=("cell", "brass"), lmw=0.01)
-    k.box("Props", (x - 0.05, y - 0.03, f + 1.1), (x + 0.05, y - 0.025, f + 1.2), uv=("cell", "steel_dark"), lmw=0.01)
+    # the back room's corridor door: open, swung in against the wall (the way in; the bar's is ajar)
+    Md = Matrix.Translation((-12.97, P["pc"] + 0.075, f + 0.01)) @ Matrix.Rotation(math.radians(-90), 4, "Z")
+    k.box("Wood", (-0.9, -0.045, 0.0), (0.0, 0.0, 2.07), M=Md, bevel=0.006, tint=(0.55, 0.55, 0.55), lmw=0.4)
+    k.box("Props", (-0.84, -0.075, 0.95), (-0.78, -0.045, 1.0), M=Md, uv=("cell", "brass"), lmw=0.01)
+    c = Md @ Vector((-0.45, -0.02, 0))
+    k.collider(c.x - 0.1, c.y - 0.46, f, c.x + 0.1, c.y + 0.46, f + 2.08)
     k.box("Props", (xe, -1.2, f + 0.01), (xe + 0.05, -0.3, f + 2.08), uv=("cell", "paint_grey"), lmw=0.4)
     k.box("Props", (xe + 0.05, -1.15, f + 0.95), (xe + 0.11, -0.35, f + 1.02), uv=("cell", "stainless"), lmw=0.02)
     # exit sign (a red glowing box, no words), the caged bulb, a payphone, a mop bucket
@@ -835,6 +869,7 @@ def corridor(k, P):
         k.tube("Props", [(bx + 0.06 * math.cos(ra), yc + 0.06 * math.sin(ra), ci - 0.04), (bx + 0.065 * math.cos(ra), yc + 0.065 * math.sin(ra), ci - 0.17),
                          (bx, yc, ci - 0.2)], 0.003, sides=3, uv=("cell", "iron_black"), lmw=0.0)
     k.light("POINT", (bx, yc, ci - 0.12), (1.0, 0.66, 0.36), 9.0, radius=0.03)
+    glow.halo(k, (bx, yc, ci - 0.12), 0.35, "warm")
     px_, py_ = -11.0, P["pc"] - 0.075 - 0.02
     k.box("Props", (px_ - 0.18, py_ - 0.15, f + 1.0), (px_ + 0.18, py_, f + 1.72), bevel=0.015, uv=("cell", "stainless"), lmw=0.2)
     k.box("Props", (px_ - 0.05, py_ - 0.2, f + 1.35), (px_ + 0.1, py_ - 0.14, f + 1.6), uv=("cell", "plastic_black"), lmw=0.02)
@@ -852,16 +887,18 @@ def back_room(k, P):
     yn = D / 2 - W - 0.05                     # the back wall's lining face
     ys = P["pc"] + 0.075                      # the corridor wall's face
     xp = P["px"] - 0.075                      # the partition's face
-    # the door from behind the bar, ajar 28 deg: hinged at its north jamb, swung into the room
+    # the door from behind the bar, ajar 28 deg: hinged at its front jamb, swung into the room, so
+    # the gap opens by the back-bar: from the bartender's aisle it shows the back wall (the
+    # monitors, the hooks)
     d0, d1 = P["backroom_door"]
-    hy = d1
+    hy = d0
     ang = math.radians(28.0)
     wdoor = d1 - d0
-    M = Matrix.Translation((xp, hy, f + 0.01)) @ Matrix.Rotation(-ang, 4, "Z")
-    k.box("Wood", (-0.045, -wdoor + 0.01, 0.0), (0.0, 0.0, 2.07), M=M, bevel=0.006, tint=(0.6, 0.6, 0.6), lmw=0.6)
-    k.box("Props", (-0.065, -wdoor + 0.08, 0.95), (-0.045, -wdoor + 0.14, 1.0), M=M, uv=("cell", "brass"), lmw=0.01)
-    k.box("Props", (0.0, -wdoor + 0.08, 0.95), (0.02, -wdoor + 0.14, 1.0), M=M, uv=("cell", "brass"), lmw=0.01)
-    c = M @ Vector((-0.02, -wdoor / 2, 1.0))
+    M = Matrix.Translation((xp, hy, f + 0.01)) @ Matrix.Rotation(ang, 4, "Z")
+    k.box("Wood", (-0.045, 0.0, 0.0), (0.0, wdoor - 0.01, 2.07), M=M, bevel=0.006, tint=(0.6, 0.6, 0.6), lmw=0.6)
+    k.box("Props", (-0.065, wdoor - 0.14, 0.95), (-0.045, wdoor - 0.08, 1.0), M=M, uv=("cell", "brass"), lmw=0.01)
+    k.box("Props", (0.0, wdoor - 0.14, 0.95), (0.02, wdoor - 0.08, 1.0), M=M, uv=("cell", "brass"), lmw=0.01)
+    c = M @ Vector((-0.02, wdoor / 2, 1.0))
     k.collider(c.x - 0.3, c.y - 0.42, f, c.x + 0.3, c.y + 0.42, f + 2.08)
     # the hook rail on the east wall, opposite the door: white masks, two dark jackets
     rz = f + 1.75
@@ -873,21 +910,31 @@ def back_room(k, P):
             _jacket(k, xe + 0.06, y, rz)
         elif i != 8:
             _mask(k, xe + 0.12, y, rz - 0.17, tilt=random.Random(i).uniform(-8, 8))
+    # a second hook rail on the back wall by the door, in the gap's view: more masks
+    k.box("Wood", (-14.6, yn - 0.03, rz + 0.4), (-13.25, yn, rz + 0.52), bevel=0.006, tint=(0.6, 0.6, 0.6), lmw=0.4)
+    for i in range(4):
+        x = -14.45 + i * 0.36
+        k.tube("Props", [(x, yn - 0.03, rz + 0.46), (x, yn - 0.1, rz + 0.45), (x, yn - 0.12, rz + 0.49)], 0.006, sides=4, uv=("cell", "steel_dark"), lmw=0.01)
+        _mask(k, x, yn - 0.12, rz + 0.28, tilt=random.Random(40 + i).uniform(-8, 8), facing=-1)
+    # and one on a nail by the monitors, where the door's gap shows it
+    k.tube("Props", [(-10.86, yn, f + 1.72), (-10.86, yn - 0.06, f + 1.71)], 0.004, sides=4, uv=("cell", "steel_dark"), lmw=0.0)
+    _mask(k, -10.86, yn - 0.08, f + 1.56, tilt=6.0, facing=-1)
     # the monitor wall: a steel desk against the back wall, four CRTs (2 x 2) and a recorder
-    mx0, mx1 = -14.6, -12.2
+    mx0, mx1 = -13.0, -10.65
     k.box("Props", (mx0, yn - 0.7, f + 0.72), (mx1, yn, f + 0.76), uv=("cell", "steel_dark"), lmw=0.6)
     for x in (mx0 + 0.05, mx1 - 0.05):
         for y in (yn - 0.65, yn - 0.05):
             k.box("Props", (x - 0.025, y - 0.025, f), (x + 0.025, y + 0.025, f + 0.72), uv=("cell", "steel_dark"), lmw=0.02)
     k.collider(mx0, yn - 0.7, f, mx1, yn, f + 0.76)
     k.box("Props", (mx0 + 0.15, yn - 0.6, f + 1.5), (mx1 - 0.15, yn - 0.05, f + 1.53), uv=("cell", "steel_dark"), lmw=0.2)
-    for i, (cx_, cz_) in enumerate(((-14.0, f + 1.04), (-12.9, f + 1.04), (-14.0, f + 1.8), (-12.9, f + 1.8))):
+    for i, (cx_, cz_) in enumerate(((-12.4, f + 1.04), (-11.3, f + 1.04), (-12.4, f + 1.8), (-11.3, f + 1.8))):
         z0 = cz_ - 0.28 if i < 2 else f + 1.53
         k.box("Props", (cx_ - 0.24, yn - 0.55, z0), (cx_ + 0.24, yn - 0.12, z0 + 0.44), bevel=0.03, uv=("cell", "plastic_black"), lmw=0.2)
         k.box("Props", (cx_ - 0.19, yn - 0.565, z0 + 0.06), (cx_ + 0.19, yn - 0.55, z0 + 0.36), uv=("cell", "crt_" + "abcd"[i]), lmw=0.0)
-    k.box("Props", (-13.75, yn - 0.6, f + 0.76), (-13.15, yn - 0.25, f + 0.84), bevel=0.005, uv=("cell", "plastic_black"), lmw=0.05)
-    k.box("Props", (-13.4, yn - 0.605, f + 0.79), (-13.2, yn - 0.6, f + 0.81), uv=("cell", "neon_green"), lmw=0.0)
-    k.light("AREA", (-13.45, yn - 0.62, f + 1.4), (0.42, 0.62, 1.0), 11.0, size=(1.0, 0.8), aim=(-13.45, yn - 3, f + 1.1))
+    k.box("Props", (-12.15, yn - 0.6, f + 0.76), (-11.55, yn - 0.25, f + 0.84), bevel=0.005, uv=("cell", "plastic_black"), lmw=0.05)
+    k.box("Props", (-11.8, yn - 0.605, f + 0.79), (-11.6, yn - 0.6, f + 0.81), uv=("cell", "neon_green"), lmw=0.0)
+    k.light("AREA", (-11.85, yn - 0.62, f + 1.4), (0.3, 0.55, 1.0), 30.0, size=(1.0, 0.8), aim=(-11.85, yn - 3, f + 1.1))
+    glow.halo(k, (-11.85, yn - 0.6, f + 1.4), 1.3, "blue", normal=(0, -1, 0))
     # the briefing table: folding table, six chairs; the estate's blueprint, photos, radios, a coffee can
     tx, ty = -13.1, 2.7
     k.box("Props", (tx - 0.95, ty - 0.4, f + 0.71), (tx + 0.95, ty + 0.4, f + 0.75), bevel=0.008, uv=("cell", "paint_cream"), lmw=1.0)
@@ -912,7 +959,8 @@ def back_room(k, P):
     k.cyl("Props", (tx, ty, ci), (tx, ty, f + 2.4), 0.004, sides=4, uv=("cell", "plastic_black"), lmw=0.0)
     k.lathe("Props", [(0.0, -0.11), (0.03, -0.1), (0.032, -0.05), (0.012, -0.02), (0.012, 0.0)], sides=8, M=Matrix.Translation((tx, ty, f + 2.4)), uv=("cell", "bulb_dim"), lmw=0.0)
     k.light("POINT", (tx, ty, f + 2.32), (1.0, 0.62, 0.32), 5.0, radius=0.03)
-    k.box("Props", (-14.9, ys, f + 1.1), (-13.1, ys + 0.02, f + 2.1), uv=("cell", "corkboard"), lmw=0.3)
+    glow.halo(k, (tx, ty, f + 2.33), 0.3, "warm")
+    k.box("Props", (-15.6, ys, f + 1.1), (-14.05, ys + 0.02, f + 2.1), uv=("cell", "corkboard"), lmw=0.3)
     k.box("Props", (-12.95, ys, f + 1.2), (-11.6, ys + 0.015, f + 2.0), uv=("cell", "map_board"), lmw=0.3)
     # kegs along the back wall's east end, crates and cases, a wire shelf, the safe in the corner
     for i in range(4):
@@ -921,7 +969,7 @@ def back_room(k, P):
             if i >= 2:
                 kx, ky = xe + 0.32 + 0.62 * (i - 2) + 0.62, yn - 0.32
             _keg(k, kx, ky, f + j * 0.6)
-    for (cx_, cy_, nz) in ((-11.4, 6.2, 3), (-11.0, 3.4, 2), (-11.45, 3.4, 4)):
+    for (cx_, cy_, nz) in ((-14.6, 4.7, 3), (-11.0, 3.4, 2), (-11.45, 3.4, 4)):
         for z in range(nz):
             k.box("Props", (cx_ - 0.2, cy_ - 0.17, f + z * 0.26), (cx_ + 0.2, cy_ + 0.17, f + z * 0.26 + 0.25), bevel=0.01,
                   uv=("cell", "plastic_red" if z % 2 == 0 else "cardboard"), lmw=0.15)
@@ -950,7 +998,7 @@ def _keg(k, x, y, z):
     k.collider(x - 0.2, y - 0.2, z, x + 0.2, y + 0.2, z + 0.59)
 
 
-def _mask(k, x, y, z, tilt=0.0):
+def _mask(k, x, y, z, tilt=0.0, facing=0):
     """A blank white face mask (the invaders'), hung by its strap: eye holes, a nose ridge."""
     w, h, d = 0.085, 0.115, 0.06
 
@@ -976,8 +1024,11 @@ def _mask(k, x, y, z, tilt=0.0):
             bm.faces.new([V[j][i], V[j][i + 1], V[j + 1][i + 1], V[j + 1][i]])
     loose = [v for v in bm.verts if not v.link_faces]
     bmesh.ops.delete(bm, geom=loose, context="VERTS")
-    M = Matrix.Translation((x, y, z)) @ Matrix.Rotation(math.radians(tilt), 4, "X")
+    # facing 0: the face looks +x (the east wall's rail); -1: it looks -y (the back wall's)
+    M = Matrix.Translation((x, y, z)) @ Matrix.Rotation(math.radians(-90 * facing * -1) if facing else 0.0, 4, "Z") @ Matrix.Rotation(math.radians(tilt), 4, "X")
     k.add(bm, "Props", M=M, uv=("cell", "mask"), smooth=True, lmw=0.4)
+    if facing:
+        return
     k.tube("Props", [(x + 0.005, y - w, z + 0.02), (x - 0.02, y - 0.04, z + 0.14), (x - 0.07, y, z + 0.17), (x - 0.02, y + 0.04, z + 0.14), (x + 0.005, y + w, z + 0.02)],
            0.004, sides=4, uv=("cell", "plastic_black"), lmw=0.01)
 
@@ -1013,4 +1064,4 @@ def build_interior(k, P):
         fn(k, P)
     # faint fill so the bar room isn't pitch black between the pools (bounce off a smoky ceiling)
     f = P["floor"]
-    k.light("AREA", (1.5, 0.0, f + P["ceiling"] - 0.05), (1.0, 0.7, 0.45), 18.0, size=(20.0, 9.0), aim=(1.5, 0.0, 0.0))
+    k.light("AREA", (1.5, 0.0, f + P["ceiling"] - 0.05), (1.0, 0.7, 0.45), 40.0, size=(20.0, 9.0), aim=(1.5, 0.0, 0.0))

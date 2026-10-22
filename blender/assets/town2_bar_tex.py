@@ -30,11 +30,11 @@ SCANS = {
     "Pine":   ("stained_pine", 1.8, (0.13, 0.066, 0.032), 1.0, 512, True),
     "Wood":   ("dark_wood", 2.0, (0.085, 0.034, 0.018), 1.0, 512, False),
     "Vinyl":  ("leather_red_02", 0.5, (0.19, 0.016, 0.016), 0.9, 256, False),
-    "Block":  ("concrete_block_wall", 2.0, (0.46, 0.44, 0.39), 1.0, 512, False),
+    "Block":  ("concrete_block_wall", 2.0, (0.15, 0.062, 0.045), 1.1, 512, False),     # painted oxblood, weathered
     "Siding": ("black_painted_planks", 1.6, (0.5, 0.5, 0.5), 1.1, 256, False),
     "Roof":   ("worn_corrugated_iron", 1.8, (0.36, 0.33, 0.3), 1.2, 256, True),
     "Deck":   ("weathered_planks", 2.0, (0.2, 0.165, 0.13), 1.05, 512, False),
-    "Gravel": ("gravel", 2.5, (0.2, 0.18, 0.15), 1.1, 512, False),
+    "Gravel": ("gravel", 2.5, (0.12, 0.1, 0.078), 1.1, 256, False),
 }
 
 
@@ -153,7 +153,7 @@ ATLAS = {
     # soft / plastic / paper
     "felt": _sw((0, 1), (0.012, 0.085, 0.035), 0.95, pat="felt"),
     "felt_rail": _sw((1, 1), (0.01, 0.06, 0.025), 0.9, pat="felt"),
-    "velvet": _sw((2, 1), (0.20, 0.008, 0.012), 0.8, pat="velvet"),
+    "velvet": _sw((2, 1), (0.3, 0.012, 0.018), 0.8, pat="velvet"),
     "shade_green": _sw((3, 1), (0.02, 0.12, 0.045), 0.3),
     "shade_inner": _sw((4, 1), (0.75, 0.72, 0.62), 0.5, emit=(0.5, 0.42, 0.3)),
     "rubber": _sw((5, 1), (0.018, 0.018, 0.018), 0.85),
@@ -195,6 +195,8 @@ ATLAS = {
     "bulb": _sw((7, 3), (0.9, 0.8, 0.6), 0.2, emit=(1.0, 0.72, 0.42)),
     "bulb_dim": _sw((8, 3), (0.8, 0.6, 0.4), 0.2, emit=(0.55, 0.33, 0.14)),
     "glow_amber": _sw((9, 3), (0.8, 0.5, 0.2), 0.3, emit=(0.5, 0.24, 0.05)),
+    "cooler_glow": _sw((13, 6), (0.7, 0.72, 0.75), 0.3, emit=(0.08, 0.09, 0.1)),
+    "amber_glass": _sw((15, 6), (0.35, 0.15, 0.03), 0.15, emit=(0.16, 0.07, 0.012)),
     "glow_red": _sw((10, 3), (0.5, 0.05, 0.03), 0.4, emit=(0.4, 0.03, 0.015)),
     "glow_green": _sw((11, 3), (0.1, 0.4, 0.15), 0.4, emit=(0.06, 0.3, 0.1)),
     "screen_blue": _sw((12, 3), (0.05, 0.08, 0.12), 0.1, emit=(0.12, 0.2, 0.32)),
@@ -536,7 +538,9 @@ MATS = {
     "Deck": dict(tex="Deck", rough=0.8, inside=False),
     "Gravel": dict(tex="Gravel", rough=0.95, inside=False),
     "PropsOut": dict(tex="Atlas", inside=False),
+    "Glow": dict(tex="Glow", inside=None),
 }
+GLOW_STRENGTH = 2.2
 TILES = {"Floor": 2.0, "Pine": 1.8, "Wood": 2.0, "Vinyl": 0.5, "Block": 2.0, "Siding": 1.6, "Roof": 1.8,
          "Deck": 2.0, "Gravel": 2.5, "Glass": 1.0}
 EMISSION_STRENGTH = 4.0
@@ -550,6 +554,23 @@ def _img(path, non_color=False):
         img.name = name
     img.colorspace_settings.name = "Non-Color" if non_color else "sRGB"
     return img
+
+
+def glow_texture():
+    import town2_bar_glow as glow
+    os.makedirs(SRC, exist_ok=True)
+    rgba = glow.texture()
+    path = os.path.join(SRC, "T_Town2_Bar_Glow.png")
+    h, w, _ = rgba.shape
+    img = bpy.data.images.new("_t2b_glow", w, h, alpha=True)
+    px = rgba[::-1].copy()
+    px[..., :3] = lin_to_srgb(px[..., :3])
+    img.pixels.foreach_set(px.astype(np.float32).ravel())
+    img.filepath_raw = path
+    img.file_format = "PNG"
+    img.save()
+    bpy.data.images.remove(img)
+    return path
 
 
 def materials(plan=None, force=False):
@@ -578,7 +599,20 @@ def materials(plan=None, force=False):
         mO = next(s for s in mul.outputs if s.type == "RGBA")
         nt.links.new(tint.outputs["Color"], mB)
         nt.links.new(mO, bsdf.inputs["Base Color"])
-        if m["tex"] == "Atlas":
+        if m["tex"] == "Glow":
+            ig = nt.nodes.new("ShaderNodeTexImage"); ig.image = _img(glow_texture())
+            ig.image.alpha_mode = "STRAIGHT"
+            nt.links.new(ig.outputs["Color"], mA)
+            nt.links.new(ig.outputs["Alpha"], bsdf.inputs["Alpha"])
+            nt.links.new(ig.outputs["Color"], bsdf.inputs["Emission Color"])
+            bsdf.inputs["Emission Strength"].default_value = GLOW_STRENGTH
+            bsdf.inputs["Roughness"].default_value = 1.0
+            try:
+                mat.surface_render_method = "BLENDED"
+            except AttributeError:
+                mat.blend_method = "BLEND"
+            mat.use_backface_culling = False
+        elif m["tex"] == "Atlas":
             ib = nt.nodes.new("ShaderNodeTexImage"); ib.image = _img(atl["BaseColor"])
             io = nt.nodes.new("ShaderNodeTexImage"); io.image = _img(atl["ORM"], True)
             ie = nt.nodes.new("ShaderNodeTexImage"); ie.image = _img(atl["Emissive"])

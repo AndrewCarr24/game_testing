@@ -246,14 +246,15 @@ class Kit:
                             affect="EDGES", clamp_overlap=True)
         return self.add(bm, mat, M=M, **kw)
 
-    def grid(self, mat, fn, nu, nv, M=None, both=False, **kw):
+    def grid(self, mat, fn, nu, nv, M=None, both=False, flip=False, **kw):
         """A surface from fn(u, v) -> (x, y, z), u, v in 0..1 (nu x nv quads)."""
         bm = bmesh.new()
         V = [[bm.verts.new(fn(i / nu, j / nv)) for i in range(nu + 1)] for j in range(nv + 1)]
         B = [[bm.verts.new(v.co) for v in row] for row in V] if both else None
         for j in range(nv):
             for i in range(nu):
-                bm.faces.new([V[j][i], V[j][i + 1], V[j + 1][i + 1], V[j + 1][i]])
+                q = [V[j][i], V[j][i + 1], V[j + 1][i + 1], V[j + 1][i]]
+                bm.faces.new(q[::-1] if flip else q)
                 if both:
                     bm.faces.new([B[j][i], B[j + 1][i], B[j + 1][i + 1], B[j][i + 1]])
         kw.setdefault("smooth", True)

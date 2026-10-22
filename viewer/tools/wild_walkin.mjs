@@ -13,7 +13,8 @@ const ids = (process.argv[2] || 'bar,gas,fastfood,sheriff,depot,church').split('
 // the kit's front doors in the asset frame (u, v) (design/town/kit_status.md "entrances")
 const DOORS = { town_bar: [5.2, -9.1, 5.0, -15.1],   // (the bar: left of the porch post at u 5.8 in front of its door)
   town_gas_station: [0, -6.1, 3.5, -9.5], town_fastfood: [-4.5, -7.1], town_sheriff: [-5.0, -9.5],
-  town_depot: [-9.0, -6.1], town_church: [0, -16.8] };
+  town_depot: [-9.0, -6.1], town_church: [0, -16.8],
+  site_bar: [-8.45, -7.0, -8.45, -16.0] };   // [bar] town2_bar: the open front door, up the porch steps
 const locks = path.join(root, 'build/locks');
 let slot = null;
 while (!slot) {

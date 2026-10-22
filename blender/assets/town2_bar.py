@@ -41,7 +41,7 @@ P = dict(
     # partitions: the bar room / service block line (x), the back room / corridor line, the corridor / restrooms line (y)
     px=-10.4, pc=0.0, pr=-1.6, backroom_door=(4.95, 5.85),
     door_x=-8.4, front_windows=(-5.85, -3.9, -1.95, 0.0, 1.95, 3.9, 9.2), back_windows=(7.0, 12.2), deck_door_x=9.6,
-    west_window=True,
+    west_window=False,
     # the porch (front) and the river deck (back)
     porch_x0=-13.2, porch_x1=11.4, porch_depth=3.0, porch_posts=9, porch_beam=3.05,
     deck_x0=4.4, deck_x1=15.6, deck_y1=11.6, deck_ground=(-0.2, -1.2), stair_x=14.2, stair_steps=22, landing_z=-3.6,
@@ -51,6 +51,7 @@ P = dict(
     footprint=(-26.0, -17.0, 47.0, 8.0),
     world=dict(x=-2112.0, y=-804.5, yaw=180.0),
     look="golden",
+    interior_exposure=1.8,
 )
 
 

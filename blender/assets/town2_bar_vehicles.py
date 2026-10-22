@@ -50,12 +50,25 @@ def pickup(k, x, y, yaw, paint="truck_red", style="90s", rust=True, extras=()):
     hw = 0.99
     zb = 0.46
     fa, ra, r = 0.88, 4.2, 0.5
+    # the lower body (fenders, doors, the hood) full width; the greenhouse (pillars, roof) above
+    # the belt line, pulled in (tumblehome)
     if style == "90s":
-        top = [(3.02, 1.12), (3.0, 1.82), (2.2, 1.84), (1.62, 1.18), (0.25, 1.08), (0.12, 0.98), (0.12, zb)]
+        top = [(3.02, 1.12), (1.62, 1.14), (0.25, 1.08), (0.12, 0.98), (0.12, zb)]
+        green = [(1.6, 1.1), (3.0, 1.1), (2.98, 1.82), (2.2, 1.84)]
     else:   # the square-body: flat hood, upright glass
-        top = [(3.02, 1.12), (3.0, 1.84), (2.28, 1.85), (1.86, 1.2), (0.22, 1.12), (0.12, 1.08), (0.12, zb)]
+        top = [(3.02, 1.12), (1.86, 1.14), (0.22, 1.12), (0.12, 1.08), (0.12, zb)]
+        green = [(1.84, 1.1), (3.0, 1.1), (3.0, 1.84), (2.28, 1.85)]
     cab = _arch_outline(0.12, 3.02, zb, [(fa, r)], top)
-    _side_prism(k, cab, -hw, hw, M, paint)
+    _side_prism(k, cab, -hw, hw, M, paint, bevel=0.045)
+    gw = hw - 0.07
+    _side_prism(k, green, -gw, gw, M, paint, bevel=0.05)
+    for s in (-1, 1):
+        for cx in (fa, ra):
+            # the wheel well's dark liner (faces in, toward the axle)
+            k.lathe(M_OUT, [(r * 0.97, 0.16), (r * 0.97, -0.16)], sides=10, a0=0.0, a1=math.pi, cap0=False, cap1=False,
+                    M=M @ Matrix.Translation((cx, s * (hw - 0.18), zb)) @ Matrix.Rotation(math.pi / 2, 4, "X"), uv=("cell", "rubber"), lmw=0.0)
+        for sx in (1.66, 2.99):
+            k.box(M_OUT, (sx - 0.004, s * (hw + 0.002) - 0.003, zb + 0.06), (sx + 0.004, s * (hw + 0.002) + 0.003, 1.1), M=M, uv=("cell", "plastic_black"), lmw=0.0)
     # the bed: two side walls (arched), the front wall, the tailgate, the floor (bedliner)
     bx0, bx1, bz = 3.07, 5.36, 1.12
     for s in (-1, 1):
@@ -70,7 +83,7 @@ def pickup(k, x, y, yaw, paint="truck_red", style="90s", rust=True, extras=()):
     wz0, wz1 = (1.2, 1.8) if style == "90s" else (1.22, 1.8)
     wx0, wx1 = (1.66, 2.18) if style == "90s" else (1.9, 2.27)
     for s in (-1, 1):
-        q = [(wx1 + 0.08, s * (hw + 0.004), 1.25), (2.92, s * (hw + 0.004), 1.25), (2.92, s * (hw + 0.004), 1.74), (wx1 + 0.12, s * (hw + 0.004), 1.74)]
+        q = [(wx1 + 0.08, s * (gw + 0.004), 1.2), (2.92, s * (gw + 0.004), 1.2), (2.92, s * (gw + 0.004), 1.74), (wx1 + 0.12, s * (gw + 0.004), 1.74)]
         k.quad(M_OUT, [tuple(M @ Vector(p)) for p in (q if s < 0 else q[::-1])], uv=("cell", "glass_dark"), lmw=0.1)
     n = Vector((-(wz1 - wz0), 0, -(wx1 - wx0))).normalized() * -0.006
     ws = [Vector((wx0 + 0.04, -hw + 0.1, wz0 + 0.04)), Vector((wx0 + 0.04, hw - 0.1, wz0 + 0.04)), Vector((wx1 - 0.02, hw - 0.12, wz1 - 0.03)), Vector((wx1 - 0.02, -hw + 0.12, wz1 - 0.03))]
@@ -111,19 +124,24 @@ def van(k, x, y, yaw, paint="van_black"):
     hw = 1.0
     zb = 0.42
     fa, ra, r = 0.98, 4.45, 0.48
-    top = [(5.9, 0.5), (5.9, 1.98), (5.85, 2.06), (1.7, 2.06), (1.12, 1.32), (0.28, 1.12), (0.12, 1.02), (0.12, zb)]
-    body = _arch_outline(0.12, 5.9, zb, [(fa, r), (ra, r)], top[1:])
-    body = [(x_, z_) for x_, z_ in body]
+    top = [(5.9, 1.24), (1.14, 1.28), (0.28, 1.12), (0.12, 1.02), (0.12, zb)]
+    body = _arch_outline(0.12, 5.9, zb, [(fa, r), (ra, r)], top)
     _side_prism(k, body, -hw, hw, M, paint, bevel=0.05)
+    gw = hw - 0.05
+    _side_prism(k, [(1.12, 1.2), (5.9, 1.2), (5.9, 1.98), (5.84, 2.06), (1.72, 2.06)], -gw, gw, M, paint, bevel=0.06)
+    for s in (-1, 1):
+        for cx in (fa, ra):
+            k.lathe(M_OUT, [(r * 0.97, 0.16), (r * 0.97, -0.16)], sides=10, a0=0.0, a1=math.pi, cap0=False, cap1=False,
+                    M=M @ Matrix.Translation((cx, s * (hw - 0.18), zb)) @ Matrix.Rotation(math.pi / 2, 4, "X"), uv=("cell", "rubber"), lmw=0.0)
     # glass: windshield, the front doors' windows only
     ws = [Vector((1.14, -hw + 0.1, 1.36)), Vector((1.14, hw - 0.1, 1.36)), Vector((1.66, hw - 0.12, 1.98)), Vector((1.66, -hw + 0.12, 1.98))]
     k.quad(M_OUT, [tuple(M @ (p + Vector((-0.012, 0, 0.008)))) for p in ws], uv=("cell", "glass_dark"), lmw=0.1)
     for s in (-1, 1):
-        q = [(1.72, s * (hw + 0.004), 1.4), (2.55, s * (hw + 0.004), 1.4), (2.55, s * (hw + 0.004), 1.9), (1.82, s * (hw + 0.004), 1.9)]
+        q = [(1.76, s * (gw + 0.004), 1.36), (2.55, s * (gw + 0.004), 1.36), (2.55, s * (gw + 0.004), 1.9), (1.86, s * (gw + 0.004), 1.9)]
         k.quad(M_OUT, [tuple(M @ Vector(p)) for p in (q if s < 0 else q[::-1])], uv=("cell", "glass_dark"), lmw=0.1)
         # door seams (the slider), a handle, mirrors
         for sx in (2.62, 3.95):
-            k.box(M_OUT, (sx - 0.006, s * (hw + 0.002) - 0.003, 0.5), (sx + 0.006, s * (hw + 0.002) + 0.003, 1.95), M=M, uv=("cell", "plastic_black"), lmw=0.0)
+            k.box(M_OUT, (sx - 0.006, s * (hw + 0.002) - 0.003, 0.5), (sx + 0.006, s * (hw + 0.002) + 0.003, 1.2), M=M, uv=("cell", "plastic_black"), lmw=0.0)
         k.box(M_OUT, (2.4, s * (hw + 0.004) - 0.008, 1.12), (2.52, s * (hw + 0.004) + 0.008, 1.15), M=M, uv=("cell", "plastic_black"), lmw=0.0)
         k.box(M_OUT, (1.62, s * (hw + 0.05) - (0.12 if s < 0 else 0.0), 1.45), (1.74, s * (hw + 0.05) + (0.12 if s > 0 else 0.0), 1.75), M=M, bevel=0.01, uv=("cell", "plastic_black"), lmw=0.02)
         k.box(M_OUT, (0.1, s * 0.78 - 0.14, 0.78), (0.14, s * 0.78 + 0.14, 0.96), M=M, uv=("cell", "headlight"), lmw=0.02)

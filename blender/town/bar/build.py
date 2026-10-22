@@ -53,8 +53,9 @@ SAMPLES = int(opt("--samples", 48 if DRAFT else 384))
 BAKE = "--no-bake" not in argv
 EXPORT = "--no-export" not in argv
 RENDERS = "--renders" in argv
+ONLY_VIEWS = opt("--views", "")
 LM_IN = tuple(int(v) for v in opt("--lm-in", "1024x1024").split("x"))
-LM_OUT = tuple(int(v) for v in opt("--lm-out", "1024x1024").split("x"))
+LM_OUT = tuple(int(v) for v in opt("--lm-out", "1024x512").split("x"))
 OUT_MODELS = os.path.join(PROJECT, "assets", "models")
 OUT_TEX = os.path.join(OUT_MODELS, "textures")
 BUILD = os.path.join(PROJECT, "build", "town2_bar")
@@ -103,6 +104,9 @@ objs = kit.to_objects(col, mats, asset.NAME)
 for o in objs.values():
     o.parent = root
 tris = {m: kit.tris.get(m, 0) for m in objs}
+GLOW = objs.get("Glow")            # the halo cards: no lightmap, out of every bake (the lamps carry the light)
+if GLOW is not None:
+    GLOW.hide_render = True
 print(f"geometry: {sum(tris.values())} tris in {len(objs)} meshes ({time.time() - t0:.1f}s) {tris}")
 print("by section:", dict(sorted(kit.sec_tris.items(), key=lambda kv: -kv[1])))
 
@@ -730,7 +734,7 @@ def bake_lod1(ob, size=256):
     nd.image = img
     nt.nodes.active = nd
     ob.data.materials.append(m)
-    srcs = [o for o in objs.values() if o.name != ob.name and o.data.materials[0].name != "M_Town2_Bar_Glass"]
+    srcs = [o for o in objs.values() if o.name != ob.name and o.data.materials[0].name not in ("M_Town2_Bar_Glass", "M_Town2_Bar_Glow")]
     select_only(srcs + [ob], active=ob)
     scene.cycles.samples = 32 if DRAFT else 96
     scene.render.bake.use_selected_to_active = True
@@ -770,6 +774,7 @@ VIEWS = {
     "backroom": ((-8.3, 4.6, 1.7), (-15.7, 4.6, 1.5), 35),
     "room_stage": ((-6.5, -4.5, 2.1), (14.0, 1.5, 1.3), 24),
     "deck": ((15.0, 16.0, -1.8), (6.0, 7.0, 1.8), 24),
+    "stage": ((8.0, -2.8, 2.0), (15.0, 0.6, 1.4), 28),
 }
 
 
@@ -785,8 +790,12 @@ def renders():
     scene.view_settings.view_transform = "AgX" if "AgX" in [i.identifier for i in bpy.types.ColorManagedViewSettings.bl_rna.properties["view_transform"].enum_items] else "Standard"
     scene.render.image_settings.file_format = "PNG"
     lod.hide_render = True
+    if GLOW is not None:
+        GLOW.hide_render = False
     out = []
     for nm, (eye, tgt, lens) in VIEWS.items():
+        if ONLY_VIEWS and nm not in ONLY_VIEWS.split(","):
+            continue
         cam.location = eye
         cam.rotation_euler = (Vector(tgt) - Vector(eye)).to_track_quat("-Z", "Y").to_euler()
         cam_d.lens = lens
@@ -829,10 +838,15 @@ if EXPORT:
             tex.export_prep(m)
             if g in baked:
                 m["lightmap"] = f"textures/{baked[g][0]}.webp"
-                m["lightmapIntensity"] = round(baked[g][1] * math.pi, 5)
+                # (the interior a stop brighter than physical: the runtime has no eye adaptation, and
+                # a room lit like a real bar at dusk reads black after the golden-hour lot)
+                m["lightmapIntensity"] = round(baked[g][1] * math.pi * (P["interior_exposure"] if g == "In" else 1.0), 5)
             if envs.get(g if m.name != "M_Town2_Bar_Glass" else "Out"):
                 m["envMap"] = f"textures/{envs[g if m.name != 'M_Town2_Bar_Glass' else 'Out']}.webp"
                 m["envMapIntensity"] = ENV_CLAMP
+    if GLOW is not None:
+        GLOW.hide_render = False
+        tex.export_prep(GLOW.data.materials[0])
     # (the bake's helpers out of the export: the root's hierarchy only)
     path = os.path.join(OUT_MODELS, "town2_bar.gltf")
     common.export_gltf(root, path, export_vertex_color="NAME", export_vertex_color_name="Tint",

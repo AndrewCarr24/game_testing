@@ -12,6 +12,7 @@ from mathutils import Matrix, Vector
 import town2_bar_vehicles as veh
 from town2_bar_interior import neon_sign, _bar_item, WARM, _chair
 from town2_bar_shell import _beam
+import town2_bar_glow as glow
 
 M = "PropsOut"
 
@@ -45,7 +46,7 @@ def gravel(k, P):
 
     def h(px, py):
         e = min(px - x0, x1 - px, py - y0, y1 - py)
-        edge = -0.14 * max(0.0, 1 - e / 1.2)
+        edge = -0.1 * max(0.0, 1 - e / 1.5) ** 1.5
         d = rut(px, py)
         r = -0.035 * math.exp(-(d / 0.3) ** 2)
         return 0.012 * math.sin(px * 1.7) * math.sin(py * 2.3) + r + edge
@@ -59,6 +60,15 @@ def gravel(k, P):
             for j in range(tj, min(ny, tj + T) + 1):
                 for i in range(ti, min(nx, ti + T) + 1):
                     px, py = x0 + i * step, y0 + j * step
+                    # a ragged outline: the outer two rings pulled in by a smooth noise
+                    ring = min(i, nx - i, j, ny - j)
+                    if ring <= 1:
+                        rag = (0.5 + 0.5 * math.sin(px * 0.37 + 2.1 * math.sin(py * 0.29)) * math.sin(py * 0.53 + px * 0.11)) * (1.6 if ring == 0 else 0.8)
+                        cxm, cym = (x0 + x1) / 2, (y0 + y1) / 2
+                        if i == 0 or i == nx or (ring == 1 and i in (1, nx - 1)):
+                            px += rag * (1 if px < cxm else -1)
+                        if j == 0 or j == ny or (ring == 1 and j in (1, ny - 1)):
+                            py += rag * (1 if py < cym else -1)
                     V[(i, j)] = bm.verts.new((px, py, h(px, py)))
             tints = []
             for j in range(tj, min(ny, tj + T)):
@@ -72,9 +82,9 @@ def gravel(k, P):
                     t = 0.82 + 0.1 * rnd.random()
                     if d < 0.5:
                         t *= 0.78                     # packed, darker in the ruts
-                    if e < 1.5:
-                        t *= 1.08
-                    tints.append((t, t * 0.98, t * 0.95))
+                    w = max(0.0, min(1.0, 1 - e / 3.0))
+                    c = (t * (1 - 0.2 * w), t * (0.98 - 0.26 * w), t * (0.95 - 0.32 * w))
+                    tints.append(c)
             loose = [v for v in bm.verts if not v.link_faces]
             bmesh.ops.delete(bm, geom=loose, context="VERTS")
             if tints:
@@ -115,8 +125,9 @@ def pole_sign(k, P):
     for s in (-1, 1):
         k.box(M, (s * 0.225 - 0.003, -w / 2 + 0.12, zs0 + 0.12), (s * 0.225 + 0.003, w / 2 - 0.12, zs1 - 0.12), M=Ms, uv=("cell", "sign_face"), lmw=0.0)
         o = Ms @ Vector((s * 0.29, 0.0, (zs0 + zs1) / 2))
-        r = (Ms.to_3x3() @ Vector((0, -s, 0)))
-        neon_sign(k, tuple(o), tuple(r), (0, 0, 1), 1.25, "BAR", mat=M, power=0.0, backing=False, lights=False, lmw=0.05)
+        r = (Ms.to_3x3() @ Vector((0, s, 0)))
+        neon_sign(k, tuple(o), tuple(r), (0, 0, 1), 0.9, "BAR", mat=M, power=0.0, backing=False, lights=False, lmw=0.05,
+                  tube=0.014, halo=0.2)
         k.light("POINT", tuple(Ms @ Vector((s * 1.2, 0.0, (zs0 + zs1) / 2))), (1.0, 0.2, 0.1), 40.0, radius=0.5)
     # the arrow above it: a yellow board with marquee bulbs along its edge, bent down toward the bar
     arrow = [(-1.9, 0.0), (0.9, 0.0), (0.9, -0.35), (1.9, 0.35), (0.9, 1.05), (0.9, 0.7), (-1.9, 0.7)]
@@ -137,6 +148,7 @@ def pole_sign(k, P):
         for s in (-1, 1):
             q = Ma @ Vector((qx, qy, s * 0.085))
             k.lathe(M, [(0.0, -0.035), (0.03, -0.02), (0.035, 0.0), (0.02, 0.03), (0.0, 0.035)], sides=6, M=Matrix.Translation(q), uv=("cell", "bulbs_marquee"), lmw=0.0)
+            glow.halo(k, tuple(q + (Ma.to_3x3() @ Vector((0, 0, s * 0.02)))), 0.22, "amber", normal=tuple(Ma.to_3x3() @ Vector((0, 0, s))))
     k.light("POINT", tuple(Ma @ Vector((0.0, 0.35, 0.0))), (1.0, 0.62, 0.25), 25.0, radius=1.0)
 
 
@@ -211,19 +223,27 @@ def porch_dressing(k, P):
     L, D, f = P["L"], P["D"], P["floor"]
     yw = -D / 2
     dx = P["door_x"]
-    # the front door: open into the room (75 deg), a diamond light in it
-    Mdoor = Matrix.Translation((dx + 0.5, yw + 0.25, f + 0.01)) @ Matrix.Rotation(math.radians(-75), 4, "Z")
+    # the front door: open into the room, back against the wall (the doorway stays clear)
+    Mdoor = Matrix.Translation((dx + 0.5, yw + 0.25, f + 0.01)) @ Matrix.Rotation(math.radians(-86), 4, "Z")
     k.box("Wood", (-1.0, 0.0, 0.0), (0.0, 0.05, 2.17), M=Mdoor, bevel=0.008, tint=(0.55, 0.3, 0.25), lmw=0.6)
     k.box("Props", (-0.94, -0.06, 0.95), (-0.86, 0.0, 1.05), M=Mdoor, uv=("cell", "brass"), lmw=0.01)
     c = Mdoor @ Vector((-0.5, 0.025, 1.0))
     k.collider(c.x - 0.15, c.y - 0.5, f, c.x + 0.15, c.y + 0.5, f + 2.17)
     # BAR in neon over the door (pink-red on a black backer), the caged porch light
-    k.box(M, (dx - 0.85, yw - 0.04, f + 2.42), (dx + 0.85, yw, f + 3.02), uv=("cell", "paint_black"), lmw=0.2)
-    neon_sign(k, (dx - 0.03, yw - 0.09, f + 2.72), (1, 0, 0), (0, 0, 1), 0.48, "BAR", mat=M, power=14.0, backing=False, lmw=0.05)
+    k.box(M, (dx - 0.7, yw - 0.04, f + 2.44), (dx + 0.7, yw, f + 3.0), uv=("cell", "paint_black"), lmw=0.2)
+    neon_sign(k, (dx, yw - 0.09, f + 2.72), (1, 0, 0), (0, 0, 1), 0.4, "BAR", mat=M, power=22.0, backing=False, lmw=0.05, tube=0.009, halo=0.1)
     lx = dx - 1.0
     k.lathe(M, [(0.0, 0.0), (0.07, 0.0), (0.07, 0.03), (0.0, 0.035)], sides=8, M=Matrix.Translation((lx, yw - 0.02, f + 2.2)) @ Matrix.Rotation(math.pi / 2, 4, "X"), uv=("cell", "iron_black"), lmw=0.0)
     k.lathe(M, [(0.0, 0.0), (0.035, 0.02), (0.04, 0.08), (0.0, 0.14)], sides=8, M=Matrix.Translation((lx, yw - 0.1, f + 2.2)) @ Matrix.Rotation(math.pi / 2, 4, "X"), uv=("cell", "bulb"), lmw=0.0)
     k.light("POINT", (lx, yw - 0.18, f + 2.2), WARM, 18.0, radius=0.04)
+    glow.halo(k, (lx, yw - 0.16, f + 2.2), 0.4, "warm")
+    # BAR in big red neon on the west gable, for the highway (no backer: tubes on the block)
+    gx = P["L"] / 2 + 0.06
+    for yy in (-1.2, 1.2):
+        k.box(M, (gx - 0.06, yy - 0.03, f + 1.55), (gx + 0.02, yy + 0.03, f + 2.95), uv=("cell", "iron_black"), lmw=0.05)
+    neon_sign(k, (gx + 0.05, 0.0, f + 2.25), (0, 1, 0), (0, 0, 1), 1.05, "BAR", mat=M, power=0.0, lights=False, backing=False, lmw=0.05,
+              tube=0.013, halo=0.18)
+    k.light("POINT", (gx + 0.5, 0.0, f + 2.25), (1.0, 0.08, 0.04), 55.0, radius=0.6)
     # benches, a cooler, a sand-bucket ashtray, an ice machine at the east end
     for bx in (-4.0, 2.0):
         by = yw - 0.45
@@ -279,6 +299,7 @@ def deck_dressing(k, P):
         k.tube(M, [tuple(p) for p in pts], 0.004, sides=4, uv=("cell", "plastic_black"), lmw=0.0)
         for i, p in enumerate(pts[1:-1]):
             k.lathe(M, [(0.0, -0.09), (0.022, -0.075), (0.028, -0.05), (0.012, -0.025), (0.008, 0.0)], sides=6, M=Matrix.Translation(p), uv=("cell", "bulb"), lmw=0.0)
+            glow.halo(k, tuple(p + Vector((0, 0, -0.06))), 0.2, "warm", crossed=2)
             if i % 4 == 2:
                 k.light("POINT", tuple(p + Vector((0, 0, -0.06))), WARM, 3.5, radius=0.03)
                 nl += 1
@@ -306,11 +327,42 @@ def _picnic(k, x, y, f, a):
     k.collider(c.x - 1.0, c.y - 0.95, f, c.x + 1.0, c.y + 0.95, f + 0.76)
 
 
+def chimney_and_roof(k, P):
+    """A block chimney on the west gable (the stage's old stove) and a neon cocktail glass on a
+    steel frame over the roof: the silhouette against the sunset."""
+    L, D, f, plate = P["L"], P["D"], P["floor"], P["plate"]
+    ridge = plate + D / 2 * P["pitch"]
+    cx0, cx1, cy0, cy1 = L / 2, L / 2 + 0.9, 3.0, 4.3
+    k.box("Block", (cx0, cy0, 0.0), (cx1, cy1, ridge + 1.3), tint=(0.85, 0.85, 0.85), lmw=0.7, skip=("-z",))
+    k.box("Block", (cx0 - 0.05, cy0 - 0.05, ridge + 1.3), (cx1 + 0.05, cy1 + 0.05, ridge + 1.42), tint=(0.6, 0.6, 0.6), bevel=0.01, lmw=0.5)
+    k.box(M, (cx0 + 0.25, cy0 + 0.3, ridge + 1.42), (cx1 - 0.25, cy1 - 0.3, ridge + 1.6), uv=("cell", "rust"), lmw=0.05)
+    k.collider(cx0, cy0, 0.0, cx1, cy1, ridge + 1.4)
+    # the rooftop sign: two steel posts off the front slope, a cocktail glass in pink / green neon
+    sx, sy = 7.5, -2.6
+    zr = plate + (D / 2 - abs(sy)) * P["pitch"]
+    for dx in (-1.1, 1.1):
+        k.box(M, (sx + dx - 0.05, sy - 0.05, zr - 0.05), (sx + dx + 0.05, sy + 0.05, zr + 3.4), uv=("cell", "paint_grey"), lmw=0.1)
+        _beam(k, M, (sx + dx, sy + 0.05, zr + 1.6), (sx + dx, sy + 1.6, plate + (D / 2 - abs(sy + 1.6)) * P["pitch"]), 0.05, 0.05, uv=("cell", "paint_grey"), lmw=0.02)
+    for zz in (zr + 1.05, zr + 3.3):
+        k.box(M, (sx - 1.2, sy - 0.04, zz), (sx + 1.2, sy + 0.04, zz + 0.07), uv=("cell", "paint_grey"), lmw=0.05)
+    neon_sign(k, (sx, sy - 0.1, zr + 2.2), (1, 0, 0), (0, 0, 1), 2.1, "cocktail", mat=M, power=0.0, lights=False, backing=False,
+              lmw=0.05, tube=0.016, halo=0.22)
+    k.light("POINT", (sx, sy - 0.6, zr + 2.4), (1.0, 0.15, 0.45), 60.0, radius=0.8)
+    # downspouts at the front corners
+    ov = P["overhang"]
+    for x in (-L / 2 - 0.2, L / 2 + 0.2):
+        k.cyl(M, (x, -D / 2 - ov + 0.02, plate - ov * P["pitch"] - 0.06), (x, -D / 2 - 0.08, plate - 0.6), 0.04, sides=8, uv=("cell", "galvanized"), lmw=0.02)
+        k.cyl(M, (x, -D / 2 - 0.08, plate - 0.6), (x, -D / 2 - 0.08, 0.15), 0.045, sides=8, uv=("cell", "galvanized"), lmw=0.1)
+        k.cyl(M, (x, -D / 2 - 0.08, 0.15), (x, -D / 2 - 0.45, 0.04), 0.045, sides=8, uv=("cell", "galvanized"), lmw=0.02)
+    # the electric meter and a window air conditioner on the east end
+    k.box(M, (-L / 2 - 0.25, 1.6, 0.9), (-L / 2, 2.4, 1.15), bevel=0.02, uv=("cell", "paint_cream"), lmw=0.1)
+
+
 def build_lot(k, P):
     P.setdefault("sign", (40.5, -15.5))
     P.setdefault("sign_yaw", 35.0)
     P.setdefault("pole", (-21.0, -12.5))
-    for fn in (gravel, pole_sign, utility_pole, back_lot, porch_dressing, deck_dressing):
+    for fn in (gravel, pole_sign, utility_pole, back_lot, porch_dressing, deck_dressing, chimney_and_roof):
         k.section = fn.__name__
         fn(k, P)
     k.section = "vehicles"
