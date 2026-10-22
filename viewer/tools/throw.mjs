@@ -1,7 +1,14 @@
 // Vase: pick up from the coffee table, arm it, throw it at a wall, it shatters.
 // Usage: node throw.mjs [out-dir]
+// RETIRED while the house's items are off (blender/levels/caches.py ITEMS: the vases are decor,
+// nothing is throwable): it runs only on a level built with GT_ITEMS=1. Throwing itself is still
+// covered by signals.mjs (an in-page fixture).
 import { chromium } from 'playwright-core';
-import { prop, fromProp, room, url } from './level.mjs';
+import { level, prop, fromProp, room, url } from './level.mjs';
+if (!level.props.some((q) => q.lock || /^(ix_flashlight|ix_fuse|ix_battery|keycard|ix_key_)/.test(q.asset))) {
+  console.log('SKIP  throw.mjs: items off (no throwable vase); build the house with GT_ITEMS=1 to run it');
+  process.exit(0);
+}
 const out = process.argv[2] || '.';
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 1100, height: 700 } });

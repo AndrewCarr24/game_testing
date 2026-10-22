@@ -2,12 +2,28 @@
 // their room's batch (no extra draw calls), then plays: walks up to pickups in several rooms,
 // takes them with E (identical ones stack), checks a stacked one waits for the one on it, and
 // throws a book (thuds, lands, can be taken again) and a ceramic piece (shatters, a noise).
+// ITEMS OFF (the default build, blender/levels/caches.py ITEMS; a level built with GT_ITEMS=1
+// runs the original test above): the sweep instead checks the only pickups in the house are
+// the kitchen knife and the tablet (both in the kitchen), that nothing is locked, lists every
+// room's prompts and flags any that point at a removed item, takes both, and checks the
+// flashlight hint (F) and the battery meter never appear.
 // Usage: GT_BASE=http://localhost:<port> node viewer/tools/pickups.mjs [out-dir]
 import { chromium } from 'playwright-core';
 import fs from 'fs';
-import { url } from './level.mjs';
+import { level, url } from './level.mjs';
 const out = process.argv[2] || 'build/pickups';
 fs.mkdirSync(out, { recursive: true });
+// (a GT_ITEMS=1 build places the item assets and the locks; the default build has neither)
+const ITEMS_ON = level.props.some((q) => q.lock || /^(ix_flashlight|ix_fuse|ix_battery|keycard|ix_key_)/.test(q.asset));
+console.log(`items ${ITEMS_ON ? 'ON (GT_ITEMS=1 build): the full pickup test' : 'OFF: only the knife and the tablet'}`);
+// one browser slot of build/locks/browser_0..2 (shared by every agent on this machine)
+fs.mkdirSync('build/locks', { recursive: true });
+let slot = null;
+while (slot === null) {
+  for (let i = 0; i < 3 && slot === null; i++) { try { fs.mkdirSync(`build/locks/browser_${i}`); slot = i; } catch {} }
+  if (slot === null) await new Promise((ok) => setTimeout(ok, 3000));
+}
+process.on('exit', () => { try { fs.rmdirSync(`build/locks/browser_${slot}`); } catch {} });
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 1100, height: 700 } });
 const errors = [];
@@ -39,11 +55,18 @@ console.log(`pickups: ${census.total} (${census.batched} resting in a room batch
 console.log('by item:', JSON.stringify(census.byItem));
 console.log('by room:', JSON.stringify(census.byRoom));
 console.log('stats:', census.stats);
-check('the house has hundreds of pickups', census.total > 300, `${census.total}`);
-check('resting pickups are drawn by their room batch', census.batched > census.total * 0.8, `${census.batched}/${census.total}`);
-const tools = ['keycard', 'car_key', 'fuse', 'battery', 'flashlight', 'tablet', ...Object.keys(census.byItem).filter((id) => id.startsWith('key_'))];
-const loose = census.total - tools.reduce((n, id) => n + (census.byItem[id] ?? 0), 0);
-check('every loose thing is throwable (the tools are not)', census.throwable === loose, `${census.throwable}/${loose}`);
+if (ITEMS_ON) {
+  check('the house has hundreds of pickups', census.total > 300, `${census.total}`);
+  check('resting pickups are drawn by their room batch', census.batched > census.total * 0.8, `${census.batched}/${census.total}`);
+  const tools = ['keycard', 'car_key', 'fuse', 'battery', 'flashlight', 'tablet', 'kitchen_knife', ...Object.keys(census.byItem).filter((id) => id.startsWith('key_'))];
+  const loose = census.total - tools.reduce((n, id) => n + (census.byItem[id] ?? 0), 0);
+  check('every loose thing is throwable (the tools are not)', census.throwable === loose, `${census.throwable}/${loose}`);
+} else {
+  check('the only pickups: the kitchen knife and the tablet', census.total === 2 && census.byItem.kitchen_knife === 1 && census.byItem.tablet === 1,
+    JSON.stringify(census.byItem));
+  check('... both in the kitchen', census.byRoom.kitchen === 2, JSON.stringify(census.byRoom));
+  check('nothing is throwable', census.throwable === 0, `${census.throwable}`);
+}
 fs.writeFileSync(`${out}/census.json`, JSON.stringify(census, null, 1));
 
 // ---------------------------------------------------------------- walk up and take
@@ -115,6 +138,85 @@ const take = async (name, shot) => {
   if (shot) await p.screenshot({ path: `${out}/${shot}_after.png` });
   return { at, before, after, ...st };
 };
+
+if (!ITEMS_ON) {
+  // ---------------------------------------------------------------- items off: locks and prompts, room by room
+  const sweep = await p.evaluate(() => {
+    const it = window.__interact, rooms = window.__level.rooms, v = window.__camera.position.clone();
+    const roomOf = (node) => {
+      node.getWorldPosition(v);
+      return Object.entries(rooms).find(([, r]) => v.y >= r.floor - 0.2 && v.y < r.floor + (r.height || 4) &&
+        v.x >= r.rect[0] && v.x <= r.rect[2] && v.z >= r.rect[1] && v.z <= r.rect[3])?.[0] ?? 'outside';
+    };
+    const byRoom = {}, flagged = [];
+    // a prompt that points at a removed item (the breaker's carrier says its fuse is in: fine)
+    const ITEMY = /locked|needs|keycard|\bkey\b|battery|flashlight|insert fuse|take /i;
+    for (const i of it.items) {
+      if (i.isReactor) continue;
+      let pr = '';
+      try { pr = it.prompt(i) ?? ''; } catch (e) { pr = `(prompt error: ${e.message})`; }
+      const room = roomOf(i.node);
+      (byRoom[room] ??= []).push(`${i.def.type}:${pr}`);
+      const keep = i.def.type === 'pickup' && ['kitchen_knife', 'tablet'].includes(i.def.item);
+      if (!keep && (ITEMY.test(pr) || i.def.type === 'pickup' || i.def.type === 'use' && i.def.needs && !/fuse/.test(i.def.needs)))
+        flagged.push(`${room}/${i.node.name}: ${i.def.type} "${pr}"`);
+    }
+    const locked = it.items.filter((i) => i.locked || i.lockKey).map((i) => `${i.node.name} <- ${i.lockKey}`);
+    const remotes = it.items.filter((i) => i.def.remote).map((i) => i.node.name);
+    return { byRoom, flagged, locked, remotes, lockable: it.items.filter((i) => ['rotate', 'slide'].includes(i.def.type)).length };
+  });
+  fs.writeFileSync(`${out}/prompts_by_room.json`, JSON.stringify(sweep.byRoom, null, 1));
+  for (const [r, ps] of Object.entries(sweep.byRoom).sort()) {
+    const n = {}; for (const x of ps) n[x] = (n[x] ?? 0) + 1;
+    console.log(`  ${r}: ${Object.entries(n).map(([k, c]) => (c > 1 ? `${k} x${c}` : k)).join(' | ')}`);
+  }
+  check('nothing in the house is locked (doors, cabinets, the locker, the safe)', sweep.locked.length === 0 && !level.props.some((q) => q.lock),
+    `${sweep.locked.join(', ')} (${sweep.lockable} doors/drawers/lids checked)`);
+  check('no prompt anywhere points at a removed item', sweep.flagged.length === 0, sweep.flagged.join(' ; '));
+  check('nothing carries a remote (the car key is gone; the car alarm stays a device)', sweep.remotes.length === 0, sweep.remotes.join(', '));
+  // ---------------------------------------------------------------- the formerly locked things open with E
+  const OPENS = [['DoorPlain', 'office'], ['Door_Hinge', 'ugallery_n'], ['DiningClimateWall_Door', null], ['IX_GunLocker_Door', null], ['IX_Safe', null]];
+  const opened = await p.evaluate((OPENS) => {
+    const it = window.__interact, rooms = window.__level.rooms, out = [];
+    const v = window.__camera.position.clone();
+    for (const [pre, rm] of OPENS) {
+      const cands = it.items.filter((i) => i.node.name.startsWith(pre) && i.def.type === 'rotate' && (!rm || (() => {
+        i.node.getWorldPosition(v); const r = rooms[rm];
+        return Math.abs(v.y - r.floor) < 1 && v.x >= r.rect[0] - 0.5 && v.x <= r.rect[2] + 0.5 && v.z >= r.rect[1] - 0.5 && v.z <= r.rect[3] + 0.5;
+      })()));
+      out.push(...cands.map((i) => i.node.name));
+    }
+    return [...new Set(out)];
+  }, OPENS);
+  console.log('formerly locked:', opened.join(', '));
+  check('found the office door, the suite door, the climate cabinet, the locker and the safe', opened.length >= 5, opened.join(', '));
+  for (const name of opened) {
+    const at = await goTo(name);
+    await p.waitForTimeout(250);
+    const before = await S();
+    await p.keyboard.press('KeyE'); await p.waitForTimeout(1500);
+    const t = await p.evaluate((n) => { const i = window.__interact.items.find((x) => x.node.name === n); return { t: i.t, locked: i.locked }; }, name);
+    check(`${name}: E opens it`, !at.none && t.t > 0.9 && !t.locked, `hint="${before.hint.slice(0, 60)}" toast="${(await S()).toast}" ${JSON.stringify(t)}`);
+    await p.keyboard.press('KeyE'); await p.waitForTimeout(1200);    // (and close it again)
+  }
+  // ---------------------------------------------------------------- take the two, no flashlight HUD
+  for (const id of ['tablet', 'kitchen_knife']) {
+    const name = await p.evaluate((id) => window.__interact.items.find((i) => i.def.item === id)?.node.name, id);
+    const r = await take(name, `take_${id}`);
+    check(`the ${id === 'tablet' ? 'tablet (kitchen dock)' : 'kitchen knife (island)'}: prompt, E takes it`, r.before.hint.includes('Take') && (r.after.inv[id] ?? 0) === 1,
+      `hint="${r.before.hint.slice(0, 60)}" inv=${JSON.stringify(r.after.inv)}`);
+  }
+  const hud = await p.evaluate(() => ({ inv: window.__inventory.ids(), battery: document.getElementById('battery').classList.contains('show'),
+    hint: document.getElementById('hint').textContent }));
+  check('the inventory holds just the two', hud.inv.length === 2 && hud.inv.includes('tablet') && hud.inv.includes('kitchen_knife'), JSON.stringify(hud.inv));
+  check('no battery meter, no "F flashlight" hint', !hud.battery && !hud.hint.includes('flashlight'), JSON.stringify(hud));
+  await p.keyboard.press('KeyF'); await p.waitForTimeout(300);
+  check('F does nothing (no flashlight)', (await p.evaluate(() => !window.__signals.get('flashlight') && !window.__flashlight?.on)));
+  check('no page errors', errors.length === 0, errors.join(' | '));
+  await b.close();
+  console.log(fails ? `${fails} failed` : 'all passed');
+  process.exit(fails ? 1 : 0);
+}
 
 // a few kinds in several rooms (first match per pattern)
 const pick = await p.evaluate(() => {
