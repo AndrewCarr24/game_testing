@@ -21,6 +21,7 @@ export class Hand {
     if (id === this.id) return;
     this.group.clear();
     this.id = id;
+    if (this.provider?.(id, node)) return;   // (combat) a weapon: the view model draws it (viewer/weapons.js)
     if (!id || !node) return;
     const model = node.clone(true);
     model.position.set(0, 0, 0);

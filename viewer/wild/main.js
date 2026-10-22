@@ -12,9 +12,14 @@ import { Forest, TIERS, TIERS_VEG, meanColor } from './trees.js';
 import { Grass } from './grass.js';
 import { loadVegKit } from './veg.js';
 import { HeightfieldPlayer } from './player_hf.js';
+import { makeWaterStandin } from './water_standin.js';   // [river] water physics (until water.js lands)
+import { SwimFx } from './swim.js';                         // [river]
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
 import { Town, Exits } from './town.js';   // [town] Sourwood (world=laurel_town) + the exits between worlds
+import { waterField, prepareWater, waterWetTexture } from './water.js';   // [water] (design/wilderness/blue_ridge/water.md)
+import { buildRoad } from './road.js';   // (estate_link) the county road: gate -> river -> town
+import { loadEstate, wildGate } from './estate.js';   // (estate_link) the real estate + the gate back to the house
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -96,6 +101,7 @@ async function main() {
     : generateWorld({ res: num('res', 2049), mapRes: num('map', 1024), seed: num('seed', 7),
       trees: on('trees') ? num('trees', 40000) : 0, bushes: on('under') ? num('bushes', 120000) : 0 });
   const level = !!world.speciesInfo;
+  if (level) await prepareWater(world);          // [water] the level's current / foam / skyline data, if it has any
   if (level) {                       // switches: trees=0 (no trees / shrubs), under=0 (no ground cover)
     for (const [id, info] of Object.entries(world.speciesInfo)) {
       if ((!on('trees') && info.tier !== 'under') || (!on('under') && info.tier === 'under') || (!on('shrubs') && info.tier === 'shrub')
@@ -155,7 +161,7 @@ async function main() {
     lightTex.anisotropy = aniso; lightTex.needsUpdate = true;
   } else lightTex = map(world.light);
   const tex = { height, splat: map(world.splat), light: lightTex, grass, floor, rock, scree, leaves, bark, foliage, bed: bed || scree,
-    bedTile: ground?.bed?.tile_m || 1.8, wet: level ? wetTexture(world) : null };
+    bedTile: ground?.bed?.tile_m || 1.8, wet: level ? waterWetTexture(world) : null };   // [water] wet banks + cobble bars
 
   sky.meta.haze = LOOK.haze;
   const uniforms = { ...atmosphereUniforms(sky), ...lightUniforms(LOOK), uBounce: { value: new THREE.Color(0.13, 0.14, 0.105) } };
@@ -226,13 +232,19 @@ async function main() {
     ...(world.meta?.grass || {}) });   // [town] a level's own grass (the town's mown lawns)
   if (on('grass')) scene.add(grassSys.group);
   // a level's own meshes
-  let props = null, town = null;
+  let props = null, waterGrp = null, town = null;
   if (level) {
     scene.add(buildBackdrop(world, uniforms));
-    scene.add(buildWater(world, uniforms, tex));
+    waterGrp = buildWater(world, uniforms, tex);  // [water] surface + falls sheet + mist (3 draws)
+    scene.add(waterGrp);
+    window.__water = waterField(world);         // [water] surfaceAt / depthAt / flowAt / wet
     props = new Props(world, uniforms, tex, kitProps);
     scene.add(props.group);
     if (world.estate) scene.add(buildEstate(world, uniforms, tex));   // [town] (the town has no estate stand-in)
+    // (estate_link) the county road (world/road.json, laurel_fork_road.py); ?road=0 leaves it out
+    if (params.get('road') !== '0') { const road = await buildRoad(world, uniforms, tex); if (road) scene.add(road); window.__road = road; }
+    // (estate_link) the house level's own grounds + glazing in place of the stand-in (?estate=0: the stand-in)
+    if (world.estate) window.__estate = await loadEstate({ world, scene, uniforms, params });   // [town] (guarded: no estate in the town)
     // [town] the town's buildings, streets, bridges (viewer/wild/town.js)
     if (world.meta.town?.buildings && params.get('town') !== '0') { town = new Town(world, uniforms, tex); scene.add(town.group); await town.ready; }
   }
@@ -273,6 +285,7 @@ async function main() {
       if (Q.grass) grassSys.setRange(Q.grass[0], Q.grass[1], on('grass')); else grassSys.setRange([0, 0], [0, 0], false);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, Math.min(Q.pr, num('pr', 1.5))));
       terrain.setLow(Q.low);
+      waterGrp?.userData.setLow?.(Q.low);          // [water] no fine ripple layer at q0-1
       forest.setLow(Q.low);
       const end = q === 3 ? 2700 : t.far[3];
       terrain.mesh.material.uniforms.uCanopy.value.set(end * 0.8, end * 0.97);
@@ -333,6 +346,20 @@ async function main() {
   let fly = params.get('fly') === '1' || (params.has('pos') && Math.abs(v0.pos[1] - world.heightAt(v0.pos[0], v0.pos[2]) - 1.65) > 0.5);
   window.__player = player;
   const exits = level && params.get('exits') !== '0' ? new Exits(world, worldName) : null;   // [town]
+  // ---- [river] being in the river: the water-look workstream's field (water.js waterField(world),
+  // cached as world.waterField: {surfaceAt, depthAt, flowAt}) when it's there, else the stand-in
+  // from the level's water raster (water_standin.js, same functions)
+  let swimFx = null;
+  if (level && world.water) {
+    // (?water=standin forces the stand-in: A/B the physics against either field)
+    const theirs = params.get('water') === 'standin' ? null : world.waterField?.surfaceAt ? world.waterField : window.__water?.surfaceAt ? window.__water : null;
+    const water = theirs || makeWaterStandin(world);
+    // (a wipeout hurts through the combat contract's player target, once viewer/combat.js is in)
+    const hurt = (dmg, info) => { const c = window.__combat; (c?.player || c?.targets?.find?.((t) => t.kind === 'player'))?.hit?.(dmg, info); };
+    player.setWater(water, { river: world.meta.river, onHurt: hurt });
+    swimFx = new SwimFx(player, { uniforms });
+  }
+  // ---- [/river]
 
   const setView = (name) => {
     const v = typeof name === 'string' ? world.views[name] : name;
@@ -375,6 +402,7 @@ async function main() {
       camera.position.y = Math.max(camera.position.y, world.heightAt(camera.position.x, camera.position.z) + 0.3);
     } else if (controls.isLocked || held.size) {
       player.update(Math.min(dt, 0.05), input());
+      swimFx?.update(Math.min(dt, 0.05));                    // [river]
     }
     exits?.check(camera, fly);   // [town] walking across the seam reloads into the other world
   };
@@ -502,6 +530,8 @@ async function main() {
     cull, colliders: colliders.length, get fly() { return fly; }, set fly(v) { fly = v; } };
 
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+  // (estate_link) walking in through the estate's gate goes back to the house (viewer/wild/estate.js)
+  const gate = level ? wildGate({ world, camera, player, wild: window.__wild, params }) : null;
 
   renderer.setAnimationLoop(loop = () => {
     const b = window.__bench;
@@ -509,6 +539,7 @@ async function main() {
     const dt = Math.min(clock.getDelta(), 0.1);
     uniforms.uTime.value = frozen ?? uniforms.uTime.value + dt;
     update(dt);
+    gate?.update();                    // (estate_link)
     b?.drive();
     if (level) {                       // forest air: the forest-floor weight of the splat under the camera
       const half = world.size / 2, M = world.mapRes;
@@ -545,44 +576,6 @@ async function main() {
   window.__loaded = true;
 }
 
-// The wet / cobble mask of a level (R8G8 over the heightfield's vertices): r = wet (the banks
-// within ~3 m of water, darker soil and rock; the falls' spray zone and its face), g = cobble bar
-// (low, flat ground beside the water: under 2 m above the nearest water within 34 m). A chamfer
-// distance transform from the water raster, carrying the nearest water level.
-function wetTexture(world) {
-  const { res, spacing, water, heights, size } = world, n = res * res;
-  const dist = new Float32Array(n).fill(1e9), lvl = new Float32Array(n);
-  for (let k = 0; k < n; k++) if (Number.isFinite(water[k])) { dist[k] = 0; lvl[k] = water[k]; }
-  const a = spacing, b = spacing * Math.SQRT2;
-  const relax = (k, kk, d) => { const v = dist[kk] + d; if (v < dist[k]) { dist[k] = v; lvl[k] = lvl[kk]; } };
-  for (let j = 0; j < res; j++) for (let i = 0; i < res; i++) {
-    const k = i + j * res;
-    if (i > 0) relax(k, k - 1, a);
-    if (j > 0) { relax(k, k - res, a); if (i > 0) relax(k, k - res - 1, b); if (i < res - 1) relax(k, k - res + 1, b); }
-  }
-  for (let j = res - 1; j >= 0; j--) for (let i = res - 1; i >= 0; i--) {
-    const k = i + j * res;
-    if (i < res - 1) relax(k, k + 1, a);
-    if (j < res - 1) { relax(k, k + res, a); if (i < res - 1) relax(k, k + res + 1, b); if (i > 0) relax(k, k + res - 1, b); }
-  }
-  const out = new Uint8Array(n * 2), half = size / 2;
-  const f = world.props?.authored?.find((p) => p.kind === 'falls'), oy = world.meta.estate_offset[1];
-  const fx = f ? f.x1 : 1e9, fz = f ? -(f.y1 - oy) : 1e9, tx = f ? f.x0 : 1e9, tz = f ? -(f.y0 - oy) : 1e9;
-  for (let j = 0; j < res; j++) for (let i = 0; i < res; i++) {
-    const k = i + j * res, x = -half + i * spacing, z = -half + j * spacing;
-    const above = heights[k] - lvl[k];
-    let wet = Math.max(0, 1 - dist[k] / 3.5) * (above < 3 ? 1 : 0.4);
-    if (f) {                                              // spray: the foot and the face of the falls
-      const d = Math.hypot(x - fx, z - fz), dt = Math.hypot(x - tx, z - tz);
-      wet = Math.max(wet, Math.max(0, 1 - d / 26), Math.max(0, 1 - dt / 16) * 0.9);
-    }
-    const bar = dist[k] < 34 && dist[k] > 0 ? Math.max(0, 1 - Math.max(0, above - 0.6) / 1.6) * (1 - Math.max(0, dist[k] - 26) / 8) : 0;
-    out[k * 2] = Math.round(Math.min(1, wet) * 255); out[k * 2 + 1] = Math.round(Math.min(1, bar) * 255);
-  }
-  const t = new THREE.DataTexture(out, res, res, THREE.RGFormat, THREE.UnsignedByteType);
-  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
-  t.name = 'wet_cobble';
-  return t;
-}
+// (the wet / cobble mask of a level is water.js waterWetTexture)
 
 main().catch((e) => { status('error: ' + e.message); console.error(e); });

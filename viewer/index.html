@@ -156,6 +156,9 @@
     import { Affordance, itemInfo } from './affordance.js';
     import { Sfx } from './audio.js';   // sound effects
     import { Hiding, batchHideDoors } from './hiding.js';   // hiding spots (interact type `hide`)
+    import { Combat, PlayerVitals } from './combat.js';      // (combat) health, damage, death: window.__combat
+    import { Weapons, spawnDummy } from './weapons.js';     // (combat) the player's weapons + view model
+    import { EstateGate } from './estate_gate.js';   // (estate_link) the gate out to the wilderness and back
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -385,6 +388,11 @@
           });
         }
       }
+      // [invader-character] ?invaders=x,z,rotDeg,Clip[,Weapon,Outfit,head];... stands invaders in the level playing a
+      // clip (viewer/invader_asset.js placeInvaders; the AI belongs to the invader-behaviour workstream)
+      // (invaders: the posed-test form only, values with a clip name; the squad's own ?invaders=N|debug|0 is further down)
+      const invPosed = /,[A-Z][A-Za-z]+/.test(params.get('invaders') ?? '');
+      const posedInvaders = invPosed ? await (await import('./invader_asset.js')).placeInvaders(scene, loader, base + 'models/invader.gltf', params.get('invaders')) : null;
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity, true);
 
@@ -539,14 +547,13 @@
       // inside: after a few rounds at the glass it breaks in and hunts (viewer/grimble_hunt.js);
       // ?hunt=0 keeps it outside
       let shatterFx = null, footsteps = null;
-      if (grimble && params.get('hunt') !== '0') {
-        grimble.playerObj = player;
-        grimble.hunt = new GrimbleHunt(grimble, {
-          level, colliders, scene, interact,     // (interact: shut doors block its sight and swipes)
-          sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
-          opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
-        });
-        grimble.hunt.onBreak = () => {
+      let invaders = null;   // (invaders: viewer/invaders.js, made further down)
+      // (invaders) the great room's glass breaking, shared by the Grimble's smash and an invader's bat
+      let glassBroken = false;
+      const breakGlass = () => {
+        if (glassBroken) return;
+        glassBroken = true;
+        {
           const b = level.breakables?.[0];
           if (b) {
             shatterFx = shatter(scene, b);
@@ -562,7 +569,17 @@
             }
           }
           renderer.shadowMap.needsUpdate = true;
-        };
+        }
+        invaders?.onGlassBroken();   // (invaders: their nav opens the hole)
+      };
+      if (grimble && params.get('hunt') !== '0') {
+        grimble.playerObj = player;
+        grimble.hunt = new GrimbleHunt(grimble, {
+          level, colliders, scene, interact,     // (interact: shut doors block its sight and swipes)
+          sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
+          opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
+        });
+        grimble.hunt.onBreak = breakGlass;
         // the player's running footsteps: soft noises it can hear (grimble_hunt.js Footsteps)
         footsteps = new Footsteps(noise);
         window.__footsteps = footsteps;
@@ -574,6 +591,23 @@
       window.__hiding = hiding;
       scene.add(camera);                       // so the held item (a child of the camera) renders
       hand = new Hand(camera);
+      // ---- (combat) viewer/combat.js + viewer/weapons.js: targets, the player's health and death,
+      // the armed weapon (view model, attacks). ?god=1 never dies; ?dummy=x,y,z[,rotY[,aware]] (repeatable)
+      // stands a practice mannequin there
+      const combat = new Combat({ colliders });
+      window.__combat = combat;
+      const vitals = new PlayerVitals({ combat, player, camera, god: params.get('god') === '1' });
+      window.__vitals = vitals;
+      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
+        canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown,
+        hidden: () => hiding.active });
+      window.__weapons = weapons;
+      hand.provider = (id, node) => weapons.show(id, node);   // a weapon is drawn by the view model
+      for (const d of params.getAll('dummy')) {
+        const [x, y, z, rotY = 0, aware = 0] = d.split(',').map(Number);
+        spawnDummy({ scene, combat, colliders, position: new THREE.Vector3(x, y, z), rotationY: rotY, aware: !!aware });
+      }
+      // ---- (end combat)
       // (affordance) focus highlight, near-range glints, crosshair states (viewer/affordance.js)
       const afford = new Affordance({ scene, camera, renderer, interact, inventory });
       window.__afford = afford;
@@ -590,7 +624,7 @@
       // recompiles every material in the house
       if (inventory.has('flashlight') || interact.items.some((i) => i.def.item === 'flashlight')) flashlight.ensure();
       const batteryEl = document.getElementById('battery');
-      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group], el: document.getElementById('tablet'), devices });
+      const tablet = new Tablet({ renderer, scene, camera, level, signals, culler, hide: [hand.group, weapons.vm.root], el: document.getElementById('tablet'), devices });
       window.__tablet = tablet;
       // --- power and darkness as gameplay (viewer/house.js): the break-in trips the power,
       // the dark rooms, the flashlight's light cue to the Grimble
@@ -602,6 +636,20 @@
         .attach({ interact, inventory, player, throwables, flashlight, tablet, culler, signals, noise, grimble: () => grimble });
       window.__sfx = sfx;
       // ---- (end sound effects)
+      // ---- invaders (viewer/invaders.js, design/invaders/behaviour.md): armed intruders in waves.
+      // On in the game; off for automated runs (navigator.webdriver, the bench) unless the URL asks:
+      // ?invaders=0 off, =N N at once, =debug overlay; ?waves=fast|0|K. Harmless under the bench.
+      {
+        const q = invPosed ? null : params.get('invaders');   // (posed test invaders: no squad unless the game would have one)
+        if (q !== '0' && !(invPosed && navigator.webdriver) && (q !== null || (!navigator.webdriver && !window.__bench))) {
+          const { Invaders } = await import('./invaders.js');
+          invaders = new Invaders({ scene, camera, player, level, colliders, interact, signals, noise, hiding, params, breakGlass });
+          footsteps ??= new Footsteps(noise);     // (they hear running feet, as the Grimble does)
+          window.__footsteps ??= footsteps;
+          if (glassBroken) invaders.onGlassBroken();
+        }
+      }
+      // ---- (end invaders)
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
@@ -613,6 +661,9 @@
       const hudEl = document.getElementById('hud');
       controls.addEventListener('lock', () => (hudEl.style.visibility = 'hidden'));
       controls.addEventListener('unlock', () => (hudEl.style.visibility = ''));
+      // (estate_link) the drive's gate opens as the player comes down to it and leads out into the
+      // wilderness (viewer/estate_gate.js: the wild loads into an iframe, the house suspends)
+      const estateGate = level.outdoor ? new EstateGate({ scene, camera, player, controls, inventory, flashlight, colliders, renderer, params, toast: (m) => toast(m) }) : null;
       const keys = {};
       let focus = null;   // interactable the player can use right now
       addEventListener('keydown', (e) => {
@@ -621,6 +672,7 @@
         if (!controls.isLocked || e.repeat) return;
         if (player.isDown) return;                       // knocked down: nothing until they're up
         if (tablet.open) { tablet.key(e.code); return; } // the tablet takes the keys while it's open
+        if (!inventory.open && weapons.key(e.code)) return;   // (combat) 1-4 arm a weapon, R reload
         // (house.js) F: the flashlight on / off without arming it
         if (e.code === 'KeyF' && inventory.has('flashlight') && !inventory.open) { toggleFlashlight(); return; }
         if (e.code === 'KeyI') { inventory.toggle(); if (inventory.open) frozenLook.copy(camera.quaternion); return; }
@@ -655,6 +707,7 @@
       function useArmed() {
         const id = inventory.armed;
         const entry = inventory.get(id);
+        if (weapons.isWeapon(id)) { weapons.attack('primary'); return; }   // (combat) Enter = the primary attack
         if (entry.def.throwable && hiding.active && hiding.spot.pose.cover !== 'open') { toast('No room to throw in here'); return; }
         if (entry.def.throwable) {
           const dir = new THREE.Vector3();
@@ -711,12 +764,14 @@
       const viewDir = new THREE.Vector3();
       update = () => {
         const dt = Math.min(clock.getDelta(), 0.05);
+        weapons.beginView(); vitals.beginView();   // (combat) last frame's jolts off the view
         const moved = interact.update(dt, camera.position);
         devices.update(dt);                      // (distractions: noise events, flashing, shaking)
         flashlight.update(dt);
         house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
         grimble?.update(dt, camera.position);
+        posedInvaders?.update(dt, camera.position);  // [invader-character]
         if (shatterFx && !shatterFx(dt)) shatterFx = null;
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
@@ -747,6 +802,7 @@
         }
         grimble?.shakeCamera(camera, dt);
         footsteps?.update(dt, player);
+        invaders?.update(dt);                    // (invaders: senses, squad, movement, bodies)
         // what the crosshair is on (or nearest to it) among the things in reach
         focus = on && !player.isDown && !hiding.active ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
@@ -756,6 +812,7 @@
         afford.update(dt, focus, camera.position);
         let cue = afford.cue(focus, armed);
         if (!cue && armedAct) cue = inventory.get(armed)?.def.throwable ? 'throw' : 'armed';
+        if (!cue && armed && weapons.target()) cue = 'armed';   // (combat) a takedown is on
         const crossCls = on && !player.isDown ? `hud show ${cue ?? ''}` : 'hud';
         if (crossEl.className !== crossCls) crossEl.className = crossCls;
         const parts = [];   // [key, text, style]
@@ -783,7 +840,11 @@
           batteryEl.classList.toggle('low', flashlight.battery < 0.15);
           batteryEl.classList.toggle('on', flashlight.on);
         }
+        // (combat) health, regeneration, death; the weapon's attacks and view model; then this frame's jolts
+        combat.update(dt); vitals.update(dt); weapons.update(dt);
+        vitals.endView(dt); weapons.endView(dt);
         sfx?.update(dt);   // sound effects (viewer/audio.js)
+        estateGate?.update(dt);   // (estate_link) the gate to the wilderness
       };
       const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
       // what Enter does with an item that works anywhere
@@ -793,6 +854,7 @@
         if (id === 'flashlight') return flashlight.on ? 'Flashlight off' : flashlight.battery > 0 || inventory.has('battery') ? 'Flashlight on' : 'Flashlight (flat)';
         if (id === 'battery') return inventory.has('flashlight') && flashlight.battery <= 0.95 ? 'Put in the flashlight' : null;
         if (id === 'tablet') return 'Open tablet';
+        if (weapons.isWeapon(id)) return weapons.hint();   // (combat) "Stab · right-click slash", "Takedown"
         return null;
       }
     }
@@ -827,6 +889,7 @@
       // nothing is drawn until the level is in: on a slow GPU each frame drawn during the load
       // (of a half-built scene nobody can play yet) delays the load itself
       if (!window.__loaded) return;
+      if (window.__suspended) return;          // (estate_link) the player is out in the wilderness
       const b = window.__bench;
       b?.frameStart();
       update();

@@ -1,0 +1,65 @@
+{
+ "asset": "town_shed",
+ "root": "TownShed",
+ "size": [
+  3.4,
+  4.4,
+  3.446
+ ],
+ "bounds": [
+  [
+   -1.7,
+   -2.2,
+   0.0
+  ],
+  [
+   1.7,
+   2.2,
+   3.446
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 292,
+ "tris_lod1": 18,
+ "colliders": [
+  [
+   -1.7,
+   -2.2,
+   2.2,
+   1.7,
+   2.2,
+   3.421
+  ],
+  [
+   -1.5,
+   -2.0,
+   0,
+   1.5,
+   2.0,
+   2.2
+  ]
+ ],
+ "entrances": [
+  {
+   "pos": [
+    0.0,
+    -2.1,
+    0.0
+   ],
+   "facing": "-Y",
+   "width": 1.0,
+   "kind": "door",
+   "note": "closed"
+  }
+ ],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "footprint": [
+  -1.7,
+  -2.2,
+  1.7,
+  2.2
+ ]
+}

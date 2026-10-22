@@ -65,8 +65,9 @@ VALLEYS = [
     # through the Narrows and out of the square toward the town, the valley opening as it goes
     dict(kind="valley", name="laurel_river", points=[
         # (depths: the square tilts down to the south, so the gorge is cut less there; the bed falls
-        # from ~-135 at the south edge to ~-150 at the confluence)
-        (-660, -2400, 50, 700), (-630, -1750, 60, 560), (-605, -1380, 84, 520), (-592, -1190, 110, 470),
+        # from ~-135 at the south edge to ~-150 at the confluence; an S-bend at y -1420..-1160, the
+        # long pool against its east cut bank with a cobble bar inside)
+        (-660, -2400, 50, 700), (-630, -1750, 60, 560), (-640, -1420, 84, 520), (-572, -1290, 98, 490), (-598, -1160, 110, 470),
         (-575, -1010, 83, 420), (-548, -850, 58, 380), (-528, -745, 18, 360)]),
     dict(kind="valley", name="laurel_river_lower", points=[
         (-528, -745, 18, 360), (-700, -752, 20, 420), (-900, -762, 30, 520), (-1300, -780, 95, 760),
@@ -88,6 +89,28 @@ KNICKS = [dict(name="laurel_falls", height=16.0, width=170.0, lip=4.0, fade=60.0
           dict(name="shoals", height=1.6, width=90.0, lip=5.0, fade=60.0,
                points=[(-582, -1060), (-572, -990), (-548, -850), (-530, -760), (-600, -745), (-700, -752),
                        (-900, -762), (-1150, -772)])]
+# the Laurel River's channel (terrain.apply_channel_profiles / apply_channel_beds): its 1.5-3% fall
+# through the gorge gathered into a pool-drop sequence, as on the Nantahala and the Linville below
+# their falls: long glassy pools, shallow riffles over cobbles, boulder rapids, two ledges; the bed
+# deep in the pools and against the outside of bends, bedrock shelves on one side of two pools.
+# The line follows the carved main stem from the inflow to the lip of the Narrows cascade (the
+# cascade, the confluence and the reach below toward the town are untouched).
+RIVER_CHANNEL = dict(
+    name="laurel_river", half_width=60.0, fade=40.0,
+    points=[(-642, -1565), (-639, -1463), (-633, -1419), (-642, -1373), (-631, -1322), (-610, -1275),
+            (-586, -1181), (-590, -1133), (-598, -1083), (-581, -1037), (-579, -989), (-573, -941),
+            (-569, -893), (-566, -814)],
+    steps=[dict(at=(-612, -1462), length=34.0, kind="rapid", depth=0.7),            # Inflow rapid
+           dict(at=(-617, -1368), length=9.0, kind="ledge", hole=3.6),              # the first ledge
+           dict(at=(-604, -1236), length=40.0, kind="riffle", depth=0.45),          # tailout riffle of the long pool
+           dict(at=(-592, -1128), length=42.0, kind="rapid", depth=0.7),
+           dict(at=(-584, -1074), length=78.0, kind="rapid", depth=0.65),           # the Shoals
+           dict(at=(-575, -948), length=10.0, kind="ledge", hole=3.8),              # Laurel Ledge
+           dict(at=(-570, -893), length=26.0, kind="riffle", depth=0.5)],           # into the bridge pool
+    bed=dict(pool_depth=3.3, riffle_depth=0.55, lip_depth=0.35, bend_k=110.0, min_width=15.0,
+             shelves=[dict(start=(-618, -1345), end=(-606, -1262), side=+1, depth=0.22, **{"from": 0.2}),
+                      dict(start=(-579, -995), end=(-575, -958), side=-1, depth=0.28, **{"from": 0.25})],
+             cut_bank=dict(kap=0.004, deg=62.0, width=6.0)))
 CLIFFS = [
     dict(name="falls", points=[(-80, -720), (-92, -660), (-100, -600)], height=14.0, side=+1,
          edge=1.5, back=25.0, end_fade=22.0, jitter=1.2, talus_deg=45.0),
@@ -106,7 +129,11 @@ ESTATE_LAWN = dict(x=(-90.0, 90.0), y=(-80.0, 80.0))
 PADS = [   # (later pads win where they overlap: the lawn last)
     dict(name="gate", center=(20, -95), radius=32, falloff=30, height=LAWN_Z),
     dict(name="gap", center=(-300, -1218), radius=24, falloff=16),
-    dict(name="estate_lawn", center=(0.0, -61.0), half=(90.0, 19.0), falloff=10, height=LAWN_Z, reach=60.0),
+    # (estate_link: a rectangle pad's reach counts from its half-size, terrain.apply_pads `d + size`:
+    # at 60 it never reached the rect (90 m half-width), and the terrain stood 3-8 m over the house's
+    # lawn inside the hedge; 150 = the rect + 60 m, with a 35 m falloff and 14 deg banks and cuts so the rising ground
+    # east of the lawn is a graded berm, not an 8 m cut)
+    dict(name="estate_lawn", center=(0.0, -61.0), half=(90.0, 19.0), falloff=35, height=LAWN_Z, reach=150.0, bank_deg=14.0, cut_deg=14.0),
 ]
 PATHS = [
     dict(name="creek_trail", width=2.0, shoulder=3.0, max_grade=0.22, smooth=24.0, ford=True,
@@ -155,6 +182,11 @@ PATHS = [
          points=[(250, -255), (262, -340), (300, -460), (318, -575), (300, -700), (255, -820),
                  (200, -930), (175, -990), (163, -1027)]),
 ]
+# (estate_link) the county road: the estate's drive leaves the gate as a two-lane concrete road,
+# down the cove's north wall in four hairpins to the Laurel River and west to the town
+# (laurel_fork_road.py: the alignment, the corridor, road.json for viewer/wild/road.js)
+import laurel_fork_road  # noqa: E402
+PATHS.append(laurel_fork_road.path())
 ROUTE_C = next(p for p in PATHS if p["name"] == "route_c")["points"]
 
 # ------------------------------------------------------------------ landmarks (brief table)
@@ -178,6 +210,11 @@ BALD = dict(center=(466, -1068), radius=140.0)
 
 def local(pt):
     return (pt[0], pt[1] + OFFSET_Y) + tuple(pt[2:])
+
+
+def channel_local(c):
+    b = dict(c["bed"], shelves=[dict(sh, start=local(sh["start"]), end=local(sh["end"])) for sh in c["bed"].get("shelves", [])])
+    return dict(c, points=[local(q) for q in c["points"]], steps=[dict(st, at=local(st["at"])) for st in c["steps"]], bed=b)
 
 
 def terrain_overrides(cell=1.5):
@@ -206,6 +243,7 @@ def terrain_overrides(cell=1.5):
                      **({"pool": dict(k["pool"], center=local(k["pool"]["center"]))} if k.get("pool") else {}))
                 for k in KNICKS],
         cliffs=[dict(c, points=[local(q) for q in c["points"]]) for c in CLIFFS],
+        channels=[channel_local(RIVER_CHANNEL)],
         pads=[dict(p, center=local(p["center"])) for p in PADS],
         paths=[dict(p, points=[local(q) for q in p["points"]]) for p in PATHS],
         # forested slopes reach 45 deg in the southern Appalachians: rock only above ~50 or on cliffs
@@ -296,7 +334,7 @@ if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true", help="3 m cells")
-    ap.add_argument("--steps", default="terrain,checks,world")
+    ap.add_argument("--steps", default="terrain,checks,world,road")
     ap.add_argument("--name", default=None)
     a = ap.parse_args()
     cell = 3.0 if a.quick else 1.5
@@ -316,4 +354,6 @@ if __name__ == "__main__":
     if "world" in steps:
         import laurel_fork_world
         laurel_fork_world.run(name)
+    if "road" in steps:                 # (estate_link) the county road's runtime data: world/road.json
+        laurel_fork_road.run(name)
     print(f"done in {time.time() - t0:.0f} s")

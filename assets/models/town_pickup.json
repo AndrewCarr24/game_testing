@@ -1,0 +1,53 @@
+{
+ "asset": "town_pickup",
+ "root": "TownPickup",
+ "size": [
+  2.2,
+  6.14,
+  1.89
+ ],
+ "bounds": [
+  [
+   -1.1,
+   -3.07,
+   0.02
+  ],
+  [
+   1.1,
+   3.07,
+   1.91
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 468,
+ "tris_lod1": 20,
+ "colliders": [
+  [
+   -1.0,
+   -2.95,
+   0,
+   1.0,
+   2.95,
+   1.88
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "vehicle": "pickup",
+ "footprint": [
+  -1.0,
+  -2.95,
+  1.0,
+  2.95
+ ],
+ "tints": {
+  "Body": [
+   0.5,
+   0.06,
+   0.05
+  ]
+ }
+}

@@ -616,6 +616,16 @@ def part_colliders(parts, skip=COLLIDER_SKIP):
         while ob is not None:
             if "interact" in ob.keys():
                 return True
+            # a react that moves its node (slide / rotate / scale: the garage door's leaf) gets the
+            # engine's moving collider too, not a static one stuck where it rests
+            r = ob.get("react")
+            if r is not None:
+                plain = lambda v: v.to_dict() if hasattr(v, "to_dict") else v.to_list() if hasattr(v, "to_list") else v
+                r = plain(r)
+                for d in (r if isinstance(r, list) else [r]):
+                    on = plain(d).get("on") or {} if isinstance(plain(d), dict) else {}
+                    if isinstance(on, dict) and any(k in on for k in ("slide", "rotate", "scale")):
+                        return True
             ob = ob.parent
         return False
     return [aabb_gltf(*world_aabb([ob])) for ob in parts

@@ -69,6 +69,12 @@ def main():
     # the Grimble is 7.3 m tall and seen from 2 m away: its colour maps keep their full size;
     # its normal maps (broad folds and fur grain) stop at 1024 (~33 MB of GPU memory saved)
     keep |= {n for n in os.listdir(TEX) if n.startswith("T_Grimble_") and "Normal" not in n}
+    # [invader-character] the invader's body set is 1024 by design (seen at arm's length when it grabs
+    # you; one set shared by every invader, the outfits only swap the base colour)
+    keep |= {n for n in os.listdir(TEX) if n.startswith("T_Invader_")}
+    # [town kit] T_Town_Atlas is the whole town's one texture (2048, 512-px regions with 8-px
+    # gutters, see blender/assets/town_textures.py): shrinking it would ruin every region
+    keep |= {n for n in os.listdir(TEX) if n.startswith("T_Town_Atlas")}
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:

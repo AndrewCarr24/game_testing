@@ -1,0 +1,53 @@
+{
+ "asset": "town_car_red",
+ "root": "TownCarRed",
+ "size": [
+  2.04,
+  5.04,
+  1.444
+ ],
+ "bounds": [
+  [
+   -1.02,
+   -2.52,
+   0.016
+  ],
+  [
+   1.02,
+   2.52,
+   1.46
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 466,
+ "tris_lod1": 20,
+ "colliders": [
+  [
+   -0.925,
+   -2.4,
+   0,
+   0.925,
+   2.4,
+   1.43
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "vehicle": "car",
+ "footprint": [
+  -0.925,
+  -2.4,
+  0.925,
+  2.4
+ ],
+ "tints": {
+  "Body": [
+   0.55,
+   0.05,
+   0.05
+  ]
+ }
+}

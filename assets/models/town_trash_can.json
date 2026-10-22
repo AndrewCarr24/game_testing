@@ -1,0 +1,46 @@
+{
+ "asset": "town_trash_can",
+ "root": "TownTrashCan",
+ "size": [
+  0.66,
+  0.68,
+  1.1
+ ],
+ "bounds": [
+  [
+   -0.33,
+   -0.34,
+   0.0
+  ],
+  [
+   0.33,
+   0.34,
+   1.1
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 184,
+ "tris_lod1": 10,
+ "colliders": [
+  [
+   -0.33,
+   -0.33,
+   0,
+   0.33,
+   0.33,
+   1.1
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "prop": true,
+ "footprint": [
+  -0.33,
+  -0.33,
+  0.33,
+  0.33
+ ]
+}

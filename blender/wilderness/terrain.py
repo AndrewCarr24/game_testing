@@ -109,6 +109,12 @@ P = dict(
     # 2° trench fill can't ramp it. An optional plunge pool (disc, (1-(r/R)²)² profile) is dug
     # after the cliffs, so hydrology turns it into a lake. points run downstream from the lip.
     knicks=[],              # dict(name, points, height, width, lip, fade, pool=dict(center, radius, depth))
+    # Big-river channel character (off by default): apply_channel_profiles turns a river's even
+    # fall into pools and drops before the hydrology (so the water surface comes out flat in the
+    # pools and steep in the riffles, rapids and ledges); apply_channel_beds then shapes the bed
+    # under the water after it (deep pools, shallow riffles over cobbles, the thalweg against the
+    # outside of bends, bedrock shelves, steep cut banks). See apply_channel_profiles for the keys.
+    channels=[],
     pads=[dict(name="gate", center=(20, -748), radius=24, falloff=14),
           dict(name="camp", center=(25, 120), radius=20, falloff=12),
           dict(name="overlook", center=(300, -380), radius=13, falloff=8),
@@ -831,6 +837,214 @@ def apply_pools(H, grid, p):
     return H
 
 
+# --------------------------------------------------------------------------------- 6b channels
+def _channel_line(c):
+    pts = spline(c["points"], 3.0)
+    seg = np.hypot(*(pts[1:, :2] - pts[:-1, :2]).T)
+    return pts, float(seg.sum())
+
+
+def _project_s(pts, xy):
+    """Arc length along the polyline pts of the point nearest to xy."""
+    seg = np.hypot(*(pts[1:, :2] - pts[:-1, :2]).T)
+    cum = np.concatenate([[0], np.cumsum(seg)])
+    q = np.asarray(xy, float)
+    best, sb = 1e18, 0.0
+    for a, b, L, s0 in zip(pts[:-1, :2], pts[1:, :2], seg, cum[:-1]):
+        ab = b - a
+        t = float(np.clip(np.dot(q - a, ab) / max(L * L, 1e-9), 0, 1))
+        dd = float(np.hypot(*(a + t * ab - q)))
+        if dd < best:
+            best, sb = dd, s0 + t * L
+    return sb
+
+
+def _channel_steps(pts, c):
+    """A channel's drops as (s, length, kind, opts) along its valley line, sorted downstream."""
+    out = [(_project_s(pts, st["at"]), float(st.get("length", 30.0)), st.get("kind", "rapid"), st) for st in c.get("steps", [])]
+    return sorted(out, key=lambda t: t[0])
+
+
+def _smooth1(a, k):
+    return np.convolve(np.pad(a, k, mode="edge"), np.ones(2 * k + 1) / (2 * k + 1), mode="valid")
+
+
+def apply_channel_profiles(H, grid, p, hyd):
+    """Pools and drops on a big river (p["channels"]; right after the hydrology, before the beds,
+    pads and paths). channel = dict(name, points (its valley line, downstream, ending at the reach's
+    last crest), half_width, fade, steps=[dict(at=(x, y), length, kind="riffle"|"rapid"|"ledge",
+    pool_depth=, depth=, hole=)], bed=dict(...) (apply_channel_beds)).
+    The river's water level along the line (smoothed, made to fall only) becomes a staircase: each
+    pool flat at the level of its tail (the crest of the drop below it), each step falling to the
+    next pool's level over its length (a ledge as an S-curve, most of it in the middle). The water
+    and the ground beside it within `fade` m of the channel's edge are lowered together (the most
+    at the head of each pool, nothing at a crest), so the water keeps its width, banks and bars;
+    hyd["river_level"] is updated in place (the riverside road grades off it); the reach's total
+    fall is unchanged. (Done before the hydrology, the flattened pools filled as lakes.)"""
+    out = []
+    level = hyd["river_level"]
+    rd, rhw = hyd["river_d"], hyd["river_hw"]
+    for c in p.get("channels", []):
+        pts, total = _channel_line(c)
+        hw, fade = c.get("half_width", 60.0), c.get("fade", 40.0)
+        d, _, s, _ = poly_field(grid, pts, hw + fade)
+        fin = np.isfinite(d) & np.isfinite(rd)
+        big = fin & (np.nan_to_num(rhw) * 2 >= c.get("bed", {}).get("min_width", 15.0))
+        # (cells past either end of the line project onto it: the cascade below its last crest
+        # mustn't set the last pool's level)
+        core = big & np.isfinite(level) & (rd < 0.5 * rhw) & (s > 1.0) & (s < total - 1.0)
+        nb = int(total / 3.0) + 2
+        b = np.clip((np.where(fin, s, 0) / 3.0).astype(np.int64), 0, nb - 1)
+        zmin = np.full(nb, np.inf)
+        np.minimum.at(zmin, b[core], level[core])
+        ok = np.isfinite(zmin)
+        sb = np.arange(nb) * 3.0
+        zf = np.minimum.accumulate(_smooth1(np.interp(sb, sb[ok], zmin[ok]), 3))
+        steps = _channel_steps(pts, c)
+        zs = lambda q: float(np.interp(q, sb, zf))
+        crests = [st[0] for st in steps] + [total]
+        stair = zf.copy()
+        prev_end, info = 0.0, []
+        for kk, (s0, L, kind, opts) in enumerate(steps):
+            P, Pn = zs(s0), zs(crests[kk + 1])
+            stair[(sb >= prev_end) & (sb < s0)] = P
+            drop = (sb >= s0) & (sb < s0 + L)
+            t = np.clip((sb[drop] - s0) / max(L, 1e-6), 0, 1)
+            stair[drop] = P + (Pn - P) * (smoothstep(0.15, 0.85, t) if kind == "ledge" else t)
+            prev_end = s0 + L
+            info.append(dict(kind=kind, s=round(s0, 1), length=L, top=round(P, 2), bottom=round(Pn, 2), drop=round(P - Pn, 2)))
+        stair[sb >= prev_end] = zs(total)
+        # (from the line's start the lowering fades in over 40 m, and out over its last 6 m)
+        delta = np.minimum(stair - zf, 0.0) * smoothstep(0.0, 40.0, sb) * (1 - smoothstep(total - 6.0, total, sb))
+        dcell = np.interp(np.where(fin, s, 0), sb, delta)
+        edge = np.where(big, rd - rhw, 1e9)
+        w = np.where(big, 1 - smoothstep(0.0, fade, edge), 0.0)
+        H = H + dcell * w
+        wet = big & np.isfinite(level)
+        level[wet] = level[wet] + dcell[wet]
+        out.append(dict(name=c["name"], length=round(total, 1), steps=info, max_lowering=round(float(-delta.min()), 2)))
+    return H, out
+
+
+def apply_channel_beds(H, grid, p, hyd, H_pre):
+    """The bed of a big river (p["channels"][].bed; after the hydrology). Along the channel, depth
+    from its pools and drops: a deep scour below each drop, the pool shallowing to a gravel tailout
+    at the next crest, shallow riffles and rapids, a lip and a plunge hole at a ledge. Across it,
+    the thalweg pushed toward the outside of bends (a point bar inside, deep water hard against
+    the outer bank), flat-bottomed riffles and rounder pools; bedrock shelves (flat, shallow
+    benches on one side with a sharp edge to the deep water); steep cut banks on the outside of
+    bends. Only the bed under the water and the banks beside it change, not the water level.
+    bed = dict(pool_depth, riffle_depth, lip_depth, bend_k (thalweg shift per 1/m of curvature),
+               min_width, shelves=[dict(start=(x, y), end=(x, y), side=+1|-1, depth, from)],
+               cut_bank=dict(kap, deg, width) | None).
+    Returns H, a rock mask (shelves + cut banks: the terrain's rock colour) and per channel its
+    carved centreline [x, y, s] (the world step's along-stream coordinate)."""
+    rock = np.zeros(H.shape)
+    infos = []
+    X, Y = grid.xy()
+    level = hyd["river_level"]
+    near_level = None
+    for c in p.get("channels", []):
+        bq = c.get("bed")
+        if not bq:
+            continue
+        pts, total = _channel_line(c)
+        hw0, fade = c.get("half_width", 60.0), c.get("fade", 40.0)
+        dl, _, sl, _ = poly_field(grid, pts, hw0 + fade)
+        rd, rhw = hyd["river_d"], hyd["river_hw"]
+        big = np.isfinite(dl) & np.isfinite(rd) & (np.nan_to_num(rhw) * 2 >= bq.get("min_width", 15.0))
+        chan = big & (rd < rhw)
+        # the carved channel's own centreline (not the valley line): the middle of the channel per
+        # 3 m of the valley line, smoothed twice over ~40 m
+        nb = int(total / 3.0) + 2
+        b = np.clip((np.where(np.isfinite(sl), sl, 0) / 3.0).astype(np.int64), 0, nb - 1)
+        mid = chan & (rd < 0.35 * rhw)
+        cnt = np.bincount(b[mid], minlength=nb).astype(float)
+        if (cnt > 0).sum() < 10:
+            continue
+        cx = np.bincount(b[mid], weights=X[mid], minlength=nb)
+        cy = np.bincount(b[mid], weights=Y[mid], minlength=nb)
+        ok = cnt > 0
+        sb = np.arange(nb) * 3.0
+        cx = _smooth1(_smooth1(np.interp(sb, sb[ok], cx[ok] / cnt[ok]), 6), 6)
+        cy = _smooth1(_smooth1(np.interp(sb, sb[ok], cy[ok] / cnt[ok]), 6), 6)
+        keep = (sb >= sb[ok].min()) & (sb <= sb[ok].max())
+        cl = np.column_stack([cx[keep], cy[keep]])
+        tx, ty = np.gradient(cl[:, 0]), np.gradient(cl[:, 1])
+        ang = np.unwrap(np.arctan2(ty, tx))
+        kap = _smooth1(np.gradient(ang) / (np.hypot(tx, ty) + 1e-9), 6)        # 1/m, + = turning left
+        cs = np.concatenate([[0], np.cumsum(np.hypot(*(cl[1:] - cl[:-1]).T))])
+        reach = float(np.nanmax(rhw[chan])) * 1.6 + 20.0
+        dc, _, sc, side = poly_field(grid, cl, reach)
+        okc = np.isfinite(dc)
+        hw = np.where(np.isfinite(rhw), rhw, 1.0)
+        n = np.clip(side * np.where(okc, dc, 0) / np.maximum(hw, 1e-3), -1.6, 1.6)
+        scc = np.where(okc, sc, 0)
+        kap_c = np.interp(scc, cs, kap)
+        s_of_line = lambda q: float(np.interp(q, sb[keep], cs))
+        steps = _channel_steps(pts, c)
+        Dp, Dr, Dl = bq.get("pool_depth", 3.2), bq.get("riffle_depth", 0.6), bq.get("lip_depth", 0.35)
+        # control points along the centreline: each drop (a riffle / rapid shallow over its length,
+        # a ledge's lip), then the pool below it: a scour (the plunge hole below a ledge), the deep
+        # pool, its tailout shallowing up to the next drop's crest (scaled into short pools)
+        segs = []
+        for s0, L, kind, opts in steps:
+            segs.append((s_of_line(s0), s_of_line(s0 + L), kind, opts))
+        ctrl = []
+        prev_e, prev_kind, prev_opts = 0.0, None, {}
+        for a, e, kind, opts in segs + [(float(cs[-1]), float(cs[-1]), "end", {})]:
+            P = max(a - prev_e, 1.0)
+            dpool = (prev_opts or {}).get("pool_depth", Dp)
+            hole = prev_opts.get("hole", dpool * 1.1) if prev_kind == "ledge" else dpool * 1.08
+            if prev_kind is not None:
+                ctrl.append((prev_e + min(7.0, 0.12 * P), hole))
+            ctrl.append((a - min(30.0, 0.35 * P), dpool * 0.85))
+            if kind == "end":
+                break
+            dr = Dl if kind == "ledge" else opts.get("depth", Dr)
+            ctrl += [(a - min(10.0, 0.14 * P), dr * 1.7), (a, dr), (max(e, a + 0.5), dr * (1.4 if kind == "ledge" else 1.1))]
+            prev_e, prev_kind, prev_opts = max(e, a + 0.5), kind, opts
+        ctrl.append((float(cs[-1]) + 1.0, Dp * 0.85))
+        ctrl.sort()
+        D = np.interp(scc, np.array([q[0] for q in ctrl]), np.array([q[1] for q in ctrl]))
+        # across: +side = right of travel, and a left turn (kap > 0) has its outer bank on the right
+        nt = np.clip(kap_c * bq.get("bend_k", 90.0), -0.55, 0.55)
+        hwid = np.where(n >= nt, 1 - nt, 1 + nt)
+        u = np.clip((n - nt) / np.maximum(hwid, 1e-3), -1, 1)
+        expo = 0.45 + 0.5 * np.clip(D / max(Dp, 1e-3), 0, 1)           # flat riffles, rounder pools
+        depth = 0.04 + D * np.clip(1 - u * u, 0, 1) ** expo
+        shelf = np.zeros(H.shape, bool)
+        for sh in bq.get("shelves", []):
+            a, e = s_of_line(_project_s(pts, sh["start"])), s_of_line(_project_s(pts, sh["end"]))
+            tt = np.clip(np.minimum(scc - a, e - scc) / 8.0, 0, 1)
+            on = okc & (scc >= a) & (scc <= e) & (n * sh.get("side", 1) > sh.get("from", 0.15) + 0.3 * (1 - tt))
+            depth = np.where(on, np.minimum(depth, sh.get("depth", 0.25)), depth)
+            shelf |= on
+        lv_ok = chan & okc & np.isfinite(level)
+        target = np.where(lv_ok, level, 0) - depth
+        edge = 1 - smoothstep(0.86, 1.0, np.where(lv_ok, rd / np.maximum(rhw, 1e-3), 1))
+        Hn = np.where(lv_ok, H + (target - H) * edge, H)
+        cut = bq.get("cut_bank", dict(kap=0.004, deg=62.0, width=6.0))
+        if cut:
+            if near_level is None:                       # (the nearest water level, beside the water)
+                wy, wx, _ = nearest_seed(np.isfinite(level))
+                near_level = level[np.maximum(wy, 0), np.maximum(wx, 0)]
+            dd = rd - rhw
+            outer = okc & big & (np.sign(n) == np.sign(kap_c)) & (dd > -0.5) & (dd < cut["width"])
+            steep = near_level + 0.25 + np.maximum(dd + 0.5, 0) * math.tan(math.radians(cut["deg"]))
+            gain = np.clip((np.abs(kap_c) - cut["kap"]) / cut["kap"], 0, 1) * (1 - smoothstep(cut["width"] * 0.6, cut["width"], dd))
+            raised = np.minimum(steep, np.maximum(H_pre, Hn))
+            Hn = np.where(outer & np.isfinite(steep), np.maximum(Hn, Hn + (raised - Hn) * gain), Hn)
+            rock = np.maximum(rock, np.where(outer, gain * smoothstep(-0.5, 1.0, dd), 0.0))
+        rock = np.maximum(rock, shelf * 0.9)
+        H = Hn
+        infos.append(dict(name=c["name"],
+                          centerline=[[round(float(x), 1), round(float(y), 1), round(float(q), 1)] for (x, y), q in zip(cl[::2], cs[::2])],
+                          bed_steps=[dict(kind=kind, s=round(s_of_line(s0), 1), end=round(s_of_line(s0 + L), 1)) for s0, L, kind, _ in steps],
+                          shelf_cells=int(shelf.sum()), max_bend_kap=round(float(np.abs(kap).max()), 4)))
+    return H, rock, infos
+
+
 # --------------------------------------------------------------------------------- 7 hydrology
 def hydrology(H, grid, p, timings):
     q, cell = p["hydro"], grid.cell
@@ -1509,7 +1723,14 @@ def build(**overrides):
     H = apply_pools(H, grid, p)
     tick("cliffs", t)
     t = time.perf_counter()
+    H_pre = H.copy() if p.get("channels") else None
     H, hyd = hydrology(H, grid, p, {})
+    channel_rock, channels = None, []
+    if p.get("channels"):
+        H, channels = apply_channel_profiles(H, grid, p, hyd)
+        H, channel_rock, beds = apply_channel_beds(H, grid, p, hyd, H_pre)
+        for c in channels:
+            c.update(next((bd for bd in beds if bd["name"] == c["name"]), {}))
     tick("hydrology", t)
     t = time.perf_counter()
     H, pads = apply_pads(H, grid, p)
@@ -1529,6 +1750,12 @@ def build(**overrides):
     pw = max(pp["width"] for pp in p["paths"]) / 2 + 1
     chan = np.isfinite(hyd["channel_T"])
     crossing = chan & (path_d < pw + 6)
+    # (estate_link: a path with culverts=True, a road on its fill, keeps its fill where streams
+    # cross it: no ford re-cut; the streams pass under it in culverts, drawn by the runtime)
+    for pp in p["paths"]:
+        if pp.get("culverts") and routed.get(pp["name"]):
+            dc, _, _, _ = poly_field(grid, spline([tuple(q) for q in routed[pp["name"]]], grid.cell), pp["width"] / 2 + 8)
+            crossing &= ~np.isfinite(dc)
     recut = np.zeros(H.shape, bool)
     if crossing.any():
         lab = label(crossing)
@@ -1551,6 +1778,8 @@ def build(**overrides):
     t = time.perf_counter()
     M = masks(H, grid, hyd, sed, path_d, p)
     M["cliff"] = np.clip(blur(cliff_mask, 0.7), 0, 1)
+    if channel_rock is not None:                             # (bedrock shelves, cut banks)
+        M["cliff"] = np.maximum(M["cliff"], np.clip(blur(channel_rock, 0.6), 0, 1))
     M["bars"] = hyd["bars"].astype(float)                    # gravel bars / floodplain (hydro.floodplain)
     water_any = (M["rivers"] > 0) | (M["lakes"] > 0)
     _, _, dwc = nearest_seed(water_any)
@@ -1637,7 +1866,7 @@ def build(**overrides):
                   slope_deg_p90=round(float(np.percentile(M["slope"], 90)), 1),
                   walkable_pct_lt_35deg=round(float((M["slope"] < 35).mean() * 100), 1),
                   paths=[path_walk(H, grid, dict(pp, points=routed[pp["name"]])) for pp in p["paths"]]),
-        routed_paths=routed, hydrology=hyd["info"], knicks=knicks, cliffs=cliffs, pads=pads, paths=paths, fords=fords, river_along_path=overlaps,
+        routed_paths=routed, hydrology=hyd["info"], knicks=knicks, **({"channels": channels} if channels else {}), cliffs=cliffs, pads=pads, paths=paths, fords=fords, river_along_path=overlaps,
         light_scale=round(scale, 5), timings_s=timings, files_bytes=files,
         grid=dict(x0=grid.x0, y0=grid.y0, cell=grid.cell, nx=n, ny=n),
         collider=dict(file="collider_u16.bin", dtype="uint16 little-endian", rows="north to south",

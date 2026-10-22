@@ -1,0 +1,47 @@
+{
+ "asset": "town_highway_light",
+ "root": "TownHighwayLight",
+ "size": [
+  3.3,
+  0.7,
+  10.05
+ ],
+ "bounds": [
+  [
+   -0.35,
+   -0.35,
+   0.0
+  ],
+  [
+   2.95,
+   0.35,
+   10.05
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 98,
+ "tris_lod1": 10,
+ "colliders": [
+  [
+   -0.35,
+   -0.35,
+   0,
+   0.35,
+   0.35,
+   9.4
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas",
+  "M_Town_Glow"
+ ],
+ "walk_in": false,
+ "prop": true,
+ "footprint": [
+  -0.35,
+  -0.35,
+  0.35,
+  0.35
+ ]
+}
