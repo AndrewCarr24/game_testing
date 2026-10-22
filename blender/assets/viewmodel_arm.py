@@ -68,7 +68,7 @@ P = dict(
     preview_knife=True,
     # the knife's handle (kitchen_knife.py): half extents across (X: thickness, Y: height)
     handle=(0.0185 / 2 * 1.04, 0.0245 / 2 * 1.04, 0.122 / 2),
-    skin=(0.745, 0.605, 0.54),        # sRGB base skin
+    skin=(0.76, 0.63, 0.575),         # sRGB base skin (light, low saturation)
     sleeve=(0.30, 0.31, 0.33),        # heather charcoal knit
 )
 
@@ -94,7 +94,7 @@ def _rot(deg, axis=(0, 0, 1)):
 A_M = _n((0.0, 0.944, 0.33))
 U_M = _n(np.cross((1.0, 0, 0), A_M))          # across the knuckles (radial, toward the thumb = +Z)
 FORE = -A_M                                   # wrist -> elbow
-WRIST = np.array([0.0165, -0.060, -0.002])      # the wrist joint (radiocarpal) centre
+WRIST = np.array([0.0140, -0.060, -0.002])      # the wrist joint (radiocarpal) centre
 
 # fingers: height on the handle (z), MCP knuckle (x, y), phalanx lengths, radii (base, tip),
 # flexion at MCP / PIP / DIP (deg, about +Z: curling toward the palm)
@@ -197,7 +197,7 @@ def field_tree(p):
         c = cmc_point(f)
         rr = f["r"][0]
         palm.append(rc(c, j[0] - 0.002 * A_M, 0.0118, rr * 1.18, k=0.009))           # metacarpal + flesh
-        palm.append(el(j[0] + np.array([0.0055, 0.0005, 0]), (0.0085, 0.0088, rr * 0.95), k=0.004))   # knuckle head
+        palm.append(el(j[0] + np.array([0.0068, 0.0005, 0]), (0.0088, 0.0086, rr * 0.92), k=0.003))   # knuckle head (a clear ridge)
     # the palm's pads: thenar (the thumb's muscle, behind the handle near the top) and
     # hypothenar (the heel under the little finger), cupping the handle's back
     palm.append(el((0.0045, -0.0330, 0.0300), (0.0150, 0.0215, 0.0185), k=0.010, rot=sdf.rot_x(-28)))
@@ -218,8 +218,11 @@ def field_tree(p):
     for name, f in FINGERS.items():
         j, dirs = finger_joints(f)
         r0, r1 = f["r"]
+        r0, r1 = r0 * 0.93, r1 * 0.93          # (slimmer than their spacing: a crease between each)
         rs = [r0, r0 * 0.96, r0 * 0.9, r1]
-        chains.append([rc(j[0], j[1], rs[0], rs[1], k=0.0),
+        corner = _n(dirs[0] - dirs[1])
+        pip_bump = el(j[1] + corner * rs[1] * 0.42, (rs[1] * 0.72, rs[1] * 0.72, rs[1] * 0.82), k=0.002)
+        chains.append([pip_bump, rc(j[0], j[1], rs[0], rs[1], k=0.0),
                        rc(j[1], j[2], rs[1] * 0.98, rs[2], k=0.0025),
                        rc(j[2], j[3], rs[2] * 0.97, rs[3], k=0.0020)])
     G.append(("fingers", "u", 0.0045, chains))
@@ -233,7 +236,7 @@ def field_tree(p):
         if out @ (mid - np.array([0, 0, mid[2]])) < 0:
             out = -out
         rr = f["r"][1]
-        nails.append(el(mid + out * (rr * 1.0 - 0.0010), (0.0016, rr * 0.80, rr * 0.72), k=0.0012,
+        nails.append(el(mid + out * (rr * 0.93 - 0.0006), (0.0018, rr * 0.78, rr * 0.70), k=0.0010,
                         rot=np.stack([out, d3, np.cross(out, d3)], 1)))
     dt = _n(T["tip"] - T["ip"])
     tout = _n(np.cross(dt, (1.0, 0, 0)))          # the thumb's back faces away from the fingers (-X-ish)
@@ -247,8 +250,8 @@ def field_tree(p):
     # the muscle belly swelling toward the elbow; the ulna's knob on the little-finger side
     elbow = WRIST + 0.30 * FORE
     fore = etube(WRIST + 0.006 * A_M, elbow,
-                 ru=lambda h: 0.0270 + 0.0145 * smooth01(h / 0.72) - 0.0025 * np.exp(-((h - 0.05) / 0.04) ** 2),
-                 rv=lambda h: 0.0178 + 0.0175 * smooth01(h / 0.78), u=U_M, k=0.010)
+                 ru=lambda h: 0.0305 + 0.0135 * smooth01(h / 0.72) - 0.0020 * np.exp(-((h - 0.05) / 0.04) ** 2),
+                 rv=lambda h: 0.0205 + 0.0160 * smooth01(h / 0.78), u=U_M, k=0.010)
     G.append(("forearm", "u", 0.012, [fore,
                                       el(WRIST + 0.012 * FORE + np.array([0.0105, 0, 0]) - 0.0215 * U_M, (0.0062, 0.0075, 0.0065), k=0.006)]))
     # -- the handle: the flesh presses flat on it (subtracted)
@@ -256,8 +259,8 @@ def field_tree(p):
     # -- the sleeve: pushed up to ~7 cm past the wrist, soft folds; the ribbed cuff at its end
     s0 = WRIST + 0.072 * FORE
     s1 = WRIST + 0.30 * FORE
-    fr = lambda h: 0.0270 + 0.0145 * smooth01((0.24 + h * 0.76) / 0.72)   # the forearm's radius under it
-    fv = lambda h: 0.0178 + 0.0175 * smooth01((0.24 + h * 0.76) / 0.78)
+    fr = lambda h: 0.0305 + 0.0135 * smooth01((0.24 + h * 0.76) / 0.72)   # the forearm's radius under it
+    fv = lambda h: 0.0205 + 0.0160 * smooth01((0.24 + h * 0.76) / 0.78)
     cuff = etube(s0, s0 + 0.055 * FORE, ru=lambda h: fr(h * 0.24) + 0.0042 + 0.0012 * smooth01(h / 0.3),
                  rv=lambda h: fv(h * 0.24) + 0.0042 + 0.0012 * smooth01(h / 0.3), u=U_M, k=0.0,
                  ribs=(44, 0.00075, 0.02, 0.98))
@@ -479,7 +482,7 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     inward = np.clip(-(N[:, 0] * rad[:, 0] + N[:, 1] * rad[:, 1]), 0, 1)
     palmar = np.where(zone == 2, inward, np.clip(-N[:, 0] * 1.4, 0, 1))
     palmar = np.where(zone == 4, np.clip(-N[:, 0], 0, 1) * 0.6, palmar)
-    col *= (1 + palmar[:, None] * np.array([0.10, 0.05, 0.04]))
+    col *= (1 + palmar[:, None] * np.array([0.12, 0.10, 0.09]))
     col *= (1 - (1 - palmar[:, None]) * np.array([0.04, 0.07, 0.08]))              # the back: a little tanned
     # knuckles (MCP, PIP, DIP) and fingertips: blood close under thin skin -> redder
     warm = np.zeros(len(P))
@@ -494,7 +497,7 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     T = {k: np.array(v) for k, v in THUMB.items() if k != "r"}
     tips = np.maximum(tips, np.exp(-(np.linalg.norm(P - T["tip"], axis=1) / 0.011) ** 2))
     warm = np.maximum(warm, np.exp(-(np.linalg.norm(P - T["ip"], axis=1) / 0.009) ** 2) * 0.7)
-    col *= (1 + warm[:, None] * np.array([0.05, -0.15, -0.15]))
+    col *= (1 + warm[:, None] * np.array([0.07, -0.20, -0.20]))
     col *= (1 + tips[:, None] * np.array([0.04, -0.09, -0.07]))
     # knuckle wrinkles: lines across the back of each bent joint (PIP, DIP, the thumb's IP),
     # ~1.5 mm apart round the joint's outer corner, fading away from its middle
@@ -533,17 +536,17 @@ def paint_maps(p, pos, nlow, ao, tan_n, size):
     col *= (1 - frk[:, None] * np.array([0.25, 0.4, 0.5]))
     # faint veins: thin winding lines on the back of the hand and up the inner wrist
     vline = np.abs(sdf.vnoise(P * np.array([1.0, 0.25, 1.0]), 60.0, 11))
-    vein = np.clip(1 - vline / 0.035, 0, 1) * np.clip(((P - WRIST) @ FORE + 0.06) / 0.04, 0, 1) * \
+    vein = np.clip(1 - vline / 0.05, 0, 1) * np.clip(((P - WRIST) @ FORE + 0.06) / 0.04, 0, 1) * \
         np.clip(1 - ((P - WRIST) @ FORE) / 0.08, 0, 1) * (1 - palmar * 0.5) * (zone != 2)
-    col = col * (1 - vein[:, None] * 0.10) + vein[:, None] * np.array([0.0, 0.004, 0.012])
+    col = col * (1 - vein[:, None] * np.array([0.22, 0.16, 0.08]))
     # nails: pinker, lighter, a whiter free edge
     nl = srgb_to_lin((0.84, 0.665, 0.61))
     col = np.where(nail[:, None], nl * (1 + 0.04 * sdf.vnoise(P, 900.0, 2)[:, None]), col)
     # occlusion tinted red: light in the creases has gone through skin
     aoc = ao.reshape(-1)
-    tint = np.array([1.0, 0.78, 0.72])
+    tint = np.array([1.0, 0.84, 0.80])
     col *= tint + (1 - tint) * np.clip(aoc, 0, 1)[:, None] ** 0.6
-    rough = 0.56 + 0.06 * palmar - 0.05 * tips + 0.04 * warm + 0.04 * sdf.vnoise(P, 300.0, 6)
+    rough = 0.47 + 0.07 * palmar - 0.04 * tips + 0.04 * warm + 0.05 * sdf.vnoise(P, 300.0, 6)
     rough = np.where(nail, 0.30, rough) + wr * 0.08
     # ---- the sleeve: heathered charcoal knit (light and dark fibres), the cuff a shade darker
     sb = srgb_to_lin(p["sleeve"])

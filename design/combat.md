@@ -122,8 +122,15 @@ along the forearm). It is built in the grip frame, so the weapon's `_Grip` goes 
 `ViewmodelArm_Socket` (on the Hand bone); the root's extras (`userData.viewmodel`) give the joint
 axes. Loaded once at startup (~250 kB); a weapon shows when it has (the old code-built hand is
 the fallback if it can't load). Placement: `hold` = the grip in camera space (`pos`), the forearm
-direction (`arm`), the back of the hand (`back`), the guard's wrist bend; scale 1:1 (a hand at
-~33 cm with the camera's 60 deg FOV), nearest visible vertex 0.2 m (the near plane is 0.1 m).
+direction (`arm`), the back of the hand (`back`, then `roll` about the forearm), the guard's
+wrist bend; scale 1:1. The guard (second art pass): the fist low in the bottom-right, ~45 cm
+from the eye, the back of the hand turned away and rolled so the curled fingers, their creases
+and the PIP knuckles face the eye (the blade leans up-left from the thumb side, like a held
+tool); nearest visible vertex 0.29 m (the near plane is 0.1 m). Proportions: wrist ~6.1 cm wide
+x 4.1 cm deep, forearm to ~8.8 x 7.3 cm, fingers slimmer than their spacing (a crease between
+each), knuckle ridges and PIP bumps in the field. Skin: low-saturation light base, paler palm,
+redder knuckles and fingertips, visible veins on the back of the hand and wrist, roughness
+~0.47-0.55; the room's SH is 35% desaturated on the skin so a warm room doesn't turn it orange.
 
 Lighting is unchanged: lit by the room the eye is in (that room's baked SH, which dims with the
 room's lights-off state, its panorama for reflections; no real-time sun in sunless rooms), plus a
