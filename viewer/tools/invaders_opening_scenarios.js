@@ -11,10 +11,12 @@
   // out of sight of the front: the upstairs office (its door shut), the kitchen
   const OFFICE = [7, -15, 4.6], KITCHEN = [-2, -15];
   const start = (from, k = 1) => (I, S) => { const o = O(); o.k = k; o.start({ from }); S.t0 = 0; };
+  const FRONT = [[-0.75, 20, false], [0.75, 20, false]];
   return {
     // up the drive from the gate in a loose group, the leader in front; on the step by the ring
-    arrival: { P: OFFICE, secs: 70, doors: [[6.75, -10.5, false, 4.6]], look: [6.75, 6.2, -10.5],
+    arrival: { P: OFFICE, secs: 70, doors: [...FRONT, [6.75, -10.5, false, 4.6]], look: [6.75, 6.2, -10.5],
       setup: (I, S) => { start('gate')(I, S); S.gaps = []; S.leadFront = 0; S.samples = 0; },
+      stop: () => O().phase === 'wait1',
       steps: [{ until: (I, S) => {
         const c = O().cast, L = c.leader, rest = Object.values(c).filter((a) => a !== L);
         if (O().phase === 'approach' && L) {
@@ -39,7 +41,7 @@
       } },
     // the ring is the house's chime: heard (flat, the house's speakers) from the far side of the
     // house; the squad doesn't go to investigate its own ring
-    ring_heard: { P: KITCHEN, secs: 14, doors: [], look: [-2, 1.6, -19],
+    ring_heard: { P: KITCHEN, secs: 14, doors: FRONT, look: [-2, 1.6, -19],
       setup: (I, S) => { start('step')(I, S); S.log0 = window.__sfx?.log.length ?? 0; S.sig = []; S.off = window.__signals.on('doorbell', (v) => S.sig.push([+S.t.toFixed(2), v])); },
       steps: [{ wait: 14 }],
       check: (I, S) => {
@@ -49,16 +51,16 @@
           ringAt: r2(ring), signal: S.sig.map((s) => s.join(':')).join(' '), chimes: chimes.length, flat: chimes.every((e) => e.flat), investigate: inv.length, phase: O().phase };
       } },
     // the player answers the door after the first ring: a beat, then they're in
-    answer: { P: [-7.2, 12.5], secs: 22, doors: [], look: [0, 1.6, 21],
+    answer: { P: [-7.2, 12.5], secs: 22, doors: FRONT, look: [0, 1.6, 21],
       setup: start('step'),
       steps: [{ until: () => O().phase === 'wait1', timeout: 10 }, { wait: 2 }, { go: [[-1, 18.6]], mode: 'walk' }, { fn: (I, S) => { S.door(0.75, 20, true); S.mark('opened'); } }, { look: 'nearest' }, { wait: 16 }],
       check: (I, S) => {
-        const opened = S.marks.find((m) => m.label === 'opened')?.t ?? null, ans = phaseAt(S, 'answered'), inside = first(S, 'inside'), atk = S.log.find((l) => l.t > (opened ?? 1e9) && l.a.some((a) => ['engage', 'chase', 'strike'].includes(a[1])))?.t ?? null;
+        const opened = S.marks.find((m) => m.label === 'opened')?.t ?? null, ans = phaseAt(S, 'answered'), inside = S.log.find((l) => l.t > (opened ?? 1e9) && l.a.some((a) => a[4] < 19.6))?.t ?? null, atk = S.log.find((l) => l.t > (opened ?? 1e9) && l.a.some((a) => ['engage', 'chase', 'strike'].includes(a[1])))?.t ?? null;
         return { pass: opened != null && ans != null && ans - opened < 1 && inside != null && atk != null && atk - opened < 6, opened: r2(opened), answered: r2(ans), firstInside: r2(inside), attackAt: r2(atk), hit: r2(first(S, 'playerHit')), reason: O().reason };
       } },
     // seen through the glass while they wait: they watch, stare in (the gunmen aim), then the
     // door is kicked in; no shot through the glass before it opens
-    glass: { P: [2.2, 16.8], secs: 40, doors: [], look: [1.5, 1.6, 22],
+    glass: { P: [2.2, 16.8], secs: 40, doors: FRONT, look: [1.5, 1.6, 22],
       setup: start('step'),
       steps: [{ wait: 40 }],
       check: (I, S) => {
@@ -67,7 +69,7 @@
       } },
     // hidden in the coat closet before they come: the whole sequence (waits x0.4): rings, knock,
     // handle, the look in, round the house, then they break in (front, glass, side door) and sweep
-    hide: { P: [9.5, 16.5], secs: 170, doors: [[8, 17.5, true]], look: [10, 1.6, 12],
+    hide: { P: [9.5, 16.5], secs: 170, doors: [...FRONT, [8, 17.5, true]], look: [10, 1.6, 12],
       steps: [{ go: [[10.2, 13.6], [11.03, 12.4]], mode: 'walk' }, { hide: [11.03, 11.82] }, { until: (I, S, pl) => pl.hidden, timeout: 3, label: 'hidden' },
         { fn: (I, S) => start('step', 0.4)(I, S) }, { wait: 170 }],
       check: (I, S) => {
@@ -77,7 +79,7 @@
           rings: o.rings, knocks: o.knocks, handles: o.handles, breakinAt: r2(br), reason: o.reason, breaches: breaches.join(','), glass: r2(glass), foundAt: r2(found), sweeping, timeline: o.timeline.map((x) => `${x.phase}@${x.t}`).join(' ') };
       } },
     // noises inside while they wait (the player knocks something over twice): they look, then come in
-    heard: { P: OFFICE, secs: 30, doors: [[6.75, -10.5, false, 4.6]], look: [6.75, 6.2, -10.5],
+    heard: { P: OFFICE, secs: 30, doors: [...FRONT, [6.75, -10.5, false, 4.6]], look: [6.75, 6.2, -10.5],
       setup: start('step'),
       steps: [{ until: () => O().phase === 'wait1', timeout: 10 }, { wait: 1.5 }, { noise: [3, 14, 1.0, 0.5], source: 'thud' }, { wait: 4 }, { noise: [-3, 13, 1.0, 0.5], source: 'thud' }, { wait: 20 }],
       check: (I, S) => {
@@ -85,7 +87,7 @@
         return { pass: h.length >= 2 && br != null && O().reason === 'heard someone', heard: h.length, breakinAt: r2(br), reason: O().reason, kick: r2(first(S, 'breach')) };
       } },
     // the player is out on the court when they come up the drive: straight to the hunt (shots)
-    outside: { P: [6, 31], secs: 20, doors: [], look: [19, 1.6, 40],
+    outside: { P: [6, 31], secs: 20, doors: FRONT, look: [19, 1.6, 40],
       setup: start('court'),
       steps: [{ wait: 20 }],
       check: (I, S) => {

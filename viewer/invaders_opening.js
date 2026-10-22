@@ -67,7 +67,7 @@ const P = {
   via: new V3(4.0, 0, 29.0),          // the entry path from the court, between the bollards
   bell: new V3(1.65, 1.3, 20.0),      // the door surround (no button model: where a finger meets it)
   door: new V3(0, 1.2, 20.0),
-  peerL: new V3(-3.9, 0, 20.47), peerR: new V3(3.7, 0, 20.47),
+  peerL: new V3(-3.75, 0, 20.47), peerR: new V3(3.75, 0, 20.47),   // (mid-bay: the mullions are 1.5 m apart)
 };
 // where each stands on the step (under the canopy), and what it faces
 const STEP = {
@@ -330,8 +330,8 @@ export class Opening {
     const c = this.cast, S = this.sub;
     if (!S.go) {
       S.go = true;
-      if (c.knife) c.knife.cue = { mode: 'go', to: P.peerR.clone(), speed: 1.3, tol: 0.25, face: new V3(3.7, 0, 10), peer: true };
-      if (c.gunA) c.gunA.cue = { mode: 'go', to: P.peerL.clone(), speed: 1.3, tol: 0.25, face: new V3(-3.9, 0, 10), peer: true };
+      if (c.knife) c.knife.cue = { mode: 'go', to: P.peerR.clone(), speed: 1.3, tol: 0.25, face: new V3(3.75, 0, 10), peer: true };
+      if (c.gunA) c.gunA.cue = { mode: 'go', to: P.peerL.clone(), speed: 1.3, tol: 0.25, face: new V3(-3.75, 0, 10), peer: true };
       if (c.leader) c.leader.cue = { mode: 'go', to: new V3(0.6, 0, 22.4), speed: 1.0, tol: 0.3, face: new V3(0.6, 0, 18) };
       // the bat turns to watch the drive; the second gunman along the front, east
       if (c.bat) this.glanceAt(c.bat, P.court.clone().setY(1.6), 0.5, 4);
@@ -364,7 +364,7 @@ export class Opening {
     const glass = E('glass'), kitchen = E('kitchen'), dining = E('dining'), mud = E('mudroom'), garage = E('garage');
     const gC = glass ? new V3(glass.centre.x, 0, glass.centre.y) : new V3(-26, 0, 0);
     const routes = {
-      leader: [stop(out(garage, 1.2), face(garage), 4), stop(P.peerL.clone(), new V3(-3.9, 0, 10), 999, null, { peer: true })],
+      leader: [stop(out(garage, 1.2), face(garage), 4), stop(P.peerL.clone(), new V3(-3.75, 0, 10), 999, null, { peer: true })],
       gunA: [stop(new V3(gC.x - 1.25, 0, gC.z - 2.4), new V3(gC.x + 5, 0, gC.z - 2.4), 999, null, { peer: true, aimReady: true })],
       bat: [stop(new V3(gC.x - 1.2, 0, gC.z + 1.6), new V3(gC.x + 5, 0, gC.z + 1.6), 999, null, { peer: true })],
       knife: [stop(new V3(27.25, 0, -5.25), new V3(20, 0, -5.25), 6, null, { peer: true }), stop(out(mud, 0.75), face(mud), 999, mud, { peer: true })],
@@ -399,7 +399,7 @@ export class Opening {
       if (since >= s.dwell * (s.dwell < 900 ? this.k : 1) + (s.door ? 1.6 : 0)) a.stopI++;
       if (s.dwell >= 900 && since > 4 * this.k) done++;      // (at its last place: done, it waits there)
     }
-    if ((n && done >= n) || this.phaseT > T.probeMax * Math.max(this.k, 0.4)) this.goIn('nobody answered');
+    if ((n && done >= n) || this.phaseT > T.probeMax)this.goIn('nobody answered');
   }
 
   // ---------------------------------------------------------------- what they sense (from the brain)
@@ -504,7 +504,7 @@ export class Opening {
     // the front door: kicked in by the leader (or whoever is nearest it)
     const nearFront = this.members.filter((a) => !this.jobs.has(a) && front).sort((p, q) => p.pos.distanceTo(front.outside) - q.pos.distanceTo(front.outside));
     const kicker = c.leader && c.leader.state === 'scene' && c.leader.pos.distanceTo(front?.outside ?? c.leader.pos) < 16 ? c.leader : nearFront[0];
-    if (front && kicker && !this.entryOpen(front)) this.jobs.set(kicker, { kind: 'kick', E: front, at: new V3(0.45, 0, 20.8) });
+    if (front && kicker && !this.entryOpen(front)) this.jobs.set(kicker, { kind: 'kick', E: front, at: new V3(front.door.centre.x, 0, front.door.centre.y + 0.85) });
     // the great room's glass: the bat, if he's round there
     if (glass && c.bat?.state === 'scene' && !this.jobs.has(c.bat) && c.bat.pos.distanceTo(glass.outside) < 14) this.jobs.set(c.bat, { kind: 'smash', E: glass });
     // the mudroom's side door: the knife, if he's at it
