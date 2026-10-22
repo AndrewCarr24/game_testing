@@ -29,6 +29,9 @@ export class HouseCar {
   constructor({ root, proto, asset, batch = null, level, scene, camera, player, colliders, culler, sky, renderer, toast, params }) {
     Object.assign(this, { root, scene, camera, player, colliders, culler, renderer, toast, level, batch });
     this.enabled = params?.get('car') !== '0';
+    // a fresh house load starts with the car in its bay: forget one left parked or mid-seam in a wild world
+    // (arriving from a stand-alone wild.html, ?from=wild, the state comes with the player instead)
+    if (params?.get('from') !== 'wild') try { sessionStorage.removeItem('gt_vehicle_parked'); sessionStorage.removeItem('gt_vehicle_seam'); } catch { /* */ }
     root.updateMatrixWorld(true);
     // its own part boxes (pushed by index.html's prop loop): found by value
     this.parts = (asset.colliders || [asset.aabb]).map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
@@ -227,6 +230,7 @@ export class HouseCar {
       this.updateBlob();
     }
     if (car.driving) {
+      if (this.player.down) this.player.updateDown?.(dt);   // (knocked down in the seat: still gets up)
       // the gate's exit sensor sees a car sooner than a walker (estate_gate.js opens it at 10 m)
       const g = window.__estateGate, p = car.pos;
       if (g && g.t < 1 && !g.opening && !window.__bench && p.x > 12 && p.x < 28 && p.z > GATE.z - 28 && p.z < GATE.line) { g.opening = true; g.preload?.(); }

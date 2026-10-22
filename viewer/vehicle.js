@@ -835,7 +835,7 @@ export class CarHud {
       #car-hud .keys { margin-top: 8px; font-size: 12px; color: #ccc; }
       #car-hud .k, #car-prompt .k { display: inline-block; min-width: 12px; padding: 0 6px; margin: 0 4px 0 10px; border: 1px solid rgba(255,255,255,.7); border-radius: 4px;
         background: rgba(0,0,0,.35); font-size: 11px; font-weight: 600; line-height: 18px; text-shadow: none; }
-      #car-prompt { position: fixed; left: 0; width: 100%; top: calc(50% + 28px); text-align: center; display: none; z-index: 60;
+      #car-prompt { position: fixed; left: 0; width: 100%; top: calc(50% + 64px); text-align: center; display: none; z-index: 60;
         font: 15px system-ui, sans-serif; color: #fff; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.7); pointer-events: none; }
       #car-prompt.show { display: block; }
       #car-prompt .k { margin-left: 0; margin-right: 8px; font-size: 12px; line-height: 19px; }`;

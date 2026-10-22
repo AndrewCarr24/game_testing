@@ -609,7 +609,7 @@
       window.__vitals = vitals;
       const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
         canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown && !window.__car?.driving,   // (vehicle)
-        hidden: () => hiding.active });
+        hidden: () => hiding.active || !!window.__car?.driving });   // (vehicle: no weapon in the seat)
       window.__weapons = weapons;
       hand.provider = (id, node) => weapons.show(id, node);   // a weapon is drawn by the view model
       for (const d of params.getAll('dummy')) {
