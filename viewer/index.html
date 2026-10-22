@@ -149,6 +149,7 @@
     import { batchRooms, RoomCuller } from './batching.js';
     import { loadSky, applyOutdoor } from './sky.js';
     import { Fire } from './fire.js';
+    import { WaterFx } from './water_fx.js';   // (the bathhouse: pools, caustics, the stair's window into the water, steam)
     import { createFx, governor } from './fx.js';
     import { Grimble, prepareGrimble } from './grimble.js';
     import { GrimbleHunt, shatter, Footsteps } from './grimble_hunt.js';
@@ -453,6 +454,7 @@
       const devices = new Devices({ signals, noise, interact, level });
       window.__devices = devices;
       const fire = new Fire();
+      const waterFx = new WaterFx(); window.__waterFx = waterFx;   // (the bathhouse's water)
       const placed = {};   // asset -> first placed object, for attachments
       const roomRoots = {};   // room -> placed prop roots (for batching and culling)
       // doors (a swinging part) belong to both rooms they join: drawn when either one is
@@ -485,6 +487,7 @@
           baked.applyDoor(obj, p.room, across.room, across.axis, level.rooms[p.room]?.sun === false && level.rooms[across.room]?.sun === false);
         } else if (baked) baked.applyRoom(obj, p.room, level.rooms[p.room]?.sun === false);
         fire.collect(obj);
+        waterFx.collect(obj);   // (the bathhouse's water)
         if (p.attach) {
           // e.g. the keycard rides inside the desk drawer
           placed[p.attach.asset].getObjectByName(p.attach.node).add(obj);
@@ -774,6 +777,7 @@
         flashlight.update(dt);
         house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
+        waterFx.update(dt, !!window.__bench);   // (the bathhouse's water)
         grimble?.update(dt, camera.position);
         posedInvaders?.update(dt, camera.position);  // [invader-character]
         if (shatterFx && !shatterFx(dt)) shatterFx = null;

@@ -37,7 +37,7 @@ def blockers(plan, doors=True):
     for c in plan.CUTS:
         L, (a0, a1), (z0, z1) = c["line"], c["span"], c["z"]
         facade = (c["axis"] == "x" and any(abs(L - y) < 1e-6 for y in ys)) or \
-                 (c["axis"] == "y" and any(abs(L - x) < 1e-6 for x in xs))
+                 (c["axis"] == "y" and any(abs(L - x) < 1e-6 for x in xs)) or c.get("facade", False)   # (detached buildings mark theirs)
         door = doors and c["kind"] == "opening" and c.get("door")
         # doors count as closed (that's how they start; a room behind a door you've opened is
         # normally within the culler's close range anyway)

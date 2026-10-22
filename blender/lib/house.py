@@ -89,7 +89,9 @@ class House:
 
     def z_range(self, room):
         r = self.plan.ROOMS[room]
-        z0 = self.plan.LEVEL_Z[r["level"]]
+        z0 = r.get("z0", self.plan.LEVEL_Z.get(r["level"], 0.0))
+        if "height" in r:             # (detached buildings, shafts: their own floor and height)
+            return z0, z0 + r["height"]
         if r.get("double"):
             return z0, self.plan.TOP
         if r.get("kind") == "courtyard":
@@ -126,10 +128,18 @@ class House:
         z0, z1 = self.z_range(room)
         f = self.finishes[room]
         kind = r.get("kind", "room")
-        self.box(room, f"{room}_Floor", (x0, y0, z0 - P.SLAB), (x1, y1, z0), f["floor"],
-                 uv_tile=f.get("floor_uv_tile", 2.0), bake=True)
+        # floor_holes / ceiling_holes [(x0, y0, x1, y1)]: the slab is split round them (sunken
+        # pools, skylights; whoever asks for one builds what goes in it)
+        for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, r.get("floor_holes", []))):
+            for j, (ky0, ky1) in enumerate(keep):
+                self.box(room, f"{room}_Floor" + (f"_{i}_{j}" if r.get("floor_holes") else ""),
+                         (s0, ky0, z0 - P.SLAB), (s1, ky1, z0), f["floor"],
+                         uv_tile=f.get("floor_uv_tile", 2.0), bake=True)
         if kind != "courtyard":
-            self.box(room, f"{room}_Ceiling", (x0, y0, z1), (x1, y1, z1 + P.SLAB), f["ceiling"], bake=True)
+            for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, r.get("ceiling_holes", []))):
+                for j, (ky0, ky1) in enumerate(keep):
+                    self.box(room, f"{room}_Ceiling" + (f"_{i}_{j}" if r.get("ceiling_holes") else ""),
+                             (s0, ky0, z1), (s1, ky1, z1 + P.SLAB), f["ceiling"], bake=True)
             for side in "NSEW":
                 self.lining(room, r, side, f.get("walls_by_side", {}).get(side, f["walls"]),
                             f.get("wall_uv_tile", 1.0))
@@ -290,7 +300,7 @@ class House:
         (+1 / -1 along the wall's normal axis) toward the room; None for an inner wall."""
         sides = set()
         for r in self.plan.ROOMS.values():
-            if self.plan.LEVEL_Z[r["level"]] > c["z"][0] + 1e-6 or self.z_range_of(r)[1] < c["z"][1] - 1e-6:
+            if self.z_range_of(r)[0] > c["z"][0] + 1e-6 or self.z_range_of(r)[1] < c["z"][1] - 1e-6:
                 continue
             x0, y0, x1, y1 = r["rect"]
             lo, hi, b0, b1 = (y0, y1, x0, x1) if c["axis"] == "x" else (x0, x1, y0, y1)
@@ -303,7 +313,9 @@ class House:
         return sides.pop() if len(sides) == 1 else None
 
     def z_range_of(self, r):
-        z0 = self.plan.LEVEL_Z[r["level"]]
+        z0 = r.get("z0", self.plan.LEVEL_Z.get(r["level"], 0.0))
+        if "height" in r:
+            return z0, z0 + r["height"]
         return (z0, self.plan.TOP) if r.get("double") or r.get("kind") == "courtyard" else (z0, z0 + self.plan.HEIGHT[r["level"]])
 
     def wall_box(self, room, name, axis, L, a0, a1, z0, z1, depth, mat, collide=True):
@@ -442,12 +454,12 @@ class House:
         z0, z1 = self.z_range(room)
         return z0 - self.plan.SLAB, z1 + self.plan.SLAB      # (the courtyard: open up past the roof slabs)
 
-    def exterior_walls(self):
+    def exterior_walls(self, with_room=False):
         """The outside of the house: every room side's outer face (its rect edge, slabs
         included) where no other room (the courtyard counts as one) lies beyond it, minus the
         cuts on that line. For the grounds (cladding, outdoor-baked): the faces seen over the
         low roofs from the upper windows were unlit black. Returns
-        [(axis, line, outward sign, a0, a1, z0, z1)]."""
+        [(axis, line, outward sign, a0, a1, z0, z1)] (+ the room with with_room)."""
         P, out = self.plan, []
         for room, r in P.ROOMS.items():
             if r.get("kind") == "courtyard":
@@ -481,7 +493,7 @@ class House:
                 for s0, s1, keep in keep_slices(a0, a1, z0, z1, holes):
                     for kz0, kz1 in keep:
                         if s1 - s0 > 1e-3 and kz1 - kz0 > 1e-3:
-                            out.append((axis, line, sign, s0, s1, kz0, kz1))
+                            out.append((axis, line, sign, s0, s1, kz0, kz1) + ((room,) if with_room else ()))
         return out
 
     def roofs(self):
@@ -502,6 +514,8 @@ class House:
                     ay0, ay1 = _overlap(y0, y1, qy0, qy1)
                     if ax1 - ax0 > 1e-4 and ay1 - ay0 > 1e-4:
                         above.append((ax0, ax1, ay0, ay1))
+            # skylights (ceiling_holes) aren't roof
+            above += [(hx0, hx1, hy0, hy1) for hx0, hy0, hx1, hy1 in r.get("ceiling_holes", [])]
             # the uncovered parts: keep_slices over x (as "a") and y (as "z")
             for s0, s1, keep in keep_slices(x0, x1, y0, y1, above):
                 for ky0, ky1 in keep:

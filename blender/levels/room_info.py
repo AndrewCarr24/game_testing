@@ -20,8 +20,8 @@ def info(room):
     T = 0 if kind == "courtyard" else plan.T
     ix0, iy0, ix1, iy1 = x0 + T, y0 + T, x1 - T, y1 - T
     cx, cy = (ix0 + ix1) / 2, (iy0 + iy1) / 2
-    z0 = plan.LEVEL_Z[r["level"]]
-    h = plan.TOP - z0 if (r.get("double") or kind == "courtyard") else plan.HEIGHT[r["level"]]
+    z0 = r.get("z0", plan.LEVEL_Z.get(r["level"], 0.0))
+    h = r["height"] if "height" in r else plan.TOP - z0 if (r.get("double") or kind == "courtyard") else plan.HEIGHT[r["level"]]
     lines = [f"ROOM {room}: {kind}, level {r['level']} ({'ground' if r['level'] == 0 else 'upper'})"
              + (", double height" if r.get("double") else ""),
              f"  interior {ix1 - ix0:.2f} m (x, west-east) by {iy1 - iy0:.2f} m (y, south-north), "

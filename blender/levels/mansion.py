@@ -98,6 +98,8 @@ P = dict(LOOKS[LOOK], look=LOOK,
          # GPU memory for all lightmap atlases together (lightmap_policy shares it out by
          # texel density; 2026-10-20: 5 x 1024² + 21 x 512² were 57.4 MB)
          lightmap_mb=62.0,
+         # the detached buildings' own share (the bathhouse: 7 rooms; its hall at 1024 x 1024)
+         lightmap_mb_buildings=17.0,
          lightmap_hero=1.3)                # double-height rooms count their density / this (big, seen from afar)
 LIGHTMAP_SIZES = [(512, 512), (1024, 512), (1024, 1024)]
 
@@ -497,6 +499,10 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     h = house.House(plan, {room: finishes_for(room, mods[room],
                                               court if plan.ROOMS[room].get("kind") == "courtyard" else base)
                            for room in plan.ROOMS}, NAME).build()
+    # (the bathhouse: its pools, the secret stair, skylights: what house.py can't build)
+    import bathhouse_shell
+    importlib.reload(bathhouse_shell)
+    bathhouse_shell.build(h, plan)
 
     room_signal = {room: light_signal(mods[room], room) for room in plan.ROOMS}
     for room in plan.ROOMS:
@@ -544,7 +550,14 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     # the air: the rooms and the gaps through the walls at openings, windows, balustrades
     air_all = [box for boxes in h.air.values() for box in boxes] + h.gap_air
     lm_res = {}
-    for room, (charts, size, k, placed, fill) in lightmap_policy(h, h.baked, air_all, p).items():
+    # (detached buildings, the bathhouse: their own lightmap budget, so adding one doesn't reshuffle
+    # the house's atlases (each room's bake is tied to its atlas size))
+    house_lm = {r: o for r, o in h.baked.items() if not plan.ROOMS.get(r, {}).get("building")}
+    extra_lm = {r: o for r, o in h.baked.items() if plan.ROOMS.get(r, {}).get("building")}
+    policy = lightmap_policy(h, house_lm, air_all, p)
+    if extra_lm:
+        policy.update(lightmap_policy(h, extra_lm, air_all, dict(p, lightmap_mb=p["lightmap_mb_buildings"])))
+    for room, (charts, size, k, placed, fill) in policy.items():
         lm_res[room] = list(size)
         common.apply_charts(h.baked[room], charts, k, placed, *size)
     borrow_lightmaps(h)
@@ -652,6 +665,8 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         "colliders": h.colliders,
         "ramps": h.ramps,
         "breakables": h.breakables,
+        # floors below a room's own that people may walk on (the bathhouse's drained plunge)
+        "sunken": getattr(h, "sunken", []),
         # the walkable outdoors (ground_colliders.py): lawn / terrace heights, bounds, the
         # exterior doors; its colliders are in their own compact file
         "grounds": dict(walk_meta, file=f"levels/{NAME.lower()}_grounds.json"),

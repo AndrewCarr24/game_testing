@@ -140,7 +140,10 @@ export class RoomCuller {
     if (camera) this._frustum.setFromProjectionMatrix(this._m.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
     const level = pos.y > this.upperY ? 1 : 0;
     // the room the eye is in: if it's open to the other floor, so is the view
-    const here = this.rooms.find((r) => r.level === level && pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3])
+    // (the room whose box holds the eye first below ground: under the bathhouse, the tunnel and
+    // the secret stair aren't the rooms over them)
+    const here = this.rooms.find((r) => r.level < 0 && r.box.containsPoint(pos))
+      ?? this.rooms.find((r) => r.level === level && pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3])
       ?? this.rooms.find((r) => pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3] && r.vertical);
     this.here = here ?? null;            // (outdoors: null)
     const crossFloor = !here || here.vertical;

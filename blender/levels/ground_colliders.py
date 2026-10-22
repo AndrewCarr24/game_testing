@@ -233,7 +233,12 @@ def base(plan):
     G, z = plan.GROUNDS, plan.LAWN_Z
     out = []
     lx0, ly0, lx1, ly1 = G["lawn"]
-    out.append(((lx0, ly0, z - 1.0), (lx1, ly1, z), "ground"))
+    # (the bathhouse: no lawn under detached buildings, whose stair and pools go below it;
+    # plan.LAWN_HOLES, bathhouse_plan.py)
+    from lib.house import keep_slices
+    for s0, s1, keep in keep_slices(lx0, lx1, ly0, ly1, getattr(plan, "LAWN_HOLES", [])):
+        for ky0, ky1 in keep:
+            out.append(((s0, ky0, z - 1.0), (s1, ky1, z), "ground"))
     for x0, y0, x1, y1 in G["terrace"]:
         out.append(((x0, y0, z - 0.5), (x1, y1, z + 0.06), "ground"))
     hd = G["hedge"]
@@ -282,7 +287,7 @@ def build(plan, placed, doors=()):
     hx0, hy0, hx1, hy1 = G["hedge"]["rect"]
     t = G["hedge"]["thick"]
     inner = (hx0 + t / 2, hy0 + t / 2, hx1 - t / 2, hy1 - t / 2)
-    rects = [r["rect"] for r in plan.ROOMS.values()]
+    rects = [r["rect"] for r in plan.ROOMS.values() if not r.get("building")]   # (the main house, not the bathhouse)
     house = (min(r[0] for r in rects), min(r[1] for r in rects), max(r[2] for r in rects), max(r[3] for r in rects))
     g = lambda r: [r[0], -r[3], r[2], -r[1]]          # Blender rect -> glTF x0, z0, x1, z1
     print("GROUNDS colliders: " + ", ".join(f"{k} {len(v)}" for k, v in boxes.items()))

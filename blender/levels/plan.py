@@ -182,3 +182,15 @@ GROUNDS = dict(
     },
 )
 LAWN_Z = -0.08            # world z of the lawn surface = z 0 in every zone
+
+
+# ---- the bathhouse (the pool house): a detached building north-east of the house, on the lap
+# pool's axis, with the secret passage's stair rising into it (blender/levels/bathhouse_plan.py)
+import importlib as _il  # noqa: E402
+import bathhouse_plan as _bathhouse  # noqa: E402
+
+_il.reload(_bathhouse)
+
+ROOMS.update(_bathhouse.ROOMS)
+CUTS += _bathhouse.CUTS
+LAWN_HOLES = list(_bathhouse.LAWN_HOLES)     # (ground_colliders, grounds: no lawn under it)

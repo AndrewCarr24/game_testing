@@ -291,9 +291,14 @@ export class Player {
   rampHeight(p) {
     const r = this.o.radius;
     let best = -Infinity;
-    for (const { x: [x0, x1], z: [z0, z1], y: [y0, y1] } of this.ramps) {
-      if (p.x + r <= Math.min(x0, x1) || p.x - r >= Math.max(x0, x1) || p.z + r <= z0 || p.z - r >= z1) continue;
-      const up = (y1 - y0) * (x1 - x0) > 0 ? p.x + r : p.x - r;
+    for (const ramp of this.ramps) {
+      // (along: "z": a flight rising along z, its z pair ordered foot -> top, x across it; the
+      // bathhouse's secret stair. Default: along x, z across)
+      const alongZ = ramp.along === 'z';
+      const [x0, x1] = alongZ ? ramp.z : ramp.x, [z0, z1] = alongZ ? ramp.x : ramp.z, [y0, y1] = ramp.y;
+      const px = alongZ ? p.z : p.x, pz = alongZ ? p.x : p.z;
+      if (px + r <= Math.min(x0, x1) || px - r >= Math.max(x0, x1) || pz + r <= z0 || pz - r >= z1) continue;
+      const up = (y1 - y0) * (x1 - x0) > 0 ? px + r : px - r;
       const t = Math.min(1, Math.max(0, (up - x0) / (x1 - x0)));
       best = Math.max(best, y0 + (y1 - y0) * t);
     }

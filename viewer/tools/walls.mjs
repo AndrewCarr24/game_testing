@@ -7,7 +7,8 @@ const p = await b.newPage({ viewport: { width: 800, height: 500 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion');
 await p.waitForFunction(() => window.__loaded, null, { timeout: 180000 });
-const result = await p.evaluate(async () => {
+const only = process.env.ROOMS ? process.env.ROOMS.split(',') : null;
+const result = await p.evaluate(async (only) => {
   const THREE = await import('three');
   const pl = window.__player, cam = window.__camera, it = window.__interact;
   // open every door so the doorways get tested too
@@ -43,7 +44,17 @@ const result = await p.evaluate(async () => {
     starts.terrace = [[0, 22.5], [0, -22.5], [-28.5, 0], [28.5, 0]].map(([x, z]) => clearNear(x, z, G.terrace)).filter(Boolean);
   }
   const [hx0, hz0, hx1, hz1] = G ? G.house : [-1e9, -1e9, 1e9, 1e9];
-  const floorAt = (x, z) => (x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
+  // (the lowest floor there: the house's 0 or the lawn, a room below them (the bathhouse's secret
+  // stair, the tunnel), or a sunken floor people may walk on (level.sunken: the drained plunge))
+  const inR = (r, x, z, m = 0) => x >= r[0] - m && x <= r[2] + m && z >= r[1] - m && z <= r[3] + m;
+  const floorAt = (x, z) => {
+    let f = x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn;
+    for (const r of Object.values(window.__level.rooms)) if (inR(r.rect, x, z)) f = Math.min(f, r.floor);
+    for (const s of window.__level.sunken || []) if (inR(s.rect, x, z, 0.3)) f = Math.min(f, s.floor);
+    return f;
+  };
+  // (ROOMS=ph_,tunnel: only the rooms whose names start with one of these, no grounds)
+  if (only) for (const k of Object.keys(starts)) if (!only.some((o) => k.startsWith(o))) delete starts[k];
   const bad = [];
   let runs = 0;
   for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
@@ -71,7 +82,7 @@ const result = await p.evaluate(async () => {
     }
   }
   return { runs, bad };
-});
+}, only);
 console.log(`${result.runs} runs, ${result.bad.length} ended somewhere impossible`);
 for (const r of result.bad.slice(0, 15)) console.log(JSON.stringify(r));
 await b.close();
