@@ -113,7 +113,7 @@
       if (S.t >= S.spec.secs || (S.spec.stop && S.spec.stop(I, S, pl))) { S.done = true; return; }
       if (acc >= 0.25 - 1e-6) {
         acc = 0;
-        const C = window.__combat?.player;
+        const C = window.__vitals?.target;
         S.log.push({ t: +S.t.toFixed(2), p: [+pl.pos.x.toFixed(2), +pl.pos.y.toFixed(2), +pl.pos.z.toFixed(2)], hid: pl.hidden ? 1 : 0, hp: C ? Math.round(C.health) : null,
           a: I.agents.map((a) => [a.id, a.state, +a.pos.x.toFixed(1), +a.pos.y.toFixed(1), +a.pos.z.toFixed(1), +a.aware.toFixed(2), a.seenNow ? 1 : 0, a.alive ? 1 : 0]) });
       }
@@ -124,9 +124,11 @@
     I.time = 0;
     I.events.length = 0;
     I.stats.shots = I.stats.hits = I.stats.playerHits = I.stats.damage = I.stats.swings = 0;
-    const C = window.__combat?.player;
-    if (C) { C.health = C.maxHealth; C.alive = true; C.lastHit = -1e9; }
-    document.getElementById('death')?.remove();
+    // the player back on their feet (viewer/combat.js PlayerVitals)
+    const V = window.__vitals;
+    if (V) { V.dead = false; V.flash = 0; V.target.health = V.target.maxHealth; V.target.alive = true; V.deathEl?.classList.remove('on'); }
+    document.body.classList.remove('cb-dead');
+    pl.dead = false;
     if (hid.spot) hid.leave({ instant: true });
     pl.hidden = false; pl.crouching = false;
     if (pl.down) { pl.down = null; pl.eye = 1.65; }

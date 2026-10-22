@@ -76,7 +76,6 @@ export class Invaders {
     this.fx = new InvaderFx(scene, camera, { debug: this.debug });
     noise?.on?.((ev) => this.onNoise(ev));
     this.combat = null;
-    this.ready = this.ensureCombat();
     this.playerBox = new THREE.Box3();
     window.__invaders = this;
   }
@@ -84,13 +83,7 @@ export class Invaders {
   // no damage while the bench / shots drive the camera (their routes must not die)
   get harmless() { return this._harmless || !!window.__bench; }
 
-  // ---------------------------------------------------------------- combat (viewer/combat.js, or the stub)
-  async ensureCombat() {
-    if (!window.__combat) {
-      const { installCombatStub } = await import('./invaders_combat_stub.js');
-      if (!window.__combat) installCombatStub({ player: this.player, camera: this.camera, colliders: this.colliders, harmless: this._harmless });
-    }
-  }
+  // ---------------------------------------------------------------- combat (viewer/combat.js)
   // (re)register every live invader whenever window.__combat changes (the real one may land later)
   syncCombat() {
     const C = window.__combat;
@@ -233,8 +226,10 @@ export class Invaders {
   topUp(n, mixI) {
     const alive = this.agents.filter((a) => a.alive).length + this.pending.length;
     const want = Math.min(MAX, n) - alive;
-    const mix = MIX[Math.min(mixI, MIX.length - 1)];
-    for (let i = 0; i < want; i++) this.pending.push({ role: mix[i % mix.length], at: this.time + Math.floor(i / 3) * 1.6 + rand(0, 0.6) });
+    // (the mixes in order, whatever the wave: the first six always bring the leader)
+    this.mixN ??= 0;
+    const roleFor = (n) => (n < 6 ? MIX[0][n] : n < 20 ? MIX[1][n - 6] : MIX[2][(n - 20) % MIX[2].length]);
+    for (let i = 0; i < want; i++) this.pending.push({ role: roleFor(this.mixN++), at: this.time + Math.floor(i / 3) * 1.6 + rand(0, 0.6) });
     this.event('wave', { n, adding: Math.max(0, want) });
   }
 
@@ -472,16 +467,17 @@ export class Invaders {
     return !this.boxesBlock(a, b, tall, 0.05);
   }
   // a clear line of fire: no wall, glass, shut door, furniture or teammate in the way
+  // (true, or why not: 'wall' | 'mate')
   lineOfFire(a, m, aim) {
-    if (this.world.solid.blocked(m, aim, 0.25)) return false;
-    if (this.boxesBlock(m, aim, this.doorBoxes(), 0.1)) return false;
+    if (this.world.solid.blocked(m, aim, 0.25)) return 'wall';
+    if (this.boxesBlock(m, aim, this.doorBoxes(), 0.1)) return 'wall';
     const d = m.distanceTo(aim), dir = _b.subVectors(aim, m).divideScalar(d || 1);
     for (const o of this.agents) {
       if (o === a || !o.alive) continue;
       const t = (o.pos.x - m.x) * dir.x + (o.pos.z - m.z) * dir.z;
       if (t < 0.2 || t > d - 0.3) continue;
       const px = m.x + dir.x * t, pz = m.z + dir.z * t, py = m.y + dir.y * t;
-      if (Math.hypot(o.pos.x - px, o.pos.z - pz) < 0.45 && py > o.pos.y && py < o.pos.y + 1.85) return false;
+      if (Math.hypot(o.pos.x - px, o.pos.z - pz) < 0.45 && py > o.pos.y && py < o.pos.y + 1.85) return 'mate';
     }
     return true;
   }
@@ -510,8 +506,8 @@ export class Invaders {
     const origin = a.pos.clone(); origin.y += 1.2;
     const dir = new V3(Math.sin(a.lookYaw), 0, Math.cos(a.lookYaw));
     // nothing solid between it and its target (no swinging through a wall or a shut door)
-    const res = window.__combat?.attack?.({ from: a.target(), origin, dir, weapon: a.weaponName, range: W.range, arc: W.arc, damage: this.harmless ? 0 : W.damage,
-      blocked: (p) => this.world.solid.blocked(origin, p, 0.1) || this.boxesBlock(origin, p, this.doorBoxes(), 0.05) });
+    // (combat.attack checks the line of sight through the level's colliders itself)
+    const res = window.__combat?.attack?.({ from: a.target(), origin, dir, weapon: a.weaponName, range: W.range, arc: W.arc, damage: this.harmless ? 0 : W.damage });
     const hits = Array.isArray(res) ? res : res?.hits ?? (res?.target ? [res] : []);
     this.stats.swings++;
     if (hits.length) { window.__sfx?.play?.(W.hitSfx, a.pos); window.__noise?.emit({ position: origin, loudness: 0.6, source: 'melee', team: 'invader' }); }
@@ -699,7 +695,7 @@ export class Invaders {
     if (this.frame % 30 === 0) this.world.nav.checkLocks();
     const P = this.player, eye = this.camera.position;
     const C = window.__combat;
-    const gone = !!this.playerGone || C?.player?.alive === false;
+    const gone = !!this.playerGone || !!P.dead || !!window.__vitals?.dead;
     const ctx = { player: P, eye, playerGone: gone, lit: this.lit(P.pos, true), playerOutside: !this.inHouseP(P.pos), tier: 0 };
     // AI LOD: the brain and senses every frame for those near or fighting, less often for the rest
     for (const a of this.agents) {

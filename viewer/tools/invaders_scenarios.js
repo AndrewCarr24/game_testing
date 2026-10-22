@@ -91,6 +91,29 @@
       steps: [{ wait: 0.5 }, { fn: (I, S, pl) => { S.g.onHit(30, { from: { position: () => pl.pos }, weapon: 'test' }); S.st1 = S.g.state; S.sg = S.g.staggerUntil > S.g.time; } }, { wait: 2 },
         { fn: (I, S, pl) => S.g.onHit(45, { from: { position: () => pl.pos }, weapon: 'test' }) }, { wait: 0.2 }, { fn: (I, S) => { S.st2 = S.g.state; } }, { wait: 9 }],
       check: (I, S, pl) => ({ pass: S.sg && S.st2 === 'flee' && I.stats.reports > S.h0, staggered: S.sg, afterFirst: S.st1, afterSecond: S.st2, health: S.g.health, endDist: r2(S.g.pos.distanceTo(pl.pos)) }) },
+    // the kitchen knife (viewer/combat.js): a takedown from behind an unaware one kills it; its
+    // mate hears the body fall and comes to look
+    takedown: { P: [0.9, -8.75], secs: 12, doors: [], look: [3, 1.2, -8.75],
+      setup: (I, S) => { S.v1 = S.add('gun', 2.1, -8.75, { yaw: E, state: 'idle' }); S.v2 = S.add('bat', 9, -16, { yaw: N, state: 'idle' }); },
+      steps: [{ crouch: true }, { wait: 0.6 }, { fn: (I, S, pl) => {
+        const C = window.__combat, eye = S.v(pl.pos.x, pl.pos.y + 1.5, pl.pos.z);
+        S.can = C.canTakedown(S.v1.target(), 'player');
+        S.res = C.attack({ from: 'player', origin: eye, dir: S.v(1, -0.2, 0), weapon: 'kitchen_knife', range: 1.25, arc: 30, damage: 55, takedown: 100 });
+      } }, { wait: 11 }],
+      check: (I, S) => {
+        const inv = S.events('investigate').find((e) => e.id === S.v2.id);
+        return { pass: S.can && !S.v1.alive && !!inv, canTakedown: S.can, killed: !S.v1.alive, stealth: S.res?.[0]?.stealth ?? null, mateInvestigates: inv?.source ?? null, mateState: S.v2.state };
+      } },
+    // a stab from the front: it takes the damage, staggers, knows, and fights back
+    stab_front: { P: [0.9, -8.75], secs: 6, doors: [], look: [3, 1.4, -8.75],
+      setup: (I, S) => { S.v1 = S.add('bat', 2.0, -8.75, { yaw: W, state: 'idle' }); },
+      steps: [{ wait: 0.5 }, { fn: (I, S, pl) => {
+        const C = window.__combat, eye = S.v(pl.pos.x, pl.pos.y + 1.5, pl.pos.z);
+        S.can = C.canTakedown(S.v1.target(), 'player');
+        S.res = C.attack({ from: 'player', origin: eye, dir: S.v(1, -0.2, 0), weapon: 'kitchen_knife', range: 1.25, arc: 30, damage: 55, takedown: 100 });
+        S.stag = S.v1.staggerUntil > S.v1.time;
+      } }, { wait: 5.5 }],
+      check: (I, S) => ({ pass: !S.can && S.v1.alive && S.v1.health === 45 && S.stag && S.events('swing').length > 0, canTakedown: S.can, health: S.v1.health, staggered: S.stag, swings: S.events('swing').length, state: S.v1.state }) },
     // the squad's radio: one sees the player; the far ones hear of it after the delay (and longer
     // once the leader is dead)
     radio: { P: [4.75, 15], secs: 10, doors: [[-19.75, 10.5, false], [13.5, -3.5, false]], look: [0, 1.6, 8.75],

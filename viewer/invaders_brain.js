@@ -31,8 +31,8 @@ import { UPPER_Y } from './invaders_nav.js';
 export const WEAPONS = {
   pistol: { kind: 'gun', range: 35, damage: 26, rate: 0.7, burst: 1, burstGap: 0.0, spread: 0.032, aim: [0.55, 0.9], sfx: 'gunshot' },
   rifle: { kind: 'gun', range: 50, damage: 30, rate: 0.14, burst: 3, burstGap: 0.95, spread: 0.028, aim: [0.7, 1.1], sfx: 'gunshot' },
-  bat: { kind: 'melee', range: 1.75, arc: 1.2, damage: 35, windup: 0.42, recover: 0.55, cooldown: 1.1, sfx: 'bat_swing', hitSfx: 'bat_hit' },
-  knife: { kind: 'melee', range: 1.3, arc: 0.9, damage: 45, windup: 0.28, recover: 0.4, cooldown: 0.9, sfx: 'knife_swing', hitSfx: 'knife_hit' },
+  bat: { kind: 'melee', range: 1.75, arc: 110, damage: 35, windup: 0.42, recover: 0.55, cooldown: 1.1, sfx: 'bat_swing', hitSfx: 'bat_hit' },
+  knife: { kind: 'melee', range: 1.3, arc: 70, damage: 45, windup: 0.28, recover: 0.4, cooldown: 0.9, sfx: 'knife_swing', hitSfx: 'knife_hit' },
 };
 
 export const ROLE_DEFAULTS = {
@@ -179,7 +179,9 @@ export class Invader {
     if (!ctx.playerGone && !P.hidden && d <= range) {
       const flat = Math.hypot(eye.x - me.x, eye.z - me.z);
       const off = Math.abs(wrap(Math.atan2(eye.x - me.x, eye.z - me.z) - this.lookYaw));
-      const close = flat <= SENSE.close && Math.abs(eye.y - me.y) < 2.2;
+      // (all round, close: unless they creep up crouched and slow; that's how a takedown happens)
+      const vP = P.vel ? Math.hypot(P.vel.x, P.vel.z) : 0;
+      const close = flat <= SENSE.close && Math.abs(eye.y - me.y) < 2.2 && !(P.crouching && vP < 1.5);
       const cone = off <= SENSE.fov ? 1 : off <= SENSE.peri ? 2 : 0;
       if ((cone || close) && this.sq.sightClear(me, eye, !!P.crouching)) {
         vis = true;
@@ -316,7 +318,7 @@ export class Invader {
     this.lookAt(feet, dt, 8);
     // too far for the weapon: close in (jog)
     if (d > W.range * 0.92) { this.goTo(feet, this.speeds.jog, { moveTol: 2, every: 0.8 }); this.anim.aim = Math.max(0, this.anim.aim - dt * 2); return; }
-    this.stop();
+    if (!this.noFire || this.noFire < 1.2) this.stop();
     this.anim.aim = Math.min(1, this.anim.aim + dt * 3);
     this.crouch = this.state === 'cover' && this.sub?.crouch ? 1 : 0;
     if (!this.aimT) { this.aimT = 0; this.aimNeed = rand(...W.aim) * (0.7 + 0.3 * Math.min(1, d / 15)) + rand(0.15, 0.35); }
@@ -325,13 +327,18 @@ export class Invader {
     // fire (bursts)
     this.fireT = (this.fireT ?? 0) - dt;
     if (this.fireT > 0) return;
-    const m = this.muzzle(_a);
-    if (!this.sq.lineOfFire(this, m, aimP)) {
-      // a teammate or furniture in the way: sidestep and try again
-      this.sidestep(feet);
-      this.fireT = 0.4;
+    const m = this.muzzle(_a), lof = this.sq.lineOfFire(this, m, aimP);
+    if (lof !== true) {
+      // a teammate in the way: sidestep; glass or furniture between (it sees them through a
+      // window): go round to them (the path takes it through a door), still watching
+      this.noFire = (this.noFire ?? 0) + dt;
+      // (a watcher keeps its post: it has reported them, the ones inside will come)
+      if (lof === 'mate' || this.noFire < 1.2 || this.role === 'watcher') { if (lof === 'mate') this.sidestep(feet); this.fireT = 0.3; return; }
+      this.goTo(feet, this.speeds.jog, { moveTol: 1.5, every: 1.0 });
+      this.anim.aim = Math.max(0.3, this.anim.aim - dt * 2);
       return;
     }
+    this.noFire = 0;
     const v = P.vel ? Math.hypot(P.vel.x, P.vel.z) : 0;
     // a snap shot first, steadier the longer it tracks (2 s); each shot of a burst kicks it off
     const track = Math.min(1, (this.aimT - this.aimNeed) / 2);
@@ -395,6 +402,7 @@ export class Invader {
     const K = this.know;
     this.anim.aim = Math.max(0, this.anim.aim - dt * 1.5);
     this.crouch = 0;
+    if (this.role === 'watcher') { this.set('post', 'lost them'); return; }
     if (!K) { this.set('sweep', 'nothing known'); return; }
     if (this.state !== 'pursue') { this.set('pursue'); }
     const S = this.sub ??= { target: K.pos.clone(), t0: this.time, v: (this.trackV ?? new V3()).clone(), phase: 'go' };
