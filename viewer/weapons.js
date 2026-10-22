@@ -47,8 +47,10 @@ const SWING_SWEEP = { t0: 0.2, t1: 0.36, from: [40, 12], to: [-45, -10] };
 export const WEAPONS = {
   kitchen_knife: {
     id: 'kitchen_knife', kind: 'melee', name: "Chef's knife",
-    // the view model: grip frame at `pos` (camera space), the blade along `aim`, the back of the hand toward `back`
-    hold: { pos: [0.18, -0.18, -0.38], aim: [-0.2, 0.32, -1], back: [0.4, 0.45, 1], arm: [0.5, -0.6, 0.6], gripRadius: 0.0115 },
+    // the view model (camera space, m): the grip (the handle's centre) at `pos`, the forearm leaving
+    // the wrist along `arm`, the back of the hand toward `back`; `wrist` = the guard's wrist bend
+    // [flex, deviation, twist] deg; `run` = the pose added while running
+    hold: { pos: [0.14, -0.12, -0.32], arm: [0.38, -0.5, 0.78], back: [0.65, 0.45, 0.6], wrist: [0, 0, 0], gripRadius: 0.0115 },
     // one attack, Enter: the slash. 55 a hit (two kill), up to 2 targets in its arc
     attack: { name: 'slash', damage: 55, range: 1.25, maxTargets: 2, duration: 0.66, cooldown: 0.62, keys: SLASH_KEYS,
       sweep: { t0: 0.15, t1: 0.27, from: [34, 9], to: [-42, -11] }, swingSfxAt: 0.12 },
@@ -124,11 +126,11 @@ const D = THREE.MathUtils.degToRad;
 
 export class Weapons {
   // combat: viewer/combat.js; player: viewer/player.js; vitals: the player's PlayerVitals (its target)
-  constructor({ combat, camera, inventory, player, noise = null, baked = null, culler = null, level = null,
+  constructor({ combat, camera, inventory, player, noise = null, baked = null, culler = null, level = null, load = null,
     canAct = () => true, hidden = () => false }) {
     Object.assign(this, { combat, camera, inventory, player, noise, baked, culler, level, canAct, hidden });
     this.known = new Set();   // weapon ids seen in the inventory (a new one is armed on pickup)
-    this.vm = new ViewModel(camera);
+    this.vm = new ViewModel(camera, { load });   // load(url) -> gltf: the arm asset (viewmodel_arm.gltf)
     this.id = null;
     this.def = null;
     this.cooldown = 0;

@@ -602,7 +602,7 @@
       window.__combat = combat;
       const vitals = new PlayerVitals({ combat, player, camera, god: params.get('god') === '1' });
       window.__vitals = vitals;
-      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
+      const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level, load: loadGltf,
         canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown,
         hidden: () => hiding.active });
       window.__weapons = weapons;

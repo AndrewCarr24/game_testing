@@ -1,26 +1,33 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
-// The first-person view model: the player's right hand (and a sleeve) gripping the armed weapon,
-// posed in camera space, animated by the weapon's keyframes (viewer/weapons.js) plus idle sway,
-// walk bob and look lag.
+// The first-person view model: the player's right arm (blender/assets/viewmodel_arm.py: a skinned
+// hand, wrist, forearm and sweater sleeve; three bones Forearm -> Twist -> Hand) gripping the armed
+// weapon, posed in camera space, animated by the weapon's keyframes (viewer/weapons.js) plus idle
+// breathing sway, walk bob, a run pose and look lag; a streak behind the blade while it cuts.
 //
-//   const vm = new ViewModel(camera)
+//   const vm = new ViewModel(camera, { load })   load(url) -> gltf (index.html's loader); the arm
+//                              loads at once (~240 kB), the weapon shows when it has
 //   vm.setWeapon(def, node)    node = the picked-up model (its <Asset>_Grip / _Tip / _Edge empties
 //                              give the grip frame), or null for none
-//   vm.play(clip)              clip = { duration, keys: [[t, {p:[x,y,z], r:[x,y,z]°}], ...] }
-//   vm.freeze(seconds)         hit stop: the animation holds still
+//   vm.play(clip)              clip = { duration, keys: [[t, {p, r, w}, ease], ...], trail: sweep }
+//                              p = [x, y, z] m (camera space), r = [pitch, yaw, roll] deg (the arm
+//                              about the grip), w = [flex, deviation, twist] deg (the wrist bones)
+//   vm.freeze(seconds)         hit stop: the animation holds still (and shivers)
+//   vm.bounce()                the blade met a wall: it springs back to the guard from where it is
+//   vm.scrub(clip, t)          hold a clip at time t (screenshots); vm.scrub(null) lets go
 //   vm.update(dt, { speed, grounded, lookDelta })
-//   vm.light(room)             light it like the room the eye is in (baked SH + env), or outdoors
+//   vm.light(baked, room, roomInfo)   lit like the room the eye is in (baked SH + env), or outdoors
 //
-// Everything is one group under the camera (2 draw calls for the hand + sleeve, the weapon's own
-// materials). It never clips into walls: its depth is squeezed into the nearest slice of the
-// depth range (vertex shader), so the world is always behind it, while its own parts still sort
-// against each other. It casts and takes no shadows; it's lit by the current room's baked
-// spherical harmonics (no real-time direct light inside sunless rooms).
+// One group under the camera: the arm (1 draw call), the weapon's materials (the knife: 3), the
+// streak (1, only while a swing cuts). It never clips into walls: its depth is squeezed into the
+// nearest slice of the depth range (vertex shader), so the world is always behind it, while its
+// own parts still sort against each other. It casts and takes no shadows; it's lit by the current
+// room's baked spherical harmonics (no real-time direct light inside sunless rooms).
 
 const D = THREE.MathUtils.degToRad;
 const smooth = (t) => t * t * (3 - 2 * t);
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // ------------------------------------------------------------------ lighting (shared uniforms)
 const U = {
@@ -30,13 +37,14 @@ const U = {
 };
 const _shTarget = Array.from({ length: 9 }, () => new THREE.Vector3());
 
-export function viewModelMaterial(src) {
+// squeeze the depth: NDC z in [-1, 1] -> [-1, -0.6] (nearer than anything in the world)
+const SQUEEZE = '#include <project_vertex>\ngl_Position.z = gl_Position.z * 0.2 - gl_Position.w * 0.8;';
+
+export function viewModelMaterial(src, { skin = false } = {}) {
   const m = src.clone();
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, U);
-    // squeeze the depth: NDC z in [-1, 1] -> [-1, -0.6] (nearer than anything in the world)
-    shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>',
-      '#include <project_vertex>\ngl_Position.z = gl_Position.z * 0.2 - gl_Position.w * 0.8;');
+    shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', SQUEEZE);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <lights_pars_begin>', '#include <lights_pars_begin>\nuniform vec3 vmSH[ 9 ];\nuniform float vmUseSH, vmDirect;')
       .replace('#include <lights_fragment_maps>', [
@@ -46,16 +54,52 @@ export function viewModelMaterial(src) {
         '  irradiance += shGetIrradianceAt( inverseTransformDirection( geometryNormal, viewMatrix ), vmSH );',
         '}',
       ].join('\n'))
-      .replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\nreflectedLight.directDiffuse *= vmDirect;\nreflectedLight.directSpecular *= vmDirect;');
+      .replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\nreflectedLight.directDiffuse *= vmDirect;\nreflectedLight.directSpecular *= vmDirect;' +
+        // skin: light scatters under it, so its shading is softer and warmer than a surface's:
+        // the darker the ambient light, the more of it comes back reddened (a cheap subsurface)
+        (skin ? '\n{ float l = dot( reflectedLight.indirectDiffuse, vec3( 0.333 ) );\n  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 0.10, 0.025, 0.01 ) * l * 2.0; }' : ''));
   };
-  m.customProgramCacheKey = () => 'viewmodel';
+  m.customProgramCacheKey = () => 'viewmodel' + (skin ? '-skin' : '');
   return m;
 }
 
-// ------------------------------------------------------------------ the hand
-// Built in the grip frame G: the handle's axis along +Y (toward the blade), the back of the hand
-// facing +X, the wrist toward +Z. Four fingers wrap the handle (radius `grip`), the thumb closes
-// over the index and middle fingers, the forearm leaves the wrist bent toward the little finger.
+// the arm asset (assets/models/viewmodel_arm.gltf): loaded once, shared by every weapon
+let ARM = null;
+function loadArm(load) {
+  ARM ??= Promise.resolve(load('../assets/models/viewmodel_arm.gltf')).then((gltf) => {
+    const scene = gltf.scene;
+    const root = scene.getObjectByName('ViewmodelArm') ?? scene;
+    const info = root.userData.viewmodel ?? {};
+    const bones = {};
+    let mesh = null;
+    scene.traverse((o) => {
+      if (o.isBone) bones[o.name] = o;
+      if (o.isSkinnedMesh) mesh = o;
+      if (o.isMesh) {
+        const src = o.material;
+        if (src.roughnessMap && !src.aoMap) { src.aoMap = src.roughnessMap; src.aoMapIntensity = 0.85; }   // ORM: R = occlusion
+        src.side = THREE.FrontSide;
+        o.material = viewModelMaterial(src, { skin: true });
+        o.castShadow = o.receiveShadow = false;
+        o.frustumCulled = false;
+        o.renderOrder = 10;
+      }
+    });
+    const socket = scene.getObjectByName('ViewmodelArm_Socket');
+    scene.updateMatrixWorld(true);
+    // each bone's rest rotation in the arm's frame (the grip frame G)
+    const rest = {};
+    for (const [n, b] of Object.entries(bones)) rest[n] = { world: b.getWorldQuaternion(new THREE.Quaternion()), local: b.quaternion.clone() };
+    const axis = (k, d) => V(...(info[k] ?? d)).normalize();
+    return { scene, mesh, bones, rest, socket, info,
+      axes: { flex: axis('flex', [0, 0.944, 0.33]), deviation: axis('deviation', [1, 0, 0]), twist: axis('twist', [0, 0.33, -0.944]) },
+      forearm: axis('forearm', [0, -0.33, 0.944]) };
+  }).catch((e) => { console.warn('viewmodel: no arm asset, using the built hand', e); return null; });
+  return ARM;
+}
+
+// ------------------------------------------------------------------ the built hand (fallback)
+// Used only if the arm asset can't load.
 function capsule(a, b, r0, r1 = r0) {
   const len = a.distanceTo(b);
   const g = new THREE.CylinderGeometry(r1, r0, len, 12, 1, true);
@@ -92,7 +136,6 @@ function ellipsoid(c, s, rot = null, seg = 16) {
   };
   return g;
 }
-const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 export function buildHand({ grip = 0.0115, skin = 0xc29b88, sleeve = 0x23262b, arm: armDir = null } = {}) {
   const parts = [];
@@ -179,11 +222,12 @@ export function buildHand({ grip = 0.0115, skin = 0xc29b88, sleeve = 0x23262b, a
 }
 
 // ------------------------------------------------------------------ pose helpers
-const _q = new THREE.Quaternion(), _e = new THREE.Euler();
+const _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion(), _e = new THREE.Euler();
+const _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3();
 // a key's ease (its third element) into that key: linear, accelerating, decelerating; default smoothstep
 const EASE = { linear: (x) => x, in: (x) => x * x * x, out: (x) => 1 - (1 - x) ** 3 };
 function lerpPose(keys, t, out) {
-  // keys: [[t, {p, r}], ...] sorted; smoothstep between neighbours
+  // keys: [[t, {p, r, w}, ease], ...] sorted
   let a = keys[0], b = keys[keys.length - 1];
   for (let i = 0; i < keys.length - 1; i++) if (t >= keys[i][0] && t <= keys[i + 1][0]) { a = keys[i]; b = keys[i + 1]; break; }
   if (t <= keys[0][0]) b = a = keys[0];
@@ -197,58 +241,140 @@ function lerpPose(keys, t, out) {
   }
   return out;
 }
+const newPose = () => ({ p: [0, 0, 0], r: [0, 0, 0], w: [0, 0, 0] });
+
+// the streak: a ribbon swept by the outer part of the blade over the last few hundredths of a
+// second (positions re-evaluated from the clip, so it doesn't depend on the frame rate); faint,
+// brighter toward the tip and the newest edge, as bright as the room
+const TRAIL_N = 10, TRAIL_SPAN = 0.075;
+function makeTrail() {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array((TRAIL_N + 1) * 2 * 3), 3));
+  g.setAttribute('a', new THREE.BufferAttribute(new Float32Array((TRAIL_N + 1) * 2), 1));
+  const idx = [];
+  for (let i = 0; i < TRAIL_N; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  g.setIndex(idx);
+  const m = new THREE.ShaderMaterial({
+    uniforms: { ...U, strength: { value: 0 } },
+    vertexShader: `attribute float a; varying float vA;
+      void main() { vA = a; vec4 mv = modelViewMatrix * vec4( position, 1.0 ); gl_Position = projectionMatrix * mv;
+        gl_Position.z = gl_Position.z * 0.2 - gl_Position.w * 0.8; }`,
+    fragmentShader: `uniform vec3 vmSH[ 9 ]; uniform float vmUseSH, strength; varying float vA;
+      void main() {
+        float amb = vmUseSH > 0.5 ? clamp( dot( vmSH[ 0 ], vec3( 0.3, 0.59, 0.11 ) ) * 0.9, 0.04, 1.0 ) : 0.8;
+        gl_FragColor = vec4( vec3( 0.86, 0.9, 0.95 ) * amb, vA * strength );
+        #include <colorspace_fragment>
+      }`,
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.name = 'ViewModel_Trail';
+  mesh.frustumCulled = false;
+  mesh.renderOrder = 11;
+  mesh.visible = false;
+  return mesh;
+}
 
 export class ViewModel {
-  constructor(camera) {
+  constructor(camera, { load = null } = {}) {
     this.camera = camera;
     this.root = new THREE.Group();          // the whole view model, under the camera
     this.root.name = 'ViewModel';
     this.root.visible = false;
     this.pivot = new THREE.Group();         // animated: the hold pose + clip + sway
     this.root.add(this.pivot);
+    this.trail = makeTrail();
+    this.root.add(this.trail);
     camera.add(this.root);
     this.def = null;
     this.clip = null; this.clipT = 0;
+    this.scrubbing = false;
     this.frozen = 0;
     this.equip = 1;                          // 0 = lowered out of view, 1 = up
     this.t = 0;
     this.bob = 0;
+    this.run = 0;
     this.lag = new THREE.Vector2();
     this.room = undefined;
-    this._pose = { p: [0, 0, 0], r: [0, 0, 0], w: [0, 0, 0] };
-    this.kick = 0;
+    this._pose = newPose();
+    this._tp = newPose();
+    this.arm = null;
+    this.loading = !!load;                  // the arm asset is on its way: weapons wait for it
+    this.ready = load ? loadArm(load).then((a) => {
+      this.arm = a; this.loading = false;
+      if (this._want) this.setWeapon(...this._want);
+      return a;
+    }) : Promise.resolve(null);
   }
 
   setWeapon(def, node) {
+    this._want = [def, node];
+    if (this.weapon) { this.weapon.removeFromParent(); this.weapon = null; }
     this.pivot.clear();
+    if (this.loading) { this.def = null; this.root.visible = false; return; }
     this.def = def;
     this.root.visible = !!def;
+    this.trail.visible = false;
     if (!def) return;
     const hold = def.hold || {};
-    const grip = new THREE.Group();          // the grip frame G (see buildHand)
+    const grip = new THREE.Group();          // the grip frame G (the arm asset's frame)
     grip.name = 'ViewModel_Grip';
-    // G in camera space: the hold position, the weapon pointing along hold.aim, the back of the
-    // hand toward hold.back, the forearm toward hold.arm (all camera space)
-    const aim = V(...(hold.aim || [-0.16, 0.3, -1])).normalize();
-    const back = V(...(hold.back || [1, 0.35, 0.3]));
-    back.addScaledVector(aim, -back.dot(aim)).normalize();
-    const z = new THREE.Vector3().crossVectors(back, aim);
-    grip.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(back, aim, z));
-    const armG = V(...(hold.arm || [0.42, -0.62, 0.66])).normalize().applyQuaternion(grip.quaternion.clone().invert());
-    grip.add(buildHand({ grip: hold.gripRadius ?? 0.0115, skin: hold.skin, sleeve: hold.sleeve, arm: armG }));
-    if (node) grip.add(fitWeapon(node, def));
-    this.basePos = V(...(hold.pos || [0.2, -0.2, -0.36]));
-    this.baseQuat = grip.quaternion.clone();
+    {
+      // G in camera space: the forearm leaves the wrist along hold.arm, the back of the hand
+      // faces hold.back (camera space); the asset says which way its forearm runs in G
+      const fG = this.arm?.forearm ?? V(0, -0.33, 0.944), xG = V(1, 0, 0);
+      const arm = V(...(hold.arm || [0.38, -0.5, 0.78])).normalize();
+      const back = V(...(hold.back || [0.65, 0.45, 0.6]));
+      back.addScaledVector(arm, -back.dot(arm)).normalize();
+      const Rg = new THREE.Matrix4().makeBasis(fG, xG, fG.clone().cross(xG));
+      const Rc = new THREE.Matrix4().makeBasis(arm, back, arm.clone().cross(back));
+      grip.quaternion.setFromRotationMatrix(Rc.multiply(Rg.transpose()));
+    }
+    let socket = grip;
+    if (this.arm) {
+      const a = this.arm;
+      for (const [n, b] of Object.entries(a.bones)) b.quaternion.copy(a.rest[n].local);
+      grip.add(a.scene);
+      socket = a.socket ?? grip;
+    } else {
+      grip.add(buildHand({ grip: hold.gripRadius ?? 0.0115, skin: hold.skin, sleeve: hold.sleeve,
+        arm: V(0.08, -0.55, 0.83) }));
+    }
+    if (node) {
+      const w = fitWeapon(node, def);
+      socket.add(w.group);
+      this.weapon = w.group;
+      this.tipLocal = w.tip;                  // in the socket's frame: the blade's tip and the
+      this.midLocal = w.mid;                  // point where the streak starts
+    } else this.tipLocal = this.midLocal = null;
+    this.basePos = V(...(hold.pos || [0.14, -0.12, -0.32]));
+    this.baseWrist = hold.wrist || [0, 0, 0];
+    this.runPose = hold.run || { p: [0.03, -0.05, 0.04], r: [-18, 10, 14] };
     this.grip = grip;
+    this.baseQuat = grip.quaternion.clone();
     this.pivot.add(grip);
     this.equip = 0;                          // raise it into view
     this.clip = null;
-    this.root.traverse((o) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = false; o.frustumCulled = false; o.renderOrder = 10; } });
+    this.room = undefined;                   // (re-apply the room's reflections to the new materials)
+    this.root.traverse((o) => { if (o.isMesh && o !== this.trail) { o.castShadow = false; o.receiveShadow = false; o.frustumCulled = false; o.renderOrder = 10; } });
   }
 
-  play(clip) { this.clip = clip; this.clipT = 0; this.frozen = 0; }
-  freeze(s) { this.frozen = Math.max(this.frozen, s); }
+  play(clip) { this.clip = clip; this.clipT = 0; this.frozen = 0; this.scrubbing = false; }
+  freeze(s) { this.frozen = Math.max(this.frozen, s); this.shiver = s; }
   get busy() { return !!this.clip; }
+  // the blade met a wall: from wherever the arm is, spring back to the guard
+  bounce() {
+    if (!this.clip) return;
+    const now = lerpPose(this.clip.keys, this.clipT, newPose());
+    const back = { p: now.p.map((x, i) => x * 0.55 + [0.02, -0.01, 0.03][i]), r: now.r.map((x) => x * 0.6), w: now.w.map((x) => x * 0.4) };
+    this.clip = { duration: 0.42, keys: [[0, now], [0.07, back, 'out'], [0.42, {}]] };
+    this.clipT = 0;
+  }
+  // hold a clip at time t (deterministic screenshots); scrub(null) lets go
+  scrub(clip, t = 0) {
+    if (!clip) { this.scrubbing = false; this.clip = null; return; }
+    this.clip = clip; this.clipT = t; this.scrubbing = true; this.frozen = 0; this.equip = 1;
+  }
 
   // light it like the room the eye is in: that room's SH (smoothly), its panorama; outdoors the
   // scene's environment and the sun
@@ -262,8 +388,40 @@ export class ViewModel {
       if (this.room === undefined && r?.sh) for (let i = 0; i < 9; i++) U.vmSH.value[i].copy(_shTarget[i]);
       this.room = room;
       const env = r?.envMap ?? null;
-      this.root.traverse((o) => { if (o.isMesh && o.material && o.material.envMap !== env) { o.material.envMap = env; o.material.needsUpdate = true; } });
+      this.root.traverse((o) => { if (o.isMesh && o.material && !o.material.isShaderMaterial && o.material.envMap !== env) { o.material.envMap = env; o.material.needsUpdate = true; } });
     }
+  }
+
+  // the arm and wrist at a pose (clip pose + the extras: sway, bob, lag, equip, run)
+  apply(pose, extra) {
+    const { sway, bob, lag, lower, run, roll, shake } = extra;
+    const rp = this.runPose;
+    this.pivot.position.set(
+      this.basePos.x + pose.p[0] + sway[0] + bob[0] - lag.x * 0.25 + rp.p[0] * run + shake[0],
+      this.basePos.y + pose.p[1] + sway[1] + bob[1] - lower * 0.25 + lag.y * 0.25 + rp.p[1] * run + shake[1],
+      this.basePos.z + pose.p[2] + sway[2] + rp.p[2] * run);
+    _e.set(D(pose.r[0] + rp.r[0] * run) - lower * 0.9 + lag.y * 0.6, D(pose.r[1] + rp.r[1] * run) + lag.x * 0.6,
+      D(pose.r[2] + rp.r[2] * run) + roll, 'XYZ');
+    this.pivot.quaternion.setFromEuler(_e);
+    this.grip.position.set(0, 0, 0);
+    this.grip.quaternion.copy(this.baseQuat);
+    this.wrist(pose.w[0] + this.baseWrist[0], pose.w[1] + this.baseWrist[1], pose.w[2] + this.baseWrist[2]);
+  }
+
+  // the wrist: flex (palm-ward +) and deviation (toward the little finger +) bend the Hand bone,
+  // the twist rolls the forearm (half of it at the Twist bone, all of it at the hand)
+  wrist(flex, dev, twist) {
+    const a = this.arm;
+    if (!a?.bones.Hand) return;
+    const { Hand, Twist, Forearm } = a.bones, R = a.rest, ax = a.axes;
+    const tq = _q.setFromAxisAngle(ax.twist, D(twist) * 0.5);
+    const twistW = _q2.copy(tq).multiply(R.Twist.world);                       // the Twist bone's new rotation (arm frame)
+    if (Twist && Forearm) Twist.quaternion.copy(R.Forearm.world).invert().multiply(twistW);
+    const hq = _q3.setFromAxisAngle(ax.flex, D(flex));
+    hq.multiply(new THREE.Quaternion().setFromAxisAngle(ax.deviation, D(dev)));
+    hq.multiply(new THREE.Quaternion().setFromAxisAngle(ax.twist, D(twist)));
+    const handW = hq.multiply(R.Hand.world);
+    Hand.quaternion.copy(twistW).invert().multiply(handW);
   }
 
   update(dt, { speed = 0, grounded = true, lookDelta = null } = {}) {
@@ -271,38 +429,68 @@ export class ViewModel {
     this.t += dt;
     for (let i = 0; i < 9; i++) U.vmSH.value[i].lerp(_shTarget[i], Math.min(1, dt * 6));
     this.equip = Math.min(1, this.equip + dt / 0.28);
-    // the clip, unless held by a hit stop
-    let pose = this._pose;
+    // the clip, unless held by a hit stop (or scrubbed)
+    const pose = this._pose;
     pose.p.fill(0); pose.r.fill(0); pose.w.fill(0);
     if (this.clip) {
-      if (this.frozen > 0) this.frozen -= dt;
+      if (this.scrubbing) { /* held */ } else if (this.frozen > 0) this.frozen -= dt;
       else this.clipT += dt;
-      if (this.clipT >= this.clip.duration) this.clip = null;
+      if (this.clipT >= this.clip.duration && !this.scrubbing) this.clip = null;
       else lerpPose(this.clip.keys, this.clipT, pose);
     }
-    // idle sway (breathing), walk bob, look lag (the hand trails the view a little)
-    const w = window.__bench ? 0 : 1;
-    const bobAmp = Math.min(1, speed / 3.4) * (grounded ? 1 : 0.2);
-    this.bob += dt * (4.2 + speed * 0.9) * (bobAmp > 0.05 ? 1 : 0);
-    const sway = [Math.sin(this.t * 1.1) * 0.0025 * w, Math.sin(this.t * 1.7) * 0.002 * w, 0];
-    const bob = [Math.cos(this.bob) * 0.011 * bobAmp * w, -Math.abs(Math.sin(this.bob)) * 0.012 * bobAmp * w, 0];
-    if (lookDelta) this.lag.lerp(lookDelta.clone().clampScalar(-0.06, 0.06), Math.min(1, dt * 10));
+    // idle breathing (a slow rise and fall, a little drift), walk bob, a run pose, look lag
+    const still = window.__bench || this.scrubbing ? 0 : 1;
+    const moving = Math.min(1, speed / 3.4) * (grounded ? 1 : 0.2);
+    this.bob += dt * (3.6 + speed * 0.95) * (moving > 0.05 ? 1 : 0);
+    this.run += ((speed > 5 && grounded && !this.clip ? 1 : 0) - this.run) * Math.min(1, dt * 6);
+    const br = Math.sin(this.t * 1.55);                      // ~15 breaths a minute
+    const sway = [(Math.sin(this.t * 0.7) * 0.0018 + Math.sin(this.t * 1.9) * 0.0006) * still,
+      (br * 0.0028 + Math.sin(this.t * 2.3) * 0.0005) * still, br * 0.0012 * still];
+    const bob = [Math.cos(this.bob) * 0.012 * moving * still, -Math.abs(Math.sin(this.bob)) * 0.014 * moving * still, 0];
+    if (lookDelta && !this.scrubbing) this.lag.lerp(lookDelta.clone().clampScalar(-0.06, 0.06), Math.min(1, dt * 10));
     this.lag.multiplyScalar(Math.max(0, 1 - dt * 8));
-    const lower = 1 - smooth(this.equip);                    // equipping: comes up from below
-    this.pivot.position.set(
-      this.basePos.x + pose.p[0] + sway[0] + bob[0] - this.lag.x * 0.25,
-      this.basePos.y + pose.p[1] + sway[1] + bob[1] - lower * 0.25 + this.lag.y * 0.25,
-      this.basePos.z + pose.p[2]);
-    _e.set(D(pose.r[0]) - lower * 0.9 + this.lag.y * 0.6, D(pose.r[1]) + this.lag.x * 0.6, D(pose.r[2]) + Math.sin(this.t * 0.9) * 0.006 * w, 'XYZ');
-    this.pivot.quaternion.setFromEuler(_e);
-    // the grip frame turns about its own origin (the handle), the pivot moves it in camera space
-    this.grip.position.set(0, 0, 0);
-    this.grip.quaternion.copy(this.baseQuat);
+    // a hit stop shivers a little (the blade caught in something)
+    const sh = this.frozen > 0 && !this.scrubbing ? 0.0018 * Math.min(1, this.frozen / Math.max(0.01, this.shiver)) : 0;
+    const extra = {
+      sway, bob, lag: this.scrubbing ? new THREE.Vector2() : this.lag, lower: 1 - smooth(this.equip), run: this.run * still,
+      roll: Math.sin(this.t * 0.9) * 0.006 * still + Math.sin(this.bob * 0.5) * 0.02 * moving * still,
+      shake: [(Math.random() - 0.5) * sh, (Math.random() - 0.5) * sh],
+    };
+    this.apply(pose, extra);
+    this.updateTrail(extra);
+  }
+
+  // the streak behind the blade while the clip's sweep cuts (and a moment after)
+  updateTrail(extra) {
+    const tr = this.trail, sw = this.clip?.trail;
+    if (!sw || !this.tipLocal || !this.weapon) { tr.visible = false; return; }
+    const t = this.clipT, t0 = sw.t0 - 0.02, t1 = sw.t1 + 0.07;
+    if (t < t0 || t > t1) { tr.visible = false; return; }
+    const pos = tr.geometry.attributes.position, al = tr.geometry.attributes.a;
+    const fade = Math.min(1, (t - t0) / 0.03) * Math.min(1, (t1 - t) / 0.05);
+    for (let i = 0; i <= TRAIL_N; i++) {
+      const ti = Math.max(0, t - (i / TRAIL_N) * TRAIL_SPAN);
+      lerpPose(this.clip.keys, ti, this._tp);
+      this.apply(this._tp, extra);
+      this.root.updateMatrixWorld(true);
+      const a = this.root.worldToLocal(this.weapon.localToWorld(_v1.copy(this.tipLocal)));
+      const b = this.root.worldToLocal(this.weapon.localToWorld(_v2.copy(this.midLocal)));
+      pos.setXYZ(i * 2, a.x, a.y, a.z); pos.setXYZ(i * 2 + 1, b.x, b.y, b.z);
+      const age = 1 - i / TRAIL_N;
+      al.setX(i * 2, age * age); al.setX(i * 2 + 1, 0);
+    }
+    pos.needsUpdate = al.needsUpdate = true;
+    tr.material.uniforms.strength.value = 0.32 * fade;
+    tr.visible = true;
+    // back to this frame's pose
+    lerpPose(this.clip.keys, t, this._tp);
+    this.apply(this._tp, extra);
   }
 }
 
 // the picked-up model in the grip frame: its <Asset>_Grip empty at the origin, grip -> tip along
-// +Y, the edge toward -Z (the side the fingers wrap)
+// +Y, the edge toward -Z (the side the fingers wrap). Returns the group, the tip and the streak's
+// inner end (60 % of the way from the grip to the tip) in the group's frame
 function fitWeapon(node, def) {
   const model = node.clone(true);
   model.visible = true;
@@ -312,6 +500,7 @@ function fitWeapon(node, def) {
   const g = find('_Grip'), t = find('_Tip'), e = find('_Edge');
   const holder = new THREE.Group();
   holder.add(model);
+  let tip = V(0, 0.27, 0);
   if (g && t) {
     const gp = g.getWorldPosition(new THREE.Vector3()), tp = t.getWorldPosition(new THREE.Vector3());
     const ep = e ? e.getWorldPosition(new THREE.Vector3()) : gp.clone().add(V(0, -1, 0));
@@ -324,8 +513,10 @@ function fitWeapon(node, def) {
     model.quaternion.setFromRotationMatrix(m);
     model.position.copy(gp).applyQuaternion(model.quaternion).negate();
     if (def.hold?.slide) model.position.addScaledVector(V(0, 1, 0), def.hold.slide);
+    tip = V(0, tp.distanceTo(gp) + (def.hold?.slide ?? 0), 0);
   }
-  return mergeByMaterial(holder);
+  const group = mergeByMaterial(holder);
+  return { group, tip, mid: tip.clone().multiplyScalar(0.6) };
 }
 
 // one mesh per material (a knife's blade, bolster, handle, rivets: 8 meshes -> 3 draw calls)
