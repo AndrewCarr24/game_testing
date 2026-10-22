@@ -284,6 +284,16 @@ def run(name=LT.NAME):
         bb["roof_shape"] = roof_of(bb)
         bb["kit"] = b["kind"] in kit_avail
         sc = LT.kit_sidecar(b["kind"]) if bb["kit"] else None
+        if b.get("site"):
+            # a rebuilt building's site (prompts/town_building.md): its model town2_<id> and its
+            # sidecar's colliders when built; nothing (no massing, no colliders) until then
+            bb["kit"] = False
+            bb["parts"] = []
+            sc = LT.kit_sidecar(f"town2_{b['id']}")
+            if sc:
+                bb["model"] = f"town2_{b['id']}"
+                b = dict(b, kit_offset=[round((sc['footprint'][0] + sc['footprint'][2]) / 2, 3), round((sc['footprint'][1] + sc['footprint'][3]) / 2, 3)])
+                bb["kit_offset"] = b["kit_offset"]
         if sc and sc.get("colliders"):
             ox, oy = b.get("kit_offset", [0.0, 0.0])
             bb["kit_cols"] = [[c[0] - ox, c[1] - oy, c[2], c[3] - ox, c[4] - oy, c[5]] for c in sc["colliders"]]

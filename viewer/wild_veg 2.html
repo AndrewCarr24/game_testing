@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wilderness Plant Kit</title>
+  <style>
+    :root { --bg: #9fb3c8; --panel: rgba(16, 20, 18, 0.8); --ink: #e8eee6; --dim: #9aa79a; --accent: #b8d98a; --line: #44513f; --card: #1c221d; }
+    html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+    canvas { display: block; }
+    #hud { position: fixed; left: 12px; top: 12px; background: var(--panel); padding: 10px 12px; border-radius: 6px; max-width: min(460px, calc(100vw - 48px)); max-height: calc(100vh - 48px); overflow: auto; }
+    #hud b { color: var(--accent); font-weight: 600; }
+    #hud .row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    #hud button, #hud select { background: #2a332b; color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 3px 7px; font: inherit; cursor: pointer; }
+    #hud button.on { border-color: var(--accent); color: var(--accent); }
+    #hud input[type=range] { width: 150px; }
+    #stats { white-space: pre-wrap; margin-top: 6px; }
+    #ref { color: var(--dim); margin-top: 6px; white-space: normal; }
+    #help { color: var(--dim); margin-top: 6px; }
+    #labels { position: fixed; inset: 0; pointer-events: none; }
+    #labels div { position: absolute; transform: translate(-50%, 0); background: var(--panel); padding: 2px 6px; border-radius: 4px; white-space: nowrap; font-size: 12px; }
+    body.hidehud #hud { display: none; }
+    /* contact sheet (mode=sheet) */
+    body.sheet { overflow: auto; background: #151a16; }
+    #sheet { display: none; padding: 16px; }
+    body.sheet #sheet { display: block; }
+    body.sheet #hud, body.sheet canvas, body.sheet #labels { display: none; }
+    #sheet h1 { font-size: 20px; margin: 0 0 4px; color: var(--accent); }
+    #sheet h2 { font-size: 15px; margin: 22px 0 8px; color: var(--accent); border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+    #sheet .intro { color: var(--dim); max-width: 1200px; margin-bottom: 8px; }
+    #sheet .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 12px; }
+    #sheet .sp { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 10px; display: grid; grid-template-columns: 220px 1fr; gap: 10px; }
+    #sheet .sp img { width: 100%; display: block; border-radius: 4px; background: #000; }
+    #sheet .sp .imgs { display: flex; flex-direction: column; gap: 6px; }
+    #sheet .sp .name { font-weight: 600; color: var(--ink); }
+    #sheet .sp .latin { color: var(--dim); font-style: italic; }
+    #sheet .sp .refd { color: #c8d2c4; margin-top: 4px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; line-height: 1.45; }
+    #sheet .sp .bud { color: var(--dim); margin-top: 6px; font-size: 12px; }
+    #sheet .sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; border: 1px solid #0006; margin-right: 3px; }
+    #sheet .lod { width: 100%; grid-column: 1 / -1; }
+    @media (max-width: 640px) { #sheet .grid { grid-template-columns: 1fr; } #sheet .sp { grid-template-columns: 1fr; } }
+  </style>
+  <script type="importmap">
+    { "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+<div id="hud">
+  <div><b>Plant kit</b> <span id="mode"></span></div>
+  <div class="row"><select id="species"></select><span id="variants"></span></div>
+  <div class="row">
+    <button data-mode="single">single</button><button data-mode="row">LODs</button><button data-mode="variants">variants</button><button data-mode="kit">kit</button>
+    <select id="group"></select>
+  </div>
+  <div class="row">scene <button data-mode="cove">cove</button><button data-mode="creek">creek</button><button data-mode="ridge">ridge</button><button data-mode="bald">bald</button><button data-mode="hell">laurel hell</button><button data-mode="forest">spike forest</button></div>
+  <div class="row">LOD <button data-lod="auto">auto</button><button data-lod="0">0</button><button data-lod="1">1</button><button data-lod="2">2</button><button data-lod="3">imp</button>
+    <button id="wind">wind</button><button id="light">golden</button><button id="shadows">shadows</button></div>
+  <div class="row">distance <input id="dist" type="range" min="2" max="250" step="1"><span id="distv"></span> m <button id="sweep">sweep</button></div>
+  <div id="stats">loading...</div>
+  <div id="ref"></div>
+  <div id="help">drag to orbit / look, wheel to zoom. URL: ?species=tulip_poplar&amp;variant=2&amp;mode=single|row|variants|kit|cove|creek|ridge|bald|hell|forest|sheet&amp;group=canopy&amp;lod=auto|0..3&amp;dist=40&amp;wind=0&amp;light=golden|noon&amp;shadows=0&amp;cam=x,y,z&amp;look=x,y,z&amp;hud=0</div>
+</div>
+<div id="labels"></div>
+<div id="sheet"></div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const BASE = '../build/wilderness/veg/';
+const Q = new URLSearchParams(location.search);
+const SCENES = ['cove', 'creek', 'ridge', 'bald', 'hell', 'forest'];
+const state = {
+  species: Q.get('species') || 'tulip_poplar', variant: +(Q.get('variant') || 1), mode: Q.get('mode') || 'single',
+  group: Q.get('group') || 'canopy', lod: Q.get('lod') || 'auto', dist: +(Q.get('dist') || 0), wind: Q.get('wind') !== '0',
+  sweep: Q.get('sweep') === '1', n: +(Q.get('n') || 1500), light: Q.get('light') || 'golden',
+  shadows: Q.get('shadows') !== null ? Q.get('shadows') !== '0' : true,
+};
+if (Q.get('hud') === '0') document.body.classList.add('hidehud');
+
+// ------------------------------------------------------------------ renderer, scene, lights
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.AgXToneMapping;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.info.autoReset = false;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const SKY = new THREE.Color(0x9fb3c8);
+scene.background = SKY;
+scene.fog = new THREE.Fog(SKY, 120, 520);
+const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.05, 3000);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+const hemi = new THREE.HemisphereLight(0xc4d6ee, 0x4a4a32, 1.6);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xfff1dc, 3.2);
+scene.add(sun, sun.target);
+sun.shadow.mapSize.set(4096, 4096);
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.04;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), new THREE.MeshStandardMaterial({ color: 0x55603a, roughness: 1 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// light presets: the brief's golden hour (sun 19 deg up from just south of west, warm; humid haze) and a
+// neutral noon for judging colour
+function applyLight() {
+  const golden = state.light === 'golden';
+  if (golden) {
+    const el = THREE.MathUtils.degToRad(19), az = THREE.MathUtils.degToRad(255);   // bearing from north
+    sun.position.set(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el)).multiplyScalar(200);
+    sun.color.setRGB(1.0, 0.82, 0.62); sun.intensity = 3.4;
+    hemi.color.setRGB(0.62, 0.72, 0.9); hemi.groundColor.setRGB(0.28, 0.24, 0.16); hemi.intensity = 1.25;
+    SKY.setRGB(0.72, 0.74, 0.78);
+  } else {
+    sun.position.set(-40, 90, 25);
+    sun.color.setRGB(1.0, 0.96, 0.9); sun.intensity = 3.2;
+    hemi.color.setRGB(0.77, 0.84, 0.93); hemi.groundColor.setRGB(0.29, 0.29, 0.2); hemi.intensity = 1.6;
+    SKY.copy(new THREE.Color(0x9fb3c8));
+  }
+  scene.background = SKY; scene.fog.color = SKY;
+  U.uSunColor.value.copy(sun.color).multiplyScalar(sun.intensity);
+  const floor = SCENES.includes(state.mode) && state.mode !== 'forest';
+  renderer.toneMappingExposure = floor ? (state.mode === 'bald' ? 1.0 : 1.45) : 1.0;   // under canopy the eye adapts
+  ground.material.color.set(floor ? (state.mode === 'bald' ? 0x5a5a34 : 0x4a3a28) : 0x55603a);
+}
+
+const U = {
+  uTime: { value: 0 }, uWind: { value: state.wind ? 1 : 0 }, uWindDir: { value: new THREE.Vector2(0.8, 0.6).normalize() },
+  uSunDirV: { value: new THREE.Vector3() }, uSunColor: { value: new THREE.Color() },
+};
+
+// ------------------------------------------------------------------ mesh LOD materials: wind, translucency, foliage normals
+function patchMaterial(mat, sp, isLeaf) {
+  mat.userData.veg = true;
+  if (isLeaf) { mat.alphaToCoverage = true; mat.side = THREE.DoubleSide; }
+  const still = sp.kind === 'log' || sp.kind === 'stump' || sp.kind === 'rock';
+  const low = sp.kind === 'clump' || sp.kind === 'mat';
+  const uni = { uHeight: { value: sp.height_m }, uSway: { value: still ? 0 : low ? 0.03 : 0.012 * sp.height_m },
+    uBranch: { value: still ? 0 : low ? 0.05 : sp.kind === 'shrub' || sp.kind === 'thicket' ? 0.08 : 0.18 },
+    uFlutter: { value: isLeaf ? 0.035 : 0 }, uTrans: { value: isLeaf ? 0.55 : 0 },
+    uMipBoost: { value: Q.get('mipboost') !== null ? +Q.get('mipboost') : 0.25 }, uLeafTex: { value: mat.map ? mat.map.image.width : 1024 } };
+  mat.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, U, uni);
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', `#include <common>
+        attribute vec3 _wind;
+        uniform float uTime, uWind, uHeight, uSway, uBranch, uFlutter;
+        uniform vec2 uWindDir;`)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        {
+          #ifdef USE_INSTANCING
+            vec3 io = instanceMatrix[3].xyz; mat3 ir = mat3(instanceMatrix);
+          #else
+            vec3 io = vec3(0.0); mat3 ir = mat3(1.0);
+          #endif
+          float iph = fract(sin(dot(io.xz, vec2(12.9898, 78.233))) * 43758.5453) * 6.2832;
+          vec3 wd = normalize(transpose(ir) * vec3(uWindDir.x, 0.0, uWindDir.y));   // wind in object space
+          float gust = 0.6 + 0.4 * sin(uTime * 0.35 + iph * 0.3 + io.x * 0.02);
+          float h = max(transformed.y, 0.0) / uHeight;
+          transformed.xz += wd.xz * uWind * gust * uSway * h * h * (1.0 + 0.2 * sin(uTime * 1.1 + iph));   // trunk sway
+          float ph = _wind.z * 6.2832 + iph;
+          float b = _wind.x * uWind * uBranch * (0.5 + 0.5 * gust);
+          transformed.xz += wd.xz * b * (0.6 + 0.4 * sin(uTime * 1.9 + ph));                       // branch bend
+          transformed.y += b * 0.3 * sin(uTime * 2.3 + ph);
+          transformed += objectNormal * _wind.y * uWind * uFlutter
+                         * sin(uTime * 9.0 + ph * 3.0 + (transformed.x + transformed.z) * 3.0);     // leaf flutter
+        }`);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform vec3 uSunDirV, uSunColor; uniform float uTrans, uMipBoost, uLeafTex;`)
+      // foliage: keep the authored (crown) normal on back faces too
+      .replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', isLeaf ? '' : 'normal *= faceDirection;'))
+      // distant cards keep their coverage: boost alpha by mip level, then sharpen into alpha-to-coverage
+      .replace('#include <alphatest_fragment>', isLeaf ? `
+        #ifdef USE_ALPHATEST
+        {
+          vec2 dx = dFdx(vMapUv * uLeafTex), dy = dFdy(vMapUv * uLeafTex);
+          float mip = max(0.0, 0.5 * log2(max(dot(dx, dx), dot(dy, dy))));
+          diffuseColor.a *= 1.0 + mip * uMipBoost;
+          diffuseColor.a = clamp((diffuseColor.a - alphaTest) / max(fwidth(diffuseColor.a), 1e-4) + 0.5, 0.0, 1.0);
+          if (diffuseColor.a <= 0.0) discard;
+        }
+        #endif` : '#include <alphatest_fragment>')
+      .replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
+        {
+          vec3 vd = normalize(vViewPosition);
+          float back = pow(max(dot(-vd, uSunDirV), 0.0), 3.0) + 0.35 * max(dot(-normal, uSunDirV), 0.0);
+          reflectedLight.directDiffuse += uTrans * back * diffuseColor.rgb * uSunColor * RECIPROCAL_PI;
+        }`);
+  };
+  mat.customProgramCacheKey = () => 'veg' + (isLeaf ? 'L' : 'B') + (still ? 'S' : '');
+}
+
+// ------------------------------------------------------------------ impostor material (instanced, hemi-octahedral, 4-frame blend)
+function impostorMaterial(sp, alb, nor) {
+  const imp = sp.impostor;
+  const c = imp.center;
+  return new THREE.ShaderMaterial({
+    fog: true, alphaToCoverage: true,
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {
+      tAlb: { value: alb }, tNor: { value: nor }, uFrames: { value: imp.frames }, uCenter: { value: new THREE.Vector3(c[0], c[1], c[2]) },
+      uRadius: { value: imp.radius }, uSunDirW: { value: new THREE.Vector3() }, uSunColor: { value: U.uSunColor.value },
+      uSky: { value: new THREE.Color() }, uGround: { value: new THREE.Color() },
+    }]),
+    vertexShader: /* glsl */`
+      uniform float uFrames, uRadius; uniform vec3 uCenter;
+      varying vec4 vUvA, vUvB; varying vec4 vW; varying mat3 vR; varying vec2 vCell;
+      #include <fog_pars_vertex>
+      vec3 dec(vec2 uv) { vec2 p = uv * 2.0 - 1.0; vec2 q = vec2(p.x + p.y, p.x - p.y) * 0.5;
+        return normalize(vec3(q, 1.0 - abs(q.x) - abs(q.y))); }
+      vec2 frameUv(vec2 cell, vec3 offB) {
+        vec3 d = dec(cell / (uFrames - 1.0));
+        vec3 r = cross(vec3(0, 0, 1), d); r = length(r) < 1e-4 ? vec3(1, 0, 0) : normalize(r);
+        vec3 u = cross(d, r);
+        return vec2(dot(offB, r), dot(offB, u)) / (2.0 * uRadius) + 0.5;
+      }
+      void main() {
+        mat4 M = modelMatrix * instanceMatrix;
+        mat3 R = mat3(M); float s = length(R[0]);
+        vec3 cW = (M * vec4(uCenter, 1.0)).xyz;
+        vec3 toCam = normalize(cameraPosition - cW);
+        vec3 dO = transpose(R) * toCam / s;
+        vec3 dB = vec3(dO.x, -dO.z, max(dO.y, 0.0));
+        dB = normalize(dB + vec3(0.0, 0.0, 1e-4));
+        vec3 a = dB / (abs(dB.x) + abs(dB.y) + dB.z);
+        vec2 g = (vec2(a.x + a.y, a.x - a.y) * 0.5 + 0.5) * (uFrames - 1.0);
+        vec2 g0 = min(floor(g), vec2(uFrames - 2.0)); vec2 f = g - g0;
+        vec3 rW = cross(vec3(0, 1, 0), toCam); rW = length(rW) < 1e-4 ? vec3(1, 0, 0) : normalize(rW);
+        vec3 uW = cross(toCam, rW);
+        vec3 pW = cW + (rW * position.x + uW * position.y) * uRadius * s;
+        vec3 off = transpose(R) * (pW - cW) / (s * s);
+        vec3 offB = vec3(off.x, -off.z, off.y);
+        vUvA = vec4(frameUv(g0, offB), frameUv(g0 + vec2(1, 0), offB));
+        vUvB = vec4(frameUv(g0 + vec2(0, 1), offB), frameUv(g0 + vec2(1, 1), offB));
+        vW = vec4((1.0 - f.x) * (1.0 - f.y), f.x * (1.0 - f.y), (1.0 - f.x) * f.y, f.x * f.y);
+        vR = R / s; vCell = g0;
+        vec4 mvPosition = viewMatrix * vec4(pW, 1.0);
+        gl_Position = projectionMatrix * mvPosition;
+        #include <fog_vertex>
+      }`,
+    fragmentShader: /* glsl */`
+      uniform sampler2D tAlb, tNor; uniform vec3 uSunDirW, uSunColor, uSky, uGround;
+      varying vec4 vUvA, vUvB; varying vec4 vW; varying mat3 vR; varying vec2 vCell;
+      uniform float uFrames;
+      #include <common>
+      #include <fog_pars_fragment>
+      void tap(vec2 f, vec2 cell, float w, inout vec4 c, inout vec3 n, inout float wa) {
+        if (any(lessThan(f, vec2(0.0))) || any(greaterThan(f, vec2(1.0)))) return;
+        vec2 uv = (cell + f) / uFrames;
+        vec4 t = texture2D(tAlb, uv); vec3 nn = texture2D(tNor, uv).xyz * 2.0 - 1.0;
+        c += vec4(t.rgb * t.a, t.a) * w; n += nn * t.a * w; wa += w;
+      }
+      void main() {
+        vec4 c = vec4(0.0); vec3 nb = vec3(0.0); float wa = 0.0;
+        vec2 cl = floor(vCell + 0.5);
+        tap(vUvA.xy, cl, vW.x, c, nb, wa); tap(vUvA.zw, cl + vec2(1, 0), vW.y, c, nb, wa);
+        tap(vUvB.xy, cl + vec2(0, 1), vW.z, c, nb, wa); tap(vUvB.zw, cl + vec2(1, 1), vW.w, c, nb, wa);
+        float alpha = c.a / max(wa, 1e-4);
+        alpha = clamp((alpha - 0.5) / max(fwidth(alpha), 1e-4) + 0.5, 0.0, 1.0);
+        if (alpha <= 0.0) discard;
+        vec3 alb = c.rgb / max(c.a, 1e-4);
+        vec3 n = normalize(vR * normalize(vec3(nb.x, nb.z, -nb.y)));
+        float ndl = max(dot(n, uSunDirW), 0.0);
+        vec3 hemiI = mix(uGround, uSky, 0.5 * n.y + 0.5);
+        vec3 col = alb * RECIPROCAL_PI * (uSunColor * ndl + hemiI + 0.35 * uSunColor * max(dot(-n, uSunDirW), 0.0) * 0.55);
+        gl_FragColor = vec4(col, alpha);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        #include <fog_fragment>
+      }`,
+  });
+}
+
+// ------------------------------------------------------------------ loading (lazy, textures shared by URI across files)
+const draco = new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/');
+const loader = new GLTFLoader().setDRACOLoader(draco);
+const texLoader = new THREE.TextureLoader();
+let MAN = null;
+const SPECIES = {};          // id -> { sp, lods: [[{geometry, material}]], imp }
+const LOADING = {};
+const TEX = {};              // uri -> Texture (the shared atlases upload once, as they would in the game)
+const MATS = {};             // material name -> patched material (shared by every variant)
+
+function kindOf(id, sp) {
+  if (sp.kind) return sp.kind;
+  return id === 'fern' ? 'clump' : id === 'shrub' ? 'shrub' : 'tree';
+}
+
+function shareTextures(gltf) {
+  const json = gltf.parser.json;
+  const uriOf = (tex) => { const a = gltf.parser.associations.get(tex); if (!a || a.textures === undefined) return null;
+    const t = json.textures[a.textures]; const src = t.source ?? t.extensions?.EXT_texture_webp?.source;
+    return src === undefined ? null : json.images[src].uri; };
+  gltf.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const slot of ['map', 'normalMap']) {
+      const t = o.material[slot]; if (!t) continue;
+      const uri = uriOf(t); if (!uri) continue;
+      if (TEX[uri] && TEX[uri] !== t) { o.material[slot] = TEX[uri]; t.dispose(); } else TEX[uri] = t;
+    }
+  });
+}
+
+async function loadSpecies(id) {
+  if (SPECIES[id]) return SPECIES[id];
+  if (LOADING[id]) return LOADING[id];
+  const sp = MAN.species[id];
+  sp.kind = kindOf(id, sp);
+  LOADING[id] = (async () => {
+    const gltf = await loader.loadAsync(BASE + sp.gltf);
+    shareTextures(gltf);
+    const lods = [];
+    for (let i = 0; i < sp.lods.length; i++) {
+      const node = gltf.scene.getObjectByName(sp.lods[i].name);
+      const parts = [];
+      node.traverse((o) => {
+        if (!o.isMesh) return;
+        const isLeaf = /Leaf/.test(o.material.name);
+        const key = (sp.species || id) + '|' + o.material.name;     // per species: wind uniforms differ
+        let mat = MATS[key];
+        if (!mat || mat.map !== o.material.map) { mat = o.material; patchMaterial(mat, sp, isLeaf); MATS[key] = mat; }
+        parts.push({ geometry: o.geometry, material: mat, isLeaf });
+      });
+      lods.push(parts);
+    }
+    let imp = null;
+    if (sp.impostor) {
+      const get = async (f, srgb) => { if (!TEX[f]) { const t = await texLoader.loadAsync(BASE + f); t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 4; TEX[f] = t; } return TEX[f]; };
+      const [alb, nor] = await Promise.all([get(sp.impostor.albedo, true), get(sp.impostor.normal, false)]);
+      imp = impostorMaterial(sp, alb, nor);
+    }
+    const g0 = lods[0][0].geometry; g0.computeBoundingBox();
+    const bb = new THREE.Box3(); lods[0].forEach((p) => { p.geometry.computeBoundingBox(); bb.union(p.geometry.boundingBox); });
+    SPECIES[id] = { id, sp, lods, imp, bb };
+    window.__veg = SPECIES;
+    return SPECIES[id];
+  })();
+  return LOADING[id];
+}
+
+// ------------------------------------------------------------------ instanced placement with per-frame LOD bucketing
+class Population {
+  constructor(S, matrices, maxDist) {
+    this.S = S; this.n = matrices.length / 16; this.mats = matrices; this.maxDist = maxDist;
+    this.pos = new Float32Array(this.n * 3);
+    for (let i = 0; i < this.n; i++) this.pos.set([matrices[i * 16 + 12], matrices[i * 16 + 13], matrices[i * 16 + 14]], i * 3);
+    this.meshes = [];
+    S.lods.forEach((parts) => this.meshes.push(parts.map((p) => this._im(p.geometry, p.material, p.isLeaf))));
+    if (S.imp) this.meshes.push([this._im(new THREE.PlaneGeometry(2, 2), S.imp, false, true)]);
+    this.counts = [0, 0, 0, 0];
+  }
+  _im(geo, mat, isLeaf, isImp) {
+    const m = new THREE.InstancedMesh(geo, mat, this.n);
+    m.frustumCulled = false; m.count = 0;
+    // opaque shells draw first, so early-z rejects the leaf cards behind them (three sorts opaque draws by
+    // material id otherwise, which would put them last and save nothing); ?shell=0 hides them (A/B)
+    if (/Shell/.test(mat.name)) { m.renderOrder = -1; if (Q.get('shell') === '0') m.visible = false; }
+    m.castShadow = !isImp; m.receiveShadow = !isImp;
+    scene.add(m);
+    return m;
+  }
+  update(cam, force) {
+    const d = this.S.sp.lod_dist, ms = this.meshes;
+    const cnt = [0, 0, 0, 0];
+    const cx = cam.position.x, cy = cam.position.y, cz = cam.position.z;
+    for (let i = 0; i < this.n; i++) {
+      const dx = this.pos[i * 3] - cx, dy = this.pos[i * 3 + 1] - cy, dz = this.pos[i * 3 + 2] - cz;
+      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (dist > this.maxDist) continue;
+      let l = force !== 'auto' ? +force : dist < d[1] ? 0 : dist < d[2] ? 1 : dist < d[3] ? 2 : 3;
+      if (l === 3 && !this.S.imp) { if (force === 'auto') continue; l = 2; }
+      for (const m of ms[l]) m.instanceMatrix.array.set(this.mats.subarray(i * 16, i * 16 + 16), cnt[l] * 16);
+      cnt[l]++;
+    }
+    ms.forEach((list, l) => list.forEach((m) => { m.count = cnt[l]; m.instanceMatrix.needsUpdate = true; }));
+    this.counts = cnt;
+    return cnt;
+  }
+  dispose() { this.meshes.flat().forEach((m) => { scene.remove(m); m.dispose(); }); }
+}
+
+function matrix(x, z, rotY, s, y = 0) {
+  return new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), rotY), new THREE.Vector3(s, s, s));
+}
+const pack = (list) => { const a = new Float32Array(list.length * 16); list.forEach((m, i) => m.toArray(a, i * 16)); return a; };
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+
+// ------------------------------------------------------------------ kit helpers
+const kit = () => MAN.kits?.blue_ridge;
+const variantsOf = (base) => (kit()?.species?.[base]) || [base];
+const baseOf = (id) => MAN.species[id]?.species || id;
+const idFor = (base, v) => { const vs = variantsOf(base); return vs[Math.min(v, vs.length) - 1] || base; };
+async function loadAll(ids) { return Promise.all([...new Set(ids)].filter((i) => MAN.species[i]).map(loadSpecies)); }
+
+// Poisson-ish scatter: rejection on a grid hash (min spacing), inside a rect, with a weight function
+function scatter(R, n, x0, x1, z0, z1, minD, weight = () => 1, avoid = []) {
+  const out = [], cell = minD, H = new Map();
+  const key = (x, z) => `${Math.floor(x / cell)},${Math.floor(z / cell)}`;
+  let tries = 0;
+  while (out.length < n && tries < n * 40) {
+    tries++;
+    const x = x0 + (x1 - x0) * R(), z = z0 + (z1 - z0) * R();
+    if (R() > weight(x, z)) continue;
+    if (avoid.some(([ax, az, ar]) => Math.hypot(x - ax, z - az) < ar)) continue;
+    const cx = Math.floor(x / cell), cz = Math.floor(z / cell);
+    let ok = true;
+    for (let i = -1; i <= 1 && ok; i++) for (let j = -1; j <= 1 && ok; j++) {
+      const l = H.get(`${cx + i},${cz + j}`); if (l) for (const [px, pz] of l) if (Math.hypot(px - x, pz - z) < minD) { ok = false; break; }
+    }
+    if (!ok) continue;
+    const k = key(x, z); if (!H.has(k)) H.set(k, []); H.get(k).push([x, z]);
+    out.push([x, z]);
+  }
+  return out;
+}
+
+// a community: [[base species, share], ...] over a point list -> per variant id lists of matrices
+function assign(R, pts, mix, scaleJ = 0.12, out = {}) {
+  const tot = mix.reduce((a, m) => a + m[1], 0);
+  for (const [x, z] of pts) {
+    let r = R() * tot, base = mix[0][0];
+    for (const [b, w] of mix) { if ((r -= w) <= 0) { base = b; break; } }
+    const vs = variantsOf(base).filter((v) => MAN.species[v]);
+    if (!vs.length) continue;
+    const id = vs[Math.floor(R() * vs.length)];
+    (out[id] ||= []).push(matrix(x, z, R() * 6.283, 1 + (R() - 0.5) * 2 * scaleJ));
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ build
+let pops = [], labels = [];
+function clearPops() { pops.forEach((p) => p.dispose()); pops = []; labels = []; document.getElementById('labels').innerHTML = ''; }
+function addPop(id, list, maxDist = 1e9, forced) {
+  const S = SPECIES[id]; if (!S || !list.length) return;
+  const p = new Population(S, Array.isArray(list) ? pack(list) : list, maxDist);
+  if (forced !== undefined) p.forced = forced;
+  pops.push(p);
+}
+
+async function build() {
+  clearPops();
+  applyLight();
+  const m = state.mode;
+  let fit = null;
+  const cur = idFor(baseOf(state.species), state.variant);
+  if (m === 'single' || m === 'row') {
+    const S = await loadSpecies(cur);
+    const c = S.bb.getCenter(new THREE.Vector3());
+    if (m === 'single') { addPop(cur, [matrix(0, 0, 0, 1)]); }
+    else {
+      const w = Math.max(2.2, (S.bb.max.x - S.bb.min.x) * 1.05, S.sp.height_m * 0.45);
+      const n = S.imp ? 4 : 3;
+      for (let l = 0; l < n; l++) {
+        const x = (l - (n - 1) / 2) * w;
+        addPop(cur, [matrix(x, 0, 0, 1)], 1e9, String(l));
+        labels.push({ pos: new THREE.Vector3(x, 0, 0), text: l < 3 ? `LOD${l} ${S.sp.lods[l].tris} tris` : 'impostor 2 tris' });
+      }
+    }
+    fit = m === 'single' ? { h: S.sp.height_m, w: Math.max(S.bb.max.x - S.bb.min.x, S.bb.max.z - S.bb.min.z), c }
+      : { h: S.sp.height_m, w: 4 * Math.max(2, S.bb.max.x - S.bb.min.x) };
+  } else if (m === 'variants' || m === 'kit') {
+    const ids = m === 'variants' ? variantsOf(baseOf(state.species)).filter((v) => MAN.species[v])
+      : Object.entries(kit()?.groups || {}).filter(([g]) => state.group === 'all' || g === state.group).flatMap(([, l]) => l).map((b) => variantsOf(b)[0]);
+    const Ss = (await loadAll(ids)).sort((a, b) => m === 'kit' ? b.sp.height_m - a.sp.height_m : 0);
+    let x = 0, H = 0;
+    const gap = (S) => Math.max(1.2, (S.bb.max.x - S.bb.min.x) * 0.95);
+    Ss.forEach((S, i) => { if (i) x += gap(S) / 2 + gap(Ss[i - 1]) / 2; S._x = x; H = Math.max(H, S.sp.height_m); });
+    const x0 = x / 2;
+    for (const S of Ss) {
+      addPop(S.id, [matrix(S._x - x0, 0, 0, 1)], 1e9, m === 'kit' ? (state.lod === 'auto' ? '0' : state.lod) : undefined);
+      labels.push({ pos: new THREE.Vector3(S._x - x0, 0, 0), text: `${S.sp.title}${S.sp.variant > 1 ? ' v' + S.sp.variant : ''}  ${S.sp.lods[0].tris}` });
+    }
+    fit = { h: H, w: x + 4 };
+  } else if (m === 'forest') {
+    await loadAll(['fir', 'ash', 'shrub', 'fern']);
+    const R = rng(11); const trees = { fir: [], ash: [] }, shrubs = [], ferns = [];
+    const N = state.n, side = Math.sqrt(N) | 0, cell = 600 / side;
+    for (let i = 0; i < side; i++) for (let j = 0; j < side; j++) {
+      const x = -300 + (i + 0.15 + 0.7 * R()) * cell, z = -300 + (j + 0.15 + 0.7 * R()) * cell;
+      if (Math.hypot(x, z) < 6) continue;
+      (R() < 0.6 ? trees.fir : trees.ash).push(matrix(x, z, R() * 6.283, 0.8 + 0.4 * R()));
+    }
+    for (let i = 0; i < N * 1.2; i++) { const a = R() * 6.283, r = 4 + Math.sqrt(R()) * 120; shrubs.push(matrix(Math.cos(a) * r, Math.sin(a) * r, R() * 6.283, 0.7 + 0.6 * R())); }
+    for (let i = 0; i < 6000; i++) { const a = R() * 6.283, r = 1.5 + Math.sqrt(R()) * 45; ferns.push(matrix(Math.cos(a) * r, Math.sin(a) * r, R() * 6.283, 0.7 + 0.6 * R())); }
+    for (const k of ['fir', 'ash']) addPop(k, trees[k]);
+    addPop('shrub', shrubs, 140); addPop('fern', ferns, SPECIES.fern?.sp.lod_dist[3] || 30);
+  } else {
+    await buildScene(m);
+  }
+  placeCamera(fit);
+  syncUi();
+}
+
+// The brief's communities (Appendix B/C), at its densities, around an eye at the origin
+async function buildScene(m) {
+  const R = rng({ cove: 3, creek: 5, ridge: 7, bald: 9, hell: 13 }[m] || 1);
+  const L = {};
+  const add = (o) => { for (const [k, v] of Object.entries(o)) (L[k] ||= []).push(...v); };
+  const ext = 160;
+  if (m === 'cove' || m === 'creek') {
+    // a creek along z = -14 (x), cove hardwoods up the slope behind, hemlock + rosebay on the banks
+    const creekZ = (x) => -14 + 4 * Math.sin(x / 23);
+    const nearCreek = (x, z) => Math.abs(z - creekZ(x));
+    const trees = scatter(R, 1100, -ext, ext, -ext, ext, 5.2, (x, z) => (nearCreek(x, z) < 4 ? 0 : 1), [[0, 0, 7], [-2, -8.5, 6]]);
+    add(assign(R, trees.filter(([x, z]) => nearCreek(x, z) < 26), [['eastern_hemlock', 5], ['tulip_poplar', 2], ['yellow_buckeye', 1], ['hemlock_snag', 0.3]]));
+    add(assign(R, trees.filter(([x, z]) => nearCreek(x, z) >= 26), [['tulip_poplar', 30], ['yellow_buckeye', 7], ['sugar_maple', 9], ['eastern_hemlock', 3], ['northern_red_oak', 3], ['shagbark_hickory', 2]]));
+    const banks = scatter(R, 120, -ext, ext, -ext, ext, 3.2, (x, z) => (nearCreek(x, z) > 3.5 && nearCreek(x, z) < 14 ? 1 : 0), [[0, 0, 4]]);
+    add(assign(R, banks, [['rosebay_rhododendron', 5], ['doghobble', 4]], 0.15));
+    // the fern ring around the eye (the brief: ferns ring the player within 25 m, densest in coves)
+    const ferns = scatter(R, 4200, -38, 38, -38, 38, 0.72, (x, z) => (nearCreek(x, z) < 4 ? 0 : 0.9), [[0, 0, 0.6]]);
+    add(assign(R, ferns, [['christmas_fern', 8], ['cinnamon_fern', 1.2], ['moss_cushion', 0.8]], 0.2));
+    const rocks = scatter(R, 60, -ext, ext, -ext, ext, 2.5, (x, z) => (nearCreek(x, z) < 5 ? 1 : 0.03));
+    add(assign(R, rocks, [['creek_boulder', 1]], 0.25));
+    const logs = scatter(R, 26, -110, 110, -110, 110, 14, (x, z) => (nearCreek(x, z) < 6 ? 0 : 1), [[0, 0, 8]]);
+    add(assign(R, logs, [['chestnut_log', 3], ['blowdown_log', 2], ['chestnut_log_propped', 1], ['chestnut_stump', 1.5], ['cut_stump', 1]], 0.05));
+    // a chestnut ghost across the view (signature moment 2)
+    (L.chestnut_log ||= []).push(matrix(6, -9, 0.35, 1));
+  } else if (m === 'ridge') {
+    const trees = scatter(R, 900, -ext, ext, -ext, ext, 6.2, () => 1, [[0, 0, 3]]);
+    add(assign(R, trees, [['northern_red_oak', 18], ['chestnut_oak', 14], ['white_oak', 8], ['shagbark_hickory', 7], ['white_pine', 5]]));
+    const laurel = scatter(R, 900, -70, 70, -70, 70, 2.8, () => 0.8, [[0, 0, 2.5]]);
+    add(assign(R, laurel, [['mountain_laurel', 1]], 0.2));
+    const logs = scatter(R, 18, -100, 100, -100, 100, 15, () => 1, [[0, 0, 6]]);
+    add(assign(R, logs, [['chestnut_log', 3], ['chestnut_stump', 2], ['cut_stump', 1]], 0.05));
+    const rocks = scatter(R, 30, -90, 90, -90, 90, 6, () => 1, [[0, 0, 3]]);
+    add(assign(R, rocks, [['creek_boulder', 1]], 0.3));
+  } else if (m === 'bald') {
+    const shr = scatter(R, 700, -90, 90, -90, 90, 2.9, (x, z) => (Math.hypot(x, z) < 70 ? 0.75 : 0.2), [[0, 0, 2.5]]);
+    add(assign(R, shr, [['catawba_rhododendron', 6], ['mountain_laurel', 2]], 0.25));
+    const edge = scatter(R, 260, -ext, ext, -ext, ext, 7, (x, z) => (Math.hypot(x, z) > 75 ? 1 : 0));
+    add(assign(R, edge, [['chestnut_oak', 3], ['northern_red_oak', 1]], 0.25));
+    const rocks = scatter(R, 20, -60, 60, -60, 60, 8, () => 1, [[0, 0, 4]]);
+    add(assign(R, rocks, [['creek_boulder', 1]], 0.4));
+  } else if (m === 'hell') {
+    // laurel-hell tiles on a 6.5 m grid (overlapping); a tunnel chain along x through the middle
+    for (let i = -12; i <= 12; i++) for (let j = -12; j <= 12; j++) {
+      const x = i * 6.5 + (R() - 0.5) * 1.5, z = j * 6.5 + (R() - 0.5) * 1.5;
+      if (j === 0) { (L.rhodo_tunnel ||= []).push(matrix(i * 6.5, 0, 0, 1)); continue; }
+      (L.rhodo_thicket ||= []).push(matrix(x, z, Math.floor(R() * 4) * Math.PI / 2, 0.95 + R() * 0.12));
+    }
+    const trees = scatter(R, 260, -ext, ext, -ext, ext, 11, () => 1, [[0, 0, 6]]);
+    add(assign(R, trees, [['eastern_hemlock', 3], ['tulip_poplar', 1]]));
+  }
+  await loadAll(Object.keys(L));
+  for (const [id, list] of Object.entries(L)) {
+    const k = MAN.species[id]?.kind;
+    const maxD = k === 'clump' || k === 'mat' ? (MAN.species[id].lod_dist[3] || 40) : 1e9;
+    addPop(id, list, maxD);
+  }
+}
+
+function placeCamera(fit) {
+  const c = Q.get('cam'), l = Q.get('look');
+  if (c && l) {
+    camera.position.fromArray(c.split(',').map(Number)); controls.target.fromArray(l.split(',').map(Number)); controls.update(); return;
+  }
+  if (SCENES.includes(state.mode)) {
+    const V = {   // eye and look-at per scene (metres; the creek runs along x at z = -14)
+      cove: [[0, 1.7, 0], [0.25, 2.15, 1]], creek: [[-2, 1.7, -8.5], [1, 1.45, -11]], ridge: [[0, 1.7, 0], [0.3, 1.8, -1]],
+      bald: [[0, 1.7, 0], [0.3, 1.6, -1]], hell: [[-3, 1.0, -0.7], [3, 1.08, -0.7]], forest: [[0, 1.7, 0.01], [0, 1.7, -1]] }[state.mode];
+    camera.position.fromArray(V[0]); controls.target.fromArray(V[1]);
+    controls.update(); return;
+  }
+  const h = fit.h || 10, w = fit.w || 10;
+  const d = state.dist || (fit.c ? Math.max(h * 1.3, w * 1.05, 1.0) : Math.max(h * 1.35, w * 0.75, 3));
+  const dir = new THREE.Vector3(0.3, 0.12 + (h < 1.5 ? 0.35 : 0), 1).normalize();
+  controls.target.set(fit.c ? fit.c.x : 0, h * 0.5, fit.c ? fit.c.z : 0);
+  camera.position.copy(controls.target).addScaledVector(dir, d);
+  controls.update();
+  state.dist = d;
+}
+
+// ------------------------------------------------------------------ contact sheet (mode=sheet): previews beside the references
+function sheet() {
+  document.body.classList.add('sheet');
+  for (const e of [document.documentElement, document.body]) { e.style.height = 'auto'; e.style.overflow = 'visible'; }
+  const el = document.getElementById('sheet');
+  const K = kit();
+  const groups = K?.groups || {};
+  const order = ['canopy', 'understory', 'ground', 'deadwood', 'rock'];
+  const sw = (h) => h ? `<span class="sw" style="background:${h}"></span>` : '';
+  let html = `<h1>Blue Ridge plant kit: Laurel Fork Cove, mid-June</h1>
+    <div class="intro">Each species beside the real look it is art-directed against. Left: three.js (this viewer, golden-hour sun, LOD0) and the Blender LOD sheet (LOD0, LOD1, LOD2, close-up). Budgets are triangles per LOD; swatches are the brief's Appendix B colour and the measured mean of the baked twig cards.</div>`;
+  for (const g of order) {
+    if (!groups[g]) continue;
+    html += `<h2>${g}</h2><div class="grid">`;
+    for (const base of groups[g]) {
+      const vs = variantsOf(base).filter((v) => MAN.species[v]);
+      const s = MAN.species[vs[0]]; if (!s) continue;
+      const means = s.leaf_mean_srgb ? Object.values(s.leaf_mean_srgb) : [];
+      const lods = s.lods.map((l) => l.tris).join(' / ');
+      const imp = s.impostor ? ` + impostor (${s.impostor.atlas_px}/${s.impostor.normal_px || s.impostor.atlas_px} px${s.impostor.shared_from ? ', shared' : ''})` : '';
+      html += `<div class="sp"><div class="imgs"><img src="${BASE}previews/viewer_${base}.png" onerror="this.style.display='none'"></div>
+        <div><div class="name">${s.title} <span class="latin">${s.latin || ''}</span></div>
+        <div class="bud">${s.community || ''}</div>
+        <div class="refd">${s.reference || ''}</div>
+        <div class="bud">id <b>${base}</b>${vs.length > 1 ? ` (+ ${vs.slice(1).join(', ')})` : ''} &middot; ${s.height_m} m &middot; tris ${lods}${imp} &middot; ${s.lods[0].draw_calls} draws/LOD
+        ${s.palette ? `<br>leaf ${sw(s.palette)}${s.palette} target &nbsp; ${means.map((h) => sw(h) + h).join(' ')} measured` : ''}</div></div>
+        <img class="lod" src="${BASE}${s.preview}"></div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+  const imgs = [...el.querySelectorAll('img')];
+  Promise.all(imgs.map((i) => i.complete ? 1 : new Promise((r) => { i.onload = i.onerror = r; }))).then(() => { window.__loaded = true; });
+}
+
+// ------------------------------------------------------------------ UI
+const $ = (id) => document.getElementById(id);
+function syncUi() {
+  document.querySelectorAll('[data-mode]').forEach((b) => b.classList.toggle('on', b.dataset.mode === state.mode));
+  document.querySelectorAll('[data-lod]').forEach((b) => b.classList.toggle('on', b.dataset.lod === state.lod));
+  $('wind').classList.toggle('on', state.wind); $('sweep').classList.toggle('on', state.sweep);
+  $('shadows').classList.toggle('on', state.shadows); $('light').textContent = state.light;
+  $('dist').value = state.dist; $('distv').textContent = (+state.dist).toFixed(0);
+  $('species').value = baseOf(state.species); $('group').value = state.group;
+  $('mode').textContent = state.mode;
+  const vs = variantsOf(baseOf(state.species)).filter((v) => MAN.species[v]);
+  $('variants').innerHTML = vs.length > 1 ? vs.map((v, i) => `<button data-v="${i + 1}" class="${state.variant === i + 1 ? 'on' : ''}">v${i + 1}</button>`).join('') : '';
+  $('variants').querySelectorAll('button').forEach((b) => b.onclick = () => { state.variant = +b.dataset.v; build(); });
+  const s = MAN.species[idFor(baseOf(state.species), state.variant)];
+  $('ref').textContent = s?.reference || '';
+}
+document.querySelectorAll('[data-mode]').forEach((b) => b.onclick = () => { state.mode = b.dataset.mode; state.dist = 0; build(); });
+document.querySelectorAll('[data-lod]').forEach((b) => b.onclick = () => { state.lod = b.dataset.lod; if (state.mode === 'kit') build(); syncUi(); });
+$('wind').onclick = () => { state.wind = !state.wind; syncUi(); };
+$('sweep').onclick = () => { state.sweep = !state.sweep; syncUi(); };
+$('light').onclick = () => { state.light = state.light === 'golden' ? 'noon' : 'golden'; applyLight(); syncUi(); };
+$('shadows').onclick = () => { state.shadows = !state.shadows; syncUi(); };
+$('dist').oninput = (e) => { state.dist = +e.target.value; placeCamera({}); syncUi(); };
+$('species').onchange = (e) => { state.species = e.target.value; state.variant = 1; if (!['single', 'row', 'variants'].includes(state.mode)) state.mode = 'single'; state.dist = 0; build(); };
+$('group').onchange = (e) => { state.group = e.target.value; state.mode = 'kit'; state.dist = 0; build(); };
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+// ------------------------------------------------------------------ main
+const clock = new THREE.Clock();
+let fpsAcc = 0, fpsN = 0, fps = 0, sweepT = 0;
+const tmpV = new THREE.Vector3();
+function texMB() {
+  let b = 0;
+  for (const t of Object.values(TEX)) { const i = t.image; if (i && i.width) b += i.width * i.height * 4 * 1.33; }
+  return b / 1048576;
+}
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (!window.__bench) U.uTime.value += dt;
+  U.uWind.value += ((state.wind ? 1 : 0) - U.uWind.value) * Math.min(1, dt * 3);
+  if (state.sweep && !SCENES.includes(state.mode)) {
+    sweepT += dt; state.dist = 5 + (1 - Math.cos(sweepT * 0.25)) * 0.5 * 145; placeCamera({ h: SPECIES[state.species]?.sp.height_m });
+  }
+  controls.update();
+  // sun shadows follow the camera (a 140 m box around the view)
+  const shadowOn = state.shadows;
+  renderer.shadowMap.enabled = shadowOn; sun.castShadow = shadowOn;
+  if (shadowOn) {
+    const c = controls.target; const span = SCENES.includes(state.mode) ? 70 : Math.max(20, (state.dist || 30) * 0.9);
+    const sc = sun.shadow.camera; sc.left = sc.bottom = -span; sc.right = sc.top = span; sc.near = 1; sc.far = 600; sc.updateProjectionMatrix();
+    const dir = tmpV.copy(sun.position).normalize();
+    sun.target.position.copy(c); sun.position.copy(c).addScaledVector(dir, 250);
+  }
+  const sunW = tmpV.copy(sun.position).sub(sun.target.position).normalize();
+  U.uSunDirV.value.copy(sunW).transformDirection(camera.matrixWorldInverse);
+  const counts = [0, 0, 0, 0];
+  for (const p of pops) {
+    const c = p.update(camera, p.forced ?? state.lod);
+    c.forEach((v, i) => counts[i] += v);
+    if (p.S.imp) { const u = p.S.imp.uniforms; u.uSunDirW.value.copy(sunW); u.uSky.value.copy(hemi.color).multiplyScalar(hemi.intensity); u.uGround.value.copy(hemi.groundColor).multiplyScalar(hemi.intensity); }
+  }
+  renderer.info.reset();
+  renderer.render(scene, camera);
+  fpsAcc += dt; fpsN++;
+  if (fpsAcc > 0.5) { fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; }
+  const info = renderer.info.render;
+  const s = MAN.species[idFor(baseOf(state.species), state.variant)];
+  $('stats').textContent =
+    `${s ? s.title + (s.variant > 1 ? ' v' + s.variant : '') : ''}  ${s ? s.height_m + ' m' : ''}  LODs ${s ? s.lods.map((l) => l.tris).join('/') : ''}  switch ${s ? s.lod_dist.slice(1).join('/') : ''} m\n` +
+    `instances  LOD0 ${counts[0]}  LOD1 ${counts[1]}  LOD2 ${counts[2]}  impostor ${counts[3]}\n` +
+    `draw calls ${info.calls}  triangles ${(info.triangles / 1000).toFixed(1)}k  textures ${texMB().toFixed(0)} MB (shared by URI)  ${fps.toFixed(0)} fps`;
+  const el = $('labels');
+  if (el.children.length !== labels.length) el.innerHTML = labels.map(() => '<div></div>').join('');
+  labels.forEach((L, i) => {
+    const v = L.pos.clone().project(camera);
+    el.children[i].style.left = `${(v.x * 0.5 + 0.5) * innerWidth}px`;
+    el.children[i].style.top = `${(-v.y * 0.5 + 0.5) * innerHeight + 8}px`;
+    el.children[i].textContent = L.text;
+  });
+  requestAnimationFrame(frame);
+}
+
+try {
+  MAN = await (await fetch(BASE + 'veg.json', { cache: 'no-store' })).json();
+  for (const [k, s] of Object.entries(MAN.species)) s.kind = kindOf(k, s);
+  if (state.mode === 'sheet') { sheet(); }
+  else {
+    const groups = kit()?.groups || {};
+    const spike = Object.keys(MAN.species).filter((k) => !MAN.species[k].group);
+    const opt = (b) => `<option value="${b}">${MAN.species[b].title}</option>`;
+    $('species').innerHTML = Object.entries(groups).map(([g, l]) => `<optgroup label="${g}">${l.filter((b) => MAN.species[b]).map(opt).join('')}</optgroup>`).join('')
+      + (spike.length ? `<optgroup label="spike (generic)">${spike.map(opt).join('')}</optgroup>` : '');
+    $('group').innerHTML = ['all', ...Object.keys(groups)].map((g) => `<option value="${g}">${g}</option>`).join('');
+    if (!MAN.species[state.species]) state.species = Object.keys(MAN.species)[0];
+    else if (MAN.species[state.species].variant > 1) { state.variant = MAN.species[state.species].variant; state.species = baseOf(state.species); }
+    await build();
+    requestAnimationFrame(frame);
+    setTimeout(() => { window.__loaded = true; }, 600);
+  }
+} catch (e) {
+  $('stats').textContent = 'load error: ' + e.message;
+  console.error(e);
+}
+</script>
+</body>
+</html>

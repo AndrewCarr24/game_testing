@@ -77,6 +77,7 @@ export class Town {
     // ---- buildings
     for (const b of T.buildings) {
       if (b.kit) continue;                           // (drawn from the kit: loadKit)
+      if (b.site) continue;                          // (a building agent's site: nothing until it's built)
       const M = place(b.x, b.y, b.z, b.yaw);
       const k = b.kind;
       const body = k.startsWith('town_shop') ? pick(BRICKS, b.id) : k.startsWith('town_cottage') ? pick(PASTEL, b.id)
@@ -289,6 +290,47 @@ export class Town {
     this.stats = { buildings: T.buildings.length, litTris: lit.reduce((n, g) => n + g.attributes.position.count / 3, 0) };
     this.zones = [];
     this.ready = (T.kit || []).length ? this.loadKit(uniforms, tex).catch((e) => console.warn('town kit:', e)) : Promise.resolve();
+    // the rebuilt buildings (prompts/town_building.md): each site's own model, lightmapped
+    this.ready = this.ready.then(() => this.loadSites()).catch((e) => console.warn('town sites:', e));
+  }
+
+  // A rebuilt building (prompts/town_building.md): assets/models/town2_<id>.gltf placed on its
+  // site (b.model, b.kit_offset from its sidecar). Its materials may carry a baked lightmap in
+  // their extras (userData.lightmap: a path relative to assets/models/, userData.lightmapIntensity)
+  // on the second UV set; emissive parts (neon) as authored. Kept as its own meshes (a building
+  // close up; its own LOD nodes `<Root>_LOD1` hidden within lodDistance, else LOD0 hidden).
+  async loadSites() {
+    const T = this.town, oy = this.world.meta.estate_offset[1];
+    const gl = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
+    const tl = new THREE.TextureLoader();
+    this.sites = [];
+    for (const b of T.buildings) {
+      if (!b.site || !b.model) continue;
+      try {
+        const g = await gl.loadAsync(`../assets/models/${b.model}.gltf`);
+        const root = g.scene;
+        root.traverse((o) => {
+          if (!o.isMesh) return;
+          for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+            const lm = m.userData?.lightmap;
+            if (lm && !m.lightMap) {
+              const tx = tl.load(`../assets/models/${lm}`);
+              tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace;
+              m.lightMap = tx; m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              m.needsUpdate = true;
+            }
+          }
+        });
+        const [ox, oyk] = b.kit_offset || [0, 0];
+        root.position.set(b.x, b.z, -(b.y - oy));
+        root.rotation.y = b.yaw * Math.PI / 180;
+        root.updateMatrix();
+        const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
+        root.name = `Town_${b.id}`;
+        this.group.add(root);
+        this.sites.push({ id: b.id, root });
+      } catch (e) { console.warn('town site', b.id, e.message); }
+    }
   }
 
   // The kit's glTFs (design/town/kit_status.md) in place of the boxes. Every placement's meshes

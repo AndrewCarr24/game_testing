@@ -202,6 +202,10 @@ KIT = {
     "town_cottage_a": (9, 11, 6, False, "hip"), "town_cottage_b": (9, 11, 6, False, "gable"), "town_cottage_c": (9, 11, 6, False, "gable"),
     "town_house_a": (11, 12, 9, False, "hip"), "town_house_b": (11, 12, 9, False, "hip"), "town_house_c": (11, 12, 7, False, "gable"),
     "town_garage": (7, 7, 3.8, False, "gable"), "town_garage_open": (7, 7, 3.8, True, "gable"), "town_shed": (3, 4, 3, False, "gable"),
+    # the three rebuilt buildings' sites (2026-10-22: the user had the kit town removed; a building
+    # agent each builds the bar, the gas station and the diner at the mansion's fidelity): a lot
+    # (flattened pad) and nothing drawn until its building exists
+    "site_bar": (30, 18, 6, True, "site"), "site_gas_station": (36, 28, 6, True, "site"), "site_diner": (24, 16, 6, True, "site"),
 }
 
 
@@ -243,7 +247,17 @@ def F(id_, kind, x, front_y, yaw=0.0, role=None, setback=0.0, **kw):
     return b
 
 
+# the town's buildings (2026-10-22): the kit town is removed (layout_buildings_v1 keeps it); only the
+# three sites the building agents fill: the bar, the gas station and the diner
 def layout_buildings():
+    return [
+        B("bar", "site_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn", site=True),
+        F("gas", "site_gas_station", -1880, -721, 0, "gas station + convenience store", site=True),
+        F("diner", "site_diner", -1935, -719, 0, "the diner", site=True),
+    ]
+
+
+def layout_buildings_v1():
     out = []
     front_n = MAIN_Y + 9.0          # north-side fronts: carriageway 7.2, angle parking, sidewalk
     front_s = MAIN_Y - 9.0
@@ -355,7 +369,7 @@ HIDES = [
     dict(name="laurel_thicket", x=-1620, y=-1080, kind="thicket", note="rhododendron in the Tannery Branch hollow"),
 ]
 # the cahoots, told by the environment only (brief: "The turn"); vans etc. are massing boxes here
-EVIDENCE = [
+EVIDENCE_V1 = [
     dict(name="vans_motel", kind="van", pts=[(-2050, -682), (-2058, -682), (-2066, -682), (-2074, -682), (-2082, -682), (-2090, -682)],
          yaw=0, note="six identical dark vans in the motel's back lot, nose out"),
     dict(name="van_gas", kind="van", pts=[(-1866, -700)], yaw=90, note="a van in the gas station's back lot, doors open"),
@@ -369,13 +383,14 @@ EVIDENCE = [
     dict(name="estate_model", kind="model", pts=[(-1738, -742)], yaw=0, note="the museum's vitrine: a scale model of the estate"),
     dict(name="back_room", kind="masks", pts=[(-2122, -800)], yaw=0, note="the bar's back room: masks on hooks"),
 ]
+EVIDENCE = []      # (removed with the kit town: EVIDENCE_V1)
 VEHICLES = [   # (kind, x, y, yaw deg): townspeople's cars, the cruiser, the heritage train
     ("cruiser", -1598, -735, 90), ("suv", -1640, -717, 0), ("car", -1660, -717, 0), ("pickup", -1690, -717, 0),
     ("suv", -1720, -717, 0), ("car", -1760, -717, 0), ("car", -1668, -733, 180), ("suv", -1700, -733, 180),
     ("pickup", -1868, -713, 0), ("car", -1915, -703, 0), ("suv", -2004, -712, 0), ("car", -2020, -712, 0),
     ("pickup", -2112, -790, 0), ("train", -1745, -752, 0),
 ]
-PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate deg, 0 = north)
+PEOPLE_V1 = [   # the townspeople's posts (stand-ins): role, where, facing (estate deg, 0 = north)
     dict(role="sheriff", x=-1612, y=-733, face=180, note="on the bench outside his office, watching the bridge"),
     dict(role="barista", x=-1620, y=-713, face=180), dict(role="museum docent", x=-1730, y=-741, face=0),
     dict(role="outfitter", x=-1750, y=-780, face=180, note="at the raft racks"),
@@ -384,6 +399,7 @@ PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate 
     dict(role="bartender", x=-2105, y=-806, face=0), dict(role="man on a porch", x=-1678, y=-647, face=180),
     dict(role="woman watering baskets", x=-1650, y=-716, face=180), dict(role="jogger", x=-1700, y=-783, face=90),
 ]
+PEOPLE = []        # (the stand-in townspeople removed with the kit town: PEOPLE_V1)
 SPAWN = dict(pos=(-760.0, -703.0), look=(-860.0, -712.0))      # the road at the seam, looking down the gorge
 
 

@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-860 -190 1760 1710" width="1760" height="1710" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<pattern id="clints" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#e3ddcf"/><path d="M0 0H14M0 0V14M7 7H14M7 0V7" stroke="#8d877c" stroke-width="1.1"/></pattern>
+<pattern id="cliff" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="10" height="10" fill="#b9ab95"/><path d="M0 0V10" stroke="#6e6252" stroke-width="3"/></pattern>
+<pattern id="moor" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="#cfc4c9"/><circle cx="5" cy="5" r="1.6" fill="#9c8f96"/><circle cx="15" cy="14" r="1.6" fill="#9c8f96"/></pattern>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker>
+</defs>
+<rect x="-860" y="-190" width="1760" height="1710" fill="#ece7dc"/>
+<path d="M-860.0,-190.0 L-700.0,-190.0 L-700.0,1045.0 L-860.0,1040.0 Z" fill="url(#moor)"/>
+<path d="M-860.0,1150.0 L-560.0,1165.0 L-300.0,1175.0 L-170.0,1135.0 L-60.0,1170.0 L60.0,1182.0 L150.0,1175.0 L230.0,1250.0 L330.0,1240.0 L420.0,1100.0 L560.0,1060.0 L720.0,1010.0 L800.0,860.0 L812.0,400.0 L800.0,-190.0 L900.0,-190.0 L900.0,1520.0 L-860.0,1520.0 Z" fill="#c3cdb6"/>
+<path d="M-860.0,1040.0 L-560.0,1055.0 L-300.0,1080.0 L-215.0,1082.0 L-195.0,1050.0 L-170.0,1036.0 L-145.0,1050.0 L-125.0,1082.0 L0.0,1100.0 L110.0,1080.0 L165.0,960.0 L240.0,948.0 L400.0,958.0 L560.0,930.0 L700.0,880.0 L722.0,700.0 L732.0,400.0 L722.0,100.0 L725.0,-190.0 L800.0,-190.0 L812.0,400.0 L800.0,860.0 L720.0,1010.0 L560.0,1060.0 L420.0,1100.0 L330.0,1240.0 L230.0,1250.0 L150.0,1175.0 L60.0,1182.0 L-60.0,1170.0 L-170.0,1135.0 L-300.0,1175.0 L-560.0,1165.0 L-860.0,1150.0 Z" fill="url(#cliff)" stroke="#5b5044" stroke-width="2"/>
+<path d="M-860.0,1040.0 L-560.0,1055.0 L-300.0,1080.0 L-215.0,1082.0 L-195.0,1050.0 L-170.0,1036.0 L-145.0,1050.0 L-125.0,1082.0 L0.0,1100.0 L110.0,1080.0 L165.0,960.0 L240.0,948.0 L400.0,958.0 L560.0,930.0 L700.0,880.0 L722.0,700.0 L732.0,400.0 L722.0,100.0 L725.0,-190.0" fill="none" stroke="#3a3128" stroke-width="5"/>
+<path d="M-860.0,1395.0 L-500.0,1385.0 L-200.0,1405.0 L60.0,1380.0 L180.0,1352.0 L400.0,1370.0 L700.0,1340.0 L900.0,1330.0" fill="none" stroke="#5a8fb0" stroke-width="12"/>
+<path d="M-860.0,1450.0 L900.0,1440.0" fill="none" stroke="#555" stroke-width="3" stroke-dasharray="14 6"/>
+<rect x="175" y="1401" width="12" height="10" fill="#8f7d6a"/>
+<rect x="231" y="1398" width="12" height="10" fill="#8f7d6a"/>
+<rect x="211" y="1410" width="12" height="10" fill="#8f7d6a"/>
+<rect x="130" y="1415" width="12" height="10" fill="#8f7d6a"/>
+<rect x="126" y="1412" width="12" height="10" fill="#8f7d6a"/>
+<rect x="132" y="1399" width="12" height="10" fill="#8f7d6a"/>
+<rect x="192" y="1428" width="12" height="10" fill="#8f7d6a"/>
+<rect x="141" y="1404" width="12" height="10" fill="#8f7d6a"/>
+<rect x="227" y="1433" width="12" height="10" fill="#8f7d6a"/>
+<rect x="218" y="1411" width="12" height="10" fill="#8f7d6a"/>
+<rect x="286" y="1397" width="12" height="10" fill="#8f7d6a"/>
+<rect x="266" y="1407" width="12" height="10" fill="#8f7d6a"/>
+<rect x="145" y="1400" width="12" height="10" fill="#8f7d6a"/>
+<rect x="172" y="1428" width="12" height="10" fill="#8f7d6a"/>
+<path d="M250.0,1395.0 l0,-38 l6,-14 l6,14 l0,38z" fill="#5b4a3a"/>
+<path d="M60.0,1192.0 L80.0,1260.0 L110.0,1320.0 L150.0,1360.0" fill="none" stroke="#3cd96a" stroke-width="5"/>
+<circle cx="60" cy="1192" r="14" fill="#3cff6a" stroke="#1d7a3a" stroke-width="2"/>
+<rect x="-90" y="-80" width="180" height="160" fill="#a9c58c"/>
+<path d="M14.0,62.0 L-70.0,62.0 L-70.0,-62.0 L70.0,-62.0 L70.0,62.0 L25.5,62.0" fill="none" stroke="#2f5a2a" stroke-width="5"/>
+<rect x="-26" y="-20" width="52" height="40" fill="#f7f5f0" stroke="#555" stroke-width="2"/>
+<text x="0" y="5" font-size="13" text-anchor="middle" fill="#333">house</text>
+<text x="0" y="-40" font-size="15" text-anchor="middle" fill="#2f5a2a" font-weight="bold">ESTATE</text>
+<path d="M-700.0,-150.0 L-700.0,1045.0" fill="none" stroke="#6b4f6b" stroke-width="3" stroke-dasharray="10 5"/>
+<path d="M-650.0,100.0 L-90.0,100.0 L-30.0,180.0 L-40.0,520.0 L-120.0,560.0 L-160.0,760.0 L-260.0,820.0 L-560.0,820.0 L-650.0,700.0 Z" fill="url(#clints)" stroke="#8d877c" stroke-width="2" opacity="0.95"/>
+<path d="M-860.0,187.0 L-780.0,197.0 L-700.0,212.0 L-600.0,208.0 L-500.0,232.0 L-420.0,244.0 L-340.0,254.0 L-285.0,262.0 L-285.0,298.0 L-340.0,290.0 L-420.0,280.0 L-500.0,268.0 L-600.0,244.0 L-700.0,248.0 L-780.0,233.0 L-860.0,223.0 Z" fill="#d9d2bf" stroke="#9a907c" stroke-width="1.5"/>
+<path d="M-860.0,205.0 L-780.0,215.0 L-700.0,230.0 L-600.0,226.0 L-500.0,250.0 L-420.0,262.0 L-340.0,272.0 L-285.0,280.0" fill="none" stroke="#4d86b8" stroke-width="5"/>
+<path d="M-420.0,262.0 L-340.0,272.0 L-285.0,280.0" fill="none" stroke="#3cff6a" stroke-width="5"/>
+<ellipse cx="-360" cy="900" rx="210" ry="110" fill="#c8d8a0" stroke="#3b3b3b" stroke-width="2" stroke-dasharray="4 4"/>
+<circle cx="-430" cy="880" r="6" fill="#4d86b8"/>
+<circle cx="-330" cy="930" r="6" fill="#4d86b8"/>
+<circle cx="-260" cy="870" r="6" fill="#4d86b8"/>
+<path d="M-220.0,860.0 L-200.0,930.0 L-185.0,990.0 L-172.0,1036.0" fill="none" stroke="#9a907c" stroke-width="22" stroke-linecap="round" opacity="0.7"/>
+<path d="M-120.0,700.0 L-150.0,820.0 L-200.0,850.0" fill="none" stroke="#6b5a45" stroke-width="7" stroke-dasharray="2 4"/>
+<circle cx="177" cy="382" r="32" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="186" cy="388" r="11" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="290" cy="404" r="12" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="322" cy="556" r="30" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="331" cy="562" r="11" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="482" cy="601" r="30" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="491" cy="607" r="11" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="380" cy="191" r="36" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="391" cy="198" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="240" cy="123" r="14" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="317" cy="268" r="15" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="358" cy="735" r="33" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="369" cy="741" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="521" cy="388" r="41" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="533" cy="396" r="14" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="255" cy="308" r="31" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="264" cy="314" r="11" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="627" cy="452" r="33" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="637" cy="458" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="656" cy="226" r="20" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="342" cy="651" r="14" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="105" cy="261" r="15" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="216" cy="506" r="40" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="228" cy="514" r="14" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="592" cy="137" r="15" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="174" cy="609" r="18" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="356" cy="377" r="19" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="586" cy="241" r="24" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="70" cy="662" r="14" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="432" cy="663" r="19" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="579" cy="307" r="19" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="202" cy="233" r="44" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="215" cy="241" r="16" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="280" cy="741" r="11" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="653" cy="139" r="23" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="542" cy="705" r="33" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="552" cy="712" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="458" cy="532" r="29" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="467" cy="538" r="10" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="626" cy="591" r="30" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="635" cy="597" r="10" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="142" cy="473" r="13" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="212" cy="712" r="33" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="222" cy="719" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="533" cy="177" r="15" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="535" cy="128" r="14" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="483" cy="702" r="12" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="119" cy="203" r="12" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="350" cy="433" r="17" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="458" cy="295" r="41" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="470" cy="303" r="14" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="149" cy="526" r="14" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="622" cy="749" r="26" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="630" cy="754" r="9" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="571" cy="193" r="11" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="472" cy="148" r="35" fill="#b5674a" fill-opacity="0.55" stroke="#7a3a24" stroke-width="2"/>
+<circle cx="483" cy="155" r="12" fill="#3d4a2c" opacity="0.7"/>
+<circle cx="430" cy="470" r="22" fill="#2fb7c4" stroke="#1d1b1a" stroke-width="4"/>
+<circle cx="464" cy="470" r="7" fill="#3d4a2c"/>
+<circle cx="459" cy="487" r="7" fill="#3d4a2c"/>
+<circle cx="447" cy="499" r="7" fill="#3d4a2c"/>
+<circle cx="430" cy="504" r="7" fill="#3d4a2c"/>
+<circle cx="413" cy="499" r="7" fill="#3d4a2c"/>
+<circle cx="401" cy="487" r="7" fill="#3d4a2c"/>
+<circle cx="396" cy="470" r="7" fill="#3d4a2c"/>
+<circle cx="401" cy="453" r="7" fill="#3d4a2c"/>
+<circle cx="413" cy="441" r="7" fill="#3d4a2c"/>
+<circle cx="430" cy="436" r="7" fill="#3d4a2c"/>
+<circle cx="447" cy="441" r="7" fill="#3d4a2c"/>
+<circle cx="459" cy="453" r="7" fill="#3d4a2c"/>
+<circle cx="-60" cy="610" r="35" fill="#1d1b1a" stroke="#000" stroke-width="3"/>
+<rect x="-28" y="598" width="26" height="8" fill="#555"/>
+<path d="M-280.0,560.0 L-80.0,213.6 L-111.0,197.5 L-143.2,184.1 L-176.5,173.6 L-210.5,166.1 L-245.1,161.5 L-280.0,160.0 L-314.9,161.5 L-349.5,166.1 L-383.5,173.6 L-416.8,184.1 L-449.0,197.5 L-480.0,213.6 L-509.4,232.3 L-537.1,253.6 L-562.8,277.2 L-586.4,302.9 L-607.7,330.6 L-626.4,360.0 L-642.5,391.0 L-655.9,423.2 L-666.4,456.5 L-673.9,490.5 L-678.5,525.1 L-680.0,560.0 L-678.5,594.9 L-673.9,629.5 L-666.4,663.5 L-655.9,696.8 L-642.5,729.0 L-626.4,760.0 L-607.7,789.4 L-586.4,817.1 L-562.8,842.8 L-537.1,866.4 L-509.4,887.7 L-480.0,906.4 L-449.0,922.5 L-416.8,935.9 L-383.5,946.4 L-349.5,953.9 L-314.9,958.5 L-280.0,960.0 L-245.1,958.5 L-210.5,953.9 L-176.5,946.4 L-143.2,935.9 L-111.0,922.5 L-80.0,906.4 Z" fill="#d0342c" fill-opacity="0.10" stroke="#d0342c" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="-289" y="551" width="18" height="18" fill="#d0342c" stroke="#000" stroke-width="2"/>
+<path d="M-440.0,760.0 h20 M-438.0,760.0 v12 M-422.0,760.0 v12" stroke="#333" stroke-width="4" fill="none"/>
+<path d="M20.0,62.0 L30.0,210.0 L170.0,930.0 L250.0,960.0 L190.0,1010.0 L280.0,1050.0 L200.0,1100.0 L290.0,1140.0 L210.0,1190.0 L260.0,1250.0 L200.0,1300.0 L180.0,1352.0" fill="none" stroke="#fff" stroke-width="13" stroke-linejoin="round"/>
+<path d="M20.0,62.0 L30.0,210.0 L170.0,930.0 L250.0,960.0 L190.0,1010.0 L280.0,1050.0 L200.0,1100.0 L290.0,1140.0 L210.0,1190.0 L260.0,1250.0 L200.0,1300.0 L180.0,1352.0" fill="none" stroke="#555" stroke-width="7" stroke-linejoin="round"/>
+<rect x="96" y="768" width="28" height="22" fill="#9a9a9a" stroke="#333" stroke-width="2"/>
+<circle cx="110" cy="755" r="14" fill="#ffffff" fill-opacity="0.75" stroke="#999" stroke-width="1"/>
+<circle cx="122" cy="732" r="18" fill="#ffffff" fill-opacity="0.75" stroke="#999" stroke-width="1"/>
+<circle cx="138" cy="705" r="22" fill="#ffffff" fill-opacity="0.75" stroke="#999" stroke-width="1"/>
+<circle cx="-547" cy="1063" r="5" fill="#2b1f1a"/>
+<circle cx="-549" cy="1029" r="5" fill="#2b1f1a"/>
+<circle cx="-522" cy="1009" r="5" fill="#2b1f1a"/>
+<circle cx="-524" cy="975" r="5" fill="#2b1f1a"/>
+<circle cx="-497" cy="954" r="5" fill="#2b1f1a"/>
+<circle cx="-498" cy="920" r="5" fill="#2b1f1a"/>
+<circle cx="-471" cy="900" r="5" fill="#2b1f1a"/>
+<circle cx="-473" cy="866" r="5" fill="#2b1f1a"/>
+<circle cx="-446" cy="845" r="5" fill="#2b1f1a"/>
+<circle cx="-448" cy="811" r="5" fill="#2b1f1a"/>
+<circle cx="-421" cy="791" r="5" fill="#2b1f1a"/>
+<circle cx="-423" cy="757" r="5" fill="#2b1f1a"/>
+<circle cx="-396" cy="736" r="5" fill="#2b1f1a"/>
+<circle cx="-398" cy="702" r="5" fill="#2b1f1a"/>
+<circle cx="-371" cy="682" r="5" fill="#2b1f1a"/>
+<circle cx="-373" cy="648" r="5" fill="#2b1f1a"/>
+<circle cx="-346" cy="627" r="5" fill="#2b1f1a"/>
+<circle cx="-348" cy="593" r="5" fill="#2b1f1a"/>
+<circle cx="-321" cy="573" r="5" fill="#2b1f1a"/>
+<circle cx="-323" cy="539" r="5" fill="#2b1f1a"/>
+<circle cx="-296" cy="518" r="5" fill="#2b1f1a"/>
+<circle cx="-298" cy="485" r="5" fill="#2b1f1a"/>
+<circle cx="-270" cy="464" r="5" fill="#2b1f1a"/>
+<circle cx="-272" cy="430" r="5" fill="#2b1f1a"/>
+<circle cx="-245" cy="409" r="5" fill="#2b1f1a"/>
+<circle cx="-247" cy="376" r="5" fill="#2b1f1a"/>
+<circle cx="-220" cy="355" r="5" fill="#2b1f1a"/>
+<circle cx="-222" cy="321" r="5" fill="#2b1f1a"/>
+<circle cx="-195" cy="300" r="5" fill="#2b1f1a"/>
+<circle cx="-197" cy="267" r="5" fill="#2b1f1a"/>
+<circle cx="-170" cy="246" r="5" fill="#2b1f1a"/>
+<circle cx="-172" cy="212" r="5" fill="#2b1f1a"/>
+<circle cx="-145" cy="192" r="5" fill="#2b1f1a"/>
+<circle cx="-147" cy="158" r="5" fill="#2b1f1a"/>
+<circle cx="-120" cy="137" r="5" fill="#2b1f1a"/>
+<circle cx="-122" cy="103" r="5" fill="#2b1f1a"/>
+<circle cx="-95" cy="83" r="5" fill="#2b1f1a"/>
+<circle cx="-97" cy="49" r="5" fill="#2b1f1a"/>
+<circle cx="-70" cy="28" r="5" fill="#2b1f1a"/>
+<path d="M-574.0,1050.0 l14,-40 l12,30 l14,-35" fill="none" stroke="#2b1f1a" stroke-width="5"/>
+<path d="M-280.0,280.0 L-250.0,400.0 L-170.0,500.0 L-60.0,610.0 L40.0,780.0 L70.0,900.0 L45.0,1050.0 L60.0,1190.0" fill="none" stroke="#1f2a6b" stroke-width="7" stroke-dasharray="12 7" opacity="0.85"/>
+<circle cx="-280" cy="280" r="9" fill="#fff" stroke="#1f2a6b" stroke-width="3"/>
+<circle cx="-250" cy="400" r="9" fill="#fff" stroke="#1f2a6b" stroke-width="3"/>
+<circle cx="-170" cy="500" r="9" fill="#fff" stroke="#1f2a6b" stroke-width="3"/>
+<circle cx="40" cy="780" r="9" fill="#fff" stroke="#1f2a6b" stroke-width="3"/>
+<ellipse cx="-60" cy="610" rx="120" ry="60" fill="none" stroke="#1f2a6b" stroke-width="2" stroke-dasharray="3 5"/>
+<rect x="20" y="768" width="40" height="24" fill="#f2f4f6" stroke="#3aa0ff" stroke-width="3"/>
+<circle cx="-210" cy="450" r="4" fill="#3aa0ff"/>
+<circle cx="-115" cy="555" r="4" fill="#3aa0ff"/>
+<circle cx="-10" cy="695" r="4" fill="#3aa0ff"/>
+<circle cx="55" cy="840" r="4" fill="#3aa0ff"/>
+<circle cx="58" cy="975" r="4" fill="#3aa0ff"/>
+<path d="M14.0,75.0 L-100.0,160.0 L-200.0,300.0 L-260.0,450.0 L-330.0,620.0 L-240.0,760.0 L-200.0,860.0 L-185.0,990.0 L-170.0,1040.0 L-170.0,1150.0 L0.0,1250.0 L160.0,1330.0" fill="none" stroke="#7b3fb8" stroke-width="5" stroke-dasharray="1 9" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.9"/>
+<path d="M28.0,75.0 L160.0,200.0 L330.0,330.0 L420.0,430.0" fill="none" stroke="#7b3fb8" stroke-width="4" stroke-dasharray="1 9" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.9"/>
+<path d="M420.0,510.0 L300.0,650.0 L140.0,760.0" fill="none" stroke="#7b3fb8" stroke-width="4" stroke-dasharray="1 9" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.9"/>
+<path d="M18.0,80.0 L-120.0,180.0 L-260.0,260.0" fill="none" stroke="#1f2a6b" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.9"/>
+<path d="M30.0,199.0 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<path d="M45.0,204.0 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<path d="M170.0,919.0 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<path d="M190.0,924.0 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<path d="M160.0,931.0 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<path d="M20.0,-40.0 L20.0,55.0" stroke="#d0342c" stroke-width="5" fill="none" marker-end="url(#arr)"/>
+<path d="M-850.0,520.0 L-720.0,520.0" stroke="#4a5a7a" stroke-width="8" fill="none" marker-end="url(#arr)"/>
+<text x="30" y="100" font-size="17" fill="#000" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">GATE (x 14-25.5, y -62)</text>
+<text x="60" y="235" font-size="15" fill="#a01c16" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">invader vans</text>
+<text x="-560" y="130" font-size="19" fill="#222" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE CLINTS  limestone pavement</text>
+<text x="-560" y="152" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">grykes 0.3-0.9 m wide, 1-2 m deep: trench cover</text>
+<text x="-296" y="548" font-size="15" fill="#a01c16" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Fire Tower (+12 m knoll), rifle ~400 m</text>
+<text x="-470" y="790" font-size="15" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Dolmen</text>
+<text x="-700" y="470" font-size="14" fill="#4a5a7a" text-anchor="start" font-style="italic" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">rain curtains in from the west</text>
+<text x="-700" y="490" font-size="14" fill="#4a5a7a" text-anchor="start" font-style="italic" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">storm at ~+6 min</text>
+<text x="-840" y="190" font-size="14" fill="#2c5c8a" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">moor stream (backdrop moor rises to +60)</text>
+<text x="-300" y="255" font-size="16" fill="#1f2a6b" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE SWALLET</text>
+<text x="-300" y="310" font-size="13" fill="#1f2a6b" text-anchor="end" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">25 m drop into the cave</text>
+<text x="-238" y="398" font-size="14" fill="#1f2a6b" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Grimble Hole (roof broken in)</text>
+<text x="-155" y="495" font-size="14" fill="#1f2a6b" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">the Duck (floods ~+10 min)</text>
+<text x="-25" y="605" font-size="15" fill="#000" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE HOLE  70 m wide, 110 m deep</text>
+<text x="-25" y="625" font-size="13" fill="#1f2a6b" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">below: the Ballroom chamber (120 m high),</text>
+<text x="-25" y="641" font-size="13" fill="#1f2a6b" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">iron footbridge 45 m over the river</text>
+<text x="12" y="772" font-size="15" fill="#1f5fa8" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Data Hall</text>
+<text x="12" y="790" font-size="13" fill="#1f5fa8" text-anchor="end" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">(power from the Vent)</text>
+<text x="135" y="790" font-size="15" fill="#000" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE VENT  head-house + 60 m shaft</text>
+<text x="150" y="715" font-size="13" fill="#555" text-anchor="start" font-style="italic" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">steam plume ~60 m (seen from everywhere)</text>
+<text x="340" y="130" font-size="19" fill="#7a3a24" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE SOTCHS  doline field</text>
+<text x="340" y="152" font-size="14" fill="#7a3a24" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">~40 bowls 20-90 m, 4-25 m deep, terra rossa,</text>
+<text x="340" y="170" font-size="14" fill="#7a3a24" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">the only trees grow in the holes</text>
+<text x="470" y="470" font-size="15" fill="#0f6f7a" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Blue Doline (cenote, 22 m walls)</text>
+<text x="240" y="315" font-size="13" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">lavogne</text>
+<text x="330" y="830" font-size="13" fill="#555" text-anchor="start" font-style="italic" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">plateau z 0 to +12 (knoll); falls ~5 m to the edge</text>
+<circle cx="250" cy="300" r="6" fill="#4d86b8"/>
+<text x="-360" y="905" font-size="15" fill="#3d5a1e" text-anchor="middle" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE TURLOUGH  -6 m, floods in the storm</text>
+<text x="-215" y="845" font-size="13" fill="#6b5a45" text-anchor="end" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">walled drove lane</text>
+<text x="-150" y="1010" font-size="15" fill="#000" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE LIP  80 m cove, via ferrata</text>
+<text x="-150" y="1027" font-size="13" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">(dry valley above it)</text>
+<text x="-600" y="1000" font-size="14" fill="#2b1f1a" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">climb scar: where the Grimble came up</text>
+<text x="-470" y="650" font-size="14" fill="#2b1f1a" text-anchor="start" font-style="italic" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Grimble trail: ~120 fresh holes, every ~9 m</text>
+<text x="185" y="905" font-size="15" fill="#a01c16" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">CHECKPOINT (scarp head)</text>
+<text x="300" y="1060" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">5 hairpins down the scarp</text>
+<text x="-430" y="1115" font-size="16" fill="#3a3128" text-anchor="middle" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">SCARP  150-170 m cliff (world edge)</text>
+<text x="760" y="560" font-size="15" fill="#3a3128" text-anchor="middle" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">SIDE GORGE (edge)</text>
+<text x="70" y="1205" font-size="15" fill="#1d7a3a" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">THE RISING (green pool, 6 m swim out)</text>
+<text x="-680" y="1300" font-size="16" fill="#3d5a1e" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">VALLEY FLOOR  z -170 (backdrop + finish strip)</text>
+<text x="320" y="1405" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">village + church (the goal, seen from the gate)</text>
+<text x="170" y="1335" font-size="15" fill="#000" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">FINISH: the bridge</text>
+<text x="-850" y="1458" font-size="13" fill="#555" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">railway</text>
+<text x="-695" y="-120" font-size="13" fill="#6b4f6b" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">deer fence (west edge)</text>
+<rect x="-850" y="-180" width="460" height="92" fill="#f8f6f0" stroke="#333" stroke-width="1.5"/>
+<text x="-835" y="-152" font-size="26" fill="#111" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">HOLLOW GROUND  (karst)</text>
+<text x="-835" y="-126" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">plan metres: +x east, +y north, estate at 0,0</text>
+<text x="-835" y="-106" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">1 SVG unit = 1 m; z = 0 is the lawn</text>
+<rect x="120" y="-180" width="770" height="200" fill="#f8f6f0" stroke="#333" stroke-width="1.5"/>
+<path d="M135,-159 h50" stroke="#555" stroke-width="5" stroke-dasharray="none" stroke-linecap="round"/>
+<text x="195" y="-144" font-size="15" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">1  The Road (fast, guarded)</text>
+<path d="M135,-135 h50" stroke="#7b3fb8" stroke-width="5" stroke-dasharray="1 9" stroke-linecap="round"/>
+<text x="195" y="-120" font-size="15" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">2  Over the Top (Clints / Sotchs, down the Lip)</text>
+<path d="M135,-111 h50" stroke="#1f2a6b" stroke-width="6" stroke-dasharray="12 7" stroke-linecap="round"/>
+<text x="195" y="-96" font-size="15" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">3  Underground: cave Swallet to Rising (~1 km)</text>
+<path d="M160,-96 l11,19 h-22z" fill="#d0342c" stroke="#000" stroke-width="1.5"/>
+<text x="195" y="-72" font-size="15" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">invaders: followers, vans, checkpoint, tower</text>
+<rect x="135" y="-64" width="18" height="14" fill="#e3ddcf" stroke="#333"/>
+<text x="159" y="-42" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">pavement</text>
+<rect x="325" y="-64" width="18" height="14" fill="#b5674a" stroke="#333"/>
+<text x="349" y="-42" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">doline</text>
+<rect x="515" y="-64" width="18" height="14" fill="#1d1b1a" stroke="#333"/>
+<text x="539" y="-42" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">shaft / hole</text>
+<rect x="705" y="-64" width="18" height="14" fill="#b9ab95" stroke="#333"/>
+<text x="729" y="-42" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">cliff band</text>
+<rect x="135" y="-38" width="18" height="14" fill="#c3cdb6" stroke="#333"/>
+<text x="159" y="-16" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">valley (-170)</text>
+<rect x="325" y="-38" width="18" height="14" fill="#3aa0ff" stroke="#333"/>
+<text x="349" y="-16" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">aquifer well-head</text>
+<rect x="515" y="-38" width="18" height="14" fill="#2b1f1a" stroke="#333"/>
+<text x="539" y="-16" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Grimble hole</text>
+<text x="135" y="8" font-size="13" fill="#333" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">Walkable: x -700..720, y -40..-1180 (1.4 x 1.15 km) + finish strip</text>
+<path d="M300,1490 h500" stroke="#111" stroke-width="5"/>
+<path d="M300,1482 v16" stroke="#111" stroke-width="3"/>
+<path d="M400,1482 v16" stroke="#111" stroke-width="3"/>
+<path d="M500,1482 v16" stroke="#111" stroke-width="3"/>
+<path d="M600,1482 v16" stroke="#111" stroke-width="3"/>
+<path d="M700,1482 v16" stroke="#111" stroke-width="3"/>
+<path d="M800,1482 v16" stroke="#111" stroke-width="3"/>
+<text x="300" y="1474" font-size="14" fill="#222" text-anchor="start" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">0</text>
+<text x="800" y="1474" font-size="14" fill="#222" text-anchor="end" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">500 m</text>
+<path d="M-330,-160 l14,40 h-28z" fill="#111"/>
+<text x="-330" y="-165" font-size="18" fill="#111" text-anchor="middle" font-weight="bold" paint-order="stroke" stroke="#f4f1ea" stroke-width="4">N</text>
+</svg>
