@@ -234,6 +234,8 @@ export class HeightfieldPlayer extends Player {
     // (in deep water the jump key is the mantle, not a jump)
     if (this._reach && S.imm > 0.7) inp.jump = false;
     const y0 = p.y;
+    // (a raised step would also let player.js's ramp-follow snap the feet down that far)
+    if (this._reach) this._onRamp = false;
 
     super.update(dt, inp);
     this.terrainFloor();
@@ -365,7 +367,12 @@ export class HeightfieldPlayer extends Player {
     this.camera.position.y += this._eyeLag;
     // a swimmer bobs on the water; a swept one rolls
     if (S.swimming && !S.diving) this.camera.position.y += Math.sin(this._bobT * 2 * Math.PI * 0.55) * 0.05;
+    // (set absolutely: a view change's lookAt zeroes the roll; never over the knockdown's own)
     const roll = S.swept ? Math.sin(S.sweptT * 3.1) * 0.14 : S.wipeout && !S.wipeout.moved ? Math.sin(S.wipeout.t * 7) * 0.4 : 0;
-    if (roll !== this._roll) { this.camera.rotateZ(roll - this._roll); this._roll = roll; }
+    if ((roll || this._roll) && !this.down) {
+      const e = (this._eul ||= new THREE.Euler(0, 0, 0, 'YXZ')).setFromQuaternion(this.camera.quaternion, 'YXZ');
+      e.z = roll; this.camera.quaternion.setFromEuler(e);
+    }
+    this._roll = roll;
   }
 }

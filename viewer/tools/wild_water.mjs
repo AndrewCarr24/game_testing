@@ -11,7 +11,10 @@
 //           the last dry foothold; and from the same spot, swimming for the bank makes it
 //   hop     cross the shoals rock to rock (jumps between boulders, a mantle if one falls short)
 //   shots   eye screenshots: wading, swimming, under, on a shoal rock, on the bank
-// Usage: node viewer/tools/wild_water.mjs [--world laurel_fork] [--only probe,wade,...] [--label L]
+//   live    the page's own loop: W held on the keyboard while swimming (main.js's hook runs)
+//   mantle  Space + forward from the water onto a rock ~0.75 m over it; one 1.4+ m over it refuses
+// Usage: node viewer/tools/wild_water.mjs [--world laurel_fork] [--only probe,wade,...] [--label L] [--water standin]
+//   (--water standin: the stand-in field even when water.js is in, for A/B; the field in use is printed)
 // Output: build/wilderness/<world>/water/<label>/report.json + *.png. Takes a browser slot.
 import { chromium } from 'playwright-core';
 import fs from 'fs';
@@ -23,8 +26,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args.splice(i, 2)[1] : d; };
 const world = opt('--world', 'laurel_fork');
-const only = opt('--only', 'probe,wade,pool,dive,swept,narrows,hop,mantle,shots').split(',');
+const only = opt('--only', 'live,probe,wade,pool,dive,swept,narrows,hop,mantle,shots').split(',');
 const label = opt('--label', 'latest');
+const waterQS = opt('--water', '') === 'standin' ? '&water=standin' : '';   // force the stand-in field (A/B against water.js)
 const out = path.join(root, 'build/wilderness', world, 'water', label);
 fs.mkdirSync(out, { recursive: true });
 
@@ -45,7 +49,7 @@ try {
   const shots = only.includes('shots');
   const page = await (await b.newContext({ viewport: shots ? { width: 1280, height: 720 } : { width: 640, height: 360 } })).newPage();
   page.on('pageerror', (e) => console.log('pageerror:', e.message));
-  await page.goto(`${BASE}/viewer/wild.html?world=${world}&t=3&hud=0&q=${shots ? 3 : 0}${shots ? '' : '&grass=0'}`);
+  await page.goto(`${BASE}/viewer/wild.html?world=${world}&t=3&hud=0&q=${shots ? 3 : 0}${shots ? '' : '&grass=0'}${waterQS}`);
   await page.waitForFunction(() => window.__loaded, null, { timeout: 300000 });
   // the in-page harness: place, steer, step
   await page.evaluate(() => {
@@ -58,7 +62,7 @@ try {
         const s = water.surfaceAt(x, z), g = pl.rampHeight({ x, z });
         pl.pos.set(x, y ?? (swim && Number.isFinite(s) ? Math.max(g, s - 1.35) : g), z); pl.vel.set(0, 0, 0);
         pl.swimming = false; pl.crouching = false; pl.height = 1.8;
-        Object.assign(pl.waterState, { swept: false, wipeout: null, breath: 1 });
+        Object.assign(pl.waterState, { swept: false, wipeout: null, breath: 1, swimming: false, inWater: false });
         pl._wasIn = false; pl._dive = 0;
         pl.syncCamera();
       },
@@ -93,6 +97,25 @@ try {
       },
     });
   });
+
+  report.field = await page.evaluate(() => (window.__player.water?.standin ? 'stand-in (water_standin.js)' : 'water.js'));
+  console.log(`water field: ${report.field}`);
+
+  if (only.includes('live')) {
+    console.log('live: the page loop (keyboard), swimming in the pool');
+    const pe = [];
+    page.on('pageerror', (e) => pe.push(e.message));
+    await page.evaluate(() => { const H = window.__H, z = 440, d = H.deepest(z, -760, -480); H.place(d.x, z, { swim: true }); H.look(1, 0); window.__wild.pause(false); });
+    const c0 = await page.evaluate(() => ({ ...window.__swim.counts }));
+    await page.keyboard.down('KeyW');
+    await page.waitForTimeout(2500);
+    await page.keyboard.up('KeyW');
+    report.live = await page.evaluate((c0) => { window.__wild.pause(true); const c = window.__swim.counts;
+      return { strokes: (c.swim_stroke || 0) - (c0.swim_stroke || 0), state: window.__H.snap() }; }, c0);
+    report.live.errors = pe;
+    console.log('  ', JSON.stringify(report.live));
+    check('live loop: swimming with the keyboard, no errors', report.live.strokes > 0 && report.live.state.swim && !pe.length, `${report.live.strokes} strokes`);
+  }
 
   if (only.includes('probe')) {
     console.log('probe: the current down the Laurel River');
