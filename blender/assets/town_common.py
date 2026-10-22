@@ -70,6 +70,8 @@ def material(glow=False):
 
 
 def kind(surf):
+    if surf.startswith("mean:"):                  # a flat swatch of a region's mean colour (cheap detail)
+        return "swatch"
     if surf in tt.REGIONS:
         return tt.REGIONS[surf]["kind"]          # tile / cells / palette
     tt.swatch_index(surf)                         # raises for unknown names
@@ -183,7 +185,7 @@ class Part:
                 uvs = uvs[::-1]
         sub = getattr(self.kit, "sub", None)
         if self.kind == "swatch" or self.kind == "palette":
-            u = tt.swatch_uv(self.surf)
+            u = tt.swatch_uv(self.surf[5:] if self.surf.startswith("mean:") else self.surf)
             if sub:                       # split for vertex-light resolution only
                 for pc, _, _ in _cells(P, auto_uv(P, sub)):
                     pc = [q for q, _ in pc]
