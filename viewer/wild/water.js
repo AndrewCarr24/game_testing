@@ -1,18 +1,45 @@
 import * as THREE from 'three';
 import { ATMOSPHERE_PARS } from './atmosphere.js';
 import { rng } from './noise.js';
+import { fetchPNG } from './png.js';
 
 // The wilderness water (a generated level, load_world.js worlds): the Laurel River, Laurel Fork,
-// the plunge pool, the falls and their spray, and the water-query API the player uses.
-//   waterField(world)   the CPU field (surfaceAt / depthAt / flowAt / wet), cached on the world
-//   buildWater(world, uniforms, tex)   the meshes
+// the plunge pool, the falls, the mist, and the water-query API the player uses.
+//   await prepareWater(world)          the level's water data (world.json "water_fx": current, foam,
+//                                      standing waves, the skyline the surface reflects, bed kind;
+//                                      blender/wilderness/levels/laurel_fork_water.py), if it has any
+//   waterField(world)                  the CPU field (surfaceAt / depthAt / flowAt / wet), cached
+//   buildWater(world, uniforms, tex)   the meshes: the water surface, the falls sheet, the mist (3 draws)
+//   waterWetTexture(world)             the terrain's wet banks / cobble bars mask (main.js tex.wet)
 // Contract: design/wilderness/blue_ridge/water.md. Coordinates: terrain-local three.js metres
-// (x east, y up, z = -(estate y + 810)), as world.heightAt.
+// (x east, y up, z = -(estate y + 810)), as world.heightAt. No lights, no extra passes: the
+// surface reflects the sky or the skyline baked per vertex (8 directions), its bed is the cobble
+// scan seen through tea-green water absorbed by depth, the current is flow-mapped noise.
+
+// ---------------------------------------------------------------- the level's water data
+export async function prepareWater(world) {
+  const fx = world.meta?.water_fx;
+  if (!fx || world.waterFx) return world.waterFx || null;
+  const dir = `../build/wilderness/${world.name}/world/`;
+  let f, e, a;
+  try { [f, e, a] = await Promise.all([fx.flow, fx.env, fx.aux].map((n) => fetchPNG(dir + n))); } catch (err) { console.warn('water fx:', err.message); return null; }
+  const n = world.res * world.res, vm = fx.vmax / 127;
+  const vx = new Float32Array(n), vz = new Float32Array(n), foam = new Float32Array(n), wave = new Float32Array(n);
+  const phase = new Float32Array(n), bedrock = new Float32Array(n), env = new Uint8Array(n * 8);
+  for (let k = 0; k < n; k++) {
+    vx[k] = (f.data[k * 4] - 128) * vm; vz[k] = (f.data[k * 4 + 1] - 128) * vm;
+    foam[k] = f.data[k * 4 + 2] / 255; wave[k] = f.data[k * 4 + 3] / 255;
+    for (let c = 0; c < 4; c++) { const v = e.data[k * 4 + c]; env[k * 8 + c * 2] = v >> 8; env[k * 8 + c * 2 + 1] = v & 255; }
+    phase[k] = a.data[k * 2] / fx.phase_scale; bedrock[k] = a.data[k * 2 + 1] / 65535;
+  }
+  world.waterFx = { vx, vz, foam, wave, phase, bedrock, env };
+  return world.waterFx;
+}
 
 // ---------------------------------------------------------------- the query API
 export function waterField(world) {
   if (world.waterField) return world.waterField;
-  const { res, spacing, size, water, heights } = world, half = size / 2, n = res * res;
+  const { res, spacing, size, water } = world, half = size / 2, n = res * res;
   const fx = world.waterFx || null;
   // per-cell current (m/s): the level's baked field (water_flow.png) or, without it, down the
   // water surface's slope (over 2 cells each way), faster where it's steeper
@@ -72,17 +99,97 @@ export function waterField(world) {
   return world.waterField;
 }
 
-// ---------------------------------------------------------------- water
-// One mesh over every wet cell of the water raster (the Laurel River, Laurel Fork, the plunge
-// pool) plus the river's ribbon beyond the square (world.river.out, down the valley to the town).
-// Tea-clear water over the cobble bed (tex.bed), absorbed by depth (tannin water: blue goes first,
-// so deep water turns amber-black); reflections of the sky only where the sky is open (the light
-// map's sky visibility), the gorge's dark walls and canopy elsewhere; whitewater where the surface
-// steepens (riffles, the shoals, the Narrows ledge and cascade) and around rocks in rapids; the
-// churn where the falls lands. The falls itself is buildFalls (a translucent sheet + spray).
+// ---------------------------------------------------------------- shared noise
+// One tileable 256² RGBA8 texture, made once (no download): rg = the slope of a 4-octave noise
+// (the ripples' normals), b = foam (bubbly cells broken by noise), a = a soft low-frequency noise
+let NOISE = null;
+function noiseTexture() {
+  if (NOISE) return NOISE;
+  const N = 256, r = rng(91), data = new Uint8Array(N * N * 4);
+  const grid = (c) => { const g = new Float32Array(c * c); for (let i = 0; i < g.length; i++) g[i] = r(); return g; };
+  const octs = [4, 8, 16, 32].map((c) => ({ c, g: grid(c) }));
+  const low = { c: 4, g: grid(4) };
+  const vnoise = (o, x, y) => {             // periodic value noise, x, y in [0, 1)
+    const fx = x * o.c, fy = y * o.c, i = Math.floor(fx), j = Math.floor(fy);
+    let u = fx - i, v = fy - j; u = u * u * (3 - 2 * u); v = v * v * (3 - 2 * v);
+    const at = (a, b) => o.g[((a % o.c) + o.c) % o.c + (((b % o.c) + o.c) % o.c) * o.c];
+    return (at(i, j) * (1 - u) + at(i + 1, j) * u) * (1 - v) + (at(i, j + 1) * (1 - u) + at(i + 1, j + 1) * u) * v;
+  };
+  const h = new Float32Array(N * N);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    let s = 0, a = 1;
+    for (const o of octs) { s += vnoise(o, x / N, y / N) * a; a *= 0.55; }
+    h[x + y * N] = s;
+  }
+  // foam cells: 14 x 14 jittered points per tile, 1 - F1 (bubbles), times a breakup noise
+  const C = 14, pts = [];
+  for (let j = 0; j < C; j++) for (let i = 0; i < C; i++) pts.push([(i + r()) / C, (j + r()) / C, 0.6 + 0.4 * r()]);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const k = x + y * N;
+    const dx = (h[((x + 1) % N) + y * N] - h[((x + N - 1) % N) + y * N]) * N / 2, dy = (h[x + ((y + 1) % N) * N] - h[x + ((y + N - 1) % N) * N]) * N / 2;
+    data[k * 4] = Math.max(0, Math.min(255, 128 + dx * 1.6));
+    data[k * 4 + 1] = Math.max(0, Math.min(255, 128 + dy * 1.6));
+    const px = x / N, py = y / N, ci = Math.floor(px * C), cj = Math.floor(py * C);
+    let f1 = 9, wgt = 1;
+    for (let b = -1; b <= 1; b++) for (let a = -1; a <= 1; a++) {
+      const ii = (ci + a + C) % C, jj = (cj + b + C) % C, p = pts[ii + jj * C];
+      let ex = p[0] + Math.floor((ci + a) / C) * 1 - px, ey = p[1] + Math.floor((cj + b) / C) * 1 - py;
+      const d = Math.hypot(ex, ey) * C / p[2];
+      if (d < f1) { f1 = d; wgt = p[2]; }
+    }
+    const bub = Math.max(0, 1 - f1) ** 0.7 * wgt;
+    data[k * 4 + 2] = Math.round(Math.min(1, bub * 0.75 + (vnoise(octs[2], px, py) - 0.3) * 0.45) * 255);
+    data[k * 4 + 3] = Math.round((vnoise(low, px, py) * 0.65 + vnoise(octs[0], px, py) * 0.35) * 255);
+  }
+  const t = new THREE.DataTexture(data, N, N, THREE.RGBAFormat);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.needsUpdate = true; t.name = 'water_noise';
+  NOISE = t;
+  return t;
+}
+
+// distance (m) from every wet cell to the nearest dry one (chamfer, two passes)
+function bankDistance(world) {
+  const { res, spacing, water } = world, n = res * res, d = new Float32Array(n);
+  for (let k = 0; k < n; k++) d[k] = Number.isFinite(water[k]) ? 1e9 : 0;
+  const a = spacing, b = spacing * Math.SQRT2;
+  const relax = (k, kk, s) => { const v = d[kk] + s; if (v < d[k]) d[k] = v; };
+  for (let j = 1; j < res - 1; j++) for (let i = 1; i < res - 1; i++) {
+    const k = i + j * res; if (!d[k]) continue;
+    relax(k, k - 1, a); relax(k, k - res, a); relax(k, k - res - 1, b); relax(k, k - res + 1, b);
+  }
+  for (let j = res - 2; j > 0; j--) for (let i = res - 2; i > 0; i--) {
+    const k = i + j * res; if (!d[k]) continue;
+    relax(k, k + 1, a); relax(k, k + res, a); relax(k, k + res + 1, b); relax(k, k + res - 1, b);
+  }
+  return d;
+}
+
+// ---------------------------------------------------------------- the surface
+// One mesh over every wet cell of the water raster (the Laurel River, Laurel Fork, the plunge pool)
+// plus the river's ribbon beyond the square (world.river.out, down the valley to the town). Per
+// vertex: the current (m/s), depth, foam potential, standing-wave strength and phase, the skyline in
+// 8 directions, bedrock, the distance to the bank. What a pixel shows:
+//   the bed through the water: the cobble scan (gold-brown, wet; grey gneiss on the bedrock shelves;
+//     silted and green in the pools), refracted by the ripples, sun caustics in the sunlit shallows,
+//     absorbed along the view path (tea-green: red goes first, then blue) toward the water's own
+//     green-brown, so riffles read clear over cobbles and pools deep green
+//   reflection (Fresnel): the sky above the skyline in the reflected direction, the gorge's forest
+//     below it (lit on the side the sun reaches), so the banks' trees mirror along the edges and the
+//     open sky down the middle of the reach
+//   the current: two layers of ripple and foam noise advected along the flow and cross-faded
+//     (flow map), each place on its own phase; rougher and quicker where the water runs fast
+//   standing waves: stationary crests across the tongue below each drop (phase from the generator)
+//   white water: the generator's foam potential (rapids, ledges, supercritical riffles, the rocks'
+//     pillows, eddy lines and wakes, carried downstream as foam lines) thresholds bubbly foam cells,
+//     broken into tongues by a slow breakup noise
+//   sun glints: the low sun's specular on the ripples, where the light map has sun
 export function buildWater(world, uniforms, tex) {
   const { res, spacing, size, water, heights } = world, half = size / 2;
-  const P = [], F = [], S = [], Dp = [], idx = [];
+  const fx = world.waterFx;
+  const bank = bankDistance(world);
+  const P = [], FL = [], FX = [], E0 = [], E1 = [], MI = [], idx = [];
   const vid = new Int32Array(res * res).fill(-1);
   const lvl = (i, j) => water[i + j * res];
   const vert = (i, j, h) => {
@@ -90,13 +197,23 @@ export function buildWater(world, uniforms, tex) {
     if (vid[k] >= 0) return vid[k];
     vid[k] = P.length / 3;
     P.push(-half + i * spacing, h, -half + j * spacing);
-    // flow: down the water surface's gradient (over 2 cells each way: smoother rapids)
-    const at = (a, b) => { const v = lvl(Math.min(res - 1, Math.max(0, a)), Math.min(res - 1, Math.max(0, b))); return Number.isFinite(v) ? v : h; };
-    const hx = at(i + 2, j) - at(i - 2, j), hz = at(i, j + 2) - at(i, j - 2);
-    const g = Math.hypot(hx, hz) / (4 * spacing);
-    F.push(-hx / (Math.hypot(hx, hz) + 1e-6), -hz / (Math.hypot(hx, hz) + 1e-6));
-    S.push(Math.min(1, g));
-    Dp.push(Math.max(0, h - heights[k]));
+    const d = Math.max(0, h - heights[k]);
+    if (fx) {
+      FL.push(fx.vx[k], fx.vz[k]);
+      FX.push(d, fx.foam[k], fx.wave[k], fx.phase[k]);
+      E0.push(fx.env[k * 8], fx.env[k * 8 + 1], fx.env[k * 8 + 2], fx.env[k * 8 + 3]);
+      E1.push(fx.env[k * 8 + 4], fx.env[k * 8 + 5], fx.env[k * 8 + 6], fx.env[k * 8 + 7]);
+      MI.push(fx.bedrock[k], Math.min(bank[k], 60));
+    } else {
+      // (no generator data: down the surface's slope, white where it steepens)
+      const at = (a, b) => { const v = lvl(Math.min(res - 1, Math.max(0, a)), Math.min(res - 1, Math.max(0, b))); return Number.isFinite(v) ? v : h; };
+      const hx = at(i + 2, j) - at(i - 2, j), hz = at(i, j + 2) - at(i, j - 2), L = Math.hypot(hx, hz) + 1e-6, g = L / (4 * spacing);
+      const sp = Math.min(6, 0.4 + 30 * g);
+      FL.push(-hx / L * sp, -hz / L * sp);
+      FX.push(d, Math.min(1, Math.max(0, (g - 0.03) / 0.09)), 0, 0);
+      E0.push(30, 30, 30, 30); E1.push(30, 30, 30, 30);
+      MI.push(0, Math.min(bank[k], 60));
+    }
     return vid[k];
   };
   for (let j = 0; j < res - 1; j++) for (let i = 0; i < res - 1; i++) {
@@ -118,105 +235,154 @@ export function buildWater(world, uniforms, tex) {
       const sx = -dz / L, sz = dx / L, w = q[3] / 2;
       const x = q[0], z = -(q[1] - oy), y = q[2];
       const g = Math.abs(b[2] - a[2]) / Math.max(1, Math.hypot(b[0] - a[0], b[1] - a[1]));
-      for (const sd of [-1, 1]) { P.push(x + sx * w * sd, y, z + sz * w * sd); F.push(dx / L, dz / L); S.push(Math.min(1, g)); Dp.push(1.8); }
+      const sp = 0.6 + 20 * g;
+      for (const sd of [-1, 1]) {
+        P.push(x + sx * w * sd, y, z + sz * w * sd); FL.push(dx / L * sp, dz / L * sp); FX.push(1.8, Math.min(1, g * 8), 0, 0);
+        E0.push(22, 22, 22, 22); E1.push(22, 22, 22, 22); MI.push(0, 6);
+      }
     });
     for (let n = 0; n < out.length - 1; n++) { const a = base + n * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
-  g.setAttribute('flow', new THREE.Float32BufferAttribute(F, 2));
-  g.setAttribute('steep', new THREE.Float32BufferAttribute(S, 1));
-  g.setAttribute('depth', new THREE.Float32BufferAttribute(Dp, 1));
+  g.setAttribute('aFlow', new THREE.Float32BufferAttribute(FL, 2));
+  g.setAttribute('aFx', new THREE.Float32BufferAttribute(FX, 4));
+  g.setAttribute('aEnv0', new THREE.BufferAttribute(new Uint8Array(E0), 4, true));
+  g.setAttribute('aEnv1', new THREE.BufferAttribute(new Uint8Array(E1), 4, true));
+  g.setAttribute('aMisc', new THREE.Float32BufferAttribute(MI, 2));
   g.setIndex(idx);
-  g.computeVertexNormals();
+  g.computeVertexNormals();              // (the surface's own slope: the cascade and the ledges tilt)
+  g.computeBoundingSphere();
   const falls = world.props.authored.find((p) => p.kind === 'falls');
   const fb = falls ? new THREE.Vector3(falls.x1, falls.z1, -(falls.y1 - oy)) : new THREE.Vector3(0, -1e4, 0);
   const mat = new THREE.ShaderMaterial({
     uniforms: { ...uniforms, uLight: { value: tex.light }, uMapXf: { value: new THREE.Vector4(-half, -half, 1 / size, 1) },
       uZenithW: { value: new THREE.Color(...(world.skyMeta?.zenith || [0.2, 0.33, 0.66])) },
-      tBed: { value: tex.bed || tex.scree }, uBedTile: { value: tex.bedTile || 1.8 }, uFallsBase: { value: fb } },
+      tBed: { value: tex.bed || tex.scree }, uBedTile: { value: tex.bedTile || 1.8 }, uFallsBase: { value: fb },
+      tNoise: { value: noiseTexture() }, uDetail: { value: 1 } },
     vertexShader: /* glsl */`
-      attribute vec2 flow;
-      attribute float steep, depth;
-      varying vec3 vWorld, vN;
-      varying vec2 vFlow;
-      varying float vSteep, vDepth;
-      void main() { vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; vN = normal; vFlow = flow; vSteep = steep; vDepth = depth;
-        gl_Position = projectionMatrix * viewMatrix * w; }`,
+      attribute vec2 aFlow, aMisc;
+      attribute vec4 aFx, aEnv0, aEnv1;
+      varying vec3 vWorld;
+      varying vec2 vFlow, vMisc;
+      varying vec4 vFx, vEnv0, vEnv1;
+      varying vec3 vNg;
+      void main() {
+        vec4 w = modelMatrix * vec4(position, 1.0);
+        vNg = normal;
+        vWorld = w.xyz; vFlow = aFlow; vFx = aFx; vEnv0 = aEnv0; vEnv1 = aEnv1; vMisc = aMisc;
+        gl_Position = projectionMatrix * viewMatrix * w;
+      }`,
     fragmentShader: /* glsl */`
-      uniform sampler2D uLight, tBed;
+      uniform sampler2D uLight, tBed, tNoise;
       uniform vec4 uMapXf;
       uniform vec3 uSunColor, uSkyColor, uZenithW, uFallsBase;
-      uniform float uBedTile;
-      varying vec3 vWorld, vN;
-      varying vec2 vFlow;
-      varying float vSteep, vDepth;
+      uniform float uBedTile, uDetail;
+      varying vec3 vWorld;
+      varying vec2 vFlow, vMisc;
+      varying vec4 vFx, vEnv0, vEnv1;
+      varying vec3 vNg;
       ${ATMOSPHERE_PARS}
-      float hn(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
-      float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hn(i), hn(i + vec2(1, 0)), f.x), mix(hn(i + vec2(0, 1)), hn(i + vec2(1, 1)), f.x), f.y); }
-      // flow-map noise: two layers advected along the local flow, each restarting every 4 s,
-      // cross-faded (no swirl where the flow turns, no stretch over time)
-      float flowN(vec2 xz, vec2 fl, float speed, vec2 k, float t) {
-        float p0 = fract(t * 0.25), p1 = fract(t * 0.25 + 0.5);
-        vec2 o0 = fl * p0 * speed * 4.0, o1 = fl * p1 * speed * 4.0;
-        vec2 ax = normalize(fl + 1e-4), ay = vec2(-ax.y, ax.x);
-        vec2 a = xz - o0, b = xz - o1 + 17.0;
-        float n0 = vn(vec2(dot(a, ax) * k.x, dot(a, ay) * k.y)), n1 = vn(vec2(dot(b, ax) * k.x, dot(b, ay) * k.y));
-        return mix(n0, n1, abs(p0 * 2.0 - 1.0));
+      // the skyline's elevation (rad) toward a horizontal direction, between the 8 baked ones
+      float skyline(vec2 d) {
+        float kf = mod(atan(d.y, d.x) / 0.7853982 + 8.0, 8.0);
+        vec4 d0 = abs(kf - vec4(0.0, 1.0, 2.0, 3.0)), d1 = abs(kf - vec4(4.0, 5.0, 6.0, 7.0));
+        d0 = min(d0, 8.0 - d0); d1 = min(d1, 8.0 - d1);
+        return (dot(max(1.0 - d0, 0.0), vEnv0) + dot(max(1.0 - d1, 0.0), vEnv1)) * 1.5707963;
       }
       void main() {
-        // (Laurel Fork's falls is buildFalls' sheet; under it the surface would be a white plank)
-        if (vSteep > 0.55 && distance(vWorld.xz, uFallsBase.xz) < 26.0) discard;
+        vec3 ng = normalize(vNg);
+        float steep = smoothstep(0.03, 0.22, 1.0 - ng.y);           // the water's own fall: drops, the cascade
+        // (on a steep drop the raster's water is a skin over the rock: it reads as white water, not shallows)
+        float depth = max(vFx.x, 0.5 * steep);
+        // (Laurel Fork's falls is the falls sheet; under it the surface would be a white plank)
+        if (vFx.y > 0.5 && depth < 1.5 && distance(vWorld.xz, uFallsBase.xz) < 22.0 && vWorld.y > uFallsBase.y + 1.5) discard;
         // (the shallow margin dithers out: no cell staircase where the water meets the bank)
-        if (vDepth < 0.14 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) > vDepth / 0.14) discard;
+        if (depth < 0.14 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) > depth / 0.14) discard;
         vec2 mu = (vWorld.xz - uMapXf.xy) * uMapXf.z;
         bool inMap = all(greaterThan(mu, vec2(0.0))) && all(lessThan(mu, vec2(1.0)));
-        vec4 l = inMap ? textureLod(uLight, mu, 0.0) : vec4(1.0, 1.0, 1.0, 1.0);
-        vec3 v = normalize(vWorld - cameraPosition);
-        vec2 fl = normalize(vFlow + 1e-4);
-        vec2 q = vec2(dot(vWorld.xz, fl), dot(vWorld.xz, vec2(-fl.y, fl.x)));
+        vec4 l = inMap ? textureLod(uLight, mu, 0.0) : vec4(1.0);
+        float sunVis = l.a * l.g;
+        vec3 toP = vWorld - cameraPosition;
+        float dist = length(toP);
+        vec3 v = toP / dist;
+        vec2 xz = vWorld.xz - floor(vWorld.xz / 512.0) * 512.0;      // (small coordinates: no float jitter)
+        vec2 fl = vFlow;
+        float speed = length(fl);
+        vec2 fdir = speed > 1e-3 ? fl / speed : vec2(0.0, -1.0);
         float t = uTime;
-        float speed = 0.8 + 14.0 * vSteep;
-        // ripples along the flow; rougher where it runs fast
-        // (a local frame: the rotated coordinates stay small, so turning flow can't swirl them)
-        vec2 lxz = vWorld.xz - floor(vWorld.xz / 256.0) * 256.0;
-        float r1 = flowN(lxz, fl, speed * 0.7, vec2(1.3, 2.1), t), r2 = flowN(lxz * 1.7, fl, speed * 1.3, vec2(2.2, 2.5), t + 1.3);
-        float rough = 0.18 + 0.9 * smoothstep(0.02, 0.15, vSteep);
-        vec3 n = normalize(vec3(((r1 - 0.5) * 0.25 + (r2 - 0.5) * 0.12) * rough * 2.0, 1.0, (r2 - r1) * 0.2 * rough * 2.0));
+        // flow map: two layers half a cycle apart, each place on its own phase (no pulsing in step)
+        const float T = 1.5;
+        float jit = texture2D(tNoise, xz / 53.0).a * 2.0;
+        float p0 = fract(t / T + jit), p1 = fract(p0 + 0.5);
+        float wb = abs(1.0 - 2.0 * p0);
+        vec2 o0 = fl * p0 * T, o1 = fl * p1 * T;
+        vec2 g = mix(texture2D(tNoise, (xz - o0) / 7.0).rg, texture2D(tNoise, (xz - o1) / 7.0 + 0.37).rg, wb) - 0.5;
+        if (uDetail > 0.5)
+          g += (mix(texture2D(tNoise, (xz - o0) / 2.3 + 0.61).rg, texture2D(tNoise, (xz - o1) / 2.3 + 0.13).rg, wb) - 0.5) * 0.8;
+        // calm pools barely ripple; riffles chop; foam roughens
+        float rough = mix(0.06, 0.55, smoothstep(0.3, 3.0, speed)) + 0.35 * vFx.y;
+        vec2 sl = g * rough;
+        // standing waves: stationary crests across the current (their phase is baked)
+        float ph = 6.2831853 * vFx.w, wv = vFx.z;
+        float brkW = wv > 0.01 ? texture2D(tNoise, xz / 11.0 + vec2(0.0, t * 0.015)).a : 0.5;
+        sl += fdir * wv * 0.5 * cos(ph) * (0.55 + 0.9 * brkW);
+        vec3 n = normalize(ng + vec3(-sl.x, 0.0, -sl.y) * (1.0 + 1.5 * steep));
         vec3 rd = reflect(v, n);
-        float fres = 0.02 + 0.98 * pow(1.0 - max(dot(-v, n), 0.0), 5.0);
-        // what the surface reflects: open sky where the sky is open, the gorge's dark walls and
-        // the canopy where it isn't (sky visibility from the light map)
-        vec3 sky = mix(hazeAlong(rd), uZenithW, sqrt(max(rd.y, 0.0)));
-        vec3 walls = vec3(0.016, 0.03, 0.013) * (uSkyColor * 2.2 + uSunColor * 0.35 * l.a);    // the gorge's forest
-        vec3 refl = mix(walls, sky, smoothstep(0.25, 0.85, l.b));
-        // the bed through the water: gold-brown cobbles, refracted by the ripples, absorbed by depth
-        float dpt = max(vDepth, 0.0);
-        vec2 buv = (vWorld.xz + n.xz * (0.35 + 0.25 * dpt)) / uBedTile;
-        vec3 bed = texture2D(tBed, buv).rgb * vec3(1.05, 0.92, 0.72);
-        vec3 lit = uSunColor * l.a * l.g * 0.85 + uSkyColor * l.b;
-        vec3 Tw = exp(-dpt * vec3(0.26, 0.36, 0.72));
-        vec3 body = vec3(0.012, 0.017, 0.008) * lit;                    // deep water: green-tea dark
-        vec3 under = mix(body, bed * lit, Tw);
-        float glint = pow(max(dot(rd, uSunDir), 0.0), 260.0) * 14.0 * l.a * l.g;
-        // (a river's surface is never a mirror: the current's chop scatters it)
-        vec3 col = mix(under, refl, fres * 0.6) + vec3(1.0, 0.82, 0.58) * glint;
-        // whitewater: riffles (patchy, where the current quickens) to rapids to the cascade, streaking
-        // down the flow and breaking up
-        float riff = smoothstep(0.012, 0.05, vSteep) * smoothstep(0.55, 0.85, vn(lxz * vec2(0.12, 0.3)));
-        float ww = max(smoothstep(0.05, 0.25, vSteep), 0.55 * riff);
+        float cosv = max(dot(-v, n), 0.0);
+        float fres = 0.02 + 0.98 * pow(1.0 - cosv, 5.0);
+        // what it reflects: sky above the skyline, the gorge's forest below it
+        vec2 hd = normalize(rd.xz + vec2(1e-5));
+        float elev = asin(clamp(rd.y, -1.0, 1.0));
+        float hz = skyline(hd);
+        float skyw = smoothstep(hz - 0.05, hz + 0.05, elev);
+        vec3 skyC = mix(hazeAlong(rd), uZenithW, sqrt(max(rd.y, 0.0)));
+        float facing = max(0.0, -dot(hd, normalize(uSunDir.xz + vec2(1e-5))));
+        vec3 forestC = vec3(0.02, 0.033, 0.015) * (uSkyColor * 1.7 + uSunColor * 0.6 * facing * facing);
+        forestC = mix(forestC, hazeAlong(rd) * 0.45, (1.0 - smoothstep(0.02, 0.2, hz)) * 0.6);   // (a far, low skyline: a hazed ridge)
+        vec3 refl = mix(forestC, skyC, skyw);
+        // the bed through the water
+        vec3 lit = uSunColor * sunVis * 0.85 + uSkyColor * l.b;
+        float pathK = 1.0 + 1.0 / max(cosv, 0.2);
+        vec3 Tw = exp(-vec3(0.5, 0.15, 0.27) * depth * pathK);
+        vec2 buv = (vWorld.xz + n.xz * (0.2 + 0.35 * depth)) / uBedTile;
+        vec3 bs = texture2D(tBed, buv).rgb;
+        vec3 bed = bs * vec3(1.0, 0.84, 0.6) * 0.85;                                     // wet gold-brown cobbles
+        bed = mix(bed, vec3(dot(bs, vec3(0.3, 0.5, 0.2))) * vec3(0.58, 0.59, 0.55), vMisc.x);  // bedrock: grey gneiss
+        bed = mix(bed, bed * vec3(0.5, 0.72, 0.42), smoothstep(0.7, 2.6, depth) * 0.65); // algae and silt in the pools
+        float caustic = 0.0;           // (sun caustics in the sunlit shallows; not at the low quality levels)
+        if (uDetail > 0.5 && sunVis > 0.05 && depth < 1.4) {
+          float cz = texture2D(tNoise, xz / 3.3 + vec2(t * 0.045, t * 0.03)).b * texture2D(tNoise, xz / 2.1 - vec2(t * 0.035, -t * 0.02) + 0.5).b;
+          caustic = smoothstep(0.18, 0.5, cz) * sunVis * (1.0 - smoothstep(0.15, 1.4, depth));
+        }
+        vec3 under = bed * (lit + uSunColor * sunVis * caustic * 0.9);
+        vec3 body = vec3(0.03, 0.064, 0.042) * lit;                                     // the water's own green-brown
+        // (undercut and shaded banks: the edge of the water under a steep bank is darker)
+        under = under * Tw + body * (1.0 - Tw);
+        vec3 col = mix(under, refl, fres);
+        // white water
+        // (foam cells, advected; a second tap up the current streaks them along the flow, more when it's fast)
+        float fpA = mix(texture2D(tNoise, (xz - o0) / 4.4 + 0.21).b, texture2D(tNoise, (xz - o1) / 4.4 + 0.77).b, wb);
+        float fp = fpA;
+        if (uDetail > 0.5) {
+          vec2 sk = fdir * (0.4 + 0.35 * min(speed, 4.0));
+          fp = 0.5 * (fpA + mix(texture2D(tNoise, (xz - o0 - sk) / 4.4 + 0.21).b, texture2D(tNoise, (xz - o1 - sk) / 4.4 + 0.77).b, wb));
+        }
+        float brk = uDetail > 0.5 ? mix(texture2D(tNoise, (xz - o0 * 0.7) / 26.0).a, texture2D(tNoise, (xz - o1 * 0.7) / 26.0 + 0.5).a, wb)
+                                  : texture2D(tNoise, (xz - fl * 0.7 * T * 0.5) / 26.0).a;
+        float pot = clamp(vFx.y * (0.45 + 1.0 * brk) + wv * 0.7 * pow(max(sin(ph), 0.0), 5.0) + 1.1 * steep, 0.0, 1.2);
+        float foam = smoothstep(1.0 - pot, 1.5 - pot, fp + 0.12 * pot) * smoothstep(0.0, 0.1, depth + steep);
         // churn where the falls lands: rings of foam spreading over the pool
         float df = distance(vWorld.xz, uFallsBase.xz);
         float churn = (1.0 - smoothstep(2.0, 13.0, df)) * (0.55 + 0.45 * sin(df * 2.2 - t * 3.0));
-        float st = flowN(lxz, fl, speed * 0.35, vec2(0.5, 2.5), t) * 0.6 + flowN(lxz, fl, speed * 0.7, vec2(1.6, 7.0), t + 2.1) * 0.4;
-        // (broken up by a world-space break-up noise: tongues of dark water between the white)
-        float brk = vn(lxz * 0.45) * 0.6 + vn(lxz * 1.3) * 0.4;
-        float foam = max(ww * smoothstep(0.5, 0.9, 0.15 + 0.6 * st + 0.4 * brk) * mix(0.55, 1.0, smoothstep(0.15, 0.4, vSteep)),
-                         churn * smoothstep(0.3, 0.8, vn(vWorld.xz * 1.7 + t * 0.6)));
+        foam = max(foam, churn * smoothstep(0.35, 0.75, texture2D(tNoise, vWorld.xz / 3.0 + t * 0.07).b));
         foam = clamp(foam, 0.0, 1.0);
-        vec3 white = vec3(0.86, 0.88, 0.86) * (uSunColor * 0.5 * l.a * l.g + uSkyColor * (0.45 + 0.55 * l.b));
-        col = mix(col, white, foam);
+        // (aerated, not paint: brighter in the cells' crowns, blue-grey where only the sky lights it)
+        vec3 white = vec3(0.8, 0.85, 0.86) * (uSunColor * 0.55 * sunVis + uSkyColor * (0.38 + 0.4 * l.b)) * (0.7 + 0.45 * fpA);
+        col = mix(col, white, foam * 0.94);
+        // the low sun's glints on the ripples
+        float sd = max(dot(rd, uSunDir), 0.0);
+        col += uSunColor * (pow(sd, 1400.0) * 12.0 + pow(sd, 110.0) * 0.25) * sunVis * (1.0 - foam);
         gl_FragColor = vec4(applyAtmosphere(col, vWorld), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -225,15 +391,22 @@ export function buildWater(world, uniforms, tex) {
   const mesh = new THREE.Mesh(g, mat);
   mesh.name = 'Wild_Water';
   mesh.position.y = 0.02;
-  if (falls) mesh.add(buildFalls(world, uniforms, tex, falls));
-  return mesh;
+  const grp = new THREE.Group();
+  grp.name = 'Wild_WaterGroup';
+  grp.add(mesh);
+  if (falls) grp.add(buildFallsSheet(world, uniforms, tex, falls));
+  grp.add(buildMist(world, uniforms, tex, falls));
+  tex.waterLevel = waterLevelTexture(world);          // (the props' wet line: level.js kitPropMaterial)
+  // the quality levels drop the ripples' fine layer at q0-1 (main.js quality.setLevel calls this)
+  // (and draw half the mist cards: additive overdraw is the software renderer's cost)
+  const mist = grp.children.find((o) => o.name === 'Wild_Mist'), mistN = mist.geometry.index.count;
+  grp.userData.setLow = (low) => { mat.uniforms.uDetail.value = low ? 0 : 1; mist.geometry.setDrawRange(0, low ? Math.min(mistN, 6 * 24) : mistN); };
+  return grp;
 }
 
 // The falls: a translucent, bowed sheet from the lip's water to the pool, streaks pouring down it
-// (fast, broken, thinning to show the dark wet rock behind), and its spray: a few camera-facing
-// cards of drifting mist at the foot (additive, like fire.js's flames: no textures, no lights).
-// Two draw calls.
-function buildFalls(world, uniforms, tex, f) {
+// (fast, broken, thinning to show the dark wet rock behind). Its spray is in the mist (buildMist).
+function buildFallsSheet(world, uniforms, tex, f) {
   const oy = world.meta.estate_offset[1];
   const top = new THREE.Vector3(f.x0, f.z0, -(f.y0 - oy)), bot = new THREE.Vector3(f.x1, f.z1, -(f.y1 - oy));
   const fl = new THREE.Vector3(bot.x - top.x, 0, bot.z - top.z).normalize(), side = new THREE.Vector3(-fl.z, 0, fl.x);
@@ -281,58 +454,167 @@ function buildFalls(world, uniforms, tex, f) {
   }));
   sheet.name = 'Wild_Falls';
   sheet.renderOrder = 10;
-  // spray: 10 cards around the foot of the falls, billboarded, drifting and pulsing
-  const N = 10, SP = [], SC = [], SI = [];
-  const rr = rng(23);
-  for (let k = 0; k < N; k++) {
-    const c = bot.clone().addScaledVector(side, (rr() - 0.5) * f.width * 1.2).addScaledVector(fl, -0.5 + rr() * 5).add(new THREE.Vector3(0, rr() * 3, 0));
-    const s = 3.5 + rr() * 4.5;
-    for (const [qx, qy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { SP.push(c.x, c.y, c.z); SC.push(qx, qy, s, rr()); }
-    const o = k * 4; SI.push(o, o + 1, o + 2, o, o + 2, o + 3);
+  return sheet;
+}
+
+// ---------------------------------------------------------------- mist
+// Spray and mist as one draw: camera-facing additive cards (no textures, no lights), drifting up
+// and pulsing: a cluster at the foot of the falls, and over the river wherever the water falls
+// steeply through heavy white water (the Narrows cascade, the ledges, the big rapids), sized and
+// placed from the water's own foam and slope.
+function buildMist(world, uniforms, tex, falls) {
+  const oy = world.meta.estate_offset[1], { res, spacing, size, water } = world, half = size / 2, fx = world.waterFx;
+  const rr = rng(23), cards = [];                        // [x, y, z, size, strength]
+  if (falls) {
+    const top = new THREE.Vector3(falls.x0, falls.z0, -(falls.y0 - oy)), bot = new THREE.Vector3(falls.x1, falls.z1, -(falls.y1 - oy));
+    const fl = new THREE.Vector3(bot.x - top.x, 0, bot.z - top.z).normalize(), side = new THREE.Vector3(-fl.z, 0, fl.x);
+    for (let k = 0; k < 10; k++) {
+      const c = bot.clone().addScaledVector(side, (rr() - 0.5) * falls.width * 1.2).addScaledVector(fl, -0.5 + rr() * 5).add(new THREE.Vector3(0, rr() * 3, 0));
+      cards.push([c.x, c.y, c.z, 3.5 + rr() * 4.5, 1]);
+    }
   }
+  if (fx) {
+    // the best cell per 9 m block: foam x steepness (the surface's fall over 3 m)
+    const B = 6, best = new Map();
+    for (let j = 2; j < res - 2; j++) for (let i = 2; i < res - 2; i++) {
+      const k = i + j * res, h = water[k];
+      if (!Number.isFinite(h) || fx.foam[k] < 0.55) continue;
+      const a = water[k - 2], b = water[k + 2], c = water[k - 2 * res], d = water[k + 2 * res];
+      if (![a, b, c, d].every(Number.isFinite)) continue;
+      const s = Math.hypot(b - a, d - c) / (4 * spacing);
+      const score = fx.foam[k] * Math.min(1, s / 0.12);
+      if (score < 0.35) continue;
+      const key = `${Math.floor(i / B)},${Math.floor(j / B)}`, o = best.get(key);
+      if (!o || score > o[1]) best.set(key, [k, score, s]);
+    }
+    const list = [...best.values()].sort((p, q) => q[1] - p[1]).slice(0, 60);
+    for (const [k, score, s] of list) {
+      const i = k % res, j = Math.floor(k / res);
+      const x = -half + i * spacing + (rr() - 0.5) * spacing * B, z = -half + j * spacing + (rr() - 0.5) * spacing * B;
+      cards.push([x, water[k] + 0.6 + rr() * 1.5, z, 2.5 + 5 * Math.min(1, s / 0.3) + rr() * 2, 0.45 + 0.55 * score]);
+    }
+  }
+  const SP = [], SC = [], SS = [], SI = [];
+  cards.forEach(([x, y, z, s, a], k) => {
+    const seed = rr();
+    for (const [qx, qy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { SP.push(x, y, z); SC.push(qx, qy, s, seed); SS.push(a); }
+    const o = k * 4; SI.push(o, o + 1, o + 2, o, o + 2, o + 3);
+  });
   const sg = new THREE.BufferGeometry();
   sg.setAttribute('position', new THREE.Float32BufferAttribute(SP, 3));
   sg.setAttribute('corner', new THREE.Float32BufferAttribute(SC, 4));
+  sg.setAttribute('strength', new THREE.Float32BufferAttribute(SS, 1));
   sg.setIndex(SI);
-  const spray = new THREE.Mesh(sg, new THREE.ShaderMaterial({
+  const U = { ...uniforms, uLight: { value: tex.light }, uMapXf: { value: new THREE.Vector4(-half, -half, 1 / size, 1) } };
+  const mist = new THREE.Mesh(sg, new THREE.ShaderMaterial({
     uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     vertexShader: /* glsl */`
       uniform float uTime;
       attribute vec4 corner;
-      varying vec2 vQ; varying float vSeed; varying vec3 vWorld;
+      attribute float strength;
+      varying vec2 vQ; varying float vSeed, vStr; varying vec3 vWorld;
       void main() {
-        float ph = fract(uTime * (0.12 + 0.05 * corner.w) + corner.w);
+        float rate = 0.12 + 0.05 * corner.w;
+        float ph = fract(uTime * rate + corner.w);
         vec3 c = position + vec3(0.0, ph * 4.0, 0.0);
         float s = corner.z * (0.6 + 0.8 * ph);
         vec3 right = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
         vec3 up = vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
         vec3 w = c + (right * corner.x + up * corner.y) * s;
-        vQ = corner.xy; vSeed = corner.w + floor(uTime * (0.12 + 0.05 * corner.w) + corner.w) * 0.37; vWorld = w;
+        vQ = corner.xy; vSeed = corner.w + floor(uTime * rate + corner.w) * 0.37; vWorld = w; vStr = strength;
         gl_Position = projectionMatrix * viewMatrix * vec4(w, 1.0);
       }`,
     fragmentShader: /* glsl */`
       uniform sampler2D uLight; uniform vec4 uMapXf; uniform vec3 uSunColor, uSkyColor;
-      varying vec2 vQ; varying float vSeed; varying vec3 vWorld;
+      varying vec2 vQ; varying float vSeed, vStr; varying vec3 vWorld;
       ${ATMOSPHERE_PARS}
       float hn(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
         return mix(mix(hn(i), hn(i + vec2(1, 0)), f.x), mix(hn(i + vec2(0, 1)), hn(i + vec2(1, 1)), f.x), f.y); }
       void main() {
         float r = length(vQ);
+        if (r > 1.0) discard;
         float puff = (1.0 - smoothstep(0.2, 1.0, r)) * (0.45 + 0.55 * vn(vQ * 2.6 + vSeed * 17.0 + uTime * 0.3));
         float ph = fract(uTime * 0.15 + vSeed);
-        float a = puff * 0.12 * sin(ph * 3.1416);
-        vec4 l = textureLod(uLight, (vWorld.xz - uMapXf.xy) * uMapXf.z, 0.0);
-        vec3 c = (uSunColor * 0.5 * l.a * l.g + uSkyColor * 0.6) * a;
+        float a = puff * 0.12 * sin(ph * 3.1416) * vStr;
+        vec2 mu = (vWorld.xz - uMapXf.xy) * uMapXf.z;
+        vec4 l = all(greaterThan(mu, vec2(0.0))) && all(lessThan(mu, vec2(1.0))) ? textureLod(uLight, mu, 0.0) : vec4(1.0);
+        // (backlit by the low sun, mist glows: forward scatter toward the sun)
+        vec3 vd = normalize(vWorld - cameraPosition);
+        float fwd = pow(max(dot(vd, uSunDir), 0.0), 6.0);
+        vec3 c = (uSunColor * (0.5 + 1.5 * fwd) * l.a * l.g + uSkyColor * 0.6) * a;
         gl_FragColor = vec4(c, 1.0);
       }`,
   }));
-  spray.name = 'Wild_Spray';
-  spray.frustumCulled = false;
-  spray.renderOrder = 11;
-  const grp = new THREE.Group();
-  grp.add(sheet, spray);
-  grp.position.y = -0.02;
-  return grp;
+  mist.name = 'Wild_Mist';
+  mist.frustumCulled = false;
+  mist.renderOrder = 11;
+  return mist;
 }
 
+// ---------------------------------------------------------------- the props' wet line
+// RG half float over the square at 3 m: r = the nearest water's level (within ~9 m; -9999 beyond),
+// g = its foam (the splash height). level.js kitPropMaterial darkens rock and wood below
+// level + splash (a dark wet band at the waterline, higher where the river is white).
+function waterLevelTexture(world) {
+  const { res, water } = world, fx = world.waterFx, S = 2, m = Math.floor((res - 1) / S) + 1;
+  const lv = new Float32Array(m * m).fill(-9999), fo = new Float32Array(m * m), dist = new Float32Array(m * m).fill(1e9);
+  for (let j = 0; j < m; j++) for (let i = 0; i < m; i++) {
+    const k = i * S + j * S * res, o = i + j * m;
+    if (Number.isFinite(water[k])) { lv[o] = water[k]; fo[o] = fx ? fx.foam[k] : 0; dist[o] = 0; }
+  }
+  const relax = (o, oo, d) => { if (dist[oo] + d < dist[o]) { dist[o] = dist[oo] + d; lv[o] = lv[oo]; fo[o] = fo[oo]; } };
+  for (let j = 1; j < m; j++) for (let i = 1; i < m - 1; i++) { const o = i + j * m; relax(o, o - 1, 1); relax(o, o - m, 1); relax(o, o - m - 1, 1.41); relax(o, o - m + 1, 1.41); }
+  for (let j = m - 2; j >= 0; j--) for (let i = m - 2; i > 0; i--) { const o = i + j * m; relax(o, o + 1, 1); relax(o, o + m, 1); relax(o, o + m + 1, 1.41); relax(o, o + m - 1, 1.41); }
+  const data = new Uint16Array(m * m * 2);
+  for (let o = 0; o < m * m; o++) {
+    data[o * 2] = THREE.DataUtils.toHalfFloat(dist[o] <= 3 ? lv[o] : -9999);
+    data[o * 2 + 1] = THREE.DataUtils.toHalfFloat(fo[o]);
+  }
+  const t = new THREE.DataTexture(data, m, m, THREE.RGFormat, THREE.HalfFloatType);
+  t.minFilter = t.magFilter = THREE.LinearFilter; t.needsUpdate = true; t.name = 'water_level';
+  return t;
+}
+
+// ---------------------------------------------------------------- wet banks
+// The terrain's wet / cobble mask (R8G8 over the heightfield's vertices; terrain.js tWet): r = wet
+// (the banks within ~2-6 m of the water, wider where the river is white and splashes; the falls'
+// spray zone and its face), g = cobble bar (low, flat ground beside the water: under 2 m above the
+// nearest water within 34 m). A chamfer distance from the water raster carrying the nearest
+// water's level and foam. (It replaces main.js's wetTexture, which had no foam to go on.)
+export function waterWetTexture(world) {
+  const { res, spacing, water, heights, size } = world, n = res * res, fx = world.waterFx;
+  const dist = new Float32Array(n).fill(1e9), lvl = new Float32Array(n), fo = new Float32Array(n);
+  for (let k = 0; k < n; k++) if (Number.isFinite(water[k])) { dist[k] = 0; lvl[k] = water[k]; fo[k] = fx ? fx.foam[k] : 0; }
+  const a = spacing, b = spacing * Math.SQRT2;
+  const relax = (k, kk, d) => { const v = dist[kk] + d; if (v < dist[k]) { dist[k] = v; lvl[k] = lvl[kk]; fo[k] = fo[kk]; } };
+  for (let j = 0; j < res; j++) for (let i = 0; i < res; i++) {
+    const k = i + j * res;
+    if (i > 0) relax(k, k - 1, a);
+    if (j > 0) { relax(k, k - res, a); if (i > 0) relax(k, k - res - 1, b); if (i < res - 1) relax(k, k - res + 1, b); }
+  }
+  for (let j = res - 1; j >= 0; j--) for (let i = res - 1; i >= 0; i--) {
+    const k = i + j * res;
+    if (i < res - 1) relax(k, k + 1, a);
+    if (j < res - 1) { relax(k, k + res, a); if (i < res - 1) relax(k, k + res + 1, b); if (i > 0) relax(k, k + res - 1, b); }
+  }
+  const out = new Uint8Array(n * 2), half = size / 2;
+  const f = world.props?.authored?.find((p) => p.kind === 'falls'), oy = world.meta.estate_offset[1];
+  const fx0 = f ? f.x1 : 1e9, fz0 = f ? -(f.y1 - oy) : 1e9, tx = f ? f.x0 : 1e9, tz = f ? -(f.y0 - oy) : 1e9;
+  for (let j = 0; j < res; j++) for (let i = 0; i < res; i++) {
+    const k = i + j * res, x = -half + i * spacing, z = -half + j * spacing;
+    const above = heights[k] - lvl[k];
+    const reach = 2.2 + 4.5 * fo[k];
+    let wet = Math.max(0, 1 - dist[k] / reach) ** 0.7 * (above < 0.6 + 2.5 * fo[k] ? 1 : 0.35);
+    if (f) {
+      const d = Math.hypot(x - fx0, z - fz0), dt = Math.hypot(x - tx, z - tz);
+      wet = Math.max(wet, Math.max(0, 1 - d / 26), Math.max(0, 1 - dt / 16) * 0.9);
+    }
+    const bar = dist[k] < 34 && dist[k] > 0 ? Math.max(0, 1 - Math.max(0, above - 0.6) / 1.6) * (1 - Math.max(0, dist[k] - 26) / 8) : 0;
+    out[k * 2] = Math.round(Math.min(1, wet) * 255); out[k * 2 + 1] = Math.round(Math.min(1, bar) * 255);
+  }
+  const t = new THREE.DataTexture(out, res, res, THREE.RGFormat, THREE.UnsignedByteType);
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+  t.name = 'wet_cobble';
+  return t;
+}

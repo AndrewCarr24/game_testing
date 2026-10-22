@@ -67,7 +67,9 @@ export function kitPropMaterial(uniforms, tex, world, maps) {
   const w = maps.wood || maps.shell, sh = maps.shell || w, so = maps.soil || w;
   return new THREE.ShaderMaterial({
     uniforms: { ...uniforms, uLight: { value: tex.light }, uMapXf: { value: new THREE.Vector4(-world.size / 2, -world.size / 2, 1 / world.size, 1) },
-      tWood: { value: w }, tMoss: { value: sh }, tSoil: { value: so }, uBounce: uniforms.uBounce || { value: new THREE.Color(0.16, 0.2, 0.1) } },
+      tWood: { value: w }, tMoss: { value: sh }, tSoil: { value: so }, uBounce: uniforms.uBounce || { value: new THREE.Color(0.16, 0.2, 0.1) },
+      // [water] the wet line: the nearest water's level + foam (water.js waterLevelTexture)
+      tWaterLvl: { value: tex.waterLevel || null }, uHasWL: { value: tex.waterLevel ? 1 : 0 } },
     vertexShader: /* glsl */`
       attribute float ao, part;
       varying vec3 vWorld, vN; varying vec2 vUv; varying float vAO, vPart;
@@ -78,15 +80,28 @@ export function kitPropMaterial(uniforms, tex, world, maps) {
         gl_Position = projectionMatrix * viewMatrix * wp;
       }`,
     fragmentShader: /* glsl */`
-      uniform sampler2D tWood, tMoss, tSoil;
+      uniform sampler2D tWood, tMoss, tSoil, tWaterLvl;
       uniform vec3 uBounce;
+      uniform float uHasWL;
       varying vec3 vWorld, vN; varying vec2 vUv; varying float vAO, vPart;
       ${ATMOSPHERE_PARS}
       ${LIT_PARS}
       void main() {
         vec3 n = normalize(vN);
         vec3 alb = vPart > 2.5 ? texture2D(tSoil, vUv).rgb : vPart > 0.5 ? texture2D(tMoss, vUv).rgb : texture2D(tWood, vUv).rgb;
+        float wetK = 0.0;
+        if (uHasWL > 0.5) {            // [water] wet below the waterline + splash (higher where the river is white)
+          vec2 wq = texture2D(tWaterLvl, (vWorld.xz - uMapXf.xy) * uMapXf.z).rg;
+          float above = vWorld.y - wq.x;
+          wetK = (1.0 - smoothstep(0.0, 0.15 + 1.3 * wq.y, above)) * step(-50.0, above + 0.0) * step(wq.x, 9000.0) * step(-9000.0, wq.x);
+          alb = mix(alb, alb * vec3(0.42, 0.44, 0.4), wetK);
+          alb = mix(alb, alb * vec3(0.75, 0.9, 0.55), (1.0 - smoothstep(-0.4, 0.0, above)) * wetK * 0.7);   // (algae at the line)
+        }
         vec3 col = litColor(alb * mix(vAO, 1.0, 0.25), n, vWorld, 0.15) + alb * uBounce * 0.5 * vAO;
+        if (wetK > 0.0) {              // [water] wet sheen toward the low sun
+          vec3 vdir = normalize(vWorld - cameraPosition), rf = reflect(vdir, n);
+          col += uSunColor * pow(max(dot(rf, uSunDir), 0.0), 40.0) * 0.12 * wetK;
+        }
         gl_FragColor = vec4(applyAtmosphere(col, vWorld), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>

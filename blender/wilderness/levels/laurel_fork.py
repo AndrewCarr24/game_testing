@@ -65,8 +65,9 @@ VALLEYS = [
     # through the Narrows and out of the square toward the town, the valley opening as it goes
     dict(kind="valley", name="laurel_river", points=[
         # (depths: the square tilts down to the south, so the gorge is cut less there; the bed falls
-        # from ~-135 at the south edge to ~-150 at the confluence)
-        (-660, -2400, 50, 700), (-630, -1750, 60, 560), (-605, -1380, 84, 520), (-592, -1190, 110, 470),
+        # from ~-135 at the south edge to ~-150 at the confluence; an S-bend at y -1420..-1160, the
+        # long pool against its east cut bank with a cobble bar inside)
+        (-660, -2400, 50, 700), (-630, -1750, 60, 560), (-640, -1420, 84, 520), (-572, -1290, 98, 490), (-598, -1160, 110, 470),
         (-575, -1010, 83, 420), (-548, -850, 58, 380), (-528, -745, 18, 360)]),
     dict(kind="valley", name="laurel_river_lower", points=[
         (-528, -745, 18, 360), (-700, -752, 20, 420), (-900, -762, 30, 520), (-1300, -780, 95, 760),
@@ -88,6 +89,28 @@ KNICKS = [dict(name="laurel_falls", height=16.0, width=170.0, lip=4.0, fade=60.0
           dict(name="shoals", height=1.6, width=90.0, lip=5.0, fade=60.0,
                points=[(-582, -1060), (-572, -990), (-548, -850), (-530, -760), (-600, -745), (-700, -752),
                        (-900, -762), (-1150, -772)])]
+# the Laurel River's channel (terrain.apply_channel_profiles / apply_channel_beds): its 1.5-3% fall
+# through the gorge gathered into a pool-drop sequence, as on the Nantahala and the Linville below
+# their falls: long glassy pools, shallow riffles over cobbles, boulder rapids, two ledges; the bed
+# deep in the pools and against the outside of bends, bedrock shelves on one side of two pools.
+# The line follows the carved main stem from the inflow to the lip of the Narrows cascade (the
+# cascade, the confluence and the reach below toward the town are untouched).
+RIVER_CHANNEL = dict(
+    name="laurel_river", half_width=60.0, fade=40.0,
+    points=[(-642, -1565), (-639, -1463), (-633, -1419), (-642, -1373), (-631, -1322), (-610, -1275),
+            (-586, -1181), (-590, -1133), (-598, -1083), (-581, -1037), (-579, -989), (-573, -941),
+            (-569, -893), (-566, -814)],
+    steps=[dict(at=(-612, -1462), length=34.0, kind="rapid", depth=0.7),            # Inflow rapid
+           dict(at=(-617, -1368), length=9.0, kind="ledge", hole=3.6),              # the first ledge
+           dict(at=(-604, -1236), length=40.0, kind="riffle", depth=0.45),          # tailout riffle of the long pool
+           dict(at=(-592, -1128), length=42.0, kind="rapid", depth=0.7),
+           dict(at=(-584, -1074), length=78.0, kind="rapid", depth=0.65),           # the Shoals
+           dict(at=(-575, -948), length=10.0, kind="ledge", hole=3.8),              # Laurel Ledge
+           dict(at=(-570, -893), length=26.0, kind="riffle", depth=0.5)],           # into the bridge pool
+    bed=dict(pool_depth=3.3, riffle_depth=0.55, lip_depth=0.35, bend_k=110.0, min_width=15.0,
+             shelves=[dict(start=(-618, -1345), end=(-606, -1262), side=+1, depth=0.22, **{"from": 0.2}),
+                      dict(start=(-579, -995), end=(-575, -958), side=-1, depth=0.28, **{"from": 0.25})],
+             cut_bank=dict(kap=0.004, deg=62.0, width=6.0)))
 CLIFFS = [
     dict(name="falls", points=[(-80, -720), (-92, -660), (-100, -600)], height=14.0, side=+1,
          edge=1.5, back=25.0, end_fade=22.0, jitter=1.2, talus_deg=45.0),
@@ -180,6 +203,11 @@ def local(pt):
     return (pt[0], pt[1] + OFFSET_Y) + tuple(pt[2:])
 
 
+def channel_local(c):
+    b = dict(c["bed"], shelves=[dict(sh, start=local(sh["start"]), end=local(sh["end"])) for sh in c["bed"].get("shelves", [])])
+    return dict(c, points=[local(q) for q in c["points"]], steps=[dict(st, at=local(st["at"])) for st in c["steps"]], bed=b)
+
+
 def terrain_overrides(cell=1.5):
     shp = [dict(s, points=[local(q) for q in s["points"]]) for s in RIDGES + VALLEYS]
     ex, ey = ESTATE_LAWN["x"], ESTATE_LAWN["y"]
@@ -206,6 +234,7 @@ def terrain_overrides(cell=1.5):
                      **({"pool": dict(k["pool"], center=local(k["pool"]["center"]))} if k.get("pool") else {}))
                 for k in KNICKS],
         cliffs=[dict(c, points=[local(q) for q in c["points"]]) for c in CLIFFS],
+        channels=[channel_local(RIVER_CHANNEL)],
         pads=[dict(p, center=local(p["center"])) for p in PADS],
         paths=[dict(p, points=[local(q) for q in p["points"]]) for p in PATHS],
         # forested slopes reach 45 deg in the southern Appalachians: rock only above ~50 or on cliffs

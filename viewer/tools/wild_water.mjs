@@ -42,9 +42,10 @@ try {
     // down the main stem's thalweg: the wettest point of each row every 10 m
     const along = [];
     for (let ye = -1500; ye <= -800; ye += 10) {
-      let best = null;
-      for (let xe = -700; xe <= -500; xe += 1) { const p = at(xe, ye); if (p.wet && (!best || p.d > best.d)) best = p; }
-      if (best) along.push(best);
+      // (the row's deepest point, with the row's mean current: eddies behind rocks run upstream by design)
+      let best = null, mz = 0, nw = 0;
+      for (let xe = -700; xe <= -500; xe += 1) { const p = at(xe, ye); if (p.wet) { mz += p.vz; nw++; if (!best || p.d > best.d) best = p; } }
+      if (best) { best.vzRow = mz / nw; along.push(best); }
     }
     // continuity: the surface between two samples 5 cm apart never jumps
     let jump = 0;
@@ -54,7 +55,15 @@ try {
     }
     const calls = [];
     window.__three.scene.traverse((o) => { if (o.isMesh && /Water|Falls|Spray|Mist/.test(o.name)) calls.push(o.name); });
-    return { across, along, jump, calls, dry: at(-480, -848) };
+    // reaches (estate frame boxes): the speeds the swimming / wading physics relies on
+    // (the river-interaction workstream: bridge pool <= 0.8 m/s, shoals >= 2.1, Narrows >= 3.2,
+    // pools flowing coherently downstream) and a wadeable crossing at the shoals
+    const box = (x0, x1, y0, y1) => { const out = [];
+      for (let ye = y0; ye <= y1; ye += 2) for (let xe = x0; xe <= x1; xe += 2) { const p = at(xe, ye); if (p.wet && p.d > 0.1) out.push(p); }
+      return out; };
+    const reaches = { bridge_pool: box(-590, -540, -860, -815), shoals: box(-630, -555, -1065, -1005), narrows: box(-720, -600, -770, -735),
+      long_pool: box(-660, -585, -1345, -1290) };
+    return { across, along, jump, calls, dry: at(-480, -848), reaches };
   });
   if (r.error) { console.log('FAIL', r.error); fail++; }
   else {
@@ -64,13 +73,28 @@ try {
     if (wetAcross.length < 8) { console.log('FAIL the river is not under the bridge'); fail++; }
     const bad = r.across.filter((p) => p.wet && Math.abs(p.s - p.g - p.d) > 1e-3);
     if (bad.length) { console.log('FAIL depth != surface - ground at', bad.length, 'samples'); fail++; }
-    const up = r.along.filter((p) => p.vz > 0.05);            // (north = -z: a +z current runs upstream)
+    const up = r.along.filter((p) => p.vzRow > 0.02);        // (north = -z: a +z net current runs upstream)
     console.log(`thalweg samples ${r.along.length}; speed p50 ${r.along.map((p) => p.v).sort((a, b) => a - b)[r.along.length >> 1]?.toFixed(2)} m/s, max ${Math.max(...r.along.map((p) => p.v)).toFixed(2)}; running upstream at ${up.length}`);
     if (up.length > r.along.length * 0.1) { console.log('FAIL the current runs upstream at', up.map((p) => p.ye).join(',')); fail++; }
     console.log(`surface jump over 5 cm: ${r.jump.toFixed(3)} m`);
     if (r.jump > 0.25) { console.log('FAIL surface not continuous'); fail++; }
     if (r.dry.wet || r.dry.v > 0) { console.log('FAIL dry bank reads wet'); fail++; }
     console.log('water meshes:', r.calls.join(', '));
+    const q = (a, f) => { const v = a.map(f).sort((x, y) => x - y); return v.length ? v[Math.min(v.length - 1, Math.floor(v.length * 0.5))] : NaN; };
+    const q90 = (a, f) => { const v = a.map(f).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length * 0.9)] : NaN; };
+    for (const [k, a] of Object.entries(r.reaches)) {
+      const north = a.filter((p) => p.v > 0.05).filter((p) => (k === 'narrows' ? p.vx < 0 : p.vz < 0)).length / Math.max(1, a.filter((p) => p.v > 0.05).length);
+      console.log(`  ${k.padEnd(12)} ${a.length} samples: speed p50 ${q(a, (p) => p.v).toFixed(2)} p90 ${q90(a, (p) => p.v).toFixed(2)} m/s, depth p50 ${q(a, (p) => p.d).toFixed(2)} m, downstream ${(north * 100).toFixed(0)}%`);
+    }
+    const R = r.reaches;
+    if (!(q(R.bridge_pool, (p) => p.v) <= 0.8)) { console.log('FAIL bridge pool faster than 0.8 m/s'); fail++; }
+    if (!(q90(R.shoals, (p) => p.v) >= 2.1)) { console.log('FAIL shoals slower than 2.1 m/s (p90)'); fail++; }
+    if (!(q90(R.narrows, (p) => p.v) >= 3.2)) { console.log('FAIL Narrows slower than 3.2 m/s (p90)'); fail++; }
+    if (!(q(R.shoals, (p) => p.d) <= 0.9)) { console.log('FAIL the shoals are not wadeable (depth p50 > 0.9 m)'); fail++; }
+    for (const k of ['bridge_pool', 'long_pool']) {
+      const a = R[k].filter((p) => p.v > 0.05), down = a.filter((p) => p.vz < 0).length / Math.max(1, a.length);
+      if (down < 0.8) { console.log(`FAIL ${k}: only ${(down * 100).toFixed(0)}% flows downstream`); fail++; }
+    }
     console.log('profile (ye: depth / speed):', r.along.filter((_, i) => i % 5 === 0).map((p) => `${p.ye}: ${p.d.toFixed(1)}/${p.v.toFixed(1)}`).join('  '));
   }
   if (errors.length) { console.log('page errors:', errors.join('\n')); fail++; }
