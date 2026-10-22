@@ -62,6 +62,8 @@ export class Town {
     const T = world.meta.town, oy = world.meta.estate_offset[1];
     this.world = world; this.town = T;
     const lit = [], glow = [];
+    const kitHas = new Set(params0().get('kit') === '0' ? [] : T.kit || []);
+    if (params0().get('kit') === '0') { for (const b of T.buildings) b.kit = false; T.kit = []; }
     const W = (x, y, z) => new THREE.Vector3(x, z, -(y - oy));
     // an asset-frame box (u across, v back, z up) placed by a building / object frame
     const place = (x, y, z, yawDeg) => new THREE.Matrix4().compose(W(x, y, z), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yawDeg * Math.PI / 180), new THREE.Vector3(1, 1, 1));
@@ -184,6 +186,7 @@ export class Town {
       };
       const at = (t, off = 0, up = 0) => A.clone().lerp(B, t).addScaledVector(sd, off).add(new THREE.Vector3(0, up, 0));
       const hw = br.width / 2;
+      if (br.kind === 'truss' && kitHas.has('town_truss_span')) continue;     // (the kit's spans and pier: loadKit)
       if (br.kind === 'truss') {
         const g = new THREE.BoxGeometry(L, 0.5, br.width + 0.6); g.applyMatrix4(new THREE.Matrix4().compose(at(0.5, 0, -0.27), q, new THREE.Vector3(1, 1, 1)));
         lit.push(setColor(g.toNonIndexed(), C.asphalt2));
@@ -230,6 +233,7 @@ export class Town {
     }
     // ---- vehicles (the invaders' vans among them), the evidence, the townspeople's stand-ins
     for (const v of T.vehicles) {
+      if (kitHas.has(`town_${v.kind}`)) continue;     // (drawn from the kit)
       const [L, Wd, Hh] = VEH[v.kind] || VEH.car, M = place(v.x, v.y, v.z, v.yaw - 90);
       const col = v.kind === 'van' ? [0.03, 0.035, 0.04] : v.kind === 'cruiser' ? [0.8, 0.8, 0.8] : v.kind === 'train' ? [0.35, 0.06, 0.05] : pick(CARS, `${v.x},${v.y}`);
       if (v.kind === 'train') {
@@ -243,7 +247,7 @@ export class Town {
       if (v.kind === 'cruiser') { abox(M, -0.6, -0.3, Hh, 0.6, 0.3, Hh + 0.15, [0.1, 0.1, 0.8]); abox(M, -Wd / 2 - 0.01, -L / 2 + 1.5, 0.6, Wd / 2 + 0.01, L / 2 - 1.5, 0.9, [0.05, 0.05, 0.05]); }
     }
     for (const e of T.evidence) {
-      if (e.kind === 'van') continue;
+      if (e.kind === 'van' || kitHas.has(EVIDENCE_KIT[e.kind])) continue;
       const M = place(e.x, e.y, e.z, e.yaw - 90);
       if (e.kind === 'crates') abox(M, -0.6, -1.2, 0, 0.6, 1.2, 1.6, [0.4, 0.3, 0.18]);
       else if (e.kind === 'masks') { abox(M, -0.02, -1.8, 1.7, 0.02, 1.8, 1.73, [0.1, 0.1, 0.1]); for (let k = -3; k <= 3; k++) abox(M, -0.12, k * 0.5 - 0.12, 1.35, 0.12, k * 0.5 + 0.12, 1.68, [0.86, 0.85, 0.8]); }
@@ -282,26 +286,174 @@ export class Town {
     if (lit.length) { const m = new THREE.Mesh(merge(lit), litMaterial(uniforms, tex, world, { mossy: 0 })); m.name = 'Wild_Town'; m.frustumCulled = false; this.group.add(m); }
     if (glow.length) { const m = new THREE.Mesh(merge(glow), emissiveMaterial(uniforms)); m.name = 'Wild_Town_Glow'; m.frustumCulled = false; this.group.add(m); }
     this.stats = { buildings: T.buildings.length, litTris: lit.reduce((n, g) => n + g.attributes.position.count / 3, 0) };
-    if ((T.kit || []).length) this.loadKit(uniforms, tex).catch((e) => console.warn('town kit:', e));
+    this.zones = [];
+    this.ready = (T.kit || []).length ? this.loadKit(uniforms, tex).catch((e) => console.warn('town kit:', e)) : Promise.resolve();
   }
 
-  // The kit's glTFs (design/town/kit_status.md) in place of the boxes: one shared lit material
-  // over the kit's atlas; emissive parts keep an unlit look. Each placement is a clone.
+  // The kit's glTFs (design/town/kit_status.md) in place of the boxes. Every placement's meshes
+  // are baked into world space and merged per 250 m zone x LOD x material (M_Town_Atlas lit like
+  // the wilderness, M_Town_Glow unlit): a zone draws its LOD0 within 260 m of the camera, its
+  // LOD1 (palette swatches) beyond. Inside a walk-in (vertices within its footprint, below 3.6 m)
+  // the atlas is drawn unlit x COLOR_0, the kit's baked lamplight (the film-set look it asks for).
   async loadKit(uniforms, tex) {
-    const T = this.town, oy = this.world.meta.estate_offset[1];
+    const T = this.town, world = this.world, oy = world.meta.estate_offset[1];
     const gl = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const models = {};
-    await Promise.all(T.kit.map(async (k) => { try { models[k] = (await gl.loadAsync(`../assets/models/${k}.gltf`)).scene; } catch (e) { console.warn('kit', k, e.message); } }));
+    let atlas = null, glowMap = null;
+    THREE.Cache.enabled = true;          // (every kit glTF names the same atlas: fetch it once)
+    await Promise.all(T.kit.map(async (k) => {
+      try {
+        const g = await gl.loadAsync(`../assets/models/${k}.gltf`);
+        g.scene.updateMatrixWorld(true);
+        const parts = { 0: [], 1: [] };
+        g.scene.traverse((o) => {
+          if (!o.isMesh) return;
+          let lod = 0;
+          for (let p = o; p; p = p.parent) if (/_LOD1$/.test(p.name)) lod = 1;
+          const mats = Array.isArray(o.material) ? o.material : [o.material];
+          const glow = /Glow/i.test(mats[0].name || '');
+          if (!glow && mats[0].map && !atlas) atlas = mats[0].map;
+          if (glow && !glowMap) glowMap = mats[0].emissiveMap || mats[0].map;
+          parts[lod].push({ geo: o.geometry, matrix: o.matrixWorld.clone(), glow });
+        });
+        models[k] = parts;
+      } catch (e) { console.warn('kit', k, e.message); }
+    }));
+    // placements: (kind, matrix, footprint for the inside test)
+    const P = [];
+    const place = (x, y, z, yawDeg) => new THREE.Matrix4().compose(new THREE.Vector3(x, z, -(y - oy)), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yawDeg * Math.PI / 180), new THREE.Vector3(1, 1, 1));
     for (const b of T.buildings) {
-      const src = models[b.kind];
-      if (!src) continue;
-      const o = src.clone(true);
-      o.position.set(b.x, b.z, -(b.y - oy));
-      o.rotation.y = b.yaw * Math.PI / 180;
-      this.group.add(o);
-      b._kit = o;
+      if (!b.kit || !models[b.kind]) continue;
+      const [ox, oyk] = b.kit_offset || [0, 0];
+      // (the asset origin sits kit_offset from the footprint centre: three local x = u, z = -v)
+      const M = place(b.x, b.y, b.z, b.yaw).multiply(new THREE.Matrix4().makeTranslation(-ox, 0, oyk));
+      P.push({ kind: b.kind, M, inside: b.walkin ? { x0: b.kit_offset ? -b.w / 2 + ox + 0.6 : 0, x1: b.w / 2 + ox - 0.6, y0: -b.d / 2 + oyk + 0.6, y1: b.d / 2 + oyk - 0.6 } : null });
+    }
+    for (const v of T.vehicles) if (models[`town_${v.kind}`]) P.push({ kind: `town_${v.kind}`, M: place(v.x, v.y, v.z, v.yaw - 90) });
+    for (const e of T.evidence) { const k = EVIDENCE_KIT[e.kind]; if (models[k]) P.push({ kind: k, M: place(e.x, e.y, e.z, e.yaw - 90) }); }
+    for (const br of T.bridges) {
+      if (br.kind !== 'truss' || !models.town_truss_span) continue;
+      const yaw = Math.atan2(-(br.b[0] - br.a[0]), br.b[1] - br.a[1]) * 180 / Math.PI;     // (the span's +y along a -> b)
+      for (let s = 0; s < br.spans; s++) {
+        const t = (s + 0.5) / br.spans, x = br.a[0] + (br.b[0] - br.a[0]) * t, y = br.a[1] + (br.b[1] - br.a[1]) * t;
+        P.push({ kind: 'town_truss_span', M: place(x, y, br.za + (br.zb - br.za) * t, yaw) });
+      }
+      if (models.town_bridge_pier) for (let s = 1; s < br.spans; s++) {
+        const t = s / br.spans, x = br.a[0] + (br.b[0] - br.a[0]) * t, y = br.a[1] + (br.b[1] - br.a[1]) * t, zt = br.za + (br.zb - br.za) * t - 0.95;
+        const M = place(x, y, zt, yaw).multiply(new THREE.Matrix4().makeScale(1, Math.max(0.3, (zt - (br.water - 3.5)) / 10), 1));
+        P.push({ kind: 'town_bridge_pier', M });
+      }
+    }
+    // bake + bucket
+    const ZONE = 250, buckets = new Map(), v = new THREE.Vector3();
+    for (const pl of P) {
+      const c = new THREE.Vector3().setFromMatrixPosition(pl.M);
+      const key = `${Math.floor(c.x / ZONE)},${Math.floor(c.z / ZONE)}`;
+      for (const lod of [0, 1]) for (const part of models[pl.kind][lod]) {
+        const g = part.geo.clone();
+        for (const name of Object.keys(g.attributes)) if (!['position', 'normal', 'uv', 'color'].includes(name)) g.deleteAttribute(name);
+        const n = g.attributes.position.count;
+        if (!g.attributes.uv) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(n * 2), 2));
+        const col = new Float32Array(n * 3).fill(1);
+        if (g.attributes.color) for (let i = 0; i < n; i++) { col[i * 3] = g.attributes.color.getX(i); col[i * 3 + 1] = g.attributes.color.getY(i); col[i * 3 + 2] = g.attributes.color.getZ(i); }
+        g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        g.applyMatrix4(part.matrix);
+        const ins = new Float32Array(n);
+        if (pl.inside && !part.glow) {
+          const f = pl.inside, p = g.attributes.position;
+          for (let i = 0; i < n; i++) { const x = p.getX(i), y = p.getY(i), vz = -p.getZ(i); ins[i] = x > f.x0 && x < f.x1 && vz > f.y0 && vz < f.y1 && y < 3.6 ? 1 : 0; }
+        }
+        g.setAttribute('inside', new THREE.BufferAttribute(ins, 1));
+        g.applyMatrix4(pl.M);
+        if (!g.attributes.normal) g.computeVertexNormals();
+        const bk = `${key}|${lod}|${part.glow ? 1 : 0}`;
+        if (!buckets.has(bk)) buckets.set(bk, { key, lod, glow: part.glow, geos: [], c: new THREE.Vector3(), n: 0 });
+        const bu = buckets.get(bk); bu.geos.push(g.index ? g : g); bu.c.add(c); bu.n++;
+      }
+    }
+    if (atlas) { atlas.colorSpace = THREE.SRGBColorSpace; }
+    if (glowMap) { glowMap.colorSpace = THREE.SRGBColorSpace; }
+    // (the kit's glow is the same atlas as emission: one texture on the GPU)
+    const matA = kitAtlasMaterial(uniforms, tex, world, atlas), matG = kitGlowMaterial(uniforms, atlas || glowMap);
+    const zones = new Map();
+    let tris = 0;
+    for (const bu of buckets.values()) {
+      const geos = bu.geos.map((g) => (g.index ? g.toNonIndexed() : g));
+      const m = new THREE.Mesh(mergeGeometries(geos), bu.glow ? matG : matA);
+      m.name = `Wild_TownKit_${bu.lod}${bu.glow ? '_Glow' : ''}`;
+      m.frustumCulled = false;
+      if (bu.lod === 0) tris += m.geometry.attributes.position.count / 3;
+      this.group.add(m);
+      if (!zones.has(bu.key)) zones.set(bu.key, { c: bu.c.clone().multiplyScalar(1 / bu.n), lods: [[], []] });
+      zones.get(bu.key).lods[bu.lod].push(m);
+    }
+    this.zones = [...zones.values()];
+    this.stats.kitPlacements = P.length; this.stats.kitTrisLod0 = tris; this.stats.kitZones = this.zones.length;
+    this._last = null;
+  }
+
+  update(camera) {
+    const c = camera.position;
+    for (const z of this.zones) {
+      const near = Math.hypot(c.x - z.c.x, c.z - z.c.z) < 260;
+      for (const m of z.lods[0]) m.visible = near;
+      for (const m of z.lods[1]) m.visible = !near;
     }
   }
+}
+
+const EVIDENCE_KIT = { crates: 'town_crate_stack', crt: 'town_crt_wall', table: 'town_table_phones', model: 'town_estate_model' };
+const params0 = () => new URLSearchParams(location.search);
+
+function kitAtlasMaterial(uniforms, tex, world, map) {
+  return new THREE.ShaderMaterial({
+    uniforms: { ...uniforms, uLight: { value: tex.light }, tAtlas: { value: map },
+      uMapXf: { value: new THREE.Vector4(-world.size / 2, -world.size / 2, 1 / world.size, 1) } },
+    vertexColors: true,
+    vertexShader: /* glsl */`
+      attribute float inside;
+      varying vec3 vWorld, vN, vCol; varying vec2 vUv; varying float vIn;
+      void main() { vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; vN = normalize(mat3(modelMatrix) * normal); vCol = color; vUv = uv; vIn = inside;
+        gl_Position = projectionMatrix * viewMatrix * w; }`,
+    fragmentShader: /* glsl */`
+      uniform sampler2D tAtlas, uLight;
+      uniform vec4 uMapXf;
+      uniform vec3 uSunColor, uSkyColor;
+      varying vec3 vWorld, vN, vCol; varying vec2 vUv; varying float vIn;
+      ${ATMOSPHERE_PARS}
+      void main() {
+        vec3 alb = texture2D(tAtlas, vUv).rgb * vCol;
+        vec3 n = normalize(vN);
+        vec3 col;
+        if (vIn > 0.5) col = alb * 1.3;                                   // a walk-in's room: its baked lamplight
+        else {
+          vec4 l = textureLod(uLight, (vWorld.xz - uMapXf.xy) * uMapXf.z, 0.0);
+          float ndl = clamp((dot(n, uSunDir) + 0.2) / 1.2, 0.0, 1.0);
+          col = alb * (uSunColor * ndl * l.a * l.g + uSkyColor * l.b * (0.6 + 0.4 * n.y) + 0.04);
+        }
+        gl_FragColor = vec4(applyAtmosphere(col, vWorld), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+}
+
+function kitGlowMaterial(uniforms, map) {
+  return new THREE.ShaderMaterial({
+    uniforms: { ...uniforms, tAtlas: { value: map } },
+    vertexShader: /* glsl */`
+      varying vec3 vWorld; varying vec2 vUv;
+      void main() { vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; vUv = uv; gl_Position = projectionMatrix * viewMatrix * w; }`,
+    fragmentShader: /* glsl */`
+      uniform sampler2D tAtlas;
+      varying vec3 vWorld; varying vec2 vUv;
+      ${ATMOSPHERE_PARS}
+      void main() {
+        gl_FragColor = vec4(applyAtmosphere(texture2D(tAtlas, vUv).rgb * 3.0, vWorld), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
 }
 
 // ---------------------------------------------------------------- exits between worlds

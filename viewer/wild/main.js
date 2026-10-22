@@ -234,7 +234,7 @@ async function main() {
     scene.add(props.group);
     if (world.estate) scene.add(buildEstate(world, uniforms, tex));   // [town] (the town has no estate stand-in)
     // [town] the town's buildings, streets, bridges (viewer/wild/town.js)
-    if (world.meta.town?.buildings && params.get('town') !== '0') { town = new Town(world, uniforms, tex); scene.add(town.group); }
+    if (world.meta.town?.buildings && params.get('town') !== '0') { town = new Town(world, uniforms, tex); scene.add(town.group); await town.ready; }
   }
   T.build = Math.round(performance.now() - t0); t0 = performance.now();
 
@@ -387,6 +387,7 @@ async function main() {
     forest.update(camera, frustum);
     if (on('grass')) grassSys.update(camera, frustum);
     props?.update(camera);
+    town?.update(camera);   // [town] the kit's zones: LOD0 near, LOD1 far
     return performance.now() - c0;
   };
   let cullMs = 0;

@@ -195,8 +195,9 @@ def colliders(R, trees, town):
             box3(min(xs) + sh, max(xs) - sh, min(ys) + sh, max(ys) - sh, z + z0, z + z1)
 
     for b in town["buildings"]:
-        for p in b["parts"]:
-            if p[6] in ("glass", "canopy"):
+        # (the kit's own colliders when it is drawn from the kit: walls split at the doors, counters, booths)
+        for p in (b.get("kit_cols") or b["parts"]):
+            if len(p) > 6 and p[6] in ("glass", "canopy"):
                 continue
             part_boxes(b["x"], b["y"], b["z"], b["yaw"], p)
     # bridges: the truss deck (short boxes, each a step <= 5 cm), the trusses as side walls
@@ -264,7 +265,9 @@ def run(name=LT.NAME):
     kinds["rail"] = (4.0, "rail")
     # ---- the town's data in the town frame
     bl = json.load(open(os.path.join(R.dir, "buildings.json")))
-    kit_avail = sorted({b["kind"] for b in bl} | {"town_truss_span", "town_bridge_pier", "town_footbridge", "town_tunnel_portal"})
+    kit_avail = sorted({b["kind"] for b in bl} | {"town_truss_span", "town_bridge_pier", "town_footbridge", "town_tunnel_portal"}
+                       | {"town_" + v[0] for v in LT.VEHICLES} | {"town_van", "town_crate_stack", "town_crt_wall", "town_table_phones",
+                                                                 "town_estate_model"})
     kit_avail = [k for k in kit_avail if os.path.exists(os.path.join(PROJECT, "assets", "models", f"{k}.gltf"))]
     buildings = []
     for b in bl:
@@ -279,6 +282,10 @@ def run(name=LT.NAME):
         bb["parts"] = [[round(v, 3) if isinstance(v, float) else v for v in p] for p in building_parts(bb)]
         bb["roof_shape"] = roof_of(bb)
         bb["kit"] = b["kind"] in kit_avail
+        sc = LT.kit_sidecar(b["kind"]) if bb["kit"] else None
+        if sc and sc.get("colliders"):
+            ox, oy = b.get("kit_offset", [0.0, 0.0])
+            bb["kit_cols"] = [[c[0] - ox, c[1] - oy, c[2], c[3] - ox, c[4] - oy, c[5]] for c in sc["colliders"]]
         buildings.append(bb)
     # streets: the routed polylines with their final heights (the runtime lays asphalt / lanes on them)
     streets = []

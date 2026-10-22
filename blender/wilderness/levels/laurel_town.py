@@ -174,7 +174,7 @@ ROAD_TOWN = [(-1585, -762), (-1585, -748), (-1592, -731), (-1610, -725), (-1700,
 # the blockout's massing until the kit's glTFs exist (design/town/kit_request.md v2)
 KIT = {
     "town_bar": (30, 18, 6, True, "gable"), "town_shop_a": (8, 18, 9, False, "flat"), "town_shop_b": (8, 18, 9, True, "flat"),
-    "town_shop_c": (8, 18, 9, False, "flat"), "town_shop_d": (8, 18, 9, True, "flat"), "town_shop_wide": (16, 18, 9, True, "flat"),
+    "town_shop_c": (8, 18, 9, False, "flat"), "town_shop_d": (8, 18, 9, True, "flat"), "town_shop_wide": (16, 18, 9, True, "flat"), "town_shop_realty": (16, 18, 9, True, "flat"),
     "town_sheriff": (18, 14, 5.5, True, "flat"), "town_depot": (32, 10, 8, True, "hip"), "town_church": (13, 26, 21, True, "church"),
     "town_church_hall": (12, 16, 5, True, "gable"), "town_gas_station": (34, 26, 6, True, "canopy"),
     "town_fastfood": (18, 14, 6, True, "flat"), "town_plaza": (64, 16, 5.5, True, "flat"), "town_inn": (20, 18, 13, True, "hip"),
@@ -187,12 +187,42 @@ KIT = {
 }
 
 
+PROJECT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+
+
+def kit_sidecar(kind):
+    """The kit's sidecar (assets/models/<kind>.json, design/town/kit_status.md) when the kit agent
+    has built it: its footprint replaces the massing's size, its colliders the massing's."""
+    f = os.path.join(PROJECT, "assets", "models", f"{kind}.json")
+    if not os.path.exists(f):
+        return None
+    s = json.load(open(f))
+    if isinstance(s.get("colliders"), str):
+        s["colliders"] = json.loads(s["colliders"])
+    return s
+
+
 def B(id_, kind, x, y, yaw=0.0, role=None, **kw):
-    """A building: kit name, centre (estate x, y), yaw (deg, CCW: 0 = front faces -Y / south,
-    180 = north), role (what it is in the town and the story)."""
+    """A building: kit name, footprint centre (estate x, y), yaw (deg, CCW: 0 = front faces -Y /
+    south, 180 = north), role (what it is in the town and the story). With the kit's sidecar the
+    footprint is the kit's (kit_offset: the asset origin's offset from the footprint centre)."""
     w, d, h, walk, roof = KIT[kind]
-    return dict(id=id_, kind=kind, x=float(x), y=float(y), yaw=float(yaw), w=w, d=d, h=h, walkin=walk, roof=roof,
-                role=role or kind.replace("town_", ""), **kw)
+    sc = kit_sidecar(kind)
+    rec = dict(id=id_, kind=kind, x=float(x), y=float(y), yaw=float(yaw), w=w, d=d, h=h, walkin=walk, roof=roof,
+               role=role or kind.replace("town_", ""), **kw)
+    if sc:
+        x0, y0, x1, y1 = sc["footprint"]
+        rec.update(w=round(x1 - x0, 2), d=round(y1 - y0, 2), h=round(sc["size"][2], 2), walkin=bool(sc.get("walk_in", walk)),
+                   kit_offset=[round((x0 + x1) / 2, 3), round((y0 + y1) / 2, 3)])
+    return rec
+
+
+def F(id_, kind, x, front_y, yaw=0.0, role=None, setback=0.0, **kw):
+    """A building placed by its front line (the street edge it faces): yaw 0 faces south (its
+    front at front_y, the body north of it), 180 faces north."""
+    b = B(id_, kind, x, 0.0, yaw, role, **kw)
+    b["y"] = float(front_y + setback + b["d"] / 2) if yaw == 0 else float(front_y - setback - b["d"] / 2)
+    return b
 
 
 def layout_buildings():
@@ -203,48 +233,48 @@ def layout_buildings():
     shops = ["a", "b", "c", "a", "d", "c", "a", "b", "c", "a"]
     roles = ["outdoor gear", "coffee", "sweets", "boutique", "bank", "gallery", "boutique", "bakery", "books", "pharmacy"]
     for k, (v, r) in enumerate(zip(shops, roles)):
-        out.append(B(f"shop_n{k}", f"town_shop_{v}", -1612 - 8 * k, front_n + 9, 0, r))
-    out.append(B("church", "town_church", -1707, front_n + 6 + 13, 0, "church (white steeple; the fellowship hall: the phones)"))
-    out.append(B("church_hall", "town_church_hall", -1726, front_n + 8 + 8, 0, "fellowship hall: the table of phones"))
-    out.append(B("outfitter", "town_shop_wide", -1748, front_n + 9, 0, "rafting outfitter / fly shop"))
-    out.append(B("realty", "town_shop_wide", -1766, front_n + 9, 0, "real estate: estates for sale in the window"))
-    out.append(B("inn", "town_inn", -1810, front_n + 6 + 9, 0, "the boutique inn"))
+        out.append(F(f"shop_n{k}", f"town_shop_{v}", -1612 - 8 * k, front_n, 0, r))
+    out.append(F("church", "town_church", -1707, front_n, 0, "church (white steeple; the fellowship hall: the phones)", setback=6))
+    out.append(F("church_hall", "town_church_hall", -1726, front_n, 0, "fellowship hall: the table of phones", setback=8))
+    out.append(F("outfitter", "town_shop_wide", -1748, front_n, 0, "rafting outfitter / fly shop"))
+    out.append(F("realty", "town_shop_realty", -1766, front_n, 0, "real estate: estates for sale in the window"))
+    out.append(F("inn", "town_inn", -1810, front_n, 0, "the boutique inn", setback=6))
     # downtown, south side (backs to the river walk)
-    out.append(B("sheriff", "town_sheriff", -1612, front_s - 7, 180, "sheriff's office: his window watches the bridge"))
+    out.append(F("sheriff", "town_sheriff", -1612, front_s, 180, "sheriff's office: his window watches the bridge"))
     for k, (v, r) in enumerate(zip(["b", "c", "a", "b"], ["diner", "ice cream", "antiques", "wine bar"])):
-        out.append(B(f"shop_s{k}", f"town_shop_{v}", -1656 - 8 * k, front_s - 9, 180, r))
-    out.append(B("depot", "town_depot", -1735, front_s - 5, 180, "the depot: railroad and history museum (the estate model)"))
-    out.append(B("shop_s4", "town_shop_wide", -1775, front_s - 9, 180, "tasting room"))
+        out.append(F(f"shop_s{k}", f"town_shop_{v}", -1656 - 8 * k, front_s, 180, r))
+    out.append(F("depot", "town_depot", -1735, front_s, 180, "the depot: railroad and history museum (the estate model)"))
+    out.append(F("shop_s4", "town_shop_wide", -1775, front_s, 180, "tasting room"))
     # the highway end of town (north side): gas station, drive-through, the strip plaza, the motel
-    out.append(B("gas", "town_gas_station", -1880, -727 + 6 + 13, 0, "gas station + convenience store (CB radio; a van in the back lot)"))
-    out.append(B("fastfood", "town_fastfood", -1926, -727.5 + 10 + 7, 0, "burger drive-through"))
-    out.append(B("plaza", "town_plaza", -1990, -731 + 9 + 8, 0, "strip plaza: video store (the monitor room), laundromat, pharmacy, vacant"))
-    out.append(B("motel_office", "town_motel_office", -2040, -737 + 9 + 4.5, 0, "motor lodge office"))
-    out.append(B("motel_a", "town_motel_wing", -2066, -737 + 13 + 5 + 10, 0, "motel, the vans' back lot behind"))
-    out.append(B("motel_b", "town_motel_wing", -2084, -737 + 8 + 13, -90, "motel"))
+    out.append(F("gas", "town_gas_station", -1880, -721, 0, "gas station + convenience store (CB radio; a van in the back lot)"))
+    out.append(F("fastfood", "town_fastfood", -1926, -718.5, 0, "burger drive-through"))
+    out.append(F("plaza", "town_plaza", -1990, -722, 0, "strip plaza: video store (the monitor room), laundromat, pharmacy, vacant"))
+    out.append(F("motel_office", "town_motel_office", -2040, -728, 0, "motor lodge office"))
+    out.append(F("motel_a", "town_motel_wing", -2066, -719, 0, "motel, the vans' back lot behind"))
+    out.append(B("motel_b", "town_motel_wing", -2084, -716, -90, "motel"))
     # the roadhouse: the last building before the highway leaves town, on the river by the spur
-    out.append(B("bar", "town_bar", -2112, -807, 180, "THE BAR (the roadhouse): the turn"))
+    out.append(F("bar", "town_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn"))
     # Church Street (y -662) and the hill behind: houses, garages, the school
     cs = -662.0
     xs_n = [-1612, -1634, -1656, -1678, -1700, -1745, -1767, -1789, -1830, -1852]
     for k, x in enumerate(xs_n):
-        out.append(B(f"house_n{k}", f"town_house_{'abc'[k % 3]}", x, cs + 5 + 3 + 6, 0, "house"))
+        out.append(F(f"house_n{k}", f"town_house_{'abc'[k % 3]}", x, cs + 8, 0, "house"))
     xs_s = [-1618, -1640, -1662, -1684, -1760, -1782, -1830, -1852]
     for k, x in enumerate(xs_s):
-        out.append(B(f"house_s{k}", f"town_house_{'bca'[k % 3]}", x, cs - 5 - 3 - 6, 180, "house"))
-    out.append(B("garage_loot", "town_garage_open", -1606, cs + 5 + 3 + 12 + 8, 90, "the garage: the estate's stolen goods"))
+        out.append(F(f"house_s{k}", f"town_house_{'bca'[k % 3]}", x, cs - 8, 180, "house"))
+    out.append(B("garage_loot", "town_garage_open", -1606, cs + 28, 90, "the garage: the estate's stolen goods"))
     for k, x in enumerate([-1656, -1700, -1767]):
-        out.append(B(f"garage{k}", "town_garage", x + 3, cs + 5 + 3 + 12 + 8, 0, "garage"))
+        out.append(B(f"garage{k}", "town_garage", x + 3, cs + 28, 0, "garage"))
     out.append(B("school", "town_school", -1880, -606, 0, "school"))
     # south bank: the mill (brewery + lofts), its stack, the water tower, Mill Hill's rentals
     out.append(B("mill", "town_mill", -1700, -868, 180, "the mill: brewery taproom + lofts (the vans' depot behind)"))
-    out.append(B("stack", "town_mill_stack", -1742, -886, 0, "mill stack"))
+    out.append(B("stack", "town_mill_stack", -1742, -888, 0, "mill stack"))
     out.append(B("water_tower", "town_water_tower", -1640, -905, 0, "water tower"))
     rows = [-940.0, -968.0, -996.0]
     for r_, ry in enumerate(rows):
         for k in range(10):
             x = -1668 - 20 * k
-            out.append(B(f"cottage_{r_}_{k}", f"town_cottage_{'abc'[(k + r_) % 3]}", x, ry - 3 - 3 - 5.5, 180,
+            out.append(F(f"cottage_{r_}_{k}", f"town_cottage_{'abc'[(k + r_) % 3]}", x, ry - 3.2, 180,
                          "vacation rental (every one booked; a lockbox on every door)", row=r_))
     return out
 
@@ -322,7 +352,7 @@ EVIDENCE = [
 VEHICLES = [   # (kind, x, y, yaw deg): townspeople's cars, the cruiser, the heritage train
     ("cruiser", -1598, -735, 90), ("suv", -1640, -717, 0), ("car", -1660, -717, 0), ("pickup", -1690, -717, 0),
     ("suv", -1720, -717, 0), ("car", -1760, -717, 0), ("car", -1668, -733, 180), ("suv", -1700, -733, 180),
-    ("pickup", -1890, -712, 0), ("car", -1930, -718, 90), ("suv", -2004, -712, 0), ("car", -2020, -712, 0),
+    ("pickup", -1868, -713, 0), ("car", -1915, -703, 0), ("suv", -2004, -712, 0), ("car", -2020, -712, 0),
     ("pickup", -2112, -790, 0), ("train", -1745, -752, 90),
 ]
 PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate deg, 0 = north)
@@ -352,7 +382,10 @@ def views():
         river_walk=dict(pos=(-1610, -779), look=(-1800, -786, -183.0)),
         strip=dict(pos=(-1850, -727), look=(-2050, -720, -180.0)),
         motel_lot=dict(pos=(-2040, -672), look=(-2070, -684, -184.0)),
-        bar_lot=dict(pos=(-2100, -768), look=(-2112, -800, -181.0)),
+        bar_lot=dict(pos=(-2090, -779, 1.1), look=(-2112, -797, -181.0)),
+        # inside the roadhouse: from just inside the door, long down the bar; and at the pool table
+        bar_porch=dict(pos=(-2117.0, -798.8, 1.6), look=(-2100.0, -806.0, -183.6)),
+        bar_room=dict(pos=(-2100.5, -799.5, 2.4), look=(-2114.0, -812.0, -184.3)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
     )
