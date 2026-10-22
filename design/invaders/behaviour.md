@@ -27,9 +27,9 @@ workstream's posed-test form `?invaders=x,z,rot,Clip;...` is told apart by its c
 
 ## Waves
 `WAVES = [{at: 60, n: 6}, {at: 300, n: 20}, {at: 600, n: 50}]` (invaders.js): at time `at` the
-squad is topped up to `n` alive (at most 50; the dead don't come back). "~6, then 20, then 50"
-is read as the squad's strength after each wave, not 6 + 20 + 50 (the perf ceiling is 50 at
-once). They arrive three at a time, 1.6 s apart, each at an entry; in mix order:
+next `n` arrive: 6, then 20, then 50, 76 in all (the user's call, 2026-10-22: arrivals, not the
+squad's strength). At most 50 are alive at once (the perf ceiling): the rest wait outside and come
+in as others fall; the dead don't come back. They arrive three at a time, 1.6 s apart, each at an entry; in mix order:
 
 | invaders | roles |
 |---|---|

@@ -9,8 +9,9 @@ export { buildWorld };
 
 // Invaders: waves of armed intruders in the house (design/invaders/behaviour.md).
 //
-// They arrive in waves (WAVES: at time `at` s the squad is topped up to `n` alive, capped at 50;
-// the dead don't come back), through the entries (the front door, the terrace doors, the garage,
+// They arrive in waves (WAVES: at time `at` s, `n` more arrive: 6, then 20, then 50 = 76 in all, the
+// user's call; at most MAX are alive at once, the rest wait outside until someone falls; the dead
+// don't come back), through the entries (the front door, the terrace doors, the garage,
 // the mudroom's side door, the great room's glass, smashed if it's still whole); some stay outside
 // as watchers on the doors and the facades. The squad shares what they know: a shout reaches
 // those in earshot at once, the radio everyone else after `radio` s (longer without the leader);
@@ -235,10 +236,10 @@ export class Invaders {
     p.x += rand(-0.5, 0.5); p.z += rand(-0.5, 0.5);
     return p;
   }
-  // top up to n alive (a wave), a few at a time, spread over the entries
-  topUp(n, mixI) {
+  // a wave: n more arrive (immediate: top up to n alive), a few at a time, spread over the entries
+  topUp(n, mixI, arrive = true) {
     const alive = this.agents.filter((a) => a.alive).length + this.pending.length;
-    const want = Math.min(MAX, n) - alive;
+    const want = arrive ? n : Math.min(MAX, n) - alive;
     // (the mixes in order, whatever the wave: the first six always bring the leader)
     this.mixN ??= 0;
     const roleFor = (n) => (n < 6 ? MIX[0][n] : n < 20 ? MIX[1][n - 6] : MIX[2][(n - 20) % MIX[2].length]);
@@ -698,11 +699,15 @@ export class Invaders {
     this.time += dt; this.frame++;
     this.syncCombat();
     // waves
-    if (this.immediate) { const n = this.immediate; this.immediate = 0; this.topUp(n, 2); this.pending.forEach((p, i) => (p.at = this.time + (i % 6) * 0.05)); }
+    if (this.immediate) { const n = this.immediate; this.immediate = 0; this.topUp(n, 2, false); this.pending.forEach((p, i) => (p.at = this.time + (i % 6) * 0.05)); }
     while (this.waveI < this.waves.length && this.time >= this.waves[this.waveI].at) { this.topUp(this.waves[this.waveI].n, this.waveI); this.waveI++; }
     if (this.pending.length) {
       const due = this.pending.filter((p) => p.at <= this.time);
-      if (due.length) { this.pending = this.pending.filter((p) => p.at > this.time); for (const p of due) this.spawn(p.role); }
+      if (due.length) {
+        this.pending = this.pending.filter((p) => p.at > this.time);
+        // (no room: MAX alive; they wait outside and come in as others fall)
+        for (const p of due) if (!this.spawn(p.role)) { p.at = this.time + 2; this.pending.push(p); }
+      }
     }
     this.updateRadio();
     this.alert = Math.max(0, this.alert - dt / 90);
