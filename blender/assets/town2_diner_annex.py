@@ -68,12 +68,13 @@ def build(k, M, p):
         if x1w < -3:     # restrooms: frosted (an opal pane behind the glass)
             k.add("Annex_Frost", G.box_lohi((x0w, ay1 - 0.09, z0w), (x1w, ay1 - 0.085, z1w)), M["paint"], tint=(0.75, 0.76, 0.74), tile=1.0, lm=0.4)
     bx0, bx1 = W["back_door"]
+    k.entrances.append(dict(name="kitchen_back", at=[round((bx0 + bx1) / 2, 3), ay1], facing=[0, 1], note="the staff door, ajar, three steps down to the yard"))
     for lo, hi in (((bx0 - 0.07, ay1 - 0.2, zb), (bx0, ay1 + 0.03, fz + 2.19)), ((bx1, ay1 - 0.2, zb), (bx1 + 0.07, ay1 + 0.03, fz + 2.19)),
                    ((bx0 - 0.07, ay1 - 0.2, fz + 2.12), (bx1 + 0.07, ay1 + 0.03, fz + 2.19))):
         k.add("Annex_DoorFrame", G.box_lohi(lo, hi), M["paint"], tint=BLACK, tile=1.0)
     # the back door: a steel door ajar 35 deg outward (the staff's smoke break), a kick plate
     hz = (bx0, ay1)
-    ang = math.radians(35)
+    ang = math.radians(100)       # (propped wide open on its closer arm: the staff go in and out)
     leaf = G.box_lohi((0, 0, fz + 0.005), (bx1 - bx0 - 0.02, 0.045, fz + 2.1), bevel=0.006)
     G.xform(leaf, loc=(bx0 + 0.01, ay1 + 0.0, 0), rz=ang)
     k.add("Annex_BackDoor", leaf, M["paint"], tint=(0.05, 0.05, 0.055), tile=1.0)
@@ -84,7 +85,7 @@ def build(k, M, p):
     G.xform(lever, loc=(bx0 + 0.01, ay1, 0), rz=ang)
     k.add("Annex_BackDoorLever", lever, M["chrome"], tile=0.5)
     ex = (bx1 - bx0) * math.cos(ang)
-    k.collider((bx0, ay1, fz), (bx0 + ex, ay1 + (bx1 - bx0) * math.sin(ang) + 0.05, fz + 2.1))
+    k.collider((bx0 + min(0.0, ex) - 0.05, ay1, fz), (bx0 + max(0.0, ex) + 0.06, ay1 + (bx1 - bx0) * math.sin(ang) + 0.05, fz + 2.1))
     # the stoop: three concrete risers down to the yard, a pipe rail
     sz = p["lot_z"]
     for top, ye in ((fz - 0.02, ay1 + 1.0), (sz + (fz - sz) * 2 / 3, ay1 + 1.32), (sz + (fz - sz) / 3, ay1 + 1.64)):
@@ -173,7 +174,7 @@ def build(k, M, p):
     # ---- partitions: the restroom block, the corridor wall, the hood wall, the walk-in cooler
     cy = W["corr_y"]
     r1, r2 = W["r1"], W["r2"]
-    d1, d2 = (-7.7, -6.8), (-5.1, -4.2)
+    d1, d2 = (-7.75, -6.75), (-5.2, -4.2)
     sd = W["staff_door"]
     parts = [
         ("x", cy, cy + 0.15, ix0, rx + 0.15, [(d1[0], d1[1], fz - 0.01, fz + 2.1), (d2[0], d2[1], fz - 0.01, fz + 2.1)], "both"),
@@ -186,7 +187,7 @@ def build(k, M, p):
         for lo, hi in CAR.wall_boxes(ax, c0, c1, a0, a1, fz, cz, [(o[0], o[1], fz - 0.01, fz + 2.1) for o in ops]):
             k.collider(lo, hi)
     # interior door leaves, swung open (restrooms inward 75 deg, the staff door 80 deg)
-    for (a0, a1), ang in ((d1, 75), (d2, 75)):
+    for (a0, a1), ang in ((d1, 92), (d2, 92)):
         leaf = G.box_lohi((0, -0.02, fz + 0.01), (a1 - a0 - 0.02, 0.02, fz + 2.08), bevel=0.005)
         G.xform(leaf, loc=(a0 + 0.01, cy + 0.15, 0), rz=math.radians(ang))
         k.add("Annex_Door", leaf, M["paint"], tint=(0.10, 0.20, 0.16), tile=1.0)
@@ -241,8 +242,8 @@ def build(k, M, p):
     for x_, y_ in trof:
         k.add("Annex_Troffer", G.box_lohi((x_ - 0.62, y_ - 0.31, cz - 0.03), (x_ + 0.62, y_ + 0.31, cz)), M["paint"], tint=(0.8, 0.8, 0.8), tile=1.0, lm=0.3)
         k.add("Annex_TrofferLens", G.box_lohi((x_ - 0.56, y_ - 0.25, cz - 0.035), (x_ + 0.56, y_ + 0.25, cz - 0.03)), M["globe_cool"], tile=None, bake=False)
-        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(1.1, 0.5), power=420.0, color=(1.0, 0.95, 0.88), dir=(0, 0, -1))
+        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(1.1, 0.5), power=120.0, color=(1.0, 0.95, 0.88), dir=(0, 0, -1))
     for x_, y_ in ((-6.0, 6.2), ((r1[0] + r1[1]) / 2, 9.4), ((r2[0] + r2[1]) / 2, 9.4)):
         k.add("Annex_Disc", G.cyl((x_, y_, cz - 0.02), 0.17, 0.04, n=16), M["globe"], tile=None, bake=False, smooth=True)
-        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(0.3, 0.3), power=110.0, color=(1.0, 0.88, 0.72), dir=(0, 0, -1))
+        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(0.3, 0.3), power=70.0, color=(1.0, 0.9, 0.78), dir=(0, 0, -1))
     return A

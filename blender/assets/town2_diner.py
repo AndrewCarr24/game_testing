@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 import town2_diner_geo as G  # noqa: E402
 import town2_diner_mats as MT  # noqa: E402
 
-MODULES = ["town2_diner_car", "town2_diner_annex", "town2_diner_rest", "town2_diner_fit", "town2_diner_kitchen", "town2_diner_site", "town2_diner_props", "town2_diner_cars"]
+MODULES = ["town2_diner_car", "town2_diner_annex", "town2_diner_rest", "town2_diner_fit", "town2_diner_kitchen", "town2_diner_site", "town2_diner_props", "town2_diner_cars", "town2_diner_lod"]
 importlib.reload(G)
 importlib.reload(MT)
 
@@ -49,7 +49,7 @@ P = dict(
     brass=(0.80, 0.55, 0.25), black=(0.022, 0.022, 0.024), vinyl=(0.32, 0.018, 0.02),
     # the parked cars (town2_diner_cars.py): kind, x, y, yaw (deg: -90 = nose to +y), tint
     cars=[("wagon", -7.65, -4.55, -90, (0.16, 0.2, 0.24)), ("pickup", 10.95, -4.3, -90, (0.07, 0.11, 0.075)),
-          ("van", -4.2, 13.15, 0, (0.035, 0.037, 0.04))],
+          ("van", -4.2, 13.45, 0, (0.035, 0.037, 0.04))],
 )
 P["pass"] = P.pop("pass_")
 
@@ -131,8 +131,15 @@ def cams(k, p):
         "booths": ((-8.3, 2.4, fz + 1.55), (4.0, 1.0, fz + 0.9), 18),
         "door": ((0.0, 1.1, fz + 1.6), (0.0, 7.0, fz + 1.2), 16),
         "pass": ((0.2, 2.3, fz + 1.55), (0.0, 7.5, fz + 1.3), 22),
-        "kitchen": ((7.6, 6.2, fz + 1.65), (-3.0, 7.2, fz + 0.9), 16),
+        "kitchen": ((6.4, 6.9, fz + 1.65), (-3.0, 6.9, fz + 0.9), 16),
         "back": ((12.0, 18.0, 2.2), (2.0, 8.0, 1.2), 22),
+        "far": ((70.0, -22.0, 1.7), (0.0, 0.0, 2.0), 30),
+        "far2": ((-130.0, -25.0, 1.7), (0.0, 0.0, 2.0), 30),
+        "farup": ((30.0, -110.0, 45.0), (0.0, 0.0, 0.0), 30),
+        "turn": ((3.5, 2.45, fz + 1.5), (2.2, 1.0, fz + 0.45), 20),
+        "juke": ((-5.4, 2.6, fz + 1.6), (-8.9, 3.6, fz + 1.1), 20),
+        "rest": ((-6.4, 7.7, fz + 1.6), (-8.2, 10.9, fz + 0.7), 16),
+        "lot": ((-6.0, -11.5, 0.45), (0.0, 1.0, 2.6), 20),
     })
 
 

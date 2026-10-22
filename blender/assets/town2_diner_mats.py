@@ -225,11 +225,11 @@ TEXTURES = {
     "T_Town2_Diner_Quarry": (_quarry, 256),
     "T_Town2_Diner_Subway": (_subway, 256),
     "T_Town2_Diner_Terrazzo": (_terrazzo, 512),
-    "T_Town2_Diner_Stone": (_stone, 512),
-    "T_Town2_Diner_Asphalt": (_asphalt, 512),
-    "T_Town2_Diner_Concrete": (_concrete, 512),
+    "T_Town2_Diner_Stone": (_stone, 256),
+    "T_Town2_Diner_Asphalt": (_asphalt, 256),
+    "T_Town2_Diner_Concrete": (_concrete, 256),
     "T_Town2_Diner_Brushed": (_brushed, 256),
-    "T_Town2_Diner_Wood": (_wood, 512),
+    "T_Town2_Diner_Wood": (_wood, 256),
 }
 
 
@@ -294,6 +294,7 @@ def material(name, color=(0.8, 0.8, 0.8), roughness=0.6, metallic=0.0, tex=None,
             m.surface_render_method = "BLENDED"
         else:
             m.blend_method = "BLEND"
+    m.use_backface_culling = True       # (single-sided in glTF; glass turns it off)
     m["lm"] = bool(lm)
     m["metal"] = bool(metal)
     m["tex"] = tex or ""
@@ -309,7 +310,7 @@ def palette():
     # painted / plastic / vinyl / laminate / enamel / rubber: white x tint
     M["paint"] = material("M_Town2_Diner_Paint", (1, 1, 1), 0.55)
     # stainless (fluted skin, back-bar, trim, kitchen): brushed grain x tint; glossy-baked
-    M["steel"] = material("M_Town2_Diner_Steel", (0.78, 0.78, 0.80), 0.28, 1.0, tex="T_Town2_Diner_Brushed", metal=True)
+    M["steel"] = material("M_Town2_Diner_Steel", (0.62, 0.62, 0.64), 0.28, 1.0, tex="T_Town2_Diner_Brushed", metal=True)
     # polished chrome (stools, rails, napkin dispensers, the jukebox's trim)
     M["chrome"] = material("M_Town2_Diner_Chrome", (0.85, 0.85, 0.87), 0.08, 1.0, metal=True)
     M["terrazzo"] = material("M_Town2_Diner_Terrazzo", (1, 1, 1), 0.35, tex="T_Town2_Diner_Terrazzo")
@@ -336,6 +337,11 @@ def palette():
                           emission=(1.0, 0.86, 0.66), strength=6.0)
     M["globe_cool"] = material("M_Town2_Diner_LampCool", (1.0, 0.97, 0.92), 0.4, lm=False, tint=False,
                                emission=(1.0, 0.96, 0.90), strength=5.0)
+    # the far version's one material: black, its look baked into an emission map (build.py)
+    M["far"] = material("M_Town2_Diner_Far", (0.0, 0.0, 0.0), 0.9, lm=False, tint=False)
+    M["far"]["far"] = True
+    M["steel"]["gmix"] = 0.35        # brushed: mostly its diffuse light, a sheen of reflection
+    M["chrome"]["gmix"] = 0.75       # polished: mostly reflection
     M["globe"]["bake_hide"] = True
     M["globe_cool"]["bake_hide"] = True
     return M

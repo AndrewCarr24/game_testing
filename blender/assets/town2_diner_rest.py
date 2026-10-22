@@ -51,13 +51,14 @@ def build(k, M, p):
     kx0, kx1 = p["kitchen_door"]
     yb = p["car"]["yb"]
     leaf_w = kx1 - kx0 - 0.02
-    # hinge at kx0 (west jamb), swung 90 deg into the kitchen: the leaf runs +y along x = kx0
-    k.add("KDoor_Leaf", G.box_lohi((kx0 - 0.045, yb + 0.02, fz + 0.02), (kx0, yb + 0.02 + leaf_w, fz + 2.06), bevel=0.006), M["steel"], tile=0.5)
-    k.add("KDoor_Porthole", G.cyl((kx0 - 0.0225, yb + 0.02 + leaf_w / 2, fz + 1.55), 0.17, 0.05, n=20, axis="x"), M["chrome"], tile=0.5)
-    k.add("KDoor_Glass", G.cyl((kx0 - 0.0225, yb + 0.02 + leaf_w / 2, fz + 1.55), 0.14, 0.052, n=20, axis="x"), M["glass"], tile=None)
-    k.add("KDoor_Kick", G.box_lohi((kx0 - 0.05, yb + 0.05, fz + 0.03), (kx0 + 0.005, yb + leaf_w - 0.03, fz + 0.32)), M["chrome"], tile=0.5, lm=0.4)
-    k.add("KDoor_Stop", G.cyl((kx0 - 0.2, yb + 0.02 + leaf_w + 0.04, fz + 0.03), 0.025, 0.06, n=8), M["paint"], tint=(0.05, 0.05, 0.05), tile=1.0, lm=0.2)
-    k.collider((kx0 - 0.05, yb, fz), (kx0 + 0.005, yb + 0.02 + leaf_w, fz + 2.06))
+    # hinge at kx1 (east jamb), swung 90 deg into the kitchen: the leaf stands along +y at
+    # x = kx1, out of the way between the doorway and the reach-ins
+    hx = kx1
+    k.add("KDoor_Leaf", G.box_lohi((hx, yb + 0.02, fz + 0.02), (hx + 0.045, yb + 0.02 + leaf_w, fz + 2.06), bevel=0.006), M["steel"], tile=0.5)
+    k.add("KDoor_Porthole", G.cyl((hx + 0.0225, yb + 0.02 + leaf_w / 2, fz + 1.55), 0.17, 0.05, n=20, axis="x"), M["chrome"], tile=0.5)
+    k.add("KDoor_Glass", G.cyl((hx + 0.0225, yb + 0.02 + leaf_w / 2, fz + 1.55), 0.14, 0.052, n=20, axis="x"), M["glass"], tile=None)
+    k.add("KDoor_Kick", G.box_lohi((hx - 0.005, yb + 0.05, fz + 0.03), (hx + 0.05, yb + leaf_w - 0.03, fz + 0.32)), M["chrome"], tile=0.5, lm=0.4)
+    k.collider((hx - 0.005, yb, fz), (hx + 0.05, yb + 0.02 + leaf_w, fz + 2.06))
 
 
 def toilet(k, M, p, x, yw):

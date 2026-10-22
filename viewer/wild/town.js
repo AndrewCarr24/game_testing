@@ -314,7 +314,11 @@ export class Town {
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
             const lm = m.userData?.lightmap;
             if (lm && !m.lightMap) {
-              const tx = tl.load(`../assets/models/${lm}`);
+              // [diner] one texture per lightmap file (every lightmapped material names the same
+              // atlas: loading it per material uploaded 13 copies, ~145 MB of GPU memory)
+              const lmCache = this._lmCache || (this._lmCache = new Map());
+              let tx = lmCache.get(lm);
+              if (!tx) { tx = tl.load(`../assets/models/${lm}`); lmCache.set(lm, tx); }
               tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace;
               m.lightMap = tx; m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
               m.needsUpdate = true;
@@ -328,7 +332,13 @@ export class Town {
         const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
         root.name = `Town_${b.id}`;
         this.group.add(root);
-        this.sites.push({ id: b.id, root });
+        // [diner] LOD: a site's `<Root>_LOD1` node (far version) shows beyond its lodDistance
+        // (node extras, default 90 m), the rest of the building within it
+        const far = [], near = [];
+        inner.traverse((o) => { if (/_LOD1$/.test(o.name)) far.push(o); });
+        for (const f of far) for (const o of f.parent.children) if (!far.includes(o)) near.push(o);
+        const lodD = far.reduce((d, o) => o.userData?.lodDistance ?? d, 90);
+        this.sites.push({ id: b.id, root, far, near, lodD, at: new THREE.Vector3(b.x, b.z, -(b.y - oy)), _far: null });
       } catch (e) { console.warn('town site', b.id, e.message); }
     }
   }
@@ -442,6 +452,15 @@ export class Town {
       const near = Math.hypot(c.x - z.c.x, c.z - z.c.z) < 260;
       for (const m of z.lods[0]) m.visible = near;
       for (const m of z.lods[1]) m.visible = !near;
+    }
+    // [diner] the rebuilt sites' LOD1 beyond their lodDistance
+    for (const s of this.sites || []) {
+      if (!s.far?.length) continue;
+      const far = Math.hypot(c.x - s.at.x, c.z - s.at.z) > s.lodD;
+      if (far === s._far) continue;
+      s._far = far;
+      for (const o of s.far) o.visible = far;
+      for (const o of s.near) o.visible = !far;
     }
   }
 }

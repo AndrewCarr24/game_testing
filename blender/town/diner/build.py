@@ -433,6 +433,70 @@ def write_lightmap(lin, scale):
     return out
 
 
+def far_version(k, merged, parts):
+    """LOD1: join the far parts, give them a UV atlas and bake the full building's look onto them
+    (COMBINED, selected to active: rays from 0.25 m out, along the normal, onto LOD0) into an
+    emission map. Returns the far mesh or None."""
+    if not parts:
+        return None
+    _select(parts, parts[0])
+    bpy.ops.object.join()
+    far = bpy.context.view_layer.objects.active
+    far.name = far.data.name = "Town2Diner_LOD1_Mesh"
+    far.parent = k.lod_root
+    me = far.data
+    me.uv_layers.active = me.uv_layers["UVMap"]
+    _select([far])
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(angle_limit=math.radians(60), island_margin=0.0, area_weight=0.0, correct_aspect=True, scale_to_bounds=False)
+    bpy.ops.uv.select_all(action="SELECT")
+    bpy.ops.uv.pack_islands(udim_source="CLOSEST_UDIM", rotate=True, scale=True, margin_method="ADD", margin=0.006, shape_method="CONCAVE")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_shadow", "visible_volume_scatter"):
+        setattr(far, attr, False)
+    if not BAKE:
+        return far
+    n = int(opt("--far-res", 512))
+    img = bpy.data.images.new("_bake_far", n, n, alpha=True, float_buffer=True)
+    m = far.data.materials[0]
+    nd = m.node_tree.nodes.new("ShaderNodeTexImage")
+    nd.image = img
+    m.node_tree.nodes.active = nd
+    src = [o for o in merged if not o.hide_render]
+    _select(src + [far], far)
+    b = scene.render.bake
+    b.use_selected_to_active = True
+    b.cage_extrusion = 0.25
+    b.max_ray_distance = 0.6
+    b.margin = 4
+    b.use_clear = True
+    t = time.time()
+    scene.cycles.samples = max(64, SAMPLES // 2)
+    bpy.ops.object.bake(type="COMBINED", target="IMAGE_TEXTURES")
+    b.use_selected_to_active = False
+    log(f"bake far COMBINED {n}x{n}: {time.time() - t:.0f}s")
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(n, n, 4)[::-1]
+    lin = denoise(px[..., :3].copy(), px[..., 3] > 0.5)
+    m.node_tree.nodes.remove(nd)
+    bpy.data.images.remove(img)
+    lit = lin.max(axis=2)
+    lit = lit[lit > 1e-4]
+    sc = float(np.percentile(lit, 99.5)) if lit.size else 1.0
+    srgb = to_srgb(np.clip(lin / sc, 0, 1))
+    png = os.path.join(OUT, "T_Town2_Diner_Far.png")
+    write_png(png, np.round(srgb * 255).astype(np.uint8))
+    im = bpy.data.images.load(png)
+    im.name = "T_Town2_Diner_Far"
+    tex = m.node_tree.nodes.new("ShaderNodeTexImage")
+    tex.image = im
+    bs = next(q for q in m.node_tree.nodes if q.type == "BSDF_PRINCIPLED")
+    m.node_tree.links.new(tex.outputs["Color"], bs.inputs["Emission Color"])
+    bs.inputs["Emission Strength"].default_value = sc
+    log(f"far map {png}: scale {sc:.3f}")
+    return far
+
+
 def bake(merged):
     W, H = RES
     lm_objs = [o for o in merged if o.data.materials and o.data.materials[0].get("lm")]
@@ -440,12 +504,23 @@ def bake(merged):
     scene.cycles.samples = SAMPLES
     scene.cycles.sample_clamp_indirect = 6.0
     scene.cycles.use_denoising = False
+    # the diffuse pass with the metals made matte (a metal has no diffuse closure), then their
+    # glossy pass; a metal's texels = METAL_MIX of its reflections + the rest of its diffuse
+    # light (brushed steel isn't a mirror, and the reflections along the normal alone striped
+    # the fluting and the sunburst rays black and white)
+    mm = {m for o in metal for m in o.data.materials}
+    for m in mm:
+        next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs["Metallic"].default_value = 0.0
     A, mA = bake_pass(lm_objs, "DIFFUSE", W, H)
+    for m in mm:
+        next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs["Metallic"].default_value = 1.0
     lin = denoise(A, mA)
-    if metal:
-        B, mB = bake_pass(metal, "GLOSSY", W, H)
+    for m in sorted(mm, key=lambda q: q.name):
+        objs = [o for o in metal if o.data.materials[0] == m]
+        B, mB = bake_pass(objs, "GLOSSY", W, H)
         linB = denoise(B, mB)
-        lin = np.where(mB[..., None], linB, lin)
+        k_ = float(m.get("gmix", 0.6))
+        lin = np.where(mB[..., None], k_ * linB + (1 - k_) * lin, lin)
     lit = lin.max(axis=2)[mA]
     lit = lit[lit > 1e-4]
     scale = float(np.percentile(lit, LM_PERCENTILE)) if lit.size else 1.0
@@ -475,7 +550,7 @@ def for_export(mats, scale):
                 b.inputs["Base Color"].default_value = col
         if m.get("metal"):
             b.inputs["Metallic"].default_value = 0.0
-        for k in ("lm", "metal", "tex", "bake_hide"):
+        for k in ("lm", "metal", "tex", "bake_hide", "far", "gmix"):
             if k in m:
                 lmflag = m.get("lm")
                 del m[k]
@@ -560,6 +635,7 @@ def main():
     if RENDER:
         render(k, RENDER)
     lod0 = [o for o in k.objects if o.get("lod", 0) == 0]
+    lod1 = [o for o in k.objects if o.get("lod", 0) == 1]
     cull_hidden(lod0, getattr(k, "dead", []))
     report(lod0)
     lm_parts = [o for o in lod0 if o.data.materials and o.data.materials[0].get("lm")]
@@ -572,10 +648,15 @@ def main():
         if m is not None and m.get("bake_hide"):
             o.hide_render = True
     json.dump({n: dict(loc=list(c[0]), at=list(c[1]), lens=c[2]) for n, c in k.cameras.items()}, open(os.path.join(OUT, "cams.json"), "w"), indent=1)
+    for o in lod1:
+        o.hide_render = True
     scale = bake(merged) if BAKE else 1.0
+    for o in lod1:
+        o.hide_render = False
+    far = far_version(k, merged, lod1)
     for o in merged:
         o.hide_render = False
-    mats = sorted({m for o in merged for m in o.data.materials}, key=lambda m: m.name)
+    mats = sorted({m for o in merged + ([far] if far else []) for m in o.data.materials}, key=lambda m: m.name)
     for_export(mats, scale)
     export(root, merged, k, scale)
     if "--save" in argv:

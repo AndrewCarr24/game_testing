@@ -153,8 +153,9 @@ def menu_card(k, M, p, x, y, z):
     a = math.radians(70)
     w = 0.2
     h = 0.24
-    k.add("Menu_Card", G.quad((x - w / 2, y, z), (x + w / 2, y, z), (x + w / 2, y + h * math.cos(a), z + h * math.sin(a)), (x - w / 2, y + h * math.cos(a), z + h * math.sin(a))),
-          M["paint"], tint=(0.45, 0.04, 0.03), tile=1.0, lm=0.3)
+    for q in ((x - w / 2, x + w / 2), (x + w / 2, x - w / 2)):      # (both faces: materials are single-sided)
+        k.add("Menu_Card", G.quad((q[0], y, z), (q[1], y, z), (q[1], y + h * math.cos(a), z + h * math.sin(a)), (q[0], y + h * math.cos(a), z + h * math.sin(a))),
+              M["paint"], tint=(0.45, 0.04, 0.03), tile=1.0, lm=0.3)
 
 
 def newspaper(k, M, p, x, y, z):

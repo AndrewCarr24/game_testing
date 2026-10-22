@@ -146,6 +146,7 @@ def build(k, M, p):
 
     # ------------------------------------------------ the vestibule (centre front)
     vy0 = yf - p["vest_d"]
+    k.entrances.append(dict(name="front", at=[0.0, round(vy0, 3)], facing=[0, -1], note="the vestibule's doors, hooked open"))
     vpath = [(-vx, yf), (-vx, vy0 + 0.25)] + G.arc_pts((-vx + 0.25, vy0 + 0.25, 0), 0.25, math.pi, 1.5 * math.pi, 5)[1:] \
         + G.arc_pts((vx - 0.25, vy0 + 0.25, 0), 0.25, 1.5 * math.pi, 2 * math.pi, 5) + [(vx, yf)]
     vpath = [(q[0], q[1]) for q in vpath]

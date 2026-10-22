@@ -110,8 +110,8 @@ def build(k, M, p):
     enclosure(k, M, p, 11.0, 14.6, A["y1"] + 0.6, y1 - 0.3)
     k.add("Yard_GreaseBin", G.box_lohi((9.6, A["y1"] + 1.2, lz), (10.5, A["y1"] + 1.9, lz + 1.0), bevel=0.03), M["paint"], tint=(0.08, 0.09, 0.1), tile=1.0, collide=True, lm=0.5)
     k.add("Yard_GreaseLid", G.box_lohi((9.58, A["y1"] + 1.18, lz + 1.0), (10.52, A["y1"] + 1.92, lz + 1.05), bevel=0.02), M["paint"], tint=(0.06, 0.07, 0.08), tile=1.0, lm=0.5)
-    k.add("Yard_Bollard", G.cyl((8.9, A["y1"] + 0.5, lz + 0.55), 0.1, 1.1, n=12, bevel=0.03), M["paint"], tint=(0.6, 0.45, 0.03), tile=1.0, collide=True, smooth=True, lm=0.4)
-    k.add("Yard_Bollard", G.cyl((-8.9, A["y1"] + 0.5, lz + 0.55), 0.1, 1.1, n=12, bevel=0.03), M["paint"], tint=(0.6, 0.45, 0.03), tile=1.0, collide=True, smooth=True, lm=0.4)
+    k.add("Yard_Bollard", G.cyl((9.1, A["y1"] + 0.12, lz + 0.55), 0.1, 1.1, n=12, bevel=0.03), M["paint"], tint=(0.6, 0.45, 0.03), tile=1.0, collide=True, smooth=True, lm=0.4)
+    k.add("Yard_Bollard", G.cyl((-9.1, A["y1"] + 0.12, lz + 0.55), 0.1, 1.1, n=12, bevel=0.03), M["paint"], tint=(0.6, 0.45, 0.03), tile=1.0, collide=True, smooth=True, lm=0.4)
     # the yard light on the annex's east corner
     k.add("Yard_LightArm", G.box_lohi((A["x1"], A["y1"] - 0.6, 3.0), (A["x1"] + 0.5, A["y1"] - 0.5, 3.06)), M["paint"], tint=BLACK, tile=1.0, lm=0.3)
     k.add("Yard_LightHead", G.box_lohi((A["x1"] + 0.3, A["y1"] - 0.75, 2.92), (A["x1"] + 0.65, A["y1"] - 0.35, 3.0), bevel=0.01), M["paint"], tint=BLACK, tile=1.0, lm=0.3)

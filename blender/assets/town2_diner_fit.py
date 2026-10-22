@@ -114,7 +114,7 @@ def build(k, M, p):
         # the mug shelf with its under-light, the menu boards above
         k.add("Bar_Shelf", G.box_lohi((x0b, by1 - 0.24, fz + 1.8), (x1b, by1, fz + 1.835), bevel=0.005), M["steel"], tile=0.5)
         k.add("Bar_ShelfLight", G.box_lohi((x0b + 0.05, by1 - 0.2, fz + 1.794), (x1b - 0.05, by1 - 0.17, fz + 1.8)), M["globe"], tile=None, bake=False)
-        k.light(kind="area", loc=((x0b + x1b) / 2, by1 - 0.19, fz + 1.78), size=(x1b - x0b - 0.1, 0.03), power=40.0 * (x1b - x0b), color=(1.0, 0.86, 0.66), dir=(0, 0, -1))
+        k.light(kind="area", loc=((x0b + x1b) / 2, by1 - 0.19, fz + 1.78), size=(x1b - x0b - 0.1, 0.03), power=11.0 * (x1b - x0b), color=(1.0, 0.86, 0.66), dir=(0, 0, -1))
         for j in range(int((x1b - x0b) / 0.16)):
             mx = x0b + 0.1 + j * 0.16
             mug(k, M, p, mx, by1 - 0.12, fz + 1.835, tint=(0.75, 0.72, 0.64) if j % 7 else (0.42, 0.06, 0.04))
@@ -178,9 +178,9 @@ def build(k, M, p):
     p["pendants"] = []
     for i in range(8):
         x = -4.9 + i * 1.4
-        pendant(k, M, p, x, 3.62, fz + 2.12, 0.13, 110.0)
+        pendant(k, M, p, x, 3.62, fz + 2.12, 0.13, 30.0)
     for tx, ty in tables:
-        pendant(k, M, p, tx, 1.33, fz + 1.88, 0.11, 60.0)
+        pendant(k, M, p, tx, 1.33, fz + 1.88, 0.11, 17.0)
     # window-side daylight is the sun's; nothing else
 
 
@@ -273,35 +273,43 @@ def stool(k, M, p, x, y, vinyl):
 
 
 def sunburst(k, M, xr, y, z0, z1):
-    """A stainless sunburst panel: rays fanning up from the bottom centre, each a shallow ridge."""
+    """A stainless sunburst panel: one pleated fan from the bottom centre to the panel's edge,
+    ridges and valleys alternating (one connected surface: one lightmap island, so the rays'
+    light is smooth, not texel-thin slivers)."""
     x0, x1 = xr
     cx, cz = (x0 + x1) / 2, z0
-    k.add("Bar_Splash", G.box_lohi((x0, y - 0.012, z0), (x1, y, z1)), M["steel"], tile=0.5)
+
+    def hit(a):
+        dx, dz = math.cos(a), math.sin(a)
+        ts = []
+        if abs(dx) > 1e-6:
+            ts.append(((x1 if dx > 0 else x0) - cx) / dx)
+        if dz > 1e-6:
+            ts.append((z1 - cz) / dz)
+        t = min(t for t in ts if t > 0)
+        return (cx + dx * t, cz + dz * t)
+    # boundary points: the two bottom corners, then 2 x nr + 1 points round the edge (even =
+    # valley, odd = ridge), the fan centre at the bottom middle
     nr = 15
-    for i in range(nr):
-        a0 = math.pi * (i + 0.15) / nr
-        a1 = math.pi * (i + 0.85) / nr
-        am = (a0 + a1) / 2
-        R = 2.0
-        def hit(a):
-            dx, dz = math.cos(a), math.sin(a)
-            ts = []
-            if abs(dx) > 1e-6:
-                ts.append(((x1 if dx > 0 else x0) - cx) / dx)
-            if dz > 1e-6:
-                ts.append((z1 - cz) / dz)
-            t = min(t for t in ts if t > 0)
-            return (cx + dx * t, cz + dz * t)
-        pa, pb, pm = hit(a0), hit(a1), hit(am)
+    pts = []
+    for i in range(2 * nr + 1):
+        a = math.pi * (1 - i / (2 * nr))
+        px, pz = hit(a)
+        pts.append((px, pz, 0.016 if i % 2 else 0.0))
+    # two meshes: the facets on one side of each ridge catch the light (tint 1), the others
+    # are in their lee (darker): the sunburst reads whatever the lamps do
+    for side, tint in ((0, (1.0, 1.0, 1.0)), (1, (0.62, 0.62, 0.64))):
         bm = bmesh.new()
         c0 = bm.verts.new((cx, y - 0.013, cz))
-        va = bm.verts.new((pa[0], y - 0.013, pa[1]))
-        vm = bm.verts.new((pm[0], y - 0.019, pm[1]))
-        vb = bm.verts.new((pb[0], y - 0.013, pb[1]))
-        bm.faces.new([c0, vm, va])
-        bm.faces.new([c0, vb, vm])
-        k.add("Bar_Ray", bm, M["steel"], tile=0.5, lm=0.6)
-    k.add("Bar_RayHub", G.cyl((cx, y - 0.015, cz + 0.005), 0.06, 0.02, n=12, axis="y"), M["chrome"], tile=0.5)
+        ring = [bm.verts.new((px, y - 0.012 - d, pz)) for px, pz, d in pts]
+        for i in range(side, len(ring) - 1, 2):
+            bm.faces.new([c0, ring[i + 1], ring[i]])
+        bm.normal_update()
+        if sum(f.normal.y for f in bm.faces) > 0:
+            bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
+        k.add("Bar_Ray", bm, M["steel"], tint=tint, tile=0.5)
+    k.add("Bar_Splash", G.box_lohi((x0, y - 0.012, z0), (x1, y, z1)), M["steel"], tile=0.5, lm=0.2)
+    k.add("Bar_RayHub", G.cyl((cx, y - 0.016, cz + 0.005), 0.06, 0.02, n=12, axis="y"), M["chrome"], tile=0.5)
 
 
 def mug(k, M, p, x, y, z, tint):

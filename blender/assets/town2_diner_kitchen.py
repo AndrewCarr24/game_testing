@@ -75,13 +75,17 @@ def build(k, M, p):
     k.collider((-2.9, ly + 0.15, fz), (3.6, ly + 0.6, fz + 1.9))
     # the east side: two reach-ins, the ice machine, lockers, the waitress pickup shelf
     ix1 = A["ix1"]
-    reachin(k, M, p, ix1 - 0.82, ix1, 5.7, 6.45)
-    reachin(k, M, p, ix1 - 0.82, ix1, 6.5, 7.25)
-    k.collider((ix1 - 0.82, 5.7, fz), (ix1, 7.25, fz + 2.05))
+    # (north of the kitchen door's swing: the door stands open along x = 7.3 to y 6.4)
+    reachin(k, M, p, ix1 - 0.82, ix1, 6.55, 7.3)
+    reachin(k, M, p, ix1 - 0.82, ix1, 7.35, 8.1)
+    k.collider((ix1 - 0.82, 6.55, fz), (ix1, 8.1, fz + 2.05))
     icemachine(k, M, p, 4.25, 5.05, 5.45, 6.2)
     k.collider((4.25, 5.45, fz), (5.05, 6.2, fz + 1.75))
-    lockers(k, M, p, ix1 - 0.45, ix1, 7.45, 8.45)
-    k.collider((ix1 - 0.45, 7.45, fz), (ix1, 8.45, fz + 1.85))
+    # aprons and a jacket on hooks by the kitchen door
+    for j, col in enumerate(((0.75, 0.74, 0.7), (0.75, 0.74, 0.7), (0.08, 0.1, 0.12))):
+        hy = 5.7 + j * 0.26
+        k.add("Hook", G.tube([(ix1, hy, fz + 1.62), (ix1 - 0.06, hy, fz + 1.6), (ix1 - 0.07, hy, fz + 1.66)], 0.007, n=6), M["chrome"], tile=0.5, lm=0.2)
+        k.add("Apron", G.box_lohi((ix1 - 0.06, hy - 0.11, fz + 0.85), (ix1 - 0.02, hy + 0.11, fz + 1.62), bevel=0.015), M["paint"], tint=col, tile=1.0, smooth=50, lm=0.4)
     # a mop sink and bucket by the back door; a fire extinguisher; a first-aid box
     k.add("MopSink", G.box_lohi((1.0 + 0.05, iy1 - 0.55, fz), (1.0 + 0.0 + 0.1, iy1, fz + 0.25)), M["steel"], tile=0.5)
     k.add("Bucket", G.lathe([(0.001, 0.0), (0.16, 0.0), (0.18, 0.32), (0.17, 0.32), (0.001, 0.01)], c=(2.65, 8.9, fz), n=12), M["paint"], tint=(0.6, 0.45, 0.05), tile=1.0, lm=0.4)

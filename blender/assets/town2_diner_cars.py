@@ -145,13 +145,15 @@ def car(k, M, p, kind, x, y, yaw, colour):
         k.add(f"Car_{kind}_Bumper", bump, M["paint"], tint=(0.03, 0.03, 0.033), tile=1.0, lm=0.3, zone="out")
     # extras: the pickup's bed (an open box), the wagon's roof bars and kayak
     if "bed" in B:
+        # the open bed, seen from above: a black liner sunk into the body's top between the bed
+        # rails, the tailgate's top edge, a toolbox across the front of the bed
         b0, b1 = B["bed"]
-        w = st[-2][4] - 0.06
-        zb = st[-2][1] + 0.35
-        for lo, hi in (((b0, -w, zb), (b1, w, zb + 0.03)), ((b0, -w, zb), (b0 + 0.06, w, st[-2][2])), ((b1 - 0.06, -w, zb), (b1, w, st[-2][2]))):
-            bm_ = G.box_lohi(lo, hi)
+        w = st[-2][4] - 0.09
+        zt = st[-2][3] + 0.006
+        for bm_, tint in ((G.box_lohi((b0 + 0.08, -w, zt - 0.01), (b1 - 0.08, w, zt)), (0.012, 0.012, 0.013)),
+                          (G.box_lohi((b0 + 0.1, -w + 0.02, zt), (b0 + 0.42, w - 0.02, zt + 0.22), bevel=0.02), (0.55, 0.56, 0.57))):
             bmesh.ops.transform(bm_, matrix=mat, verts=bm_.verts)
-            k.add(f"Car_{kind}_Bed", bm_, M["paint"], tint=(0.02, 0.02, 0.022), tile=1.0, lm=0.3, zone="out")
+            k.add(f"Car_{kind}_Bed", bm_, M["paint"], tint=tint, tile=1.0, lm=0.3, zone="out")
     if kind == "wagon":
         zr = st[5][3] + 0.04
         for bx in (-0.3, 1.2):
