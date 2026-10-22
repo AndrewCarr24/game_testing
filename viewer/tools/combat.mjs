@@ -65,7 +65,7 @@ try {
   await press('KeyE', 500);
   const st = await p.evaluate(() => ({ has: window.__inventory.has('kitchen_knife'), armed: window.__inventory.armed, def: window.__weapons.def?.id }));
   check('picked up and armed', st.has && st.armed === 'kitchen_knife' && st.def === 'kitchen_knife', JSON.stringify(st));
-  await p.evaluate(() => window.__weapons.vm.ready);
+  await p.evaluate(() => window.__weapons.vm.ready.then(() => true));   // (not the arm itself: playwright would serialise it)
   await p.waitForTimeout(600);
   // the view model: the arm asset (skinned, 3 bones) holding the knife, lit like the kitchen
   const vmInfo = await p.evaluate(() => {
@@ -202,7 +202,7 @@ try {
     const c = window.__combat, cam = window.__camera;
     return c.shoot({ from: 'player', origin: cam.position.clone(), dir: c.get('d5').position().clone().setY(cam.position.y - 0.4).sub(cam.position).normalize(), damage: 20 }).target?.id ?? null;
   });
-  check('untagged character box: stab and shot still land', (await health('d5')).h === 25 && shot5 === 'd5', JSON.stringify({ h: await health('d5'), shot5 }));
+  check('untagged character box: slash and shot still land', (await health('d5')).h === 25 && shot5 === 'd5', JSON.stringify({ h: await health('d5'), shot5 }));
   await p.evaluate(() => window.__combat.get('d5').remove());
   // the sweep: two dummies, one on each side of the view (~25 deg): one slash hits both, the one
   // on the right first (the blade travels right to left), 55 each
@@ -297,7 +297,8 @@ try {
   check('hit: 30 damage, red vignette, a direction wedge', hurt.h === 70 && hurt.vig > 0.3 && hurt.wedges === 1, JSON.stringify(hurt));
   check('wedge points left (the attacker is on the left)', /rotate\(-\d/.test(hurt.rot || ''), hurt.rot);
   await p.screenshot({ path: `${out}/damage.png` });
-  await p.evaluate(() => window.__combat.hit('player', 45, { from: 'attacker' }));
+  // (down to 25 whatever regenerated meanwhile: a slow screenshot on a busy machine can take seconds)
+  await p.evaluate(() => window.__combat.hit('player', window.__vitals.health - 25, { from: 'attacker' }));
   await p.waitForTimeout(500);
   const low = await p.evaluate(() => ({ h: window.__vitals.health, breath: window.__vitals.breathLevel }));
   check('low health: breathing on', low.h === 25 && low.breath > 0.3, JSON.stringify(low));
