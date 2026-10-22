@@ -62,7 +62,8 @@ export class Invaders {
     this.stats = { spawned: 0, killed: 0, shots: 0, hits: 0, playerHits: 0, damage: 0, swings: 0, reports: 0, shouts: 0, radio: 0, orders: 0, planMs: 0, plans: 0, thinkMs: 0, frames: 0, maxMs: 0 };
     this.events = [];
     this.opts = { radio: 1.6, radioNoLeader: 4.0, shout: 20 };
-    const q = params.getAll('invaders').join(',').split(',').filter(Boolean);
+    // (the character workstream's posed test form, ?invaders=x,z,rot,Clip;..., isn't ours)
+    const q = params.getAll('invaders').filter((v) => !/,[A-Z][A-Za-z]+/.test(v)).join(',').split(',').filter(Boolean);
     this.debug = q.includes('debug') || params.get('invdebug') === '1';
     const n = q.map(Number).find((v) => Number.isFinite(v) && v > 0);
     const wq = params.get('waves');

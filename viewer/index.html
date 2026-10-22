@@ -389,7 +389,9 @@
       }
       // [invader-character] ?invaders=x,z,rotDeg,Clip[,Weapon,Outfit,head];... stands invaders in the level playing a
       // clip (viewer/invader_asset.js placeInvaders; the AI belongs to the invader-behaviour workstream)
-      const invaders = params.get('invaders') ? await (await import('./invader_asset.js')).placeInvaders(scene, loader, base + 'models/invader.gltf', params.get('invaders')) : null;
+      // (invaders: the posed-test form only, values with a clip name; the squad's own ?invaders=N|debug|0 is further down)
+      const invPosed = /,[A-Z][A-Za-z]+/.test(params.get('invaders') ?? '');
+      const posedInvaders = invPosed ? await (await import('./invader_asset.js')).placeInvaders(scene, loader, base + 'models/invader.gltf', params.get('invaders')) : null;
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity, true);
 
@@ -637,8 +639,8 @@
       // On in the game; off for automated runs (navigator.webdriver, the bench) unless the URL asks:
       // ?invaders=0 off, =N N at once, =debug overlay; ?waves=fast|0|K. Harmless under the bench.
       {
-        const q = params.get('invaders');
-        if (q !== '0' && (q !== null || (!navigator.webdriver && !window.__bench))) {
+        const q = invPosed ? null : params.get('invaders');   // (posed test invaders: no squad unless the game would have one)
+        if (q !== '0' && !(invPosed && navigator.webdriver) && (q !== null || (!navigator.webdriver && !window.__bench))) {
           const { Invaders } = await import('./invaders.js');
           invaders = new Invaders({ scene, camera, player, level, colliders, interact, signals, noise, hiding, params, breakGlass });
           footsteps ??= new Footsteps(noise);     // (they hear running feet, as the Grimble does)
@@ -765,7 +767,7 @@
         house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
         grimble?.update(dt, camera.position);
-        invaders?.update(dt, camera.position);  // [invader-character]
+        posedInvaders?.update(dt, camera.position);  // [invader-character]
         if (shatterFx && !shatterFx(dt)) shatterFx = null;
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear

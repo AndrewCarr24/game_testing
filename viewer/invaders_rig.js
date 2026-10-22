@@ -6,7 +6,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 // design/invaders/character.md) driven by the brains. Two paths, as that contract recommends:
 // - near the player (within `near` m, at most `maxNear` at once, nearest first): a SkinnedMesh
 //   each (viewer/invader_asset.js Invader: cross-fades, the upper body layered over the legs:
-//   walking while aiming), its LODs by distance;
+//   walking while aiming), its LODs by distance, lit by its room's probe like the props;
 // - the rest: the instanced GPU-skinned crowd (viewer/invader_crowd.js InvaderCrowd: one clip
 //   each, ~10 draw calls for all of them).
 // An invader is handed from one to the other as it comes near / goes away. Same interface as the
@@ -36,7 +36,7 @@ const HEADS = ['none', 'mask', 'cap', 'hood', 'mask+hood', 'mask', 'none', 'mask
 const LOOK_STATES = new Set(['search', 'sweep', 'investigate', 'check', 'post', 'hold']);
 
 export class RigBodies {
-  constructor(scene, asset, crowd, { near = 24, maxNear = 14 } = {}) {
+  constructor(scene, asset, crowd, { near = 22, maxNear = 8 } = {}) {
     Object.assign(this, { scene, asset, crowd, near, maxNear });
     this.meta = asset.meta;
     this.outfits = (this.meta.outfits || []).map((o) => o.name);
@@ -86,6 +86,8 @@ export class RigBodies {
       this.scene.add(s.root);
     }
     s.setOutfit(a.rig.outfit); s.setHead(a.rig.head); s.setWeapon(a.rig.weapon);
+    s.root.traverse((o) => { if (o.isMesh) o.userData.invBase = o.material; });
+    a.rig.room = undefined;
     s.root.visible = true;
     s.current = null; s.mixer.stopAllAction();
     a.rig.skinned = s; a.rig.key = null;
@@ -96,6 +98,7 @@ export class RigBodies {
     if (!s) return;
     s.root.visible = false;
     s.mixer.stopAllAction();
+    s.root.traverse((o) => { if (o.isMesh && o.userData.invBase) o.material = o.userData.invBase; });
     this.pool.push(s);
     a.rig.skinned = null; a.rig.ckey = null;
   }
@@ -147,6 +150,7 @@ export class RigBodies {
         }
         if (s.current && c.rate && !c.once) s.current.timeScale = c.rate;
         s.update(dt, eye);
+        this.light(a);
       } else {
         // the crowd: one clip each (an aiming gunman standing still aims; moving, its legs win)
         const clip = c.once ? c.lower : (a.moveSpeed ?? 0) < 0.25 && c.upper && !/^Shoot/.test(c.upper) ? c.upper : c.lower;
@@ -156,6 +160,19 @@ export class RigBodies {
         this.crowd.set(a.rig.cid, opts);
       }
     }
+  }
+
+  // lit like the props: the room's probe (SH) and panorama (viewer/baked.js applyRoom), swapped
+  // as it walks from room to room; outdoors the scene's own environment
+  light(a) {
+    const L = window.__lighting;
+    if (!L?.applyRoom || !a.sq?.world) return;
+    const room = a.sq.world.roomAt(a.pos.x, a.pos.y + 0.5, a.pos.z)?.name ?? null;
+    if (room === a.rig.room) return;
+    a.rig.room = room;
+    const s = a.rig.skinned;
+    s.root.traverse((o) => { if (o.isMesh && o.userData.invBase) o.material = o.userData.invBase; });
+    if (room) L.applyRoom(s.root, room, a.sq.level.rooms[room]?.sun === false);
   }
 
   dispose() {
