@@ -387,6 +387,9 @@
           });
         }
       }
+      // [invader-character] ?invaders=x,z,rotDeg,Clip[,Weapon,Outfit,head];... stands invaders in the level playing a
+      // clip (viewer/invader_asset.js placeInvaders; the AI belongs to the invader-behaviour workstream)
+      const invaders = params.get('invaders') ? await (await import('./invader_asset.js')).placeInvaders(scene, loader, base + 'models/invader.gltf', params.get('invaders')) : null;
       const proto = Object.fromEntries(names.map((n, i) => [n, protos[i].scene]));
       for (const n of names) prepare(proto[n], envIntensity, true);
 
@@ -739,6 +742,7 @@
         house.update(dt);                        // (house.js) power events, room light levels, the light cue
         fire.update(dt, !!window.__bench);
         grimble?.update(dt, camera.position);
+        invaders?.update(dt, camera.position);  // [invader-character]
         if (shatterFx && !shatterFx(dt)) shatterFx = null;
         if (moved.length) renderer.shadowMap.needsUpdate = true;
         // a door that has just finished opening may now overlap the player: step them clear
