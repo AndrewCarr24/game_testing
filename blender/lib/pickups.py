@@ -333,4 +333,14 @@ def adopt(name, col, root, kind, objects, base, yaw=0.0):
     body = objects[0].active_material if objects and objects[0].type == "MESH" else None
     if ENABLED:
         node["interact"] = define(kind, body)
+    else:
+        no_collide(objects)         # (as a pickup it had no box: fixed decor keeps none)
     return node
+
+
+def no_collide(objects):
+    """Tag meshes `_NoCollide` (common.part_colliders skips them): items off, a thing that was a
+    pickup (no collider: interact parts move) stays without one as fixed decor."""
+    for ob in objects:
+        if ob.type == "MESH" and "_NoCollide" not in ob.name:
+            ob.name = ob.name + "_NoCollide"

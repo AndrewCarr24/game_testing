@@ -215,6 +215,8 @@ def build(**overrides):
             poly.use_smooth = True
 
     parts = [o for o in root.children_recursive if o.type == "MESH"]
+    if not pickups.ENABLED:
+        pickups.no_collide(parts)   # (decor now, but no box: as a pickup it had none)
     return root, parts
 
 
