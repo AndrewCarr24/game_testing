@@ -134,6 +134,10 @@ export class Invader {
     const from = info.from?.position?.() ?? info.from?.pos ?? null;
     this.stats.hitsTaken = (this.stats.hitsTaken ?? 0) + 1;
     this.lastHitAt = this.time;
+    // (the body module plays the hit / fall the right way: blown forward from behind)
+    const d = info.dir;
+    this.hitFromBehind = !!d && d.x * Math.sin(this.yaw) + d.z * Math.cos(this.yaw) > 0.3;
+    this.fellForward = this.hitFromBehind;
     if (this.health <= 0) { this.die(info); return; }
     // stagger, call out, and know where it came from
     this.anim.stagger = damage > 40 ? 0.9 : 0.5;
@@ -166,6 +170,8 @@ export class Invader {
   // ---------------------------------------------------------------- senses
   eyePos(out = new V3()) { return out.set(this.pos.x, this.pos.y + (this.crouch > 0.5 ? SENSE.crouchEye : SENSE.eye), this.pos.z); }
   muzzle(out = new V3()) {
+    const m = this.rig?.muzzle?.();
+    if (m) return out.copy(m);
     const y = this.pos.y + (this.crouch > 0.5 ? 1.0 : 1.42);
     return out.set(this.pos.x + Math.sin(this.lookYaw) * 0.45 + Math.cos(this.lookYaw) * 0.12, y, this.pos.z + Math.cos(this.lookYaw) * 0.45 - Math.sin(this.lookYaw) * 0.12);
   }

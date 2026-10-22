@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { BoxGrid } from './invaders_nav.js';
 import { buildWorld } from './invaders_world.js';
-import { Invader, SENSE } from './invaders_brain.js';
+import { Invader, SENSE, WEAPONS } from './invaders_brain.js';
 import { InvaderBodies } from './invaders_body.js';
 import { InvaderFx } from './invaders_fx.js';
 
@@ -72,7 +72,19 @@ export class Invaders {
     this.immediate = n ? Math.min(MAX, n) : 0;
     this.setupRooms();
     this.setupEntries();
+    // bodies: the stand-in at once; the rigged character (invaders_rig.js) when it has loaded,
+    // if it's there (?invbody=stand keeps the stand-in)
     this.bodies = new InvaderBodies(scene, MAX + 8);
+    if (params.get('invbody') !== 'stand') {
+      import('./invaders_rig.js').then(({ loadRig }) => loadRig(scene, MAX + 8)).then((rig) => {
+        rig.tune(WEAPONS);
+        const stand = this.bodies;
+        this.bodies = rig;
+        for (const a of this.agents) rig.add(a);
+        stand.dispose();
+        this.event('rig', {});
+      }).catch((e) => console.info('[inv] rigged invader not available, stand-ins:', e?.message ?? e));
+    }
     this.fx = new InvaderFx(scene, camera, { debug: this.debug });
     noise?.on?.((ev) => this.onNoise(ev));
     this.combat = null;
@@ -493,6 +505,7 @@ export class Invaders {
     this.stats.shots++;
     if (hitT) { this.stats.hits++; a.stats.hits++; }
     this.fx.tracer(m, end, !!hitT);
+    a.anim.shotAt = a.time;
     this.lastShots ??= [];
     this.lastShots.push({ t: this.time, p: m.clone() });
     if (this.lastShots.length > 20) this.lastShots.shift();
@@ -734,7 +747,7 @@ export class Invaders {
 
   event(kind, data) {
     this.events.push({ t: +this.time.toFixed(2), kind, ...data });
-    if (this.events.length > 3000) this.events.shift();
+    if (this.events.length > 4000) this.events.splice(0, 1000);
   }
   log() {}
 

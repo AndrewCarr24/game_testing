@@ -41,8 +41,9 @@ await withPage('&grimble=0&waves=0&invaders=on&god=1', async (p) => {
   const views = {
     lineup: [[0, 1.5, -1.5], [0, 1.0, 3.5]],
     lineup_close: [[-3.5, 1.4, 0.6], [-3.5, 1.0, 3.5]],
-    lineup_side: [[-12, 1.6, 0.5], [-2, 0.9, 3.5]],
-    great_room: [[-11.8, 1.65, 0], [-19, 1.2, 1]],
+    lineup_34: [[-6.5, 1.7, -0.5], [-2.5, 0.9, 3.5]],
+    lineup_top: [[0, 9, 1.5], [0, 0, 3.6]],
+    great_room: [[-14.5, 1.65, -6], [-19, 1.1, 1]],
   };
   for (const [name, [pos, at]] of Object.entries(views)) {
     await p.evaluate(([pos, at]) => { const c = window.__camera; c.position.set(...pos); c.lookAt(...at); }, [pos, at]);
