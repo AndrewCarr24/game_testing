@@ -7,59 +7,57 @@ import { makeTarget } from './combat.js';
 // damage, sweeps, shots, events) is viewer/combat.js; design notes: design/combat.md.
 //
 // A weapon is a pickup whose interact definition names it (`weapon: '<id>'`, or its item id is
-// a WEAPONS key). Armed (inventory), it shows in the first-person view model and:
-//   melee   click / Enter = the primary attack, right click = the secondary; from behind an
-//           unaware target (combat.canTakedown) the primary becomes the takedown
-//   gun     (designed, no gun asset yet) click = fire, right click held = aim down sights,
-//           R = reload; ammo from inventory items (`ammo.item`), recoil kicks the view
+// a WEAPONS key). Armed (inventory), it shows in the first-person view model and Enter attacks
+// with it (no mouse buttons: the input stays on the keyboard):
+//   melee   Enter = its one attack (the knife: a slash); from behind an unaware target
+//           (combat.canTakedown) the same swing is a takedown when the weapon has `takedown`
+//   gun     (designed, no gun asset yet) Enter = fire, R = reload; ammo from inventory items
+//           (`ammo.item`), recoil kicks the view
 // Adding a melee weapon = a WEAPONS entry + a pickup asset with `weapon` in its interact dict
 // (and _Grip / _Tip / _Edge empties for the view model).
 //
-// Times are seconds, distances metres, angles degrees. Attack keys are view-model poses
-// relative to the hold pose: [t, { p: [x, y, z] (camera space), r: [pitch, yaw, roll] }].
+// Times are seconds, distances metres, angles degrees. An attack's keys are view-model poses
+// relative to the hold pose: [t, { p: [x, y, z] (camera space), r: [pitch, yaw, roll] (the arm
+// about the grip), w: [flex, deviation, twist] (the wrist bone, when the arm is rigged) }, ease],
+// ease = 'linear' | 'in' (accelerating) | 'out' (decelerating) | smoothstep (default).
+// Its `sweep` is where the blade travels in the view while it can hit: from / to = [yaw, pitch]
+// (degrees off the view's centre, + = right / up) between t0 and t1; each frame the step swept
+// since the last one is a melee cone (combat.attack), every target at most once per swing.
 
-const STAB_KEYS = [
-  [0.0, {}],
-  [0.07, { p: [0.015, -0.025, 0.07], r: [-6, -4, 8] }],         // draw back
-  [0.15, { p: [-0.075, 0.04, -0.3], r: [-9, 6, -4] }, 'linear'], // thrust, the tip to the centre
-  [0.21, { p: [-0.07, 0.035, -0.28], r: [-8, 5, -4] }],
-  [0.5, {}],
-];
+// the knife's slash, right to left and a little down: a short wind-up (the arm draws back to the
+// right, the wrist cocks), the cut (fast, accelerating into the centre), the follow-through past
+// the left of the view (the wrist rolls over), a beat, the recovery back to the guard
 const SLASH_KEYS = [
   [0.0, {}],
-  [0.1, { p: [0.09, 0.07, 0.02], r: [8, -32, -42] }],             // wind up to the right, blade back
-  [0.25, { p: [-0.2, -0.04, -0.12], r: [-6, 40, 30] }, 'linear'], // sweep across, right to left
-  [0.32, { p: [-0.22, -0.06, -0.1], r: [-8, 44, 34] }],
-  [0.62, {}],
-];
-const TAKEDOWN_KEYS = [
-  [0.0, {}],
-  [0.12, { p: [-0.04, 0.13, 0.05], r: [22, 6, -10] }],           // raised, the tip back
-  [0.2, { p: [-0.08, -0.05, -0.27], r: [-62, 8, -6] }, 'linear'],   // driven down and in
-  [0.42, { p: [-0.08, -0.06, -0.26], r: [-62, 8, -6] }],
-  [0.8, {}],
+  [0.13, { p: [0.075, 0.05, 0.03], r: [6, -28, -24], w: [-26, 22, -8] }, 'out'],   // anticipation
+  [0.2, { p: [-0.02, 0.0, -0.1], r: [-2, 8, 10], w: [4, -6, 6] }, 'in'],           // the cut, mid-arc
+  [0.27, { p: [-0.2, -0.065, -0.07], r: [-10, 46, 36], w: [24, -24, 18] }, 'out'],  // follow-through
+  [0.36, { p: [-0.215, -0.08, -0.05], r: [-12, 50, 40], w: [28, -26, 20] }],        // the beat
+  [0.66, {}],                                                                         // recovery
 ];
 const SWING_KEYS = [   // a club (bat, pan, poker): big wind-up over the shoulder, a heavy sweep
   [0.0, {}],
-  [0.16, { p: [0.12, 0.14, 0.06], r: [30, -40, -50] }],
-  [0.33, { p: [-0.25, -0.08, -0.15], r: [-20, 55, 40] }, 'linear'],
+  [0.16, { p: [0.12, 0.14, 0.06], r: [30, -40, -50] }, 'out'],
+  [0.33, { p: [-0.25, -0.08, -0.15], r: [-20, 55, 40] }, 'in'],
   [0.4, { p: [-0.27, -0.1, -0.13], r: [-22, 58, 42] }],
   [0.85, {}],
 ];
+const SWING_SWEEP = { t0: 0.2, t1: 0.36, from: [40, 12], to: [-45, -10] };
 
 export const WEAPONS = {
   kitchen_knife: {
     id: 'kitchen_knife', kind: 'melee', name: "Chef's knife",
     // the view model: grip frame at `pos` (camera space), the blade along `aim`, the back of the hand toward `back`
     hold: { pos: [0.18, -0.18, -0.38], aim: [-0.2, 0.32, -1], back: [0.4, 0.45, 1], arm: [0.5, -0.6, 0.6], gripRadius: 0.0115 },
-    attacks: {
-      primary: { name: 'stab', damage: 55, range: 1.05, arc: 26, hitAt: 0.15, duration: 0.5, cooldown: 0.52, keys: STAB_KEYS },
-      secondary: { name: 'slash', damage: 38, range: 1.2, arc: 100, maxTargets: 2, hitAt: 0.2, duration: 0.62, cooldown: 0.66, keys: SLASH_KEYS },
-      takedown: { name: 'takedown', damage: 100, range: 1.25, arc: 50, hitAt: 0.2, duration: 0.8, cooldown: 0.9, keys: TAKEDOWN_KEYS },
-    },
+    // one attack, Enter: the slash. 55 a hit (two kill), up to 2 targets in its arc
+    attack: { name: 'slash', damage: 55, range: 1.25, maxTargets: 2, duration: 0.66, cooldown: 0.62, keys: SLASH_KEYS,
+      sweep: { t0: 0.15, t1: 0.27, from: [34, 9], to: [-42, -11] }, swingSfxAt: 0.12 },
+    // the same slash from behind an unaware target (combat.canTakedown): it dies outright
+    takedown: { damage: 100, range: 1.3, arc: 60 },
     hitStop: 0.075,            // the view model holds still for this long on a hit (0.13 takedown)
     kick: 0.9,                 // the view's jolt on a hit (degrees)
     noise: 0.6,                // a hit's noise (window.__noise); swings are silent
+    reach: 0.9,                // a wall or counter nearer than this in the blade's path stops it (a clink)
     sfx: { swing: 'knife_swing', hit: 'knife_hit', wall: 'knife_wall', takedown: 'knife_takedown' },
   },
 
@@ -67,29 +65,21 @@ export const WEAPONS = {
   bat: {
     id: 'bat', kind: 'melee', name: 'Baseball bat',
     hold: { pos: [0.24, -0.26, -0.42], aim: [-0.35, 0.75, -0.55], back: [1, 0.2, 0.4], gripRadius: 0.015 },
-    attacks: {
-      primary: { name: 'swing', damage: 35, range: 1.7, arc: 110, maxTargets: 2, hitAt: 0.3, duration: 0.85, cooldown: 0.95, keys: SWING_KEYS },
-      secondary: { name: 'jab', damage: 15, range: 1.3, arc: 30, hitAt: 0.15, duration: 0.5, cooldown: 0.55, keys: STAB_KEYS, stagger: 1 },
-    },
+    attack: { name: 'swing', damage: 35, range: 1.7, maxTargets: 2, duration: 0.85, cooldown: 0.95, keys: SWING_KEYS, sweep: SWING_SWEEP },
     hitStop: 0.11, kick: 1.8, noise: 0.9,
     sfx: { swing: 'bat_swing', hit: 'bat_hit', wall: 'bat_hit' },
   },
   frying_pan: {
     id: 'frying_pan', kind: 'melee', name: 'Frying pan',
     hold: { pos: [0.22, -0.24, -0.4], aim: [-0.3, 0.6, -0.75], back: [1, 0.3, 0.3], gripRadius: 0.012 },
-    attacks: {
-      primary: { name: 'swing', damage: 30, range: 1.45, arc: 100, hitAt: 0.27, duration: 0.8, cooldown: 0.9, keys: SWING_KEYS },
-    },
+    attack: { name: 'swing', damage: 30, range: 1.45, duration: 0.8, cooldown: 0.9, keys: SWING_KEYS, sweep: SWING_SWEEP },
     hitStop: 0.1, kick: 1.5, noise: 1.1,              // a pan rings out
     sfx: { swing: 'bat_swing', hit: 'pan_hit', wall: 'pan_hit' },
   },
   fireplace_poker: {
     id: 'fireplace_poker', kind: 'melee', name: 'Fireplace poker',
     hold: { pos: [0.22, -0.24, -0.4], aim: [-0.25, 0.55, -0.8], back: [1, 0.3, 0.3], gripRadius: 0.009 },
-    attacks: {
-      primary: { name: 'swing', damage: 40, range: 1.6, arc: 90, hitAt: 0.28, duration: 0.8, cooldown: 0.9, keys: SWING_KEYS },
-      secondary: { name: 'thrust', damage: 30, range: 1.5, arc: 20, hitAt: 0.16, duration: 0.55, cooldown: 0.6, keys: STAB_KEYS },
-    },
+    attack: { name: 'swing', damage: 40, range: 1.6, duration: 0.8, cooldown: 0.9, keys: SWING_KEYS, sweep: SWING_SWEEP },
     hitStop: 0.09, kick: 1.3, noise: 0.8,
     sfx: { swing: 'bat_swing', hit: 'bat_hit', wall: 'pan_hit' },
   },
@@ -130,6 +120,7 @@ export function weaponFor(def) {
 }
 
 const _dir = new THREE.Vector3(), _q0 = new THREE.Quaternion(), _q1 = new THREE.Quaternion();
+const D = THREE.MathUtils.degToRad;
 
 export class Weapons {
   // combat: viewer/combat.js; player: viewer/player.js; vitals: the player's PlayerVitals (its target)
@@ -145,12 +136,9 @@ export class Weapons {
     this.lastLook = camera.quaternion.clone();
     this.attacks = 0;         // counters (tests)
     this.ammo = {};           // guns: rounds in the magazine per weapon id
-    this.ads = false;
     this.recoil = new THREE.Vector2();
     this.viewKick = new THREE.Vector2();
-    window.addEventListener('mousedown', (e) => this.mouse(e, true));
-    window.addEventListener('mouseup', (e) => this.mouse(e, false));
-    window.addEventListener('contextmenu', (e) => { if (this.def && document.pointerLockElement) e.preventDefault(); });
+    // (no mouse buttons: Enter attacks, index.html useArmed -> attack())
   }
 
   get player_target() { return this.combat.get('player'); }
@@ -166,15 +154,6 @@ export class Weapons {
     this.vm.setWeapon(def, def ? node : null);
     if (def && def.kind === 'gun') this.ammo[def.id] ??= def.ammo?.mag ?? 0;
     return !!def;
-  }
-
-  mouse(e, down) {
-    if (!this.def || !document.pointerLockElement || !this.canAct()) { if (!down && e.button === 2) this.ads = false; return; }
-    if (e.button === 0 && down) this.attack('primary');
-    if (e.button === 2) {
-      if (this.def.kind === 'gun') this.ads = down;
-      else if (down) this.attack('secondary');
-    }
   }
 
   // the weapons carried, in the order they were picked up
@@ -194,84 +173,118 @@ export class Weapons {
     return false;
   }
 
-  // what the armed weapon would do now (the prompt under the crosshair, the crosshair's cue)
+  // the target a takedown would kill now (an unaware one in reach, the player behind it): the
+  // prompt under the crosshair says so and the crosshair turns gold
   target() {
     const me = this.player_target;
-    if (!me || !this.def || this.def.kind !== 'melee' || !this.def.attacks.takedown) return null;
-    const a = this.def.attacks.takedown;
+    const td = this.def?.takedown;
+    if (!me || !td || this.def.kind !== 'melee') return null;
     const eye = this.camera.position, fwd = this.camera.getWorldDirection(_dir);
     for (const t of this.combat.living((t) => t.team !== me.team)) {
       const p = t.position();
       const c = new THREE.Vector3(p.x, THREE.MathUtils.clamp(eye.y, p.y + 0.3, p.y + t.height - 0.2), p.z);
       const to = c.sub(eye), d = to.length();
-      if (d - t.radius > a.range) continue;
-      if (to.normalize().dot(fwd) < Math.cos(THREE.MathUtils.degToRad(a.arc / 2 + 10))) continue;
+      if (d - t.radius > td.range) continue;
+      if (to.normalize().dot(fwd) < Math.cos(D(td.arc / 2 + 10))) continue;
       if (this.combat.canTakedown(t, me) && this.combat.lineOfSight(eye, p.clone().setY(eye.y))) return t;
     }
     return null;
   }
   hint() {
     if (!this.def) return null;
-    if (this.def.kind === 'gun') return `Fire · right-click aim${this.ammo[this.def.id] ? '' : ' · empty'}`;
+    if (this.def.kind === 'gun') return `Fire${this.ammo[this.def.id] ? '' : ' · empty'}`;
     if (this.target()) return 'Takedown';
-    const a = this.def.attacks;
-    return `${cap(a.primary.name)}${a.secondary ? ` · right-click ${a.secondary.name}` : ''}`;
+    return cap(this.def.attack.name);
   }
 
-  attack(which = 'primary') {
+  // Enter: the armed weapon's one attack (a gun fires). From behind an unaware target the same
+  // swing is a takedown (marked now, killed when the blade's sweep reaches it)
+  attack() {
     const def = this.def;
     if (!def || this.cooldown > 0 || this.pending || this.player.isDown || !this.canAct()) return false;
     if (def.kind === 'gun') return this.fire();
     const me = this.player_target;
-    let a = def.attacks[which] ?? def.attacks.primary;
-    let victim = null;
-    if (which === 'primary' && def.attacks.takedown) {
-      victim = this.target();
-      if (victim) a = def.attacks.takedown;
-    }
+    const a = def.attack;
+    const victim = def.takedown ? this.target() : null;
     this.attacks++;
     this.cooldown = a.cooldown;
-    this.vm.play({ duration: a.duration, keys: a.keys });
-    this.pending = { a, t: 0, victim, which, me };
-    if (a.name !== 'takedown') sfx(def.sfx?.swing, null, { delay: Math.max(0, a.hitAt - 0.1) });
+    this.vm.play({ duration: a.duration, keys: a.keys, trail: a.sweep });
+    this.pending = { a, t: 0, u: 0, victim, me, hit: new Set(), hits: [], wall: null, view: this.camera.quaternion.clone() };
+    sfx(def.sfx?.swing, null, { delay: Math.max(0, a.swingSfxAt ?? a.sweep.t0 - 0.03) });
     return true;
   }
 
-  strike(p) {
-    const { a, victim, me } = p, def = this.def;
-    const origin = this.camera.position.clone();
-    const dir = this.camera.getWorldDirection(new THREE.Vector3());
-    let hits;
-    if (a.name === 'takedown' && victim?.alive && this.combat.canTakedown(victim, me)) {
-      // the stealth takedown: the marked target, whatever the sweep finds
-      const point = victim.position().clone().setY(origin.y - 0.15);
-      const r = this.combat.hit(victim, Math.max(a.damage, victim.health), {
-        from: me, dir: dir.clone().setY(0).normalize(), weapon: def.id, part: 'body', point, stealth: true, kind: 'melee' });
-      hits = r ? [{ target: victim, point, damage: r.damage, part: 'body', stealth: true, killed: r.killed }] : [];
-      this.combat.emit('attack', { from: me, origin, dir, weapon: def.id, hits, takedown: true });
-    } else {
-      hits = this.combat.attack({ from: me, origin, dir, weapon: def, range: a.range, arc: a.arc, damage: a.damage,
-        takedown: 0, maxTargets: a.maxTargets ?? 1 });
+  // the blade's direction in the view at sweep progress u (0..1): yaw / pitch off the view's
+  // centre (+ = right / up), eased like the arm (fast through the middle)
+  sweepDir(sw, u, q, out = new THREE.Vector3()) {
+    const k = u * u * (3 - 2 * u);
+    const yaw = sw.from[0] + (sw.to[0] - sw.from[0]) * k, pitch = sw.from[1] + (sw.to[1] - sw.from[1]) * k;
+    return out.set(Math.sin(D(yaw)) * Math.cos(D(pitch)), Math.sin(D(pitch)), -Math.cos(D(yaw)) * Math.cos(D(pitch))).applyQuaternion(q);
+  }
+
+  // one frame of the swing's sweep: the arc from the last step to this one is a melee cone.
+  // The view's turn during the swing carries the arc with it (q = the camera now)
+  sweep(p) {
+    const { a, me } = p, def = this.def, sw = a.sweep;
+    const u = THREE.MathUtils.clamp((p.t - sw.t0) / (sw.t1 - sw.t0), 0, 1);
+    if (u <= p.u || p.wall) return;
+    const q = this.camera.quaternion, origin = this.camera.position.clone();
+    const d0 = this.sweepDir(sw, p.u, q), d1 = this.sweepDir(sw, u, q);
+    const dir = d0.clone().add(d1).normalize();
+    const step = THREE.MathUtils.radToDeg(d0.angleTo(d1));
+    const left = (a.maxTargets ?? 1) - p.hits.length;
+    let hits = [];
+    // the marked takedown: killed when the blade reaches it, whatever its health
+    const v = p.victim;
+    if (v && !p.hit.has(v)) {
+      const at = v.position().clone().setY(origin.y - 0.15);
+      const to = at.clone().sub(origin).normalize();
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(q), fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+      const yaw = THREE.MathUtils.radToDeg(Math.atan2(to.dot(right), to.dot(fwd)));
+      const yNow = sw.from[0] + (sw.to[0] - sw.from[0]) * (u * u * (3 - 2 * u));
+      if ((yNow <= yaw || u >= 1) && v.alive && this.combat.canTakedown(v, me)) {
+        p.hit.add(v);
+        const r = this.combat.hit(v, Math.max(def.takedown.damage, v.health), {
+          from: me, dir: to.clone().setY(0).normalize(), weapon: def.id, part: 'body', point: at, stealth: true, kind: 'melee' });
+        if (r) hits.push({ target: v, point: at, damage: r.damage, part: 'body', stealth: true, killed: r.killed });
+      }
     }
+    if (left > hits.length) {
+      hits = hits.concat(this.combat.attack({ from: me, origin, dir, weapon: def, range: a.range, arc: step + 2 * (a.width ?? 9),
+        damage: a.damage, takedown: def.takedown?.damage ?? 0, maxTargets: left - hits.length, exclude: p.hit, quiet: true }));
+    }
+    p.u = u;
     if (hits.length) {
-      const at = hits[0].point;
-      const stealth = hits.some((h) => h.stealth);
+      for (const h of hits) p.hit.add(h.target);
+      const first = !p.hits.length;
+      p.hits.push(...hits);
+      const at = hits[0].point, stealth = hits.some((h) => h.stealth);
       sfx(stealth ? def.sfx?.takedown ?? def.sfx?.hit : def.sfx?.hit, at);
       this.noise?.emit({ position: at.clone(), loudness: stealth ? def.noise * 0.5 : def.noise, source: 'melee', weapon: def.id });
-      this.vm.freeze(stealth ? 0.13 : def.hitStop);
+      // hit stop: the arm holds on contact (the first one longest), the view jolts
+      this.vm.freeze(stealth ? 0.13 : first ? def.hitStop : def.hitStop * 0.5);
       this.viewKick.set((Math.random() - 0.5) * def.kick, def.kick * (stealth ? 1.4 : 1));
-    } else {
-      // the blade meets a wall or a counter in reach: a clink, a small jolt
-      const wall = this.combat.raycast(origin, dir, a.range * 0.9);
+      return;
+    }
+    // the blade meets a wall or a counter in its path before any target: a clink, it stops
+    if (!p.hits.length && def.reach) {
+      const wall = this.combat.raycast(origin, d1, def.reach);
       if (wall) {
+        p.wall = wall;
         sfx(def.sfx?.wall, wall.point);
-        this.vm.freeze(def.hitStop * 0.6);
+        this.vm.freeze(def.hitStop * 0.8);
+        this.vm.bounce?.();
         this.viewKick.set(0, def.kick * 0.4);
         this.noise?.emit({ position: wall.point.clone(), loudness: 0.3, source: 'melee_wall', weapon: def.id });
       }
     }
-    this.lastHits = hits;
-    return hits;
+  }
+
+  // the swing is over: one 'attack' event with everything it hit
+  endSwing(p) {
+    this.lastHits = p.hits;
+    this.combat.emit('attack', { from: p.me, origin: this.camera.position.clone(), dir: this.camera.getWorldDirection(new THREE.Vector3()),
+      weapon: this.def?.id, hits: p.hits, takedown: p.hits.some((h) => h.stealth), wall: !!p.wall });
   }
 
   // ---- guns (designed for the armory; no gun is in the level yet)
@@ -332,7 +345,8 @@ export class Weapons {
     if (this.pending) {
       const p = this.pending;
       if (!(this.vm.frozen > 0)) p.t += dt;
-      if (p.t >= p.a.hitAt) { this.pending = null; this.strike(p); }
+      this.sweep(p);
+      if (p.t >= p.a.sweep.t1 || p.wall) { this.pending = null; this.endSwing(p); }
     }
     // how far the view turned since last frame (the hand lags behind it)
     const q = this.camera.quaternion;

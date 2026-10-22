@@ -180,15 +180,21 @@ export function buildHand({ grip = 0.0115, skin = 0xc29b88, sleeve = 0x23262b, a
 
 // ------------------------------------------------------------------ pose helpers
 const _q = new THREE.Quaternion(), _e = new THREE.Euler();
+// a key's ease (its third element) into that key: linear, accelerating, decelerating; default smoothstep
+const EASE = { linear: (x) => x, in: (x) => x * x * x, out: (x) => 1 - (1 - x) ** 3 };
 function lerpPose(keys, t, out) {
   // keys: [[t, {p, r}], ...] sorted; smoothstep between neighbours
   let a = keys[0], b = keys[keys.length - 1];
   for (let i = 0; i < keys.length - 1; i++) if (t >= keys[i][0] && t <= keys[i + 1][0]) { a = keys[i]; b = keys[i + 1]; break; }
   if (t <= keys[0][0]) b = a = keys[0];
   if (t >= keys[keys.length - 1][0]) a = b = keys[keys.length - 1];
-  const span = b[0] - a[0], k = span > 0 ? (b[3] === 'linear' ? (t - a[0]) / span : smooth((t - a[0]) / span)) : 0;
-  const pa = a[1].p || [0, 0, 0], pb = b[1].p || [0, 0, 0], ra = a[1].r || [0, 0, 0], rb = b[1].r || [0, 0, 0];
-  for (let i = 0; i < 3; i++) { out.p[i] = pa[i] + (pb[i] - pa[i]) * k; out.r[i] = ra[i] + (rb[i] - ra[i]) * k; }
+  const span = b[0] - a[0], x = span > 0 ? (t - a[0]) / span : 0;
+  const k = EASE[b[2]] ? EASE[b[2]](x) : smooth(x);
+  const Z = [0, 0, 0];
+  const pa = a[1].p || Z, pb = b[1].p || Z, ra = a[1].r || Z, rb = b[1].r || Z, wa = a[1].w || Z, wb = b[1].w || Z;
+  for (let i = 0; i < 3; i++) {
+    out.p[i] = pa[i] + (pb[i] - pa[i]) * k; out.r[i] = ra[i] + (rb[i] - ra[i]) * k; out.w[i] = wa[i] + (wb[i] - wa[i]) * k;
+  }
   return out;
 }
 
@@ -209,7 +215,7 @@ export class ViewModel {
     this.bob = 0;
     this.lag = new THREE.Vector2();
     this.room = undefined;
-    this._pose = { p: [0, 0, 0], r: [0, 0, 0] };
+    this._pose = { p: [0, 0, 0], r: [0, 0, 0], w: [0, 0, 0] };
     this.kick = 0;
   }
 
@@ -267,7 +273,7 @@ export class ViewModel {
     this.equip = Math.min(1, this.equip + dt / 0.28);
     // the clip, unless held by a hit stop
     let pose = this._pose;
-    pose.p.fill(0); pose.r.fill(0);
+    pose.p.fill(0); pose.r.fill(0); pose.w.fill(0);
     if (this.clip) {
       if (this.frozen > 0) this.frozen -= dt;
       else this.clipT += dt;
