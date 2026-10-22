@@ -7,10 +7,12 @@ clips) is the character workstream's (`design/invaders/character.md`); combat is
 Code: `viewer/invaders.js` (the squad: waves, entries, shared knowledge, orders, the path
 planner's queue, AI LOD, sight / fire / hearing queries), `viewer/invaders_brain.js` (one
 invader: senses, states, movement), `viewer/invaders_nav.js` (the nav over the whole house,
-rays), `viewer/invaders_world.js` (what's built once for all of them), `viewer/invaders_body.js`
-(the stand-in bodies, instanced), `viewer/invaders_fx.js` (tracers, muzzle flashes, the debug
-overlay). Hook: `viewer/index.html` (one block after the sound effects, one line in the frame,
-the great room's glass break shared with the Grimble).
+rays), `viewer/invaders_world.js` (what's built once for all of them), `viewer/invaders_rig.js`
+(the rigged character driven by the brains), `viewer/invaders_body.js` (the instanced stand-in:
+until the rig has loaded, or `?invbody=stand`), `viewer/invaders_fx.js` (tracers, muzzle
+flashes, the debug overlay). Hook: `viewer/index.html` (one block after the sound effects, one
+line in the frame, the great room's glass break shared with the Grimble; the character
+workstream's posed-test form `?invaders=x,z,rot,Clip;...` is told apart by its clip names).
 
 ## How to see it
 - `viewer/index.html?level=mansion`: on by default in the game (off for automated runs:
@@ -116,16 +118,29 @@ once; a goal off the nav (inside furniture, a locked room) goes to the nearest r
 - AI LOD: senses + brain every frame within 22 m or in a fight, every 3rd frame within 45 m,
   every 8th beyond (staggered by id); movement every frame (every 2nd frame far away); the path
   planner takes at most 6 plans / 2 ms a frame (fights first).
-- Draw calls: 8 for all of them (instanced torso, head, limbs, rifle, pistol, bat, knife, blob
-  shadow), + 2 while shots are flying (tracers, flashes). ~45k triangles for 50. No shadow casting,
-  no real-time lights (the muzzle flash is an additive sprite).
+- Draw calls with the rigged character, 50 in the house: ~35 (crowd 10, the 8 skinned ~25), up
+  to ~150k triangles (8 x LOD0 10k close up + the crowd at 800 each); the stand-in: 8 draw calls,
+  38k triangles. + 2 while shots are flying (tracers, flashes). No shadow casting, no real-time
+  lights (the muzzle flash is an additive sprite). The asset: +1.9 MB download, +29 MB textures.
+- Bench (`BENCH_QS="&invaders=50" bench.mjs --profile gpu`, harmless under the bench, M4 Pro):
+  draw calls mean 290 -> 419, max 837 -> 1088, triangles max 972k -> 1125k, frame p95 6.8 -> 7.9
+  ms, gpu p50 13.3 -> 14.0 ms. Most of the draw-call rise isn't the bodies: the great room's
+  glass, smashed by an invader, becomes 160 separate shard meshes (grimble_hunt.js `shatter`,
+  one Mesh per shard; one merged mesh would be 1 draw call), and every door they open redraws
+  the sun's shadow map while it swings.
 
-## For the character workstream (assets/models/invader.gltf)
-The stand-in is posed from the brain's `anim` fields; the names it expects of the rigged one are
-in `invaders_body.js` (`CLIPS`, `SOCKETS`: Idle, Walk, Run, CrouchIdle, CrouchWalk, Aim, Shoot,
-Swing, Stab, Kick, HitReact, Death, OpenDoor; Socket_HandR / Socket_HandL / Head). Swapping it in
-is that file's job (one SkinnedMesh per invader near the player, mixers only within ~30 m, the
-instanced stand-in far away).
+## Bodies (the character workstream's invader, design/invaders/character.md)
+`invaders_rig.js`: the nearest 8 within 22 m are SkinnedMeshes (viewer/invader_asset.js:
+cross-fades, a gun's aim / shot / ready pose layered over the legs, the asset's LODs by distance),
+lit by their room's probe and panorama like the props (baked.js applyRoom, swapped room to room);
+the rest are the instanced GPU-skinned crowd (viewer/invader_crowd.js, LOD2, one clip each).
+Handed from one to the other as they come near or go away. The brain's state picks the clip:
+dead DeathBack / DeathForward (by where the blow came from), staggered HitFront / HitBack, strike
+MeleeBat / MeleeKnife (the brain's windup is taken from the clip's hit event), breach / opening a
+hiding spot OpenDoor, legs Run / Walk / CrouchWalk / CrouchIdle (playback rate from the speed, so
+the feet stay planted) / Search / IdleAlert / Idle, guns AimRifle / AimPistol, ShootRifle /
+ShootPistol per shot, HoldRifle / HoldPistol. Tracers start at the gun's `_Muzzle` marker.
+Outfits by id (the leader: a cap), heads: balaclava, mask, cap, hood and combinations.
 
 ## Open questions (for the user)
 - Waves as strength after each wave (6 / 20 / 50 alive) or as arrivals (6 + 20 + 50)?

@@ -178,7 +178,7 @@ export class Invaders {
     if (extra.smash) { e.inside.set(c.x - n.x * 5, 0, c.y - n.y * 5); e.outside.set(c.x + n.x * 1.6, 0, c.y + n.y * 1.6); }
     // spawn points: 20-30 m out from the door (round its sides), on the nav, connected to the door
     const sOut = nav.cellFor(e.outside.x, 0, e.outside.z, 4);
-    for (const [dist, sd] of [[24, 0], [26, 7], [26, -7], [30, 3], [30, -3], [20, 10], [20, -10]]) {
+    for (const [dist, sd] of [[24, 0], [26, 7], [26, -7], [30, 3], [30, -3], [20, 10], [20, -10], [16, 4], [16, -4], [14, 8], [14, -8]]) {
       const x = c.x + n.x * dist + n.y * sd, z = c.y + n.y * dist - n.x * sd;
       const k = nav.nearest(ground, x, z, 5);
       if (k >= 0 && nav.connected(k, sOut)) { const p = nav.xz(k); e.spawn.push(new V3(p.x, nav.floorY(ground, p.x, p.y), p.y)); }
