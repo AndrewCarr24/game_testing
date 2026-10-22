@@ -118,6 +118,12 @@ PLACEMENTS += [
     ("decor_b_plant_floor", (-8.2, 4.05), 200),
 ]
 
+# (combat) the chef's knife on the island's end-grain board (left of the sink): a pickup, the
+# player's first weapon (viewer/weapons.js; the island no longer has a static one)
+PLACEMENTS += [
+    ("kitchen_knife", (-0.31, -1.52, 0.965), 12),
+]
+
 
 # --- interactivity (prompts/interactivity.md): the light switch north of the dining opening (W wall),
 # interactive props, and this room's light fixtures wired to lights_kitchen (ix_common.wire)
