@@ -19,6 +19,7 @@ import bmesh
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import ix_common  # noqa: E402
+import kitchen_lib  # noqa: E402
 
 importlib.reload(ix_common)
 common, materials = ix_common.common, ix_common.materials
@@ -150,9 +151,11 @@ def build(**overrides):
         p["item"], p["label"], weapon=p["item"],
         purpose="A weapon. Arm it: click or Enter to stab, right-click to slash. From behind, unseen: a silent takedown.")
 
-    satin = common.pbr_material("M_Knife_Steel", (0.74, 0.74, 0.75), roughness=0.24, metallic=1.0)
+    # the kitchen's own materials (the island's sink steel, its black carcass): resting on the
+    # board the knife joins the room's existing batches, no extra draw calls
+    satin = kitchen_lib.brushed_steel()               # M_Steel_Brushed: blade, bolster, tang
     polished = materials.steel()                      # M_Steel_Polished: the edge bevel, the rivets
-    acetal = common.pbr_material("M_Knife_Handle", (0.016, 0.016, 0.018), roughness=0.36)
+    acetal = kitchen_lib.carcass()                    # M_Carcass_Black: the handle scales
 
     # ---- blade (x 0 .. blade), material 0 satin, 1 the polished edge bevel
     blade = common.mesh_object(f"{n}_Blade", blade_bmesh(p), col, satin, root)

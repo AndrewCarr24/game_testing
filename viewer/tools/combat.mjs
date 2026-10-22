@@ -141,6 +141,24 @@ try {
   await p.waitForTimeout(300);
   check('no takedown from the front', !/Takedown/.test(await hint()), `hint="${(await hint()).trim()}"`);
   await p.evaluate(() => window.__combat.get('d4').remove());
+  // a character whose box in the colliders isn't tagged (owner): still stabbed and shot
+  await dummy(ahead(0.95), -90, true, 'd5');
+  await p.evaluate(() => { for (const c of window.__colliders) if (c.owner?.id === 'd5') delete c.owner; });
+  await p.waitForTimeout(700);
+  await press('Enter', 700);
+  const shot5 = await p.evaluate(async () => {
+    const THREE = await import('three');
+    const c = window.__combat, cam = window.__camera;
+    return c.shoot({ from: 'player', origin: cam.position.clone(), dir: c.get('d5').position().clone().setY(cam.position.y - 0.4).sub(cam.position).normalize(), damage: 20 }).target?.id ?? null;
+  });
+  check('untagged character box: stab and shot still land', (await health('d5')).h === 25 && shot5 === 'd5', JSON.stringify({ h: await health('d5'), shot5 }));
+  await p.evaluate(() => window.__combat.get('d5').remove());
+  // 1 puts the knife away, 1 again raises it
+  await press('Digit1', 200);
+  const off = await p.evaluate(() => ({ armed: window.__inventory.armed, vm: window.__weapons.vm.root.visible }));
+  await press('Digit1', 500);
+  const on = await p.evaluate(() => ({ armed: window.__inventory.armed, vm: window.__weapons.vm.root.visible, equip: window.__weapons.vm.equip }));
+  check('1 holsters, 1 re-arms (view model back up)', off.armed === null && !off.vm && on.armed === 'kitchen_knife' && on.vm && on.equip === 1, JSON.stringify({ off, on }));
   await p.evaluate(() => (document.getElementById('hint').style.visibility = ''));
 
   // ---- hitscan: down the gallery it hits, through the kitchen wall it doesn't
@@ -194,8 +212,9 @@ try {
   await p.keyboard.press('KeyW');                             // input is ignored
   await p.waitForTimeout(3000);
   const scr = await p.evaluate(() => ({ text: document.getElementById('cb-death').innerText.trim(), shown: document.querySelector('#cb-death button').classList.contains('show'),
-    op: +getComputedStyle(document.getElementById('cb-death')).opacity, stillDown: window.__player.isDown }));
-  check('death screen: faded, only a restart button', scr.shown && scr.op > 0.9 && scr.text === 'RESTART' && scr.stillDown, JSON.stringify(scr));
+    op: +getComputedStyle(document.getElementById('cb-death')).opacity, stillDown: window.__player.isDown,
+    visible: ['hud', 'hint', 'inventory', 'battery', 'cross', 'toast'].filter((id) => { const e = document.getElementById(id); return e && getComputedStyle(e).visibility !== 'hidden' && e.offsetParent !== null && e.textContent.trim() + e.className !== ''; }) }));
+  check('death screen: faded, only a restart button', scr.shown && scr.op > 0.9 && scr.text === 'RESTART' && scr.stillDown && !scr.visible.length, JSON.stringify(scr));
   await p.screenshot({ path: `${out}/death.png` });
   await Promise.all([p.waitForNavigation({ timeout: 60000 }), p.click('#cb-death button')]);
   await p.waitForFunction(() => window.__loaded, null, { timeout: 120000 });

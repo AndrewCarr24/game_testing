@@ -24,6 +24,13 @@ dummy), `viewer/weapons_viewmodel.js` (the first-person hand and weapon). Test:
   targets (vertical cylinders) -> `{ target, point, normal, distance, part, wall, glass, killed }`.
   The shooter emits its own gunshot noise (`window.__noise`, loudness 2.5).
 - `canTakedown(target, from)`, `lineOfSight(a, b)`, `raycast(origin, dir, range)`, `lastCombat(id)`.
+- For the invader workstreams: implement `facing()` and set `aware` (false, or a function
+  returning false, while it hasn't noticed the player; undefined counts as aware, so no
+  takedowns); a Box3 a character pushes into `window.__colliders` should carry `owner` = its
+  target (rays skip it and meet the body's cylinder; an untagged box round a living target's
+  middle is recognised too, at a small cost per ray). Listen for `playerDown` to stop
+  attacking. The player is target `'player'` (team `'player'`); hurt it with
+  `__combat.hit('player', dmg, { from: me, weapon })` or `attack()` / `shoot()` with `from: me`.
 - Events (`on(name | '*', fn)`): `hit`, `kill`, `shot`, `attack` (every swing), `playerDown`.
 
 ## The player
@@ -95,6 +102,13 @@ squeezed into the nearest slice of the depth buffer, so it never pokes into wall
 walk bob, look lag; raised into view when armed.
 
 ## Cost
-Per frame with the knife armed: ~4 draw calls (hand, sleeve, knife's 3 materials share one
-mesh each: blade, bolster, handle, rivets), ~5k triangles (hand ~3.5k, knife 1.7k). No lights,
-no shadow casting. The combat code is a few loops over the registered targets per frame.
+- Armed: the view model is 5 draw calls (hand, sleeve, the knife's 3 materials: its meshes are
+  merged per material) and 8.8k triangles (hand ~7k, knife 1.7k). No lights, no shadows.
+- Unarmed: nothing drawn. The knife on the board uses the kitchen's existing materials
+  (M_Steel_Brushed, M_Steel_Polished, M_Carcass_Black), so it joins the room's batches: +1.6k
+  triangles, no draw calls. The combat code is a few loops over the registered targets.
+- Bench (`bench.mjs`, gpu, 2026-10-22, vs the `wave` run at d1b4f4f): 184 fps, frame p95 6.6 ms,
+  draw calls mean 289.9 / max 837, triangles max 971,750 (+1,612 = the knife), every budget
+  PASS. The draw calls are +3 mean over `wave` whatever the knife's materials (the commits
+  between). SwiftShader ran over its GPU-time budget while 8 agents shared the CPU (timings
+  only; counts within noise).

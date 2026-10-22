@@ -217,8 +217,9 @@ export class Combat {
   }
 
   // nearest wall / prop / glass along a ray. Skipped: seeThrough boxes (rails, boundaries), boxes
-  // the origin is inside, and characters' own boxes (a Box3 a target pushes into the colliders
-  // carries `owner` = the target: rays meet the target's cylinder instead)
+  // the origin is inside, and characters' own boxes: a Box3 a target pushes into the colliders
+  // should carry `owner` = the target (the fast path); an untagged box round a living target's
+  // middle is recognised too. Rays meet the target's cylinder instead.
   raycast(origin, dir, range = 100) {
     _ray.set(origin, dir);
     let best = null;
@@ -229,10 +230,21 @@ export class Combat {
       if (c.distanceToPoint(origin) > range) continue;
       if (!_ray.intersectBox(c, _hit)) continue;
       const s = _hit.distanceTo(origin);
-      if (s <= range && (!best || s < best.distance)) best = { point: _hit.clone(), distance: s, box: c };
+      if (s <= range && (!best || s < best.distance) && !this.bodyBox(c)) best = { point: _hit.clone(), distance: s, box: c };
     }
     if (best) best.normal = boxNormal(best.point, best.box);
     return best;
+  }
+
+  // is this collider a character's (it holds a living target's mid-body point)?
+  bodyBox(c) {
+    for (const t of this.targets) {
+      if (!t.alive) continue;
+      const p = t.position();
+      _v.set(p.x, p.y + t.height / 2, p.z);
+      if (c.containsPoint(_v) && c.max.x - c.min.x < 2 * t.radius + 0.6 && c.max.z - c.min.z < 2 * t.radius + 0.6) return true;
+    }
+    return false;
   }
 
   lineOfSight(a, b) {
@@ -396,6 +408,8 @@ export class PlayerVitals {
     this.player.dead = true;
     sfxPlay('body_fall', null, { delay: 0.35 });
     this.deathEl.classList.add('on');
+    // nothing else on screen: the HUD (prompts, crosshair, inventory, the dev links) goes
+    document.body.classList.add('cb-dead');
   }
 
   restart() { location.reload(); }
@@ -414,6 +428,7 @@ export class PlayerVitals {
         #cb-death { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
           background: #000; opacity: 0; transition: opacity 2.4s ease-in; }
         #cb-death.on { display: flex; }
+        body.cb-dead > :not(canvas):not(#cb-death):not(#cb-vig):not(script):not(style) { visibility: hidden !important; }
         #cb-death button { opacity: 0; transition: opacity .8s; pointer-events: none; font: 600 15px system-ui, sans-serif; letter-spacing: .22em;
           color: #ddd; background: transparent; border: 1px solid rgba(255,255,255,.45); border-radius: 4px; padding: 12px 30px; cursor: pointer; }
         #cb-death button.show { opacity: 1; pointer-events: auto; }
