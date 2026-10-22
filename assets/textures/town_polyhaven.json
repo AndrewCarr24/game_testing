@@ -1,0 +1,339 @@
+{
+ "atlas": "T_Town_Atlas",
+ "size": 2048,
+ "unit": 256,
+ "gutter": 8,
+ "regions": {
+  "bb_white": {
+   "col": 0,
+   "row": 0,
+   "w": 2,
+   "tile": 2.4,
+   "kind": "tile"
+  },
+  "bb_charcoal": {
+   "col": 2,
+   "row": 0,
+   "w": 2,
+   "tile": 2.4,
+   "kind": "tile"
+  },
+  "lap_cream": {
+   "col": 4,
+   "row": 0,
+   "w": 2,
+   "tile": 2.1,
+   "kind": "tile"
+  },
+  "ledgestone": {
+   "col": 6,
+   "row": 0,
+   "w": 2,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "fieldstone": {
+   "col": 0,
+   "row": 2,
+   "w": 2,
+   "tile": 2.5,
+   "kind": "tile"
+  },
+  "brick_red": {
+   "col": 2,
+   "row": 2,
+   "w": 2,
+   "tile": 1.5,
+   "kind": "tile"
+  },
+  "seam_black": {
+   "col": 4,
+   "row": 2,
+   "w": 2,
+   "tile": 1.8,
+   "kind": "tile"
+  },
+  "shingle": {
+   "col": 6,
+   "row": 2,
+   "w": 2,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "cedar": {
+   "col": 0,
+   "row": 4,
+   "w": 2,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "windows": {
+   "col": 2,
+   "row": 4,
+   "w": 2,
+   "tile": 1.0,
+   "kind": "cells"
+  },
+  "signs": {
+   "col": 4,
+   "row": 4,
+   "w": 2,
+   "tile": 1.0,
+   "kind": "cells"
+  },
+  "woodfloor": {
+   "col": 6,
+   "row": 4,
+   "w": 2,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "concrete": {
+   "col": 0,
+   "row": 6,
+   "w": 1,
+   "tile": 3.0,
+   "kind": "tile"
+  },
+  "asphalt": {
+   "col": 1,
+   "row": 6,
+   "w": 1,
+   "tile": 3.0,
+   "kind": "tile"
+  },
+  "deck": {
+   "col": 2,
+   "row": 6,
+   "w": 1,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "plaster": {
+   "col": 3,
+   "row": 6,
+   "w": 1,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "checker": {
+   "col": 4,
+   "row": 6,
+   "w": 1,
+   "tile": 1.0,
+   "kind": "tile"
+  },
+  "darkwood": {
+   "col": 5,
+   "row": 6,
+   "w": 1,
+   "tile": 1.5,
+   "kind": "tile"
+  },
+  "varnish": {
+   "col": 6,
+   "row": 6,
+   "w": 1,
+   "tile": 1.0,
+   "kind": "tile"
+  },
+  "polished": {
+   "col": 7,
+   "row": 6,
+   "w": 1,
+   "tile": 3.0,
+   "kind": "tile"
+  },
+  "brick_white": {
+   "col": 0,
+   "row": 7,
+   "w": 1,
+   "tile": 1.5,
+   "kind": "tile"
+  },
+  "bb_sage": {
+   "col": 1,
+   "row": 7,
+   "w": 1,
+   "tile": 2.4,
+   "kind": "tile"
+  },
+  "seam_green": {
+   "col": 2,
+   "row": 7,
+   "w": 1,
+   "tile": 1.8,
+   "kind": "tile"
+  },
+  "corrugated": {
+   "col": 3,
+   "row": 7,
+   "w": 1,
+   "tile": 2.24,
+   "kind": "tile"
+  },
+  "block": {
+   "col": 4,
+   "row": 7,
+   "w": 1,
+   "tile": 2.0,
+   "kind": "tile"
+  },
+  "tile_floor": {
+   "col": 5,
+   "row": 7,
+   "w": 1,
+   "tile": 1.2,
+   "kind": "tile"
+  },
+  "lap_white": {
+   "col": 6,
+   "row": 7,
+   "w": 1,
+   "tile": 2.1,
+   "kind": "tile"
+  },
+  "palette": {
+   "col": 7,
+   "row": 7,
+   "w": 1,
+   "tile": 1.0,
+   "kind": "palette"
+  }
+ },
+ "sources": {
+  "white_planks_clean": {
+   "polyhaven": "white_planks_clean",
+   "url": "https://polyhaven.com/a/white_planks_clean",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/white_planks_clean/white_planks_clean_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.8
+  },
+  "weathered_plank_siding": {
+   "polyhaven": "weathered_plank_siding",
+   "url": "https://polyhaven.com/a/weathered_plank_siding",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.57
+  },
+  "rustic_stone_wall_02": {
+   "polyhaven": "rustic_stone_wall_02",
+   "url": "https://polyhaven.com/a/rustic_stone_wall_02",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rustic_stone_wall_02/rustic_stone_wall_02_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.5
+  },
+  "stone_wall": {
+   "polyhaven": "stone_wall",
+   "url": "https://polyhaven.com/a/stone_wall",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/stone_wall/stone_wall_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "factory_brick": {
+   "polyhaven": "factory_brick",
+   "url": "https://polyhaven.com/a/factory_brick",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/factory_brick/factory_brick_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.5
+  },
+  "metal_plate": {
+   "polyhaven": "metal_plate",
+   "url": "https://polyhaven.com/a/metal_plate",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/metal_plate/metal_plate_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 0.5
+  },
+  "japanese_cedar_planks": {
+   "polyhaven": "japanese_cedar_planks",
+   "url": "https://polyhaven.com/a/japanese_cedar_planks",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/japanese_cedar_planks/japanese_cedar_planks_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.13
+  },
+  "wood_floor_worn": {
+   "polyhaven": "wood_floor_worn",
+   "url": "https://polyhaven.com/a/wood_floor_worn",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/wood_floor_worn/wood_floor_worn_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "concrete_floor_02": {
+   "polyhaven": "concrete_floor_02",
+   "url": "https://polyhaven.com/a/concrete_floor_02",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_02/concrete_floor_02_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "asphalt_02": {
+   "polyhaven": "asphalt_02",
+   "url": "https://polyhaven.com/a/asphalt_02",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_02/asphalt_02_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 3.0
+  },
+  "weathered_planks": {
+   "polyhaven": "weathered_planks",
+   "url": "https://polyhaven.com/a/weathered_planks",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_planks/weathered_planks_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "painted_plaster_wall": {
+   "polyhaven": "painted_plaster_wall",
+   "url": "https://polyhaven.com/a/painted_plaster_wall",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "old_linoleum_flooring_01": {
+   "polyhaven": "old_linoleum_flooring_01",
+   "url": "https://polyhaven.com/a/old_linoleum_flooring_01",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_linoleum_flooring_01/old_linoleum_flooring_01_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.99
+  },
+  "dark_wood": {
+   "polyhaven": "dark_wood",
+   "url": "https://polyhaven.com/a/dark_wood",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_wood/dark_wood_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "wood_table_001": {
+   "polyhaven": "wood_table_001",
+   "url": "https://polyhaven.com/a/wood_table_001",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/wood_table_001/wood_table_001_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.5
+  },
+  "smooth_concrete_floor": {
+   "polyhaven": "smooth_concrete_floor",
+   "url": "https://polyhaven.com/a/smooth_concrete_floor",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/smooth_concrete_floor/smooth_concrete_floor_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "whitewashed_brick": {
+   "polyhaven": "whitewashed_brick",
+   "url": "https://polyhaven.com/a/whitewashed_brick",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/whitewashed_brick/whitewashed_brick_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.0
+  },
+  "worn_corrugated_iron": {
+   "polyhaven": "worn_corrugated_iron",
+   "url": "https://polyhaven.com/a/worn_corrugated_iron",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_corrugated_iron/worn_corrugated_iron_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 1.8
+  },
+  "square_tiles": {
+   "polyhaven": "square_tiles",
+   "url": "https://polyhaven.com/a/square_tiles",
+   "file": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/square_tiles/square_tiles_diff_2k.jpg",
+   "license": "CC0",
+   "scan_metres": 2.4
+  }
+ }
+}
