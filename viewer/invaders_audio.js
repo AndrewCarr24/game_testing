@@ -78,7 +78,7 @@ const MAKE = {
 
 // level (dB), distance (ref m; null = flat), whether it's the house's speakers, min gap between plays
 const DEFS = {
-  doorbell: { db: -6, ref: 6, house: true, gap: 2.55 },
+  doorbell: { db: -12, ref: 6, house: true, gap: 2.55 },
   door_knock: { db: -6, ref: 5, gap: 0.6 },
   door_kick: { db: -2, ref: 9, gap: 0.3 },
 };
@@ -110,6 +110,14 @@ export function install(sfx, { inHouse = null } = {}) {
     last[name] = now;
     const c = sfx.ctx;
     if (!c || c.state !== 'running' || window.__bench) { entry.muted = true; return null; }
+    // (never let a sound take the frame down: the bell rings from devices.update in the frame loop)
+    try { return synth(name, D, pos, opts, entry, c, spatial, eye); } catch (e) {
+      entry.muted = 'error';
+      if (!sfx.__synthErr) { sfx.__synthErr = true; console.warn('[inv] synth sound failed', name, e); }
+      return null;
+    }
+  };
+  const synth = (name, D, pos, opts, entry, c, spatial, eye) => {
     if (!bufs[name]) {
       const data = MAKE[name](c.sampleRate);
       let peak = 0;

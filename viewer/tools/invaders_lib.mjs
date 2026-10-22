@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const BASE = process.env.GT_BASE || 'http://localhost:8765';
 
-export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = () => window.__loaded, init = null } = {}) {
+export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = () => window.__loaded, init = null, args = [] } = {}) {
   const locks = path.join(root, 'build/locks');
   fs.mkdirSync(locks, { recursive: true });
   let slot = null;
@@ -21,7 +21,7 @@ export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = (
   process.on('SIGINT', () => { release(); process.exit(1); });
   let b;
   try {
-    b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
+    b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal', ...args] });
     const p = await b.newPage({ viewport: { width: w, height: h } });
     p.on('pageerror', (e) => console.log('pageerror:', e.message, (e.stack ?? '').split('\n').slice(1, 4).join(' | ')));
     p.on('requestfailed', (r) => console.log('requestfailed:', r.url(), r.failure()?.errorText));

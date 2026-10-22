@@ -67,6 +67,15 @@
         const seen = first(S, 'seq_seen'), stare = phaseAt(S, 'stare'), kick = first(S, 'breach'), shots = S.events('shot').filter((e) => kick == null || e.t < kick).length;
         return { pass: seen != null && stare != null && kick != null && kick - seen < 30 && shots === 0, seenAt: r2(seen), stareAt: r2(stare), kickedIn: r2(kick), shotsBeforeKick: shots, hit: r2(first(S, 'playerHit')), reason: O().reason };
       } },
+    // the same from the west end of the glass: the kicker sees the player through a bay (not a
+    // door leaf) and turns to fight mid-kick; they must still get in
+    glass_left: { P: [-5, 16.8], secs: 55, doors: FRONT, look: [-3, 1.6, 22],
+      setup: start('step'),
+      steps: [{ wait: 55 }],
+      check: (I, S) => {
+        const seen = first(S, 'seq_seen'), br = phaseAt(S, 'breakin'), done = phaseAt(S, 'done'), inside = S.log.find((l) => l.t > (br ?? 1e9) && l.a.some((a) => a[4] < 19.6))?.t ?? null;
+        return { pass: seen != null && br != null && done != null && inside != null, seenAt: r2(seen), breakinAt: r2(br), doneAt: r2(done), firstInside: r2(inside), kick: r2(first(S, 'breach')), reason: O().reason };
+      } },
     // hidden in the coat closet before they come: the whole sequence (waits x0.4): rings, knock,
     // handle, the look in, round the house, then they break in (front, glass, side door) and sweep
     hide: { P: [9.5, 16.5], secs: 170, doors: [...FRONT, [8, 17.5, true]], look: [10, 1.6, 12],

@@ -539,6 +539,9 @@ export class Opening {
       // waiting for a way in: the nearest open one
       const open = this.sq.entries.filter((e) => this.entryOpen(e)).sort((p, q) => p.outside.distanceTo(a.pos) - q.outside.distanceTo(a.pos));
       if (open.length) this.handOff(a, open[0], { through: a.pos.distanceTo(open[0].outside) < 4 });
+      // nothing open after 15 s (the kicker saw the player and turned to fight, or fell): in by the
+      // front door anyway (their brain's arrival kicks in a door that's locked to them)
+      else if (this.phaseT > 15) this.handOff(a, this.entry('entry'));
       else if (a.state === 'scene' && (!a.cue || a.cue.mode !== 'hold')) a.cue = { mode: 'hold', face: a.cue?.face ?? P.door };
     }
   }
