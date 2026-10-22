@@ -150,8 +150,9 @@ def build(**overrides):
     # the same pickup as every glass vase of the decor kits (lib/pickups.py)
     from lib import pickups
     importlib.reload(pickups)
-    root["interact"] = {**pickups.define("vase", smoke), "item": p["item"], "name": p["label"],
-                        "prompt": f"Take {p['label'].lower()}"}
+    if pickups.ENABLED:             # (items off, GT_ITEMS unset: a vase is decor, not a pickup)
+        root["interact"] = {**pickups.define("vase", smoke), "item": p["item"], "name": p["label"],
+                            "prompt": f"Take {p['label'].lower()}"}
     dense = materials.glass("M_Glass_Smoke_Dense", tint=tuple(c * 0.85 for c in p["tint"]),
                             alpha=0.55, roughness=0.04)
 

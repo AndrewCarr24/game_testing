@@ -174,6 +174,9 @@ export class House {
   // the power trips: a flicker, then dark. blowFuse: the main fuse goes too (a spare is needed)
   trip({ blowFuse = false, delay = 0 } = {}) {
     if (this.signals.get('power') === false || this.tripping) return false;
+    // (items off, blender/levels/caches.py) no spare fuse in the level: a blown fuse could never
+    // be replaced, so the trip only drops the isolator (switch it back on in the garage)
+    if (blowFuse && !this.interact?.items?.some((i) => i.def.item === 'fuse')) blowFuse = false;
     this.tripping = { t: -delay, blowFuse, sounded: false };
     return true;
   }

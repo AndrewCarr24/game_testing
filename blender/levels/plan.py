@@ -61,7 +61,8 @@ OPEN = [
 # axis "y" = a wall running along y at x = line. span = (a0, a1) along the wall;
 # z = absolute (z0, z1).
 #   opening:    a gap; with door=<asset> a door is placed in it, swinging into `swing`
-#               (a room name); lock=<item id> locks it (needs that item, armed)
+#               (a room name); lock=<item id> locks it (needs that item, armed; only while the
+#               house's items are on: caches.ITEMS, GT_ITEMS=1; off, mansion.py leaves it unlocked)
 #   window:     floor-to-ceiling style glazing (frame, mullions, glass, one collider)
 #   garage_door: a closed panel door
 #   balustrade: open above floor level with a glass rail (overlooking a double-height room)
