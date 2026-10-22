@@ -1564,29 +1564,37 @@ export function shatter(scene, breakable) {
   geo.setAttribute('position', new THREE.Float32BufferAttribute(tri, 3));
   geo.computeVertexNormals();
   const mat = new THREE.MeshStandardMaterial({ color: 0x9fb5b5, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.55, side: THREE.DoubleSide });
-  const shards = [];
-  const group = new THREE.Group();
+  // one instanced mesh for all the shards (they were 160 meshes = 160 draw calls); each shard's
+  // own triangle is the instance geometry scaled per instance
+  const one = new THREE.BufferGeometry();
+  one.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 1, 0, 0.3, 0.2, 0, 1], 3));
+  one.computeVertexNormals();
+  const inst = new THREE.InstancedMesh(one, mat, n);
+  inst.frustumCulled = false;
+  const shards = [], o = new THREE.Object3D();
   for (let i = 0; i < n; i++) {
-    const g2 = new THREE.BufferGeometry();
-    g2.setAttribute('position', new THREE.Float32BufferAttribute(tri.slice(i * 9, i * 9 + 9), 3));
-    g2.computeVertexNormals();
-    const m = new THREE.Mesh(g2, mat);
-    m.position.set(THREE.MathUtils.lerp(lo.x, hi.x, Math.random()), lo.y + Math.random() * (hi.y - lo.y) * 0.6,
+    const p = new THREE.Vector3(THREE.MathUtils.lerp(lo.x, hi.x, Math.random()), lo.y + Math.random() * (hi.y - lo.y) * 0.6,
       THREE.MathUtils.lerp(lo.z, hi.z, Math.random()));
-    shards.push({ m, v: new THREE.Vector3(2 + Math.random() * 4, Math.random() * 2, (Math.random() - 0.5) * 3), spin: new THREE.Vector3().random().multiplyScalar(8) });
-    group.add(m);
+    shards.push({ p, r: new THREE.Euler(), s: tri[i * 9 + 3], v: new THREE.Vector3(2 + Math.random() * 4, Math.random() * 2, (Math.random() - 0.5) * 3),
+      spin: new THREE.Vector3().random().multiplyScalar(8), rest: false });
   }
-  scene.add(group);
+  const write = () => {
+    shards.forEach((sh, i) => { o.position.copy(sh.p); o.rotation.copy(sh.r); o.scale.setScalar(sh.s); o.updateMatrix(); inst.setMatrixAt(i, o.matrix); });
+    inst.instanceMatrix.needsUpdate = true;
+  };
+  write();
+  scene.add(inst);
   let t = 0;
   return (dt) => {          // call every frame until it returns false
     t += dt;
-    for (const s of shards) {
-      if (s.m.position.y <= 0.01) continue;
-      s.v.y -= 9.8 * dt;
-      s.m.position.addScaledVector(s.v, dt);
-      s.m.rotation.x += s.spin.x * dt; s.m.rotation.y += s.spin.y * dt;
-      if (s.m.position.y <= 0.01) { s.m.position.y = 0.01; s.m.rotation.set(-Math.PI / 2, 0, Math.random() * 6); }
+    for (const sh of shards) {
+      if (sh.rest) continue;
+      sh.v.y -= 9.8 * dt;
+      sh.p.addScaledVector(sh.v, dt);
+      sh.r.x += sh.spin.x * dt; sh.r.y += sh.spin.y * dt;
+      if (sh.p.y <= 0.01) { sh.p.y = 0.01; sh.r.set(-Math.PI / 2, 0, Math.random() * 6); sh.rest = true; }
     }
+    write();
     return t < 4;
   };
 }
