@@ -406,6 +406,13 @@ def finish(kit, col, root, far=None, extra_info=None):
         "materials": sorted({m.name for o in out for m in o.data.materials}),
         **kit.info, **(extra_info or {}),
     }
+    # every mesh carries COLOR_0 ("AO", 1 = unchanged) so the town can merge kit meshes; walk-ins
+    # overwrite it with their baked interior light (town_light.bake)
+    import numpy as np
+    for o in [root] + list(root.children_recursive):
+        if o.type == "MESH" and "AO" not in o.data.color_attributes:
+            attr = o.data.color_attributes.new("AO", "FLOAT_COLOR", "POINT")
+            attr.data.foreach_set("color", np.ones(4 * len(attr.data), np.float32))
     root["town"] = json.dumps(info)
     if kit.module:
         os.makedirs(MODELS, exist_ok=True)
@@ -459,6 +466,9 @@ def wall(part, side, plane, a0, a1, z0, z1, openings=(), gable=None, inward=Fals
         ap = (lo + hi) / 2 if apex_a is None else apex_a
         pts = [P(a, z1, d) for a in As] + [P(ap, gable, d)]
         part.face(pts, toward=toward)
+
+
+_wall_face = wall
 
 
 def reveals(part, side, plane, openings, depth, d0=0.0, sill=True):
@@ -634,7 +644,7 @@ def hinged_door(kit, col, root, side, plane, a, w, h, z=0.0, depth=0.10, leaf="d
     lk = Kit(nm)
     L = lk.p("Leaf", leaf)
     t = 0.045
-    with L.xf(Matrix.Translation(-hp)):
+    if True:                        # built in world space, then moved to the hinge's frame
         wbox(L, side, plane, a0 + 0.005, a0 + w - 0.005, z + 0.01, z + h - 0.005, -depth - t, -depth)
         if style == "glass":
             wquad(lk.p("Glass", "windows"), side, plane, a0 + 0.1, a0 + w - 0.1, z + 0.25, z + h - 0.12, -depth + 0.002,
@@ -650,6 +660,8 @@ def hinged_door(kit, col, root, side, plane, a, w, h, z=0.0, depth=0.10, leaf="d
         K = lk.p("Knob", "brass" if style != "glass" else "chrome")
         wbox(K, side, plane, a0 + w - 0.1, a0 + w - 0.05, z + 0.95, z + 1.0, -depth, -depth + 0.06, skip="back")
         wbox(K, side, plane, a0 + w - 0.1, a0 + w - 0.05, z + 0.95, z + 1.0, -depth - t - 0.06, -depth - t)
+    for pt in lk.parts.values():
+        pt.v = [tuple(Vector(v) - hp) for v in pt.v]
     objects(lk, col, hinge, prefix=nm)
     return hinge
 
@@ -761,8 +773,8 @@ def flat_roof(kit, x0, x1, y0, y1, z, parapet=0.6, wall="brick_red", coping="sto
         if side not in sides:
             continue
         P, u, n = frame(side, plane)
-        wall(W, side, plane, a0 + (0.0 if side in "SN" else t), a1 - (0.0 if side in "SN" else t), z - 0.3, zt, d=0.0)
-        wall(W, side, plane, a0 + t, a1 - t, z, zt, d=-t, inward=True)
+        _wall_face(W, side, plane, a0 + (0.0 if side in "SN" else t), a1 - (0.0 if side in "SN" else t), z - 0.3, zt, d=0.0)
+        _wall_face(W, side, plane, a0 + t, a1 - t, z, zt, d=-t, inward=True)
         wbox(C, side, plane, a0 - 0.03, a1 + 0.03, zt, zt + 0.08, -t - 0.02, 0.04)
     if collide:
         kit.collide((x0, y0, z - 0.3), (x1, y1, zt + 0.08))
