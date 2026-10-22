@@ -140,11 +140,8 @@ def build(**overrides):
     walnut = materials.walnut()
     bx_, by_ = sx0 - 0.95, sy0 - 0.02
     b.box("Board", (0.50, 0.34, 0.035), (bx_, by_, zt + 0.0175), walnut, bevel=0.006, seg=2, tile=0.5, shift=(0.3, 0.6))
-    knife = b.box("Knife_Blade_NoCollide", (0.21, 0.045, 0.002), (bx_ + 0.04, by_ - 0.06, zt + 0.036), steel, bevel=0, tile=0)
-    knife.rotation_euler = (0, 0, math.radians(12))
-    hnd = b.box("Knife_Handle_NoCollide", (0.12, 0.022, 0.018), (bx_ - 0.115, by_ - 0.083, zt + 0.044), black, bevel=0.005,
-                seg=2, tile=0)
-    hnd.rotation_euler = (0, 0, math.radians(12))
+    # (combat) the chef's knife on the board is its own pickup now, the player's first weapon:
+    # blender/assets/kitchen_knife.py, placed on this board by blender/levels/rooms/kitchen.py
     for k, (mx, mh) in enumerate(((bx_ + 0.42, 0.21), (bx_ + 0.50, 0.17))):
         b.lathe(f"Mill{k}", [(0.024, 0.0), (0.026, 0.006), (0.022, 0.03), (0.019, mh * 0.55), (0.024, mh * 0.82),
                              (0.02, mh - 0.008), (0.008, mh), (0.0, mh + 0.004)], walnut if k == 0 else black,

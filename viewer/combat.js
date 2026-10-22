@@ -313,3 +313,195 @@ function boxNormal(p, b) {
   ].sort((a, c) => Math.abs(a[0]) - Math.abs(c[0]))[0];
   return new THREE.Vector3(d[1], d[2], d[3]);
 }
+
+// ------------------------------------------------------------------ the player's health
+// The player as a combat target, the damage feedback and death. No numbers, no bars:
+//   a red edge vignette (a flash per hit, a slow pulse while badly hurt), a wedge at the edge of
+//   the view pointing at where the hit came from, the view jolts away from it, heavy breathing at
+//   low health; out of combat (no damage taken or dealt for `regenDelay` s) health comes back
+//   slowly. At 0: the player falls (an endless knockdown), the screen fades to black and one
+//   button restarts the run (reloads the page). ?god=1: hits show but never kill (playtesting).
+//
+//   const vitals = new PlayerVitals({ combat, player, camera })
+//   vitals.target          the player's combat target (id 'player')
+//   vitals.update(dt)      each frame; vitals.beginView() / endView(dt) around the frame's
+//                          camera work (the jolt is an offset taken off again next frame)
+export class PlayerVitals {
+  constructor({ combat, player, camera, maxHealth = 100, regenDelay = 7, regenRate = 3.5, god = false }) {
+    Object.assign(this, { combat, player, camera, regenDelay, regenRate, god });
+    this.dead = false;
+    this.flash = 0;            // the vignette's hit flash (0..1)
+    this.indicators = [];      // { el, from: Vector3 | null, dir, t }
+    this.kick = { pitch: 0, roll: 0 };
+    this._applied = null;
+    this.deathT = 0;
+    const self = this;
+    this.target = combat.register({
+      id: 'player', kind: 'player', team: 'player', radius: 0.3, maxHealth, health: maxHealth, alive: true,
+      get height() { return player.height ?? 1.8; },
+      position: () => player.pos.clone(),
+      facing: () => { const d = camera.getWorldDirection(new THREE.Vector3()); d.y = 0; return d.normalize(); },
+      aware: true,
+      hit(damage, info) { return self.onHit(damage, info); },
+    });
+    this.ui();
+  }
+
+  get health() { return this.target.health; }
+  heal(n) { if (!this.dead) this.target.health = Math.min(this.target.maxHealth, this.target.health + n); }
+
+  onHit(damage, info = {}) {
+    const t = this.target;
+    if (this.dead) return 0;
+    const before = t.health;
+    t.health = Math.max(this.god ? 1 : 0, t.health - damage);
+    if (t.health <= 0) t.alive = false;
+    // where it came from: the attacker's position, else the blow's direction reversed
+    const from = info.from?.position ? info.from.position() : null;
+    const dir = from ? from.clone().sub(this.player.pos).setY(0).normalize()
+      : info.dir ? info.dir.clone().negate().setY(0).normalize() : null;
+    this.flash = Math.min(1, this.flash + 0.35 + damage / 60);
+    if (dir) this.indicate(dir, from);
+    // the jolt: up and rolled away from the side it came from
+    const side = dir ? this.sideOf(dir) : 1;
+    this.kick.pitch += THREE.MathUtils.degToRad(1.5 + damage * 0.12);
+    this.kick.roll += THREE.MathUtils.degToRad(1 + damage * 0.1) * -side;
+    sfxPlay('player_hurt', null);
+    if (!t.alive) this.die(from, dir);
+    return before - t.health;
+  }
+
+  // +1 = the hit came from the player's right, -1 = the left
+  sideOf(dir) {
+    const f = this.camera.getWorldDirection(new THREE.Vector3()).setY(0).normalize();
+    return f.x * dir.z - f.z * dir.x < 0 ? -1 : 1;
+  }
+
+  indicate(dir, from) {
+    const el = document.createElement('div');
+    el.className = 'cb-ind';
+    this.indEl.appendChild(el);
+    this.indicators.push({ el, dir: dir.clone(), from: from?.clone() ?? null, t: 0 });
+    if (this.indicators.length > 4) this.indicators.shift().el.remove();
+  }
+
+  die(from, dir) {
+    this.dead = true;
+    this.deathT = 0;
+    const at = from ?? (dir ? this.player.pos.clone().add(dir) : null);
+    if (this.player.down) this.player.down.duration = Infinity;      // already on the floor: stays there
+    else this.player.knockDown(at, { duration: Infinity, shove: 2.2, roll: 84 });
+    this.player.dead = true;
+    sfxPlay('body_fall', null, { delay: 0.35 });
+    this.deathEl.classList.add('on');
+  }
+
+  restart() { location.reload(); }
+
+  ui() {
+    if (!document.getElementById('cb-style')) {
+      const st = document.createElement('style');
+      st.id = 'cb-style';
+      st.textContent = `
+        #cb-vig { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+          background: radial-gradient(ellipse at center, rgba(120,0,0,0) 52%, rgba(120,0,0,.42) 78%, rgba(70,0,0,.85) 100%); }
+        #cb-ind { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+        .cb-ind { position: absolute; left: -70px; top: -230px; width: 140px; height: 60px; transform-origin: 70px 230px;
+          background: radial-gradient(ellipse at 50% 100%, rgba(200,20,10,.75), rgba(200,20,10,0) 70%);
+          clip-path: polygon(0 100%, 50% 0, 100% 100%, 50% 78%); }
+        #cb-death { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+          background: #000; opacity: 0; transition: opacity 2.4s ease-in; }
+        #cb-death.on { display: flex; }
+        #cb-death button { opacity: 0; transition: opacity .8s; pointer-events: none; font: 600 15px system-ui, sans-serif; letter-spacing: .22em;
+          color: #ddd; background: transparent; border: 1px solid rgba(255,255,255,.45); border-radius: 4px; padding: 12px 30px; cursor: pointer; }
+        #cb-death button.show { opacity: 1; pointer-events: auto; }
+        #cb-death button:hover, #cb-death button:focus { border-color: #fff; color: #fff; outline: none; }`;
+      document.head.appendChild(st);
+    }
+    const mk = (id, html = '') => { const d = document.createElement('div'); d.id = id; d.innerHTML = html; document.body.appendChild(d); return d; };
+    this.vigEl = mk('cb-vig');
+    this.indEl = mk('cb-ind');
+    this.deathEl = mk('cb-death', '<button type="button">RESTART</button>');
+    this.button = this.deathEl.querySelector('button');
+    // (the page's own click starts pointer lock: keep it away from the death screen)
+    this.deathEl.addEventListener('click', (e) => e.stopPropagation());
+    this.button.addEventListener('click', (e) => { e.stopPropagation(); this.restart(); });
+  }
+
+  beginView() {
+    if (this._applied) { this.camera.quaternion.multiply(this._applied.invert()); this._applied = null; }
+  }
+  endView(dt) {
+    const k = this.kick;
+    k.pitch *= Math.max(0, 1 - dt * 7);
+    k.roll *= Math.max(0, 1 - dt * 6);
+    if (this.player.isDown || Math.abs(k.pitch) + Math.abs(k.roll) < 1e-5) return;
+    this._applied = new THREE.Quaternion().setFromEuler(new THREE.Euler(k.pitch, 0, k.roll, 'YXZ'));
+    this.camera.quaternion.multiply(this._applied);
+  }
+
+  update(dt) {
+    const t = this.target;
+    // regenerate, slowly, once out of combat
+    if (!this.dead && t.health < t.maxHealth && this.combat.lastCombat('player') > this.regenDelay)
+      t.health = Math.min(t.maxHealth, t.health + this.regenRate * dt);
+    this.flash = Math.max(0, this.flash - dt * 1.6);
+    const low = this.dead ? 0 : Math.max(0, (40 - t.health) / 40);
+    const pulse = low > 0 ? 0.75 + 0.25 * Math.sin(performance.now() / 1000 * Math.PI * 2 * (0.9 + low * 0.6)) : 0;
+    const vig = Math.min(1, this.flash + low * 0.75 * pulse);
+    if (Math.abs((this._vig ?? -1) - vig) > 0.003) { this.vigEl.style.opacity = vig.toFixed(3); this._vig = vig; }
+    // hit direction wedges: they follow the source as the player turns, then fade (~1.4 s)
+    const f = this.camera.getWorldDirection(new THREE.Vector3()).setY(0).normalize();
+    for (let i = this.indicators.length - 1; i >= 0; i--) {
+      const ind = this.indicators[i];
+      ind.t += dt;
+      if (ind.t > 1.4 || this.dead) { ind.el.remove(); this.indicators.splice(i, 1); continue; }
+      const d = ind.from ? ind.from.clone().sub(this.player.pos).setY(0).normalize() : ind.dir;
+      const ang = Math.atan2(f.x * d.z - f.z * d.x, f.x * d.x + f.z * d.z);
+      ind.el.style.transform = `rotate(${(ang * 180 / Math.PI).toFixed(1)}deg)`;
+      ind.el.style.opacity = (1 - Math.max(0, ind.t - 0.5) / 0.9).toFixed(3);
+    }
+    this.breathing(dt, this.dead ? 0 : low);
+    if (this.dead) {
+      this.deathT += dt;
+      if (this.deathT > 0.05 && !this._faded) { this._faded = true; this.deathEl.style.opacity = '0.94'; if (document.pointerLockElement) document.exitPointerLock(); }
+      if (this.deathT > 2.6 && !this.button.classList.contains('show')) { this.button.classList.add('show'); this.button.focus(); }
+    }
+  }
+
+  // heavy breathing under ~40 health: band-passed noise in an in-out rhythm, louder and faster
+  // the lower it gets (synthesised: no sample needed)
+  breathing(dt, amount) {
+    const s = window.__sfx;
+    this.breathLevel = amount;
+    if (!s?.running || !s.ctx) return;
+    const c = s.ctx;
+    if (!this.breath) {
+      if (amount <= 0) return;
+      const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(); src.buffer = buf; src.loop = true;
+      const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 850; bp.Q.value = 0.7;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+      const g = c.createGain(); g.gain.value = 0;
+      src.connect(bp).connect(lp).connect(g).connect(s.master ?? c.destination);
+      src.start();
+      this.breath = { src, bp, g, phase: 0 };
+    }
+    const b = this.breath;
+    const rate = 0.45 + amount * 0.35;                       // breaths per second
+    b.phase = (b.phase + dt * rate) % 1;
+    // in (brighter) for 40% of the cycle, out (longer, darker) for 55%, then a pause
+    const ph = b.phase, env = ph < 0.4 ? Math.sin((ph / 0.4) * Math.PI) * 0.8 : ph < 0.95 ? Math.sin(((ph - 0.4) / 0.55) * Math.PI) : 0;
+    b.bp.frequency.setTargetAtTime(ph < 0.4 ? 1100 : 700, c.currentTime, 0.05);
+    b.g.gain.setTargetAtTime(env * amount * 0.22, c.currentTime, 0.03);
+  }
+}
+
+function sfxPlay(name, pos, opts) {
+  const s = window.__sfx;
+  if (!s?.play) return null;
+  const fb = { player_hurt: ['hit', { rate: 0.75, db: -3 }], body_fall: ['fall', {}] }[name];
+  if (s.manifest && !s.manifest.sounds?.[name] && fb) return s.play(fb[0], pos, { ...fb[1], ...opts });
+  return s.play(name, pos, opts);
+}
