@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 import terrain  # noqa: E402
 import laurel_fork as LF  # noqa: E402
+import laurel_fork_water as LFW  # noqa: E402  (the river-look pass: rocks, driftwood, the water's data)
 from laurel_fork_checks import Run, in_poly, los  # noqa: E402
 
 OY = LF.OFFSET_Y
@@ -1164,7 +1165,11 @@ def run(name=LF.NAME):
     t2 = time.time()
     logs = place_logs(R, C, trails_d, excl | on_c, r)
     boulders = place_boulders(R, C, trails_d, excl | on_c, r)
-    boulders += river_rocks(R, C, trails_d, r)
+    # [water] the Laurel River's rocks and driftwood (laurel_fork_water; their own random stream)
+    rr_w = rng(SEED + 77)
+    river_b = LFW.river_rocks(R, C, trails_d, rr_w, CID, jitter_grid, poisson_thin)
+    boulders += river_b
+    logs += LFW.strainers(R, rr_w, river_b)
     z_b = np.load(os.path.join(R.dir, "terrain.npz"))
     bst0 = st["backdrop"]
     gb0 = terrain.Grid(-bst0["extent"] / 2, -bst0["extent"] / 2, bst0["cell"], bst0["samples"][0], bst0["samples"][1])
@@ -1223,6 +1228,9 @@ def run(name=LF.NAME):
     wlo, whi = float(np.nanmin(wl)) - 1, float(np.nanmax(wl)) + 1
     wq = np.where(wm, np.round((np.where(wm, wl, wlo) - wlo) / (whi - wlo) * 65534) + 1, 0).astype(np.uint16)
     files["water16.png"] = terrain.write_png(os.path.join(out_dir, "water16.png"), wq)
+    # [water] the water's own data: current, foam, standing waves, the skyline it reflects, bed kind
+    water_fx, wfiles = LFW.water_fx(R, wl, river_b, logs, top, out_dir)
+    files.update(wfiles)
     # backdrop: heights + a baked colour (forested hills, a few cleared valley floors, rock)
     z = np.load(os.path.join(R.dir, "terrain.npz"))
     Hb = z["Hb"].astype(np.float64)
@@ -1339,7 +1347,7 @@ def run(name=LF.NAME):
         views=make_views(R, thick, routed, props), routes=routes(routed, river_fit(R), props),
         props=rounded(dict(logs=logs, boulders=boulders, authored=props), 3),
         estate=estate(R), colliders=int(len(cols)), colliders_q=colliders_q, lawn_z=LF.LAWN_Z,
-        river=river_meta(R, gb, Hb), town=town_meta(gb, Hb),
+        river=river_meta(R, gb, Hb), town=town_meta(gb, Hb), water_fx=water_fx,
         light_file="light.webp" if os.path.exists(os.path.join(out_dir, "light.webp")) else "light.png",
         spawn=make_views(R)["gate"],
         checks=dict(views=view_chk, hidden_from_lookouts=hidden, vista_cut=int(cut.sum()), light=lt),
