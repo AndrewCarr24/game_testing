@@ -1,10 +1,12 @@
-# Invaders: behaviour and waves
+# Invaders: behaviour (the first five)
 
 Wave 2, invader-behaviour workstream. The design of the invaders themselves (look, rig,
 clips) is the character workstream's (`design/invaders/character.md`); combat is
 `viewer/combat.js` (`design/combat.md`). This is how they act.
 
-Code: `viewer/invaders.js` (the squad: waves, entries, shared knowledge, orders, the path
+Code: `viewer/invaders_opening.js` (the first five: the arrival, the doorbell, the branches, the
+break-in), `viewer/invaders_audio.js` (the chime, knocks and kicks, made in the browser),
+`viewer/invaders.js` (the squad: the old waves, entries, shared knowledge, orders, the path
 planner's queue, AI LOD, sight / fire / hearing queries), `viewer/invaders_brain.js` (one
 invader: senses, states, movement), `viewer/invaders_nav.js` (the nav over the whole house,
 rays), `viewer/invaders_world.js` (what's built once for all of them), `viewer/invaders_rig.js`
@@ -16,16 +18,137 @@ workstream's posed-test form `?invaders=x,z,rot,Clip;...` is told apart by its c
 
 ## How to see it
 - `viewer/index.html?level=mansion`: on by default in the game (off for automated runs:
-  `navigator.webdriver` or the bench, unless the URL asks).
-- `?invaders=0` off · `?invaders=N` N at once (no waves) · `?invaders=debug` (or `&invdebug=1`)
+  `navigator.webdriver` or the bench, unless the URL asks). The five appear at the gate 30 s in
+  and ring the bell ~65 s in. Quicker: `&seq=now&seqfrom=court` (they start on the motor court,
+  2 s in: the ring at ~25 s) or `&seqfrom=step` (on the step: the ring at once).
+- `?seq=0` no opening · `?seq=N` they appear after N s · `?seq=now` · `?seq=manual` (tests call
+  `__invaders.opening.start({from})`) · `?seqk=K` the waits times K · `?seqfrom=gate|court|step`.
+- `?waves=old` the old waves instead of the opening (6, 20, 50) · `?waves=fast` (the old schedule
+  at a tenth) · `?waves=K` (times K) · `?waves=0` nobody comes.
+- `?invaders=0` off · `?invaders=N` N at once (no opening, no waves) · `?invaders=debug` (or `&invdebug=1`)
   the overlay: each one's cones (focal bright, peripheral dim), its path (doors magenta), a line to
   where it thinks the player is (red while it sees them), a label (role, state, notice meter,
-  health) · `?waves=fast` (the schedule at a tenth: 6 s / 30 s / 60 s) · `?waves=0` none ·
-  `?waves=K` the schedule times K · `?god=1` (combat's: hits show, never die).
-- `window.__invaders`: `spawn(role, {entry | at, inside, yaw, post})`, `agents`, `events`,
-  `summary()`, `clear()`, `report(by, pos)`.
+  health) · `?god=1` (combat's: hits show, never die).
+- `window.__invaders`: `spawn(role, {entry | at, inside, yaw, post, extra})`, `agents`, `events`,
+  `summary()` (with `opening`: phase, rings, knocks, handles, the timeline), `clear()`,
+  `report(by, pos)`, `opening` (the sequence).
 
-## Waves
+## The first five (the opening)
+The user, 2026-10-22: "have the initial five invaders arrive together. They should go to the
+front door and ring the doorbell. Scrap the subsequent waves of invaders for now; we should just
+think through these five guys." The waves are behind `?waves=old`; the game opens with this.
+
+**How they come: on foot, up the drive from the gate.** Five dark figures inside the shut gate,
+walking the 45 m of drive and motor court in a loose group, past the fountain, under the bollards
+and up the entry path, is the slow burn: from the entry's glass front the player can watch them
+come for half a minute (the gate is 46 m from the door, 25 degrees off the entry's axis). It needs
+nothing new (no vehicle asset, no gate interaction: the gate and the drive are the car
+workstream's), and it reads as people who walked in like they own the place. The vehicle version
+(a van stops at the drive's mouth, its lights sweep the glass, doors slam, they get out) is the
+alternative to workshop: it needs a van asset, its arrival on the drive and a light reactor.
+
+**The cast** (silhouettes from the character's variants; `CAST` in invaders_opening.js):
+| who | role | weapon | look | in the group | at the door |
+|---|---|---|---|---|---|
+| the leader | leader | pistol, **holstered** (on the hip: he rings with empty hands) | Navy, cap | in front | beside the door: rings, knocks, tries the handle; draws when it breaks |
+| gunman A | gun | rifle, low ready | Charcoal, mask + hood | 1.8 m behind, left | west of the door; looks in the glass |
+| gunman B | gun | rifle, low ready | Olive, hood | 2.4 m behind, right | east of the door; stays outside as the watcher |
+| the bat | bat | bat | Charcoal, bare balaclava, 7% bigger | 3.9 m behind | behind the leader; keeps looking back down the drive |
+| the knife | knife | knife | Olive, the white hard mask, 5% smaller | at the back | at the back, restless (IdleAlert); the face at the glass |
+
+**The sequence** (times in s, the waits scale with `?seqk`):
+1. *approach*: they appear at the gate (30 s in) and walk up (1.35 m/s, ~32 s): the leader along
+   the drive, the court and the entry path; the others in their places behind him on his trail
+   (each keeps its slot: straight at it, or by a path round a planter), a slow sway in their
+   spacing. The last 7 m: each to its own place on the step, under the canopy.
+2. *gather* (2.5): they settle, facing the door.
+3. *ring*: the leader reaches to the door's surround (OpenDoor's reach) and the house's chime
+   sounds: `signals.set('doorbell', true)` on the entry's control panel (devices.js, 4 s, the
+   panel's screen flashes); the chime is a two-tone ding-dong over the house's speakers, the same
+   in every room (flat, with the room's reverb; from outside, from the panel through the glass).
+   The tablet's Cameras page has a **Front door** camera (the doorbell's, in the surround).
+4. *wait* (10): nobody moves much. The bat looks back down the drive, gunman B along the glass,
+   gunman A toward the west lawn, the leader up at the house. Heads turn with the brain's look
+   (invaders_rig.js `turnHead`: neck and head, up to 60 degrees).
+5. *ring again*, *wait* (8).
+6. *knock* on the door's glass (two raps of three knocks), *wait* (5).
+7. *handle*: the leader steps to the doors' meeting stiles and tries the handle: locked, a rattle.
+8. *peer* (8): the knife and gunman A step up to the glass either side of the door and look in;
+   the leader steps back under the canopy.
+9. *split*: the leader points (Signal) and they go round the house: the leader to the garage door,
+   then back to the front glass; gunman A and the bat round the west to the great room's glass;
+   the knife round the east to the mudroom's window, then its side door (the handle); gunman B on
+   round the north: the kitchen's glass, the kitchen's door, the dining room's doors (handles).
+   The player hears handles rattle round the house (doors 4 in all) for about a minute.
+10. *break-in* (nobody answered, ~150 s after they appeared): at once, the leader kicks in the
+    front door (four kicks, loud), the bat smashes the great room's glass (two blows), the knife
+    kicks in the mudroom's side door; gunman A follows the bat in; gunman B takes the watcher's
+    post on the north terrace (or the front door's, whichever is nearer). From there on: their
+    brains (sweep, search, hiding spots checked; the leader gives orders).
+
+**The doors are locked to them** while it runs: every outer door's `locked()` is true for the nav
+(`latched`: no path goes through it, the brain's breach can kick it in). The player opens them
+from inside as usual, and that door stays unlocked to them for good. Their own sounds (the
+bell, knocks, handles, kicks) are tagged as theirs: nobody goes to investigate their own ring.
+
+**Branches** (each ends the slow part; their brains keep what they know):
+- **Answered**: the player opens a door one of them is near: they turn to it, the leader steps
+  up (a 0.8 s beat), then in through it. Melee rush, guns engage: answering the door is deadly
+  (in the test the player is hit 8 s after opening it, and dead soon after, without god mode).
+- **Seen through the glass** (their senses never stop: a lit entry is seen from the gate, 38 m):
+  on the way up, they keep coming (the one who saw points; the others look); at the door they
+  ring anyway, once, and watch the player through the glass while they wait (shorter waits, no
+  second ring), knock, try the handle, then **stare** (3.5 s: they turn to the player, the gunmen
+  aim through the glass, nobody fires: glass stops bullets), then the front door is kicked in.
+  Seen after they'd given up on the door (peer, probe): the stare, then in.
+- **Heard**: a noise inside while they're at the house (running, a thrown thing, a device): they
+  look toward it; a second one (3 s or more later) and they come in. A gunshot: at once.
+- **Hiding**: nothing to see; the whole sequence, the break-in, then the sweep (spots included).
+- **Seen outside** (the player went out to meet them, or ran for it): straight to their brains:
+  the gunmen shoot.
+- **Hurt** (the player stabs one through an open door): the hunt.
+- **An open door**: one they try that the player left open: in through it, the rest follow.
+- **The power is off**: the bell is dead (it needs power); they knock longer and harder.
+- **The blinds are down** (the entry's switch or the tablet): they can't see in; it runs as if
+  nobody's home.
+
+**What to workshop with the user**
+- The arrival: on foot from the gate (built) or a van at the motor court? From the gate's inside
+  (they're simply there) or through it (the gate opening for them: the car workstream's gate)?
+- The timing: they appear 30 s in, the first ring ~65 s, the break-in ~3 min in. Slower? Should
+  the game wait for the player to do something first (go upstairs, open the tablet)?
+- The doorbell camera on the tablet: keep it (a great way to see the white mask up close)?
+- Answering the door: certain death now (a beat, then they rush). A talk at the door (the leader
+  says something, waits for you to let them in, steps in calmly) would need voices; a chance to
+  slam it shut again (a longer beat, the leader's foot in the door)?
+- Seen through the glass: is the stare (guns raised through the glass, nobody shooting) the
+  right beat? How long?
+- Who stays outside: one watcher (gunman B) after the break-in. Two (the front and the back)?
+  Going out the front would then be lethal again.
+- Locked doors: the house is locked to them (a script rule, the player can open any door from
+  inside). Real locks the player could set (and the invaders could pick or kick), a smart lock on
+  the tablet?
+- They have no voices (no `invader_shout` / `invader_alert` in the sound sprite yet): a muttered
+  word at the door, the leader's "open up", would change it a lot.
+- Missing clips that would help: a knock, a kick (OpenDoor stands in for both), hands cupped to
+  the glass, pointing at the doorbell, drawing the pistol.
+
+**Tests** (viewer/tools/invaders_opening.mjs, fast-forward, the suite's harness; scenarios in
+invaders_opening_scenarios.js): `arrival` (5 spawned, on the step within 34 s of the gate, the
+leader in front all the way, never closer than 0.9 m to each other, each within 0.4 m of its
+place), `ring_heard` (the signal, the chime played flat from the kitchen, not unknown, nobody
+investigates), `answer`, `glass` (seen, stare, kicked in, no shot before), `hide` (2 rings, 2
+knocks, 4 handles, the break-in at 94 s with waits x0.4, nobody found before it, then sweeping),
+`heard`, `power_off`, `blinds`, `outside`. Real time with photos from inside:
+`invaders_opening_live.mjs [from] [ghost|entry]`. The game's default path:
+`invaders_default.mjs`.
+
+**Cost**: five invaders, ~0.09 ms/frame AI + 0.06 ms bodies (M4 Pro, `invaders_default.mjs`);
+the chime/knock/kick buffers ~0.5 ms each once; the doorbell camera only renders while the
+tablet's Cameras page shows it.
+
+## The old waves (`?waves=old`)
+
 `WAVES = [{at: 60, n: 6}, {at: 300, n: 20}, {at: 600, n: 50}]` (invaders.js): at time `at` the
 next `n` arrive: 6, then 20, then 50, 76 in all (the user's call, 2026-10-22: arrivals, not the
 squad's strength). At most 50 are alive at once (the perf ceiling): the rest wait outside and come
@@ -143,7 +266,8 @@ ShootPistol per shot, HoldRifle / HoldPistol. Tracers start at the gun's `_Muzzl
 Outfits by id (the leader: a cap), heads: balaclava, mask, cap, hood and combinations.
 
 ## Open questions (for the user)
-- Waves as strength after each wave (6 / 20 / 50 alive) or as arrivals (6 + 20 + 50)?
+- (The first five: see "What to workshop" above.)
+- The waves (if they come back): as strength after each wave (6 / 20 / 50 alive) or as arrivals (6 + 20 + 50)?
 - How lethal: a rifle burst at a standing player 20 m away kills in about 2 s now; at the front
   door the watcher kills in ~1-2 s (as asked: going out that way gets you shot).
 - The safe way out (the secret passage) isn't built: nothing here knows about it yet; it should

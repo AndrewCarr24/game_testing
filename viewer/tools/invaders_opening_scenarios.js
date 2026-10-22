@@ -86,6 +86,25 @@
         const h = S.events('seq_heard'), br = phaseAt(S, 'breakin');
         return { pass: h.length >= 2 && br != null && O().reason === 'heard someone', heard: h.length, breakinAt: r2(br), reason: O().reason, kick: r2(first(S, 'breach')) };
       } },
+    // the power is off: the bell is dead (it needs power); they knock instead, longer and harder
+    power_off: { P: OFFICE, secs: 22, doors: [...FRONT, [6.75, -10.5, false, 4.6]], look: [6.75, 6.2, -10.5],
+      setup: (I, S) => { window.__signals.set('power', false); S.log0 = window.__sfx?.log.length ?? 0; start('step', 0.5)(I, S); },
+      steps: [{ wait: 22 }],
+      check: (I, S) => {
+        const o = O(), chimes = (window.__sfx?.log ?? []).slice(S.log0).filter((e) => e.name === 'doorbell').length, dead = S.events('seq_ring').filter((e) => e.dead).length;
+        window.__signals.set('power', true);
+        return { pass: !!o.bellDead && dead >= 1 && chimes === 0 && o.knocks === 3, deadRings: dead, chimes, knocks: o.knocks, phase: o.phase };
+      } },
+    // the entry's blinds are down: standing right behind them, they can't see in (the sequence
+    // runs on as if nobody's home)
+    blinds: { P: [2.2, 16.8], secs: 39, doors: FRONT, look: [1.5, 1.6, 22],
+      setup: (I, S) => { window.__signals.set('blinds_entry', true); },
+      steps: [{ wait: 9 }, { fn: (I, S) => start('step')(I, S) }, { wait: 30 }],     // (the blinds take ~7 s to come down)
+      check: (I, S) => {
+        const o = O(), seen = first(S, 'seq_seen'), blockers = window.__interact.sightBlockers().length;
+        window.__signals.set('blinds_entry', false);
+        return { pass: seen == null && blockers > 0 && o.rings === 2, seen: r2(seen), blockers, rings: o.rings, phase: o.phase };
+      } },
     // the player is out on the court when they come up the drive: straight to the hunt (shots)
     outside: { P: [6, 31], secs: 20, doors: FRONT, look: [19, 1.6, 40],
       setup: start('court'),
