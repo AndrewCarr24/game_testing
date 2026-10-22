@@ -36,7 +36,7 @@ const FLOAT = 1.35;          // m of water over the feet when floating
 const SWIM_SPEED = 1.3, DIVE_SPEED = 1.1, BREATH = 20;
 const REACH = 0.95;          // a mantle climbs onto tops up to this far over the water
 const FOOTING = 0.95;        // m/s of push that takes the feet out (waist deep or more)
-const SWEPT = 2.6;           // m/s of current a swimmer can't fight
+const SWEPT = 2.1;           // m/s of current a swimmer can't fight
 const WIPEOUT_SPEED = 3.2, WIPEOUT_DAMAGE = 35;
 const IMM = [0, 0.3, 0.7, 1.05, FLOAT];
 const SPEED_K = [1, 0.85, 0.6, 0.4, 0.3];
@@ -189,7 +189,8 @@ export class HeightfieldPlayer extends Player {
     } else this._loseFooting = 0;
     // into the Narrows, or out of the square, with the water: no way back
     const half = this.world.size / 2, edge = Math.max(Math.abs(p.x), Math.abs(p.z)) > half - 4;
-    if (S.inWater && (this.swimming || S.swept) && ((S.hazard && this._flow.speed > WIPEOUT_SPEED) || edge)) {
+    // (pinned on the ledge's rocks counts: a strainer)
+    if (S.inWater && (this.swimming || S.swept) && ((S.hazard && (this._flow.speed > WIPEOUT_SPEED || (this._pinned > 2 && this._flow.speed > 0.8))) || edge)) {
       this._doom = (this._doom || 0) + dt;
       if (this._doom > 0.4 || edge) { this.startWipeout(); return this.wipeoutStep(0); }
     } else this._doom = 0;
@@ -206,8 +207,8 @@ export class HeightfieldPlayer extends Player {
       o.crouchSpeed = SWIM_SPEED * 0.8;
       o.gravity = 0; o.jumpHeight = 0;
       // dive while C is held (with air left), float back up when it's let go
-      const air = S.breath > (this._gasp ? 0.4 : 0.02);
-      if (this._gasp && S.breath > 0.4) this._gasp = false;
+      const air = !this._gasp && S.breath > 0.02;
+      if (this._gasp && S.breath > 0.4 && !input.crouch) this._gasp = false;     // (let go of C first)
       S.diving = !!input.crouch && air && !S.swept;
       const floor = this.world.heightAt(p.x, p.z) + 0.05;
       this._dive = S.diving ? Math.min(Math.max(0, floatY - floor), (this._dive || 0) + DIVE_SPEED * dt) : Math.max(0, (this._dive || 0) - 1.6 * dt);
@@ -237,11 +238,31 @@ export class HeightfieldPlayer extends Player {
     super.update(dt, inp);
     this.terrainFloor();
 
-    // the current: a push along the flow (collides like walking: rocks stop it)
+    // the current: a push along the flow (collides like walking: rocks stop it; a floating body
+    // pinned on a rock is carried round it, the side that's open, as the water goes)
     const ox = this._flow.x * push * dt, oz = this._flow.z * push * dt;
     if (S.inWater && (ox || oz)) {
-      const n = Math.max(1, Math.ceil(Math.max(Math.abs(ox), Math.abs(oz)) / 0.04));
-      for (let i = 0; i < n; i++) { this.moveHorizontal('x', ox / n); this.moveHorizontal('z', oz / n); this.depenetrate(); }
+      const carry = (dx, dz) => {
+        const x0 = p.x, z0 = p.z, n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / 0.04));
+        for (let i = 0; i < n; i++) { this.moveHorizontal('x', dx / n); this.moveHorizontal('z', dz / n); this.depenetrate(); this.terrainFloor(); }
+        return ((p.x - x0) * dx + (p.z - z0) * dz) / (dx * dx + dz * dz);      // the fraction made
+      };
+      const made = carry(ox, oz);
+      if (this.swimming && made < 0.4) {
+        // round the rock in the way by its nearer side (kept while pinned; flipped if that's shut)
+        if (!this._pinned) {
+          const L = Math.hypot(ox, oz), ux = ox / L, uz = oz / L, px = -uz, pz = ux;
+          const rock = this.overlapping(new THREE.Vector3(p.x + ux * 0.12, p.y, p.z + uz * 0.12))[0];
+          if (rock) {
+            const cs = [[rock.min.x, rock.min.z], [rock.max.x, rock.min.z], [rock.min.x, rock.max.z], [rock.max.x, rock.max.z]]
+              .map(([x, z]) => (x - p.x) * px + (z - p.z) * pz);
+            this._side = Math.max(...cs) < -Math.min(...cs) ? 1 : -1;
+          }
+        }
+        this._pinned = (this._pinned || 0) + dt;
+        const side = this._side || 1, k = 0.8;
+        if (carry(-oz * side * k, ox * side * k) < 0.3) this._side = -side;
+      } else this._pinned = 0;
       this.terrainFloor();
     }
     o.stepHeight = B.stepHeight;
@@ -303,7 +324,7 @@ export class HeightfieldPlayer extends Player {
       this.grounded = true;
       if (w.t >= 2.0) S.wipeout = null;
     }
-    S.inWater = false; this.wading = false;
+    S.inWater = false; this.wading = false; S.swimming = false; S.band = w.moved ? 'dry' : 'swept';
     this.syncCamera();
   }
 

@@ -335,7 +335,7 @@ async function main() {
     // (a wipeout hurts through the combat contract's player target, once viewer/combat.js is in)
     const hurt = (dmg, info) => { const c = window.__combat; (c?.player || c?.targets?.find?.((t) => t.kind === 'player'))?.hit?.(dmg, info); };
     player.setWater(water, { river: world.meta.river, onHurt: hurt });
-    swimFx = new SwimFx(player);
+    swimFx = new SwimFx(player, { uniforms });
   }
   // ---- [/river]
 
