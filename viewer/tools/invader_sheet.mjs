@@ -21,9 +21,9 @@ process.on('exit', release);
 
 const cells = [];
 for (const part of spec.split(';').filter(Boolean)) {
-  const [ct, view = 'three', upper = ''] = part.split(':');
+  const [ct, view = 'three', upper = '', opts = ''] = part.split(':');
   const [clip, times = '0'] = ct.split('@');
-  for (const t of times.split(',')) cells.push({ clip, t, view, upper });
+  for (const t of times.split(',')) cells.push({ clip, t, view, upper, opts });
 }
 const W = 360, H = 460;
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
@@ -36,8 +36,13 @@ try {
   await p.evaluate(() => { document.getElementById('ui').style.display = 'none'; document.getElementById('stats').style.display = 'none'; });
   const shots = [];
   for (const c of cells) {
-    const url = await p.evaluate(({ clip, t, view, upper }) => {
+    const url = await p.evaluate(({ clip, t, view, upper, opts }) => {
       const I = window.__inv;
+      const o = Object.fromEntries(opts.split(',').filter(Boolean).map((kv) => kv.split('=')));
+      I.inv.setOutfit(o.outfit || I.asset.defaultOutfit());
+      I.inv.setHead(o.head || 'none');
+      I.inv.setWeapon(o.weapon || null);
+      I.setLod(o.lod ? +o.lod : 0);
       const dur = I.asset.clips[clip]?.duration ?? 0;
       const time = t.startsWith('f') ? parseFloat(t.slice(1)) * dur : parseFloat(t);
       I.pose(clip, time, upper || null);
@@ -52,7 +57,7 @@ try {
   const sheet = await b.newPage({ viewport: { width: W * n, height: H * rows } });
   await sheet.setContent(`<body style="margin:0;background:#111;display:grid;grid-template-columns:repeat(${n},${W}px)">` +
     shots.map((s) => `<div style="position:relative;width:${W}px;height:${H}px"><img src="${s.url}" style="width:${W}px;height:${H}px;display:block">` +
-      `<span style="position:absolute;left:6px;top:4px;color:#fff;font:13px sans-serif;text-shadow:0 0 3px #000">${s.clip}${s.upper ? '|' + s.upper : ''} @${s.t} ${s.view}</span></div>`).join('') + '</body>');
+      `<span style="position:absolute;left:6px;top:4px;color:#fff;font:13px sans-serif;text-shadow:0 0 3px #000">${s.clip}${s.upper ? '|' + s.upper : ''} @${s.t} ${s.view} ${s.opts}</span></div>`).join('') + '</body>');
   await sheet.waitForTimeout(300);
   await sheet.screenshot({ path: out, fullPage: true });
   console.log('SHEET', out, shots.length, 'cells');

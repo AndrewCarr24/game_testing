@@ -333,6 +333,7 @@ class Solver:
         self.up = {b[0]: b[4] for b in bones}
         self.L = L
         self.gap = 0.0
+        self.gaps = {}
 
     # armature-space rest positions carried by a bone's pose delta
     def delta(self, PM, bone):
@@ -378,6 +379,7 @@ class Solver:
         l1, l2 = self.len[up_n], self.len[fo_n]
         el, end, gap = ik(sh, tgt, l1, l2, pole)
         self.gap = max(self.gap, gap)
+        self.gaps['arm_' + s] = max(self.gaps.get('arm_' + s, 0.0), gap)
         PM[up_n] = frame(sh, el, pole)
         F = frame(el, end, pole)
         # forearm twist: half of the hand's roll about the forearm, relative to the rest
@@ -415,6 +417,7 @@ class Solver:
             pole = np.asarray(g.get("pole", (qf @ Vector((0, -1, 0)))), float)
             kn, end, gap = ik(hip, ank, self.len[th], self.len[sh], pole)
             self.gap = max(self.gap, gap)
+            self.gaps['leg_' + s] = max(self.gaps.get('leg_' + s, 0.0), gap)
             PM[th] = frame(hip, kn, pole)
             PM[sh] = frame(kn, end, pole)
             Rf = qf.to_matrix() @ self.R[ft].to_3x3()
@@ -456,6 +459,7 @@ def key_clip(sv, name, fn, T, loop=True, fps=FPS, extra_bones=()):
     nf = max(int(round(T * fps)), 1)
     prev = {}
     sv.gap = 0.0
+    sv.gaps = {}
     frames = []
     for f in range(nf + 1):
         t = (f % nf) / fps if loop else min(f / fps, T)

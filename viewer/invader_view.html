@@ -74,6 +74,7 @@
     const loader = new GLTFLoader();
     loader.setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const asset = await InvaderAsset.load(loader, '../assets/models/invader.gltf');
+    await asset.preloadOutfits();
     const meta = asset.meta;
     const inv = asset.spawn({ outfit: Q.get('outfit') || undefined, head: Q.get('head') || 'none', weapon: Q.get('weapon') || null,
                               lod: Q.has('lod') ? +Q.get('lod') : 0 });

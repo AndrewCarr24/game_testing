@@ -24,7 +24,9 @@ export class InvaderAsset {
   constructor(gltf, base) {
     this.gltf = gltf;
     this.base = base;
-    this.meta = gltf.scene.userData || {};
+    // the numbers live on the root node's extras (blender/assets/invader.py)
+    const rootNode = gltf.scene.getObjectByName('Invader');
+    this.meta = { ...(gltf.scene.userData || {}), ...(rootNode ? rootNode.userData : {}) };
     this.clips = Object.fromEntries(gltf.animations.map((c) => [c.name, c]));
     this.upperSet = new Set(this.meta.upperBody || []);
     this.layered = new Map();
@@ -34,6 +36,16 @@ export class InvaderAsset {
     gltf.scene.traverse((o) => { if (o.isMesh && o.name === LOD_NAMES[0]) body = o; });
     this.bodyMaterial = body ? body.material : null;
     if (this.bodyMaterial) this.outfitMaterials.set(this.defaultOutfit(), this.bodyMaterial);
+  }
+
+  // load every outfit's base-colour map now (otherwise the first frames of a new outfit render untextured)
+  async preloadOutfits() {
+    await Promise.all((this.meta.outfits || []).map(async (o) => {
+      const m = this.outfitMaterial(o.name);
+      if (m && m !== this.bodyMaterial && m.map && !m.map.image) {
+        await new Promise((ok) => { const t = setInterval(() => { if (m.map.image) { clearInterval(t); ok(); } }, 20); });
+      }
+    }));
   }
 
   defaultOutfit() { return (this.meta.outfits && this.meta.outfits[0] && this.meta.outfits[0].name) || 'default'; }
