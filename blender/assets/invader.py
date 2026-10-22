@@ -38,14 +38,15 @@ import invader_anims as anims  # noqa: E402
 import invader_gear as gear  # noqa: E402
 import invader_paint as paint  # noqa: E402
 import invader_qa as qa  # noqa: E402
+import invader_crowd as crowd  # noqa: E402
 
-for _m in (common, body, rig, anims, gear, paint, qa):
+for _m in (common, body, rig, anims, gear, paint, qa, crowd):
     importlib.reload(_m)
 
 NAME = "Invader"
 PROJECT = os.path.abspath(os.path.join(HERE, "..", ".."))
 CACHE = os.path.join(PROJECT, "build", "invader_cache")
-EXPORT = dict(export_tangents=True)
+EXPORT = dict(export_tangents=True, export_optimize_animation_keep_anim_armature=False)
 
 P = dict(
     name=NAME,
@@ -64,6 +65,7 @@ P = dict(
     gear_tex=256,           # gear palette atlas
     ao_samples=64,
     attach_tris=dict(Mask=700, Cap=420, Hood=900),
+    crowd_data=True,        # write assets/models/invader_anim.bin/.json (bone animation texture)
 )
 TEX_DIR = os.path.join(PROJECT, "assets", "models", "textures")
 # the fist's grip point in the hand frame: along the fingers, toward the palm, toward the thumb (m)
@@ -554,6 +556,8 @@ def _build(p):
     for k in ("DeathForward", "DeathBack"):
         md["events"][k].update(measured.pop(k))
     md.update(measured)
+    if p["crowd_data"]:
+        crowd.write(sv, info, sv.sockets, os.path.join(PROJECT, "assets", "models"))
     md.update(
         height=round(float(verts[:, 2].max()), 3), radius=0.3,
         lods=[dict(mesh=o.name, tris=_tri_count(o)) for o in lods], lodDistance=list(p["lod_distance"]),

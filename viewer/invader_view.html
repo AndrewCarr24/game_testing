@@ -157,9 +157,39 @@
     if (Q.get('crowd')) {
       const { InvaderCrowd } = await import('./invader_crowd.js');
       crowd = await InvaderCrowd.load(asset, '../assets/models/invader_anim.json', { lod: +(Q.get('crowdlod') || 1) });
-      crowd.spawnGrid(+Q.get('crowd'), 1.6);
       scene.add(crowd.mesh);
-      inv.root.visible = Q.get('hero') === '1';
+      if (Q.get('crowd') === 'compare') {
+        // one crowd instance (right) next to the SkinnedMesh (left), same clip and time: they must match
+        inv.root.position.x = -0.6;
+        crowd.add({ position: new THREE.Vector3(0.6, 0, 0), clip: state.clip, time: -(state.freeze ?? 0),
+                    outfit: inv.outfit, weapon: inv.weapon, head: inv.head });
+        crowd.compare = true;
+      } else {
+        crowd.spawnGrid(+Q.get('crowd'), 1.6);
+        inv.root.visible = Q.get('hero') === '1';
+        view('far');
+      }
+    }
+
+    // ---- the SkinnedMesh path for comparison: ?skinned=50 (clones, a mixer each, distance LODs)
+    const herd = [];
+    if (Q.get('skinned')) {
+      const n = +Q.get('skinned'), side = Math.ceil(Math.sqrt(n));
+      const clips = ['Idle', 'IdleAlert', 'Walk', 'Search', 'HoldRifle', 'AimRifle', 'Run', 'CrouchWalk', 'HoldPistol', 'Drag'];
+      const outfits = (meta.outfits || []).map((o) => o.name);
+      for (let i = 0; i < n; i++) {
+        const clip = clips[i % clips.length];
+        const h = asset.spawn({ outfit: outfits[i % outfits.length], weapon: /Rifle/.test(clip) ? 'Rifle' : /Pistol/.test(clip) ? 'Pistol' : null,
+                                head: ['none', 'cap', 'mask', 'hood'][i % 4] });
+        h.forcedLod = Q.has('herdlod') ? +Q.get('herdlod') : null;
+        if (h.forcedLod !== null) h.setLod(h.forcedLod);
+        h.root.position.set((i % side - (side - 1) / 2) * 1.6, 0, (Math.floor(i / side) - (side - 1) / 2) * 1.6);
+        h.play(clip, { fade: 0 });
+        h.current.time = (i * 0.37) % 2;
+        scene.add(h.root);
+        herd.push(h);
+      }
+      inv.root.visible = false;
       view('far');
     }
 
@@ -167,7 +197,7 @@
     if (state.freeze !== null) pose(state.clip, state.freeze, state.upper);
 
     window.__inv = {
-      inv, asset, meta, scene, camera, renderer, crowd,
+      inv, asset, meta, scene, camera, renderer, crowd, herd,
       clips: Object.keys(asset.clips), pose, play, view,
       setLod: (i) => { inv.forcedLod = i; inv.setLod(i); },
       info: () => ({ tris: inv.lods.map((o) => o.geometry.index.count / 3), joints: inv.lods[0].skeleton.bones.map((b) => b.name),
@@ -180,7 +210,8 @@
     function frame() {
       const dt = Math.min(clock.getDelta(), 0.05);
       if (state.freeze === null) inv.update(dt);
-      if (crowd) crowd.update(window.__bench ? 0 : dt);
+      if (crowd && state.freeze === null) crowd.update(dt);
+      for (const h of herd) h.update(dt, camera.position);
       const v = speeds[state.clip] || 0;
       if (state.scroll && state.freeze === null) gridTex.offset.y -= (v * dt * state.speed) / 1.0 * (40 / 40);
       controls.update();
