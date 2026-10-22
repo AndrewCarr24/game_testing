@@ -734,7 +734,9 @@ export class Invaders {
     }
     const ms = performance.now() - t0;
     this.stats.thinkMs += ms; this.stats.frames++; this.stats.maxMs = Math.max(this.stats.maxMs, ms);
+    const tb = performance.now();
     this.bodies.update(this.agents, dt, this.camera);
+    this.stats.bodyMs = (this.stats.bodyMs ?? 0) + performance.now() - tb;
     this.fx.update(dt, this.debug ? this.agents : null, this);
   }
 

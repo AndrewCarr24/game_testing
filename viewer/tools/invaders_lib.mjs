@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const BASE = process.env.GT_BASE || 'http://localhost:8765';
 
-export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = () => window.__loaded } = {}) {
+export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = () => window.__loaded, init = null } = {}) {
   const locks = path.join(root, 'build/locks');
   fs.mkdirSync(locks, { recursive: true });
   let slot = null;
@@ -31,6 +31,7 @@ export async function withPage(qs, fn, { w = 960, h = 600, seed = null, wait = (
         Math.random = () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
       }, seed * 7919 + 13);
     }
+    if (init) await p.addInitScript(init);
     await p.goto(`${BASE}/viewer/index.html?level=mansion${qs}`);
     await p.waitForFunction(wait, null, { timeout: 180000, polling: 250 });
     return await fn(p);
