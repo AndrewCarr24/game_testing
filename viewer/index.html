@@ -159,6 +159,7 @@
     import { Combat, PlayerVitals } from './combat.js';      // (combat) health, damage, death: window.__combat
     import { Weapons, spawnDummy } from './weapons.js';     // (combat) the player's weapons + view model
     import { EstateGate } from './estate_gate.js';   // (estate_link) the gate out to the wilderness and back
+    import { HouseCar } from './vehicle_house.js';   // (vehicle) the estate's car, drivable (viewer/vehicle.js)
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -523,6 +524,7 @@
       for (const r of interact.reactors) if (r.moves || params.get('rbatch') === '0') r.node.traverse((o) => moving.add(o));   // (?rbatch=0: compare)
       for (const s of shared) s.obj.traverse((o) => moving.add(o));   // (not merged into one room's batch)
       for (const n of devices.movingNodes()) n.traverse((o) => moving.add(o));   // (distractions: a blender's shaking jar)
+      if (placed.car_ev) placed.car_ev.traverse((o) => moving.add(o));   // (vehicle) the drivable car keeps its own nodes
       const { batches, before, after } = batchRooms(roomRoots, moving, restingPickups);
       for (const list of Object.values(batches)) for (const m of list) scene.add(m);
       const culler = new RoomCuller(level, roomRoots, batches, { shared });
@@ -603,7 +605,7 @@
       const vitals = new PlayerVitals({ combat, player, camera, god: params.get('god') === '1' });
       window.__vitals = vitals;
       const weapons = new Weapons({ combat, camera, inventory, player, noise, baked, culler, level,
-        canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown,
+        canAct: () => controls.isLocked && !inventory.open && !tablet.open && !hiding.active && !player.isDown && !window.__car?.driving,   // (vehicle)
         hidden: () => hiding.active });
       window.__weapons = weapons;
       hand.provider = (id, node) => weapons.show(id, node);   // a weapon is drawn by the view model
@@ -667,6 +669,10 @@
       controls.addEventListener('unlock', () => (hudEl.style.visibility = ''));
       // (estate_link) the drive's gate opens as the player comes down to it and leads out into the
       // wilderness (viewer/estate_gate.js: the wild loads into an iframe, the house suspends)
+      // (vehicle) the car in the garage, drivable: E at the driver's door (viewer/vehicle_house.js); made before the
+      // gate, which hands it over with the player (its link registry's 'vehicle')
+      const car = placed.car_ev ? new HouseCar({ root: placed.car_ev, proto: proto.car_ev, asset: level.assets.car_ev, level, scene, camera, player,
+        colliders, culler, sky, renderer, toast: (m) => toast(m), params }) : null;
       const estateGate = level.outdoor ? new EstateGate({ scene, camera, player, controls, inventory, flashlight, colliders, renderer, params, toast: (m) => toast(m) }) : null;
       const keys = {};
       let focus = null;   // interactable the player can use right now
@@ -674,6 +680,7 @@
         keys[e.code] = true;
         if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
         if (!controls.isLocked || e.repeat) return;
+        if (car?.key(e.code, inventory.open || tablet.open || hiding.active || player.isDown)) return;   // (vehicle) E in / out, V view
         if (player.isDown) return;                       // knocked down: nothing until they're up
         if (tablet.open) { tablet.key(e.code); return; } // the tablet takes the keys while it's open
         if (!inventory.open && weapons.key(e.code)) return;   // (combat) 1-4 arm a weapon, R reload
@@ -791,8 +798,11 @@
         // the inventory screen and the tablet pause looking and moving
         if (inventory.open || tablet.open) camera.quaternion.copy(frozenLook);
         const on = controls.isLocked && !inventory.open && !tablet.open;
-        hand.group.visible = !hiding.active;         // (a held item would poke through the wardrobe door)
-        if (!hiding.update(dt)) player.update(dt, {   // (in a hiding spot the hiding module has the camera)
+        hand.group.visible = !hiding.active && !car?.driving;         // (a held item would poke through the wardrobe door)
+        // (vehicle) driving: the car has the player and the camera (W/S/A/D/Space from the held keys)
+        const driving = car?.update(dt, { forward: on && held(KEYS.forward), back: on && held(KEYS.back), left: on && held(KEYS.left),
+          right: on && held(KEYS.right), jump: on && held(KEYS.jump) }, { locked: on, busy: player.isDown || hiding.active });
+        if (!driving && !hiding.update(dt)) player.update(dt, {   // (in a hiding spot the hiding module has the camera)
           forward: on && held(KEYS.forward), back: on && held(KEYS.back),
           left: on && held(KEYS.left), right: on && held(KEYS.right),
           run: on && held(KEYS.run), jump: on && held(KEYS.jump), crouch: on && held(KEYS.crouch),
@@ -808,7 +818,7 @@
         footsteps?.update(dt, player);
         invaders?.update(dt);                    // (invaders: senses, squad, movement, bodies)
         // what the crosshair is on (or nearest to it) among the things in reach
-        focus = on && !player.isDown && !hiding.active ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
+        focus = on && !player.isDown && !hiding.active && !driving ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
         const armedAct = armed ? interact.armedPrompt(armed, camera.position) : null;
         const armedHint = armed ? armedAct ?? itemHint(armed) : null;
