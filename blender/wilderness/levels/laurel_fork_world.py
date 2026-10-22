@@ -367,7 +367,10 @@ def vista_clear(R, trees, margin=2.5, reach=1400.0):
         rx, ry = trees["x"] - ax, trees["y"] - ay
         t = rx * ux + ry * uy
         lat = np.abs(-rx * uy + ry * ux)
-        near = (t > 0) & (t < reach) & (lat < 6 + 0.06 * t)
+        # (estate_link: + the crown's half-width: a broad crown standing just outside the band still
+        # reached over the line; a re-scatter put a red oak's into the Knob's view, -17 m)
+        crown = np.array([SPECIES[s]["width"] for s in trees["sp"]]) * trees["size"] * 0.5
+        near = (t > 0) & (t < reach) & (lat < 6 + 0.06 * t + crown)
         line_z = az + (t / L) * (hz - az)
         cut |= near & (gz + hgt > line_z - margin)
     return cut

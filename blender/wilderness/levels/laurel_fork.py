@@ -108,8 +108,9 @@ PADS = [   # (later pads win where they overlap: the lawn last)
     dict(name="gap", center=(-300, -1218), radius=24, falloff=16),
     # (estate_link: a rectangle pad's reach counts from its half-size, terrain.apply_pads `d + size`:
     # at 60 it never reached the rect (90 m half-width), and the terrain stood 3-8 m over the house's
-    # lawn inside the hedge; 130 = the rect + 40 m)
-    dict(name="estate_lawn", center=(0.0, -61.0), half=(90.0, 19.0), falloff=10, height=LAWN_Z, reach=130.0),
+    # lawn inside the hedge; 150 = the rect + 60 m, with a 35 m falloff and 14 deg banks and cuts so the rising ground
+    # east of the lawn is a graded berm, not an 8 m cut)
+    dict(name="estate_lawn", center=(0.0, -61.0), half=(90.0, 19.0), falloff=35, height=LAWN_Z, reach=150.0, bank_deg=14.0, cut_deg=14.0),
 ]
 PATHS = [
     dict(name="creek_trail", width=2.0, shoulder=3.0, max_grade=0.22, smooth=24.0, ford=True,

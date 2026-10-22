@@ -22,8 +22,9 @@ house at the origin; the wild's three.js frame is (x, height, -(y + 810))):
   water        the river and Laurel Fork (water16.png), the county road (road.json)
   town         the town's glimpse props (world.json town), as boxes
   far ridges   composited after the render where the sky still shows: sky_wild.js's eight layers
-Everything inside the lawn rect (x +-90, y +-80) is left out: the house, its grounds and the
-hedge are real geometry in front of the band (plan.GROUNDS), and the band starts past them.
+The house, its grounds and the hedge are left out: they are real geometry in front of the band
+(plan.GROUNDS). The ground under them (the lawn rect, held at lawn height) stays in, so the band
+has no holes under the horizon seen from anywhere on the grounds.
 
 Writes assets/textures/T_Mansion_Horizon.webp (RGBA: alpha 0 where the sky shows; the engine draws
 the sky itself behind it), assets/levels/mansion_sky.json (latitude range, brightness scale, sky
@@ -260,10 +261,10 @@ def terrain_mesh(col, D, meta, step=2):
     alb = w @ P
     hay = np.clip((s[..., 0] - 0.55) / 0.3, 0, 1) * (s[..., 1] < 0.25)
     alb = alb * (1 - hay[..., None]) + np.array(HAY) * hay[..., None]
-    # quads, minus the house's own lawn rect (real geometry there)
-    inside = (np.abs(BX) <= LAWN[0]) & (np.abs(BY) <= LAWN[1])
-    qin = inside[:-1, :-1] & inside[1:, :-1] & inside[:-1, 1:] & inside[1:, 1:]
-    faces = grid_faces(n, n, ~qin)
+    # every quad, the house's own lawn rect included (held at lawn height): the house's real grounds
+    # cover it from the house, and without it the band had sky-coloured holes just under the horizon
+    # wherever the real lawn's edge sits at another angle than from the band's centre (the gate)
+    faces = grid_faces(n, n, np.ones((n - 1, n - 1), bool))
     # (rows run north -> south: flip the winding so the faces look up)
     faces = faces[:, ::-1]
     verts = np.column_stack([BX.ravel(), BY.ravel(), H.ravel()])
@@ -321,6 +322,8 @@ def backdrop_mesh(col, D, meta):
     # forest floor under the trees; beyond, the far baked colour (the canopy as the wild draws it)
     near = R < 3000
     vflat = (np.degrees(np.arctan(np.hypot(gx, gy))) < 6.0) & (H < 40.0)
+    # (and the estate's own meadows round the lawn, inside the ring forest's 160 m: grass, not bare soil)
+    vflat |= np.hypot(XX, ZZ + OY) < 175.0
     alb = np.where(vflat.ravel()[:, None], np.array(HAY)[None, :], np.array(PAL["litter"])[None, :] * 0.8)
     far = make_mesh("Backdrop", verts, grid_faces(n, n, ~qa & ~near)[:, ::-1], col, emissive("M_Backdrop", "Col", scale),
                     srgb_lin(bc[..., :3]).reshape(-1, 3))
@@ -375,7 +378,7 @@ def road_mesh(col, D):
     bsdf = next(nd for nd in m.node_tree.nodes if nd.type == "BSDF_PRINCIPLED")
     for k in ("Specular IOR Level", "Specular"):
         if k in bsdf.inputs:
-            bsdf.inputs[k].default_value = 0.15                 # (no sky sheen at grazing: it read as water)
+            bsdf.inputs[k].default_value = 0.0                  # (no sky sheen at grazing: it read as water)
     return make_mesh("Road", verts, faces, col, m, smooth=False)
 
 
@@ -697,7 +700,8 @@ def main():
     print(f"world {WORLD}: {meta.get('title')}")
     terrain_mesh(col, D, meta)
     backdrop_mesh(col, D, meta)
-    water_mesh(col, D, meta)
+    if "--nowater" not in sys.argv:
+        water_mesh(col, D, meta)
     road_mesh(col, D)
     town_boxes(col, meta)
     n = forest(col, D, meta, None)
