@@ -283,7 +283,7 @@ FOOTBRIDGE = dict(a=(-1795.0, -786.0), b=(-1795.0, -830.0))
 # exits (estate frame rects x0, y0, x1, y1): the runtime reloads into `to` at the same point;
 # `to: None` = a later level (marked, not wired). The east one is the seam with the cove.
 EXITS = [
-    dict(name="cove", to=COVE, rect=[-750.0, -1578.0, -700.0, -42.0], spawn_dx=-5.0,
+    dict(name="cove", to=COVE, rect=[-750.0, -1578.0, -700.0, -42.0], spawn_dx=2.0,
          note="back up the gorge: road, river, path (the cove's own trigger is x < -762)"),
     dict(name="highway_west", to=None, rect=[-2300.0, -870.0, -2255.0, -800.0], note="the highway out west (the roadblock)"),
     dict(name="tunnel", to=None, rect=[-2190.0, -770.0, -2172.0, -758.0], note="the heritage line's tunnel under Tunnel Knob"),
@@ -333,14 +333,14 @@ PEOPLE = [   # the townspeople's posts (stand-ins): role, where, facing (estate 
     dict(role="bartender", x=-2105, y=-806, face=0), dict(role="man on a porch", x=-1678, y=-647, face=180),
     dict(role="woman watering baskets", x=-1650, y=-716, face=180), dict(role="jogger", x=-1700, y=-783, face=90),
 ]
-SPAWN = dict(pos=(-760.0, -786.0), look=(-900.0, -805.0))      # the road at the seam, looking down the gorge
+SPAWN = dict(pos=(-760.0, -786.5), look=(-860.0, -797.0))      # the road at the seam, looking down the gorge
 
 
 def views():
     """Named eye-height views (estate frame): pos (x, y[, z over ground]), look (x, y, z abs or None)."""
     return dict(
         spawn=dict(pos=SPAWN["pos"], look=(*SPAWN["look"], None)),
-        seam_road=dict(pos=(-760, -786), look=(-900, -805, None)),
+        seam_road=dict(pos=(-760, -786.5), look=(-860, -797, -166.5)),
         seam_river=dict(pos=(-758, -718), look=(-900, -735, None)),
         gorge_mouth=dict(pos=(-1405, -828), look=(-1700, -760, -175.0)),
         gorge_mouth_river=dict(pos=(-1420, -766), look=(-1700, -760, -178.0)),

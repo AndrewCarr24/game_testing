@@ -491,6 +491,10 @@ def run(name=LT.NAME):
         river=dict(name="Laurel River", out=river_out), town=LFW.rounded(town, 3),
         light_file="light.webp" if os.path.exists(os.path.join(out_dir, "light.webp")) else "light.png",
         spawn=vw["spawn"],
+        # the runtime: the town's lawns are mown (short blades, not the cove's hay), keys 1-0 jump between views
+        grass=dict(floor=0.05, height=0.3, tint=[0.78, 1.0, 0.55], hay=False),
+        keys={f"Digit{(k + 1) % 10}": v for k, v in enumerate(["spawn", "gorge_mouth", "bridge_approach", "main_street", "river_walk",
+                                                                "strip", "motel_lot", "bar_lot", "mill_hill", "steeple"])},
         checks=dict(seam_max_diff_m=round(R.seam_diff, 3)),
         stats=dict(trees=int(len(trees["x"])), shrubs=int(len(shrubs["x"])), buildings=len(buildings), files_bytes=files,
                    timings_s=dict(total=round(time.time() - t0, 1))),

@@ -14,6 +14,7 @@ import { loadVegKit } from './veg.js';
 import { HeightfieldPlayer } from './player_hf.js';
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
+import { Town, Exits } from './town.js';   // [town] Sourwood (world=laurel_town) + the exits between worlds
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -221,16 +222,19 @@ async function main() {
   if (params.has('mid')) { const m = num('mid', 150); tiers.mid = [tiers.mid[0], tiers.mid[1], m, m + 25]; tiers.far = [m, m + 25, 2600, 2700]; }
   const forest = new Forest(world, renderer, uniforms, tex, { tiers, veg, vegModels, split: params.has('split') ? params.get('split') === '1' : false });
   scene.add(forest.group);
-  const grassSys = new Grass(world, tex, uniforms, { blades: num('blades', 4500), ...(level ? { floor: 0.05, height: 1.15, tint: [1.2, 1.05, 0.5], hay: true, blades: num('blades', 6500) } : {}) });
+  const grassSys = new Grass(world, tex, uniforms, { blades: num('blades', 4500), ...(level ? { floor: 0.05, height: 1.15, tint: [1.2, 1.05, 0.5], hay: true, blades: num('blades', 6500) } : {}),
+    ...(world.meta?.grass || {}) });   // [town] a level's own grass (the town's mown lawns)
   if (on('grass')) scene.add(grassSys.group);
   // a level's own meshes
-  let props = null;
+  let props = null, town = null;
   if (level) {
     scene.add(buildBackdrop(world, uniforms));
     scene.add(buildWater(world, uniforms, tex));
     props = new Props(world, uniforms, tex, kitProps);
     scene.add(props.group);
-    scene.add(buildEstate(world, uniforms, tex));
+    if (world.estate) scene.add(buildEstate(world, uniforms, tex));   // [town] (the town has no estate stand-in)
+    // [town] the town's buildings, streets, bridges (viewer/wild/town.js)
+    if (world.meta.town?.buildings && params.get('town') !== '0') { town = new Town(world, uniforms, tex); scene.add(town.group); }
   }
   T.build = Math.round(performance.now() - t0); t0 = performance.now();
 
@@ -303,13 +307,16 @@ async function main() {
       b.fixed = true;
       colliders.push(b);
     }
-    colliders.push(...estateColliders(world));
+    if (world.estate) colliders.push(...estateColliders(world));   // [town]
   } else colliders = forest.colliders();
   const estateView = () => {
     if (!params.has('epos')) return null;
     const p = params.get('epos').split(',').map(Number), l = (params.get('elook') || '').split(',').map(Number);
-    const pos = [p[0], p.length > 2 ? p[2] : world.heightAt(p[0], -(p[1] + 810)) + 1.65, -(p[1] + 810)];
-    return { pos, look: l.length >= 2 ? [l[0], l.length > 2 ? l[2] : pos[1], -(l[1] + 810)] : [pos[0], pos[1], pos[2] + 10] };
+    // [town] the estate frame through the world's own offset (the town's square is centred at estate x -1500)
+    const [ox, oy] = world.meta?.estate_offset || [0, -810];
+    const px = p[0] - ox, pz = -(p[1] - oy);
+    const pos = [px, p.length > 2 ? p[2] : world.heightAt(px, pz) + 1.65, pz];
+    return { pos, look: l.length >= 2 ? [l[0] - ox, l.length > 2 ? l[2] : pos[1], -(l[1] - oy)] : [pos[0], pos[1], pos[2] + 10] };
   };
   const startView = () => {
     if (params.has('pos')) {
@@ -325,6 +332,7 @@ async function main() {
   camera.lookAt(...v0.look);
   let fly = params.get('fly') === '1' || (params.has('pos') && Math.abs(v0.pos[1] - world.heightAt(v0.pos[0], v0.pos[2]) - 1.65) > 0.5);
   window.__player = player;
+  const exits = level && params.get('exits') !== '0' ? new Exits(world, worldName) : null;   // [town]
 
   const setView = (name) => {
     const v = typeof name === 'string' ? world.views[name] : name;
@@ -341,9 +349,9 @@ async function main() {
     held.add(e.code);
     if (e.code === 'KeyF') { fly = !fly; if (!fly) { player.pos.set(camera.position.x, Math.max(camera.position.y - 1.65, world.heightAt(camera.position.x, camera.position.z)), camera.position.z); player.vel.set(0, 0, 0); } }
     if (e.code === 'KeyH') overlay.style.display = overlay.style.display === 'none' ? '' : 'none';
-    const views = level ? { Digit1: 'gate', Digit2: 'meadow_edge', Digit3: 'poplar_cove', Digit4: 'falls', Digit5: 'footlog',
+    const views = world.meta?.keys || (level ? { Digit1: 'gate', Digit2: 'meadow_edge', Digit3: 'poplar_cove', Digit4: 'falls', Digit5: 'footlog',
       Digit6: 'laurel_hell', Digit7: 'raven', Digit8: 'knob', Digit9: 'painted', Digit0: 'gap' }
-      : { Digit1: 'open', Digit2: 'forest', Digit3: 'ridge', Digit4: 'spawn' };
+      : { Digit1: 'open', Digit2: 'forest', Digit3: 'ridge', Digit4: 'spawn' });   // [town] world.json keys
     if (views[e.code]) setView(views[e.code]);
   });
   addEventListener('keyup', (e) => held.delete(e.code));
@@ -368,6 +376,7 @@ async function main() {
     } else if (controls.isLocked || held.size) {
       player.update(Math.min(dt, 0.05), input());
     }
+    exits?.check(camera, fly);   // [town] walking across the seam reloads into the other world
   };
   const cull = () => {
     camera.updateMatrixWorld();
@@ -488,7 +497,7 @@ async function main() {
   // frame that takes a second to draw)
   let loop = null;
   const pause = (p) => { renderer.setAnimationLoop(p ? null : loop); if (p) { cull(); renderer.render(scene, camera); } };
-  window.__wild = { world, level, props, pause, quality, softwareGPU, terrain, forest, grass: grassSys, uniforms, setView, stats, textureMB, textureList, downloadBy, shippingEstimate, timings: { ...world.timings, ...T },
+  window.__wild = { world, level, props, town, exits, pause, quality, softwareGPU, terrain, forest, grass: grassSys, uniforms, setView, stats, textureMB, textureList, downloadBy, shippingEstimate, timings: { ...world.timings, ...T },
     cull, colliders: colliders.length, get fly() { return fly; }, set fly(v) { fly = v; } };
 
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
