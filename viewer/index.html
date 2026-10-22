@@ -539,14 +539,13 @@
       // inside: after a few rounds at the glass it breaks in and hunts (viewer/grimble_hunt.js);
       // ?hunt=0 keeps it outside
       let shatterFx = null, footsteps = null;
-      if (grimble && params.get('hunt') !== '0') {
-        grimble.playerObj = player;
-        grimble.hunt = new GrimbleHunt(grimble, {
-          level, colliders, scene, interact,     // (interact: shut doors block its sight and swipes)
-          sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
-          opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
-        });
-        grimble.hunt.onBreak = () => {
+      let invaders = null;   // (invaders: viewer/invaders.js, made further down)
+      // (invaders) the great room's glass breaking, shared by the Grimble's smash and an invader's bat
+      let glassBroken = false;
+      const breakGlass = () => {
+        if (glassBroken) return;
+        glassBroken = true;
+        {
           const b = level.breakables?.[0];
           if (b) {
             shatterFx = shatter(scene, b);
@@ -562,7 +561,17 @@
             }
           }
           renderer.shadowMap.needsUpdate = true;
-        };
+        }
+        invaders?.onGlassBroken();   // (invaders: their nav opens the hole)
+      };
+      if (grimble && params.get('hunt') !== '0') {
+        grimble.playerObj = player;
+        grimble.hunt = new GrimbleHunt(grimble, {
+          level, colliders, scene, interact,     // (interact: shut doors block its sight and swipes)
+          sightBlockers: () => (interact.sightBlockers ? interact.sightBlockers() : []),
+          opts: params.get('hunt') === 'now' ? { loopsBeforeSmash: 0 } : {},
+        });
+        grimble.hunt.onBreak = breakGlass;
         // the player's running footsteps: soft noises it can hear (grimble_hunt.js Footsteps)
         footsteps = new Footsteps(noise);
         window.__footsteps = footsteps;
@@ -602,6 +611,20 @@
         .attach({ interact, inventory, player, throwables, flashlight, tablet, culler, signals, noise, grimble: () => grimble });
       window.__sfx = sfx;
       // ---- (end sound effects)
+      // ---- invaders (viewer/invaders.js, design/invaders/behaviour.md): armed intruders in waves.
+      // On in the game; off for automated runs (navigator.webdriver, the bench) unless the URL asks:
+      // ?invaders=0 off, =N N at once, =debug overlay; ?waves=fast|0|K. Harmless under the bench.
+      {
+        const q = params.get('invaders');
+        if (q !== '0' && (q !== null || (!navigator.webdriver && !window.__bench))) {
+          const { Invaders } = await import('./invaders.js');
+          invaders = new Invaders({ scene, camera, player, level, colliders, interact, signals, noise, hiding, params, breakGlass });
+          footsteps ??= new Footsteps(noise);     // (they hear running feet, as the Grimble does)
+          window.__footsteps ??= footsteps;
+          if (glassBroken) invaders.onGlassBroken();
+        }
+      }
+      // ---- (end invaders)
 
       const controls = new PointerLockControls(camera, document.body);
       const walkHint = 'click to play · WASD move · Shift run · Space jump · C crouch · I inventory · Esc release';
@@ -747,6 +770,7 @@
         }
         grimble?.shakeCamera(camera, dt);
         footsteps?.update(dt, player);
+        invaders?.update(dt);                    // (invaders: senses, squad, movement, bodies)
         // what the crosshair is on (or nearest to it) among the things in reach
         focus = on && !player.isDown && !hiding.active ? interact.nearest(camera.position, camera.getWorldDirection(viewDir)) : null;
         const armed = on && !player.isDown ? inventory.armed : null;
