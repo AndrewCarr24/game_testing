@@ -14,6 +14,7 @@ import { loadVegKit } from './veg.js';
 import { HeightfieldPlayer } from './player_hf.js';
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
+import { buildRoad } from './road.js';   // (estate_link) the county road: gate -> river -> town
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -231,6 +232,8 @@ async function main() {
     props = new Props(world, uniforms, tex, kitProps);
     scene.add(props.group);
     scene.add(buildEstate(world, uniforms, tex));
+    // (estate_link) the county road (world/road.json, laurel_fork_road.py); ?road=0 leaves it out
+    if (params.get('road') !== '0') { const road = await buildRoad(world, uniforms, tex); if (road) scene.add(road); window.__road = road; }
   }
   T.build = Math.round(performance.now() - t0); t0 = performance.now();
 

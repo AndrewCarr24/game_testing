@@ -155,6 +155,11 @@ PATHS = [
          points=[(250, -255), (262, -340), (300, -460), (318, -575), (300, -700), (255, -820),
                  (200, -930), (175, -990), (163, -1027)]),
 ]
+# (estate_link) the county road: the estate's drive leaves the gate as a two-lane concrete road,
+# down the cove's north wall in four hairpins to the Laurel River and west to the town
+# (laurel_fork_road.py: the alignment, the corridor, road.json for viewer/wild/road.js)
+import laurel_fork_road  # noqa: E402
+PATHS.append(laurel_fork_road.path())
 ROUTE_C = next(p for p in PATHS if p["name"] == "route_c")["points"]
 
 # ------------------------------------------------------------------ landmarks (brief table)
@@ -296,7 +301,7 @@ if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true", help="3 m cells")
-    ap.add_argument("--steps", default="terrain,checks,world")
+    ap.add_argument("--steps", default="terrain,checks,world,road")
     ap.add_argument("--name", default=None)
     a = ap.parse_args()
     cell = 3.0 if a.quick else 1.5
@@ -316,4 +321,6 @@ if __name__ == "__main__":
     if "world" in steps:
         import laurel_fork_world
         laurel_fork_world.run(name)
+    if "road" in steps:                 # (estate_link) the county road's runtime data: world/road.json
+        laurel_fork_road.run(name)
     print(f"done in {time.time() - t0:.0f} s")

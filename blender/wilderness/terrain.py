@@ -1529,6 +1529,12 @@ def build(**overrides):
     pw = max(pp["width"] for pp in p["paths"]) / 2 + 1
     chan = np.isfinite(hyd["channel_T"])
     crossing = chan & (path_d < pw + 6)
+    # (estate_link: a path with culverts=True, a road on its fill, keeps its fill where streams
+    # cross it: no ford re-cut; the streams pass under it in culverts, drawn by the runtime)
+    for pp in p["paths"]:
+        if pp.get("culverts") and routed.get(pp["name"]):
+            dc, _, _, _ = poly_field(grid, spline([tuple(q) for q in routed[pp["name"]]], grid.cell), pp["width"] / 2 + 8)
+            crossing &= ~np.isfinite(dc)
     recut = np.zeros(H.shape, bool)
     if crossing.any():
         lab = label(crossing)

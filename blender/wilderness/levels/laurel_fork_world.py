@@ -1107,7 +1107,9 @@ def run(name=LF.NAME):
         if nm == "route_c":
             route_c_d, _, route_c_s, _ = terrain.poly_field(R.grid, P, 60.0)
         elif pmeta[nm].get("road"):
-            road_d = np.minimum(road_d, d)
+            # (estate_link: a wide road (the county road) keeps its trees, rocks and thickets off
+            # its whole width plus 2 m: road_d < 4 means within half its width + 2 m)
+            road_d = np.minimum(road_d, d - max(0.0, pmeta[nm]["width"] / 2 + 2.0 - 4.0))
             trails_d = np.minimum(trails_d, d - 1.0)
         else:
             trails_d = np.minimum(trails_d, d)
