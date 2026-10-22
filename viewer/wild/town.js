@@ -506,7 +506,7 @@ function kitGlowMaterial(uniforms, map) {
 // identical in both worlds). A world without exits (laurel_fork today) gets the seam's other side
 // from FALLBACK, so the cove's world needs no rebuild for it.
 const FALLBACK = {
-  laurel_fork: [{ name: 'town', to: 'laurel_town', rect: [-800, -1578, -762, -42], spawn_dx: -3 }],
+  laurel_fork: [{ name: 'town', to: 'laurel_town', rect: [-800, -1578, -762, -42], spawn_dx: -3, drive_y: [-800, -640] }],
 };
 
 export class Exits {
@@ -528,7 +528,10 @@ export class Exits {
     const inside = (e) => x >= e.rect[0] && x <= e.rect[2] && y >= e.rect[1] && y <= e.rect[3];
     // (armed only once the player has stood outside every exit: a spawn inside one does nothing)
     if (!this.armed) { this.armed = !this.list.some(inside); return null; }
-    const e = this.list.find(inside);
+    // (vehicle) a car only crosses where the road and river do (estate y -703 / ~-755): the hairpins at
+    // x -752 / -745 (y -417, -620) sit within a car's width of the seam line
+    const drivable = (e) => !window.__car?.driving || !e.drive_y || (y >= e.drive_y[0] && y <= e.drive_y[1]);
+    const e = this.list.find((e) => inside(e) && drivable(e));
     if (!e) return null;
     if (!e.to) { if (!e._logged) { console.log(`exit "${e.name}": a later level (${e.note || ''})`); e._logged = true; } return null; }
     const f = new THREE.Vector3(); camera.getWorldDirection(f);
