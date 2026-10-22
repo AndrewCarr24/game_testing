@@ -1,0 +1,53 @@
+{
+ "asset": "town_suv",
+ "root": "TownSuv",
+ "size": [
+  2.1,
+  5.14,
+  1.692
+ ],
+ "bounds": [
+  [
+   -1.05,
+   -2.57,
+   0.018
+  ],
+  [
+   1.05,
+   2.57,
+   1.71
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 452,
+ "tris_lod1": 20,
+ "colliders": [
+  [
+   -0.95,
+   -2.45,
+   0,
+   0.95,
+   2.45,
+   1.68
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "vehicle": "suv",
+ "footprint": [
+  -0.95,
+  -2.45,
+  0.95,
+  2.45
+ ],
+ "tints": {
+  "Body": [
+   0.92,
+   0.92,
+   0.9
+  ]
+ }
+}

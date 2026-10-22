@@ -1,0 +1,54 @@
+{
+ "asset": "town_cruiser",
+ "root": "TownCruiser",
+ "size": [
+  2.1,
+  5.24,
+  1.822
+ ],
+ "bounds": [
+  [
+   -1.05,
+   -2.67,
+   0.018
+  ],
+  [
+   1.05,
+   2.57,
+   1.84
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 528,
+ "tris_lod1": 20,
+ "colliders": [
+  [
+   -0.95,
+   -2.45,
+   0,
+   0.95,
+   2.45,
+   1.68
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas",
+  "M_Town_Glow"
+ ],
+ "walk_in": false,
+ "vehicle": "cruiser",
+ "footprint": [
+  -0.95,
+  -2.45,
+  0.95,
+  2.45
+ ],
+ "tints": {
+  "Body": [
+   1,
+   1,
+   1
+  ]
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "asset": "town_ice_chest",
+ "root": "TownIceChest",
+ "size": [
+  2.0,
+  0.83,
+  1.2
+ ],
+ "bounds": [
+  [
+   -1.0,
+   -0.43,
+   0.0
+  ],
+  [
+   1.0,
+   0.4,
+   1.2
+  ]
+ ],
+ "below_m": 0.0,
+ "tris_lod0": 36,
+ "tris_lod1": 10,
+ "colliders": [
+  [
+   -1.0,
+   -0.4,
+   0,
+   1.0,
+   0.4,
+   1.2
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas",
+  "M_Town_Glow"
+ ],
+ "walk_in": false,
+ "prop": true,
+ "footprint": [
+  -1.0,
+  -0.4,
+  1.0,
+  0.4
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "asset": "town_bridge_pier",
+ "root": "TownBridgePier",
+ "size": [
+  4.6,
+  10.14,
+  10.12
+ ],
+ "bounds": [
+  [
+   -2.3,
+   -5.99,
+   -10.0
+  ],
+  [
+   2.3,
+   4.15,
+   0.12
+  ]
+ ],
+ "below_m": 10.0,
+ "tris_lod0": 220,
+ "tris_lod1": 10,
+ "colliders": [
+  [
+   -2.3,
+   -6.3,
+   -10.0,
+   2.3,
+   6.0,
+   0.0
+  ]
+ ],
+ "entrances": [],
+ "materials": [
+  "M_Town_Atlas"
+ ],
+ "walk_in": false,
+ "footprint": [
+  -2.3,
+  -5.9,
+  2.3,
+  6.0
+ ]
+}
