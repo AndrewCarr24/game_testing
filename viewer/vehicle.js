@@ -534,6 +534,7 @@ export class Vehicle {
     const d = this.doorWorld(_v);
     const dx = d.x - eye.x, dz = d.z - eye.z, dist = Math.hypot(dx, dz);
     if (dist > 1.9 || Math.abs(d.y - eye.y) > 1.6) return false;
+    if (dist < 1.4) return true;                    // (right at the door: whichever way they look)
     // facing the car (its centre or the door)
     const cx = this.pos.x - eye.x, cz = this.pos.z - eye.z, cl = Math.hypot(cx, cz) || 1;
     const fl = Math.hypot(dir.x, dir.z) || 1;
@@ -611,6 +612,19 @@ export class Vehicle {
       const want = new THREE.Vector3(this.pos.x - cx * 6.4, this.pos.y + 2.4, this.pos.z - cz * 6.4);
       const g = this.env.ground ? this.env.ground(want.x, want.z, want.y + 50) : -Infinity;
       if (Number.isFinite(g)) want.y = Math.max(want.y, g + 1.0);
+      // the boom stops short of walls (the garage, the house, trunks)
+      const head = _v.set(this.pos.x, this.pos.y + 1.5, this.pos.z), dir = want.clone().sub(head);
+      let len = dir.length();
+      dir.divideScalar(len || 1);
+      const boxes = [];
+      this.env.boxes(Math.min(head.x, want.x) - 0.5, Math.min(head.z, want.z) - 0.5, Math.max(head.x, want.x) + 0.5, Math.max(head.z, want.z) + 0.5, boxes);
+      const ray = new THREE.Ray(head.clone(), dir), hit = new THREE.Vector3();
+      for (const b of boxes) {
+        if (b.max.y < this.pos.y + 0.6 || this.env.skip?.(b) || b.containsPoint(head)) continue;
+        if (ray.intersectBox(b, hit)) { const d = hit.distanceTo(head); if (d < len) len = d; }
+      }
+      want.copy(head).addScaledVector(dir, Math.max(0.8, len - 0.35));
+      if (len < 6) this._chase = null;              // (pulled in: no lag through the wall)
       if (!this._chase) this._chase = want.clone();
       this._chase.lerp(want, Math.min(1, dt * 6));
       cam.position.copy(this._chase);

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Vehicle, BoxGrid, CarAudio, CarHud, blobShadow } from './vehicle.js';
-import { linkRegistry } from './estate_link.js';
+import { linkRegistry, GATE } from './estate_link.js';
 
 // The car in the house level (viewer/vehicle.js has the vehicle): the estate's car_ev, parked in
 // the garage's west bay, is driven out of the garage (its door opens from the switch by the
@@ -32,7 +32,17 @@ export class HouseCar {
     this.parts = (asset.colliders || [asset.aabb]).map((c) => new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
     const placed = this.parts.map((b) => b.clone().applyMatrix4(root.matrixWorld));
     const same = (a, b) => a.min.distanceToSquared(b.min) < 1e-8 && a.max.distanceToSquared(b.max) < 1e-8;
-    this.own = placed.map((p) => colliders.find((c) => same(c, p))).filter(Boolean);
+    this.orig = placed.map((p) => colliders.find((c) => same(c, p))).filter(Boolean);
+    // once it has moved: six boxes along its length instead (a rotated car's part boxes, made
+    // axis-aligned, would stand up to 1.4 m proud of its sides), each as tall as the car there
+    const S = 6, L0 = -2.45, L1 = 2.45;
+    this.sliceDefs = [...Array(S)].map((_, k) => {
+      const z0 = L0 + ((L1 - L0) * k) / S, z1 = L0 + ((L1 - L0) * (k + 1)) / S;
+      const top = Math.max(0.6, ...this.parts.filter((b) => b.max.z > z0 + 0.05 && b.min.z < z1 - 0.05).map((b) => b.max.y));
+      return { z0, z1, top };
+    });
+    this.slices = this.sliceDefs.map(() => { const b = new THREE.Box3(new THREE.Vector3(0, -101, 0), new THREE.Vector3(0, -100, 0)); colliders.push(b); return b; });
+    this.own = [...this.orig, ...this.slices];
     const ownSet = new Set(this.own);
     this.grid = new BoxGrid(colliders);
     const env = {
@@ -155,7 +165,13 @@ export class HouseCar {
   // its part boxes round it where it stands (each part's box rotated, as an axis-aligned box)
   park() {
     this.root.updateMatrixWorld(true);
-    this.own.forEach((b, i) => b.copy(this.parts[i]).applyMatrix4(this.root.matrixWorld));
+    const c = this.car, fx = Math.sin(c.yaw), fz = Math.cos(c.yaw), lx = fz, lz = -fx, w = 0.97;
+    this.sliceDefs.forEach((d, i) => {
+      const b = this.slices[i];
+      b.makeEmpty();
+      for (const z of [d.z0, d.z1]) for (const x of [-w, w]) b.expandByPoint(_d.set(c.pos.x + lx * x + fx * z, c.pos.y + 0.15, c.pos.z + lz * x + fz * z));
+      b.max.y = c.pos.y + d.top;
+    });
     if (this.cullRoom && this.isInside() && !this.cullRoom.objects.includes(this.root)) {
       this.cullRoom.objects.push(this.root);
       this.root.visible = this.cullRoom.shown !== false;
@@ -189,6 +205,9 @@ export class HouseCar {
       this.updateBlob();
     }
     if (car.driving) {
+      // the gate's exit sensor sees a car sooner than a walker (estate_gate.js opens it at 10 m)
+      const g = window.__estateGate, p = car.pos;
+      if (g && g.t < 1 && !g.opening && !window.__bench && p.x > 12 && p.x < 28 && p.z > GATE.z - 28 && p.z < GATE.line) { g.opening = true; g.preload?.(); }
       // the player rides in the seat: everything that follows the player (the gate, the culler,
       // the invaders' senses) follows the car
       const seat = car.seatWorld(_d);

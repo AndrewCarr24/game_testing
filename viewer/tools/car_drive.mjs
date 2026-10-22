@@ -124,6 +124,7 @@ try {
     }, { fn: pathFn.toString(), arg, speed, stop: opts.stop !== false, ts });
     const t0 = Date.now();
     let res = null, last = null;
+    const startWorld = await W(() => window.__wild?.world?.name || 'house');
     const pending = [...shots];
     for (;;) {
       await page.waitForTimeout(400);
@@ -136,7 +137,8 @@ try {
             world: window.__wild?.world?.name || 'house' };
         });
       } catch { res = null; }       // (mid-reload: the other world loading)
-      if (res) last = res;
+      // (a leg that ends in the other level: the stats are the last ones from the level it was driven in)
+      if (res && (startWorld === 'house') === (res.world === 'house')) last = res; else if (res && !until) last = res;
       while (res && pending.length && res.s >= pending[0][0]) { const [, name] = pending.shift(); await shot(name); }
       if (until && (await until().catch(() => false))) break;
       if (!res && !until) { if (Date.now() - t0 > 20000) break; continue; }
@@ -182,7 +184,7 @@ try {
     const p0 = await page.evaluate(() => ({ p: window.__vehicle.pos.toArray(), yaw: window.__vehicle.yaw }));
     await page.keyboard.down('KeyW'); await page.keyboard.down('KeyA'); await page.waitForTimeout(800); await page.keyboard.up('KeyA'); await page.keyboard.up('KeyW');
     await page.keyboard.down('KeyS'); await page.waitForTimeout(900); await page.keyboard.up('KeyS');
-    await page.waitForTimeout(600);
+    await page.waitForFunction(() => window.__vehicle.speed < 0.3, null, { timeout: 5000 }).catch(() => {});
     const p1 = await page.evaluate(() => ({ p: window.__vehicle.pos.toArray(), yaw: window.__vehicle.yaw, v: window.__vehicle.speed }));
     check(p1.p[2] - p0.p[2] > 0.5 && p1.yaw - p0.yaw > 0.02 && p1.v < 0.3,
       `W+A then S: ${(p1.p[2] - p0.p[2]).toFixed(2)} m forward, turned ${((p1.yaw - p0.yaw) * 57.3).toFixed(1)} deg left, stopped (${p1.v.toFixed(2)} m/s)`);
@@ -201,6 +203,9 @@ try {
     // (the car is solid again where it's parked)
     const solid = await page.evaluate(() => { const c = window.__vehicle, P = window.__player; return P.overlapping(new P.pos.constructor(c.pos.x, 0.02, c.pos.z), 1.8).length > 0; });
     check(solid, 'parked: its colliders are back round it');
+    const dbg = await page.evaluate(() => { const c = window.__vehicle, cam = window.__three.camera; const d = c.doorWorld();
+      return { prompt: window.__car.prompt, speed: c.speed, door: d.toArray(), eye: cam.position.toArray(), reach: c.inReach(cam.position, cam.getWorldDirection(d.clone())) }; });
+    console.log('     (at the door again:', JSON.stringify(dbg), ')');
     await page.keyboard.press('KeyE'); await page.waitForTimeout(700);
     check(await page.evaluate(() => window.__vehicle.driving), 'E again: back in');
   };
@@ -262,6 +267,21 @@ try {
     await shot('22_garage_parked');
     await page.keyboard.press('KeyE'); await page.waitForTimeout(500);
     check(await page.evaluate(() => !window.__vehicle.driving), 'E: out in the garage');
+  }
+
+  if (stages.includes('gate')) {
+    // the handoff alone: in the car on the drive, out through the gate and back in
+    await house('&pos=18.6,1.65,15.4&look=16.75,1.0,15.4');
+    await page.evaluate(() => { const c = window.__car; c.enter(); const v = window.__vehicle; v.trans = null; v.pos.set(19.75, -0.08, 45); v.yaw = 0; v.settle(); v.applyTransform(); v._prevQ.copy(v._q); window.__three.camera.quaternion.copy(v._q); });
+    await page.waitForTimeout(500);
+    await drive('drive -> gate', FIXED, { pts: [[19.75, 80]] }, { speed: 8, stop: false, ts: 1,
+      until: () => page.evaluate(() => window.__suspended === true && window.__estateGate?.inWild) });
+    check(!!(await carReady('laurel_fork')), 'through the gate: the car in the wilderness');
+    const st = await W(() => { const c = window.__vehicle, cam = window.__three.camera, d = cam.getWorldDirection(cam.position.clone());
+      return { yaw: c.yaw, vel: c.vel.toArray(), pos: c.pos.toArray(), cam: d.toArray(), auto: !!c.auto }; });
+    console.log('     wild car:', JSON.stringify(st));
+    await frames(10);
+    await shot('gate_wild_side');
   }
 
   if (stages.includes('road')) {
