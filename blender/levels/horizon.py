@@ -31,8 +31,8 @@ the sky itself behind it), assets/levels/mansion_sky.json (latitude range, brigh
 colours) and build/horizon_preview.png (the band over the house's sky, for looking at). The band
 is an equirectangular strip in three.js's convention (the engine reads it with the same u as an
 equirect environment map). One panorama from the house works from anywhere on the grounds: the
-nearest of it is ~80 m away. --fields renders the old generic fields-and-hills band instead
-(git history: before estate_link).
+nearest of it is ~80 m away. (The old generic fields-and-hills band is in git history, before
+estate_link; --fields only says so.) --nowater leaves the water out (a debugging aid).
 """
 import json
 import math
@@ -700,7 +700,7 @@ def main():
     print(f"world {WORLD}: {meta.get('title')}")
     terrain_mesh(col, D, meta)
     backdrop_mesh(col, D, meta)
-    if "--nowater" not in sys.argv:
+    if "--nowater" not in args:
         water_mesh(col, D, meta)
     road_mesh(col, D)
     town_boxes(col, meta)

@@ -130,7 +130,7 @@ export class EstateGate {
     if (this.frame || this.params.get('wild') === '0') return;
     const f = document.createElement('iframe');
     const q = this.params.get('wildq');
-    f.src = `wild.html?world=laurel_fork&embed=1&hud=0${q ? `&q=${q}` : ''}`;
+    f.src = `wild.html?world=${this.params.get('wildworld') || 'laurel_fork'}&embed=1&hud=0${q ? `&q=${q}` : ''}`;
     Object.assign(f.style, { position: 'fixed', inset: '0', width: '100%', height: '100%', border: '0', opacity: '0',
       pointerEvents: 'none', zIndex: '50', transition: 'opacity 0.35s', background: 'transparent' });
     f.allow = 'pointer-lock';
@@ -143,6 +143,15 @@ export class EstateGate {
         this.ready = true;
         this.loadMs = Math.round(performance.now() - this.loadStart);
         if (!this.inWild) w.__wildGate.suspend();
+        return;
+      }
+      // (it failed: an error on its status line, e.g. no generated world, or 90 s without loading)
+      let err = '';
+      try { err = w?.document.getElementById('hud')?.textContent || ''; } catch { /* */ }
+      if (/^error/.test(err) || performance.now() - this.loadStart > 90000) {
+        this.failed = true;
+        console.warn('estate gate: the wilderness did not load', err);
+        f.remove(); this.frame = null;
         return;
       }
       setTimeout(poll, 100);
@@ -178,11 +187,17 @@ export class EstateGate {
       this.forward(true);
       this.crossedAt = performance.now();
     };
+    // (the wilderness failed to load: the gate leads nowhere, the house plays on)
+    const closed = () => {
+      document.body.style.filter = ''; this.waiting = false; this.inWild = false; this.armed = false;
+      this.toast?.('The road is closed');
+    };
+    if (this.failed || !this.frame) { closed(); return; }
     if (this.ready) go();
     else {                                             // (not loaded yet: hold at the gate, dimmed)
       this.waiting = true;
       document.body.style.transition = 'filter 0.4s'; document.body.style.filter = 'brightness(0.35)';
-      const wait = () => (this.ready ? (document.body.style.filter = '', this.waiting = false, go()) : setTimeout(wait, 100));
+      const wait = () => (this.failed ? closed() : this.ready ? (document.body.style.filter = '', this.waiting = false, go()) : setTimeout(wait, 100));
       wait();
     }
   }

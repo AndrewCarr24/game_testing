@@ -272,6 +272,13 @@ each view:
 
 The band itself, over the house's sky (`build/horizon_preview.png`): [estate_link/band.jpg](estate_link/band.jpg).
 
+**House regression tests** on this branch:
+- `outside.mjs`: all pass, the drive, the gate and the doors included.
+- `walls.mjs`: 3,488 runs, 1 impossible position, in the south_lawn zone at (−39, 43). The base
+  (b82ebe1) gives the identical result, so it predates this work.
+- If the wilderness can't load (no generated world, an error), the gate says "The road is closed" and the
+  house plays on (`?wildworld=nope` tests it).
+
 **Known gaps:**
 - The swap at the gate is a cut. The band's forest wall at the gate sits about 60 m farther than the real one.
 - The wilderness has no inventory UI yet; it only carries the items.
