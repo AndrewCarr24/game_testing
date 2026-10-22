@@ -385,7 +385,7 @@ export function spawnDummy({ scene, combat, colliders = null, position, rotation
   const state = { flash: 0, wobble: new THREE.Vector3(), wobbleV: new THREE.Vector3(), fall: 0, fallAxis: null };
   const facing = () => new THREE.Vector3(Math.sin(root.rotation.y), 0, Math.cos(root.rotation.y));
   const t = makeTarget({
-    id: id ?? `dummy_${Math.random().toString(36).slice(2, 7)}`, kind: 'dummy', team: 'invaders',
+    id: id ?? `dummy_${Math.random().toString(36).slice(2, 7)}`, kind: 'dummy', team: 'invader',
     position: () => root.position.clone(), radius: 0.24, height: 1.75, maxHealth: health, health,
     facing, aware,
     onHit: (tt, dmg, info) => {

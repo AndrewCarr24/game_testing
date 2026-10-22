@@ -153,6 +153,23 @@ try {
   });
   check('untagged character box: stab and shot still land', (await health('d5')).h === 25 && shot5 === 'd5', JSON.stringify({ h: await health('d5'), shot5 }));
   await p.evaluate(() => window.__combat.get('d5').remove());
+  // a target shaped like the invaders workstream's (alive a getter, facing() a yaw, unaware()):
+  // the takedown works and nothing throws
+  const inv = await p.evaluate(async ([x, z]) => {
+    const THREE = await import('three');
+    const me = { pos: new THREE.Vector3(x, 0, z), health: 100, alive: true, yaw: Math.PI / 2, aware: 0 };
+    const c = window.__combat;
+    c.register({ id: 'invader:test', kind: 'invader', team: 'invader', position: () => me.pos, radius: 0.3, height: 1.8,
+      get health() { return me.health; }, set health(v) { me.health = v; }, get maxHealth() { return 100; }, get alive() { return me.alive; },
+      hit: (d) => { me.health = Math.max(0, me.health - d); if (me.health <= 0) me.alive = false; return d; },
+      unaware: () => me.aware < 0.5, facing: () => me.yaw });
+    const offered = !!window.__weapons.target();
+    window.__weapons.attack('primary');
+    await new Promise((r) => setTimeout(r, 700));
+    c.unregister('invader:test');
+    return { offered, health: me.health, alive: me.alive };
+  }, ahead(0.85).filter((_, i) => i !== 1));
+  check('invader-shaped target: takedown offered and kills', inv.offered && !inv.alive && inv.health === 0, JSON.stringify(inv));
   // 1 puts the knife away, 1 again raises it
   await press('Digit1', 200);
   const off = await p.evaluate(() => ({ armed: window.__inventory.armed, vm: window.__weapons.vm.root.visible }));

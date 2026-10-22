@@ -10,10 +10,13 @@ import * as THREE from 'three';
 //         { id, kind: 'player'|'invader'|'dummy', team, position() -> Vector3 (feet centre),
 //           radius, height, health, maxHealth, alive, hit(damage, info) }
 //       optional:
-//         facing() -> Vector3       horizontal unit vector it looks along (needed for takedowns)
-//         aware                     bool, or fn(attacker) -> bool: does it know the attacker is
+//         facing() -> Vector3 | yaw horizontal unit vector it looks along, or its yaw in radians
+//                                   (direction (sin, 0, cos)); needed for takedowns
+//         aware / unaware           bool, or fn(attacker) -> bool: does it know the attacker is
 //                                   there? An unaware target hit from behind by a weapon with a
-//                                   `takedown` damage dies outright (the stealth takedown)
+//                                   `takedown` damage dies outright (the stealth takedown).
+//                                   Neither given = aware (no takedowns)
+//       `alive` may be a getter (combat then never sets it; health <= 0 must make it false)
 //         parts                     { head: k, body: k, legs: k } damage multipliers for shots
 //       target.hit(damage, info) applies the damage to itself (health -= damage, alive = false at
 //       0, its own stagger / call-out / ragdoll) and may return the damage it took (armour);
@@ -70,7 +73,7 @@ export class Combat {
     if (!t || t.id == null) throw new Error('combat.register: a target needs an id');
     this.unregister(t.id);
     t.kind ??= 'invader';
-    t.team ??= t.kind === 'player' ? 'player' : 'invaders';
+    t.team ??= t.kind === 'player' ? 'player' : 'invader';
     t.maxHealth ??= 100;
     t.health ??= t.maxHealth;
     t.alive ??= t.health > 0;
@@ -113,10 +116,10 @@ export class Combat {
     // a target whose hit() doesn't keep its own health: combat does it
     if (target.health === before && typeof r !== 'number' && r !== false) {
       target.health = Math.max(0, before - damage);
-      if (target.health <= 0) target.alive = false;
+      if (target.health <= 0) setDead(target);
     }
     const taken = typeof r === 'number' ? r : before - target.health;
-    if (target.health <= 0 && target.alive) target.alive = false;
+    if (target.health <= 0 && target.alive) setDead(target);
     const killed = !target.alive;
     this._last.set(target.id, this.time);
     if (from) this._last.set(from.id, this.time);
@@ -135,9 +138,13 @@ export class Combat {
   canTakedown(target, from) {
     target = this.get(target); from = this.get(from);
     if (!target?.alive || !from || typeof target.facing !== 'function') return false;
-    const aware = typeof target.aware === 'function' ? target.aware(from) : target.aware;
-    if (aware !== false) return false;              // unknown awareness counts as aware
-    const f = target.facing();
+    // aware (bool | fn(attacker)) or unaware (bool | fn(attacker)); unknown counts as aware
+    const aware = target.unaware !== undefined
+      ? !(typeof target.unaware === 'function' ? target.unaware(from) : target.unaware)
+      : typeof target.aware === 'function' ? target.aware(from) : target.aware;
+    if (aware !== false) return false;
+    let f = target.facing();
+    if (typeof f === 'number') f = { x: Math.sin(f), z: Math.cos(f) };   // a yaw (radians, 0 = +z)
     _v.copy(from.position()).sub(target.position()).setY(0);
     if (_v.lengthSq() < 1e-6) return false;
     _v.normalize();
@@ -256,8 +263,13 @@ export class Combat {
   }
 }
 
+// alive = false, also on a target whose `alive` is a getter (it then keeps its own state)
+function setDead(t) {
+  try { t.alive = false; } catch { /* read-only: the target decides */ }
+}
+
 // a standard target (a dummy, a test, a simple prop): health, death, callbacks
-export function makeTarget({ id, kind = 'dummy', team = 'invaders', position, radius = 0.3, height = 1.8,
+export function makeTarget({ id, kind = 'dummy', team = 'invader', position, radius = 0.3, height = 1.8,
   maxHealth = 100, health = maxHealth, facing = null, aware = undefined, parts = null, onHit = null, onDeath = null } = {}) {
   const t = {
     id, kind, team, radius, height, maxHealth, health, alive: health > 0, parts,

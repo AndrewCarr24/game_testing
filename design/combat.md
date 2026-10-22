@@ -24,9 +24,9 @@ dummy), `viewer/weapons_viewmodel.js` (the first-person hand and weapon). Test:
   targets (vertical cylinders) -> `{ target, point, normal, distance, part, wall, glass, killed }`.
   The shooter emits its own gunshot noise (`window.__noise`, loudness 2.5).
 - `canTakedown(target, from)`, `lineOfSight(a, b)`, `raycast(origin, dir, range)`, `lastCombat(id)`.
-- For the invader workstreams: implement `facing()` and set `aware` (false, or a function
-  returning false, while it hasn't noticed the player; undefined counts as aware, so no
-  takedowns); a Box3 a character pushes into `window.__colliders` should carry `owner` = its
+- For the invader workstreams: implement `facing()` (a Vector3, or a yaw in radians with
+  direction (sin, 0, cos)) and `aware` or `unaware` (bool or function; neither counts as
+  aware, so no takedowns); `alive` may be a getter; a Box3 a character pushes into `window.__colliders` should carry `owner` = its
   target (rays skip it and meet the body's cylinder; an untagged box round a living target's
   middle is recognised too, at a small cost per ray). Listen for `playerDown` to stop
   attacking. The player is target `'player'` (team `'player'`); hurt it with
