@@ -26,14 +26,16 @@ try {
     await p.goto(`${base}/viewer/invader_view.html?${mode}`);
     await p.waitForFunction(() => window.__loaded, null, { timeout: 90000 });
     await p.waitForTimeout(1500);
-    const r = await p.evaluate(() => new Promise((ok) => {
+    p.setDefaultTimeout(900000);
+    const nFrames = gpu === 'swiftshader' ? 20 : 240;
+    const r = await p.evaluate((nFrames) => new Promise((ok) => {
       const I = window.__inv;
       const dts = [], cpu = [];
       let last = performance.now();
       const step = () => {
         const t0 = performance.now();
         dts.push(t0 - last); last = t0;
-        if (dts.length < 240) requestAnimationFrame(step);
+        if (dts.length < nFrames) requestAnimationFrame(step);
         else {
           dts.sort((a, b) => a - b);
           const info = I.renderer.info.render;
@@ -41,7 +43,7 @@ try {
         }
       };
       requestAnimationFrame(step);
-    }));
+    }), nFrames);
     // CPU cost of the animation update alone (mixers vs one uniform)
     const upd = await p.evaluate(() => {
       const I = window.__inv;
@@ -50,7 +52,7 @@ try {
       return (performance.now() - t0) / 100;
     });
     const shot = `build/invader/perf_${mode.replace(/[=&]/g, '_')}.png`;
-    await p.screenshot({ path: shot });
+    if (gpu !== 'swiftshader') await p.screenshot({ path: shot });
     console.log(`${mode.padEnd(26)} frame ${r.mean.toFixed(2)} ms (p95 ${r.p95.toFixed(2)}), anim update ${upd.toFixed(3)} ms, ` +
       `draw calls ${r.calls}, triangles ${r.tris}  ${shot}`);
     await p.close();

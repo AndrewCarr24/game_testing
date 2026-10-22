@@ -944,6 +944,9 @@ UPPER_BODY = ("Spine", "Chest", "Neck", "Head") + tuple(
 
 
 def bake_all(sv, only=None):
+    import bpy
+    bpy.context.scene.render.fps = rig.FPS          # the exporter times keys by the scene's frame rate
+    bpy.context.scene.render.fps_base = 1.0
     lib = Lib(sv)
     made, info = [], {}
     for mk in CLIPS:

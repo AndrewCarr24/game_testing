@@ -178,3 +178,24 @@ export class Invader {
     }
   }
 }
+
+// Test hook for the house (index.html ?invaders=...): stands invaders in the level playing clips.
+// spec: ';'-separated 'x,z,rotDeg,Clip[,Weapon,Outfit,head[,y]]' (glTF metres; rot 0 faces +Z), e.g.
+//   ?invaders=-2,12.5,0,AimRifle,Rifle,Navy,cap;2,13,-20,Search,,Olive,hood;0,11.5,0,Walk
+// Returns { invaders, update(dt, camPos) }. Lighting: the scene environment (not the rooms' probes).
+export async function placeInvaders(scene, loader, url, spec, envMap = null) {
+  const asset = await InvaderAsset.load(loader, url);
+  await asset.preloadOutfits();
+  const invaders = spec.split(';').filter(Boolean).map((part) => {
+    const [x, z, rot = '0', clip = 'Idle', weapon = '', outfit = '', head = 'none', y = '0'] = part.split(',');
+    const inv = asset.spawn({ outfit: outfit || undefined, head, weapon: weapon || null });
+    inv.root.position.set(+x, +y, +z);
+    inv.root.rotation.y = THREE.MathUtils.degToRad(+rot);
+    if (envMap) inv.root.traverse((o) => { if (o.isMesh) for (const m of [o.material].flat()) m.envMap = envMap; });
+    scene.add(inv.root);
+    inv.play(clip, { fade: 0 });
+    return inv;
+  });
+  window.__invaders = invaders;
+  return { invaders, asset, update: (dt, camPos) => { for (const i of invaders) i.update(dt, camPos); } };
+}
