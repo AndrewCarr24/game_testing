@@ -95,7 +95,8 @@
  "materials": [
   "M_Town_Atlas"
  ],
- "walk_in": true,
+ "walk_in": false,
+ "walkable_bore": true,
  "bore": [
   6.0,
   7.5,

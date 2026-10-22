@@ -208,7 +208,7 @@ def build(**overrides):
                                     (x1 + pd + 0.2, y1 - 1.8, sh - 0.65), (x1, y1 - 1.8, sh - 0.1)], toward=(-1, 0, -1))
         for y in (y_out + 1.6, y_out + 4.0, y1 - 2.2):
             kit.p("Posts", p["post_mat"]).box((x1 + pd - 0.25, y - 0.07, pz), (x1 + pd - 0.11, y + 0.07, sh - 0.65), skip="bt")
-        tc.railing(kit, (x1 + pd - 0.18, y_out + 0.3), (x1 + pd - 0.18, y1 - 2.1), pz, mat=trim, style="bars")
+        tc.railing(kit, (x1 + pd - 0.18, y_out + 0.3), (x1 + pd - 0.18, y1 - 2.1), pz, mat=trim, style="bars", spacing=0.17)
     if p["bay"]:                                                # a canted bay on the front, right of the door
         bx0, bx1, bd = 0.6, 2.8, 0.7
         Bv = kit.p("Bay", p["siding"])

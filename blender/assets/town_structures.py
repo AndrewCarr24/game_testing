@@ -120,7 +120,7 @@ def tunnel_portal(kit):
     far.box((-r, -0.3, bh), (r, 0.0, Hf), "fieldstone", skip="b")
     far.quad("S", 0.05, -r, r, 0.0, bh, "soot", d=0.0)
     kit.entrance((0.0, -0.5, 0.0), "-Y", bw, kind="rail", note="the track enters the bore (+Y), dark at 20 m")
-    kit.info.update(walk_in=True, bore=[bw, bh, L], footprint=[-W / 2 - 6.0, -4.5, W / 2 + 6.0, L])
+    kit.info.update(walk_in=False, walkable_bore=True, bore=[bw, bh, L], footprint=[-W / 2 - 6.0, -4.5, W / 2 + 6.0, L])
     return far
 
 

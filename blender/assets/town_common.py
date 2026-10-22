@@ -873,9 +873,9 @@ def porch(kit, x0, x1, y_wall, depth, z_deck, z_roof_wall, posts=4, roof="seam_b
             if gap:
                 segs = [s for s in ((a_, min(b_, gap[0])), (max(a_, gap[1]), b_)) if s[1] - s[0] > 0.25]
             for s0, s1 in segs:
-                railing(kit, (s0, yr), (s1, yr), z_deck, style=rail_style, mat=rail_mat or trim)
+                railing(kit, (s0, yr), (s1, yr), z_deck, style=rail_style, mat=rail_mat or trim, spacing=0.17)
         for x in (x0 + 0.06, x1 - 0.06):
-            railing(kit, (x, yr), (x, y_wall - 0.05), z_deck, style=rail_style, mat=rail_mat or trim)
+            railing(kit, (x, yr), (x, y_wall - 0.05), z_deck, style=rail_style, mat=rail_mat or trim, spacing=0.17)
     if steps_at is not None and z_deck > 0.05:
         steps(kit, steps_at - step_w / 2, steps_at + step_w / 2, y_out, z_deck, mat=deck, stringer=trim)
     if ribbon:

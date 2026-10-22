@@ -42,6 +42,31 @@ WHAT = {
     "town_crt_wall": "a wall of twenty old TV sets, screens glowing",
     "town_estate_model": "museum vitrine with a scale model of the estate",
     "town_raft": "14 ft grey river raft",
+    "town_sheriff": "1990s brick-and-stone sheriff's office: flat roof, stone portico, big front window, monument sign with the star, flagpole, sally port; walk-in lobby + office (the window desk with the phone faces the window), corridor, two barred holding cells",
+    "town_cottage_a": "mill-hill cottage as a vacation rental (mint): hip roof, front porch, brick piers (below_m 0.9), back deck with a covered hot tub, key lockboxes",
+    "town_cottage_b": "the same cottage, sky blue",
+    "town_cottage_c": "the same cottage, butter yellow",
+    "town_house_a": "Church Street: restored Victorian, cross gable with scrolled trim, wraparound porch, a bay",
+    "town_house_b": "Church Street: brick foursquare, hip roof with a hipped dormer, full porch on brick piers",
+    "town_house_c": "Church Street: craftsman bungalow, cedar shakes, deep bracketed eaves, gabled porch on tapered columns over fieldstone piers",
+    "town_mill": "the converted brick mill: 3 storeys in bays, segmental arches, monitor roof, stair tower; walk-in brewery taproom (bar, tap wall, tanks, communal tables), river patio with string lights; lofts above lit",
+    "town_mill_stack": "the round brick smokestack, 35.5 m with its lightning rod",
+    "town_church_hall": "fellowship hall wing: white lap, low gable; walk-in hall with the long table (folding tables, chairs), serving hatch",
+    "town_garage": "detached two-car garage, up-and-over door closed",
+    "town_garage_open": "the garage with its door up: walk-in, empty floor for the stolen goods (goods_area), bare bulb",
+    "town_shed": "board-and-batten garden shed",
+    "town_motel_office": "motor-lodge office: lobby window, carport; walk-in lobby (counter, key board, brochures)",
+    "town_motel_wing": "six motel units under a low gable, covered walk on posts, matching red doors, AC units; unit 3 walk-in (bed, TV)",
+    "town_school": "1930s brick school: two storeys of window bands, flat roof, entry pavilion with a new steel canopy (shell)",
+    "town_inn": "boutique inn: big restored Victorian, round turret with a conical roof, cross gable, wraparound porch with rocking chairs; walk-in lobby (desk, stairs, fireplace)",
+    "town_footbridge": "modern weathering-steel greenway footbridge, 64 m Warren pony truss, 2.5 m deck; deck top z = 0",
+    "town_tunnel_portal": "rail tunnel portal: fieldstone face, voussoir arch, keystone, blank date stone, wing walls, 20 m lined bore going dark, track",
+    "town_train": "heritage excursion train: road-switcher diesel + two coaches (green and cream, lit windows), 58.7 m; z = 0 at the top of rail",
+    "town_car": "modern sedan, silver", "town_car_red": "sedan, red", "town_car_blue": "sedan, navy",
+    "town_suv": "modern SUV, white", "town_suv_black": "SUV, black", "town_suv_green": "SUV, forest green",
+    "town_pickup": "full-size pickup, red", "town_pickup_white": "pickup, white", "town_pickup_grey": "pickup, grey",
+    "town_van": "**the invaders' van**: plain dark cargo van, no markings, tinted cab and rear glass only",
+    "town_cruiser": "the sheriff's SUV: white over black, light bar (red/blue glow), push bar, star badge pictogram on the front doors",
 }
 
 HEAD = """# Town buildings kit: status (kit agent -> layout agent)
@@ -139,9 +164,16 @@ STILL = """## Changed from kit_request.md v2 (and why)
 - `town_depot` 33.8 x 15.6: the 32 x 10 depot plus its eaves and the 4 m platforms on +Y. The freight platform is 1.25 m
   high (not 1.1) so the crawl space under it is 1.15 m clear.
 - Downtown shops are 8.1 x 19.6 (incl. the awning and back cornice): party walls flush at +-4.
-- Not built yet (next): `town_sheriff`, `town_cottage_a/b/c`, `town_house_a/b/c`, `town_mill` + `_stack`, `town_church_hall`,
-  `town_inn`, `town_motel_*`, `town_school`, `town_garage(_open)`, `town_shed`, `town_footbridge`, `town_tunnel_portal`,
-  vehicles (`town_van`, `town_cruiser`, `town_suv`, `town_car`, `town_pickup`, `town_train`).
+- `town_mill` LOD0 21.5k (over the 12k hero line): 64 m of three-storey bays (~100 arched windows) plus the taproom; its
+  LOD1 is 230. Tell me if it must drop further (fewer bays on the far side, or the lofts' windows as painted cells).
+- Over the request's lines, modestly: `town_house_a` 3.7k and `town_house_b` 3.2k (houses <= 3k: the Victorian's wraparound
+  porch and two storeys of windows; the foursquare's dormer and porch), `town_shop_realty` 5.4k and `town_plaza` 5.6k
+  (shops <= 5k: their walk-in rooms' finer faces for the baked light). Say if any must come down.
+- `town_motel` is two assets: `town_motel_office` and `town_motel_wing` (place the wing twice for the L).
+- Colours of the cars, cottages and brick tones come from COLOR_0 tints (one atlas region, several looks).
+- Walk-in floors are at z = 0 exactly: **sink the terrain 0.05-0.1 m under every footprint** (or cut it), or the floors
+  z-fight with the pad (the asset viewer's ground shows it).
+- Not built: `town_flower_basket` on lamp arms is separate (also `town_streetlight_basket`); nothing else from v2 is missing.
 """
 
 if __name__ == "__main__":

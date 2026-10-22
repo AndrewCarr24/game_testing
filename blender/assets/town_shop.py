@@ -219,7 +219,7 @@ def build(**overrides):
         kit.colliders.pop()
         ry0, ry1 = y0 + T, y0 + 8.0
         C = 3.6
-        kit.sub = 0.8
+        kit.sub = 1.1
         tc.room(kit, x0 + T, x1 - T, ry0, ry1, 0.0, C, walls="plaster" if p["kind"] != "coffee" else "brick_red",
                 floor="woodfloor", ceiling="paint_white", name="Front", wainscot="darkwood", wainscot_h=1.0, base="trim_black",
                 openings={"S": [(x0 + 0.2, x1 - 0.2, 0.0, 3.4)]})

@@ -141,7 +141,7 @@ def build(**overrides):
     vx0, vx1 = vid_x0 + T / 2, vid_x1 - T
     vy0, vwall, vy1 = y0 + T, 3.9, y1 - T
     br_door = (vx1 - 4.5, vx1 - 3.5, 0.0, 2.2)
-    kit.sub = 0.8
+    kit.sub = 1.3
     tc.room(kit, vx0, vx1, vy0, vwall - T / 2, 0.0, C, walls="plaster", floor="tile_floor", ceiling="paint_white", name="Video",
             wainscot="trim_black" if False else None, base="trim_black",
             openings={"S": [front[3]], "N": [br_door]})
