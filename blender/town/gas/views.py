@@ -36,6 +36,8 @@ V = {
     "gas_coolers": ((-9, 11, 1.85), (-10, 17, 1.2)),
     "gas_back": ((19, 8, 1.7), (9, 15, 1.2)),
     "gas_high": ((40, -55, 24), (-3, 0, 0)),
+    "gas_far": ((150, -20, 3.0), (-3, 0, 3.0)),
+    "gas_near_lod": ((120, -20, 3.0), (-3, 0, 3.0)),
 }
 out = {k: {"pos": T(*e), "look": T(*l)} for k, (e, l) in V.items()}
 os.makedirs(os.path.join(PROJECT, "build", "town", "gas"), exist_ok=True)

@@ -95,20 +95,21 @@ def lot(kit, p, rng):
     OUT.bed(kit, rng, p["sx0"] - 1.5, p["sy0"], p["sx0"], p["sy1"],
             shrubs=[(p["sx0"] - 0.75, y, 0.5) for y in [4.2 + k * 1.45 for k in range(9)]])
     # paint: the parking stalls on the side lot (head-in to the east sidewalk), stop bars at the drives
-    Wp = kit.p("paint_white_road", "ext", lmw=0.2)
+    # (full density: at less, the 10 cm stripes were under a texel and bled dark)
+    Wp = kit.p("paint_white_road", "ext", lmw=1.0)
     for k in range(5):
         y = -1.6 + k * 2.75
         Wp.box((p["sx1"] + 1.8, y - 0.05, 0.0), (p["sx1"] + 7.3, y + 0.05, 0.004), skip="zxXyY")
     for a0, a1 in drives:
         Wp.box((a0 + 0.5, y0 + 2.2, 0.0), (a0 + (a1 - a0) / 2 - 0.2, y0 + 2.6, 0.004), skip="zxXyY")
     # the forecourt's oil spots and tyre wear (dark, irregular, just above the slab)
-    O = kit.p("stain", "ext", lmw=0.15)
+    O = kit.p("stain", "ext", lmw=0.6)
     for x in p["islands"]:
         for s in (-1, 1):
             for k in range(2):
                 cx, cy = x + s * 1.9 + rng.uniform(-0.3, 0.3), p["island_y"] + rng.uniform(-1.5, 1.5)
                 blot(O, rng, cx, cy, rng.uniform(0.25, 0.5))
-    O2 = kit.p("asphalt_patch", "ext", lmw=0.15)
+    O2 = kit.p("asphalt_patch", "ext", lmw=0.6)
     for k in range(5):
         blot(O2, rng, 8.3 + rng.uniform(-0.5, 0.5), 11.0 + k * 1.1, rng.uniform(0.3, 0.6))
 
