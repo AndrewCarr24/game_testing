@@ -21,8 +21,8 @@ import { makeTarget } from './combat.js';
 const STAB_KEYS = [
   [0.0, {}],
   [0.07, { p: [0.015, -0.025, 0.07], r: [-6, -4, 8] }],         // draw back
-  [0.15, { p: [-0.07, 0.035, -0.3], r: [4, 10, -4] }, 'linear'], // thrust to the centre
-  [0.21, { p: [-0.065, 0.03, -0.28], r: [3, 9, -4] }],
+  [0.15, { p: [-0.075, 0.04, -0.3], r: [-9, 6, -4] }, 'linear'], // thrust, the tip to the centre
+  [0.21, { p: [-0.07, 0.035, -0.28], r: [-8, 5, -4] }],
   [0.5, {}],
 ];
 const SLASH_KEYS = [
@@ -34,9 +34,9 @@ const SLASH_KEYS = [
 ];
 const TAKEDOWN_KEYS = [
   [0.0, {}],
-  [0.12, { p: [-0.04, 0.12, 0.04], r: [55, 8, -10] }],           // up and over (blade down)
-  [0.2, { p: [-0.07, -0.05, -0.28], r: [80, 10, -6] }, 'linear'],   // down into them
-  [0.42, { p: [-0.07, -0.06, -0.27], r: [80, 10, -6] }],
+  [0.12, { p: [-0.04, 0.13, 0.05], r: [22, 6, -10] }],           // raised, the tip back
+  [0.2, { p: [-0.08, -0.05, -0.27], r: [-62, 8, -6] }, 'linear'],   // driven down and in
+  [0.42, { p: [-0.08, -0.06, -0.26], r: [-62, 8, -6] }],
   [0.8, {}],
 ];
 const SWING_KEYS = [   // a club (bat, pan, poker): big wind-up over the shoulder, a heavy sweep
@@ -51,7 +51,7 @@ export const WEAPONS = {
   kitchen_knife: {
     id: 'kitchen_knife', kind: 'melee', name: "Chef's knife",
     // the view model: grip frame at `pos` (camera space), the blade along `aim`, the back of the hand toward `back`
-    hold: { pos: [0.2, -0.19, -0.37], aim: [-0.17, 0.28, -1], back: [1, 0.45, 0.35], gripRadius: 0.0115 },
+    hold: { pos: [0.18, -0.18, -0.38], aim: [-0.2, 0.32, -1], back: [0.4, 0.45, 1], arm: [0.5, -0.6, 0.6], gripRadius: 0.0115 },
     attacks: {
       primary: { name: 'stab', damage: 55, range: 1.05, arc: 26, hitAt: 0.15, duration: 0.5, cooldown: 0.52, keys: STAB_KEYS },
       secondary: { name: 'slash', damage: 38, range: 1.2, arc: 100, maxTargets: 2, hitAt: 0.2, duration: 0.62, cooldown: 0.66, keys: SLASH_KEYS },
@@ -403,6 +403,7 @@ export function spawnDummy({ scene, combat, colliders = null, position, rotation
     },
   });
   t.root = root;
+  if (collider) collider.owner = t;     // (combat's rays meet the body, not this box)
   t.update = (dt) => {
     state.flash = Math.max(0, state.flash - dt * 5);
     mat.emissive.setRGB(0.35 * state.flash, 0.02 * state.flash, 0.0);

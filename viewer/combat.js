@@ -216,12 +216,14 @@ export class Combat {
     return res;
   }
 
-  // nearest wall / prop / glass along a ray (seeThrough boxes and boxes the origin is inside skipped)
+  // nearest wall / prop / glass along a ray. Skipped: seeThrough boxes (rails, boundaries), boxes
+  // the origin is inside, and characters' own boxes (a Box3 a target pushes into the colliders
+  // carries `owner` = the target: rays meet the target's cylinder instead)
   raycast(origin, dir, range = 100) {
     _ray.set(origin, dir);
     let best = null;
     for (const c of this.colliders) {
-      if (c.seeThrough) continue;
+      if (c.seeThrough || c.owner) continue;
       if (c.containsPoint(origin)) continue;
       // cheap reject: the box's distance from the origin
       if (c.distanceToPoint(origin) > range) continue;

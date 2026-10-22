@@ -59,25 +59,42 @@ export function viewModelMaterial(src) {
 function capsule(a, b, r0, r1 = r0) {
   const len = a.distanceTo(b);
   const g = new THREE.CylinderGeometry(r1, r0, len, 12, 1, true);
-  const capA = new THREE.SphereGeometry(r0, 12, 8);
-  const capB = new THREE.SphereGeometry(r1, 12, 8);
+  const capA = new THREE.SphereGeometry(r0, 12, 7);
+  const capB = new THREE.SphereGeometry(r1, 12, 7);
   capA.translate(0, -len / 2, 0); capB.translate(0, len / 2, 0);
-  const m = mergeGeometries([g.toNonIndexed(), capA.toNonIndexed(), capB.toNonIndexed()]);
+  const m = mergeGeometries([g, capA, capB]);
   const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
   m.applyQuaternion(q);
   m.translate((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
+  // its distance field (for the occlusion between parts, buildHand)
+  const ab = b.clone().sub(a), l2 = ab.lengthSq(), t = new THREE.Vector3();
+  m.userData.sdf = (p) => {
+    const h = THREE.MathUtils.clamp(t.copy(p).sub(a).dot(ab) / l2, 0, 1);
+    return t.copy(a).addScaledVector(ab, h).distanceTo(p) - (r0 + (r1 - r0) * h);
+  };
   return m;
 }
 function ellipsoid(c, s, rot = null, seg = 16) {
-  const g = new THREE.SphereGeometry(1, seg, Math.round(seg * 0.7)).toNonIndexed();
+  const g = new THREE.SphereGeometry(1, seg, Math.round(seg * 0.7));
   g.scale(s[0], s[1], s[2]);
+  // (scaling a sphere's normals by the scale is wrong for an ellipsoid: n ~ p / s^2)
+  const p = g.attributes.position, n = g.attributes.normal;
+  for (let i = 0; i < p.count; i++) {
+    const v = new THREE.Vector3(p.getX(i) / (s[0] * s[0]), p.getY(i) / (s[1] * s[1]), p.getZ(i) / (s[2] * s[2])).normalize();
+    n.setXYZ(i, v.x, v.y, v.z);
+  }
   if (rot) g.applyQuaternion(rot);
   g.translate(c.x, c.y, c.z);
+  const inv = rot ? rot.clone().invert() : null, t = new THREE.Vector3(), m = Math.min(...s);
+  g.userData.sdf = (p) => {
+    t.copy(p).sub(c); if (inv) t.applyQuaternion(inv);
+    return (Math.hypot(t.x / s[0], t.y / s[1], t.z / s[2]) - 1) * m;
+  };
   return g;
 }
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
-export function buildHand({ grip = 0.0115, skin = 0xb98a72, sleeve = 0x23262b } = {}) {
+export function buildHand({ grip = 0.0115, skin = 0xc29b88, sleeve = 0x23262b, arm: armDir = null } = {}) {
   const parts = [];
   const R = grip + 0.0105;             // the fingers' centre line round the handle
   // fingers: height on the handle, size; joints on a loop round the handle (in the X/Z plane):
@@ -98,7 +115,9 @@ export function buildHand({ grip = 0.0115, skin = 0xb98a72, sleeve = 0x23262b } 
     parts.push(capsule(mcp, pip, r * 1.05, r));
     parts.push(capsule(pip, dip, r, r * 0.92));
     parts.push(capsule(dip, tip, r * 0.92, r * 0.82));
+    parts[parts.length - 1].userData.tint = [1.04, 0.95, 0.94];
     parts.push(ellipsoid(mcp.clone().add(V(0.004, 0, 0.002)), [0.0105 * k, 0.0098 * k, 0.0105], null, 12));   // the knuckle
+    parts[parts.length - 1].userData.tint = [1.05, 0.96, 0.95];
   }
   // palm (the back of the hand faces +X) and the heel of the hand
   parts.push(ellipsoid(V(0.027, -0.002, 0.022), [0.016, 0.046, 0.038]));
@@ -107,29 +126,43 @@ export function buildHand({ grip = 0.0115, skin = 0xb98a72, sleeve = 0x23262b } 
   parts.push(ellipsoid(V(0.004, 0.02, 0.03), [0.019, 0.022, 0.026], new THREE.Quaternion().setFromEuler(new THREE.Euler(0.4, 0, 0.3))));
   const t0 = V(0.008, 0.03, 0.022), t1 = V(-0.012, 0.042, 0.0), t2 = V(-0.026, 0.036, -0.016), t3 = V(-0.026, 0.026, -0.032);
   parts.push(capsule(t0, t1, 0.0115, 0.0105), capsule(t1, t2, 0.0105, 0.0095), capsule(t2, t3, 0.0095, 0.0082));
-  // wrist and forearm: bent ~35 deg toward the little finger, a little flattened
-  const wrist = V(0.022, -0.012, 0.058);
-  const arm = V(0.08, -0.55, 0.83).normalize();
+  // wrist and forearm: from the heel of the hand toward the elbow (`armDir`, in G; default: bent
+  // ~35 deg toward the little finger)
+  const arm = (armDir ? armDir.clone() : V(0.08, -0.55, 0.83)).normalize();
+  const wrist = V(0.024, -0.03, 0.036).addScaledVector(arm, 0.022);
   const elbow = wrist.clone().addScaledVector(arm, 0.34);
   parts.push(ellipsoid(wrist, [0.024, 0.03, 0.026]));
   const fore = capsule(wrist, elbow, 0.026, 0.036);
   parts.push(fore);
-  const skinGeo = mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)));
-  skinGeo.computeVertexNormals();
-  // a soft occlusion term in the vertex colours: darker between the fingers and in the fist
-  const pos = skinGeo.attributes.position, col = new Float32Array(pos.count * 3);
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
-    const inFist = Math.max(0, 1 - Math.hypot(x, z) / (R + 0.012));
-    const ao = 1 - 0.45 * smooth(Math.min(1, inFist * 1.6));
-    col[i * 3] = ao; col[i * 3 + 1] = ao * 0.97; col[i * 3 + 2] = ao * 0.96;
-  }
-  skinGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  const skinMat = viewModelMaterial(new THREE.MeshStandardMaterial({ color: skin, roughness: 0.62, metalness: 0, vertexColors: true }));
+  // occlusion in the vertex colours: each vertex darkens near the other parts' surfaces (the
+  // creases between fingers, where they press on the handle and the palm) and inside the fist
+  const handleSdf = (p) => Math.hypot(p.x, p.z) - grip;
+  const cols = [];
+  const v = new THREE.Vector3();
+  parts.forEach((g, i) => {
+    g.deleteAttribute('uv');
+    const pos = g.attributes.position, col = new Float32Array(pos.count * 3);
+    const tint = g.userData.tint || [1, 1, 1];
+    for (let k = 0; k < pos.count; k++) {
+      v.fromBufferAttribute(pos, k);
+      let occ = 0;
+      for (let j = 0; j < parts.length; j++) {
+        if (j === i || !parts[j].userData.sdf) continue;
+        const d = parts[j].userData.sdf(v);
+        if (d < 0.009) occ += 0.55 * (1 - Math.max(0, d) / 0.009) ** 2;
+      }
+      if (Math.abs(v.y) < 0.05) { const d = handleSdf(v); if (d < 0.008) occ += 0.6 * (1 - Math.max(0, d) / 0.008) ** 2; }
+      const ao = 1 - Math.min(0.62, occ);
+      col[k * 3] = ao * tint[0]; col[k * 3 + 1] = ao * tint[1]; col[k * 3 + 2] = ao * tint[2];
+    }
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  });
+  const skinGeo = mergeGeometries(parts);
+  const skinMat = viewModelMaterial(new THREE.MeshStandardMaterial({ color: skin, roughness: 0.52, metalness: 0, vertexColors: true }));
   const hand = new THREE.Mesh(skinGeo, skinMat);
   hand.name = 'ViewModel_Hand';
   // sleeve: a cuff from 8 cm past the wrist up the forearm
-  const s0 = wrist.clone().addScaledVector(arm, 0.075), s1 = wrist.clone().addScaledVector(arm, 0.4);
+  const s0 = wrist.clone().addScaledVector(arm, 0.03), s1 = wrist.clone().addScaledVector(arm, 0.4);
   const sl = new THREE.CylinderGeometry(0.039, 0.045, s0.distanceTo(s1), 18, 3, false);
   // a soft rolled hem: the bottom ring flares out a touch
   const sp = sl.attributes.position;
@@ -188,16 +221,16 @@ export class ViewModel {
     const hold = def.hold || {};
     const grip = new THREE.Group();          // the grip frame G (see buildHand)
     grip.name = 'ViewModel_Grip';
-    const arm = buildHand({ grip: hold.gripRadius ?? 0.0115, skin: hold.skin, sleeve: hold.sleeve });
-    grip.add(arm);
-    if (node) grip.add(fitWeapon(node, def));
     // G in camera space: the hold position, the weapon pointing along hold.aim, the back of the
-    // hand toward hold.back
+    // hand toward hold.back, the forearm toward hold.arm (all camera space)
     const aim = V(...(hold.aim || [-0.16, 0.3, -1])).normalize();
     const back = V(...(hold.back || [1, 0.35, 0.3]));
     back.addScaledVector(aim, -back.dot(aim)).normalize();
     const z = new THREE.Vector3().crossVectors(back, aim);
     grip.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(back, aim, z));
+    const armG = V(...(hold.arm || [0.42, -0.62, 0.66])).normalize().applyQuaternion(grip.quaternion.clone().invert());
+    grip.add(buildHand({ grip: hold.gripRadius ?? 0.0115, skin: hold.skin, sleeve: hold.sleeve, arm: armG }));
+    if (node) grip.add(fitWeapon(node, def));
     this.basePos = V(...(hold.pos || [0.2, -0.2, -0.36]));
     this.baseQuat = grip.quaternion.clone();
     this.grip = grip;
@@ -266,6 +299,7 @@ export class ViewModel {
 // +Y, the edge toward -Z (the side the fingers wrap)
 function fitWeapon(node, def) {
   const model = node.clone(true);
+  model.visible = true;
   model.position.set(0, 0, 0); model.rotation.set(0, 0, 0); model.scale.set(1, 1, 1);
   model.updateMatrixWorld(true);
   const find = (suffix) => { let f = null; model.traverse((o) => { if (!f && o.name.endsWith(suffix)) f = o; }); return f; };
@@ -285,10 +319,36 @@ function fitWeapon(node, def) {
     model.position.copy(gp).applyQuaternion(model.quaternion).negate();
     if (def.hold?.slide) model.position.addScaledVector(V(0, 1, 0), def.hold.slide);
   }
-  model.traverse((o) => {
-    if (!o.isMesh) return;
-    o.material = viewModelMaterial(o.material);
-    o.castShadow = o.receiveShadow = false;
+  return mergeByMaterial(holder);
+}
+
+// one mesh per material (a knife's blade, bolster, handle, rivets: 8 meshes -> 3 draw calls)
+function mergeByMaterial(root) {
+  root.updateMatrixWorld(true);
+  const byMat = new Map();
+  root.traverse((o) => {
+    if (!o.isMesh || !o.visible) return;
+    const geo = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
+    geo.applyMatrix4(o.matrixWorld);
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    const groups = o.geometry.groups.length ? o.geometry.groups : [{ start: 0, count: o.geometry.index ? o.geometry.index.count : geo.attributes.position.count, materialIndex: 0 }];
+    for (const gr of groups) {
+      const m = mats[gr.materialIndex ?? 0];
+      const part = new THREE.BufferGeometry();
+      for (const [name, attr] of Object.entries(geo.attributes)) {
+        part.setAttribute(name, new THREE.BufferAttribute(attr.array.slice(gr.start * attr.itemSize, (gr.start + gr.count) * attr.itemSize), attr.itemSize, attr.normalized));
+      }
+      if (!byMat.has(m)) byMat.set(m, []);
+      byMat.get(m).push(part);
+    }
   });
-  return holder;
+  const out = new THREE.Group();
+  for (const [m, list] of byMat) {
+    const keep = Object.keys(list[0].attributes).filter((n) => list.every((g) => g.attributes[n]));
+    for (const g of list) for (const n of Object.keys(g.attributes)) if (!keep.includes(n)) g.deleteAttribute(n);
+    const mesh = new THREE.Mesh(mergeGeometries(list), viewModelMaterial(m));
+    mesh.castShadow = mesh.receiveShadow = false;
+    out.add(mesh);
+  }
+  return out;
 }

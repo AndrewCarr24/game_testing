@@ -51,7 +51,7 @@ try {
     await p.evaluate(async (at) => {
       const THREE = await import('three');
       const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-      const g = await new GLTFLoader().loadAsync('../assets/models/kitchen_knife.gltf');
+      const g = await (async () => { const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js'); const l = new GLTFLoader(); l.setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/')); return l.loadAsync('../assets/models/kitchen_knife.gltf'); })();
       const obj = g.scene.children[0] ?? g.scene;
       obj.position.set(...at); obj.rotation.y = THREE.MathUtils.degToRad(12);
       window.__three.scene.add(obj); obj.updateMatrixWorld(true);
@@ -64,6 +64,13 @@ try {
   const st = await p.evaluate(() => ({ has: window.__inventory.has('kitchen_knife'), armed: window.__inventory.armed, def: window.__weapons.def?.id }));
   check('picked up and armed', st.has && st.armed === 'kitchen_knife' && st.def === 'kitchen_knife', JSON.stringify(st));
   await p.waitForTimeout(600);
+  const cost = await p.evaluate(() => {
+    let meshes = 0, tris = 0;
+    window.__weapons.vm.root.traverse((o) => { if (o.isMesh && o.visible) { meshes++; tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+    return { meshes, tris: Math.round(tris) };
+  });
+  console.log(`view model cost: ${cost.meshes} draw calls, ${cost.tris} triangles`);
+  check('view model is cheap (<= 8 draw calls, < 12k triangles)', cost.meshes <= 8 && cost.tris < 12000, JSON.stringify(cost));
   await p.evaluate(() => (document.getElementById('hint').style.visibility = 'hidden'));
   await p.screenshot({ path: `${out}/viewmodel_idle.png` });
   await p.evaluate(() => (document.getElementById('hint').style.visibility = ''));
