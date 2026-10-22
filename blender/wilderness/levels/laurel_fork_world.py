@@ -1193,6 +1193,8 @@ def run(name=LF.NAME):
     wet = R.mask("wetness")
     asp = R.mask("aspect") * 360
     grass = np.isin(C, [CID["meadow"], CID["estate"], CID["clearing"]]).astype(float)
+    # (estate_link: no hay inside the hedge: the house's own grounds are drawn there, viewer/wild/estate.js)
+    grass = np.where((np.abs(R.X) < 70.0) & (R.Y > -61.6), 0.0, grass)
     grass = np.maximum(grass, 0.55 * (C == CID["bald"]))
     northwet = np.clip((wet - 0.35) * 2, 0, 1) * (np.cos(np.radians(asp)) > 0.1)
     grass = np.maximum(grass, 0.14 * northwet * np.isin(C, [CID["cove"], CID["ripar"]]) * (nz > -0.1))  # moss

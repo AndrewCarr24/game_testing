@@ -11,7 +11,9 @@ Free ground used (everything else belongs to another zone):
 """
 
 R, RB = "plant_tree_round", "plant_tree_round_b"
-O, OB, OC = "plant_tree_olive", "plant_tree_olive_b", "plant_tree_olive_c"
+# (estate_link: olives die at 1,000 m in the Blue Ridge, zone 6b-7a; the brief swaps them for the
+# multistem, read as river birch, native and hardy. design/wilderness/estate_link.md)
+O, OB, OC = "plant_tree_multistem", "plant_tree_multistem_b", "plant_tree_multistem"
 M, MB = "plant_tree_multistem", "plant_tree_multistem_b"
 C, CB = "plant_tree_cypress", "plant_tree_cypress_b"
 F, FB = "plant_tree_fir", "plant_tree_fir_b"

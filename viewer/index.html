@@ -156,6 +156,7 @@
     import { Affordance, itemInfo } from './affordance.js';
     import { Sfx } from './audio.js';   // sound effects
     import { Hiding, batchHideDoors } from './hiding.js';   // hiding spots (interact type `hide`)
+    import { EstateGate } from './estate_gate.js';   // (estate_link) the gate out to the wilderness and back
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -613,6 +614,9 @@
       const hudEl = document.getElementById('hud');
       controls.addEventListener('lock', () => (hudEl.style.visibility = 'hidden'));
       controls.addEventListener('unlock', () => (hudEl.style.visibility = ''));
+      // (estate_link) the drive's gate opens as the player comes down to it and leads out into the
+      // wilderness (viewer/estate_gate.js: the wild loads into an iframe, the house suspends)
+      const estateGate = level.outdoor ? new EstateGate({ scene, camera, player, controls, inventory, flashlight, colliders, renderer, params, toast: (m) => toast(m) }) : null;
       const keys = {};
       let focus = null;   // interactable the player can use right now
       addEventListener('keydown', (e) => {
@@ -784,6 +788,7 @@
           batteryEl.classList.toggle('on', flashlight.on);
         }
         sfx?.update(dt);   // sound effects (viewer/audio.js)
+        estateGate?.update(dt);   // (estate_link) the gate to the wilderness
       };
       const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
       // what Enter does with an item that works anywhere
@@ -827,6 +832,7 @@
       // nothing is drawn until the level is in: on a slow GPU each frame drawn during the load
       // (of a half-built scene nobody can play yet) delays the load itself
       if (!window.__loaded) return;
+      if (window.__suspended) return;          // (estate_link) the player is out in the wilderness
       const b = window.__bench;
       b?.frameStart();
       update();

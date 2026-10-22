@@ -31,7 +31,8 @@ PLACEMENTS = [
 ]
 
 # olive allée: three a side (variants of the planting agent's olive), the middle pair behind the benches
-_OLIVES = ("plant_tree_olive", "plant_tree_olive_b", "plant_tree_olive_c")
+# (estate_link: river birch for the olives, which the mountains' winters kill: estate_link.md)
+_OLIVES = ("plant_tree_multistem", "plant_tree_multistem_b", "plant_tree_multistem")
 for _i, _u in enumerate((-9.0, 0.0, 9.0)):
     PLACEMENTS.append((_OLIVES[_i % 3], at(_u, 9.6), 70 * _i))
     PLACEMENTS.append((_OLIVES[(_i + 1) % 3], at(_u, -9.6), 55 * _i + 30))

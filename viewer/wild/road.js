@@ -34,6 +34,46 @@ const PULL = /* glsl */`
   w.xyz += toCam / max(dc, 1e-3) * min(dc * 0.004, 6.0) * step(30.0, dc);
 `;
 
+// the slab's surface (albedo) from (across, along) metres: shared with the house's stretch of it
+// (viewer/estate_gate.js, inside the house level's lawn edge)
+export const ROAD_SURFACE = /* glsl */`
+      float h2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(h2(i), h2(i + vec2(1, 0)), f.x), mix(h2(i + vec2(0, 1)), h2(i + vec2(1, 1)), f.x), f.y); }
+      float band(float x, float a, float b, float aa) { return smoothstep(a - aa, a + aa, x) * (1.0 - smoothstep(b - aa, b + aa, x)); }
+      vec3 roadSurface(vec2 uv, float uHalf, float uJoint) {
+        float u = uv.x, v = uv.y, au = abs(u);
+        float aa = max(fwidth(u), 0.01) * 0.75;
+        vec2 wp = vec2(u, v);
+        vec3 col;
+        if (au < uHalf) {
+          // concrete: a pale warm grey, mottled per slab and at a few scales, aggregate speckle,
+          // darker wheel paths (oil and rubber) and the faint lane centre stain
+          float slabId = floor(v / uJoint) + (u > 0.0 ? 0.5 : 0.0);
+          float m = 0.55 * vn(wp * 0.45) + 0.3 * vn(wp * 1.7) + 0.15 * vn(wp * 9.0);
+          col = vec3(0.30, 0.295, 0.28) * (0.86 + 0.22 * m) * (0.95 + 0.1 * h2(vec2(slabId, 3.1)));
+          col *= 0.93 + 0.14 * h2(floor(wp * 90.0));
+          float lane = au - 1.675;                          // the lane's own centre (3.35 m lanes)
+          float wheel = band(abs(lane), 0.55, 1.05, 0.25);
+          col *= 1.0 - 0.13 * wheel - 0.08 * band(abs(lane), 0.0, 0.25, 0.2);
+          // saw-cut joints: transverse every uJoint m, longitudinal at the centre (under the paint)
+          float jt = abs(fract(v / uJoint + 0.5) - 0.5) * uJoint;
+          col *= 1.0 - 0.55 * (1.0 - smoothstep(0.004, 0.012 + fwidth(v), jt));
+          // paint: double yellow centre line (two 0.12 m lines 0.10 m apart), white edge lines
+          float yel = band(au, 0.05, 0.17, aa);
+          float wht = band(au, uHalf - 0.17, uHalf - 0.05, aa);
+          float wear = 0.82 + 0.18 * vn(wp * vec2(6.0, 0.7));
+          col = mix(col, vec3(0.62, 0.42, 0.04) * wear, yel * 0.95);
+          col = mix(col, vec3(0.70, 0.70, 0.67) * wear, wht * 0.95);
+        } else {
+          // gravel shoulders, dusty at the slab's edge
+          float m = vn(wp * 2.3) * 0.6 + 0.4 * h2(floor(wp * 40.0));
+          col = vec3(0.16, 0.135, 0.10) * (0.75 + 0.5 * m);
+          col = mix(col, vec3(0.22, 0.2, 0.17), 0.5 * (1.0 - smoothstep(0.0, 0.5, au - uHalf)));
+        }
+        return col;
+      }`;
+
 export async function buildRoad(world, uniforms, tex, base = '../build/wilderness') {
   let R;
   try {
@@ -98,40 +138,9 @@ export async function buildRoad(world, uniforms, tex, base = '../build/wildernes
       varying vec3 vWorld, vN; varying vec2 vUv;
       ${ATMOSPHERE_PARS}
       ${LIT}
-      float h2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-      float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-        return mix(mix(h2(i), h2(i + vec2(1, 0)), f.x), mix(h2(i + vec2(0, 1)), h2(i + vec2(1, 1)), f.x), f.y); }
-      float band(float x, float a, float b, float aa) { return smoothstep(a - aa, a + aa, x) * (1.0 - smoothstep(b - aa, b + aa, x)); }
+      ${ROAD_SURFACE}
       void main() {
-        float u = vUv.x, v = vUv.y, au = abs(u);
-        float aa = max(fwidth(u), 0.01) * 0.75;
-        vec2 wp = vec2(u, v);
-        vec3 col;
-        if (au < uHalf) {
-          // concrete: a pale warm grey, mottled per slab and at a few scales, aggregate speckle,
-          // darker wheel paths (oil and rubber) and the faint lane centre stain
-          float slabId = floor(v / uJoint) + (u > 0.0 ? 0.5 : 0.0);
-          float m = 0.55 * vn(wp * 0.45) + 0.3 * vn(wp * 1.7) + 0.15 * vn(wp * 9.0);
-          col = vec3(0.30, 0.295, 0.28) * (0.86 + 0.22 * m) * (0.95 + 0.1 * h2(vec2(slabId, 3.1)));
-          col *= 0.93 + 0.14 * h2(floor(wp * 90.0));
-          float lane = au - 1.675;                          // the lane's own centre (3.35 m lanes)
-          float wheel = band(abs(lane), 0.55, 1.05, 0.25);
-          col *= 1.0 - 0.13 * wheel - 0.08 * band(abs(lane), 0.0, 0.25, 0.2);
-          // saw-cut joints: transverse every uJoint m, longitudinal at the centre (under the paint)
-          float jt = abs(fract(v / uJoint + 0.5) - 0.5) * uJoint;
-          col *= 1.0 - 0.55 * (1.0 - smoothstep(0.004, 0.012 + fwidth(v), jt));
-          // paint: double yellow centre line (two 0.12 m lines 0.10 m apart), white edge lines
-          float yel = band(au, 0.05, 0.17, aa);
-          float wht = band(au, uHalf - 0.17, uHalf - 0.05, aa);
-          float wear = 0.82 + 0.18 * vn(wp * vec2(6.0, 0.7));
-          col = mix(col, vec3(0.62, 0.42, 0.04) * wear, yel * 0.95);
-          col = mix(col, vec3(0.70, 0.70, 0.67) * wear, wht * 0.95);
-        } else {
-          // gravel shoulders, dusty at the slab's edge
-          float m = vn(wp * 2.3) * 0.6 + 0.4 * h2(floor(wp * 40.0));
-          col = vec3(0.16, 0.135, 0.10) * (0.75 + 0.5 * m);
-          col = mix(col, vec3(0.22, 0.2, 0.17), 0.5 * (1.0 - smoothstep(0.0, 0.5, au - uHalf)));
-        }
+        vec3 col = roadSurface(vUv, uHalf, uJoint);
         vec3 n = normalize(vN);
         gl_FragColor = vec4(applyAtmosphere(litColor(col, n, vWorld), vWorld), 1.0);
         #include <tonemapping_fragment>

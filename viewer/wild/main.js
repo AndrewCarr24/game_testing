@@ -15,6 +15,7 @@ import { HeightfieldPlayer } from './player_hf.js';
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
 import { buildRoad } from './road.js';   // (estate_link) the county road: gate -> river -> town
+import { loadEstate, wildGate } from './estate.js';   // (estate_link) the real estate + the gate back to the house
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -234,6 +235,8 @@ async function main() {
     scene.add(buildEstate(world, uniforms, tex));
     // (estate_link) the county road (world/road.json, laurel_fork_road.py); ?road=0 leaves it out
     if (params.get('road') !== '0') { const road = await buildRoad(world, uniforms, tex); if (road) scene.add(road); window.__road = road; }
+    // (estate_link) the house level's own grounds + glazing in place of the stand-in (?estate=0: the stand-in)
+    window.__estate = await loadEstate({ world, scene, uniforms, params });
   }
   T.build = Math.round(performance.now() - t0); t0 = performance.now();
 
@@ -495,6 +498,8 @@ async function main() {
     cull, colliders: colliders.length, get fly() { return fly; }, set fly(v) { fly = v; } };
 
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+  // (estate_link) walking in through the estate's gate goes back to the house (viewer/wild/estate.js)
+  const gate = level ? wildGate({ world, camera, player, wild: window.__wild, params }) : null;
 
   renderer.setAnimationLoop(loop = () => {
     const b = window.__bench;
@@ -502,6 +507,7 @@ async function main() {
     const dt = Math.min(clock.getDelta(), 0.1);
     uniforms.uTime.value = frozen ?? uniforms.uTime.value + dt;
     update(dt);
+    gate?.update();                    // (estate_link)
     b?.drive();
     if (level) {                       // forest air: the forest-floor weight of the splat under the camera
       const half = world.size / 2, M = world.mapRes;
