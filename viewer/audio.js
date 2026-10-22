@@ -498,9 +498,12 @@ export class Sfx {
     const out = !here || name === 'courtyard';
     const broken = !!this.grimble?.()?.hunt?.broken && (name === 'great_room' || name === 'gallery_w');
     const power = this.signals?.get('power') !== false;
-    this.loop('wind', 'wind', out ? 1 : broken ? 0.45 : 0.08);
-    this.loop('air', 'air', out ? 0.2 : 1);
-    this.loop('hum', 'hum', power ? (out ? 0.1 : 1) : 0);
+    // (secret passage) below ground: no wind, the ventilation's air and its own mains (the bunker's
+    // batteries: rooms[r].power "own") whatever the house's power
+    const under = here?.level < 0, own = here && this.level?.rooms?.[name]?.power === 'own';
+    this.loop('wind', 'wind', out ? 1 : broken ? 0.45 : under ? 0 : 0.08);
+    this.loop('air', 'air', out ? 0.2 : under ? 1.6 : 1);
+    this.loop('hum', 'hum', power || own ? (out ? 0.1 : under ? 1.5 : 1) : 0);
     const wet = out ? 0.04 : this.wetByRoom[name] ?? 0.12;
     if (Math.abs(wet - (this._wet ?? -1)) > 0.005) { this._wet = wet; this.wet.gain.setTargetAtTime(wet, this.ctx.currentTime, 0.3); }
   }
@@ -618,6 +621,9 @@ function groupReactors(reactors) {
     let kind = null;
     if ((r.on.slide || r.on.rotate || r.on.scale) && /blind|shade|curtain|shutter/i.test(s)) kind = 'motor';
     else if ((r.on.slide || r.on.rotate || r.on.scale) && /garage|gate/i.test(s)) kind = 'garage';
+    // (secret passage) the library's folding floor: the garage door's heavy motor; the safe wall's doors: a blind's
+    else if ((r.on.slide || r.on.rotate) && /^secret_/i.test(s)) kind = 'garage';
+    else if ((r.on.slide || r.on.rotate) && /^armory_/i.test(s)) kind = 'motor';
     else if (/^tv/i.test(s) && !r.moves) kind = 'tv';
     else if (/^fire/i.test(s) && r.on.visible !== undefined) kind = 'fire';
     if (!kind) continue;
@@ -636,6 +642,8 @@ function roomWetness(level) {
     out[name] = Math.min(0.32, Math.max(0.05, 0.05 + 0.11 * Math.log10(Math.max(1, v / 60))));
   }
   if (out.courtyard !== undefined) out.courtyard = 0.04;
+  // (secret passage) a room's own reverb level (mansion.json rooms[r].reverb: the concrete tunnels ring)
+  for (const [name, r] of Object.entries(level?.rooms ?? {})) if (typeof r.reverb === 'number') out[name] = r.reverb;
   return out;
 }
 

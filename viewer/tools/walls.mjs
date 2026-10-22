@@ -7,7 +7,9 @@ const p = await b.newPage({ viewport: { width: 800, height: 500 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion');
 await p.waitForFunction(() => window.__loaded, null, { timeout: 180000 });
-const result = await p.evaluate(async () => {
+// ROOMS=a,b,c: only these rooms (and no grounds), e.g. ROOMS=secret_stair,armory,tunnel_e,pump_room,tunnel_n
+const only = process.env.ROOMS ? process.env.ROOMS.split(',') : null;
+const result = await p.evaluate(async (only) => {
   const THREE = await import('three');
   const pl = window.__player, cam = window.__camera, it = window.__interact;
   // open every door so the doorways get tested too
@@ -25,6 +27,7 @@ const result = await p.evaluate(async () => {
   };
   const starts = {};
   for (const [name, r] of Object.entries(window.__level.rooms)) {
+    if (only && !only.includes(name)) continue;
     const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
     starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2]]
       .map(([x, z]) => clearNear(x, z, r.floor)).filter(Boolean);
@@ -32,7 +35,7 @@ const result = await p.evaluate(async () => {
   // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
   // on the lawn); outside the house the floor is the lawn, not 0
   const G = window.__level.grounds;
-  if (G) {
+  if (G && !only) {
     for (const [name, [x0, z0, x1, z1]] of Object.entries(G.zones)) {
       if (name === 'planting') continue;
       const [bx0, bz0, bx1, bz1] = G.bounds;          // (a zone may reach past the hedge: the drive)
@@ -43,7 +46,8 @@ const result = await p.evaluate(async () => {
     starts.terrace = [[0, 22.5], [0, -22.5], [-28.5, 0], [28.5, 0]].map(([x, z]) => clearNear(x, z, G.terrace)).filter(Boolean);
   }
   const [hx0, hz0, hx1, hz1] = G ? G.house : [-1e9, -1e9, 1e9, 1e9];
-  const floorAt = (x, z) => (x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
+  // (below ground: a run that starts under the house keeps its own floor, -4.2)
+  const floorAt = (x, z, sy = 0) => (sy < -1 ? sy : x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
   const bad = [];
   let runs = 0;
   for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
@@ -63,7 +67,7 @@ const result = await p.evaluate(async () => {
         // than a jump above where we took off, on the roof, under the ground floor, or
         // left inside a box
         const why = y - prevY > 0.65 ? 'teleported up' : y > takeoff + 1.2 ? 'above jump' : y > 8.4 ? 'on the roof'
-                  : y < floorAt(pl.pos.x, pl.pos.z) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
+                  : y < floorAt(pl.pos.x, pl.pos.z, sy) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
         prevY = y;
         if (why) { worst = { why, f, y: +y.toFixed(2), takeoff: +takeoff.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
       }
@@ -71,7 +75,7 @@ const result = await p.evaluate(async () => {
     }
   }
   return { runs, bad };
-});
+}, only);
 console.log(`${result.runs} runs, ${result.bad.length} ended somewhere impossible`);
 for (const r of result.bad.slice(0, 15)) console.log(JSON.stringify(r));
 await b.close();

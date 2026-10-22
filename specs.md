@@ -428,3 +428,165 @@ zone's rect, `plan.GROUNDS["zones"]`), and planting just outside the terrace's o
   short delay after the game loads; image-to-3D credits are OK (2-3 tries).
 - Open (later): its personality / the "turn" (does the cute ever drop?), choosing the
   player's window, coming inside, sound.
+
+## Below ground: the secret passage (design/house/secret_passage.md)
+Shared by every asset here: the palette is `blender/assets/bunker_kit.py` (import it like
+`library_kit`; use ONLY its materials plus `lib/materials.py` ones: walnut, steel, black_metal,
+bronze, glass; no new textures: the whole download budget for these rooms is ~0.5 MB). The
+armory is the library's cold twin: expensive, quiet, precise (Vivos / Rising S / Survival Condo
+armories, a Purdey gun room, an Apple Store's restraint): brushed stainless, graphite powder
+coat, charcoal felt, cold white LED. The tunnels are utilitarian and old-feeling but well built
+(CERN service tunnels, Cheyenne Mountain, the Greenbrier's Project Greek Island): raw concrete,
+galvanised steel, grey conduit, caged bulkhead lights. Seen mostly from 1-6 m, by the light of
+a few baked lamps and the player's flashlight. Props are lit by their room's probe; emissive
+parts named `*_Glow` or `*_LED` (fixtures: asset names containing `light`/`lamp` get the
+bake's fixture rules). Conventions as everywhere (metres, origin at the floor centre, front
+-Y, parts `<Asset>_<Part>`; few parts: one mesh per material where nothing moves).
+Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless stated.
+
+### armory_safe_wall (Model: opus)                       blender/assets/armory_safe_wall.py
+- Status: READY
+- What: the armory's hero: a built-in gun safe wall, five 1.18 m bays wide (5.9 x 0.62 x 2.75 m),
+  a monolith of brushed stainless doors in a graphite frame; turn the wheel and the five doors
+  lift one after another like the lids of a jewel case, each bay lit inside.
+- Size: 5.90 wide (x), 0.62 deep (y; the back is against the wall at y = +0.31), 2.75 tall.
+- Construction: graphite carcass (back, top, sides, 4 mullions 0.05 wide between the bays, a
+  0.08 recessed plinth); per bay an interior: charcoal felt back panel and sides, a felt-covered
+  floor at 0.22, cradles (two rows of padded U-rests, graphite) for long guns standing upright at
+  x -0.35..+0.35 of the bay centre, a slim cold LED line down both inner sides and across the
+  top inside (`*_LED`, static emissive), a small stainless nameless plate (no text) at the
+  bottom. Doors: one per bay, 1.12 x 2.45 x 0.05, brushed stainless with a fine 3 mm shadow-gap
+  border, a recessed vertical pull channel, hinged at the TOP (hinge axis along x at z 2.6, at
+  the front face): opening = rotate up 95 degrees outward to become a horizontal canopy over
+  the bay (keep it clear of a 3.4 m ceiling: the open door's top must stay under 3.3 m).
+  The middle bay (bay 3) has no long-gun cradles: a felt pegboard for pistols and a drawer-like
+  felt shelf at 1.0; its door carries the wheel.
+- The wheel: a 0.42 m spoked stainless handwheel (5 spokes, a knurled rim, a graphite hub) on
+  the middle door at 1.3 m, standing 0.08 proud.
+- Interact: the wheel is a `switch` on an empty at its hub: `{type: "switch", signal:
+  "armory_safe", state: false, prompt: "Turn the wheel", promptActive: "Close the safe",
+  range: 1.4, duration: 1.1, travel: {axis: "z", angle: 270}}` (glTF axes: the wheel turns
+  about its own axis, which points out of the wall: -Y in Blender = +Z in glTF, so `axis: "z"`).
+  Each door hangs from its own empty at its hinge with a `react` (NOT an interact):
+  `{signal: "armory_safe", on: {rotate: {axis: "x", angle: A}}, duration: D, collide: true,
+  motor: false}` where A is the sign that lifts the door outward (+/-95: check in the preview
+  with `--set` variants or a test pose), D = 2.0, 2.35, 2.7, 3.05, 3.4 from the middle bay
+  outward... i.e. middle first (2.0), then its neighbours (2.35), then the ends (2.7): the doors
+  rise from the centre outward. The wheel's door must carry the wheel's empty as a child (the
+  wheel rises with its door). Put reacts on the door empties, not the root.
+- Weapon slots (report them in your summary, in the asset's local coordinates): per long-gun bay
+  three upright positions (x = bay centre -0.3, 0, +0.3; y = +0.12; z = 0.22 the felt floor),
+  and in bay 3 four pistol positions on the pegboard (z 1.25 and 1.65, x +-0.2, y +0.2).
+- Budget: 14,000 triangles; no textures.
+- Placement: against the armory's west wall, rotation -90 (faces east), centred on the room.
+
+### armory_rifle, armory_shotgun, armory_pistol, armory_bat (Model: opus)   one file each
+- Status: READY
+- What: set dressing for the safe wall's slots (later the weapons workstream turns them into
+  pickups: NO interact now). Believable at 0.5 m, modern, unbranded, nothing tactical-cosplay.
+- armory_rifle: an AR-pattern carbine STANDING UPRIGHT (muzzle up, the buttstock's base on the
+  origin), its left side facing -Y: 0.86 tall, 16" barrel, M-LOK handguard, a small optic,
+  sling swivels; gunmetal + black polymer (+ one in `variant=tan` with a tan stock and handguard).
+- armory_shotgun: a pump shotgun standing upright, 1.0 m, black polymer stock, gunmetal receiver
+  and barrel, a side saddle.
+- armory_pistol: a polymer-frame pistol lying on its right side (origin at the underside centre),
+  0.19 x 0.03 x 0.14, gunmetal slide.
+- armory_bat: an aluminium baseball bat standing on its knob end... no: standing on its barrel
+  end is how they lean: stand it upright on the barrel's end cap (handle up), 0.84 m, satin
+  black anodised barrel with a thin stainless band, black grip tape.
+- Budget: rifle/shotgun 3,500 tris each, pistol 1,500, bat 600; no textures.
+
+### armory_table (Model: sonnet)
+- Status: READY
+- What: the layout table in the room's middle (the twin of the library's reading table): a
+  2.4 x 1.0 m stainless top 0.92 high on a graphite frame with a lower shelf of olive ammo cans,
+  a black rubber bench mat on the top with an open hard rifle case (black, foam with cut-outs:
+  felt), a cleaning rod, a few gunmetal tools, a torque driver; under-shelf cold LED strip (`*_LED`).
+- Budget: 9,000 tris.
+
+### armory_bench (Model: sonnet)
+- Status: READY
+- What: the gunsmith's bench against a wall: 2.2 x 0.75 m walnut butcher-block top at 0.95 on a
+  graphite drawer base (4 drawers), a heavy gunmetal bench vise at one end, a padded gun cradle,
+  behind it a 2.2 x 1.2 m graphite french-cleat wall (starts 0.15 above the top) holding
+  screwdrivers, punches, a hammer, a torque wrench, a scope box, a coil of cord; an articulated
+  task lamp (name the part `..._Lamp`, a cold emissive `*_LED` head).
+- Budget: 10,000 tris.
+
+### armory_security (Model: sonnet)
+- Status: READY
+- What: the security station: a graphite desk 2.4 x 0.8 m with a 3 x 2 bank of thin 27" monitors
+  on a wall-mount frame (screens: `bunker_kit.screen()`), a keyboard, a radio handset in a cradle,
+  a black mesh task chair (pushed in).
+- Budget: 8,000 tris.
+
+### armory_power (Model: sonnet)
+- Status: READY
+- What: the emergency power and air wall: three white wall-hung battery units (1.15 x 0.75 x
+  0.15 each, a thin vertical cold LED line on each: `*_LED`), a graphite transfer-switch cabinet
+  (0.6 x 0.3 x 0.9) with a big red rotary handle, grey conduit up into the ceiling (to 3.4), and an
+  NBC air-filtration unit (a white steel cabinet 0.7 x 0.5 x 1.3 with two round gauges, a hand
+  crank and a flexible duct up to a ceiling blast valve).
+- Size: about 3.6 wide x 0.55 deep x 3.4 tall (against a wall).
+- Budget: 9,000 tris.
+
+### armory_supplies (Model: sonnet)
+- Status: READY
+- What: a run of graphite steel shelving (2.4 x 0.5 x 2.2, four shelves): blue water drums on the
+  floor shelf, kraft ration cases, olive ammo cans, a white medical cabinet with a red cross
+  (shape only) beside it on the wall (part of the asset), two gas masks and two olive plate
+  carriers hanging from hooks at the end.
+- Budget: 9,000 tris.
+
+### tunnel_bulkhead, tunnel_bulkhead_dead (Model: sonnet)
+- Status: READY
+- What: a cast-aluminium caged oval bulkhead light on the tunnel wall (0.28 x 0.12 x 0.18),
+  galvanised cage, an opal lens (`bunker_kit.lens()`, part `..._Glow`), a short conduit up out of
+  it. `tunnel_bulkhead_dead`: the same, lens dead (`lens(False)`), cage bent, hanging off one
+  screw at an angle, a dangling cable (it's a thin module importing the first with a variant).
+  Origin: the centre of its back on the wall plane; it faces -Y (place on walls with rotation).
+- Budget: 800 tris each.
+
+### tunnel_conduit (Model: sonnet)
+- Status: READY
+- What: a 6.0 m run of services along a tunnel wall: a galvanised ladder cable tray (0.3 wide) at
+  2.35 with a few black and grey cables in it, three grey conduits below it on galvanised strut
+  brackets every 1.5 m, a junction box at one end. Origin: floor point under the run's middle on
+  the wall plane; the run lies along x, standing off the wall toward -Y.
+- Budget: 3,500 tris.
+
+### tunnel_channel (Model: sonnet)
+- Status: READY
+- What: a 6.0 x 0.3 m drainage channel grate set into the floor at the tunnel's edge: galvanised
+  bar grate 0.01 above the floor over a dark recess (fake depth: a dark inner floor 0.002 under
+  the grate's top: keep everything within 0.012 of the floor so it walks flat).
+- Budget: 1,500 tris.
+
+### tunnel_puddle (Model: sonnet)
+- Status: READY
+- What: standing water: an irregular flat patch (3.0 x 2.2 m outline, soft lobed edge, a few
+  islands) `bunker_kit.wet()`, 2 mm above the floor; plus `variant=small` 1.2 x 0.8.
+- Budget: 600 tris.
+
+### pump_station (Model: sonnet)
+- Status: READY
+- What: the pump room's sump: a 1.6 x 1.6 m galvanised (rusting at the edges) pit grate in a
+  concrete kerb, two vertical blue pump motors on it, discharge pipes rising, joining and running
+  up to 2.6 then along (2.0 m) into the wall, a gate valve with a red handwheel, a grey control
+  box with two lamps (one green `*_LED`), a yellow-painted kerb edge. 2.2 x 1.8 x 3.0.
+- Budget: 9,000 tris.
+
+### bunker_door, blast_door (Model: sonnet)                  one file each
+- Status: READY
+- What: doors for `plan.CUTS` (like `door.py`: origin = bottom centre of the opening on the
+  wall's centre plane, the room it swings into is +Y, the hinge empty carries
+  `interact = {type: "rotate", axis: "y", angle: 90 (or -90: into +Y), prompt: "Open door" /
+  "Close door", collide: true, side: "both", duration}`).
+  `bunker_door`: a 1.2 x 2.15 opening in a 0.3 m wall; graphite steel door 0.06 thick with a
+  stainless lever handle both sides, a narrow vertical vision slot of ballistic glass, a steel
+  frame; duration 0.9.
+  `blast_door`: a 2.0 x 2.2 opening; a 0.28 m thick steel door (graphite with a stainless edge
+  band), four heavy bolt-heads, big external hinge knuckles on a steel frame that stands 0.1
+  proud on both faces, a 0.6 m spoked wheel on each face (fixed: part of the leaf), a
+  safety-yellow kick plate on the frame sill; duration 3.2 (it's heavy).
+- Budget: bunker_door 3,000, blast_door 7,000; no textures.

@@ -64,6 +64,10 @@ class House:
         self.doors = []                   # door placements generated from cuts
         self.glow = materials.emissive("M_LightStrip", (1.0, 0.92, 0.82), 4.0)
         self.frame = materials.black_metal()
+        # (below ground) shafts that pierce the rooms they stand in: [(room, rect, (z0, z1) incl. slabs)]
+        self.shafts = [(n, r["rect"], (self.z_range(n)[0] - plan.SLAB, self.z_range(n)[1] + plan.SLAB))
+                       for n, r in plan.ROOMS.items() if r.get("kind") == "shaft"]
+        self.hatch_list = list(getattr(plan, "HATCHES", []))
         # window glass has (almost) no diffuse colour: a light tint here would be lit by the
         # sun like a white sheet and veil the view; dark + low alpha = a faint tint + reflections
         self.glass = materials.glass("M_Glass", tint=(0.02, 0.026, 0.026), alpha=0.1, roughness=0.02)
@@ -82,13 +86,19 @@ class House:
         if solid:
             self.solids.append((tuple(lo), tuple(hi)))
         if collide:
-            self.colliders.append(common.aabb_gltf(lo, hi))
+            c = common.aabb_gltf(lo, hi)
+            # (below ground) the engine keeps these out of the sun's shadow box
+            if room and self.plan.ROOMS.get(room, {}).get("level", 0) < 0:
+                c["under"] = True
+            self.colliders.append(c)
         if bake and room:
             self.baked.setdefault(room, []).append(ob)
         return ob
 
     def z_range(self, room):
         r = self.plan.ROOMS[room]
+        if "z" in r:                      # (below ground) a room with its own extent: a shaft, the armory
+            return tuple(r["z"])
         z0 = self.plan.LEVEL_Z[r["level"]]
         if r.get("double"):
             return z0, self.plan.TOP
@@ -105,6 +115,7 @@ class House:
             self.cut_fill(cut)
             self.cut_air(cut)
         self.stair(P.STAIR)
+        self.below_ground()
         return self
 
     def cut_air(self, c):
@@ -126,17 +137,198 @@ class House:
         z0, z1 = self.z_range(room)
         f = self.finishes[room]
         kind = r.get("kind", "room")
-        self.box(room, f"{room}_Floor", (x0, y0, z0 - P.SLAB), (x1, y1, z0), f["floor"],
-                 uv_tile=f.get("floor_uv_tile", 2.0), bake=True)
+        self.slab(room, f"{room}_Floor", (x0, y0, z0 - P.SLAB), (x1, y1, z0), f["floor"],
+                  uv_tile=f.get("floor_uv_tile", 2.0))
         if kind != "courtyard":
-            self.box(room, f"{room}_Ceiling", (x0, y0, z1), (x1, y1, z1 + P.SLAB), f["ceiling"], bake=True)
+            self.slab(room, f"{room}_Ceiling", (x0, y0, z1), (x1, y1, z1 + P.SLAB), f["ceiling"])
             for side in "NSEW":
                 self.lining(room, r, side, f.get("walls_by_side", {}).get(side, f["walls"]),
                             f.get("wall_uv_tile", 1.0))
-            self.air[room] = [((x0 + T, y0 + T, z0), (x1 - T, y1 - T, z1))]
+            self.air[room] = self.minus_shafts(room, ((x0 + T, y0 + T, z0), (x1 - T, y1 - T, z1)), grow=T)
+            self.shaft_walls(room, r, f["walls"], f.get("wall_uv_tile", 1.0))
         else:
             self.air[room] = [((x0, y0, z0), (x1, y1, z1 + 2.0))]
         self.probes[room] = ((x0 + x1) / 2, (y0 + y1) / 2, z0 + 1.6)
+
+    # ---------------------------------------------------------------- below ground
+    def shafts_in(self, room, z0, z1):
+        """The shafts (other rooms) that pierce `room` between z0 and z1: [(name, rect)]."""
+        x0, y0, x1, y1 = self.plan.ROOMS[room]["rect"]
+        out = []
+        for name, (sx0, sy0, sx1, sy1), (sz0, sz1) in self.shafts:
+            if name == room or sz1 <= z0 + 1e-6 or sz0 >= z1 - 1e-6:
+                continue
+            if sx0 < x1 - 1e-6 and sx1 > x0 + 1e-6 and sy0 < y1 - 1e-6 and sy1 > y0 + 1e-6:
+                out.append((name, (sx0, sy0, sx1, sy1)))
+        return out
+
+    def minus_rects(self, lo, hi, holes):
+        """A box minus vertical prisms over xy rects `holes`: the pieces, [(lo, hi)]."""
+        hs = [(max(lo[0], a), min(hi[0], c), max(lo[1], b), min(hi[1], d)) for a, b, c, d in holes]
+        hs = [h for h in hs if h[1] - h[0] > 1e-4 and h[3] - h[2] > 1e-4]
+        if not hs:
+            return [(tuple(lo), tuple(hi))]
+        return [((s0, k0, lo[2]), (s1, k1, hi[2])) for s0, s1, keep in keep_slices(lo[0], hi[0], lo[1], hi[1], hs)
+                for k0, k1 in keep if s1 - s0 > 1e-4 and k1 - k0 > 1e-4]
+
+    def minus_shafts(self, room, box, grow=0.0):
+        """A room's box (its air, a slab) minus the shafts through it (grown by `grow`: the
+        walls the room puts round them)."""
+        lo, hi = box
+        holes = [(a - grow, b - grow, c + grow, d + grow) for _, (a, b, c, d) in self.shafts_in(room, lo[2], hi[2])]
+        return self.minus_rects(lo, hi, holes)
+
+    def slab(self, room, name, lo, hi, mat, uv_tile=1.0):
+        """A floor or ceiling slab, minus the shafts through it and the hatches in its z range."""
+        holes = [(a, b, c, d) for _, (a, b, c, d) in self.shafts_in(room, lo[2], hi[2])]
+        for h in self.hatch_list:
+            if h["z"][1] > lo[2] + 1e-6 and h["z"][0] < hi[2] - 1e-6:
+                holes.append(h["rect"])
+        for i, (a, b) in enumerate(self.minus_rects(lo, hi, holes)):
+            self.box(room, name if i == 0 else f"{name}_{i}", a, b, mat, uv_tile=uv_tile, bake=True)
+
+    def lining_shaft_holes(self, room, axis, line, d0, d1, a0, a1, z0, z1):
+        """The parts of a lining (along `axis` at `line`, depth band d0..d1) a shaft stands in."""
+        holes = []
+        for _, (sx0, sy0, sx1, sy1) in self.shafts_in(room, z0, z1):
+            b0, b1, c0, c1 = (sy0, sy1, sx0, sx1) if axis == "x" else (sx0, sx1, sy0, sy1)
+            if b0 <= d0 + 1e-6 and b1 >= d1 - 1e-6:
+                ha0, ha1 = _overlap(a0, a1, c0, c1)
+                if ha1 - ha0 > 1e-4:
+                    holes.append((ha0, ha1, z0, z1))
+        return holes
+
+    def shaft_walls(self, room, r, mat, uv_tile):
+        """The walls a room puts round a shaft standing in it (on the shaft's sides inside the
+        room's rect; a side on the room's own wall line is the shaft's wall alone), its finish."""
+        T = self.plan.T
+        x0, y0, x1, y1 = r["rect"]
+        z0, z1 = self.z_range(room)
+        for name, (sx0, sy0, sx1, sy1) in self.shafts_in(room, z0, z1):
+            ix0, iy0, ix1, iy1 = x0 + T, y0 + T, x1 - T, y1 - T
+            sides = []
+            if sy1 < y1 - 1e-6:       # its north side: the room's wall faces north, y sy1..sy1+T
+                sides.append(("N", "x", sy1, (sy1, sy1 + T), (max(ix0, sx0 - T), min(ix1, sx1 + T))))
+            if sy0 > y0 + 1e-6:
+                sides.append(("S", "x", sy0, (sy0 - T, sy0), (max(ix0, sx0 - T), min(ix1, sx1 + T))))
+            if sx1 < x1 - 1e-6:
+                sides.append(("E", "y", sx1, (sx1, sx1 + T), (max(iy0, sy0), min(iy1, sy1))))
+            if sx0 > x0 + 1e-6:
+                sides.append(("W", "y", sx0, (sx0 - T, sx0), (max(iy0, sy0), min(iy1, sy1))))
+            for side, axis, line, (d0, d1), (a0, a1) in sides:
+                holes = self.holes_on(axis, line, a0, a1, z0, z1, room)
+                for i, (s0, s1, keep) in enumerate(keep_slices(a0, a1, z0, z1, holes)):
+                    for j, (kz0, kz1) in enumerate(keep):
+                        lo, hi = ((s0, d0, kz0), (s1, d1, kz1)) if axis == "x" else ((d0, s0, kz0), (d1, s1, kz1))
+                        self.box(room, f"{room}_Shaft{side}_{i}_{j}", lo, hi, mat, bake=True, uv_tile=uv_tile)
+                        if kz0 <= z0 + 1e-4 and s1 - s0 > 0.05:      # a baseboard on the room's face
+                            face = d1 if side in "NE" else d0
+                            out = 1 if side in "NE" else -1
+                            f0, f1 = sorted((face, face + out * 0.012))
+                            blo, bhi = ((s0, f0, z0), (s1, f1, z0 + 0.07)) if axis == "x" else ((f0, s0, z0), (f1, s1, z0 + 0.07))
+                            self.box(room, f"{room}_ShaftBase{side}_{i}", blo, bhi, mat, collide=False, solid=False,
+                                     bake=True, uv_tile=uv_tile)
+
+    def below_ground(self):
+        """Hatches (cut out of the slabs in room_shell; a `fold` fills one with floor strips that
+        drop into a stair), flights, landings and the stair's spine (plan.FLIGHTS, LANDINGS,
+        DIVIDERS), the exit stub."""
+        P = self.plan
+        steel = common.pbr_material("M_Steel_Blackened", (0.035, 0.034, 0.033), roughness=0.42, metallic=0.85)
+        for h in self.hatch_list:
+            x0, y0, x1, y1 = h["rect"]
+            hz0, hz1 = h["z"]
+            self.gap_air.append(((x0, y0, hz0), (x1, y1, hz1)))     # the slab's cut faces round it are seen
+            fold = h.get("fold")
+            if fold:
+                self.fold_floor(h, fold)
+        for k, fl in enumerate(getattr(P, "FLIGHTS", [])):
+            self.flight(k, fl, steel)
+        for k, L in enumerate(getattr(P, "LANDINGS", [])):
+            a, b, c, d = L["rect"]
+            self.box(L["room"], f"Landing_{k}", (a, b, L["z"] - 0.2), (c, d, L["z"]), steel, uv_tile=0.5, bake=True)
+        for k, D in enumerate(getattr(P, "DIVIDERS", [])):
+            self.box(D["room"], f"Spine_{k}", D["lo"], D["hi"], steel, uv_tile=0.5, bake=True)
+        stub = getattr(P, "SECRET_EXIT_STUB", None)
+        if stub:
+            self.colliders.append(dict(common.aabb_gltf(stub["lo"], stub["hi"]), under=True, stub=True))
+
+    def fold_floor(self, h, fold):
+        """A hatch filled with floor strips (the room above's floor: same material, same lightmap
+        chart as the floor round them) that drop into a stair when `fold["signal"]` is on: strip k
+        (k = 0..treads-1, from the edge at `top` in direction `dir`) by (k+1) rises, the rest of
+        the hatch (a landing plate) by treads+1. Each strip is its own mesh with a `react` (slide
+        down, a moving collider; motor: false, so it works without the house's power)."""
+        room = h["room"]
+        f = self.finishes[room]
+        x0, y0, x1, y1 = h["rect"]
+        top, d, g, rise = fold["top"], fold["dir"], fold["going"], fold["rise"]
+        z1 = h["z"][1]
+        z0 = z1 - fold.get("thick", 0.4)
+        far = y0 if d < 0 else y1
+        spans = [(top + d * k * g, top + d * (k + 1) * g, (k + 1) * rise) for k in range(fold["treads"])]
+        spans.append((top + d * fold["treads"] * g, far, (fold["treads"] + 1) * rise))
+        for k, (a, b, drop) in enumerate(spans):
+            ya, yb = min(a, b), max(a, b)
+            ob = self.box(room, f"{room}_Fold_{k:02d}", (x0, ya, z0), (x1, yb, z1), f["floor"], collide=False,
+                          uv_tile=f.get("floor_uv_tile", 2.0), bake=True)
+            ob["moving"] = f"fold{k:02d}"
+            # the deeper the strip, the longer it travels: the floor sinks and leaves a step behind
+            # at every strip (the nearest first)
+            ob["react"] = {"signal": fold["signal"], "on": {"slide": {"axis": "y", "distance": -round(drop, 4)}},
+                           "duration": round(1.2 + 1.1 * drop, 3), "collide": True, "motor": False}
+
+    def flight(self, k, fl, mat):
+        """A straight flight down from `z` at the nosing line y=`start`, `dir` +1 north / -1 south,
+        `n` risers; open-riser plate treads, a steel handrail on both sides and an invisible ramp
+        along the nosings (player.js, `along: "z"`)."""
+        P = self.plan
+        g, rise = fl.get("going", getattr(P, "STAIR_GOING", 0.28)), fl.get("rise", getattr(P, "SR", 0.18))
+        x0, x1 = fl["x"]
+        s, d, n, z = fl["start"], fl["dir"], fl["n"], fl["z"]
+        if fl.get("treads", True):
+            for i in range(1, n):
+                a, b = s + d * (i - 1) * g, s + d * i * g
+                zt = z - i * rise
+                self.box(fl["room"], f"Flight{k}_Tread_{i:02d}", (x0, min(a, b), zt - 0.04), (x1, max(a, b), zt), mat,
+                         uv_tile=0.5, bake=True, solid=False)
+        end = s + d * n * g
+        lo, hi = common.to_gltf((x0, s, z)), common.to_gltf((x1, end, z - n * rise))
+        self.ramps.append({"x": [lo[0], hi[0]], "z": [lo[2], hi[2]], "y": [z, z - n * rise], "along": "z"})
+        # handrails: a 40 mm steel bar 0.9 m over the nosings, 40 mm off each side
+        if not fl.get("rails", fl.get("treads", True)):
+            return
+        rail = common.pbr_material("M_Steel_Satin", (0.55, 0.55, 0.56), roughness=0.3, metallic=1.0)
+        for side, xr in (("A", x0 + 0.045), ("B", x1 - 0.045)):
+            a = (xr, s + d * 0.15, z + 0.9 - 0.15 * rise / g)
+            b = (xr, s + d * (n - 1) * g, z - (n - 1) * rise + 0.9)
+            self.bar(fl["room"], f"Flight{k}_Rail{side}", a, b, 0.04, 0.04, rail)
+            if fl.get("led") and side == fl.get("led_side", "B"):
+                # a LED line under the rail (its light is a LIGHTS area light in the room module)
+                c = fl["led"]
+                glow = materials.emissive("M_RailLED_" + "".join(f"{int(round(v * 255)):02X}" for v in c), tuple(c), 5.0)
+                self.bar(fl["room"], f"Flight{k}_LED", (a[0], a[1], a[2] - 0.026), (b[0], b[1], b[2] - 0.026),
+                         0.012, 0.006, glow)
+
+    def bar(self, room, name, a, b, w, h, mat):
+        """A bar of section w (x) by h (z) from a to b (points on its axis; x the same at both
+        ends): a sloped handrail. Not baked (a metal rail shows its reflections), no collider."""
+        import bmesh
+        bm = bmesh.new()
+        rings = []
+        for p in (a, b):
+            rings.append([bm.verts.new((p[0] + dx, p[1], p[2] + dz)) for dx, dz in
+                          ((-w / 2, -h / 2), (w / 2, -h / 2), (w / 2, h / 2), (-w / 2, h / 2))])
+        f, k = rings
+        for q in ((f[3], f[2], f[1], f[0]), (k[0], k[1], k[2], k[3]), (f[0], f[1], k[1], k[0]),
+                  (f[1], f[2], k[2], k[1]), (f[2], f[3], k[3], k[2]), (f[3], f[0], k[0], k[3])):
+            bm.faces.new(q)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+        ob = common.mesh_object(f"{self.name}_{name}", bm, self.col, mat, self.root, smooth=False)
+        if room:
+            ob["room"] = room
+        return ob
+
 
     def holes_on(self, axis, line, a0, a1, z0, z1, room):
         """Rectangles (a0, a1, z0, z1) cut out of a lining on this line."""
@@ -176,6 +368,7 @@ class House:
             axis, line, a0, a1 = "y", (x1 if side == "E" else x0), y0, y1
             d0, d1 = (x1 - T, x1) if side == "E" else (x0, x0 + T)
         holes = self.holes_on(axis, line, a0, a1, z0, z1, room)
+        holes += self.lining_shaft_holes(room, axis, line, d0, d1, a0, a1, z0, z1)   # (a shaft stands there)
         slices = keep_slices(a0, a1, z0, z1, holes)
         for i, (s0, s1, keep) in enumerate(slices):
             for j, (kz0, kz1) in enumerate(keep):
@@ -288,9 +481,11 @@ class House:
     def exterior_side(self, c):
         """For a cut in an outer wall (rooms on one side of its line only): the direction
         (+1 / -1 along the wall's normal axis) toward the room; None for an inner wall."""
+        if c["z"][1] <= 0.0 + 1e-6:
+            return None                   # (below ground: nothing outside to go out to)
         sides = set()
         for r in self.plan.ROOMS.values():
-            if self.plan.LEVEL_Z[r["level"]] > c["z"][0] + 1e-6 or self.z_range_of(r)[1] < c["z"][1] - 1e-6:
+            if self.z_range_of(r)[0] > c["z"][0] + 1e-6 or self.z_range_of(r)[1] < c["z"][1] - 1e-6:
                 continue
             x0, y0, x1, y1 = r["rect"]
             lo, hi, b0, b1 = (y0, y1, x0, x1) if c["axis"] == "x" else (x0, x1, y0, y1)
@@ -300,9 +495,13 @@ class House:
                 sides.add(1)
             if abs(hi - c["line"]) < 1e-6:
                 sides.add(-1)
+            if lo + 1e-6 < c["line"] < hi - 1e-6:
+                sides.update((1, -1))     # (a shaft's wall inside a room it pierces: the slot into the den)
         return sides.pop() if len(sides) == 1 else None
 
     def z_range_of(self, r):
+        if "z" in r:
+            return tuple(r["z"])
         z0 = self.plan.LEVEL_Z[r["level"]]
         return (z0, self.plan.TOP) if r.get("double") or r.get("kind") == "courtyard" else (z0, z0 + self.plan.HEIGHT[r["level"]])
 
@@ -331,9 +530,13 @@ class House:
             if brk and bi < i < bj:
                 ob["breakable"] = brk
         spans = [(a0, a1, None)] if not brk else [(a0, at(bi), None), (at(bi), at(bj), brk), (at(bj), a1, None)]
+        if c.get("glass") == "smoked" and not hasattr(self, "smoked"):
+            # (below ground) the slot from the secret stair into the den: dark from the lit side
+            self.smoked = materials.glass("M_Glass_Smoked", tint=(0.006, 0.007, 0.007), alpha=0.62, roughness=0.04)
+        pane = self.smoked if c.get("glass") == "smoked" else self.glass
         for s0, s1, tag in spans:
             ob = self.wall_box(None, f"{n}_Glass{'_B' if tag else ''}_{int(s0 * 10)}", c["axis"], L, s0, s1,
-                               z0 + 0.05, z1 - 0.05, 0.012, self.glass, collide=False)
+                               z0 + 0.05, z1 - 0.05, 0.012, pane, collide=False)
             if tag:
                 ob["breakable"] = tag
         if brk:
@@ -450,7 +653,7 @@ class House:
         [(axis, line, outward sign, a0, a1, z0, z1)]."""
         P, out = self.plan, []
         for room, r in P.ROOMS.items():
-            if r.get("kind") == "courtyard":
+            if r.get("kind") == "courtyard" or r.get("level", 0) < 0:     # (below ground: no outside)
                 continue
             x0, y0, x1, y1 = r["rect"]
             z0, z1 = self.outer_z(room)
@@ -490,7 +693,7 @@ class House:
         [(room, (x0, y0, x1, y1), z_top)], one rectangle per uncovered part."""
         P, out = self.plan, []
         for room, r in P.ROOMS.items():
-            if r.get("kind") == "courtyard":
+            if r.get("kind") == "courtyard" or r.get("level", 0) < 0:     # (below ground: under the lawn)
                 continue
             top = self.outer_z(room)[1]
             x0, y0, x1, y1 = r["rect"]
@@ -509,14 +712,20 @@ class House:
         return out
 
     # ---------------------------------------------------------------- lights
-    def strip(self, room, pos, size, z, power):
+    def strip(self, room, pos, size, z, power, color=None):
+        """A glowing ceiling slot; `color` (below ground: the armory's cold 6000 K) gives it its
+        own glow material (M_LightStrip_<hex>; one strip colour per room) and bake light colour."""
         (x, y), (sw, sd) = pos, size
+        glow = self.glow
+        if color:
+            tag = "".join(f"{int(round(c * 255)):02X}" for c in color)
+            glow = materials.emissive(f"M_LightStrip_{tag}", tuple(color), 4.0)
         self.box(room, f"LightStrip_{len(self.strips)}", (x - sw / 2, y - sd / 2, z - 0.006),
-                 (x + sw / 2, y + sd / 2, z - 0.001), self.glow, collide=False, solid=False)
-        self.strips.append(dict(pos=pos, size=size, z=z, power=power))
+                 (x + sw / 2, y + sd / 2, z - 0.001), glow, collide=False, solid=False)
+        self.strips.append(dict(pos=pos, size=size, z=z, power=power, **({"color": tuple(color)} if color else {})))
         self.lights.append({"type": "rect", "position": common.to_gltf((x, y, z - 0.01)),
                             "width": max(sw, 0.25), "height": max(sd, 0.25), "intensity": 6.0,
-                            "color": [1.0, 0.92, 0.82], "lookAt": common.to_gltf((x, y, 0))})
+                            "color": list(color or (1.0, 0.92, 0.82)), "lookAt": common.to_gltf((x, y, 0))})
 
     def point(self, pos, power, color=(1.0, 0.78, 0.55), radius=0.1):
         self.points.append(dict(pos=pos, power=power, color=color, radius=radius))
@@ -566,7 +775,7 @@ class House:
                 groups.setdefault(key, []).append(ob)
                 continue
             key = (ob.get("room", "_"), ob.data.materials[0].name,
-                   ob.get("lm_borrow") or ("frames" if ob.get("art_frame") else ""))
+                   ob.get("lm_borrow") or ("frames" if ob.get("art_frame") else "") or ob.get("moving", ""))
             groups.setdefault(key, []).append(ob)
         merged = {}
         for (room, mat, rug), obs in groups.items():
@@ -576,7 +785,8 @@ class House:
                     bpy.ops.object.join()
             ob = obs[0]
             ob.name = (f"{room}_{mat}" if room.startswith(f"{self.name}_Breakable") else
-                       f"{self.name}_{room}_{mat}" + {"floor": "_Rug", "wall": "_Art", "frames": "_ArtFrames"}.get(rug, ""))
+                       f"{self.name}_{room}_{mat}" + {"floor": "_Rug", "wall": "_Art", "frames": "_ArtFrames"}.get(
+                           rug, f"_{rug}" if rug else ""))     # (a moving piece: Mansion_library_M_..._fold03)
             ob.data.name = ob.name
             merged[(room, mat, rug)] = ob
         self.baked = {}

@@ -282,7 +282,7 @@ def build(plan, placed, doors=()):
     hx0, hy0, hx1, hy1 = G["hedge"]["rect"]
     t = G["hedge"]["thick"]
     inner = (hx0 + t / 2, hy0 + t / 2, hx1 - t / 2, hy1 - t / 2)
-    rects = [r["rect"] for r in plan.ROOMS.values()]
+    rects = [r["rect"] for r in plan.ROOMS.values() if r.get("level", 0) >= 0]   # (not the rooms below ground)
     house = (min(r[0] for r in rects), min(r[1] for r in rects), max(r[2] for r in rects), max(r[3] for r in rects))
     g = lambda r: [r[0], -r[3], r[2], -r[1]]          # Blender rect -> glTF x0, z0, x1, z1
     print("GROUNDS colliders: " + ", ".join(f"{k} {len(v)}" for k, v in boxes.items()))

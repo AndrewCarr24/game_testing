@@ -199,7 +199,7 @@ def blender_lights(p, h):
         ld.shape = "RECTANGLE"
         ld.size, ld.size_y = max(ls["size"][0], 0.25), max(ls["size"][1], 0.25)
         ld.energy = ls["power"] * p.get("cove_scale", 1.0)
-        ld.color = p["cove_color"]
+        ld.color = ls.get("color") or p["cove_color"]      # (a strip with its own colour: below ground)
         ob = bpy.data.objects.new(f"{NAME}_Cove_{i}", ld)
         ob.location = (*ls["pos"], ls["z"] - 0.02)
         tag_light(ob, ls)
@@ -411,9 +411,15 @@ def lightmap_policy(h, rooms_objs, air_all, p):
     for mips, as viewer/tools/bench.mjs counts). Returns {room: (charts, (W, H), k, placements, fill)}."""
     sizes = [s for s in LIGHTMAP_SIZES if max(s) <= p["lightmap_res"]]
     mb = lambda s: s[0] * s[1] * 4 * 4 / 3 / 1e6
-    packs = {}
+    packs, fixed = {}, {}
     for room, objs in sorted(rooms_objs.items()):
         charts = common.lightmap_charts(objs, h.solids, air_all)
+        # (below ground) a room with its own atlas size (plan lightmap=(w, h)) stays out of the
+        # shared budget: the house's rooms keep the sizes they were baked at
+        own = plan.ROOMS.get(room, {}).get("lightmap")
+        if own:
+            fixed[room] = (charts, tuple(own), *common.pack_charts(charts, *own))
+            continue
         packs[room] = (charts, [common.pack_charts(charts, *size) for size in sizes])
     level = {room: 0 for room in packs}
     total = sum(mb(sizes[0]) for _ in packs)
@@ -434,8 +440,13 @@ def lightmap_policy(h, rooms_objs, air_all, p):
     for room, (charts, results) in packs.items():
         k, placed, fill = results[level[room]]
         out[room] = (charts, sizes[level[room]], k, placed, fill)
+    for room, (charts, size, k, placed, fill) in fixed.items():
+        out[room] = (charts, size, k, placed, fill)
+    if fixed:
+        print(f"LIGHTMAPS own sizes (outside the budget) ~{sum(mb(v[1]) for v in fixed.values()):.1f} MB GPU: "
+              + ", ".join(f"{r} {v[1][0]}x{v[1][1]}" for r, v in fixed.items()))
     print("LIGHTMAPS " + ", ".join(f"{r} {W}x{H} {k:.1f}/m {fill:.0%} (" + "/".join(f"{x[0]:.0f}" for x in packs[r][1]) + ")"
-                                   for r, (_, (W, H), k, _, fill) in out.items()))
+                                   for r, (_, (W, H), k, _, fill) in out.items() if r in packs))
     print(f"LIGHTMAPS total ~{total:.1f} MB GPU (budget {p['lightmap_mb']}), lowest density "
           f"{min(v[2] for v in out.values()):.1f} texels/m")
     return out
@@ -508,7 +519,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         for L in lights:
             if L["kind"] == "strip":
                 wx, wy, _ = h.to_world(room, L["pos"])
-                h.strip(room, (wx, wy), L["size"], z1, L["power"])
+                h.strip(room, (wx, wy), L["size"], z1, L["power"], L.get("color"))
             elif L["kind"] == "point":
                 h.point(h.to_world(room, L["pos"]), L["power"], L.get("color", (1.0, 0.78, 0.55)))
             elif L["kind"] == "spot":
@@ -604,6 +615,8 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
         for k in ("signal", "state"):         # interactivity: switch/reactor signal override, initial state
             if k in opts:
                 entry[k] = opts[k]
+        if "weapon_slot" in opts:             # (secret passage) where a weapon will be taken later: set dressing now
+            entry["weapon_slot"] = opts["weapon_slot"]
         ob.location = loc
         ob.rotation_euler = (0, 0, math.radians(rot))
         # the light signal a fixture was wired to (bake.py LightsOff darkens its glow; after the
@@ -639,6 +652,11 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                     "floor": z0, "height": round(z1 - z0, 3),
                     "rect": [x0, -y1, x1, -y0],          # glTF: x0, z0, x1, z1
                     "lights": room_signal[r]}            # the signal its lights follow (lights off: bake.py, baked.js)
+        # (below ground) plan flags for the engine: nav false = off the invaders' nav, sealed =
+        # nothing above ground seen from it, power "own" = lit whatever the house's power, reverb
+        for k in ("nav", "sealed", "power", "reverb", "kind"):
+            if k in plan.ROOMS[r] and (k != "kind" or plan.ROOMS[r][k] == "shaft"):
+                rooms[r][k] = plan.ROOMS[r][k]
     level = {
         "name": NAME,
         "units": "metres, Y-up (glTF)",
@@ -673,7 +691,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     # rooms direct sunlight never reaches: their props skip real-time sun (sunlight.py)
     lit = sunlight.sunlit_rooms({r: h.interior(r) for r in rooms}, list(h.root.children_recursive), p["sun_dir"])
     for r, v in lit.items():
-        rooms[r]["sun"] = v
+        rooms[r]["sun"] = v and plan.ROOMS[r].get("level", 0) >= 0      # (below ground: never)
     # which rooms can see into which (doors closed): the engine's culler (visibility.py)
     interiors, shell_obs = {r: h.interior(r) for r in rooms}, list(h.root.children_recursive)
     for key, closed in (("sees", True), ("seesOpen", False)):
