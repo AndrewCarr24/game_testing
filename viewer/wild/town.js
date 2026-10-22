@@ -304,19 +304,40 @@ export class Town {
     const gl = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const tl = new THREE.TextureLoader();
     this.sites = [];
+    // [town2] one texture per file: several materials of a building share its lightmap (each
+    // tl.load is its own GPU upload otherwise)
+    const texCache = new Map();
+    const loadTex = (path, setup) => { if (!texCache.has(path)) { const t = tl.load(`../assets/models/${path}`); setup(t); texCache.set(path, t); } return texCache.get(path); };
     for (const b of T.buildings) {
       if (!b.site || !b.model) continue;
       try {
         const g = await gl.loadAsync(`../assets/models/${b.model}.gltf`);
         const root = g.scene;
+        // [town2] LOD0 / LOD1 nodes: a <Root>_LOD1 node is the far version of its siblings
+        const lods = [[], []];
+        root.traverse((o) => { if (/_LOD1$/.test(o.name)) lods[1].push(o); });
+        for (const l1 of lods[1]) for (const sib of l1.parent.children) if (!lods[1].includes(sib)) lods[0].push(sib);
         root.traverse((o) => {
           if (!o.isMesh) return;
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
             const lm = m.userData?.lightmap;
             if (lm && !m.lightMap) {
-              const tx = tl.load(`../assets/models/${lm}`);
-              tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace;
+              const tx = loadTex(lm, (t) => { t.channel = 1; t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; });
               m.lightMap = tx; m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              m.needsUpdate = true;
+            }
+            // [town2] reflections: an equirect panorama baked with the building (userData.envMap,
+            // radiance / envMapIntensity in 8-bit sRGB); its irradiance is dropped (the lightmap
+            // holds the diffuse light), so it only adds the glossy reflections
+            const em = m.userData?.envMap;
+            if (em && !m.envMap) {
+              m.envMap = loadTex(em, (t) => { t.mapping = THREE.EquirectangularReflectionMapping; t.colorSpace = THREE.SRGBColorSpace; });
+              m.envMapIntensity = m.userData.envMapIntensity ?? 1;
+              m.onBeforeCompile = (sh) => {
+                sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_maps>',
+                  THREE.ShaderChunk.lights_fragment_maps.replace('iblIrradiance += getIBLIrradiance( geometryNormal );', ''));
+              };
+              m.customProgramCacheKey = () => 'town2_env';
               m.needsUpdate = true;
             }
           }
@@ -328,7 +349,7 @@ export class Town {
         const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
         root.name = `Town_${b.id}`;
         this.group.add(root);
-        this.sites.push({ id: b.id, root });
+        this.sites.push({ id: b.id, root, lods });
       } catch (e) { console.warn('town site', b.id, e.message); }
     }
   }
@@ -442,6 +463,13 @@ export class Town {
       const near = Math.hypot(c.x - z.c.x, c.z - z.c.z) < 260;
       for (const m of z.lods[0]) m.visible = near;
       for (const m of z.lods[1]) m.visible = !near;
+    }
+    // [town2] a rebuilt building: its LOD1 beyond 170 m (only when it has one)
+    for (const s of this.sites || []) {
+      if (!s.lods?.[1].length) continue;
+      const near = Math.hypot(c.x - s.root.position.x, c.z - s.root.position.z) < 170;
+      for (const n of s.lods[0]) n.visible = near;
+      for (const n of s.lods[1]) n.visible = !near;
     }
   }
 }
