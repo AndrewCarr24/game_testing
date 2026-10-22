@@ -14,6 +14,7 @@ import { loadVegKit } from './veg.js';
 import { HeightfieldPlayer } from './player_hf.js';
 import { makeWildSky } from './sky_wild.js';
 import { buildBackdrop, buildWater, Props, buildEstate, estateColliders } from './level.js';
+import { waterField } from './water.js';        // [water] the water-query API (design/wilderness/blue_ridge/water.md)
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -228,6 +229,7 @@ async function main() {
   if (level) {
     scene.add(buildBackdrop(world, uniforms));
     scene.add(buildWater(world, uniforms, tex));
+    window.__water = waterField(world);         // [water] surfaceAt / depthAt / flowAt / wet
     props = new Props(world, uniforms, tex, kitProps);
     scene.add(props.group);
     scene.add(buildEstate(world, uniforms, tex));

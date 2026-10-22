@@ -2,6 +2,8 @@
 // per named view in its world.json (the brief's moments: the gate, the meadow edge, Poplar Cove,
 // the falls, the footlog, a laurel hell, each lookout looking back at the house, the Gap).
 // Usage: node viewer/tools/wild_shots.mjs [label] [--world laurel_fork] [--views a,b] [--profile gpu|soft] [--qs "&veg=0"]
+//        [--extra views.json]  more views, { name: { at: [x, z] (three.js) or pos: [x, y, z], eye: 1.7, look: [x, y, z] } }
+//        (at: the eye stands `eye` m over the ground there; extra views are added to the world's and shot too)
 // Output: build/wilderness/<world>/shots/<label>/<view>.png (+ errors.txt). Takes a browser slot.
 import { chromium } from 'playwright-core';
 import fs from 'fs';
@@ -16,6 +18,8 @@ const world = opt('--world', 'laurel_fork');
 const only = opt('--views', '');
 const profile = opt('--profile', 'gpu');
 const qs = opt('--qs', process.env.WILD_QS || '');
+const extraFile = opt('--extra', '');
+const extra = extraFile ? JSON.parse(fs.readFileSync(extraFile, 'utf8')) : null;
 const label = args[0] || 'latest';
 const out = path.join(root, 'build/wilderness', world, 'shots', label);
 fs.mkdirSync(out, { recursive: true });
@@ -43,6 +47,13 @@ try {
   const hud = await page.evaluate(() => document.getElementById('hud').textContent);
   if (hud.startsWith('error')) throw new Error(hud);
   console.log(`loaded in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+  if (extra) await page.evaluate((ex) => {
+    const W = window.__wild.world;
+    for (const [k, v] of Object.entries(ex)) {
+      const pos = v.pos || [v.at[0], W.heightAt(v.at[0], v.at[1]) + (v.eye ?? 1.7), v.at[1]];
+      W.views[k] = { pos, look: v.look };
+    }
+  }, extra);
   const names = await page.evaluate(() => Object.keys(window.__wild.world.views));
   const meta = await page.evaluate(() => { const w = window.__wild; const by = w.downloadBy();
     return { textureMB: w.textureMB(), textures: w.textureList(), downloadMB: +Object.values(by).reduce((a, b) => a + b, 0).toFixed(2), downloadBy: by }; });
