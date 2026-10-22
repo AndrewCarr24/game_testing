@@ -208,6 +208,8 @@ KIT = {
     "site_bar": (30, 18, 6, True, "site"), "site_gas_station": (36, 28, 6, True, "site"), "site_diner": (24, 16, 6, True, "site"),
 }
 
+# [diner] the diner's lot: head-in parking in front of the car, the yard behind (design/town/diner.md)
+KIT["site_diner"] = (30, 30, 6.2, True, "site")
 
 PROJECT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
@@ -253,7 +255,7 @@ def layout_buildings():
     return [
         B("bar", "site_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn", site=True),
         F("gas", "site_gas_station", -1880, -721, 0, "gas station + convenience store", site=True),
-        F("diner", "site_diner", -1935, -719, 0, "the diner", site=True),
+        F("diner", "site_diner", -1935, -721.5, 0, "the diner", site=True),   # [diner] the lot meets the highway's edge
     ]
 
 
