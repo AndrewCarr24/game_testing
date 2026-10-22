@@ -3418,8 +3418,14 @@
   },
   "exposure": 0.95,
   "samples": 1024,
+  "partial": {
+    "rooms": [],
+    "outdoor": true,
+    "samples": 1024,
+    "state": "on"
+  },
   "outdoor": {
-    "flat": 1.41491,
-    "textured": 2.14711
+    "flat": 1.41035,
+    "textured": 2.1448
   }
 }
