@@ -368,7 +368,10 @@ def vista_clear(R, trees, margin=2.5, reach=1400.0):
         rx, ry = trees["x"] - ax, trees["y"] - ay
         t = rx * ux + ry * uy
         lat = np.abs(-rx * uy + ry * ux)
-        near = (t > 0) & (t < reach) & (lat < 6 + 0.06 * t)
+        # (estate_link: + the crown's half-width: a broad crown standing just outside the band still
+        # reached over the line; a re-scatter put a red oak's into the Knob's view, -17 m)
+        crown = np.array([SPECIES[s]["width"] for s in trees["sp"]]) * trees["size"] * 0.5
+        near = (t > 0) & (t < reach) & (lat < 6 + 0.06 * t + crown)
         line_z = az + (t / L) * (hz - az)
         cut |= near & (gz + hgt > line_z - margin)
     return cut
@@ -1108,7 +1111,9 @@ def run(name=LF.NAME):
         if nm == "route_c":
             route_c_d, _, route_c_s, _ = terrain.poly_field(R.grid, P, 60.0)
         elif pmeta[nm].get("road"):
-            road_d = np.minimum(road_d, d)
+            # (estate_link: a wide road (the county road) keeps its trees, rocks and thickets off
+            # its whole width plus 2 m: road_d < 4 means within half its width + 2 m)
+            road_d = np.minimum(road_d, d - max(0.0, pmeta[nm]["width"] / 2 + 2.0 - 4.0))
             trails_d = np.minimum(trails_d, d - 1.0)
         else:
             trails_d = np.minimum(trails_d, d)
@@ -1196,6 +1201,8 @@ def run(name=LF.NAME):
     wet = R.mask("wetness")
     asp = R.mask("aspect") * 360
     grass = np.isin(C, [CID["meadow"], CID["estate"], CID["clearing"]]).astype(float)
+    # (estate_link: no hay inside the hedge: the house's own grounds are drawn there, viewer/wild/estate.js)
+    grass = np.where((np.abs(R.X) < 70.0) & (R.Y > -61.6), 0.0, grass)
     grass = np.maximum(grass, 0.55 * (C == CID["bald"]))
     northwet = np.clip((wet - 0.35) * 2, 0, 1) * (np.cos(np.radians(asp)) > 0.1)
     grass = np.maximum(grass, 0.14 * northwet * np.isin(C, [CID["cove"], CID["ripar"]]) * (nz > -0.1))  # moss
