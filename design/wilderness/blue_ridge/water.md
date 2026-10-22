@@ -194,7 +194,7 @@ calls per pixel.
 
 ![before | after: the bridge, the rail grade, the shoal](blockout/water_before_after_1.jpg)
 ![before | after: the long pool, the bridge pool's tail at the cascade lip, the gorge from the air](blockout/water_before_after_2.jpg)
-![before | after: the cascade, the bridge pool, the river road](blockout/water_before_after_3.jpg)
+![before | after: the cascade (world view; then pinned, from below), the bridge pool, the river road](blockout/water_before_after_3.jpg)
 
 *Before (left) is pass 2 as committed, served from b82ebe1 with its world; after (right) is the
 final build. Metal, q3, 2400x1350. The views are in `viewer/tools/wild_river_views.json`, plus the
@@ -227,9 +227,20 @@ Those are contended numbers, roughly 4x quiet. The cascade view's pass-2 bench w
 
 ## What doesn't work yet
 
-- **The world's cascade view** (make_views picks the lowest dry spot north-east of it) looks along
-  the cascade from a mound. It reads as a white chute, not a stepped cascade. A view from the
-  Narrows looking up would show it better.
+- **The Narrows cascade** is the weakest view: a streaked blue-white chute. The bands are gone, but
+  it is not a stepped, tumbling cascade. From below (`cascade_below`, pinned in
+  `wild_river_views.json`), its water raster stands as a raised slab over a dry trench at the
+  sides: the blurred river level sits above the steep ground. The world's own `cascade` view
+  (make_views' lowest dry spot north-east of it) moved with the terrain, so its before and after
+  are different places. Next: steps in the cascade's bed (a knick-like stair under it), clamp the
+  water level to the ground on steep cells, and add more mist cards there.
+- **Not in git:** the water's data files (`build/` is ignored). After merging, run
+  `laurel_fork.py` (about 2 min, numpy only, no run slot). Until then the runtime falls back to
+  slope-derived flow with no skyline reflections, and the old terrain keeps its 3 m-deep shoals.
+- **`--quick` builds never carve the main stem** (pre-existing: at 3 m cells the D8 network leaves
+  the river a lake and dry cells). Iterate on the river at 1.5 m (`--name <scratch>`).
+- **Eddies** behind emergent rocks run upstream by design, so `flowAt` pushes a swimmer in a lee
+  back toward the rock. The swimming side may want to clamp that.
 - **Sky reflections** in the calm pools have soft but blobby edges. The skyline is per vertex, so a
   far ridge's notch is only as sharp as the 1.5 m mesh.
 - **The kit's creek_boulder** stretched to 3-5 m reads as smooth, mossy "loaves". A bigger, angular
