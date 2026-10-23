@@ -32,7 +32,7 @@ const VIEWS = [
   ['locked_door', level.props.find((p) => p.lock === 'keycard'), 1.1, 1.6],
   ['great_room_fire_switch', pick('ix_switch_fire', 'great_room'), 0.0, 1.0],
   ['office_book_vase', pick('ix_book_b', 'office'), 0.08, 1.2],
-];
+].filter(([label, q]) => q || console.log(`(skip ${label}: not in the level; items off, blender/levels/caches.py)`));
 
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 try {
@@ -98,6 +98,7 @@ try {
     }, [pos, look]);
     await p.waitForTimeout(1200);
   };
+  if (door) {   // (items off: no locked door, no keycard, no vase)
   const a = (door.rotationY * Math.PI) / 180;   // the door's local +y (Blender) = the gallery side
   const dz = -Math.cos(a) * 1.6, dx = -Math.sin(a) * 1.6;
   await view([door.position[0] + dx, door.position[1] + 1.65, door.position[2] + dz], [door.position[0], door.position[1] + 1.2, door.position[2]]);
@@ -109,6 +110,7 @@ try {
   const gr = level.rooms.great_room;
   await view([(gr.rect[0] + gr.rect[2]) / 2, gr.floor + 1.65, (gr.rect[1] + gr.rect[3]) / 2], [gr.rect[0], gr.floor + 1.0, (gr.rect[1] + gr.rect[3]) / 2]);
   await shot('armed_vase');
+  }
   fs.writeFileSync(`${out}/info.json`, JSON.stringify(info, null, 1));
 } finally {
   await b.close();

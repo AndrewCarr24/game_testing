@@ -555,7 +555,8 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
     # placements: doors from the plan's cuts, then every room's furniture
     entries = []
     for d in h.doors:
-        entries.append((d["room"], d["asset"], d["pos"], d["rot"], {"lock": d["lock"]} if d["lock"] else {}))
+        # (items off, caches.ITEMS: plan.CUTS' door locks stay in the data but lock nothing)
+        entries.append((d["room"], d["asset"], d["pos"], d["rot"], {"lock": d["lock"]} if d["lock"] and caches.ITEMS else {}))
     for room in plan.ROOMS:
         if rooms_only and room not in rooms_only:
             continue

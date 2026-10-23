@@ -22,6 +22,30 @@ static `<Asset>_Inside` node). Hosts must come before what's attached to them, a
 lands on the level's FIRST placement of the host asset.
 """
 
+import os
+
+# ---------------------------------------------------------------- ITEMS: off (the user, wave 2)
+# "Remove all items from the mansion except the knife and the tablet", keeping every item's logic
+# to come back to. Off (the default), apply() leaves out every placement of an item asset below
+# (the keys, keycard, car key, fuse, flashlight, batteries, books, wine bottles) and drops every
+# lock (here, in the rooms' placements, and plan.CUTS' doors: mansion.py), so nothing is locked
+# without its key; lib/pickups.py makes the decor kits' loose things fixed decor again (the
+# vases too). The safe and the steel locker stay, unlocked and empty. Untouched: the kitchen
+# knife (kitchen.py) and the tablet (ix_tablet_dock), their own assets.
+# Bring everything back: build with GT_ITEMS=1 in the environment (build_level.py as usual);
+# the data below, the room modules' placements and plan.CUTS' lock= are all still there.
+ITEMS = os.environ.get("GT_ITEMS") == "1"
+ITEM_ASSETS = {
+    "keycard", "ix_key_office", "ix_key_safe", "ix_key_cellar", "ix_key_locker", "ix_car_key",
+    "ix_fuse", "ix_flashlight", "ix_battery", "ix_book", "ix_book_b", "ix_wine_bottle",
+}
+KEPT = {"kitchen_knife", "ix_tablet_dock"}     # (what stays takeable: for the report and the tests)
+
+
+def item_asset(asset):
+    return asset in ITEM_ASSETS or asset.startswith("ix_key_")
+
+
 # key item id -> what it opens (for the test and the report; the engine reads locks from props)
 KEYS = {
     "key_office": "office door",
@@ -75,7 +99,16 @@ PLACEMENTS = {
 
 
 def apply(room, placements):
-    """The room's placements with this module's locks and props merged in (a new list)."""
+    """The room's placements with this module's locks and props merged in (a new list). Items
+    off (ITEMS False): without the item assets and without any lock."""
+    if not ITEMS:
+        out = []
+        for a, loc, rot, *rest in list(placements) + list(PLACEMENTS.get(room, [])):
+            if item_asset(a):
+                continue
+            opts = {k: v for k, v in (rest[0] if rest else {}).items() if k != "lock"}
+            out.append((a, loc, rot, opts) if rest else (a, loc, rot))
+        return out
     out = list(placements)
     for asset, key in LOCKS.get(room, []):
         for i, (a, loc, rot, *rest) in enumerate(out):
