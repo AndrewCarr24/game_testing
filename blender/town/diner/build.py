@@ -3,7 +3,7 @@ Cycles bake (golden-hour sun and sky + the diner's own lamps and neon), denoise,
 
   /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup \
       --python blender/town/diner/build.py -- [--samples 512] [--res 2048x1024] [--no-bake]
-      [--render front,inside] [--render-samples 64] [--save]
+      [--render front,inside] [--render-samples 64] [--no-export] [--save] [--far-res 512]
 
 Writes assets/models/town2_diner.gltf (+ .bin, textures/T_Town2_Diner_*), the sidecar
 assets/models/town2_diner.json (footprint, size, colliders, entrances) and the lightmap
@@ -658,7 +658,8 @@ def main():
         o.hide_render = False
     mats = sorted({m for o in merged + ([far] if far else []) for m in o.data.materials}, key=lambda m: m.name)
     for_export(mats, scale)
-    export(root, merged, k, scale)
+    if "--no-export" not in argv:
+        export(root, merged, k, scale)
     if "--save" in argv:
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "town2_diner.blend"))
     log(f"done in {time.time() - t0:.0f}s")

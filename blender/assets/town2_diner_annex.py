@@ -243,7 +243,10 @@ def build(k, M, p):
         k.add("Annex_Troffer", G.box_lohi((x_ - 0.62, y_ - 0.31, cz - 0.03), (x_ + 0.62, y_ + 0.31, cz)), M["paint"], tint=(0.8, 0.8, 0.8), tile=1.0, lm=0.3)
         k.add("Annex_TrofferLens", G.box_lohi((x_ - 0.56, y_ - 0.25, cz - 0.035), (x_ + 0.56, y_ + 0.25, cz - 0.03)), M["globe_cool"], tile=None, bake=False)
         k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(1.1, 0.5), power=120.0, color=(1.0, 0.95, 0.88), dir=(0, 0, -1))
+        # (what the lens throws back up: a soft point under each fixture lights the ceiling round it)
+        k.light(kind="point", loc=(x_, y_, cz - 0.6), power=60.0, color=(1.0, 0.95, 0.88), radius=0.3)
     for x_, y_ in ((-6.0, 6.2), ((r1[0] + r1[1]) / 2, 9.4), ((r2[0] + r2[1]) / 2, 9.4)):
         k.add("Annex_Disc", G.cyl((x_, y_, cz - 0.02), 0.17, 0.04, n=16), M["globe"], tile=None, bake=False, smooth=True)
-        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(0.3, 0.3), power=70.0, color=(1.0, 0.9, 0.78), dir=(0, 0, -1))
+        k.light(kind="area", loc=(x_, y_, cz - 0.05), size=(0.3, 0.3), power=150.0, color=(1.0, 0.9, 0.78), dir=(0, 0, -1))
+        k.light(kind="point", loc=(x_, y_, cz - 0.35), power=20.0, color=(1.0, 0.9, 0.78), radius=0.2)
     return A

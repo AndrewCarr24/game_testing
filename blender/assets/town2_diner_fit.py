@@ -63,7 +63,7 @@ def build(k, M, p):
           M["chrome"], tile=0.5, uv_rot=True)
     # the apron: fluted stainless on the stool side and round the ends (an open path), a black kick
     front = [q for q in G.rrect_path(-cx + 0.15, b0, cx - 0.15, b1, 0.3, n=8, start="bw")]
-    k.add("Counter_Apron", G.path_sweep(front, G.flute_profile(fz + 0.16, zt - 0.06, 0.05, 0.006)), M["steel"], tile=0.5, uv_rot=True)
+    k.add("Counter_Apron", G.path_sweep(front, G.flute_profile(fz + 0.16, zt - 0.06, 0.05, 0.006)), M["steel"], tile=0.5, uv_rot=True, sheen=(1.12, 0.66))
     k.add("Counter_ApronCap", G.path_sweep(front, [(-0.02, zt - 0.06), (0.012, zt - 0.055), (0.012, zt - 0.045), (-0.02, zt - 0.045)]), M["chrome"], tile=0.5)
     k.add("Counter_Kick", G.path_sweep(front, [(-0.06, fz), (-0.06, fz + 0.16)]), M["paint"], tint=BLACK, tile=1.0)
     k.add("Counter_KickTop", G.path_sweep(front, [(-0.06, fz + 0.16), (0.0, fz + 0.16)]), M["paint"], tint=BLACK, tile=1.0)

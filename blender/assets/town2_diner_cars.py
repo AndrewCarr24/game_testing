@@ -75,9 +75,9 @@ def car(k, M, p, kind, x, y, yaw, colour):
             jn = (j + 1) % m
             quad = [a[j], b[j], b[jn], a[jn]]
             # greenhouse side faces: index 5..6 on the right (belt+ -> roof), mirrored on the left
-            side = j in (5, 6) or j in (m - 7, m - 6)
             xs = (st[i][0] + st[i + 1][0]) / 2
-            is_glass = cab and side and j in (5, m - 7) and not any(abs(xs - q) < 0.07 for q in pil)
+            # the greenhouse's side faces: belt+ -> roof on the right (j 5), mirrored on the left
+            is_glass = cab and j in (5, m - 6) and not any(abs(xs - q) < 0.07 for q in pil)
             if B.get("cargo") and xs > -0.6:
                 is_glass = False
             dst = glass if is_glass else body
@@ -125,10 +125,33 @@ def car(k, M, p, kind, x, y, yaw, colour):
             k.add(f"Car_{kind}_Tyre", tyre, M["paint"], tint=(0.018, 0.018, 0.02), tile=1.0, smooth=40, lm=0.3, zone="out")
             rim = G.cyl((ax, wy + sgn * 0.1, r), r * 0.62, 0.02, n=14, axis="y")
             bmesh.ops.transform(rim, matrix=mat, verts=rim.verts)
-            k.add(f"Car_{kind}_Rim", rim, M["steel"], tile=0.5, lm=0.3, zone="out")
+            k.add(f"Car_{kind}_Rim", rim, M["steel"], tint=(0.55, 0.56, 0.58), tile=0.5, lm=0.3, zone="out")
+            # the wheel arch: a dark liner disc on the flank behind the tyre (its upper half shows)
+            flank = max((q[4] for q in st if abs(q[0] - ax) < 1.3), default=max(q[4] for q in st))
+            arch = G.cyl((ax, sgn * (flank + 0.004), r), r + 0.07, 0.006, n=18, axis="y")
+            bmesh.ops.transform(arch, matrix=mat, verts=arch.verts)
+            k.add(f"Car_{kind}_Arch", arch, M["paint"], tint=(0.01, 0.01, 0.011), tile=1.0, lm=0.2, zone="out")
             hub = G.cyl((ax, wy + sgn * 0.115, r), r * 0.2, 0.02, n=8, axis="y")
             bmesh.ops.transform(hub, matrix=mat, verts=hub.verts)
             k.add(f"Car_{kind}_Hub", hub, M["paint"], tint=(0.05, 0.05, 0.05), tile=1.0, lm=0.2, zone="out")
+    # door seams, handles and a bright belt strip on each flank
+    cab_st = [q for q in st if q[6]]
+    if cab_st:
+        xa_, xb_ = cab_st[0][0], cab_st[-1][0]
+        seams = [xa_ + 0.05, (xa_ + xb_) / 2] if not B.get("cargo") else [xa_ + 0.05]
+        for sgn in (-1, 1):
+            for sx_ in seams:
+                w_ = max((q[4] for q in st if abs(q[0] - sx_) < 0.9), default=max(q[4] for q in st)) + 0.003
+                sm = G.box_lohi((sx_ - 0.006, sgn * w_ - 0.004, st[0][1] + 0.12), (sx_ + 0.006, sgn * w_ + 0.004, cab_st[0][2] - 0.02))
+                bmesh.ops.transform(sm, matrix=mat, verts=sm.verts)
+                k.add(f"Car_{kind}_Seam", sm, M["paint"], tint=(0.01, 0.01, 0.01), tile=1.0, lm=0.2, zone="out")
+                hd = G.box_lohi((sx_ + 0.25, sgn * w_ - 0.012, cab_st[0][2] - 0.12), (sx_ + 0.4, sgn * w_ + 0.012, cab_st[0][2] - 0.09))
+                bmesh.ops.transform(hd, matrix=mat, verts=hd.verts)
+                k.add(f"Car_{kind}_Handle", hd, M["chrome"], tile=0.5, lm=0.2, zone="out")
+            wb = max(q[4] for q in cab_st) + 0.004
+            belt = G.box_lohi((xa_, sgn * wb - 0.005, cab_st[0][2] - 0.012), (xb_, sgn * wb + 0.005, cab_st[0][2] + 0.004))
+            bmesh.ops.transform(belt, matrix=mat, verts=belt.verts)
+            k.add(f"Car_{kind}_Belt", belt, M["chrome"], tint=(0.3, 0.3, 0.32), tile=0.5, lm=0.2, zone="out")
     # lamps: head (pale) and tail (red) blocks at the ends, bumpers, mirrors, handles
     s0, s1 = st[0], st[-1]
     for sgn in (-1, 1):

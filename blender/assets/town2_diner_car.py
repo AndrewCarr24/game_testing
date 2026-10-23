@@ -56,7 +56,7 @@ def build(k, M, p):
     path = G.rrect_path(x0, yf, x1, yb, r, n=8, start="bw")
 
     # ------------------------------------------------ outside: skirt, stripes, sill, head, band
-    k.add("Car_Skirt", G.path_sweep(path, G.flute_profile(zs0, zs1 - 0.2, 0.045, 0.007)), M["steel"], tile=0.5, uv_rot=True)
+    k.add("Car_Skirt", G.path_sweep(path, G.flute_profile(zs0, zs1 - 0.2, 0.045, 0.007)), M["steel"], tile=0.5, uv_rot=True, sheen=(1.15, 0.62))
     # the enamel pinstripes (two) and the stainless between them, at the top of the skirt
     k.add("Car_SkirtTop", G.path_sweep(path, [(0, zs1 - 0.2), (0.004, zs1 - 0.19), (0.004, zs1 - 0.13), (0, zs1 - 0.12),
                                               (0, zs1 - 0.09), (0.004, zs1 - 0.08), (0.004, zs1 - 0.02), (0, zs1)]), M["steel"], tile=0.5, uv_rot=True)
@@ -150,7 +150,7 @@ def build(k, M, p):
     vpath = [(-vx, yf), (-vx, vy0 + 0.25)] + G.arc_pts((-vx + 0.25, vy0 + 0.25, 0), 0.25, math.pi, 1.5 * math.pi, 5)[1:] \
         + G.arc_pts((vx - 0.25, vy0 + 0.25, 0), 0.25, 1.5 * math.pi, 2 * math.pi, 5) + [(vx, yf)]
     vpath = [(q[0], q[1]) for q in vpath]
-    k.add("Vest_Skirt", G.path_sweep(vpath, G.flute_profile(zs0, zs1, 0.045, 0.007)), M["steel"], tile=0.5, uv_rot=True)
+    k.add("Vest_Skirt", G.path_sweep(vpath, G.flute_profile(zs0, zs1, 0.045, 0.007)), M["steel"], tile=0.5, uv_rot=True, sheen=(1.15, 0.62))
     zvh = fz + 2.30
     # glass-block sides and the door head: the sides are glass block (a tinted paint grid), the
     # front is the door opening (1.5 m) under a stainless head

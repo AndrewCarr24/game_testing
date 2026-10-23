@@ -427,6 +427,9 @@ def views():
         bar_room=dict(pos=(-2100.5, -799.5, 2.4), look=(-2114.0, -812.0, -184.3)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
+        # [diner] the diner (design/town/diner.md): low in its lot, and inside from the east end
+        diner_lot=dict(pos=(-1941.0, -718.0, 1.0), look=(-1935.0, -705.5, -181.7)),
+        diner_room=dict(pos=(-1927.2, -705.0, 2.16), look=(-1941.0, -702.3, -182.9)),
     )
 
 

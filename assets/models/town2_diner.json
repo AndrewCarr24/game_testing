@@ -1393,7 +1393,7 @@
   }
  ],
  "walk_in": true,
- "tris_lod0": 134634,
+ "tris_lod0": 135834,
  "materials": [
   "M_Town2_Diner_Asphalt",
   "M_Town2_Diner_Checker",
@@ -1415,5 +1415,5 @@
   "M_Town2_Diner_Wood"
  ],
  "lightmap": "textures/T_Town2_Diner_Lightmap.webp",
- "lightmap_scale": 3.9122
+ "lightmap_scale": 4.6327
 }

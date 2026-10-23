@@ -288,7 +288,7 @@ class Parts:
         self.count = {}
 
     def add(self, name, bm, mat, tint=None, tile=1.0, lm=1.0, collide=False, smooth=False, bake=True, lod=0, uv_rot=False,
-            zone=None):
+            zone=None, sheen=None):
         k = self.count.get(name, 0)
         self.count[name] = k + 1
         nm = name if k == 0 else f"{name}.{k:03d}"
@@ -311,7 +311,18 @@ class Parts:
         attr = me.color_attributes.new(TINT, "FLOAT_COLOR", "CORNER")
         t = tuple(tint) if tint is not None else (1.0, 1.0, 1.0)
         rgba = (*t[:3], 1.0)
-        attr.data.foreach_set("color", rgba * len(me.loops))
+        if sheen is None:
+            attr.data.foreach_set("color", rgba * len(me.loops))
+        else:
+            # sheen (top, bottom): faces tinted by how much they face up, a painted-in stand-in
+            # for the sky a metal reflects (fluting below the lightmap's resolution still reads)
+            top, bot = sheen
+            cols = [0.0] * (4 * len(me.loops))
+            for poly in me.polygons:
+                f = bot + (top - bot) * (poly.normal.z * 0.5 + 0.5)
+                for li in poly.loop_indices:
+                    cols[4 * li:4 * li + 4] = (t[0] * f, t[1] * f, t[2] * f, 1.0)
+            attr.data.foreach_set("color", cols)
         ob = bpy.data.objects.new(nm, me)
         self.col.objects.link(ob)
         ob.parent = self.root
