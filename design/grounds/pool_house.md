@@ -1,45 +1,24 @@
 # The pool house: the bathhouse
 
-## Status (2026-10-23, paused by the orchestrator)
-- **Done:** design (below); plan data, shell builder, house.py, grounds and engine hooks; 16 `ph_*` assets
-  plus 3 outdoor `cabana_*` ones; water fx; the zone re-laid; walk test `viewer/tools/bathhouse.mjs`.
-  The house was rebuilt (`build_level.py`, OK, 459 s) after the fixes below. Its outputs (assets/models,
-  levels, mansion.blend) are in the worktree but not committed.
-- **Fixed since the first walk:** the lawn's ground collider wasn't cut under the building (the
-  LAWN_HOLES rect format was wrong), so the stair was blocked at z -1.08 and the player was pushed into
-  the pool; the test's door finder opened the wrong doors; a route detour round a motor-court collider;
-  the fx cards are now kept out of the probes' panoramas.
-- **Next:** `bake.py -- mansion 64 --outdoor-only`, which must follow every build (the raw export has a
-  62-primitive Mansion_Outdoor_Flat that breaks estate_link's splitGateLeaves until the outdoor bake
-  merges it); then a draft bake of only my rooms (`--rooms ph_hall,ph_fire,ph_stair,ph_steam,ph_cold,ph_rest,tunnel_landing`);
-  rerun bathhouse.mjs and `ROOMS=ph_,tunnel walls.mjs`; golden-hour screenshots; perf.mjs/fps.mjs in
-  the hall; commit the build outputs for my rooms.
-- **Open problems:** (1) iCloud keeps evicting worktree and .git files ("dataless") whenever the disk is
-  nearly full. Sandboxed Blender, node and git can't read them (git SIGBUS, numpy EOF, Cycles "not a PNG"),
-  and the first draft bake ran with missing textures. A materialiser run outside the sandbox
-  (read every dataless file) fixes it until the next eviction. (2) Audio has no water or drain sounds.
-  (3) Merge: set `STUB_LANDING = False` once the passage's landing room exists.
+## Status (2026-10-23)
+Built, rebuilt on main 87454de (the secret passage merged), draft-baked (64 samples, on + lights off:
+the six bathhouse rooms and the passage's `tunnel_n`), tested end to end. The next full bake brings
+them to 1024 samples with the rest of the house.
 
-## Meeting point with the secret passage (for the orchestrator)
-
-Taken as given: the passage's tunnel ends at a landing centred on world (40, 33), floor z -4.2,
-x 38.5..41.5, y 31.5..34.5, arriving from the south. The bathhouse owns everything north of
-y = 34.5 at that landing:
-
-- `bath stair` = plan room `ph_stair`: rect (38.5, 34.5, 41.5, 40.5), `level=-1`, `z0=-4.2`,
-  `height=9.6` (a 9.6 m concrete shaft from the tunnel's floor to the bathhouse's roof).
-- The opening between them: `plan.CUTS` axis "x", line y = 34.5, span x 38.65..41.35,
-  z -4.2..-1.3 (2.7 x 2.9 m). It cuts the passage's landing's north lining too, if it has one on
-  that line. Their landing's ceiling must be at least -1.3 (the opening's head) and their slab must
-  stay under -1.0: the fire bath's hot pool basin sits over the landing down to z -0.95.
-- Until their landing exists, `blender/levels/bathhouse_plan.py` adds a stand-in room
-  `tunnel_landing` at exactly their landing's rect (z -4.2..-1.2, concrete), so the stair can be
-  walked and tested. **Merge: set `STUB_LANDING = False`** in bathhouse_plan.py once their landing
-  room is in the plan (and rebuild).
-- My plan data lives in its own file (`blender/levels/bathhouse_plan.py`), merged at the end of
-  `plan.py` by one marked block (`ROOMS.update`, `CUTS +=`, `LAWN_HOLES`), so it merges with
-  whatever the passage workstream adds to plan.py. Rooms use explicit `z0` / `height` (house.py
-  now honours them) rather than a new `LEVEL_Z` key; the passage's rooms can use either.
+## Meeting point with the secret passage (connected)
+The passage's room `tunnel_n` (plan.py `UNDERGROUND`) ends at the landing (40, 33), z -4.2,
+x 38.5..41.5, y 31.5..34.5; its north wall's opening (y 34.5, x 38.65..41.35, z -4.2..-1.4, the
+passage's cut) is the foot of the bathhouse's stair. Merging made these changes: `plan.SECRET_EXIT_STUB`
+(their temporary wall) is deleted; `bathhouse_plan.STUB_LANDING = False` (my stand-in landing room is
+gone); my duplicate cut on y = 34.5 is gone (theirs does it).
+- `ph_stair` is `level=0` with its own `z=(-4.2, 5.4)` (the passage's convention), so the grounds
+  still clad its outside and roof it; it carries the passage's below-ground flags: `nav=False`
+  (off the invaders' nav), `power="own"` (its lights are the bunker's: `signal=None`, on whatever
+  the house's power and the bathhouse's switch), `reverb`, and one new flag, `below=True`. That
+  flag is exported to mansion.json; `secret_passage.js` moves its shell into the below-ground group,
+  culled with its room, and `batching.js` keeps it drawn from the sealed tunnel. Without it the
+  tunnel's `sealed` rule hid the stair: from the landing you saw a blank sky-coloured hole.
+- The plan's other bathhouse rooms keep `height` (house.py honours both `z` and `height`).
 
 ## The idea
 
@@ -109,7 +88,6 @@ east, behind glass). Floor z 0 (the lawn -0.08). Seven plan rooms, all `building
 | `ph_fire` | 6.2 x 3.2 | 3.0 | oxblood lime plaster, a 3.5 x 1.2 m hot pool, a sky slot along the north wall, a door east |
 | `ph_stair` | 2.7 x 5.7 | 9.6 | the secret stair: z -4.2 to the plunge's floor at -1.2 (17 risers), Ando concrete, a skylight at the top, the pool's glass end as its west wall |
 | `ph_rest` | 17.7 x 3.7 | 3.2 | oak floor, cedar ceiling, loungers facing a 15 m window to the north |
-| `tunnel_landing` | (stand-in) | 3.0 | the passage's landing until it's merged |
 
 The pool runs from the west glass to the east wall, so it **cuts the hall in two**: the north
 half (where you arrive) reaches the south half (the doors out) only through the stone rooms
@@ -188,8 +166,57 @@ room they can sweep like any other once they know you're there.
   `cabana_court`, `cabana_mirror_pool`; `blender/levels/outdoor/pool_house.py` re-laid round the
   building.
 - Engine: `viewer/water_fx.js` (new: water surfaces with ripples and Fresnel alpha, caustics,
-  the underwater window, steam; one hook in index.html), `player.js` ramps `along: "z"`,
-  `interactables.js` react `delay` / `delayOff`, `batching.js` the room under the eye below
-  ground, `ground_colliders.py` / `grounds.py` (no lawn under the building, the house footprint
-  is the main house only, stone facades), mansion.py (the buildings' own lightmap budget,
-  `level.sunken`).
+  the underwater window, steam; one hook in index.html), `interactables.js` react `delay` /
+  `delayOff`, the room flag `below` (`batching.js`, `secret_passage.js`; the passage's ramps
+  `along: "z"` and below-ground culling carry the stair), `ground_colliders.py` / `grounds.py`
+  (no lawn or ground collider under the building, the house footprint is the main house only,
+  stone facades), `visibility.py` (cuts marked `facade`), mansion.py (the buildings' own
+  lightmap budget, `level.sunken`, the `below` flag).
+
+## Tests (2026-10-23, after the merge, draft bake)
+- `node viewer/tools/bathhouse.mjs final`: 38 checks, all pass. The real controller at 60 Hz from the
+  passage's landing: up the stair (it glides: max 3.6 cm a frame, at z -1.2 at its head), E at the
+  wheel ("Open the valve"), the plunge drains and the slab sinks (all three reacts settle), through the
+  slab's opening into the empty plunge, up its steps onto the cold room's floor, into the hall, along
+  the north walkway, over the stepping stones, out of the glass door to the lap pool's deck, back in,
+  out of the south door to the house's terrace, the east terrace, the motor court, the drive and the
+  gate; then the hidden way: cold room -> steam (both doors) -> fire bath -> its east door -> the
+  garden court. Screenshots in `build/bathhouse/final/` (`sheet.png`: 12 of them).
+- `node viewer/tools/secret_passage.mjs`: 83/83 pass (library -> shaft -> armory -> tunnels -> the
+  landing, and back). Together with bathhouse.mjs: library -> the pool deck and the gate.
+- `ROOMS=ph_,tunnel node viewer/tools/walls.mjs`: 672 runs, 0 impossible positions. walls.mjs now
+  takes name prefixes in `ROOMS`, knows `level.sunken` (the drained plunge), and drops starts its
+  spiral found outside their room's rect. The stair has no start of its own (its floor is all
+  treads); bathhouse.mjs walks it.
+- `outside.mjs`: the hall's glass door passes; the fire bath's east door "fails" only because the
+  test walks 2 m straight in and the hot pool's blocker is 1.2 m inside that door (it did get in).
+
+## Cost (perf.mjs, M4 Pro, 1600x900 @2, invaders off)
+| view | draw calls | triangles | ms/frame |
+|---|---|---|---|
+| the hall (south walkway) | 68 | 98k | 0.37 |
+| the lawn by the lap pool, looking at it | 110 | 125k | 0.48 |
+| the stair | 65 | 93k | 0.36 |
+| the passage's landing, looking up the stair | 17 | 16k | 0.23 |
+| (the great room, for scale) | 51 | 194k | 0.36 |
+
+The level downloads 21.77 MB and holds 319.6 MB of GPU textures. The bathhouse's share of that:
+- ~0.5 MB download: lightmaps, panoramas, nine textures, 19 small models (192 KB).
+- ~40 MB GPU:
+  - textures: the stone and the slab at 1024, the other seven at 512, plus the facade's copy of
+    the stone outdoors (one more outdoor textured draw call);
+  - lightmaps, in the buildings' own budget (`lightmap_mb_buildings` 14 MB: the hall at 1024²,
+    the rest room at 1024x512, the others at 512), so the house's rooms keep their atlas sizes
+    (checked against main: none changed).
+- The fx: one draw call each for the pool surfaces, the caustic cards, the window and the steam.
+  The bench route never passes the building, so the bench is unchanged.
+
+## Problems found / for later
+- iCloud keeps evicting worktree and `.git` files ("dataless") when the disk fills up. Sandboxed
+  Blender, node and git can't read them: git SIGBUS, numpy EOF, Cycles "not a PNG". Reading every
+  dataless file outside the sandbox before builds and bakes fixes it until the next eviction.
+- Every house build must be followed by `bake.py ... --outdoor-only`: the raw export's
+  `Mansion_Outdoor_Flat` has 62 primitives (a Group in three.js), and estate_link's
+  `splitGateLeaves` throws on it, so the page never loads.
+- Audio has no water: no drain, splash or stone-slab sound yet (the valve plays the switch sound).
+- The stair's head (the slab, before it sinks) is still on the dark side in the draft bake.
