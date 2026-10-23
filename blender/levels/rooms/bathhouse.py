@@ -85,7 +85,6 @@ FINISHES = {
     "ph_cold": dict(floor=slab_dark, walls=stone_dark, ceiling=stone_dark, floor_uv_tile=2.4, wall_uv_tile=2.0),
     "ph_stair": dict(floor=concrete, walls=concrete, ceiling=concrete, floor_uv_tile=1.82, wall_uv_tile=1.82),
     "ph_rest": dict(floor=oak, walls=stone, ceiling=cedar, floor_uv_tile=2.0, wall_uv_tile=2.0),
-    "tunnel_landing": dict(floor=concrete, walls=concrete, ceiling=concrete, floor_uv_tile=1.82, wall_uv_tile=1.82),
 }
 
 # the materials of the shell pieces bathhouse_shell.py adds (basins, treads, ...)
@@ -134,7 +133,6 @@ PLACEMENTS = {
         *[("ph_lounger", (x, -0.15), 180) for x in (1.2, 2.1, 3.0, 3.9, 4.8)],
         ("ph_towels", (-8.85, 0.0), 90),
     ],
-    "tunnel_landing": [],
 }
 
 # all baked (golden hour, the lights on): the light the building makes of water and stone
@@ -168,9 +166,6 @@ LIGHTS = {
     "ph_rest": [
         # a cove along the south wall washing the cedar ceiling
         dict(kind="area", pos=(0.0, -1.7, 2.7), size=(16.0, 0.3), aim=(0.0, -1.5, 3.2), power=110.0, color=(1.0, 0.82, 0.62)),
-    ],
-    "tunnel_landing": [
-        dict(kind="area", pos=(0.0, 0.0, 2.9), size=(1.0, 2.0), aim=(0.0, 0.0, 0.0), power=12.0, color=(1.0, 0.85, 0.7)),
     ],
 }
 

@@ -3,9 +3,13 @@
 // 2) Walks one full chain the way a player does: garage workbench drawer -> cellar key ->
 // wine room climate cabinet (locked; arm the key, Enter, E) -> locker key -> garage steel locker
 // (locked) -> fuse, flashlight and battery. Usage: node locks.mjs [out-dir]
+// ITEMS OFF (the default build, blender/levels/caches.py ITEMS; GT_ITEMS=1 builds run the chain
+// above): no locks and no keys anywhere; the drawer, the cabinet and the locker open with E and
+// hold nothing to take.
 import { chromium } from 'playwright-core';
 import fs from 'fs';
-import { prop, fromProp, url } from './level.mjs';
+import { level, prop, fromProp, url } from './level.mjs';
+const ITEMS_ON = level.props.some((q) => q.lock || /^(ix_flashlight|ix_fuse|ix_battery|keycard|ix_key_)/.test(q.asset));
 const out = process.argv[2] || 'build/locks_chain';   // (not build/locks: that's the run-slot directory)
 fs.mkdirSync(out, { recursive: true });
 const bench = prop('garage_workbench'), cabinet = prop('dining_climate_wall'), locker = prop('ix_gun_locker');
@@ -43,12 +47,18 @@ const audit = await p.evaluate(() => {
 console.log(`keys: ${audit.keys.join(', ')}`);
 for (const l of audit.locks) console.log(`  lock ${l.node} <- ${l.key}: "${l.prompt}"`);
 const lockKeys = new Set(audit.locks.map((l) => l.key));
+if (!ITEMS_ON) {
+  check('items off: no locks and no keys in the level', audit.locks.length === 0 && audit.keys.length === 0 && !level.props.some((q) => q.lock),
+    `locks=${audit.locks.length} keys=${audit.keys.join(',')}`);
+}
+if (ITEMS_ON) {
 check('every lock has its key in the level', audit.locks.every((l) => audit.keys.includes(l.key)),
   audit.locks.filter((l) => !audit.keys.includes(l.key)).map((l) => l.key).join(','));
 check('every key opens something', audit.keys.every((k) => lockKeys.has(k)), audit.keys.filter((k) => !lockKeys.has(k)).join(','));
 check('every lock starts locked and names its key ("Locked · needs the ...")',
   audit.locks.length >= 5 && audit.locks.every((l) => l.locked && l.prompt === `Locked · needs the ${l.name}`),
   `${audit.locks.length} locks`);
+}
 
 const S = () => p.evaluate(() => {
   const it = window.__interact;
@@ -75,6 +85,27 @@ const arm = async (id) => {
   for (let i = sel; i > ids.indexOf(id); i--) await press('ArrowUp', 80);
   await press('Enter', 300);
 };
+
+if (!ITEMS_ON) {
+  // the same three places, unlocked and empty (E opens; nothing offered)
+  let s = await S();
+  await press('KeyE', 900); s = await S();
+  check('the workbench drawer opens and holds nothing to take', s.drawerT === 1 && !s.hint.includes('Take'), `hint="${s.hint}"`);
+  await p.screenshot({ path: `${out}/off_1_workbench_drawer.png` });
+  await teleport(fromProp(cabinet, [-0.5, -1.15, 1.65]), fromProp(cabinet, [-0.5, 0, 1.2])); await p.waitForTimeout(400); s = await S();
+  check('the climate cabinet is not locked: "Open"', !s.cabLocked && !s.hint.includes('Locked'), `hint="${s.hint}"`);
+  await press('KeyE', 1200); s = await S();
+  check('E opens its glass door; nothing to take', s.cabT === 1 && !s.hint.includes('Take'), `t=${s.cabT} hint="${s.hint}"`);
+  await p.screenshot({ path: `${out}/off_2_cabinet_open.png` });
+  await teleport(fromProp(locker, [0.15, -1.25, 1.65]), fromProp(locker, [0.1, 0, 1.1])); await p.waitForTimeout(400); s = await S();
+  check('the garage locker is not locked', !s.lockerLocked && !s.hint.includes('Locked'), `hint="${s.hint}"`);
+  await press('KeyE', 1100); s = await S();
+  check('E opens it: empty', s.lockerT === 1 && !s.hint.includes('Take') && s.inv.length === 0, `hint="${s.hint}" inv=${s.inv}`);
+  await p.screenshot({ path: `${out}/off_3_locker_open.png` });
+  await b.close();
+  console.log(fails ? `${fails} failed` : 'all passed (items off; the key chain needs a GT_ITEMS=1 build)');
+  process.exit(fails ? 1 : 0);
+}
 
 // ------------------------------------------------------------------ 1: the cellar key in the workbench drawer
 let s = await S();

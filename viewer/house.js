@@ -58,6 +58,8 @@ export class House {
   constructor({ signals, noise, level, baked, scene, camera, flashlight, interact, toast = () => {}, params = new URLSearchParams() }) {
     Object.assign(this, { signals, noise, baked, scene, camera, flashlight, interact, toast });
     this.rooms = Object.entries(level.rooms).sort((a, b) => b[1].floor - a[1].floor);   // upper floor first
+    // (secret passage) rooms lit whatever the house's power (mansion.json rooms[r].power "own")
+    this.ownPower = new Set(this.rooms.filter(([, r]) => r.power === 'own').map(([n]) => n));
     this.levels = new Map();      // room -> how far its fittings are on now, 0..1 (eases to target())
     this.flick = 1;               // the trip flicker on the electric part of the light
     this.tripping = null;         // { t, blowFuse, curve }
@@ -83,6 +85,11 @@ export class House {
 
   // ------------------------------------------------------------ light levels
   roomAt(p) {
+    // (secret passage) rooms below ground first: a shaft stands inside the den
+    for (const [name, r] of this.rooms) {
+      if (r.level >= 0 || p.y < r.floor - 0.1 || p.y > r.floor + r.height + 0.1) continue;
+      if (p.x >= r.rect[0] && p.x <= r.rect[2] && p.z >= r.rect[1] && p.z <= r.rect[3]) return name;
+    }
     for (const [name, r] of this.rooms) {
       if (p.y < r.floor - 0.1 || p.y > r.floor + r.height + 0.1) continue;
       if (p.x >= r.rect[0] && p.x <= r.rect[2] && p.z >= r.rect[1] && p.z <= r.rect[3]) return name;
@@ -97,6 +104,7 @@ export class House {
 
   // are a room's fittings on (1) or off (0)? Off, only its daylight comes in
   target(room) {
+    if (this.ownPower?.has(room)) return 1;   // (secret passage) below ground: the bunker's own batteries
     return this.signals.get('power') !== false && this.signals.get(`lights_${room}`) !== false ? 1 : 0;
   }
   // the fittings' share right now (with the trip flicker)
@@ -174,6 +182,9 @@ export class House {
   // the power trips: a flicker, then dark. blowFuse: the main fuse goes too (a spare is needed)
   trip({ blowFuse = false, delay = 0 } = {}) {
     if (this.signals.get('power') === false || this.tripping) return false;
+    // (items off, blender/levels/caches.py) no spare fuse in the level: a blown fuse could never
+    // be replaced, so the trip only drops the isolator (switch it back on in the garage)
+    if (blowFuse && !this.interact?.items?.some((i) => i.def.item === 'fuse')) blowFuse = false;
     this.tripping = { t: -delay, blowFuse, sounded: false };
     return true;
   }

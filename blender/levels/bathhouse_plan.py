@@ -71,7 +71,7 @@ SKY_FIRE = (39.1, 33.95, 44.4, 34.35)      # a slot along the red room's north w
 # the passage workstream's landing (x 38.5..41.5, y 31.5..34.5, z -4.2) as a stand-in room, so
 # the stair can be walked and tested before their tunnel is merged. The orchestrator drops it
 # (STUB_LANDING = False) when their landing room exists.
-STUB_LANDING = True
+STUB_LANDING = False      # (the passage is merged: its room tunnel_n ends at this landing)
 LANDING = (38.5, 31.5, 41.5, 34.5)
 
 ROOMS = {
@@ -79,7 +79,11 @@ ROOMS = {
                        floor_holes=[(POOL[0] - T, POOL[1] - T, POOL[2] + T, POOL[3] + T)], ceiling_holes=[SKY_HALL]),
     "ph_fire":  dict(rect=FIRE, level=0, height=H_FIRE, building=B, module=B, facade="stone",
                        floor_holes=[(HOT[0] - T, HOT[1] - T, HOT[2] + T, HOT[3] + T)], ceiling_holes=[SKY_FIRE]),
-    "ph_stair": dict(rect=STAIR, level=-1, z0=DEEP, height=H_HALL - DEEP, building=B, module=B, facade="stone",
+    # (level 0 with its own z: it climbs from the tunnel's floor up through the ground to the roof,
+    # so the grounds clad its exterior and it gets a roof; nav False, power "own", reverb: the
+    # passage's below-ground flags, plan.py UNDERGROUND)
+    "ph_stair": dict(rect=STAIR, level=0, z=(DEEP, H_HALL), building=B, module=B, facade="stone",
+                     nav=False, power="own", reverb=0.22,
                        ceiling_holes=[SKY_STAIR]),
     "ph_steam": dict(rect=STEAM, level=0, height=H_STEAM, building=B, module=B, facade="stone"),
     "ph_cold":  dict(rect=COLD, level=0, height=H_COLD, building=B, module=B, facade="stone",
@@ -114,8 +118,8 @@ CUTS = [
     dict(kind="window", facade=True, axis="x", line=48.5, span=(28.5, 43.5), z=(0.45, 2.85)),           # the rest room's long window
     # ---- the secret: the plunge's south wall is the stair's head; a stone slab sinks out of it
     dict(kind="opening", axis="x", line=40.5, span=SLAB_DOOR, z=(LANDING_Z, SLAB_TOP)),
-    # the tunnel landing (the passage workstream's) opens into the stair's foot
-    dict(kind="opening", axis="x", line=34.5, span=(38.65, 41.35), z=(DEEP, DEEP + 2.9)),
+    # (the opening from the tunnel's landing into the stair's foot is the passage's: plan.py
+    # UNDERGROUND's last cut, line y 34.5, x 38.65..41.35, z -4.2..-1.4)
 ]
 
 # where the lawn's 1 m ground collider (ground_colliders.base) and the lawn mesh are cut away

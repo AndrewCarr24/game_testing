@@ -56,6 +56,9 @@ export function feedCameras(level) {
     const y = r.floor + Math.min(r.height - 0.4, 3.6);
     out.push(make(label, [x, y, z], [(x0 + x1) / 2, r.floor + 0.8, (z0 + z1) / 2]));
   }
+  // [invaders-opening] the doorbell's camera, in the front door's surround, looking out over the
+  // step (who's ringing: viewer/invaders_opening.js)
+  if (level.rooms?.entry) out.splice(1, 0, make('Front door', [1.62, 1.4, 20.2], [0.3, 1.15, 26], 100));
   return out;
 }
 

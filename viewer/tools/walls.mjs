@@ -7,6 +7,7 @@ const p = await b.newPage({ viewport: { width: 800, height: 500 } });
 p.on('pageerror', (e) => console.log('pageerror:', e.message));
 await p.goto((process.env.GT_BASE || 'http://localhost:8765') + '/viewer/index.html?level=mansion');
 await p.waitForFunction(() => window.__loaded, null, { timeout: 180000 });
+// ROOMS=a,b,c: only these rooms (and no grounds), e.g. ROOMS=secret_stair,armory,tunnel_e,pump_room,tunnel_n
 const only = process.env.ROOMS ? process.env.ROOMS.split(',') : null;
 const result = await p.evaluate(async (only) => {
   const THREE = await import('three');
@@ -25,15 +26,20 @@ const result = await p.evaluate(async (only) => {
     return null;
   };
   const starts = {};
+  // (below ground) a shaft stands inside another room's rect (the secret stair in the den): a start
+  // for that room must not be in the shaft
+  const shafts = Object.entries(window.__level.rooms).filter(([, q]) => q.kind === 'shaft');
+  const inShaft = (name, p) => p && shafts.some(([n, q]) => n !== name && p[0] > q.rect[0] - 0.4 && p[0] < q.rect[2] + 0.4 && p[1] > q.rect[1] - 0.4 && p[1] < q.rect[3] + 0.4);
   for (const [name, r] of Object.entries(window.__level.rooms)) {
+    if (only && !only.some((o) => name === o || name.startsWith(o))) continue;   // (names or prefixes: ROOMS=ph_,tunnel)
     const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
-    starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2]]
-      .map(([x, z]) => clearNear(x, z, r.floor)).filter(Boolean);
+    starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2], [x1 - 1.2, z0 + 1.2]]
+      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p)).slice(0, 3);
   }
   // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
   // on the lawn); outside the house the floor is the lawn, not 0
   const G = window.__level.grounds;
-  if (G) {
+  if (G && !only) {
     for (const [name, [x0, z0, x1, z1]] of Object.entries(G.zones)) {
       if (name === 'planting') continue;
       const [bx0, bz0, bx1, bz1] = G.bounds;          // (a zone may reach past the hedge: the drive)
@@ -44,17 +50,16 @@ const result = await p.evaluate(async (only) => {
     starts.terrace = [[0, 22.5], [0, -22.5], [-28.5, 0], [28.5, 0]].map(([x, z]) => clearNear(x, z, G.terrace)).filter(Boolean);
   }
   const [hx0, hz0, hx1, hz1] = G ? G.house : [-1e9, -1e9, 1e9, 1e9];
-  // (the lowest floor there: the house's 0 or the lawn, a room below them (the bathhouse's secret
-  // stair, the tunnel), or a sunken floor people may walk on (level.sunken: the drained plunge))
+  // (below ground: a run that starts under the house keeps its own floor, -4.2)
+  const floorAt = (x, z, sy = 0) => (sy < -1 ? sy : x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
+  // (the bathhouse: a sunken floor people may walk on, level.sunken: the drained plunge)
+  const floorAt0 = floorAt;
   const inR = (r, x, z, m = 0) => x >= r[0] - m && x <= r[2] + m && z >= r[1] - m && z <= r[3] + m;
-  const floorAt = (x, z) => {
-    let f = x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn;
-    for (const r of Object.values(window.__level.rooms)) if (inR(r.rect, x, z)) f = Math.min(f, r.floor);
+  const floorAtB = (x, z, sy = 0) => {
+    let f = floorAt0(x, z, sy);
     for (const s of window.__level.sunken || []) if (inR(s.rect, x, z, 0.3)) f = Math.min(f, s.floor);
     return f;
   };
-  // (ROOMS=ph_,tunnel: only the rooms whose names start with one of these, no grounds)
-  if (only) for (const k of Object.keys(starts)) if (!only.some((o) => k.startsWith(o))) delete starts[k];
   const bad = [];
   let runs = 0;
   for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
@@ -74,7 +79,7 @@ const result = await p.evaluate(async (only) => {
         // than a jump above where we took off, on the roof, under the ground floor, or
         // left inside a box
         const why = y - prevY > 0.65 ? 'teleported up' : y > takeoff + 1.2 ? 'above jump' : y > 8.4 ? 'on the roof'
-                  : y < floorAt(pl.pos.x, pl.pos.z) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
+                  : y < floorAtB(pl.pos.x, pl.pos.z, sy) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
         prevY = y;
         if (why) { worst = { why, f, y: +y.toFixed(2), takeoff: +takeoff.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
       }

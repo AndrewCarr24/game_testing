@@ -6,10 +6,14 @@
 // F) lights the dark and its beam on the Grimble sends a `light` cue (not through a wall); the
 // spare fuse is in the garage's steel locker (a key chain away); fuse in + isolator on = power
 // back, rooms lit; a timed trip later (fuse intact) is undone at the isolator alone.
+// ITEMS OFF (the default build: blender/levels/caches.py ITEMS, no flashlight, no spare fuse;
+// a GT_ITEMS=1 build runs all of the above): the break-in trip (?breaktrip=1) only drops the
+// isolator, the fuse survives (house.js never blows a fuse that has no spare), the isolator alone
+// brings the power back; no flashlight hint; the timed trips as before.
 // Screenshots: <out>/power_*.png. Usage: node viewer/tools/power.mjs [out-dir=build/power] [real]
 import { chromium } from 'playwright-core';
 import fs from 'fs';
-import { prop, props, fromProp, url, room } from './level.mjs';
+import { level, prop, props, fromProp, url, room } from './level.mjs';
 const [out = 'build/power', mode = ''] = process.argv.slice(2);
 fs.mkdirSync(out, { recursive: true });
 fs.mkdirSync('build/locks', { recursive: true });
@@ -26,6 +30,8 @@ const lookIso = fromProp(breaker, [0, 0, 0.275]);              // the isolator (
 const lookSlot = fromProp(breaker, [0, 0, -0.25]);             // the fuse carrier (bottom)
 const garage = room('garage');
 const flash = props('ix_flashlight')[0];
+const ITEMS_ON = !!flash || props('ix_fuse').length > 0 || level.props.some((q) => q.lock);
+console.log(`items ${ITEMS_ON ? 'ON (GT_ITEMS=1 build)' : 'OFF: no flashlight, no spare fuse'}`);
 
 const b = await chromium.launch({ channel: 'chrome', args: ['--use-angle=metal'] });
 const p = await b.newPage({ viewport: { width: 1100, height: 700 } });
@@ -101,7 +107,8 @@ s = await S();
 check('mid-flicker: still powered, lights flickering', s.power === true && (await p.evaluate(() => window.__house.state().tripping)), JSON.stringify(s));
 await p.waitForTimeout(1600);
 s = await S();
-check('after the flicker: power out, main fuse blown', s.power === false && s.fuse === false, JSON.stringify(s));
+if (ITEMS_ON) check('after the flicker: power out, main fuse blown', s.power === false && s.fuse === false, JSON.stringify(s));
+else check('after the flicker: power out, the main fuse survives (no spare in the house)', s.power === false && s.fuse === true, JSON.stringify(s));
 check('toast "Power out"', (await toast()).includes('Power out'), `toast="${await toast()}"`);
 check('the windowless garage is black; the courtyard keeps its daylight', s.garage < 0.05 && s.courtyard === 1 && s.kitchen > 0.2 && s.kitchen < 0.6, JSON.stringify(s));
 await p.waitForTimeout(300);
@@ -111,11 +118,17 @@ check('the garage view is much darker', dark < lit * 0.35, `lit=${lit} dark=${da
 
 // ---------------------------------------------------------------- what needs power, without it
 await teleport(eyeBreaker, lookIso);
-check('the isolator (dropped to off) asks for the fuse', (await hint()).includes('No main fuse'), `hint="${await hint()}"`);
-await press('KeyE');
-check('E: "No main fuse", power stays off', (await toast()).includes('No main fuse') && (await S()).power === false, `toast="${await toast()}"`);
-await teleport(eyeBreaker, lookSlot);
-check('the empty carrier asks for a fuse', (await hint()).includes('needs a fuse'), `hint="${await hint()}"`);
+if (ITEMS_ON) {
+  check('the isolator (dropped to off) asks for the fuse', (await hint()).includes('No main fuse'), `hint="${await hint()}"`);
+  await press('KeyE');
+  check('E: "No main fuse", power stays off', (await toast()).includes('No main fuse') && (await S()).power === false, `toast="${await toast()}"`);
+  await teleport(eyeBreaker, lookSlot);
+  check('the empty carrier asks for a fuse', (await hint()).includes('needs a fuse'), `hint="${await hint()}"`);
+} else {
+  check('the isolator (dropped to off) offers "Switch the power on"', (await hint()).includes('Switch the power on'), `hint="${await hint()}"`);
+  await teleport(eyeBreaker, lookSlot);
+  check('the carrier still reads "Main fuse in place"', (await hint()).includes('Main fuse in place'), `hint="${await hint()}"`);
+}
 // motors: the office blinds (lowered from the tablet / a switch elsewhere) don't move without power
 const motor = await p.evaluate(async () => {
   const it = window.__interact, blinds = it.reactors.filter((r) => r.signal === 'blinds_office');
@@ -131,6 +144,27 @@ await press('KeyE');
 check('E on it: "No power"', (await toast()).includes('No power'), `toast="${await toast()}"`);
 await press('KeyE');
 
+// ---------------------------------------------------------------- items off: no flashlight; the isolator alone
+if (!ITEMS_ON) {
+  await teleport(view, viewLook); await p.waitForTimeout(200);
+  check('no "F flashlight" hint, no battery meter', !(await hint()).includes('flashlight') &&
+    !(await p.evaluate(() => document.getElementById('battery').classList.contains('show'))), `hint="${await hint()}"`);
+  await teleport(eyeBreaker, lookIso);
+  await press('KeyE', 900);
+  s = await S();
+  check('E at the isolator: power back on, the garage lit again', s.power === true && s.garage > 0.99, JSON.stringify(s));
+  check('toast "Power on"', (await toast()).includes('Power on'), `toast="${await toast()}"`);
+  const back = await p.evaluate(async () => {
+    await new Promise((ok) => setTimeout(ok, 2500));
+    const t = Math.min(...window.__interact.reactors.filter((r) => r.signal === 'blinds_office').map((r) => r.t));
+    window.__signals.set('blinds_office', false);
+    return t;
+  });
+  check('the blinds called for in the dark come down once there is power', back === 1, `t=${back}`);
+  await teleport(view, viewLook); await p.waitForTimeout(400);
+  await shot('6_garage_restored');
+}
+if (ITEMS_ON) {
 // ---------------------------------------------------------------- the flashlight in the dark
 if (flash) await teleport(fromProp(flash, [0, -0.6, 0.73]), fromProp(flash, [0, 0, 0]));   // (none: it's attached inside the locker)
 await p.waitForTimeout(200);
@@ -208,6 +242,7 @@ check('the blinds called for in the dark come down once there is power', back ==
 await press('KeyF', 200);   // flashlight off
 await teleport(view, viewLook); await p.waitForTimeout(400);
 await shot('6_garage_restored');
+}   // (ITEMS_ON)
 
 // ---------------------------------------------------------------- a timed trip: the isolator alone
 if (!real) {
@@ -225,11 +260,13 @@ if (!real) {
 }
 
 // ---------------------------------------------------------------- the battery behind the keycard door
+if (ITEMS_ON) {
 const bat = await p.evaluate(() => {
   const it = window.__interact.items.find((i) => i.def.item === 'battery' && i.host && /Nightstand_Drawer$/.test(i.host.node.name) && !/Guest/.test(i.host.node.name));
   return it ? it.host.node.name : null;
 });
 check('a spare battery rides in the primary bedroom nightstand drawer', !!bat, `host=${bat}`);
+}
 
 await b.close();
 console.log(fails ? `${fails} failed` : 'all passed');

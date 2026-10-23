@@ -149,7 +149,7 @@ def build(**overrides):
     root = common.empty(n, col)
     root["interact"] = ix_common.pickup(
         p["item"], p["label"], weapon=p["item"],
-        purpose="A weapon. Arm it: click or Enter to stab, right-click to slash. From behind, unseen: a silent takedown.")
+        purpose="A weapon. Armed, Enter slashes. From behind, unseen, the same slash is a silent takedown.")
 
     # the kitchen's own materials (the island's sink steel, its black carcass): resting on the
     # board the knife joins the room's existing batches, no extra draw calls

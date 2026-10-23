@@ -21,6 +21,7 @@ import { waterField, prepareWater, waterWetTexture } from './water.js';   // [wa
 import { buildRoad } from './road.js';   // (estate_link) the county road: gate -> river -> town
 import { loadEstate, wildGate } from './estate.js';   // (estate_link) the real estate + the gate back to the house
 import { HOMES as GRIMBLE_HOMES, loadWildGrimble } from './grimble_wild.js';   // (grimble) the friendly giant of Poplar Cove
+import { WildCar } from './vehicle_wild.js';   // (vehicle) the estate's car, driven out through the gate / across the seam
 
 // Wilderness runtime spike (viewer/wild_proto.html). URL options:
 //   view=open|forest|ridge|spawn   start view (default spawn); pos=x,y,z&look=x,y,z overrides
@@ -383,6 +384,7 @@ async function main() {
   const held = new Set();
   addEventListener('keydown', (e) => {
     held.add(e.code);
+    if (window.__car?.key?.(e.code)) return;   // (vehicle) E in / out, V view; the rest while driving
     if (e.code === 'KeyF') { fly = !fly; if (!fly) { player.pos.set(camera.position.x, Math.max(camera.position.y - 1.65, world.heightAt(camera.position.x, camera.position.z)), camera.position.z); player.vel.set(0, 0, 0); } }
     if (e.code === 'KeyH') overlay.style.display = overlay.style.display === 'none' ? '' : 'none';
     const views = world.meta?.keys || (level ? { Digit1: 'gate', Digit2: 'meadow_edge', Digit3: 'poplar_cove', Digit4: 'falls', Digit5: 'footlog',
@@ -402,14 +404,15 @@ async function main() {
   const frozen = params.has('t') ? num('t', 0) : null;
 
   const update = (dt) => {
-    if (fly) {
+    const driving = window.__car?.update?.(Math.min(dt, 0.05), input());   // (vehicle) true: the car has the player
+    if (fly && !driving) {
       const i = input(), sp = (i.run ? 80 : 20) * dt;
       const f = new THREE.Vector3(); camera.getWorldDirection(f);
       const r = new THREE.Vector3().crossVectors(f, camera.up).normalize();
       camera.position.addScaledVector(f, ((i.forward ? 1 : 0) - (i.back ? 1 : 0)) * sp).addScaledVector(r, ((i.right ? 1 : 0) - (i.left ? 1 : 0)) * sp);
       camera.position.y += ((i.jump ? 1 : 0) - (i.crouch ? 1 : 0)) * sp;
       camera.position.y = Math.max(camera.position.y, world.heightAt(camera.position.x, camera.position.z) + 0.3);
-    } else if (controls.isLocked || held.size) {
+    } else if (!driving && (controls.isLocked || held.size)) {
       player.update(Math.min(dt, 0.05), input());
       swimFx?.update(Math.min(dt, 0.05));                    // [river]
     }
@@ -541,6 +544,9 @@ async function main() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
   // (estate_link) walking in through the estate's gate goes back to the house (viewer/wild/estate.js)
   const gate = level ? wildGate({ world, camera, player, wild: window.__wild, params }) : null;
+  // (vehicle) the estate's car (viewer/wild/vehicle_wild.js): from the house through the gate, across the seam, or ?car=
+  if (level && params.get('car') !== '0') new WildCar({ world, worldName, scene, camera, player, colliders, uniforms, tex, sky, params, exits,
+    embedded: params.get('embed') === '1' && window.parent !== window });
   // (grimble) loaded after the first frame (it isn't near the gate; ~2.9 MB): its shaders compile
   // off the render loop before it joins the scene. window.__grimble once it's in
   let grimble = null;

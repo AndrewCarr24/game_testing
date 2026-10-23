@@ -9,6 +9,7 @@ from lib import common, materials, textures
 importlib.reload(materials)
 
 D = 0.18          # half a bookcase's depth: the origin sits this far off the wall
+TY = 1.6          # (secret passage) the reading-table group's y: north of the folding floor (caches.py: the safe key on it)
 
 
 def _floor():
@@ -48,12 +49,14 @@ PLACEMENTS = (
 
     # the reading table on the big rug (its long axis along x), six chairs and two lamps
     + [
-        ("library_rug", (1.4, 0.0), 0),
-        ("library_table", (1.4, 0.0), 0),
-        ("library_chair", (0.45, 0.85), 0), ("library_chair", (1.4, 0.85), 0), ("library_chair", (2.35, 0.85), 0),
-        ("library_chair", (0.45, -0.85), 180), ("library_chair", (1.4, -0.85), 180), ("library_chair", (2.35, -0.85), 180),
-        ("library_lamp", (0.5, 0.12, 0.764), 0),
-        ("library_lamp", (2.3, -0.12, 0.764), 180),
+        # (secret passage: the table group sits TY north of the room's middle, clear of the folding
+        # floor in front of the south bookcases: local x 1.4..2.35, y -4.24..-0.19)
+        ("library_rug", (1.4, TY), 0),
+        ("library_table", (1.4, TY), 0),
+        ("library_chair", (0.45, TY + 0.85), 0), ("library_chair", (1.4, TY + 0.85), 0), ("library_chair", (2.35, TY + 0.85), 0),
+        ("library_chair", (0.45, TY - 0.85), 180), ("library_chair", (1.4, TY - 0.85), 180), ("library_chair", (2.35, TY - 0.85), 180),
+        ("library_lamp", (0.5, TY + 0.12, 0.764), 0),
+        ("library_lamp", (2.3, TY - 0.12, 0.764), 180),
     ]
     # reading nook by the west glass: two armchairs round a side table and a lamp
     + [
@@ -74,7 +77,10 @@ PLACEMENTS = (
         ("library_sidetable", (6.6, -1.9), 0),
         ("library_floorlamp", (7.8, -3.5), 0),
         # the ladder hangs from the south wall's rail
-        ("library_ladder", (-3.7, -4.165), 180),
+        # (secret passage) the ladder is the latch: E rolls it 4.55 m east to the end of its run
+        # (x 0.85), and the floor beside it folds down into the stair (design/house/secret_passage.md)
+        ("library_ladder_secret", (-3.7, -4.165), 180),
+        ("library_floor_inlay", (1.875, -2.215), 0),     # the brass band round the folding floor
     ]
 )
 
@@ -94,7 +100,7 @@ PLACEMENTS += (
     [("light_u_downlight", (x, -4.6 + _BOOK, CEIL), 0) for x in _bays[0]]
     + [("light_u_downlight", (8.85 - _BOOK, y, CEIL), 0) for y in _bays[1]]
     + [("light_u_downlight", (x, 4.6 - _BOOK, CEIL), 0) for x in _bays[2]]
-    + [("light_u_linear_pendant", (1.4, 0.0, CEIL - 2.15), 0)]          # bottom at 1.65 m over the table
+    + [("light_u_linear_pendant", (1.4, TY, CEIL - 2.15), 0)]          # bottom at 1.65 m over the table
 )
 
 _GRAZE = dict(kind="spot", power=240.0, angle=55.0, blend=0.75, color=(1.0, 0.80, 0.58))
@@ -104,13 +110,13 @@ LIGHTS = (
     + [dict(_GRAZE, pos=(x, 4.6 - _BOOK, CEIL - 0.03), aim=(x, 4.24, 1.5)) for x in _bays[2]]
     + [
         # linear pendant: down onto the table and rug, up onto the ceiling
-        dict(kind="area", pos=(1.4, 0.0, 1.635), size=(2.3, 0.08), aim=(1.4, 0.0, 0.0), power=300.0,
+        dict(kind="area", pos=(1.4, TY, 1.635), size=(2.3, 0.08), aim=(1.4, TY, 0.0), power=300.0,
              color=(1.0, 0.82, 0.60)),
-        dict(kind="area", pos=(1.4, 0.0, 1.72), size=(2.3, 0.04), aim=(1.4, 0.0, CEIL), power=380.0,
+        dict(kind="area", pos=(1.4, TY, 1.72), size=(2.3, 0.04), aim=(1.4, TY, CEIL), power=380.0,
              color=(1.0, 0.84, 0.64)),
         # banker's lamps on the table
-        dict(kind="point", pos=(0.5, 0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
-        dict(kind="point", pos=(2.3, -0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
+        dict(kind="point", pos=(0.5, TY + 0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
+        dict(kind="point", pos=(2.3, TY - 0.12, 1.08), power=55.0, color=(1.0, 0.8, 0.5)),
         # reading nook: table lamp and floor lamp
         dict(kind="point", pos=(-7.55, 0.0, 0.88), power=65.0, color=(1.0, 0.72, 0.45)),
         dict(kind="point", pos=(-5.5, 2.3, 1.42), power=85.0, color=(1.0, 0.75, 0.48)),
@@ -141,7 +147,7 @@ _SOFA = (-3.6, 3.85, 180)          # library_sofa_navy: arms at local x = +-1.05
 _COGNAC = (5.2, -1.6, -135)        # library_armchair_cognac: arms at local x = +-0.355
 _NOOK = (-6.5, 1.45, -65)          # library_armchair (navy)
 PLACEMENTS = list(PLACEMENTS) + [
-    ("decor_c_vignette_table", (1.4, 0.0, 0.76), 0),
+    ("decor_c_vignette_table", (1.4, TY, 0.76), 0),
     ("decor_c_cup_book", (6.6, -1.9, 0.56), -100),
     ("decor_c_throw_chair", *_rel(_COGNAC, (0.355, 0.02), 0.22)),
     ("decor_c_throw", *_rel(_SOFA, (1.05, 0.0), 0.22)),
@@ -160,7 +166,7 @@ import ix_common  # noqa: E402
 _il.reload(ix_common)
 PLACEMENTS = list(PLACEMENTS) + [
     ('ix_switch', (5.53, 4.6, 1.1), 0, {'signal': 'lights_library', 'state': True}),
-    ('ix_book', (1.6, 0.3, 0.76), 10),           # between the folios and the notebook
-    ('ix_book_b', (0.75, -0.05, 0.76), -15),     # between the west lamp and the mug
+    ('ix_book', (1.6, TY + 0.3, 0.76), 10),           # between the folios and the notebook
+    ('ix_book_b', (0.75, TY - 0.05, 0.76), -15),     # between the west lamp and the mug
 ]
 PLACEMENTS = ix_common.wire(PLACEMENTS, "library")

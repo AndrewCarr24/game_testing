@@ -207,7 +207,12 @@ KIT = {
     # (flattened pad) and nothing drawn until its building exists
     "site_bar": (30, 18, 6, True, "site"), "site_gas_station": (36, 28, 6, True, "site"), "site_diner": (24, 16, 6, True, "site"),
 }
+# [gas] the gas station's lot (blender/assets/town2_gas.py, design/town/gas.md): canopy + forecourt,
+# the store behind it, the side lot and the back lot: 44 x 40 m, its front on the road's edge
+KIT["site_gas_station"] = (44, 40, 6, True, "site")
 
+# [diner] the diner's lot: head-in parking in front of the car, the yard behind (design/town/diner.md)
+KIT["site_diner"] = (30, 30, 6.2, True, "site")
 
 PROJECT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
@@ -247,13 +252,19 @@ def F(id_, kind, x, front_y, yaw=0.0, role=None, setback=0.0, **kw):
     return b
 
 
+# [bar] the roadhouse's site (blender/assets/town2_bar.py, design/town/bar.md): the building, its
+# porch and the gravel lot west to the highway (73 x 25 m pad; the river deck overhangs the bank
+# to the south); the footprint centre, the asset origin (the building's centre) at (-2112, -804.5)
+KIT["site_bar"] = (73, 25, 6, True, "site")
+
+
 # the town's buildings (2026-10-22): the kit town is removed (layout_buildings_v1 keeps it); only the
 # three sites the building agents fill: the bar, the gas station and the diner
 def layout_buildings():
     return [
-        B("bar", "site_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn", site=True),
-        F("gas", "site_gas_station", -1880, -721, 0, "gas station + convenience store", site=True),
-        F("diner", "site_diner", -1935, -719, 0, "the diner", site=True),
+        B("bar", "site_bar", -2122.5, -800.0, 180, "THE BAR (the roadhouse): the turn", site=True),     # [bar] the lot's centre
+        F("gas", "site_gas_station", -1880, -720.6, 0, "gas station + convenience store", site=True),   # [gas] front on the road's edge
+        F("diner", "site_diner", -1935, -721.5, 0, "the diner", site=True),   # [diner] the lot meets the highway's edge
     ]
 
 
@@ -360,7 +371,7 @@ HIDES = [
     dict(name="under_depot_platform", x=-1735, y=-743, kind="crawl", note="1.15 m under the freight platform"),
     dict(name="under_bridge_south", x=-1592, y=-826, kind="bank", note="the river bank under the truss's south span"),
     dict(name="under_bridge_north", x=-1578, y=-776, kind="bank", note="under the north span, by the pier"),
-    dict(name="bar_deck_underside", x=-2112, y=-819, kind="crawl", note="under the bar's river deck, on the gravel"),
+    dict(name="bar_deck_underside", x=-2122, y=-813.5, kind="crawl", note="under the bar's river deck, on the bank"),   # [bar] under town2_bar's deck
     dict(name="motel_ice_alcove", x=-2060, y=-715, kind="alcove", note="the ice-machine alcove"),
     dict(name="church_tower", x=-1707, y=-716, kind="climb", note="the steeple's bell deck (sees the whole town)"),
     dict(name="raft_racks", x=-1748, y=-780, kind="cover", note="the outfitter's raft racks on the river walk"),
@@ -388,7 +399,7 @@ VEHICLES = [   # (kind, x, y, yaw deg): townspeople's cars, the cruiser, the her
     ("cruiser", -1598, -735, 90), ("suv", -1640, -717, 0), ("car", -1660, -717, 0), ("pickup", -1690, -717, 0),
     ("suv", -1720, -717, 0), ("car", -1760, -717, 0), ("car", -1668, -733, 180), ("suv", -1700, -733, 180),
     ("pickup", -1868, -713, 0), ("car", -1915, -703, 0), ("suv", -2004, -712, 0), ("car", -2020, -712, 0),
-    ("pickup", -2112, -790, 0), ("train", -1745, -752, 0),
+    ("train", -1745, -752, 0),          # [bar] (the pickup at the bar: the roadhouse's lot has its own trucks)
 ]
 PEOPLE_V1 = [   # the townspeople's posts (stand-ins): role, where, facing (estate deg, 0 = north)
     dict(role="sheriff", x=-1612, y=-733, face=180, note="on the bench outside his office, watching the bridge"),
@@ -419,12 +430,18 @@ def views():
         river_walk=dict(pos=(-1610, -779), look=(-1800, -786, -183.0)),
         strip=dict(pos=(-1850, -727), look=(-2050, -720, -180.0)),
         motel_lot=dict(pos=(-2040, -672), look=(-2070, -684, -184.0)),
-        bar_lot=dict(pos=(-2090, -779, 1.1), look=(-2112, -797, -181.0)),
-        # inside the roadhouse: from just inside the door, long down the bar; and at the pool table
-        bar_porch=dict(pos=(-2117.0, -798.8, 1.6), look=(-2100.0, -806.0, -183.6)),
-        bar_room=dict(pos=(-2100.5, -799.5, 2.4), look=(-2114.0, -812.0, -184.3)),
+        # [bar] the roadhouse (town2_bar): the lot low at knee height; along the porch; inside the door, long down the bar
+        bar_lot=dict(pos=(-2090.0, -788.5, 0.5), look=(-2114.0, -797.5, -183.9)),
+        bar_porch=dict(pos=(-2100.6, -795.2, 2.05), look=(-2120.0, -796.5, -184.1)),
+        bar_room=dict(pos=(-2103.4, -798.7, 2.05), look=(-2115.5, -809.1, -184.6)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
+        # [gas] the gas station (town2_gas): under the canopy toward the store; inside, down the aisle to the coolers
+        gas_lot=dict(pos=(-1887.0, -710.1), look=(-1886.0, -697.6, -182.3)),
+        gas_store=dict(pos=(-1886.5, -695.6, 2.0), look=(-1888.0, -684.6, -182.8)),
+        # [diner] the diner (design/town/diner.md): low in its lot, and inside from the east end
+        diner_lot=dict(pos=(-1941.0, -718.0, 1.0), look=(-1935.0, -705.5, -181.7)),
+        diner_room=dict(pos=(-1927.2, -705.0, 2.16), look=(-1941.0, -702.3, -182.9)),
     )
 
 

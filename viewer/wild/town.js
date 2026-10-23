@@ -304,19 +304,65 @@ export class Town {
     const gl = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const tl = new THREE.TextureLoader();
     this.sites = [];
+    // [town2] one texture per file: several materials of a building share its lightmap (each
+    // tl.load is its own GPU upload otherwise)
+    const texCache = new Map();
+    const loadTex = (path, setup) => { if (!texCache.has(path)) { const t = tl.load(`../assets/models/${path}`); setup(t); texCache.set(path, t); } return texCache.get(path); };
+    const q = params0();               // [town2] ?sites=0: no rebuilt buildings; ?senv=0|1: reflections off / forced
+    // (reflections cost a software renderer ~3x the bar room's frame: off there by default)
+    const gl2 = window.__three?.renderer?.getContext?.(), dbg = gl2?.getExtension('WEBGL_debug_renderer_info');
+    const softGPU = /swiftshader|llvmpipe|software/i.test(dbg ? gl2.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '');
+    const useEnv = q.has('senv') ? q.get('senv') !== '0' : !softGPU;
     for (const b of T.buildings) {
-      if (!b.site || !b.model) continue;
+      if (!b.site || !b.model || q.get('sites') === '0') continue;
       try {
         const g = await gl.loadAsync(`../assets/models/${b.model}.gltf`);
         const root = g.scene;
+        // [town2 sites: shared textures, reflections, LOD] (prompts/town_building.md; added by the
+        // gas station workstream, generic for every site): a lightmap or panorama path is loaded
+        // once (one GPU copy, however many materials name it); a material's extras `envMap` (an
+        // equirect panorama, path relative to assets/models/) + `envMapIntensity` give it
+        // reflections only (its diffuse light is the lightmap: the panorama's irradiance is
+        // zeroed); nodes named `<Root>_LOD1` / `<Root>_LOD0` swap at the LOD1 node's extras
+        // `lodDistance` (m, default 140; update() below).
+        const texs = this._siteTex || (this._siteTex = new Map());
+        const tex = (p, f) => { if (!texs.has(p)) { const t = tl.load(`../assets/models/${p}`); f(t); texs.set(p, t); } return texs.get(p); };
+        const lod = { near: [], far: [], dist: 140 };
+        const boxes = [];
         root.traverse((o) => {
+          if (/_LOD1$/.test(o.name)) { lod.far.push(o); if (o.userData?.lodDistance) lod.dist = o.userData.lodDistance; } else if (/_LOD0$/.test(o.name)) lod.near.push(o);
           if (!o.isMesh) return;
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
             const lm = m.userData?.lightmap;
             if (lm && !m.lightMap) {
-              const tx = tl.load(`../assets/models/${lm}`);
-              tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace;
-              m.lightMap = tx; m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              // (no mip chain: a lightmap is smooth, and its mips were a quarter more GPU memory)
+              m.lightMap = tex(lm, (tx) => { tx.channel = 1; tx.flipY = false; tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; });
+              m.lightMapIntensity = m.userData.lightmapIntensity ?? 1;
+              m.needsUpdate = true;
+            }
+            const ep = m.userData?.envMap;
+            if (ep && !m.envMap && useEnv) {
+              m.envMap = tex(ep, (tx) => { tx.mapping = THREE.EquirectangularReflectionMapping; tx.colorSpace = THREE.SRGBColorSpace; });
+              m.envMapIntensity = m.userData.envMapIntensity ?? 1;
+              // extras `envBox` [x0, y0, z0, x1, y1, z1] + `envProbe` [x, y, z] (the asset's Blender
+              // frame): the panorama is box-projected (a floor reflects the coolers where they are);
+              // reflections fade where the lightmap is dark (under shelves), except on metals
+              const box = m.userData.envBox && m.userData.envProbe ? { min: new THREE.Vector3(), max: new THREE.Vector3(), probe: new THREE.Vector3(),
+                                                                       src: m.userData.envBox, p: m.userData.envProbe } : null;
+              if (box) boxes.push(box);
+              m.onBeforeCompile = (sh) => {
+                if (box) {
+                  Object.assign(sh.uniforms, { envBoxMin: { value: box.min }, envBoxMax: { value: box.max }, envProbe: { value: box.probe } });
+                  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vSiteWorld;')
+                    .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvSiteWorld = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;');
+                  sh.fragmentShader = sh.fragmentShader.replace('#include <envmap_physical_pars_fragment>', SITE_BOX_PARS + '\n' +
+                    THREE.ShaderChunk.envmap_physical_pars_fragment.replace('reflectVec = inverseTransformDirection( reflectVec, viewMatrix );',
+                      'reflectVec = siteBoxProject( inverseTransformDirection( reflectVec, viewMatrix ) );'));
+                }
+                sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_maps>', '#include <lights_fragment_maps>\n\tiblIrradiance = vec3( 0.0 );' +
+                  (m.lightMap ? '\n\tradiance *= mix( smoothstep( 0.06, 0.45, dot( lightMapTexel.rgb, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 1.0, step( 0.5, metalnessFactor ) );' : ''));
+              };
+              m.customProgramCacheKey = () => `town2-site-env${box ? '-box' : ''}${m.lightMap ? '-so' : ''}`;
               m.needsUpdate = true;
             }
           }
@@ -326,9 +372,21 @@ export class Town {
         root.rotation.y = b.yaw * Math.PI / 180;
         root.updateMatrix();
         const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
+        // the reflection boxes in world space (Blender (x, y, z) -> three (x, z, -y), then the placement)
+        root.updateMatrixWorld(true);
+        for (const bx of boxes) {
+          const M = inner.matrixWorld, [x0, y0, z0, x1, y1, z1] = bx.src, [px, py, pz] = bx.p;
+          const c = [new THREE.Vector3(x0, z0, -y0), new THREE.Vector3(x1, z1, -y1)].map((v) => v.applyMatrix4(M));
+          bx.min.set(Math.min(c[0].x, c[1].x), Math.min(c[0].y, c[1].y), Math.min(c[0].z, c[1].z));
+          bx.max.set(Math.max(c[0].x, c[1].x), Math.max(c[0].y, c[1].y), Math.max(c[0].z, c[1].z));
+          bx.probe.set(px, pz, -py).applyMatrix4(M);
+        }
+        // [/town2 sites]
         root.name = `Town_${b.id}`;
         this.group.add(root);
-        this.sites.push({ id: b.id, root });
+        // (a site with only a `<Root>_LOD1` node: everything beside it is the near version)
+        if (lod.far.length && !lod.near.length) for (const f of lod.far) for (const o of f.parent.children) if (!lod.far.includes(o)) lod.near.push(o);
+        this.sites.push({ id: b.id, root, lod });
       } catch (e) { console.warn('town site', b.id, e.message); }
     }
   }
@@ -438,6 +496,14 @@ export class Town {
 
   update(camera) {
     const c = camera.position;
+    // [town2 sites: LOD] (see loadSites)
+    for (const st of this.sites || []) {
+      if (!st.lod?.far.length) continue;
+      const near = Math.hypot(c.x - st.root.position.x, c.z - st.root.position.z) < st.lod.dist;
+      for (const o of st.lod.near) o.visible = near;
+      for (const o of st.lod.far) o.visible = !near;
+    }
+    // [/town2 sites]
     for (const z of this.zones) {
       const near = Math.hypot(c.x - z.c.x, c.z - z.c.z) < 260;
       for (const m of z.lods[0]) m.visible = near;
@@ -446,6 +512,16 @@ export class Town {
   }
 }
 
+// [town2 sites] box projection of a site's reflection panorama (as viewer/baked.js does for the house)
+const SITE_BOX_PARS = /* glsl */ `
+uniform vec3 envBoxMin, envBoxMax, envProbe;
+varying vec3 vSiteWorld;
+vec3 siteBoxProject( vec3 dir ) {
+  vec3 p = clamp( vSiteWorld, envBoxMin + 0.01, envBoxMax - 0.01 );
+  vec3 t = max( ( envBoxMax - p ) / dir, ( envBoxMin - p ) / dir );
+  float d = min( min( t.x, t.y ), t.z );
+  return normalize( p + dir * d - envProbe );
+}`;
 const EVIDENCE_KIT = { crates: 'town_crate_stack', crt: 'town_crt_wall', table: 'town_table_phones', model: 'town_estate_model' };
 const params0 = () => new URLSearchParams(location.search);
 
@@ -506,7 +582,7 @@ function kitGlowMaterial(uniforms, map) {
 // identical in both worlds). A world without exits (laurel_fork today) gets the seam's other side
 // from FALLBACK, so the cove's world needs no rebuild for it.
 const FALLBACK = {
-  laurel_fork: [{ name: 'town', to: 'laurel_town', rect: [-800, -1578, -762, -42], spawn_dx: -3 }],
+  laurel_fork: [{ name: 'town', to: 'laurel_town', rect: [-800, -1578, -762, -42], spawn_dx: -3, drive_y: [-800, -640] }],
 };
 
 export class Exits {
@@ -528,7 +604,10 @@ export class Exits {
     const inside = (e) => x >= e.rect[0] && x <= e.rect[2] && y >= e.rect[1] && y <= e.rect[3];
     // (armed only once the player has stood outside every exit: a spawn inside one does nothing)
     if (!this.armed) { this.armed = !this.list.some(inside); return null; }
-    const e = this.list.find(inside);
+    // (vehicle) a car only crosses where the road and river do (estate y -703 / ~-755): the hairpins at
+    // x -752 / -745 (y -417, -620) sit within a car's width of the seam line
+    const drivable = (e) => !window.__car?.driving || !e.drive_y || (y >= e.drive_y[0] && y <= e.drive_y[1]);
+    const e = this.list.find((e) => inside(e) && drivable(e));
     if (!e) return null;
     if (!e.to) { if (!e._logged) { console.log(`exit "${e.name}": a later level (${e.note || ''})`); e._logged = true; } return null; }
     const f = new THREE.Vector3(); camera.getWorldDirection(f);

@@ -30,7 +30,8 @@ export function buildWorld({ level, colliders, interact, signals }) {
   const rest = colliders.slice(nLevel).filter((c) => !own.has(c) && !c.isEmpty() && c.max.y > -50 && !leaves.some((l) => l.containsBox(c)));
   const floorOf = (c) => (c.min.y > UPPER_Y - 0.4 ? UPPER_Y : 0);
   const cover = rest.filter((c) => !c.seeThrough && c.kind !== 'ground' && c.max.y - floorOf(c) > 0.5);
-  const nav = new HouseNav({ boxes: [...shell, ...colliders.slice(0, nLevel).filter((c) => c.rail), ...rest], level, doors });
+  // (the ground layer reaches the drive's gate at z 62: the opening's five walk up from there)
+  const nav = new HouseNav({ boxes: [...shell, ...colliders.slice(0, nLevel).filter((c) => c.rail), ...rest], level, doors, ground: [-50, -45, 50, 61.5] });
   const world = {
     level, interact, signals, nav, doors,
     sight: new BoxGrid(sight),
@@ -40,7 +41,8 @@ export function buildWorld({ level, colliders, interact, signals }) {
     coverLow: new BoxGrid(cover.filter((c) => c.max.y - floorOf(c) <= 1.9)),
     // what bodies are pushed out of (walls and furniture between the knees and the head)
     body: new BoxGrid([...shell, ...colliders.slice(0, nLevel).filter((c) => c.rail), ...rest.filter((c) => c.kind !== 'ground')]),
-    rooms: Object.entries(level.rooms).map(([name, r]) => ({ name, rect: r.rect, floor: r.floor ?? 0, height: r.height ?? 4.2, sun: r.sun })),
+    // (secret passage) rooms with nav false (below ground) are never swept
+    rooms: Object.entries(level.rooms).filter(([, r]) => r.nav !== false).map(([name, r]) => ({ name, rect: r.rect, floor: r.floor ?? 0, height: r.height ?? 4.2, sun: r.sun })),
   };
   world.roomAt = (x, y, z) => world.rooms.find((r) => y >= r.floor - 0.6 && y < r.floor + r.height && x >= r.rect[0] && x <= r.rect[2] && z >= r.rect[1] && z <= r.rect[3]) ?? null;
   return world;
@@ -51,7 +53,9 @@ export function collectDoors(interact, signals, level) {
   const out = [];
   if (!interact) return out;
   // (a door prop's placement names it: asset@room; appliances with tall doors, the fridge, aren't doors)
-  const props = (level?.props ?? []).filter((p) => /(^|_)door/.test(p.asset) && !p.attach);
+  // (secret passage) not the doors of rooms off the nav (below ground: their leaves would stamp
+  // portal cells on the ground layer over them)
+  const props = (level?.props ?? []).filter((p) => /(^|_)door/.test(p.asset) && !p.attach && level?.rooms?.[p.room]?.nav !== false);
   const v = new THREE.Vector3();
   for (const it of interact.items) {
     if (it.def.type !== 'rotate' || !it.collider) continue;
@@ -73,6 +77,7 @@ export function collectDoors(interact, signals, level) {
     if (!r.collider || r.collider.isEmpty() || !r.signal) continue;
     const box = r.collider.clone();
     if (box.max.y - box.min.y < 2.0) continue;
+    if (box.max.y < -0.5) continue;      // (secret passage) below ground: off the nav
     out.push({
       kind: 'reactor', r, box, name: r.node.name,
       isOpen: () => r.t === 1 && r.target === 1,

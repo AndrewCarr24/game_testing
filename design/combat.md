@@ -50,32 +50,48 @@ A weapon is a pickup whose interact definition names it (`weapon: '<id>'`), so a
 weapon is data: a `WEAPONS` entry and a pickup asset with `_Grip`, `_Tip`, `_Edge` empties
 (the view model holds the model by them). Arming: picked up with nothing in hand it is armed at
 once; keys 1-4 arm the carried weapons in pickup order (again: put away); the inventory (I) also
-arms them. Attacks: click or Enter = primary, right click = secondary.
+arms them. **One attack per weapon, on Enter. No mouse buttons** (the user: "the knife should only
+have a slash move (Enter)"): clicks only lock the pointer.
 
-| weapon | primary | secondary | other |
-|---|---|---|---|
-| kitchen_knife | stab 55, 1.05 m, 26 deg cone, hit at 0.15 s, 0.52 s cooldown | slash 38, 1.2 m, 100 deg, up to 2 targets, 0.66 s | takedown 100 (instant) from behind an unaware target, 1.25 m |
-| bat (data) | swing 35, 1.7 m, 110 deg | jab 15 | |
-| frying_pan (data) | swing 30, 1.45 m | | louder (noise 1.1) |
-| fireplace_poker (data) | swing 40, 1.6 m | thrust 30 | |
+| weapon | attack (Enter) | other |
+|---|---|---|
+| kitchen_knife | slash 55 (two kill), 1.25 m, right to left across ~76 deg of the view, up to 2 targets, 0.66 s, 0.62 s cooldown | the same slash from behind an unaware target = takedown (instant kill) |
+| bat (data) | swing 35, 1.7 m, up to 2 | |
+| frying_pan (data) | swing 30, 1.45 m | louder (noise 1.1) |
+| fireplace_poker (data) | swing 40, 1.6 m | |
 
-Each attack is view-model keyframes (poses relative to the hold pose), a hit frame (`hitAt`),
-`duration` and `cooldown`. On a hit: hit stop (the view model holds 75 ms, 130 ms for a
-takedown), a small jolt of the view, the weapon's hit sound at the point, a noise of 0.6 (half
-for a takedown); a blade that meets a wall or counter in reach clinks (noise 0.3). Swings are
-silent to the AI. No blood: the hit reads from the sound, the hit stop and the target's own
-reaction (the dummy flashes and wobbles; invaders stagger).
+An attack is view-model keyframes (`keys`: arm pose `p`/`r` plus the wrist bones `w` = flex,
+deviation, twist; eases `in`/`out`), `duration`, `cooldown` and a `sweep`: where the blade travels
+in the view while it can cut (`from`/`to` = [yaw, pitch] off the view's centre between `t0` and
+`t1`). Each frame the step swept since the last one is a `combat.attack` cone (`exclude` = the
+targets this swing already hit, `quiet`: the swing raises one `attack` event when it ends), so a
+target on the right is cut early in the arc, one on the left late, a target 70 deg off isn't.
 
-The takedown: the crosshair turns gold and the prompt says "Takedown" when an unaware target
-(`aware` false) is in reach with the player behind it (more than ~110 deg off its facing); the
-primary attack becomes an overhand stab that kills whatever its health.
+The slash (0.66 s): anticipation (0-0.13 s: the arm draws back and up to the right, the wrist
+cocks back), the cut (0.13-0.27 s: accelerating right to left and a little down, the wrist snaps
+through; it can hit from 0.15 to 0.27 s), follow-through (the wrist rolls over past the left of
+the view), a beat, the recovery back to the guard. A faint streak trails the outer blade while it
+cuts (one ribbon, positions re-evaluated from the clip, as bright as the room); the view leans
+~1 deg with the swing (`attack.view`). On contact: hit stop (the arm holds 75 ms and shivers,
+130 ms for a takedown, half for a second target), a small jolt of the view, `knife_hit` at the
+point, a noise of 0.6 (half for a takedown). A wall or counter in the blade's path before any
+target (0.9 m, `reach`) stops the swing: `knife_wall`, a short hit stop, the arm springs back,
+noise 0.3. Swings are silent to the AI (`knife_swing` is for the player). No blood: the hit reads
+from the sound, the hit stop and the target's own reaction.
+
+The takedown is not a separate move: when an unaware target (`aware` false / `unaware` true) is
+in reach with the player behind it (more than ~110 deg off its facing), the crosshair turns gold
+and the prompt says "Takedown"; Enter plays the same slash, and when the blade's sweep reaches
+that target it dies outright whatever its health (`stealth: true` on the hit and kill events,
+`knife_takedown`). Seen (aware) or from the front it is an ordinary 55 slash.
 
 ## Guns (designed, not built)
 The armory comes later. The controller already reads a gun definition (commented `pistol`
 entry): `damage, range, rate, auto, pellets, spread {hip, ads, move}, recoil {pitch, yaw,
 recover}, ammo {item, mag}, reload, ads {pos, fov, time}, noise, sfx`. Implemented: `fire()`
 (magazine, `combat.shoot` with hip / aim spread, the gunshot noise, recoil kicking the view and
-recovering), `reload()` (rounds from the inventory's ammo item, R), right mouse held = `ads`.
+recovering), `reload()` (rounds from the inventory's ammo item, R); Enter fires. Aiming down
+sights needs a key of its own when the first gun lands (no mouse buttons).
 Still to build with the first gun: its asset and view-model pose, the aim-down-sights blend
 (position + FOV), muzzle flash / tracer / impact decals (from the `shot` event), auto fire.
 
@@ -92,23 +108,43 @@ facing) on a base, 100 health, solid to the player. Hit: flashes and wobbles awa
 dead: topples over along it. Stand-in until the invaders are in.
 
 ## The view model
-The hand is built in code (`buildHand`): four fingers wrapped round the handle (capsules on a
-loop round its axis), knuckles, palm, thenar and thumb closing over the fingers, a wrist and
-forearm bent toward the little finger, a dark sleeve; soft occlusion in the vertex colours.
-One mesh for the skin, one for the sleeve, plus the weapon's own (2 extra draw calls + the
-weapon's). It is lit by the room the eye is in (that room's baked SH, its panorama for
-reflections; no real-time sun in sunless rooms), so it matches the furniture. Its depth is
-squeezed into the nearest slice of the depth buffer, so it never pokes into walls. Idle sway,
-walk bob, look lag; raised into view when armed.
+The arm is an asset, `blender/assets/viewmodel_arm.py` -> `assets/models/viewmodel_arm.gltf`
+(+ `T_ViewmodelArm_BaseColor/ORM/Normal`, 1024, kept full size by optimize_textures): a bare right
+hand closed round the chef's knife's handle in a hammer grip (four fingers in three phalanges
+wrapping the handle, the thumb over the index and middle fingers, knuckles, nails, thenar and
+hypothenar pads, the flesh pressed flat on the handle), the wrist, the forearm and the pushed-up
+sleeve of a charcoal knit sweater with a ribbed cuff. Built as a signed distance field (the
+invader's SDF toolkit), meshed at 0.8 mm, decimated to 7.2k triangles; the normal map is baked
+from the field mesh (knuckle wrinkles, the cuff's ribs, pores and knit added in texture space),
+occlusion baked with the handle as an occluder and tinted red in the base colour (light through
+skin). Rig: Forearm -> Twist -> Hand (the slash bends and rolls the wrist; the twist is shared
+along the forearm). It is built in the grip frame, so the weapon's `_Grip` goes in its
+`ViewmodelArm_Socket` (on the Hand bone); the root's extras (`userData.viewmodel`) give the joint
+axes. Loaded once at startup (~250 kB); a weapon shows when it has (the old code-built hand is
+the fallback if it can't load). Placement: `hold` = the grip in camera space (`pos`), the forearm
+direction (`arm`), the back of the hand (`back`, then `roll` about the forearm), the guard's
+wrist bend; scale 1:1. The guard (second art pass): the fist low in the bottom-right, ~45 cm
+from the eye, the back of the hand turned away and rolled so the curled fingers, their creases
+and the PIP knuckles face the eye (the blade leans up-left from the thumb side, like a held
+tool); nearest visible vertex 0.29 m (the near plane is 0.1 m). Proportions: wrist ~6.1 cm wide
+x 4.1 cm deep, forearm to ~8.8 x 7.3 cm, fingers slimmer than their spacing (a crease between
+each), knuckle ridges and PIP bumps in the field. Skin: low-saturation light base, paler palm,
+redder knuckles and fingertips, visible veins on the back of the hand and wrist, roughness
+~0.47-0.55; the room's SH is 35% desaturated on the skin so a warm room doesn't turn it orange.
+
+Lighting is unchanged: lit by the room the eye is in (that room's baked SH, which dims with the
+room's lights-off state, its panorama for reflections; no real-time sun in sunless rooms), plus a
+small warm scatter term on the skin. Its depth is squeezed into the nearest slice of the depth
+buffer, so it never pokes into walls. Idle breathing (a slow rise and fall), walk bob, a lowered
+run pose, look lag; raised into view when armed. `vm.scrub(clip, t)` holds a pose (screenshots).
 
 ## Cost
-- Armed: the view model is 5 draw calls (hand, sleeve, the knife's 3 materials: its meshes are
-  merged per material) and 8.8k triangles (hand ~7k, knife 1.7k). No lights, no shadows.
-- Unarmed: nothing drawn. The knife on the board uses the kitchen's existing materials
-  (M_Steel_Brushed, M_Steel_Polished, M_Carcass_Black), so it joins the room's batches: +1.6k
-  triangles, no draw calls. The combat code is a few loops over the registered targets.
-- Bench (`bench.mjs`, gpu, 2026-10-22, vs the `wave` run at d1b4f4f): 184 fps, frame p95 6.6 ms,
-  draw calls mean 289.9 / max 837, triangles max 971,750 (+1,612 = the knife), every budget
-  PASS. The draw calls are +3 mean over `wave` whatever the knife's materials (the commits
-  between). SwiftShader ran over its GPU-time budget while 8 agents shared the CPU (timings
-  only; counts within noise).
+- Armed: the view model is 4 draw calls (the arm: one skinned mesh, 3 bones; the knife's 3
+  materials), 8.9k triangles (arm 7.2k, knife 1.7k), +1 draw call for the streak only during a
+  cut's ~0.15 s. Textures: 3 x 1024 (~16 MB of GPU memory once armed). No lights, no shadows.
+- Unarmed: nothing drawn. Download +~250 kB (the arm, loaded at start). The knife on the board
+  uses the kitchen's existing materials, so it joins the room's batches (+1.6k triangles).
+- Bench (`bench.mjs knife_vm --profile gpu`, 2026-10-22, unarmed route): draw calls mean 290.9 /
+  max 830, triangles max 972,422, download 19.9 MB, textures 269 MB: counts within noise of the
+  previous combat run. frame p95 8.2 ms (budget 7) on a machine shared with other agents' builds
+  (33 hitches > 50 ms), timing only.

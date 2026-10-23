@@ -99,7 +99,8 @@ for (const dev of DEVICES) {
       tb.key('Enter'); msg = tb.msg; tb.close();
     } else {
       const key = I.items.find((x) => x.def.item === 'car_key');
-      msg = D.useRemote(key.def);
+      // (items off, blender/levels/caches.py: no car key; the car alarm stays a device, set off here by its signal)
+      if (key) msg = D.useRemote(key.def); else { S.set(signal, true); msg = 'no car key: signal set'; }
     }
     const hd = h.chain ? h.chain.hd : { x: h.root.position.x, y: h.root.position.z };
     return { pos: [pos.x, pos.y, pos.z], goal: goal && [goal.x, goal.y], loud: d.loudness, label: d.label, msg,
@@ -191,7 +192,8 @@ const loud = await p.evaluate(() => {
   for (const it of window.__interact.items) if (it.def.throwable) out[it.def.item] = +(it.def.noise ?? 1);
   return out;
 });
-check('throwables: vase 1.4, wine bottle 1.2, book 0.6', loud.vase === 1.4 && loud.wine_bottle === 1.2 && loud.book === 0.6, JSON.stringify(loud));
+if (Object.keys(loud).length) check('throwables: vase 1.4, wine bottle 1.2, book 0.6', loud.vase === 1.4 && loud.wine_bottle === 1.2 && loud.book === 0.6, JSON.stringify(loud));
+else console.log('SKIP  throwables: none in the level (items off: GT_ITEMS=1 build to test)');
 
 await p.mouse.click(480, 300);
 await p.waitForTimeout(300);
@@ -214,6 +216,10 @@ for (const [signal, want] of [['tv_den', 'Turn on TV'], ['music_great_room', 'Pl
 }
 
 // the car key the way a player uses it: take it (E), arm it (I, Enter), then Enter = the panic button
+// (items off: no car key in the level, skipped)
+const hasKey = await p.evaluate(() => window.__interact.items.some((x) => x.def.item === 'car_key'));
+if (!hasKey) console.log('SKIP  car key panic button: no car key (items off: GT_ITEMS=1 build to test)');
+if (hasKey) {
 await p.evaluate(() => {
   const I = window.__interact, inv = window.__inventory;
   const key = I.items.find((x) => x.def.item === 'car_key');
@@ -230,6 +236,7 @@ check('car key: Enter sets off the car alarm', fob.on === true && /Car alarm · 
 await p.keyboard.press('Enter');
 await p.waitForTimeout(300);
 check('car key: Enter again stops it', (await p.evaluate(() => window.__signals.get('car_alarm'))) === false);
+}
 
 await b.close();
 console.log(fails ? `${fails} FAILED` : 'ALL PASS');

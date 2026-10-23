@@ -4,12 +4,17 @@ import { buildWorld } from './invaders_world.js';
 import { Invader, SENSE, WEAPONS } from './invaders_brain.js';
 import { InvaderBodies } from './invaders_body.js';
 import { InvaderFx } from './invaders_fx.js';
+import { Opening } from './invaders_opening.js';
 
 export { buildWorld };
 
-// Invaders: waves of armed intruders in the house (design/invaders/behaviour.md).
+// Invaders: armed intruders in the house (design/invaders/behaviour.md).
 //
-// They arrive in waves (WAVES: at time `at` s, `n` more arrive: 6, then 20, then 50 = 76 in all, the
+// The game opens with five of them (viewer/invaders_opening.js: they walk up the drive, ring the
+// doorbell, wait, look in, try the doors, then break in and hunt). The waves are off for now (the
+// user, 2026-10-22: "scrap the subsequent waves; just think through these five"); ?waves=old
+// brings them back:
+// they arrived in waves (WAVES: at time `at` s, `n` more arrive: 6, then 20, then 50 = 76 in all, the
 // user's call; at most MAX are alive at once, the rest wait outside until someone falls; the dead
 // don't come back), through the entries (the front door, the terrace doors, the garage,
 // the mudroom's side door, the great room's glass, smashed if it's still whole); some stay outside
@@ -23,9 +28,11 @@ export { buildWorld };
 // 45 m, every 8th beyond; staggered by id), a path planner with a per-frame budget, bodies drawn
 // instanced (invaders_body.js: a handful of draw calls for all of them).
 //
-// URL: ?invaders=0 off, ?invaders=N N at once (no waves), ?invaders=debug the overlay (cones,
-// paths, states; also ?invdebug=1), ?waves=fast (the schedule at a tenth), ?waves=0 (none),
-// ?waves=K (the schedule times K). window.__invaders: this.
+// URL: ?invaders=0 off, ?invaders=N N at once (no opening, no waves), ?invaders=debug the overlay
+// (cones, paths, states; also ?invdebug=1), ?seq=0|N|now|manual the opening (invaders_opening.js),
+// ?waves=old the old waves (instead of the opening), ?waves=fast (the old schedule at a tenth),
+// ?waves=K (the old schedule times K), ?waves=0 (nobody comes: no opening, no waves).
+// window.__invaders: this.
 
 export const WAVES = [{ at: 60, n: 6 }, { at: 300, n: 20 }, { at: 600, n: 50 }];
 // who comes in each wave (watchers stay outside); a wave tops up with its mix, in this order
@@ -68,12 +75,16 @@ export class Invaders {
     this.debug = q.includes('debug') || params.get('invdebug') === '1';
     const n = q.map(Number).find((v) => Number.isFinite(v) && v > 0);
     const wq = params.get('waves');
+    // (the old waves only when asked for: ?waves=old|fast|K)
+    const oldWaves = wq === 'old' || wq === 'fast' || (Number.isFinite(+wq) && +wq > 0);
     const k = wq === 'fast' ? 0.1 : Number.isFinite(+wq) && +wq > 0 ? +wq : 1;
-    this.waves = wq === '0' || n ? [] : WAVES.map((w) => ({ ...w, at: w.at * k }));
+    this.waves = !oldWaves || n ? [] : WAVES.map((w) => ({ ...w, at: w.at * k }));
     this.waveI = 0;
     this.immediate = n ? Math.min(MAX, n) : 0;
     this.setupRooms();
     this.setupEntries();
+    // the opening: the first five at the front door (unless N at once, the old waves or nobody)
+    this.opening = !n && !oldWaves && wq !== '0' && params.get('seq') !== '0' ? new Opening(this, params) : null;
     // bodies: the stand-in at once; the rigged character (invaders_rig.js) when it has loaded,
     // if it's there (?invbody=stand keeps the stand-in)
     this.bodies = new InvaderBodies(scene, MAX + 8);
@@ -193,7 +204,7 @@ export class Invaders {
 
   // ---------------------------------------------------------------- spawning
   // a new invader of `role` at an entry (or at a given place: `at`, `inside` = already in).
-  spawn(role = 'bat', { entry = null, at = null, layer = 'ground', post = null, weapon = null, inside = false, yaw = null } = {}) {
+  spawn(role = 'bat', { entry = null, at = null, layer = 'ground', post = null, weapon = null, inside = false, yaw = null, extra = null } = {}) {
     if (this.agents.filter((a) => a.alive).length >= MAX) return null;
     let E = entry ? (typeof entry === 'string' ? this.entries.find((e) => e.name === entry) : entry) : null;
     if (!at) {
@@ -201,6 +212,7 @@ export class Invaders {
       at = this.spawnPoint(E);
     }
     const a = new Invader(this, { role, pos: at.clone(), layer, entry: inside || role === 'watcher' ? null : E, weapon });
+    if (extra) Object.assign(a, extra);      // (the opening's cast: look, holstered, scale, idle clip)
     if (role === 'watcher') a.post = post ?? this.pickPost(E);
     if (inside) { a.inside = true; a.set('sweep'); }
     a.yaw = a.lookYaw = yaw ?? (E ? Math.atan2(E.centre.x - at.x, E.centre.y - at.z) : 0);
@@ -277,7 +289,7 @@ export class Invaders {
   giveOrders(p, by) {
     const lead = this.leader?.alive ? this.leader : null;
     const delay = lead ? this.opts.radio : this.opts.radioNoLeader;
-    const free = this.agents.filter((a) => a.alive && a !== by && a.role !== 'watcher' && !['engage', 'chase', 'strike', 'flee', 'dead', 'breach', 'cover', 'check'].includes(a.state));
+    const free = this.agents.filter((a) => a.alive && a !== by && a.role !== 'watcher' && !['engage', 'chase', 'strike', 'flee', 'dead', 'breach', 'cover', 'check', 'scene'].includes(a.state));
     const dist = (a) => a.pos.distanceTo(p) + Math.abs(a.pos.y - p.y) * 3;
     free.sort((a, b) => dist(a) - dist(b));
     const orders = [];
@@ -414,6 +426,8 @@ export class Invaders {
 
   onNoise(ev) {
     if (!ev?.position || ev.team === 'invader') return;
+    // (the doorbell they rang themselves)
+    if (ev.source === 'doorbell' && this.opening?.ownRing()) return;
     // (our own gunshots, if viewer/combat.js emits them for us)
     if (ev.source === 'gunshot' && this.lastShots?.some((s) => this.time - s.t < 0.3 && s.p.distanceTo(ev.position) < 1.5)) return;
     const p = ev.position, L0 = ev.loudness ?? 1, at = new V3(p.x, Math.max(p.y ?? 0.5, 0.3), p.z);
@@ -562,6 +576,7 @@ export class Invaders {
       D.it.locked = false;
       D.it.indicator?.material?.emissive?.setRGB?.(0.05, 1.0, 0.25);
     }
+    D.latched = false;          // (an outer door locked to them while the opening ran)
     D.open();
     this.world.nav.components();
     this.event('breach', { door: D.name });
@@ -709,6 +724,7 @@ export class Invaders {
         for (const p of due) if (!this.spawn(p.role)) { p.at = this.time + 2; this.pending.push(p); }
       }
     }
+    this.opening?.update(dt);
     this.updateRadio();
     this.alert = Math.max(0, this.alert - dt / 90);
     if (this.frame % 30 === 0) this.world.nav.checkLocks();
@@ -765,7 +781,7 @@ export class Invaders {
     const by = {};
     for (const a of this.agents) by[a.state] = (by[a.state] ?? 0) + 1;
     const f = Math.max(1, this.stats.frames);
-    return { t: +this.time.toFixed(1), alive: this.alive().length, states: by, alert: +this.alert.toFixed(2), msPerFrame: +(this.stats.thinkMs / f).toFixed(3), stats: { ...this.stats }, nav: { ...this.world.nav.stats } };
+    return { t: +this.time.toFixed(1), alive: this.alive().length, states: by, alert: +this.alert.toFixed(2), msPerFrame: +(this.stats.thinkMs / f).toFixed(3), stats: { ...this.stats }, nav: { ...this.world.nav.stats }, opening: this.opening?.summary() ?? null };
   }
   // remove everyone (tests)
   clear() {
@@ -773,6 +789,7 @@ export class Invaders {
     this.agents = []; this.leader = null; this.intel = []; this.radioQ = []; this.queue = []; this.pending = [];
     this.cleared.clear(); this.claims.clear(); this.spotAt.clear(); this.noiseClaims.clear(); this.alert = 0; this.playerGone = false;
     this.orderAt = -1e9; this.lastShots = [];
+    this.opening?.reset();
   }
 }
 

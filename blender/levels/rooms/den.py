@@ -27,7 +27,9 @@ PLACEMENTS = [
     # ---- screen wall (south) ----------------------------------------------------------
     # the TV starts off (distractions: on, it's a noise the Grimble hears, so the player turns it
     # on to lure it); the bake has no screen light
-    ("living_media_wall", (0.0, -4.34), 180, {"signal": {"tv": "tv_den"}, "state": False}),
+    # (secret passage: the screen wall sits 0.25 m west of the middle, clear of the secret stair's
+    # shaft in the south-east corner: local x 3.85..6.1, y -4.6..0.88 with its wall)
+    ("living_media_wall", (-0.25, -4.34), 180, {"signal": {"tv": "tv_den"}, "state": False}),
     # ---- seating: the sectional faces the screen -----------------------------------------
     ("living_rug_den", (0.0, -0.8), 0),
     ("living_sectional", (-0.6, 0.6), 0),
@@ -38,9 +40,9 @@ PLACEMENTS = [
     ("living_side_table", (2.2, 1.2), 0),
     ("living_table_lamp", (2.2, 1.2, 0.55), 0),
     ("living_floor_lamp", (-2.2, 2.1), 0),
-    ("living_armchair_cognac", (3.7, -0.5), -40),
+    ("living_armchair_cognac", (3.0, -1.0), -40),     # (secret passage: west of the shaft's wall)
     ("living_armchair_cognac", (4.5, 1.8), -75),
-    ("living_side_table", (4.3, 0.55), 0),
+    ("living_side_table", (3.45, 0.6), 0),
     # ---- west wall: shelving ------------------------------------------------------------------
     ("living_shelving", (-5.9, -1.9), 90),
     ("living_shelving", (-5.9, 1.9), 90),
@@ -49,7 +51,7 @@ PLACEMENTS = [
     ("art_colorfield_b", (6.09, 3.0, 1.8), -90),
     ("vase", (5.85, 3.6, 0.82), 0),
     # ---- corners ---------------------------------------------------------------------------------
-    ("library_plant", (4.9, -2.8), 0),
+    ("library_plant", (3.35, -3.3), 0),               # (secret passage: in front of the shaft's wall)
     ("library_plant", (-4.9, -2.8), 0),
     # ---- north wall flanks (the door is at x = 0) ---------------------------------------------
     ("living_console", (-3.4, 4.39), 0),
@@ -58,8 +60,10 @@ PLACEMENTS = [
     # ---- lighting (see LIGHTS): up/down sconces on the green walls, three ceiling cans
     ("light_g_sconce_updown", (-1.2, 4.6, 2.25), 0),
     ("light_g_sconce_updown", (1.2, 4.6, 2.25), 0),
-    ("light_g_sconce_updown", (6.1, -0.8, 2.25), -90),
-    ("light_g_sconce_updown", (6.1, -3.4, 2.25), -90),
+    # (secret passage) the east wall's south half is now the shaft's: one sconce on the shaft's
+    # west face (the "AV closet"), one on the east wall north of it
+    ("light_g_sconce_updown", (3.85, -1.9, 2.25), -90),
+    ("light_g_sconce_updown", (6.1, 1.9, 2.25), -90),
     ("light_g_downlight", (-3.4, 3.6, 4.2), 0),
     ("light_g_downlight", (5.1, 3.0, 4.2), 0),
     ("light_g_downlight", (-0.7, -1.9, 4.2), 0),
@@ -69,8 +73,8 @@ PLACEMENTS = [
     ("decor_a_table_ottoman_den", (-0.7, -1.9, 0.435), 0),    # round the vase
     ("decor_a_table_side_glass", (-3.3, 1.2, 0.55), 0),
     ("decor_a_table_side_cup", (2.2, 1.2, 0.55), 0),
-    ("decor_a_table_side_plant_den", (4.3, 0.55, 0.55), 0),
-    ("decor_a_table_credenza", (0.0, -4.37, 0.54), 180),     # low groups at both ends of the credenza
+    ("decor_a_table_side_plant_den", (3.45, 0.6, 0.55), 0),
+    ("decor_a_table_credenza", (-0.25, -4.37, 0.54), 180),     # low groups at both ends of the credenza
     ("decor_a_soft_sectional_throw", (-0.6, 0.6), 0),        # over the sectional's left arm
 ]
 
@@ -91,9 +95,9 @@ def _updown(x, y, wx, wy, up=90.0, down=110.0):
 
 LIGHTS = [
     # the warm glow under the floating credenza (the TV starts off: its screen isn't in the bake)
-    dict(kind="area", pos=(0.0, -4.2, 0.12), size=(4.7, 0.05), aim=(0.0, -4.2, 0.0), power=20.0, color=(1.0, 0.62, 0.30)),
+    dict(kind="area", pos=(-0.25, -4.2, 0.12), size=(4.7, 0.05), aim=(-0.25, -4.2, 0.0), power=20.0, color=(1.0, 0.62, 0.30)),
     # cove on top of the 3.75 m slat wall (4.9 m wide, living_media_wall slat_zone), up onto the ceiling
-    dict(kind="area", pos=(0.0, -4.4, 3.8), size=(4.9, 0.15), aim=(0.0, -4.4, 4.2), power=130.0, color=(1.0, 0.84, 0.66)),
+    dict(kind="area", pos=(-0.25, -4.4, 3.8), size=(4.9, 0.15), aim=(-0.25, -4.4, 4.2), power=130.0, color=(1.0, 0.84, 0.66)),
     # table lamps and the arc lamp
     dict(kind="point", pos=(-3.3, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),
     dict(kind="point", pos=(2.2, 1.2, 1.2), power=80.0, color=(1.0, 0.72, 0.45)),
@@ -103,7 +107,7 @@ LIGHTS = [
     dict(kind="spot", pos=(5.1, 3.0, 4.08), aim=(6.05, 3.0, 1.8), power=130.0, angle=30, blend=0.5),
     dict(kind="spot", pos=(-0.7, -1.9, 4.08), aim=(-0.7, -1.9, 0.0), power=220.0, angle=40, blend=0.6),
     *_updown(-1.2, 4.6, 0, -1), *_updown(1.2, 4.6, 0, -1),
-    *_updown(6.1, -0.8, -1, 0), *_updown(6.1, -3.4, -1, 0),
+    *_updown(3.85, -1.9, -1, 0), *_updown(6.1, 1.9, -1, 0),     # (secret passage: see the sconces)
 ] + [
     # backlit shelving: an LED under each board of the two west-wall units (fronts at x -5.72)
     dict(kind="area", pos=(-5.78, y, z), size=(0.05, 3.2), aim=(-5.78, y, 0.0), power=30.0, color=(1.0, 0.82, 0.6))

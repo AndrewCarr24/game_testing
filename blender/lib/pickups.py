@@ -29,8 +29,16 @@ pickup. The engine draws resting pickups inside their room's batch (viewer/batch
 vignette split into twenty pickups still costs what it did as one mesh per material.
 """
 import math
+import os
 
 from mathutils import Matrix, Vector
+
+# ON / OFF (the house's items are off: only the kitchen knife and the tablet can be taken, and
+# those are their own assets, not this rule). Off, every kind is fixed decor again: wrap() leaves
+# the kits alone (their items stay in the vignette's meshes, as before the rule existed), and
+# make() / adopt() build the same empty and meshes without the interact. GT_ITEMS=1 in the build's
+# environment (with blender/levels/caches.py's items and locks) brings every pickup back.
+ENABLED = os.environ.get("GT_ITEMS") == "1"
 
 RANGE = 1.5             # m from the eye to the item's nearest edge: across a table to its middle
 MAX_SIZE = 0.6          # m: a bigger thing (floor vase, big basket) is furniture, not a pickup
@@ -175,6 +183,8 @@ def wrap(module, store, items, fixed=()):
     """Make `module`'s item functions emit pickups. `store`: the accumulator attribute holding
     {material key: geometry}; `items`: {function name: kind, or fn(args, kwargs) -> kind | None};
     `fixed`: functions whose geometry never becomes a pickup (a shelved row of books)."""
+    if not ENABLED:
+        return                      # (items off: the kit's own meshes keep everything)
     for fname, kind in items.items():
         setattr(module, fname, _item(getattr(module, fname), kind, store))
     for fname in fixed:
@@ -298,7 +308,8 @@ def make(name, col, root, kind, parts, base, yaw=0.0, uv_tile=None, **extra):
         ob = common.mesh_object(f"{name}_{label}_NoCollide", bm, col, mat, node)
         if uv_tile:
             common.box_uv(ob, uv_tile)
-    node["interact"] = {**define(kind, parts[0][2]), **extra}
+    if ENABLED:
+        node["interact"] = {**define(kind, parts[0][2]), **extra}
     return node
 
 
@@ -320,5 +331,16 @@ def adopt(name, col, root, kind, objects, base, yaw=0.0):
         ob.matrix_parent_inverse = Matrix.Identity(4)
         ob.matrix_basis = inv @ basis
     body = objects[0].active_material if objects and objects[0].type == "MESH" else None
-    node["interact"] = define(kind, body)
+    if ENABLED:
+        node["interact"] = define(kind, body)
+    else:
+        no_collide(objects)         # (as a pickup it had no box: fixed decor keeps none)
     return node
+
+
+def no_collide(objects):
+    """Tag meshes `_NoCollide` (common.part_colliders skips them): items off, a thing that was a
+    pickup (no collider: interact parts move) stays without one as fixed decor."""
+    for ob in objects:
+        if ob.type == "MESH" and "_NoCollide" not in ob.name:
+            ob.name = ob.name + "_NoCollide"

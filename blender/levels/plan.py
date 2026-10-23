@@ -61,7 +61,8 @@ OPEN = [
 # axis "y" = a wall running along y at x = line. span = (a0, a1) along the wall;
 # z = absolute (z0, z1).
 #   opening:    a gap; with door=<asset> a door is placed in it, swinging into `swing`
-#               (a room name); lock=<item id> locks it (needs that item, armed)
+#               (a room name); lock=<item id> locks it (needs that item, armed; only while the
+#               house's items are on: caches.ITEMS, GT_ITEMS=1; off, mansion.py leaves it unlocked)
 #   window:     floor-to-ceiling style glazing (frame, mullions, glass, one collider)
 #   garage_door: a closed panel door
 #   balustrade: open above floor level with a glass rail (overlooking a double-height room)
@@ -183,6 +184,98 @@ GROUNDS = dict(
 )
 LAWN_Z = -0.08            # world z of the lawn surface = z 0 in every zone
 
+# ==== below ground: the secret passage (design/house/secret_passage.md) =======================
+# The house's safe way out. In the library a stretch of floor in front of the south bookcases
+# folds down into a stair (the rolling ladder is the latch: pushed to the end of its rail); a
+# narrow concrete shaft drops through the den's south-east corner (a smoked-glass slot looks
+# into the den) to an armory under the great room; a service tunnel runs on under the courtyard,
+# the garage and the tennis lawn to a landing below the pool house.
+# Kept general for later spaces below ground:
+#   level -1             LEVEL_Z[-1], HEIGHT[-1]; any room may give its own z=(z0, z1)
+#   kind "shaft"         a room that pierces the rooms it stands in (the den): their floor,
+#                        ceiling and walls are cut round its footprint and they get walls of
+#                        their own facing it (house.py House.pierce)
+#   HATCHES              rectangles cut out of every floor / ceiling slab in their z range;
+#                        fold=... fills one with floor strips that drop into a stair (reacts)
+#   FLIGHTS / LANDINGS   straight flights (+ an invisible ramp each, along x or y) and landings
+#   DIVIDERS             plain steel plates (a stair's spine)
+#   room flags           nav=False: off the invaders' nav and room sweeps; sealed=True: nothing
+#                        above ground is seen from it (the engine hides the house there);
+#                        power="own": its lights don't follow the house's power (the bunker
+#                        has its own batteries); reverb: the engine's reverb level (audio.js);
+#                        lightmap=(w, h): a fixed atlas, outside the house's lightmap budget
+LEVEL_Z[-1] = -4.2
+HEIGHT[-1] = 2.8
+SECRET_SIGNAL = "secret_library"      # the ladder and the buttons below; the folding floor follows it
+SR = 8.8 / 48                         # the secret stair's rise (48 risers, library floor to -4.2)
+SG = 0.28                             # ... and its going
+UNDERGROUND = {
+    # the shaft: 2.25 x 5.48 m, from the bunker floor up to the den's ceiling (the library's floor
+    # slab over it is cut only where the folding floor is); in the den's south-east corner
+    "secret_stair": dict(rect=(-15.75, -20.0, -13.5, -14.52), level=-1, z=(-4.2, 4.2), kind="shaft",
+                         nav=False, power="own", reverb=0.16, lightmap=(512, 512)),
+    # the armory: 7.5 x 14 m, 3.4 m high, its long axis north-south under the den and great room
+    "armory":      dict(rect=(-17.5, -14.52, -10.0, -0.5), level=-1, z=(-4.2, -0.8),
+                        nav=False, sealed=True, power="own", reverb=0.2, lightmap=(1024, 512)),
+    # the service tunnel east under the courtyard, the galleries, the garage and the terrace
+    "tunnel_e":    dict(rect=(-10.0, -3.9, 38.5, -0.9), level=-1, nav=False, sealed=True, power="own",
+                        reverb=0.3, lightmap=(512, 512)),
+    # the pump room at the turn (sump, pumps)
+    "pump_room":   dict(rect=(38.5, -6.5, 45.5, 1.5), level=-1, z=(-4.2, -1.0), nav=False, sealed=True,
+                        power="own", reverb=0.26, lightmap=(512, 512)),
+    # north under the tennis lawn; its last 3 m (y 31.5..34.5) is the landing below the pool house
+    "tunnel_n":    dict(rect=(38.5, 1.5, 41.5, 34.5), level=-1, nav=False, sealed=True, power="own",
+                        reverb=0.3, lightmap=(512, 512)),
+}
+ROOMS.update(UNDERGROUND)
+CUTS += [
+    # the slot from the shaft's middle landing (L2) into the den, at eye height there
+    dict(kind="window", axis="y", line=-15.75, span=(-15.55, -14.75), z=(1.47, 1.69), glass="smoked"),
+    # shaft bottom -> armory: a steel door
+    dict(kind="opening", axis="x", line=-14.52, span=(-15.45, -14.25), z=(-4.2, -2.05), door="bunker_door",
+         swing="armory"),
+    # armory -> tunnel: the blast door (it opens into the armory)
+    dict(kind="opening", axis="y", line=-10.0, span=(-3.4, -1.4), z=(-4.2, -2.0), door="blast_door",
+         swing="armory"),
+    # tunnel -> pump room -> north tunnel: open
+    dict(kind="opening", axis="y", line=38.5, span=(-3.75, -1.05), z=(-4.2, -1.4)),
+    dict(kind="opening", axis="x", line=1.5, span=(38.65, 41.35), z=(-4.2, -1.4)),
+    # the meeting point: the landing's north edge (y 34.5), open the tunnel's full width; the pool
+    # house's stair / lift / hatch takes over from here (SECRET_EXIT_STUB closes it until it does)
+    dict(kind="opening", axis="x", line=34.5, span=(38.65, 41.35), z=(-4.2, -1.4)),
+]
+# the folding floor: the shaft's lane W, from the bookcases' fronts (y -19.49) 4.05 m out into
+# the library: 12 treads (from its north edge, y -15.44, down southward) + a landing plate that
+# drops to the first landing (L1)
+HATCHES = [
+    dict(rect=(-15.6, -19.49, -14.65, -15.44), z=(4.2, 4.6), room="library",
+         fold=dict(top=-15.44, dir=-1, going=SG, rise=SR, treads=12, signal=SECRET_SIGNAL, thick=0.4)),
+]
+# the shaft's scissor stair: lane W x -15.6..-14.65, lane E x -14.6..-13.65. Each flight goes down
+# from `z` at the nosing line y=`start` in direction `dir` (+1 north, -1 south), `n` risers;
+# treads=False: only the ramp (F1's treads are the folding floor's strips)
+_L1, _L2, _L3 = 4.6 - 13 * SR, 4.6 - 25 * SR, 4.6 - 37 * SR
+FLIGHTS = [
+    dict(room="secret_stair", x=(-15.6, -14.65), start=-15.44, dir=-1, n=13, z=4.6, treads=False),  # F1 (folding)
+    dict(room="secret_stair", x=(-14.6, -13.65), start=-18.8, dir=1, n=12, z=_L1,       # F2 north to L2
+         led=(1.0, 0.74, 0.50), led_side="B"),
+    dict(room="secret_stair", x=(-15.6, -14.65), start=-15.72, dir=-1, n=12, z=_L2,     # F3 south to L3
+         led=(1.0, 0.88, 0.74), led_side="A"),
+    dict(room="secret_stair", x=(-14.6, -13.65), start=-18.8, dir=1, n=11, z=_L3,       # F4 north to the floor
+         led=(0.86, 0.92, 1.0), led_side="B"),
+]
+STAIR_GOING = SG
+LANDINGS = [
+    # L1 (z 2.22): lane E + the spine's gap, and under the bookcases in lane W (the plate does the rest)
+    dict(room="secret_stair", rect=(-14.65, -19.85, -13.65, -18.8), z=_L1),
+    dict(room="secret_stair", rect=(-15.6, -19.85, -14.65, -19.49), z=_L1),
+    dict(room="secret_stair", rect=(-15.6, -15.72, -13.65, -14.67), z=_L2),      # L2 (z 0.02): the slot
+    dict(room="secret_stair", rect=(-15.6, -19.85, -13.65, -18.8), z=_L3),       # L3 (z -2.18)
+]
+# the steel plate between the two lanes (the flights' spine), floor to ceiling between the landings
+DIVIDERS = [dict(room="secret_stair", lo=(-14.65, -18.8, -4.2), hi=(-14.6, -15.72, 4.2))]
+# (SECRET_EXIT_STUB, the wall that closed the landing until the pool house's way up existed: gone,
+# the bathhouse's stair rises from y 34.5)
 
 # ---- the bathhouse (the pool house): a detached building north-east of the house, on the lap
 # pool's axis, with the secret passage's stair rising into it (blender/levels/bathhouse_plan.py)

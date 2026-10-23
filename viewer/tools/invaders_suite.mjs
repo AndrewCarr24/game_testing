@@ -12,12 +12,14 @@ const HERE = path.dirname(new URL(import.meta.url).pathname);
 const [label = 'x', names = 'all', seed = '1'] = process.argv.slice(2);
 const out = `build/invaders/${label}`;
 fs.mkdirSync(out, { recursive: true });
-const scSrc = fs.readFileSync(`${HERE}/invaders_scenarios.js`, 'utf8');
+// (SC=invaders_opening_scenarios.js: the opening's scenarios, on a page with ?seq=manual)
+const SC = process.env.SC || 'invaders_scenarios.js';
+const scSrc = fs.readFileSync(`${HERE}/${SC}`, 'utf8');
 const pageSrc = fs.readFileSync(`${HERE}/invaders_page.js`, 'utf8');
 const lines = [];
 const say = (s) => { console.log(s); lines.push(s); };
 
-await withPage(`&grimble=0&fx=0&waves=0&invaders=debug${process.env.QS || ''}`, async (p) => {
+await withPage(SC === 'invaders_scenarios.js' ? `&grimble=0&fx=0&waves=0&invaders=debug${process.env.QS || ''}` : `&grimble=0&fx=0&seq=manual&invaders=debug${process.env.QS || ''}`, async (p) => {
   await p.waitForFunction(() => window.__invaders && window.__combat, null, { timeout: 60000 });
   await p.evaluate(`(${pageSrc})()`);
   await p.evaluate(`window.__SC = ${scSrc}`);

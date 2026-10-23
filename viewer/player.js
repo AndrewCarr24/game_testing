@@ -292,15 +292,17 @@ export class Player {
     const r = this.o.radius;
     let best = -Infinity;
     for (const ramp of this.ramps) {
-      // (along: "z": a flight rising along z, its z pair ordered foot -> top, x across it; the
-      // bathhouse's secret stair. Default: along x, z across)
-      const alongZ = ramp.along === 'z';
-      const [x0, x1] = alongZ ? ramp.z : ramp.x, [z0, z1] = alongZ ? ramp.x : ramp.z, [y0, y1] = ramp.y;
-      const px = alongZ ? p.z : p.x, pz = alongZ ? p.x : p.z;
-      if (px + r <= Math.min(x0, x1) || px - r >= Math.max(x0, x1) || pz + r <= z0 || pz - r >= z1) continue;
-      const up = (y1 - y0) * (x1 - x0) > 0 ? px + r : px - r;
-      const t = Math.min(1, Math.max(0, (up - x0) / (x1 - x0)));
-      best = Math.max(best, y0 + (y1 - y0) * t);
+      const { x: [x0, x1], z: [z0, z1], y: [y0, y1] } = ramp;
+      if (p.x + r <= Math.min(x0, x1) || p.x - r >= Math.max(x0, x1) || p.z + r <= Math.min(z0, z1) || p.z - r >= Math.max(z0, z1)) continue;
+      // (secret passage) `along: "z"`: a flight that slopes along z (y0 at z0 .. y1 at z1)
+      const [a0, a1, pa] = ramp.along === 'z' ? [z0, z1, p.z] : [x0, x1, p.x];
+      const up = (y1 - y0) * (a1 - a0) > 0 ? pa + r : pa - r;
+      const t = Math.min(1, Math.max(0, (up - a0) / (a1 - a0)));
+      const h = y0 + (y1 - y0) * t;
+      // (secret passage) flights stacked over each other (a switchback): the highest surface the
+      // feet can still step onto, not one a storey up
+      if (this.ramps.length > 1 && h > p.y + this.o.stepHeight + 0.02) continue;
+      best = Math.max(best, h);
     }
     return best;
   }

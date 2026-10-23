@@ -75,6 +75,9 @@ def main():
     # [town kit] T_Town_Atlas is the whole town's one texture (2048, 512-px regions with 8-px
     # gutters, see blender/assets/town_textures.py): shrinking it would ruin every region
     keep |= {n for n in os.listdir(TEX) if n.startswith("T_Town_Atlas")}
+    # [knife view model] the first-person arm (blender/assets/viewmodel_arm.py) is seen 30-60 cm
+    # from the eye: its one 1024 set stays full size (loaded only once a weapon is armed)
+    keep |= {n for n in os.listdir(TEX) if n.startswith("T_ViewmodelArm_")}
     shrunk = 0
     for name in sorted(os.listdir(TEX)):
         if not name.endswith((".webp", ".png", ".jpg")) or name in keep:
