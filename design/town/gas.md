@@ -119,37 +119,110 @@ GT_BASE=http://localhost:<port> bash blender/town/gas/cycle.sh <label> [samples|
 - `lod1`, lightmap 256²;
 - `*_g`: unlit (emissive, glass), no lightmap.
 
+## Second pass: the interior at the mansion's fidelity (2026-10-23)
+
+**Light.**
+- The bake multiplies in Cycles ambient occlusion (0.6 m; 40 % inside, 30 % outside). That darkens under shelves, at wall bases and round the gondolas' feet, the contact darkening the house gets from its screen-space AO, which the wild runtime lacks.
+- The troffers have a 110° spread, so walls and ceiling fall off between fixtures.
+- Each cooler door has two lights: one lights the bottles from the frame, and one throws the glow out onto the floor.
+- **Reflections** (town.js hook, generic for any site):
+  - A material's extras `envBox` / `envProbe` box-project its panorama, as `baked.js` does for the house. The floor and the glossy surfaces reflect the coolers and troffers where they actually are.
+  - Reflections fade where the lightmap is dark (under shelves), except on metals.
+  - The interior panorama is now 512 × 256.
+  - The floor is a polished tile, with a roughness map at 0.07-0.2 with smudges and matte grout.
+  - Stainless and chrome are real metals: the palette's metalness channel.
+
+**Products** (`town2_gas_pack.py`, `town2_gas_goods.py`).
+- **The atlas.** One packaging atlas, 768 × 960, holds everything:
+  - 16 crinkled chip-bag designs;
+  - bottle and can wraps, unrolled around the shape;
+  - cereal, candy and medicine boxes, pouches, jars, jugs, gable-top cartons, multipack cases, cigarette packs;
+  - shelf tag strips and the mural.
+  - The graphics read as packaging but carry no words. "Wordmarks" are letter-like strokes, "small print" is rows of bars, and nutrition panels are ruled.
+- **The shapes.**
+  - PET bottles: 6-sided lathe with a label waist, shoulder and cap.
+  - Necked cans; jars.
+  - Puffed pillow bags with crimped seals and crinkle.
+  - Bevelled jugs with caps; gable cartons; boxes.
+- **How they're shelved:**
+  - in runs of two to six facings of one product;
+  - a sold-out gap now and then (5-8 %);
+  - some facings pulled forward 0-2.5 cm, small turns, bags slumped and leaning;
+  - the rows behind as one block, or a second real row for bags;
+  - price-tag rails on every shelf.
+- **The coolers:**
+  - 14 doors, five wire shelves each, with real bottles, cans, cartons and cases;
+  - a frosted glass texture, thick at the bottom and edges;
+  - chrome handles and LED mullion strips.
+- **Dust:** a dust decal on the top shelves and on the gondola tops.
+
+**Counter, coffee and grill.**
+- **POS:** a touch monitor on its stand with a lit screen, a customer display, a receipt printer with its paper, a card terminal on a pole, cables to a grommet, and a cash drawer.
+- **Counter:** a stepped chrome impulse rack, oak boards (now one lightmap chart, no blotches), and a bevelled quartz top.
+- **Roller grill:** brushed stainless, ten chrome rollers with hot dogs and taquitos, knobs, a sloped sneeze guard, a bun-warmer drawer and its cord.
+- **Coffee bar:**
+  - brushed twin-warmer brewers with funnels under the hood and decanters (one decaf-orange);
+  - airpots with pump levers, nested cup towers, lid caddies, a sugar-packet caddy, a trash cutout;
+  - a black-and-stainless cappuccino machine with a grated drip tray;
+  - a creamer fridge with cartons, cords behind the machines, oak doors with steel pulls.
+- **Fountain:** stainless valves with lit badges and a grated drip tray.
+
+**The van** (`town2_gas_out.van2`): a Sprinter/Transit-like high-roof cargo van, unbranded.
+- The body is lofted from rounded cross-sections, with tumblehome, the sloped windshield and a short bonnet.
+- It has wheel arches with black flares, tyres, steel rims with holes, and hubs.
+- Glass, door seams, handles, the sliding-door track, mirrors on arms, side markers, grille, lamps, bumpers, step and plates.
+- The rear doors are open on the bay's dark lining and its load.
+
+**Wear** (`M_Town2Gas_Decals`, one 512² RGBA atlas). The decals are alpha-blended black, so they darken whatever is under them:
+- inside: foot-traffic scuffs fanning in from the door and at the counter and coffee bar; grime along the wall bases;
+- the sidewalk: gum spots;
+- the forecourt and driveways: oil under where cars stand at the pumps, tyre marks through the drive aisle and the entrances;
+- the back lot: oil under the van;
+- the walk-off mat is now a rubber border round a pile field.
+
 ## Numbers
 
-**Triangles.** LOD0 is about 75.7k:
+**Triangles.** LOD0 is about 157k (second pass; first pass 75.7k):
 
 | part | triangles |
 |---|---|
-| outside | 24.9k |
-| inside | 49.6k |
-| emissive and glass | 1k |
+| outside | 27.6k |
+| inside | 128.7k |
+| unlit | 0.7k |
 
-LOD1 is 132 triangles.
+- Of the inside: the coolers ~45k, the three gondolas ~55k, coffee and fountain ~15k, the counter ~7k.
+- LOD1 is 132 triangles.
 
-**Draw calls:** 16 near (LOD0); 6 beyond 140 m (LOD1).
+**Draw calls:** about 22 near; 6 beyond 140 m.
 
 | zone | materials |
 |---|---|
 | ext | asphalt, concrete, stone, siding, paint, goods |
-| ext_g | glass, signs |
+| ext_g | glass, signs, decals |
 | int | floor, ceiling, paint, oak, goods |
-| int_g | glass, signs, drinks |
+| int_g | glass, signs, frost, decals |
 
-**Lightmap density:** ext 21 texels/m at weight 1 (the lot at 0.3, the roof and canopy top 0.1-0.15); int 39 texels/m.
+**Lightmap density:** ext 20 texels/m at weight 1 (the lot at 0.3, the roof and canopy top 0.1-0.15); int 34.5 texels/m.
 
-**Download:** 1.5 MB (bin 676 KB Draco; textures 0.85 MB WebP).
+**Download:** 2.2 MB (bin 1.24 MB Draco; textures about 0.95 MB WebP).
 
-**GPU textures:** about +24 MB. The town measured 104 MB without the station (`&veg=0`) and 127.8 MB with it.
-- The lightmaps are about 12.6 MB (no mip chain: the town.js hook).
-- The material maps are 512 px or less.
-- The two panoramas are small.
+**GPU textures:** about +27 MB. The town measured 104 MB without the station (`&veg=0`) and 130.5 MB with it. That is over the brief's ~20 MB. The interior lightmap at 1536 × 1024 would save about 2 MB.
+- The lightmaps are about 12.6 MB (no mip chain).
+- The material maps are 512 px or less, the packaging atlas 768 × 960.
+- The interior panorama is 512 × 256.
 
-This is a little over the brief's ~20 MB. The interior lightmap at 1536 x 1024 would save about 2 MB.
+**Bench, second pass, with the trees on** (`WILD_QS="&world=laurel_town"`):
+
+| profile | gas_lot | gas_store | strip |
+|---|---|---|---|
+| M4 Metal render (ms) | 2.14 | 2.59 | 2.34 |
+| M4 Metal calls | 53 | 52 | 55 |
+| M4 Metal triangles | 579k | 694k | 694k |
+| SwiftShader (ms) | 107 | 733 | 90 |
+
+The SwiftShader run was at a machine load of 45-57, so it is not a valid measurement and needs a quiet-machine rerun. The store's 129k products and its glass are the soft renderer's worst case.
+
+## First pass numbers (kept for comparison)
 
 **Bench** (`WILD_QS="&world=laurel_town&veg=0" node viewer/tools/wild_bench.mjs gas_final --views gas_lot,gas_store,strip,main_street --no-walk`):
 

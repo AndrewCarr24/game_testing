@@ -457,3 +457,131 @@ def van(kit, rng, doors_open=True):
         kit.p("tan", "ext", lmw=0.2).tube(rope, 0.015, sides=5)
         kit.p("blue", "ext", lmw=0.3).box((x0 + 2.8, -0.85, 0.66), (x0 + 3.5, -0.2, 0.8), bevel=0.03)
     kit.collide((x0 - 0.12, -hw, 0), (x0 + 6.0, hw, 2.58))
+
+
+# ------------------------------------------------------------------ the van, second pass
+def _ring(w, z0, zt, rt=0.16, rb=0.06, tumble=0.95, n_arc=4):
+    """A van body's cross-section (y, z), closed, counter-clockwise seen from +x."""
+    pts = [(0.0, z0)]
+    for k in range(n_arc + 1):                                  # bottom corner (+y)
+        a = -math.pi / 2 + (math.pi / 2) * k / n_arc
+        pts.append((w - rb + rb * math.cos(a), z0 + rb + rb * math.sin(a)))
+    wt = w * tumble
+    for k in range(n_arc + 1):                                  # top corner (+y)
+        a = (math.pi / 2) * k / n_arc
+        pts.append((wt - rt + rt * math.cos(a), zt - rt + rt * math.sin(a)))
+    pts.append((0.0, zt))
+    half = pts[1:-1]
+    mirror = [(-y, z) for (y, z) in reversed(half)]
+    return pts[:-1] + [(0.0, zt)] + mirror
+
+
+def _loft(br, stations, close_front=True, inward=False):
+    """Quads between consecutive rings; stations = [(x, ring)], each ring the same length."""
+    rings = [[(x, y, z) for (y, z) in ring] for x, ring in stations]
+    n = len(rings[0])
+    for a, b in zip(rings, rings[1:]):
+        for i in range(n):
+            q = [a[i], a[(i + 1) % n], b[(i + 1) % n], b[i]]
+            if inward:
+                q = q[::-1]
+            br.face(q, smooth=True)
+    if close_front:
+        br.face(list(reversed(rings[-1])) if not inward else rings[-1], smooth=False)
+
+
+def van2(kit, rng, doors_open=True):
+    """A dark high-roof cargo van of the Sprinter / Transit kind (5.9 x 2.0 x 2.6, no badges): a
+    lofted body (rounded sections, tumblehome, the sloped windshield and short bonnet), wheel
+    arches with flares, four wheels (tyre, steel rim, hub), glass, door seams and handles, mirrors,
+    lamps, grille, bumpers, a step; the rear doors swung open on a cargo bay of crates, duffels, rope
+    and a tarp. Built along +x = forward, centred, on the ground."""
+    P = kit.p("van", "ext", lmw=1.0)
+    T = kit.p("van_trim", "ext", lmw=0.7)
+    G = kit.p("glass_dark", "ext")
+    L = 5.92
+    x0 = -L / 2
+    hw = 1.0
+    xr, xf = x0 + 1.05, x0 + 4.55                               # wheel centres
+    R = 0.37
+    # stations: (x, half width, bottom, top); arches as raised bottoms over the wheels
+    S = [(x0, 0.97, 0.42, 2.56), (x0 + 0.05, 0.99, 0.4, 2.6), (xr - 0.5, hw, 0.4, 2.6), (xr - 0.47, hw, 0.8, 2.6),
+         (xr + 0.47, hw, 0.8, 2.6), (xr + 0.5, hw, 0.4, 2.6), (x0 + 3.85, hw, 0.4, 2.6), (x0 + 4.0, hw, 0.4, 2.52),
+         (xf - 0.5, 0.995, 0.4, 2.3), (xf - 0.47, 0.99, 0.8, 2.22), (x0 + 4.75, 0.98, 0.8, 1.36), (xf + 0.47, 0.96, 0.8, 1.16),
+         (xf + 0.5, 0.955, 0.42, 1.14), (x0 + 5.82, 0.92, 0.45, 1.0), (x0 + 5.9, 0.86, 0.5, 0.82)]
+    stations = [(x, _ring(w, z0, zt, rt=min(0.16, (zt - z0) * 0.2))) for x, w, z0, zt in S]
+    # (the rear is left open: the doors stand open on the bay)
+    _loft(P, stations)
+    # the cargo bay: a dark lining inside the opening, its floor, the bulkhead
+    K = kit.p("charcoal", "ext", lmw=0.6)
+    inner = [(x, _ring(w - 0.05, z0 + 0.22, zt - 0.06, rt=0.1)) for x, w, z0, zt in S[:2]] + [(x0 + 3.6, _ring(0.94, 0.62, 2.48, rt=0.1))]
+    _loft(K, inner, close_front=True, inward=True)
+    # rear frame: the door aperture's ring (body to lining)
+    a_out, a_in = stations[0][1], inner[0][1]
+    for i in range(len(a_out)):
+        j = (i + 1) % len(a_out)
+        P.face([(x0, *a_out[j]), (x0, *a_out[i]), (x0 + 0.0001, *a_in[i]), (x0 + 0.0001, *a_in[j])])
+    K.box((x0 + 0.02, -0.92, 0.6), (x0 + 3.6, 0.92, 0.64))
+    # wheel flares (black plastic arcs) and the wheels
+    for xc in (xr, xf):
+        for s in (-1, 1):
+            arc = [(xc + 0.56 * math.cos(a), s * (hw + 0.015), 0.4 + 0.5 * math.sin(a)) for a in [math.pi * k / 10 for k in range(11)]]
+            outer = [(xc + 0.64 * math.cos(a), s * (hw + 0.015), 0.4 + 0.58 * math.sin(a)) for a in [math.pi * k / 10 for k in range(11)]]
+            for k in range(10):
+                q = [arc[k], arc[k + 1], outer[k + 1], outer[k]]
+                T.face(q if s < 0 else q[::-1])
+            with kit.at((xc, s * (hw - 0.13), R), rx=90 * s):
+                kit.p("tyre", "ext", lmw=0.5).lathe([(0.21, -0.12), (0.3, -0.125), (0.355, -0.11), (0.37, -0.06), (0.37, 0.06), (0.355, 0.11), (0.3, 0.125), (0.21, 0.125)], seg=18, cap_top=False)
+                kit.p("darksteel", "ext", lmw=0.4).lathe([(0.0, 0.13), (0.06, 0.13), (0.07, 0.11), (0.21, 0.1), (0.215, 0.12)], seg=16, cap_top=False)
+                for k in range(5):
+                    a = 2 * math.pi * k / 5
+                    kit.p("black", "ext", lmw=0.1).cyl((0.13 * math.cos(a), 0.13 * math.sin(a)), 0.03, 0.105, 0.112, seg=6)
+    # glass: the windshield, the cab door windows
+    sl = lambda x: next(w for (xx, w, z0, zt) in S if xx >= x)
+    G.face([(x0 + 4.72, -0.9, 1.4), (x0 + 4.72, 0.9, 1.4), (x0 + 4.07, 0.92, 2.36), (x0 + 4.07, -0.92, 2.36)][::-1])
+    for s in (-1, 1):
+        y = s * (hw + 0.004)
+        wp = [(x0 + 3.95, y, 1.45), (x0 + 4.62, y, 1.45), (x0 + 4.16, y, 2.22), (x0 + 3.95, y, 2.25)]
+        G.face(wp if s > 0 else wp[::-1])
+        # seams: the cab door, the sliding door; handles; the mirror on its arm; the side marker
+        for xs in (x0 + 3.92, x0 + 4.66, x0 + 1.75, x0 + 3.0):
+            T.box((xs - 0.006, y - 0.004, 0.45), (xs + 0.006, y + 0.004, 2.25 if xs < x0 + 4.0 else 1.38))
+        T.box((x0 + 3.62, y - 0.01, 1.3), (x0 + 3.8, y + s * 0.025, 1.35), bevel=0.008)
+        T.box((x0 + 2.7, y - 0.01, 1.2), (x0 + 2.88, y + s * 0.025, 1.25), bevel=0.008)
+        T.box((x0 + 1.75, y - 0.01, 2.2), (x0 + 3.0, y + s * 0.02, 2.23))                  # the sliding door's track
+        with kit.at((x0 + 4.5, s * (hw + 0.05), 1.7)):
+            T.tube([(0, 0, -0.05), (0, s * 0.12, -0.02)], 0.015, sides=6)
+            T.box((-0.05, s * 0.12 - 0.08, -0.22), (0.07, s * 0.12 + 0.08, 0.12), bevel=0.03, seg=2)
+        kit.p("orange", "ext", lmw=0.1).box((x0 + 0.08, y - 0.005, 2.35), (x0 + 0.16, y + s * 0.01, 2.39))
+    # the nose: grille, headlamps, bumpers, plate; the rear: lamps, bumper, step, plate
+    T.box((x0 + 5.85, -0.6, 0.62), (x0 + 5.93, 0.6, 0.92), bevel=0.02)
+    for k in range(4):
+        kit.p("black", "ext", lmw=0.1).box((x0 + 5.93, -0.55, 0.66 + k * 0.065), (x0 + 5.935, 0.55, 0.69 + k * 0.065))
+    for s in (-1, 1):
+        G.face([(x0 + 5.86, s * 0.66, 0.84), (x0 + 5.86, s * 0.92, 0.86), (x0 + 5.74, s * 0.93, 1.02), (x0 + 5.8, s * 0.66, 0.98)][::1 if s > 0 else -1])
+        kit.p("chrome", "ext", lmw=0.1).cyl((x0 + 5.83, s * 0.8), 0.05, 0.88, 0.92, seg=10)
+        kit.p("red", "ext", lmw=0.2).box((x0 - 0.02, s * 0.9 - 0.07, 1.0), (x0 + 0.03, s * 0.9 + 0.07, 1.65), bevel=0.01)
+    T.box((x0 + 5.75, -1.0, 0.36), (x0 + 6.02, 1.0, 0.62), bevel=0.05, seg=2)
+    T.box((x0 - 0.12, -1.0, 0.34), (x0 + 0.08, 1.0, 0.56), bevel=0.04, seg=2)
+    T.box((x0 - 0.2, -0.5, 0.3), (x0 - 0.05, 0.5, 0.34))
+    kit.p("white", "ext", lmw=0.1).box((x0 + 6.02, -0.26, 0.42), (x0 + 6.03, 0.26, 0.54))
+    kit.p("white", "ext", lmw=0.1).box((x0 - 0.13, -0.26, 0.6), (x0 - 0.12, 0.26, 0.72))
+    if doors_open:
+        for s in (-1, 1):
+            # each rear leaf hinged at its corner, swung ~105 degrees out along the side
+            with kit.at((x0, s * 0.97, 0.42), rot=-s * 105):
+                lo, hi = ((-0.05, -0.95, 0.0), (0.0, 0.0, 2.12)) if s > 0 else ((-0.05, 0.0, 0.0), (0.0, 0.95, 2.12))
+                P.box(lo, hi, bevel=0.015)
+                G.panel((-0.051, -0.48 if s > 0 else 0.48, 1.65), "x", 0.62, 0.5)
+                T.box((-0.07, (-0.12 if s > 0 else 0.06), 1.0), (-0.05, (-0.06 if s > 0 else 0.12), 1.2))
+        # the load: plastic crates, duffels, a rope coil, a folded tarp
+        for k in range(3):
+            for j in range(2):
+                kit.p("black", "ext", lmw=0.4).box((x0 + 0.3 + k * 0.62, -0.75 + j * 0.62, 0.64), (x0 + 0.85 + k * 0.62, -0.25 + j * 0.62, 0.96), bevel=0.012)
+        for k in range(2):
+            with kit.at((x0 + 2.2 + k * 0.6, 0.45, 0.8), ry=90):
+                kit.p("charcoal", "ext", lmw=0.3).lathe([(0, -0.3), (0.13, -0.28), (0.16, -0.1), (0.16, 0.1), (0.13, 0.28), (0.0, 0.3)], seg=8)
+        rope = [(x0 + 1.0 + 0.2 * math.cos(a * 0.4), 0.55 + 0.2 * math.sin(a * 0.4), 0.66 + 0.01 * a) for a in range(40)]
+        kit.p("tan", "ext", lmw=0.2).tube(rope, 0.015, sides=5)
+        kit.p("blue", "ext", lmw=0.3).box((x0 + 2.8, -0.85, 0.64), (x0 + 3.5, -0.2, 0.78), bevel=0.04)
+    kit.collide((x0 - 0.12, -hw, 0), (x0 + 6.02, hw, 2.6))

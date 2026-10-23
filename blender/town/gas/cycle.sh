@@ -13,4 +13,4 @@ fi
 /Applications/Blender.app/Contents/Resources/5.0/python/bin/python3.11 blender/wilderness/levels/laurel_town.py --steps world 2>&1 | tail -1
 python3 blender/town/gas/views.py > /dev/null
 bash build/town/gas/restore.sh viewer assets/levels assets/textures assets/models > /dev/null 2>&1 || true
-node viewer/tools/wild_shots.mjs "$LABEL" --world laurel_town --qs "${WILD_QS:-&veg=0}" --views "$VIEWS" --extra build/town/gas/views.json 2>&1 | grep -v "^error: Failed to load resource: the server responded with a status of 404" | tail -14
+node viewer/tools/wild_shots.mjs "$LABEL" --world laurel_town --qs "${WILD_QS:-&veg=1}" --views "$VIEWS" --extra build/town/gas/views.json 2>&1 | grep -v "^error: Failed to load resource: the server responded with a status of 404" | tail -14
