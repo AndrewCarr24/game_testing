@@ -11,6 +11,10 @@ The brief is design/town/brief.md section 4 and its six shots.
 
 *Inside: long down the bar from the door, the pool table, the jukebox, a booth, the back room's door ajar from the bartender's aisle, the bottle wall, the stage, the river deck.*
 
+![aerial](bar/aerial.webp)
+
+*From the hillside over the river: the porch, the vans, the lot west to the highway and the pole sign, the river deck, the rooftop cocktail sign.*
+
 ## 1. What it is
 
 The one place in town the polish never reached. It is a long, low 1950s roadhouse on the river at the west edge of town, across the tracks. The highway curves past its gravel lot under Tunnel Knob.
@@ -66,7 +70,7 @@ The asset origin, the building's centre, is at estate (-2112, -804.5). The pad /
 - **The corridor door,** open. This is the way in.
 
 Inside the back room:
-- **Masks.** Two hook rails of the invaders' blank white masks (shaped like `invader_gear`'s), and two dark work jackets.
+- **Masks.** Two hook rails of blank white masks, our own shell modelled after the invaders' (`invader_gear`'s mask isn't imported), and two dark work jackets.
 - **The briefing table.** A folding table with six chairs. On it are the estate house's blueprint (drawn from `blender/levels/plan.py`'s ground floor), photos, charging radios and a coffee can.
 - **On the walls.** A cork board with blank pinned sheets and a red string, and a topo map with a red road.
 - **Storage.** Kegs, beer crates and cases, a wire shelf, and an old green safe.
@@ -119,7 +123,7 @@ The emissive pieces emit too.
 |---|---|---|
 | triangles | 152.9k LOD0 (props 71k, outside props + vehicles 32k, vinyl 20k, wood 10k, deck 6k), LOD1 94 | 60-150k |
 | draw calls (the building in view) | 13 materials (5 inside, 7 outside + glass, 1 glow); LOD1: 1 | ≤ 25 |
-| GPU textures | 20.9 MB (lightmaps 5.6 + 2.8, eight 512² maps 1.4 each, eight 256² maps 0.35 each, two env 0.7 each; + PMREM targets) | ≤ ~20 MB |
+| GPU textures | 20.9 MB of maps (lightmaps 5.6 + 2.8, six 512² maps 1.4 each, eight 256² maps 0.35 each, two env 0.7 each) + ~3 MB of PMREM targets for the two panoramas (GPU only): ~24 MB, a little over | ≤ ~20 MB |
 | download | 3.25 MB geometry (Draco) + 0.5 MB textures | ≤ 6 MB |
 | colliders | 172 boxes (walls split at the doors, the bar, stools, booths, tables, the stage, the porch and its steps, the deck, 22 stair treads, the landing, vehicles, the sign) | |
 
@@ -137,7 +141,7 @@ The emissive pieces emit too.
 
   The bar then costs about 30 ms on SwiftShader. It adds about 15 draw calls (34 vs 19) and about 156k triangles.
 
-  The default run afterwards measured 145-250 ms across the three views at that load. The budget is ≤ 200 ms.
+  The default run afterwards measured 145-250 ms across the three views at that load. The budget is ≤ 200 ms, so the bar may be OVER on SwiftShader; the load made it unmeasurable. Re-bench on a quiet machine.
 
 **Walk tests:**
 - `node blender/town/bar/walk.mjs` walks the real player along four routes:
@@ -148,6 +152,8 @@ The emissive pieces emit too.
 
   PASS.
 - `node viewer/tools/wild_walkin.mjs bar` (the bar is added as `site_bar`): PASS, 4 m inside.
+- `node viewer/tools/wild_routes.mjs --world laurel_town` (the road route ends at the bar's lot): road 1,384 m and river 1,271 m, both 0 stuck and 0 falls.
+- LOD: the 13 LOD0 nodes show at 41 m and only `Town2Bar_LOD1` at 200 m (`town.update`). From the strip and Main Street the bar is behind the rail embankment and trees, so LOD1 is mostly seen from the river and the hillsides.
 
 ## 5. How to build
 

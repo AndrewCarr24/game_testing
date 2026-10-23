@@ -366,7 +366,7 @@ HIDES = [
     dict(name="under_depot_platform", x=-1735, y=-743, kind="crawl", note="1.15 m under the freight platform"),
     dict(name="under_bridge_south", x=-1592, y=-826, kind="bank", note="the river bank under the truss's south span"),
     dict(name="under_bridge_north", x=-1578, y=-776, kind="bank", note="under the north span, by the pier"),
-    dict(name="bar_deck_underside", x=-2112, y=-819, kind="crawl", note="under the bar's river deck, on the gravel"),
+    dict(name="bar_deck_underside", x=-2122, y=-813.5, kind="crawl", note="under the bar's river deck, on the bank"),   # [bar] under town2_bar's deck
     dict(name="motel_ice_alcove", x=-2060, y=-715, kind="alcove", note="the ice-machine alcove"),
     dict(name="church_tower", x=-1707, y=-716, kind="climb", note="the steeple's bell deck (sees the whole town)"),
     dict(name="raft_racks", x=-1748, y=-780, kind="cover", note="the outfitter's raft racks on the river walk"),
@@ -427,7 +427,7 @@ def views():
         motel_lot=dict(pos=(-2040, -672), look=(-2070, -684, -184.0)),
         # [bar] the roadhouse (town2_bar): the lot low at knee height; along the porch; inside the door, long down the bar
         bar_lot=dict(pos=(-2090.0, -788.5, 0.5), look=(-2114.0, -797.5, -183.9)),
-        bar_porch=dict(pos=(-2099.4, -796.2, 2.05), look=(-2120.0, -794.9, -184.1)),
+        bar_porch=dict(pos=(-2100.6, -795.2, 2.05), look=(-2120.0, -796.5, -184.1)),
         bar_room=dict(pos=(-2103.4, -798.7, 2.05), look=(-2115.5, -809.1, -184.6)),
         mill_hill=dict(pos=(-1760, -996), look=(-1700, -800, -182.0)),
         steeple=dict(pos=(-1707, -720, 17.0), look=(-1900, -760, -186.0)),
