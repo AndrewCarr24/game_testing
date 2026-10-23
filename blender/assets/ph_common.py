@@ -105,20 +105,20 @@ def slab():
 def pool_stone():
     m = common.pbr_material("M_PH_PoolStone", (0.12, 0.15, 0.14), roughness=0.35)
     common.set_base_color_map(m, textures.load(ph_textures.slabs(name="T_PH_PoolStone_BaseColor", seed=75,
-                                                                    color=(0.11, 0.145, 0.135), rows=8)))
+                                                                    color=(0.11, 0.145, 0.135), rows=8, n=512)))
     return m
 
 
 def mosaic():
     m = common.pbr_material("M_PH_Mosaic", (0.02, 0.05, 0.05), roughness=0.18)
-    common.set_base_color_map(m, textures.load(ph_textures.mosaic()))
+    common.set_base_color_map(m, textures.load(ph_textures.mosaic(n=512)))
     return m
 
 
 def cedar():
     m = common.pbr_material("M_PH_Cedar", (0.36, 0.22, 0.13), roughness=0.7)
     common.set_base_color_map(m, textures.load(textures.wood("T_PH_Cedar_BaseColor", (0.22, 0.12, 0.065),
-                                                             (0.42, 0.26, 0.15), seed=91, rings=26)))
+                                                             (0.42, 0.26, 0.15), seed=91, rings=26, n=512)))
     return m
 
 

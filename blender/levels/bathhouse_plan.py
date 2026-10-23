@@ -67,6 +67,7 @@ STAIR_RUN = 0.28
 SKY_HALL = (37.55, 31.5, 38.35, 44.0)      # a slot along the east wall: light washes down the stone
 SKY_STAIR = (38.95, 34.95, 41.05, 40.05)   # the top of the shaft
 SKY_FIRE = (39.1, 33.95, 44.4, 34.35)      # a slot along the red room's north wall
+SKY_COLD = (38.75, 40.7, 41.25, 41.05)     # over the plunge, along its south wall: light down the slab
 
 # the passage workstream's landing (x 38.5..41.5, y 31.5..34.5, z -4.2) as a stand-in room, so
 # the stair can be walked and tested before their tunnel is merged. The orchestrator drops it
@@ -83,11 +84,12 @@ ROOMS = {
     # so the grounds clad its exterior and it gets a roof; nav False, power "own", reverb: the
     # passage's below-ground flags, plan.py UNDERGROUND)
     "ph_stair": dict(rect=STAIR, level=0, z=(DEEP, H_HALL), building=B, module=B, facade="stone",
-                     nav=False, power="own", reverb=0.22,
+                     nav=False, power="own", reverb=0.22, below=True,   # (below: drawn with the rooms below ground,
+                     # seen from the sealed tunnel: viewer/secret_passage.js, batching.js)
                        ceiling_holes=[SKY_STAIR]),
     "ph_steam": dict(rect=STEAM, level=0, height=H_STEAM, building=B, module=B, facade="stone"),
     "ph_cold":  dict(rect=COLD, level=0, height=H_COLD, building=B, module=B, facade="stone",
-                       floor_holes=[(PLUNGE[0] - T, PLUNGE[1] - T, PLUNGE[2] + T, PLUNGE[3])]),
+                       floor_holes=[(PLUNGE[0] - T, PLUNGE[1] - T, PLUNGE[2] + T, PLUNGE[3])], ceiling_holes=[SKY_COLD]),
     "ph_rest":  dict(rect=REST, level=0, height=H_REST, building=B, module=B, facade="stone"),
 }
 if STUB_LANDING:

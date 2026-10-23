@@ -32,14 +32,13 @@ def _courses(total, lo, hi, rng):
     return hs * total / hs.sum()
 
 
-def coursed_stone(force=False, name="T_PH_Stone_BaseColor", seed=71, tile=2.0, dark=False):
+def coursed_stone(force=False, n=N, name="T_PH_Stone_BaseColor", seed=71, tile=2.0, dark=False):
     """Dry-laid thin courses (2.5..9 cm) of grey-green gneiss, stones 0.25..1.2 m long, the joints
     a dark shadow line under each course. One tile = `tile` m square; courses run along u."""
     path = _path(name)
     if os.path.exists(path) and not force:
         return path
     rng = np.random.default_rng(seed)
-    n = N
     u, v = _grid(n)
     heights = _courses(tile, 0.018, 0.075, rng)
     edges = np.concatenate([[0], np.cumsum(heights)]) / tile           # course boundaries in v (0..1)
@@ -86,14 +85,13 @@ def coursed_stone(force=False, name="T_PH_Stone_BaseColor", seed=71, tile=2.0, d
     return tx._save(name, tx._to_srgb(lin))
 
 
-def slabs(force=False, name="T_PH_Slab_BaseColor", seed=73, tile=2.4, color=(0.24, 0.235, 0.215), rows=4):
+def slabs(force=False, n=N, name="T_PH_Slab_BaseColor", seed=73, tile=2.4, color=(0.24, 0.235, 0.215), rows=4):
     """Long honed slabs of the same stone in 0.6 m rows (random lengths 0.9..2.4 m), 2 mm joints.
     One tile = `tile` m; rows run along u."""
     path = _path(name)
     if os.path.exists(path) and not force:
         return path
     rng = np.random.default_rng(seed)
-    n = N
     u, v = _grid(n)
     row = np.floor(v * rows).astype(int)
     vin = (v * rows) % 1.0
@@ -122,14 +120,13 @@ def slabs(force=False, name="T_PH_Slab_BaseColor", seed=73, tile=2.4, color=(0.2
     return tx._save(name, tx._to_srgb(lin))
 
 
-def ando_concrete(force=False, name="T_PH_Concrete_BaseColor", seed=79):
+def ando_concrete(force=False, n=N, name="T_PH_Concrete_BaseColor", seed=79):
     """Tadao Ando's board-formed concrete: smooth, pale, faintly mottled; one tile = 1.82 m square =
     two 0.91 x 1.82 m form panels, each with its six tie holes (three across, two up, 2.4 cm)."""
     path = _path(name)
     if os.path.exists(path) and not force:
         return path
     rng = np.random.default_rng(seed)
-    n = N
     u, v = _grid(n)
     W = 1.82
     x, y = u * W, v * W
@@ -154,13 +151,12 @@ def ando_concrete(force=False, name="T_PH_Concrete_BaseColor", seed=79):
     return tx._save(name, tx._to_srgb(lin))
 
 
-def lime_plaster(force=False, name="T_PH_Red_BaseColor", seed=83, color=(0.30, 0.042, 0.026)):
+def lime_plaster(force=False, n=N, name="T_PH_Red_BaseColor", seed=83, color=(0.30, 0.042, 0.026)):
     """Oxblood lime plaster (the Vals fire bath's red): soft clouds and trowel marks. Tile 2 m."""
     path = _path(name)
     if os.path.exists(path) and not force:
         return path
     rng = np.random.default_rng(seed)
-    n = N
     cloud = tx._noise(n, 1.0, 1.0, 2.3, rng)
     trowel = tx._noise(n, 0.35, 1.0, 1.5, rng)
     fine = tx._noise(n, 1.0, 1.0, 0.5, rng)
@@ -170,13 +166,12 @@ def lime_plaster(force=False, name="T_PH_Red_BaseColor", seed=83, color=(0.30, 0
     return tx._save(name, tx._to_srgb(lin))
 
 
-def mosaic(force=False, name="T_PH_Mosaic_BaseColor", seed=89, tiles=20):
+def mosaic(force=False, n=N, name="T_PH_Mosaic_BaseColor", seed=89, tiles=20):
     """2.5 cm glazed tiles, deep teal-black with a few lighter ones, pale grey grout. Tile 0.5 m."""
     path = _path(name)
     if os.path.exists(path) and not force:
         return path
     rng = np.random.default_rng(seed)
-    n = N
     u, v = _grid(n)
     i, j = np.floor(u * tiles).astype(int), np.floor(v * tiles).astype(int)
     fu, fv = (u * tiles) % 1.0, (v * tiles) % 1.0

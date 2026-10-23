@@ -140,14 +140,14 @@ class House:
         z0, z1 = self.z_range(room)
         f = self.finishes[room]
         kind = r.get("kind", "room")
-        # (the bathhouse) floor_holes / ceiling_holes [(x0, y0, x1, y1)]: the slab is split round
+        # (the bathhouse) floor_holes / ceiling_holes [(x0, y0, x1, y1)] (keep_slices wants (a0, a1, z0, z1)): the slab is split round
         # them (sunken pools, skylights; whoever asks for one builds what goes in it)
-        for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, r.get("floor_holes", []))):
+        for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, [(h[0], h[2], h[1], h[3]) for h in r.get("floor_holes", [])])):
             for j, (ky0, ky1) in enumerate(keep):
                 self.slab(room, f"{room}_Floor" + (f"_{i}_{j}" if r.get("floor_holes") else ""),
                           (s0, ky0, z0 - P.SLAB), (s1, ky1, z0), f["floor"], uv_tile=f.get("floor_uv_tile", 2.0))
         if kind != "courtyard":
-            for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, r.get("ceiling_holes", []))):
+            for i, (s0, s1, keep) in enumerate(keep_slices(x0, x1, y0, y1, [(h[0], h[2], h[1], h[3]) for h in r.get("ceiling_holes", [])])):
                 for j, (ky0, ky1) in enumerate(keep):
                     self.slab(room, f"{room}_Ceiling" + (f"_{i}_{j}" if r.get("ceiling_holes") else ""),
                               (s0, ky0, z1), (s1, ky1, z1 + P.SLAB), f["ceiling"])

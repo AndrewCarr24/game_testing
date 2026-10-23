@@ -34,7 +34,10 @@ const result = await p.evaluate(async (only) => {
     if (only && !only.some((o) => name === o || name.startsWith(o))) continue;   // (names or prefixes: ROOMS=ph_,tunnel)
     const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
     starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2], [x1 - 1.2, z0 + 1.2]]
-      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p)).slice(0, 3);
+      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p))
+      // (a start the spiral found outside the room's own rect isn't in it: the bathhouse's stair,
+      // whose floor is all treads, spiralled out into the ground beside it)
+      .filter((p) => p[0] > x0 && p[0] < x1 && p[1] > z0 && p[1] < z1).slice(0, 3);
   }
   // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
   // on the lawn); outside the house the floor is the lawn, not 0
@@ -90,5 +93,8 @@ const result = await p.evaluate(async (only) => {
 }, only);
 console.log(`${result.runs} runs, ${result.bad.length} ended somewhere impossible`);
 for (const r of result.bad.slice(0, 15)) console.log(JSON.stringify(r));
+const by = {};
+for (const r of result.bad) by[`${r.room} ${r.why} from ${r.start}`] = (by[`${r.room} ${r.why} from ${r.start}`] || 0) + 1;
+for (const [k, n] of Object.entries(by)) console.log(`  ${n} x ${k}`);
 await b.close();
 process.exit(result.bad.length ? 1 : 0);

@@ -32,7 +32,7 @@ def stone():
 
 def stone_dark():
     return _mat("M_PH_StoneDark", (0.1, 0.105, 0.1), 0.8,
-                ph_textures.coursed_stone(name="T_PH_StoneDark_BaseColor", seed=72, dark=True))
+                ph_textures.coursed_stone(name="T_PH_StoneDark_BaseColor", seed=72, dark=True, n=512))
 
 
 def slab():
@@ -41,25 +41,25 @@ def slab():
 
 def slab_dark():
     return _mat("M_PH_SlabDark", (0.08, 0.085, 0.08), 0.42,
-                ph_textures.slabs(name="T_PH_SlabDark_BaseColor", seed=74, color=(0.075, 0.085, 0.08)))
+                ph_textures.slabs(name="T_PH_SlabDark_BaseColor", seed=74, color=(0.075, 0.085, 0.08), n=512))
 
 
 def pool_stone():
     """The pools' basins: the same slabs, a shade greener and darker under the water."""
     return _mat("M_PH_PoolStone", (0.12, 0.15, 0.14), 0.35,
-                ph_textures.slabs(name="T_PH_PoolStone_BaseColor", seed=75, color=(0.11, 0.145, 0.135), rows=8))
+                ph_textures.slabs(name="T_PH_PoolStone_BaseColor", seed=75, color=(0.11, 0.145, 0.135), rows=8, n=512))
 
 
 def concrete():
-    return _mat("M_PH_Concrete", (0.33, 0.325, 0.31), 0.78, ph_textures.ando_concrete())
+    return _mat("M_PH_Concrete", (0.33, 0.325, 0.31), 0.78, ph_textures.ando_concrete(n=512))
 
 
 def red():
-    return _mat("M_PH_Red", (0.3, 0.042, 0.026), 0.92, ph_textures.lime_plaster())
+    return _mat("M_PH_Red", (0.3, 0.042, 0.026), 0.92, ph_textures.lime_plaster(n=512))
 
 
 def mosaic():
-    return _mat("M_PH_Mosaic", (0.02, 0.05, 0.05), 0.18, ph_textures.mosaic())
+    return _mat("M_PH_Mosaic", (0.02, 0.05, 0.05), 0.18, ph_textures.mosaic(n=512))
 
 
 def pale_ceiling():
@@ -69,7 +69,7 @@ def pale_ceiling():
 
 def cedar():
     return _mat("M_PH_Cedar", (0.36, 0.22, 0.13), 0.7,
-                textures.wood("T_PH_Cedar_BaseColor", (0.22, 0.12, 0.065), (0.42, 0.26, 0.15), seed=91, rings=26))
+                textures.wood("T_PH_Cedar_BaseColor", (0.22, 0.12, 0.065), (0.42, 0.26, 0.15), seed=91, rings=26, n=512))
 
 
 def oak():
@@ -82,7 +82,7 @@ FINISHES = {
     "ph_hall": dict(floor=slab, walls=stone, ceiling=pale_ceiling, floor_uv_tile=2.4, wall_uv_tile=2.0),
     "ph_fire": dict(floor=slab_dark, walls=red, ceiling=red, floor_uv_tile=2.4, wall_uv_tile=2.0),
     "ph_steam": dict(floor=mosaic, walls=mosaic, ceiling=mosaic, floor_uv_tile=0.5, wall_uv_tile=0.5),
-    "ph_cold": dict(floor=slab_dark, walls=stone_dark, ceiling=stone_dark, floor_uv_tile=2.4, wall_uv_tile=2.0),
+    "ph_cold": dict(floor=slab_dark, walls=stone, ceiling=stone_dark, floor_uv_tile=2.4, wall_uv_tile=2.0),
     "ph_stair": dict(floor=concrete, walls=concrete, ceiling=concrete, floor_uv_tile=1.82, wall_uv_tile=1.82),
     "ph_rest": dict(floor=oak, walls=stone, ceiling=cedar, floor_uv_tile=2.0, wall_uv_tile=2.0),
 }
@@ -150,18 +150,23 @@ LIGHTS = {
         dict(kind="area", pos=(0.0, 1.38, 2.96), size=(5.0, 0.3), aim=(0.0, 1.6, 0.0), power=35.0, color=(1.0, 0.75, 0.55)),
     ],
     "ph_steam": [
-        dict(kind="area", pos=(0.0, 0.0, 2.55), size=(1.0, 4.4), aim=(0.0, 0.0, 0.0), power=16.0, color=(0.75, 0.9, 1.0)),
+        dict(kind="area", pos=(0.0, 0.0, 2.55), size=(1.0, 4.4), aim=(0.0, 0.0, 0.0), power=45.0, color=(0.75, 0.9, 1.0)),
     ],
     "ph_stair": [
         # the pool's glass end: cold light through the water
-        dict(kind="area", pos=(-1.25, 0.1, 3.45), size=(5.0, 1.0), aim=(1.35, 0.1, 2.6), power=85.0, color=(0.45, 0.85, 0.95)),
+        dict(kind="area", pos=(-1.25, 0.1, 3.45), size=(5.0, 1.0), aim=(1.35, 0.1, 2.6), power=85.0, color=(0.45, 0.85, 0.95),
+             signal=None),
         # small warm lights under the handrail, down onto the treads
         *[dict(kind="area", pos=(1.25, y, 1.02 + (y + 2.85) * 0.63), size=(0.5, 0.05), aim=(1.0, y, 0.0), power=3.0,
-               color=(1.0, 0.78, 0.55)) for y in (-2.2, -0.9, 0.4, 1.6)],
+               color=(1.0, 0.78, 0.55), signal=None) for y in (-2.2, -0.9, 0.4, 1.6)],
+        dict(kind="area", pos=(1.25, 2.3, 3.75), size=(0.5, 0.05), aim=(0.5, 2.3, 3.0), power=10.0, color=(1.0, 0.78, 0.55),
+             signal=None),
     ],
     "ph_cold": [
-        dict(kind="area", pos=(-1.75, -1.1, -1.15), size=(2.4, 0.6), aim=(-1.75, -1.1, 3.0), power=22.0, color=(0.8, 0.92, 1.0)),
-        dict(kind="spot", pos=(-1.75, 0.5, 3.5), aim=(-1.75, -1.85, 0.4), power=18.0, angle=32.0, blend=0.8, color=(1.0, 0.85, 0.7)),
+        dict(kind="area", pos=(-1.75, -1.1, -1.15), size=(2.4, 0.6), aim=(-1.75, -1.1, 3.0), power=60.0, color=(0.8, 0.92, 1.0)),
+        # a warm wash down the wall over the slab, from the sky slot above the plunge
+        dict(kind="area", pos=(-1.75, -1.6, 3.55), size=(2.4, 0.3), aim=(-1.75, -1.85, 0.0), power=35.0, color=(1.0, 0.82, 0.62)),
+        dict(kind="spot", pos=(-1.75, 0.5, 3.5), aim=(-1.75, -1.85, 0.4), power=40.0, angle=32.0, blend=0.8, color=(1.0, 0.85, 0.7)),
     ],
     "ph_rest": [
         # a cove along the south wall washing the cedar ceiling

@@ -98,8 +98,8 @@ P = dict(LOOKS[LOOK], look=LOOK,
          # GPU memory for all lightmap atlases together (lightmap_policy shares it out by
          # texel density; 2026-10-20: 5 x 1024² + 21 x 512² were 57.4 MB)
          lightmap_mb=62.0,
-         # the detached buildings' own share (the bathhouse: 7 rooms; its hall at 1024 x 1024)
-         lightmap_mb_buildings=17.0,
+         # the detached buildings' own share (the bathhouse: 6 rooms; its hall at 1024 x 1024)
+         lightmap_mb_buildings=14.0,
          lightmap_hero=1.3)                # double-height rooms count their density / this (big, seen from afar)
 LIGHTMAP_SIZES = [(512, 512), (1024, 512), (1024, 1024)]
 
@@ -668,7 +668,7 @@ def build(export=True, rooms_only=None, write_json=True, zones_only=None):
                     "lights": room_signal[r]}            # the signal its lights follow (lights off: bake.py, baked.js)
         # (below ground) plan flags for the engine: nav false = off the invaders' nav, sealed =
         # nothing above ground seen from it, power "own" = lit whatever the house's power, reverb
-        for k in ("nav", "sealed", "power", "reverb", "kind"):
+        for k in ("nav", "sealed", "power", "reverb", "kind", "below"):   # (below: the bathhouse's stair, see bathhouse_plan)
             if k in plan.ROOMS[r] and (k != "kind" or plan.ROOMS[r][k] == "shaft"):
                 rooms[r][k] = plan.ROOMS[r][k]
     level = {

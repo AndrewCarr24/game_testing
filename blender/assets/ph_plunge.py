@@ -86,7 +86,7 @@ def build(**overrides):
     # (its courses don't quite meet the wall's: the only tell)
     stone_dark = common.pbr_material("M_PH_StoneDark", (0.1, 0.105, 0.1), roughness=0.8)
     common.set_base_color_map(stone_dark, pc.textures.load(pc.ph_textures.coursed_stone(
-        name="T_PH_StoneDark_BaseColor", seed=72, dark=True)))
+        name="T_PH_StoneDark_BaseColor", seed=72, dark=True, n=512)))
     lower = pc.box(f"{n}_Slab_Lower", (-sw / 2, -st / 2, fl + 0.004), (sw / 2, st / 2, 0.0), pc.pool_stone(), col, slab,
                    uv_tile=1.2)
     upper = pc.box(f"{n}_Slab_Upper", (-sw / 2, -st / 2, 0.0), (sw / 2, st / 2, p["slab_top"] - 0.004), stone_dark, col,

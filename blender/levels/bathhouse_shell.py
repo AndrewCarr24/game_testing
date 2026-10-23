@@ -145,7 +145,7 @@ def build(h, plan):
     plunge(h, mats)
     stair(h, mats)
     stones(h, mats)
-    for room, hole in (("ph_hall", BP.SKY_HALL), ("ph_fire", BP.SKY_FIRE), ("ph_stair", BP.SKY_STAIR)):
+    for room, hole in (("ph_hall", BP.SKY_HALL), ("ph_fire", BP.SKY_FIRE), ("ph_stair", BP.SKY_STAIR), ("ph_cold", BP.SKY_COLD)):
         skylight(h, room, hole, h.z_range(room)[1])
     blockers(h)
     world_uvs(h, set(rooms))
