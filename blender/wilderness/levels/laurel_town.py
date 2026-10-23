@@ -211,6 +211,8 @@ KIT = {
 # the store behind it, the side lot and the back lot: 44 x 40 m, its front on the road's edge
 KIT["site_gas_station"] = (44, 40, 6, True, "site")
 
+# [diner] the diner's lot: head-in parking in front of the car, the yard behind (design/town/diner.md)
+KIT["site_diner"] = (30, 30, 6.2, True, "site")
 
 PROJECT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
@@ -256,7 +258,7 @@ def layout_buildings():
     return [
         B("bar", "site_bar", -2112, -796.5, 180, "THE BAR (the roadhouse): the turn", site=True),
         F("gas", "site_gas_station", -1880, -720.6, 0, "gas station + convenience store", site=True),   # [gas] front on the road's edge
-        F("diner", "site_diner", -1935, -719, 0, "the diner", site=True),
+        F("diner", "site_diner", -1935, -721.5, 0, "the diner", site=True),   # [diner] the lot meets the highway's edge
     ]
 
 
@@ -431,6 +433,9 @@ def views():
         # [gas] the gas station (town2_gas): under the canopy toward the store; inside, down the aisle to the coolers
         gas_lot=dict(pos=(-1887.0, -710.1), look=(-1886.0, -697.6, -182.3)),
         gas_store=dict(pos=(-1886.5, -695.6, 2.0), look=(-1888.0, -684.6, -182.8)),
+        # [diner] the diner (design/town/diner.md): low in its lot, and inside from the east end
+        diner_lot=dict(pos=(-1941.0, -718.0, 1.0), look=(-1935.0, -705.5, -181.7)),
+        diner_room=dict(pos=(-1927.2, -705.0, 2.16), look=(-1941.0, -702.3, -182.9)),
     )
 
 

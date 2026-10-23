@@ -375,6 +375,8 @@ export class Town {
         // [/town2 sites]
         root.name = `Town_${b.id}`;
         this.group.add(root);
+        // (a site with only a `<Root>_LOD1` node: everything beside it is the near version)
+        if (lod.far.length && !lod.near.length) for (const f of lod.far) for (const o of f.parent.children) if (!lod.far.includes(o)) lod.near.push(o);
         this.sites.push({ id: b.id, root, lod });
       } catch (e) { console.warn('town site', b.id, e.message); }
     }
