@@ -295,7 +295,19 @@
     // ------------------------------------------------------------ level
     async function viewLevel(name) {
       const base = '../assets/';
-      const level = await (await fetch(`${base}levels/${name}.json`)).json();
+      // (cache) the level file is always fetched fresh, and its Last-Modified stamps every other
+      // asset URL (?v=): after a rebuild the browser can't mix a cached old shell with the new
+      // level (it once kept a pre-passage shell: the library's ladder rolled, the floor had no
+      // folding pieces), while an unchanged build still caches
+      const levelRes = await fetch(`${base}levels/${name}.json`, { cache: 'no-store' });
+      const stamp = Date.parse(levelRes.headers.get('last-modified') || '') || 0;
+      if (stamp) {
+        const ver = (u) => (/\/assets\//.test(u) && !/^(data|blob):/.test(u) && !/[?&]v=/.test(u) ? `${u}${u.includes('?') ? '&' : '?'}v=${stamp}` : u);
+        THREE.DefaultLoadingManager.setURLModifier(ver);
+        const fetch0 = window.fetch.bind(window);
+        window.fetch = (u, o) => fetch0(typeof u === 'string' ? ver(new URL(u, location.href).href) : u, o);
+      }
+      const level = await levelRes.json();
       window.__level = level;
       // signals (switches, `use` points, the tablet, power) and noise (thrown things landing,
       // what the Grimble hears): prompts/interactivity.md, viewer/signals.js
