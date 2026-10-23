@@ -160,6 +160,7 @@
     import { Weapons, spawnDummy } from './weapons.js';     // (combat) the player's weapons + view model
     import { EstateGate } from './estate_gate.js';   // (estate_link) the gate out to the wilderness and back
     import { HouseCar } from './vehicle_house.js';   // (vehicle) the estate's car, drivable (viewer/vehicle.js)
+    import { SecretPassage } from './secret_passage.js';   // (secret passage) the folding floor, rooms below ground
 
     const params = new URLSearchParams(location.search);
     const stats = document.getElementById('stats');
@@ -333,7 +334,7 @@
           // the shadow must cover the whole level: walls and ceilings are what keep the
           // sun out of interior rooms, so a prop outside the shadow box is lit as if outdoors
           const bounds = new THREE.Box3();
-          for (const c of level.colliders) bounds.union(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));
+          for (const c of level.colliders) if (!c.under) bounds.union(new THREE.Box3(new THREE.Vector3(...c.min), new THREE.Vector3(...c.max)));   // (secret passage: not the rooms below ground)
           const centre = bounds.getCenter(new THREE.Vector3());
           const radius = bounds.getSize(new THREE.Vector3()).length() / 2;
           sun.target.position.copy(centre);
@@ -359,8 +360,10 @@
       if (baked) baked.applyLightmaps(shell.scene);
       scene.add(shell.scene);
       // the grounds: lawn, terrace, hedge and the outdoor zones, lighting baked into vertex colours
+      let outdoorScene = null;   // (secret passage: hidden from the sealed rooms below ground)
       if (outdoorLoad) {
         const outdoor = await outdoorLoad;
+        outdoorScene = outdoor.scene;
         total += prepare(outdoor.scene).tris;
         applyOutdoor(outdoor.scene, sky, baked?.bake.outdoor);
         scene.add(outdoor.scene);
@@ -543,6 +546,11 @@
           culler.rooms.find((r) => r.name === room)?.objects.push(o);
         });
       }
+      // ---- (secret passage) viewer/secret_passage.js: the library's folding floor (shell pieces with a
+      // react), the rooms below ground culled with their room, the house hidden from the sealed ones
+      const secret = new SecretPassage({ scene, shell: shell.scene, outdoor: outdoorScene, sky, culler, level, interact, renderer });
+      window.__secret = secret;
+      // ---- (end secret passage)
       stats.textContent = `${level.props.length} props · ${Math.round(total)} tris · ${colliders.length} colliders · ${before}→${after} meshes`;
 
       camera.fov = 65; camera.updateProjectionMatrix();
@@ -792,6 +800,7 @@
         for (const it of moved) if (it.collider && it.t === it.target) player.pushOutOf(it.collider);
         if (throwables.update(dt)) renderer.shadowMap.needsUpdate = true;
         if (culler.update(camera.position, camera)) renderer.shadowMap.needsUpdate = true;
+        secret.update();                         // (secret passage) below ground: the house hidden from the sealed rooms
         baked?.setGlassSun(!culler.here || culler.here.name === 'courtyard');   // the sun's glint on glass only from outdoors
         baked?.update(dt);                       // lights off: rooms fade with their light switch / power
         tablet.update(dt);                       // the camera feed (~5 fps, while that page is open)

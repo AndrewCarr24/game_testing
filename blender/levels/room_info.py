@@ -22,7 +22,10 @@ def info(room):
     cx, cy = (ix0 + ix1) / 2, (iy0 + iy1) / 2
     z0 = plan.LEVEL_Z[r["level"]]
     h = plan.TOP - z0 if (r.get("double") or kind == "courtyard") else plan.HEIGHT[r["level"]]
-    lines = [f"ROOM {room}: {kind}, level {r['level']} ({'ground' if r['level'] == 0 else 'upper'})"
+    if "z" in r:                                   # (below ground) its own extent
+        z0, h = r["z"][0], r["z"][1] - r["z"][0]
+    lines = [f"ROOM {room}: {kind}, level {r['level']} "
+             f"({ {0: 'ground', 1: 'upper'}.get(r['level'], 'below ground')}, floor z {z0:+.2f})"
              + (", double height" if r.get("double") else ""),
              f"  interior {ix1 - ix0:.2f} m (x, west-east) by {iy1 - iy0:.2f} m (y, south-north), "
              f"ceiling {h:.2f} m" + (" (open to the sky)" if kind == "courtyard" else ""),
@@ -45,6 +48,15 @@ def info(room):
                                 if c.get("door") else "")
             lines.append(f"    {side} wall: {what} from {a0 - off:+.2f} to {a1 - off:+.2f} "
                          f"(along {'x' if axis == 'x' else 'y'}), height {cz0 - z0:.1f}..{cz1 - z0:.1f}")
+            found = True
+    # (below ground) shafts standing in this room, and this shaft's host rooms
+    for n, q in plan.ROOMS.items():
+        if n == room or q.get("kind") != "shaft":
+            continue
+        sx0, sy0, sx1, sy1 = q["rect"]
+        if sx0 < x1 and sx1 > x0 and sy0 < y1 and sy1 > y0 and q["z"][1] > z0 and q["z"][0] < z0 + h:
+            lines.append(f"    SHAFT {n} stands in this room: x {max(sx0, ix0) - cx:+.2f}..{min(sx1, ix1) - cx:+.2f}, "
+                         f"y {max(sy0, iy0) - cy:+.2f}..{min(sy1, iy1) - cy:+.2f} (+0.15 m of wall round it); keep clear")
             found = True
     for a, b in plan.OPEN:
         if room in (a, b):

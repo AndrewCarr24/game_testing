@@ -255,7 +255,39 @@ def base(plan):
     for lo, hi in (((bx0 - w, by0 - w, z), (bx1 + w, by0, z + BOUND_H)), ((bx0 - w, by1, z), (bx1 + w, by1 + w, z + BOUND_H)),
                    ((bx0 - w, by0, z), (bx0, by1, z + BOUND_H)), ((bx1, by0, z), (bx1 + w, by1, z + BOUND_H))):
         out.append((lo, hi, "bound"))
-    return out
+    # (below ground) a room under the ground that climbs up through it (the secret stair's shaft,
+    # up into the den): the lawn / terrace boxes are cut round it (rooms that stay below, the
+    # tunnels, leave them whole: their ceilings are under the boxes)
+    holes = []
+    for r in plan.ROOMS.values():
+        if r.get("level", 0) >= 0:
+            continue
+        top = r["z"][1] if "z" in r else plan.LEVEL_Z[r["level"]] + plan.HEIGHT[r["level"]]
+        if top > z:
+            holes.append(r["rect"])
+    return [piece for lo, hi, tag in out for piece in (_minus_rects(lo, hi, holes, tag) if tag == "ground" else [(lo, hi, tag)])]
+
+
+def _minus_rects(lo, hi, holes, tag):
+    """A box minus vertical prisms over xy rects: the pieces, [(lo, hi, tag)]."""
+    pieces = [(tuple(lo), tuple(hi))]
+    for hx0, hy0, hx1, hy1 in holes:
+        nxt = []
+        for a, b in pieces:
+            if hx0 >= b[0] or hx1 <= a[0] or hy0 >= b[1] or hy1 <= a[1]:
+                nxt.append((a, b))
+                continue
+            if a[0] < hx0:
+                nxt.append((a, (hx0, b[1], b[2])))
+            if hx1 < b[0]:
+                nxt.append(((hx1, a[1], a[2]), b))
+            mx0, mx1 = max(a[0], hx0), min(b[0], hx1)
+            if a[1] < hy0:
+                nxt.append(((mx0, a[1], a[2]), (mx1, hy0, b[2])))
+            if hy1 < b[1]:
+                nxt.append(((mx0, hy1, a[2]), (mx1, b[1], b[2])))
+        pieces = nxt
+    return [(a, b, tag) for a, b in pieces]
 
 
 def _flat(lo, hi):
@@ -282,7 +314,7 @@ def build(plan, placed, doors=()):
     hx0, hy0, hx1, hy1 = G["hedge"]["rect"]
     t = G["hedge"]["thick"]
     inner = (hx0 + t / 2, hy0 + t / 2, hx1 - t / 2, hy1 - t / 2)
-    rects = [r["rect"] for r in plan.ROOMS.values()]
+    rects = [r["rect"] for r in plan.ROOMS.values() if r.get("level", 0) >= 0]   # (not the rooms below ground)
     house = (min(r[0] for r in rects), min(r[1] for r in rects), max(r[2] for r in rects), max(r[3] for r in rects))
     g = lambda r: [r[0], -r[3], r[2], -r[1]]          # Blender rect -> glTF x0, z0, x1, z1
     print("GROUNDS colliders: " + ", ".join(f"{k} {len(v)}" for k, v in boxes.items()))

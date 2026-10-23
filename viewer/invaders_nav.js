@@ -258,6 +258,15 @@ export class HouseNav {
       this.fill(S, Math.min(...R.x), Math.min(...R.z), Math.max(...R.x), Math.max(...R.z), (L, k) => (L.open[k] = 1), true);
       // (the stair's own cells are carved out of the upper layer: no slab there anyway)
     }
+    // (secret passage) rooms off the nav (mansion.json rooms[r].nav === false: below ground; the
+    // shaft that stands in the den): every cell of a layer whose floor lies in their height span
+    for (const r of Object.values(this.level.rooms ?? {})) {
+      if (r.nav !== false) continue;
+      for (const L of [G, U]) {
+        if (L.floor < r.floor - 0.05 || L.floor > r.floor + r.height) continue;
+        this.fill(L, r.rect[0], r.rect[1], r.rect[2], r.rect[3], (LL, k) => (LL.blocked[k] = 1));
+      }
+    }
     for (const b of boxes) {
       if (b.isEmpty()) continue;
       for (const L of [G, U]) {

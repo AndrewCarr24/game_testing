@@ -74,7 +74,7 @@ PLACEMENTS = {
     # B: the safe key on the library reading table's leather mat, in front of the east lamp
     # (z 0.768: on the mat, not under it)
     "library": [
-        ("ix_key_safe", (2.05, -0.36, 0.768), 35),
+        ("ix_key_safe", (2.05, -0.36 + 1.6, 0.768), 35),    # (+1.6: the table moved north, rooms/library.py TY)
     ],
     # B: the floor safe against the office's east wall, north of the gym door (front faces west)
     "office": [

@@ -99,8 +99,12 @@ export class RoomCuller {
     this._box = new THREE.Box3();
     const upperY = Math.min(...Object.values(level.rooms).filter((r) => r.level === 1).map((r) => r.floor));
     this.upperY = upperY - 0.5;            // eye above this = on the upper floor
+    // (below ground) rooms under the house (plan level -1): found first, by their own height
+    // span (a shaft stands inside a room above ground); `sealed` ones see nothing above ground
+    this.lowerY = Math.min(0, ...Object.values(level.rooms).filter((r) => r.level >= 0).map((r) => r.floor)) - 0.5;
     this.rooms = Object.entries(level.rooms).map(([name, r]) => ({
-      name, rect: r.rect, level: r.level,
+      name, rect: r.rect, level: r.level, floor: r.floor, height: r.height || 4, sealed: !!r.sealed,
+      area: (r.rect[2] - r.rect[0]) * (r.rect[3] - r.rect[1]),
       always: name.includes('gallery') || name === 'courtyard',
       // open to the other floor: double height (they reach the upper floor), the gallery
       // ring and courtyard (glass and balustrades), the library (glass into the great room)
@@ -138,12 +142,20 @@ export class RoomCuller {
   update(pos, camera = null) {
     let n = 0, changed = false;
     if (camera) this._frustum.setFromProjectionMatrix(this._m.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
-    const level = pos.y > this.upperY ? 1 : 0;
+    const inRect = (r) => pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3];
+    // (below ground) the smallest room below ground whose own span holds the eye wins
+    let under = null;
+    for (const r of this.rooms) {
+      if (r.level >= 0 || !inRect(r) || pos.y < r.floor - 0.3 || pos.y > r.floor + r.height + 0.3) continue;
+      if (!under || r.area < under.area) under = r;
+    }
+    const level = under ? under.level : pos.y > this.upperY ? 1 : pos.y < this.lowerY ? -1 : 0;
     // the room the eye is in: if it's open to the other floor, so is the view
-    const here = this.rooms.find((r) => r.level === level && pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3])
-      ?? this.rooms.find((r) => pos.x >= r.rect[0] && pos.x <= r.rect[2] && pos.z >= r.rect[1] && pos.z <= r.rect[3] && r.vertical);
+    const here = under ?? this.rooms.find((r) => r.level === level && inRect(r))
+      ?? this.rooms.find((r) => inRect(r) && r.vertical);
     this.here = here ?? null;            // (outdoors: null)
     const crossFloor = !here || here.vertical;
+    const sealed = !!here?.sealed;       // (below ground) nothing above ground can be seen from here
     for (const r of this.rooms) {
       const [x0, z0, x1, z1] = r.rect;
       const dx = Math.max(x0 - pos.x, 0, pos.x - x1);
@@ -155,6 +167,12 @@ export class RoomCuller {
       const reach = !here?.seesOpen || here.seesOpen.has(r.name);       // ... or through a door opened
       let show = r.always || (sameFloor && d < this.near && reach) ||
         (d < this.far && inView && sight && (sameFloor || here?.sees));
+      if (sealed && r.level >= 0) show = false;                          // (below ground)
+      // (below ground) from above ground: only one the room sees (the den's slot), or a shaft
+      // whose way in stands open (`force`)
+      if (r.level < 0 && here?.level >= 0 && !(here.sees?.has(r.name) && inView && d < this.far)) show = false;
+      if (r.level < 0 && !here) show = false;
+      if (r.force && d < this.near) show = true;      // (a shaft whose floor is open: secret_passage.js)
       // ---- going outside: outdoors (no room here) a room is seen only through its own windows
       // and doorways in the outer walls (rooms[r].outside, ground_colliders.facades), from the
       // side they face; close to one (within `near`) also the rooms it sees into
