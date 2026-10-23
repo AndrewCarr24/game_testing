@@ -445,7 +445,7 @@ bake's fixture rules). Conventions as everywhere (metres, origin at the floor ce
 Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless stated.
 
 ### armory_safe_wall (Model: opus)                       blender/assets/armory_safe_wall.py
-- Status: READY
+- Status: BUILT
 - What: the armory's hero: a built-in gun safe wall, five 1.18 m bays wide (5.9 x 0.62 x 2.75 m),
   a monolith of brushed stainless doors in a graphite frame; turn the wheel and the five doors
   lift one after another like the lids of a jewel case, each bay lit inside.
@@ -481,7 +481,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Placement: against the armory's west wall, rotation -90 (faces east), centred on the room.
 
 ### armory_rifle, armory_shotgun, armory_pistol, armory_bat (Model: opus)   one file each
-- Status: READY
+- Status: BUILT
 - What: set dressing for the safe wall's slots (later the weapons workstream turns them into
   pickups: NO interact now). Believable at 0.5 m, modern, unbranded, nothing tactical-cosplay.
 - armory_rifle: an AR-pattern carbine STANDING UPRIGHT (muzzle up, the buttstock's base on the
@@ -497,7 +497,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: rifle/shotgun 3,500 tris each, pistol 1,500, bat 600; no textures.
 
 ### armory_table (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: the layout table in the room's middle (the twin of the library's reading table): a
   2.4 x 1.0 m stainless top 0.92 high on a graphite frame with a lower shelf of olive ammo cans,
   a black rubber bench mat on the top with an open hard rifle case (black, foam with cut-outs:
@@ -505,7 +505,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 9,000 tris.
 
 ### armory_bench (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: the gunsmith's bench against a wall: 2.2 x 0.75 m walnut butcher-block top at 0.95 on a
   graphite drawer base (4 drawers), a heavy gunmetal bench vise at one end, a padded gun cradle,
   behind it a 2.2 x 1.2 m graphite french-cleat wall (starts 0.15 above the top) holding
@@ -514,14 +514,14 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 10,000 tris.
 
 ### armory_security (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: the security station: a graphite desk 2.4 x 0.8 m with a 3 x 2 bank of thin 27" monitors
   on a wall-mount frame (screens: `bunker_kit.screen()`), a keyboard, a radio handset in a cradle,
   a black mesh task chair (pushed in).
 - Budget: 8,000 tris.
 
 ### armory_power (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: the emergency power and air wall: three white wall-hung battery units (1.15 x 0.75 x
   0.15 each, a thin vertical cold LED line on each: `*_LED`), a graphite transfer-switch cabinet
   (0.6 x 0.3 x 0.9) with a big red rotary handle, grey conduit up into the ceiling (to 3.4), and an
@@ -531,7 +531,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 9,000 tris.
 
 ### armory_supplies (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: a run of graphite steel shelving (2.4 x 0.5 x 2.2, four shelves): blue water drums on the
   floor shelf, kraft ration cases, olive ammo cans, a white medical cabinet with a red cross
   (shape only) beside it on the wall (part of the asset), two gas masks and two olive plate
@@ -539,7 +539,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 9,000 tris.
 
 ### tunnel_bulkhead, tunnel_bulkhead_dead (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: a cast-aluminium caged oval bulkhead light on the tunnel wall (0.28 x 0.12 x 0.18),
   galvanised cage, an opal lens (`bunker_kit.lens()`, part `..._Glow`), a short conduit up out of
   it. `tunnel_bulkhead_dead`: the same, lens dead (`lens(False)`), cage bent, hanging off one
@@ -548,7 +548,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 800 tris each.
 
 ### tunnel_conduit (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: a 6.0 m run of services along a tunnel wall: a galvanised ladder cable tray (0.3 wide) at
   2.35 with a few black and grey cables in it, three grey conduits below it on galvanised strut
   brackets every 1.5 m, a junction box at one end. Origin: floor point under the run's middle on
@@ -556,20 +556,20 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 3,500 tris.
 
 ### tunnel_channel (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: a 6.0 x 0.3 m drainage channel grate set into the floor at the tunnel's edge: galvanised
   bar grate 0.01 above the floor over a dark recess (fake depth: a dark inner floor 0.002 under
   the grate's top: keep everything within 0.012 of the floor so it walks flat).
 - Budget: 1,500 tris.
 
 ### tunnel_puddle (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: standing water: an irregular flat patch (3.0 x 2.2 m outline, soft lobed edge, a few
   islands) `bunker_kit.wet()`, 2 mm above the floor; plus `variant=small` 1.2 x 0.8.
 - Budget: 600 tris.
 
 ### pump_station (Model: sonnet)
-- Status: READY
+- Status: BUILT
 - What: the pump room's sump: a 1.6 x 1.6 m galvanised (rusting at the edges) pit grate in a
   concrete kerb, two vertical blue pump motors on it, discharge pipes rising, joining and running
   up to 2.6 then along (2.0 m) into the wall, a gate valve with a red handwheel, a grey control
@@ -577,7 +577,7 @@ Every hand-sized loose thing here stays FIXED set dressing (no pickups) unless s
 - Budget: 9,000 tris.
 
 ### bunker_door, blast_door (Model: sonnet)                  one file each
-- Status: READY
+- Status: BUILT
 - What: doors for `plan.CUTS` (like `door.py`: origin = bottom centre of the opening on the
   wall's centre plane, the room it swings into is +Y, the hinge empty carries
   `interact = {type: "rotate", axis: "y", angle: 90 (or -90: into +Y), prompt: "Open door" /

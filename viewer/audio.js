@@ -666,9 +666,13 @@ export class Surfaces {
       if (room) (byRoom[room] ??= []).push(o);
     });
     for (const [name, r] of Object.entries(level?.rooms ?? {})) {
-      this.rooms.push({ name, rect: r.rect, floor: r.floor, height: r.height, surface: floorOf(byRoom[name] ?? [], r.floor) });
+      // (secret passage) below ground it's concrete (their meshes have left the shell by now: secret_passage.js)
+      this.rooms.push({ name, rect: r.rect, floor: r.floor, height: r.height, level: r.level,
+                        surface: r.level < 0 ? 'concrete' : floorOf(byRoom[name] ?? [], r.floor) });
     }
     this.rooms.sort((a, b) => b.floor - a.floor);
+    // (secret passage) rooms below ground first: the shaft stands inside the den
+    this.rooms.sort((a, b) => (a.level < 0 ? 0 : 1) - (b.level < 0 ? 0 : 1));
   }
 
   addRug(mesh) {
@@ -694,9 +698,9 @@ export class Surfaces {
   }
 
   at(p, onStair = false) {
-    if (onStair) return 'wood';
     const room = this.rooms.find((r) => p.y >= r.floor - 0.5 && p.y <= r.floor + r.height &&
       p.x >= r.rect[0] && p.x <= r.rect[2] && p.z >= r.rect[1] && p.z <= r.rect[3]);
+    if (onStair) return room?.level < 0 ? 'concrete' : 'wood';     // (secret passage: the shaft's steel stair)
     if (room) {
       if (p.y < room.floor + 0.12 && this.rugs.has(`${Math.floor(p.x / CELL)},${Math.floor(p.z / CELL)},${p.y > 2.3 ? 1 : 0}`)) return 'rug';
       return p.y > room.floor + 0.25 ? 'wood' : room.surface;     // up on the furniture

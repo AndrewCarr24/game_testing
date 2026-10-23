@@ -182,6 +182,11 @@ of the house, the grounds or the sky.
   ladder back: the floor shuts. Screenshots 01-14 there (library before / after / shut again).
 - `ROOMS=secret_stair,armory,tunnel_e,pump_room,tunnel_n,library,den node viewer/tools/walls.mjs`:
   672 runs, 0 impossible positions.
+- In-page checks (build/sp_check.mjs): footsteps below ground are concrete (on the shaft's stair
+  too); both buttons in the shaft toggle the floor and the ladder rolls with them; the safe wall's
+  wheel lifts all five doors. From the lit den the slot reads as a strip of dark glass
+  (`15_den_side_of_the_slot.png`). The standard 32 views (`shots.mjs sp_after`) show every
+  unchanged room lit as before (the rebuilt shell's atlases match their bakes).
 - `tour.mjs` (the entry stair, after the ramp change): all pass. `invaders_smoke.mjs`: runs, sweeps,
   doors as before.
 
