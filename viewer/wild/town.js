@@ -304,8 +304,17 @@ export class Town {
     const gl = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/'));
     const tl = new THREE.TextureLoader();
     this.sites = [];
+    // [town2] one texture per file: several materials of a building share its lightmap (each
+    // tl.load is its own GPU upload otherwise)
+    const texCache = new Map();
+    const loadTex = (path, setup) => { if (!texCache.has(path)) { const t = tl.load(`../assets/models/${path}`); setup(t); texCache.set(path, t); } return texCache.get(path); };
+    const q = params0();               // [town2] ?sites=0: no rebuilt buildings; ?senv=0|1: reflections off / forced
+    // (reflections cost a software renderer ~3x the bar room's frame: off there by default)
+    const gl2 = window.__three?.renderer?.getContext?.(), dbg = gl2?.getExtension('WEBGL_debug_renderer_info');
+    const softGPU = /swiftshader|llvmpipe|software/i.test(dbg ? gl2.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '');
+    const useEnv = q.has('senv') ? q.get('senv') !== '0' : !softGPU;
     for (const b of T.buildings) {
-      if (!b.site || !b.model) continue;
+      if (!b.site || !b.model || q.get('sites') === '0') continue;
       try {
         const g = await gl.loadAsync(`../assets/models/${b.model}.gltf`);
         const root = g.scene;
@@ -332,7 +341,7 @@ export class Town {
               m.needsUpdate = true;
             }
             const ep = m.userData?.envMap;
-            if (ep && !m.envMap) {
+            if (ep && !m.envMap && useEnv) {
               m.envMap = tex(ep, (tx) => { tx.mapping = THREE.EquirectangularReflectionMapping; tx.colorSpace = THREE.SRGBColorSpace; });
               m.envMapIntensity = m.userData.envMapIntensity ?? 1;
               // extras `envBox` [x0, y0, z0, x1, y1, z1] + `envProbe` [x, y, z] (the asset's Blender
