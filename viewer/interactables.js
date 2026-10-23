@@ -355,7 +355,13 @@ export class Interactables {
   }
   aim(r) {
     if (r.motor && this.signals.get('power') === false) { r.target = r.t; return; }   // (house.js: no power, no motor)
-    r.target = this.live(r) ? 1 : 0;
+    const target = this.live(r) ? 1 : 0;
+    // (the bathhouse: `delay` / `delayOff` s before a react starts on / off: the plunge drains,
+    // then its stone slab sinks; the slab rises, then the water comes back)
+    const wait = target ? r.def.delay : r.def.delayOff;
+    if (wait > 0 && target !== r.target && !this._snapping) { r.pending = { target, at: performance.now() + wait * 1000 }; return; }
+    r.pending = null;
+    r.target = target;
   }
   // does anything on this signal need power (lamps, screens, motors)? (house.js: "no power" prompts)
   needsPower(signal) {
@@ -371,7 +377,7 @@ export class Interactables {
     if (a.isReactor) { this.aim(a); a.t = a.target; this.poseReactor(a); return; }
     if (a.def.type === 'switch') { this.follow(a); a.t = a.target; this.pose(a); }
   }
-  snapAll() { this.resolve(); for (const a of [...this.items, ...this.reactors]) this.snap(a); }
+  snapAll() { this.resolve(); this._snapping = true; for (const a of [...this.items, ...this.reactors]) this.snap(a); this._snapping = false; }
 
   hostOf(node) {
     for (let n = node.parent; n; n = n.parent) {
@@ -772,6 +778,7 @@ export class Interactables {
       moved.push(it);
     }
     for (const r of this.reactors) {
+      if (r.pending && performance.now() >= r.pending.at) { r.target = r.pending.target; r.pending = null; }   // (react delay)
       if (r.t === r.target) continue;
       const step = r.duration > 0 ? dt / r.duration : 1;
       r.t = r.target > r.t ? Math.min(r.target, r.t + step) : Math.max(r.target, r.t - step);

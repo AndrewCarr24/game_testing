@@ -274,5 +274,16 @@ LANDINGS = [
 ]
 # the steel plate between the two lanes (the flights' spine), floor to ceiling between the landings
 DIVIDERS = [dict(room="secret_stair", lo=(-14.65, -18.8, -4.2), hi=(-14.6, -15.72, 4.2))]
-# until the pool house's way up exists: an invisible wall across the landing's open north edge
-SECRET_EXIT_STUB = dict(lo=(38.5, 34.5, -4.2), hi=(41.5, 34.7, -1.4), room="tunnel_n")   # (a plain wall)
+# (SECRET_EXIT_STUB, the wall that closed the landing until the pool house's way up existed: gone,
+# the bathhouse's stair rises from y 34.5)
+
+# ---- the bathhouse (the pool house): a detached building north-east of the house, on the lap
+# pool's axis, with the secret passage's stair rising into it (blender/levels/bathhouse_plan.py)
+import importlib as _il  # noqa: E402
+import bathhouse_plan as _bathhouse  # noqa: E402
+
+_il.reload(_bathhouse)
+
+ROOMS.update(_bathhouse.ROOMS)
+CUTS += _bathhouse.CUTS
+LAWN_HOLES = list(_bathhouse.LAWN_HOLES)     # (ground_colliders, grounds: no lawn under it)

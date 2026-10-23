@@ -104,7 +104,11 @@ def base(plan, col):
     # 1.5 m cells within ~12 m of the house (its shadow, the terrace edge), 6 m beyond
     xs = _axis_coords(lx0, lx1, (-38, 38), 1.5, 6.0)
     ys = _axis_coords(ly0, ly1, (-32, 32), 1.5, 6.0)
-    house = lambda cx, cy: abs(cx) < 26 and abs(cy) < 20
+    # (the bathhouse: grid lines on its footprint, no lawn under it: plan.LAWN_HOLES)
+    holes = getattr(plan, "LAWN_HOLES", [])
+    xs = sorted(set(xs) | {h[i] for h in holes for i in (0, 2)})
+    ys = sorted(set(ys) | {h[i] for h in holes for i in (1, 3)})
+    house = lambda cx, cy: (abs(cx) < 26 and abs(cy) < 20) or any(h[0] < cx < h[2] and h[1] < cy < h[3] for h in holes)
     objs = [grid_mesh("Lawn", xs, ys, z, col, outdoor.grass(), 3.0, skip=house)]
     for i, (x0, y0, x1, y1) in enumerate(G["terrace"]):
         gx = _axis_coords(x0, x1, (x0, x1), 1.5, 1.5)
@@ -169,9 +173,12 @@ def house_exterior(h, plan, col, off=0.01, coping=(0.3, 0.25)):
     where nothing rises beyond it."""
     objs = []
     render = outdoor.render_white()
+    # (the bathhouse: its rooms name their facade, "stone": the same coursed stone as inside)
+    facade = {"stone": outdoor.coursed_stone()}
     lawn = plan.LAWN_Z + 0.06                       # the terrace surface
-    for k, (axis, line, sign, a0, a1, z0, z1) in enumerate(h.exterior_walls()):
-        z0 = max(z0, lawn - 0.02)
+    for k, (axis, line, sign, a0, a1, z0, z1, room) in enumerate(h.exterior_walls(with_room=True)):
+        mat = facade.get(plan.ROOMS[room].get("facade"), render)
+        z0 = max(z0, lawn - 0.02 if not plan.ROOMS[room].get("building") else plan.LAWN_Z - 0.02)
         if z1 - z0 < 1e-3:
             continue
         L = line + sign * off
@@ -181,11 +188,13 @@ def house_exterior(h, plan, col, off=0.01, coping=(0.3, 0.25)):
         else:                   # wall along y at x = L, normal (sign, 0, 0)
             o, du, dv = ((L, a1, z0), (0, a0 - a1, 0), (0, 0, z1 - z0)) if sign < 0 else \
                         ((L, a0, z0), (0, a1 - a0, 0), (0, 0, z1 - z0))
-        objs.append(plane_grid(f"Facade_{k}", o, du, dv, 1.5, col, render))
+        objs.append(plane_grid(f"Facade_{k}", o, du, dv, 1.5, col, mat))
     tops = {r: h.outer_z(r)[1] for r in plan.ROOMS}
     sedum, gravel, stone = outdoor.sedum(), outdoor.gravel(), outdoor.stone()
     cw, chh = coping
     for k, (room, (x0, y0, x1, y1), top) in enumerate(h.roofs()):
+        if top < plan.LAWN_Z:
+            continue                                # (underground: the secret passage's rooms)
         low = top < plan.TOP
         objs.append(plane_grid(f"Roof_{k}", (x0, y0, top + off), (x1 - x0, 0, 0), (0, y1 - y0, 0),
                                1.0 if low else 3.0, col, sedum if low else gravel))

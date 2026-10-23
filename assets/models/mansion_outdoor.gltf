@@ -16,65 +16,72 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				8
+				9
 			]
 		}
 	],
 	"nodes":[
 		{
 			"extras":{
-				"outdoor":"flat"
+				"outdoor":"textured"
 			},
 			"mesh":0,
+			"name":"Mansion_Outdoor_BathStone"
+		},
+		{
+			"extras":{
+				"outdoor":"flat"
+			},
+			"mesh":1,
 			"name":"Mansion_Outdoor_Flat"
 		},
 		{
 			"extras":{
 				"outdoor":"glass"
 			},
-			"mesh":1,
+			"mesh":2,
 			"name":"Mansion_Outdoor_Glass"
 		},
 		{
 			"extras":{
 				"outdoor":"textured"
 			},
-			"mesh":2,
+			"mesh":3,
 			"name":"Mansion_Outdoor_Gravel"
 		},
 		{
 			"extras":{
 				"outdoor":"textured"
 			},
-			"mesh":3,
+			"mesh":4,
 			"name":"Mansion_Outdoor_Hedge"
 		},
 		{
 			"extras":{
 				"outdoor":"textured"
 			},
-			"mesh":4,
+			"mesh":5,
 			"name":"Mansion_Outdoor_Lawn"
 		},
 		{
 			"extras":{
 				"outdoor":"textured"
 			},
-			"mesh":5,
+			"mesh":6,
 			"name":"Mansion_Outdoor_Stone"
 		},
 		{
 			"extras":{
 				"outdoor":"textured"
 			},
-			"mesh":6,
+			"mesh":7,
 			"name":"Mansion_Outdoor_Teak"
 		},
 		{
 			"extras":{
 				"outdoor":"water"
 			},
-			"mesh":7,
+			"mesh":8,
 			"name":"Mansion_Outdoor_Water"
 		},
 		{
@@ -86,12 +93,24 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8
 			],
 			"name":"Mansion_Outdoor"
 		}
 	],
 	"materials":[
+		{
+			"doubleSided":true,
+			"name":"M_Out_BathStone",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.8600000143051147
+			}
+		},
 		{
 			"doubleSided":true,
 			"name":"M_Outdoor_Flat",
@@ -119,7 +138,7 @@
 			"name":"M_Out_Gravel",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":0
+					"index":1
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.949999988079071
@@ -130,7 +149,7 @@
 			"name":"M_Grounds_Hedge",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":1
+					"index":2
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.8999999761581421
@@ -141,7 +160,7 @@
 			"name":"M_Grounds_Lawn",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":2
+					"index":3
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.949999988079071
@@ -152,7 +171,7 @@
 			"name":"M_Grounds_Stone",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":3
+					"index":4
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.800000011920929
@@ -163,7 +182,7 @@
 			"name":"M_Out_Teak",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":4
+					"index":5
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.699999988079071
@@ -186,7 +205,7 @@
 	],
 	"meshes":[
 		{
-			"name":"Mansion_Outdoor_Flat",
+			"name":"Mansion_Outdoor_BathStone",
 			"primitives":[
 				{
 					"attributes":{
@@ -213,13 +232,14 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Glass",
+			"name":"Mansion_Outdoor_Flat",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":5,
 						"NORMAL":6,
-						"COLOR_0":7
+						"TEXCOORD_0":7,
+						"COLOR_0":8
 					},
 					"extensions":{
 						"KHR_draco_mesh_compression":{
@@ -227,24 +247,24 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"COLOR_0":2
+								"TEXCOORD_0":2,
+								"COLOR_0":3
 							}
 						}
 					},
-					"indices":8,
+					"indices":9,
 					"material":1,
 					"mode":4
 				}
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Gravel",
+			"name":"Mansion_Outdoor_Glass",
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":9,
-						"NORMAL":10,
-						"TEXCOORD_0":11,
+						"POSITION":10,
+						"NORMAL":11,
 						"COLOR_0":12
 					},
 					"extensions":{
@@ -253,8 +273,7 @@
 							"attributes":{
 								"POSITION":0,
 								"NORMAL":1,
-								"TEXCOORD_0":2,
-								"COLOR_0":3
+								"COLOR_0":2
 							}
 						}
 					},
@@ -265,7 +284,7 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Hedge",
+			"name":"Mansion_Outdoor_Gravel",
 			"primitives":[
 				{
 					"attributes":{
@@ -292,7 +311,7 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Lawn",
+			"name":"Mansion_Outdoor_Hedge",
 			"primitives":[
 				{
 					"attributes":{
@@ -319,7 +338,7 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Stone",
+			"name":"Mansion_Outdoor_Lawn",
 			"primitives":[
 				{
 					"attributes":{
@@ -346,7 +365,7 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Teak",
+			"name":"Mansion_Outdoor_Stone",
 			"primitives":[
 				{
 					"attributes":{
@@ -373,7 +392,7 @@
 			]
 		},
 		{
-			"name":"Mansion_Outdoor_Water",
+			"name":"Mansion_Outdoor_Teak",
 			"primitives":[
 				{
 					"attributes":{
@@ -395,6 +414,33 @@
 					},
 					"indices":38,
 					"material":7,
+					"mode":4
+				}
+			]
+		},
+		{
+			"name":"Mansion_Outdoor_Water",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":39,
+						"NORMAL":40,
+						"TEXCOORD_0":41,
+						"COLOR_0":42
+					},
+					"extensions":{
+						"KHR_draco_mesh_compression":{
+							"bufferView":8,
+							"attributes":{
+								"POSITION":0,
+								"NORMAL":1,
+								"TEXCOORD_0":2,
+								"COLOR_0":3
+							}
+						}
+					},
+					"indices":43,
+					"material":8,
 					"mode":4
 				}
 			]
@@ -440,9 +486,22 @@
 				}
 			},
 			"sampler":0
+		},
+		{
+			"extensions":{
+				"EXT_texture_webp":{
+					"source":5
+				}
+			},
+			"sampler":0
 		}
 	],
 	"images":[
+		{
+			"mimeType":"image/webp",
+			"name":"T_PH_Stone_BaseColor",
+			"uri":"textures/T_PH_Stone_BaseColor.webp"
+		},
 		{
 			"mimeType":"image/webp",
 			"name":"T_Out_Gravel_BaseColor",
@@ -472,7 +531,43 @@
 	"accessors":[
 		{
 			"componentType":5126,
-			"count":82119,
+			"count":632,
+			"max":[
+				45.0099983215332,
+				5.600000381469727,
+				-30.989999771118164
+			],
+			"min":[
+				26.989999771118164,
+				-0.10000000149011612,
+				-48.5099983215332
+			],
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":632,
+			"type":"VEC3"
+		},
+		{
+			"componentType":5126,
+			"count":632,
+			"type":"VEC2"
+		},
+		{
+			"componentType":5123,
+			"count":632,
+			"normalized":true,
+			"type":"VEC4"
+		},
+		{
+			"componentType":5123,
+			"count":948,
+			"type":"SCALAR"
+		},
+		{
+			"componentType":5126,
+			"count":82523,
 			"max":[
 				71.27143096923828,
 				12.753400802612305,
@@ -487,28 +582,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":82119,
+			"count":82523,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":82119,
+			"count":82523,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":82119,
+			"count":82523,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5125,
-			"count":119250,
+			"count":119712,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":592,
+			"count":560,
 			"max":[
 				63.88999938964844,
 				4.019999980926514,
@@ -517,29 +612,29 @@
 			"min":[
 				26.510000228881836,
 				0,
-				-52.46500015258789
+				-19.652000427246094
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":592,
+			"count":560,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5123,
-			"count":592,
+			"count":560,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":936,
+			"count":888,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":3762,
+			"count":3456,
 			"max":[
 				59.30000305175781,
 				8.609999656677246,
@@ -548,34 +643,34 @@
 			"min":[
 				-59.849998474121094,
 				-0.07999999821186066,
-				-53.58000183105469
+				-52.79999923706055
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3762,
+			"count":3456,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":3762,
+			"count":3456,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":3762,
+			"count":3456,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":5790,
+			"count":5328,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":35327,
+			"count":34929,
 			"max":[
 				71.02157592773438,
 				14.513749122619629,
@@ -590,28 +685,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":35327,
+			"count":34929,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":35327,
+			"count":34929,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":35327,
+			"count":34929,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":46680,
+			"count":46152,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":9765,
+			"count":10271,
 			"max":[
 				90,
 				0.4700000286102295,
@@ -626,28 +721,28 @@
 		},
 		{
 			"componentType":5126,
-			"count":9765,
+			"count":10271,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":9765,
+			"count":10271,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":9765,
+			"count":10271,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":18936,
+			"count":19830,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":16501,
+			"count":18759,
 			"max":[
 				64.8499984741211,
 				8.850000381469727,
@@ -662,64 +757,64 @@
 		},
 		{
 			"componentType":5126,
-			"count":16501,
+			"count":18759,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":16501,
+			"count":18759,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":16501,
+			"count":18759,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":25374,
+			"count":29112,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":8446,
+			"count":8196,
 			"max":[
 				64.75,
-				3.430000066757202,
+				5.75,
 				58.13999938964844
 			],
 			"min":[
 				-53.5,
 				-0.07999999821186066,
-				-52.900001525878906
+				-44.415000915527344
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":8446,
+			"count":8196,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":8446,
+			"count":8196,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":8446,
+			"count":8196,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":12690,
+			"count":12306,
 			"type":"SCALAR"
 		},
 		{
 			"componentType":5126,
-			"count":136,
+			"count":169,
 			"max":[
 				51.40999984741211,
 				0.4650000333786011,
@@ -727,73 +822,78 @@
 			],
 			"min":[
 				-59.599998474121094,
-				0.10999999940395355,
-				-41.369998931884766
+				-0.019999999552965164,
+				-52.60000228881836
 			],
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":136,
+			"count":169,
 			"type":"VEC3"
 		},
 		{
 			"componentType":5126,
-			"count":136,
+			"count":169,
 			"type":"VEC2"
 		},
 		{
 			"componentType":5123,
-			"count":136,
+			"count":169,
 			"normalized":true,
 			"type":"VEC4"
 		},
 		{
 			"componentType":5123,
-			"count":504,
+			"count":624,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":777953,
+			"byteLength":6500,
 			"byteOffset":0
 		},
 		{
 			"buffer":0,
-			"byteLength":1511,
-			"byteOffset":777956
+			"byteLength":785847,
+			"byteOffset":6500
 		},
 		{
 			"buffer":0,
-			"byteLength":35993,
-			"byteOffset":779468
+			"byteLength":1550,
+			"byteOffset":792348
 		},
 		{
 			"buffer":0,
-			"byteLength":464248,
-			"byteOffset":815464
+			"byteLength":33282,
+			"byteOffset":793900
 		},
 		{
 			"buffer":0,
-			"byteLength":77104,
-			"byteOffset":1279712
+			"byteLength":459298,
+			"byteOffset":827184
 		},
 		{
 			"buffer":0,
-			"byteLength":159573,
-			"byteOffset":1356816
+			"byteLength":81697,
+			"byteOffset":1286484
 		},
 		{
 			"buffer":0,
-			"byteLength":86003,
-			"byteOffset":1516392
+			"byteLength":173939,
+			"byteOffset":1368184
 		},
 		{
 			"buffer":0,
-			"byteLength":706,
-			"byteOffset":1602396
+			"byteLength":82972,
+			"byteOffset":1542124
+		},
+		{
+			"buffer":0,
+			"byteLength":771,
+			"byteOffset":1625096
 		}
 	],
 	"samplers":[
@@ -804,7 +904,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1603104,
+			"byteLength":1625868,
 			"uri":"mansion_outdoor.bin"
 		}
 	]

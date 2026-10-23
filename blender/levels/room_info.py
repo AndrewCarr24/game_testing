@@ -22,8 +22,10 @@ def info(room):
     cx, cy = (ix0 + ix1) / 2, (iy0 + iy1) / 2
     z0 = plan.LEVEL_Z[r["level"]]
     h = plan.TOP - z0 if (r.get("double") or kind == "courtyard") else plan.HEIGHT[r["level"]]
-    if "z" in r:                                   # (below ground) its own extent
+    if "z" in r:                                   # (below ground, the bathhouse) its own extent
         z0, h = r["z"][0], r["z"][1] - r["z"][0]
+    elif "height" in r:
+        z0, h = r.get("z0", z0), r["height"]
     lines = [f"ROOM {room}: {kind}, level {r['level']} "
              f"({ {0: 'ground', 1: 'upper'}.get(r['level'], 'below ground')}, floor z {z0:+.2f})"
              + (", double height" if r.get("double") else ""),

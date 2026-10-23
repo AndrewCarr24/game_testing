@@ -47,6 +47,16 @@ def stone():
     return m
 
 
+def coursed_stone():
+    """(the bathhouse) Its walls outside: the same thin-coursed grey-green gneiss as inside
+    (lib/ph_textures.py), one more textured outdoor draw call, chosen on purpose: the building
+    is half stone, half glass, and from the lawn the stone must read as stone. Tile 2 m."""
+    from . import ph_textures
+    m = common.pbr_material("M_Out_BathStone", (0.21, 0.21, 0.19), roughness=0.86)
+    common.set_base_color_map(m, textures.load(ph_textures.coursed_stone()))
+    return m
+
+
 def teak():
     """Weathered teak: decking, benches, loungers, pergola timbers. Tile 0.5 m."""
     m = common.pbr_material("M_Out_Teak", (0.35, 0.25, 0.16), roughness=0.7)

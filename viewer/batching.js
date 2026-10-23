@@ -106,6 +106,7 @@ export class RoomCuller {
       name, rect: r.rect, level: r.level, floor: r.floor, height: r.height || 4, sealed: !!r.sealed,
       area: (r.rect[2] - r.rect[0]) * (r.rect[3] - r.rect[1]),
       always: name.includes('gallery') || name === 'courtyard',
+      below: !!r.below,          // (the bathhouse's stair: reaches up from below ground, seen from the sealed tunnel)
       // open to the other floor: double height (they reach the upper floor), the gallery
       // ring and courtyard (glass and balustrades), the library (glass into the great room)
       vertical: name.includes('gallery') || name === 'courtyard' || name === 'library' || r.height > 5,
@@ -167,7 +168,7 @@ export class RoomCuller {
       const reach = !here?.seesOpen || here.seesOpen.has(r.name);       // ... or through a door opened
       let show = r.always || (sameFloor && d < this.near && reach) ||
         (d < this.far && inView && sight && (sameFloor || here?.sees));
-      if (sealed && r.level >= 0) show = false;                          // (below ground)
+      if (sealed && r.level >= 0 && !r.below) show = false;              // (below ground)
       // (below ground) from above ground: only one the room sees (the den's slot), or a shaft
       // whose way in stands open (`force`)
       if (r.level < 0 && here?.level >= 0 && !(here.sees?.has(r.name) && inView && d < this.far)) show = false;

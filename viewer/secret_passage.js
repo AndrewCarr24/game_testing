@@ -29,7 +29,7 @@ export class SecretPassage {
     shell.updateMatrixWorld(true);
     shell.traverse((o) => {
       if (o.isMesh && o.userData.react) moving.push(o);
-      else if (o.isMesh) { const room = roomOf(o); if (room && rooms[room].level < 0) under.push([o, room]); }
+      else if (o.isMesh) { const room = roomOf(o); if (room && (rooms[room].level < 0 || rooms[room].below)) under.push([o, room]); }   // (below: the bathhouse's stair)
     });
     for (const [o, room] of under) {
       this.below.attach(o);              // (keeps its world transform)

@@ -31,10 +31,13 @@ const result = await p.evaluate(async (only) => {
   const shafts = Object.entries(window.__level.rooms).filter(([, q]) => q.kind === 'shaft');
   const inShaft = (name, p) => p && shafts.some(([n, q]) => n !== name && p[0] > q.rect[0] - 0.4 && p[0] < q.rect[2] + 0.4 && p[1] > q.rect[1] - 0.4 && p[1] < q.rect[3] + 0.4);
   for (const [name, r] of Object.entries(window.__level.rooms)) {
-    if (only && !only.includes(name)) continue;
+    if (only && !only.some((o) => name === o || name.startsWith(o))) continue;   // (names or prefixes: ROOMS=ph_,tunnel)
     const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
     starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2], [x1 - 1.2, z0 + 1.2]]
-      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p)).slice(0, 3);
+      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p))
+      // (a start the spiral found outside the room's own rect isn't in it: the bathhouse's stair,
+      // whose floor is all treads, spiralled out into the ground beside it)
+      .filter((p) => p[0] > x0 && p[0] < x1 && p[1] > z0 && p[1] < z1).slice(0, 3);
   }
   // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
   // on the lawn); outside the house the floor is the lawn, not 0
@@ -52,6 +55,14 @@ const result = await p.evaluate(async (only) => {
   const [hx0, hz0, hx1, hz1] = G ? G.house : [-1e9, -1e9, 1e9, 1e9];
   // (below ground: a run that starts under the house keeps its own floor, -4.2)
   const floorAt = (x, z, sy = 0) => (sy < -1 ? sy : x > hx0 && x < hx1 && z > hz0 && z < hz1 ? 0 : G.lawn);
+  // (the bathhouse: a sunken floor people may walk on, level.sunken: the drained plunge)
+  const floorAt0 = floorAt;
+  const inR = (r, x, z, m = 0) => x >= r[0] - m && x <= r[2] + m && z >= r[1] - m && z <= r[3] + m;
+  const floorAtB = (x, z, sy = 0) => {
+    let f = floorAt0(x, z, sy);
+    for (const s of window.__level.sunken || []) if (inR(s.rect, x, z, 0.3)) f = Math.min(f, s.floor);
+    return f;
+  };
   const bad = [];
   let runs = 0;
   for (const [room, pts] of Object.entries(starts)) for (const [sx, sz, sy] of pts) {
@@ -71,7 +82,7 @@ const result = await p.evaluate(async (only) => {
         // than a jump above where we took off, on the roof, under the ground floor, or
         // left inside a box
         const why = y - prevY > 0.65 ? 'teleported up' : y > takeoff + 1.2 ? 'above jump' : y > 8.4 ? 'on the roof'
-                  : y < floorAt(pl.pos.x, pl.pos.z, sy) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
+                  : y < floorAtB(pl.pos.x, pl.pos.z, sy) - 0.05 ? 'under the floor' : pl.overlapping(pl.pos).length ? 'inside a box' : null;
         prevY = y;
         if (why) { worst = { why, f, y: +y.toFixed(2), takeoff: +takeoff.toFixed(2), x: +pl.pos.x.toFixed(2), z: +pl.pos.z.toFixed(2) }; break; }
       }
@@ -82,5 +93,8 @@ const result = await p.evaluate(async (only) => {
 }, only);
 console.log(`${result.runs} runs, ${result.bad.length} ended somewhere impossible`);
 for (const r of result.bad.slice(0, 15)) console.log(JSON.stringify(r));
+const by = {};
+for (const r of result.bad) by[`${r.room} ${r.why} from ${r.start}`] = (by[`${r.room} ${r.why} from ${r.start}`] || 0) + 1;
+for (const [k, n] of Object.entries(by)) console.log(`  ${n} x ${k}`);
 await b.close();
 process.exit(result.bad.length ? 1 : 0);
