@@ -8,7 +8,7 @@ Modern tech-billionaire mansion game. Current phase: building game-ready assets 
   Change the script, not the .blend, so work stays reproducible. The working Blender file is `blender/levels/mansion.blend`.
 - Shared helpers: `blender/lib/common.py` (cushions, bent tubes, bevels, box UVs, glTF export), `blender/lib/textures.py` (numpy-generated tileable maps → `assets/textures/`).
 - Conventions: metres, origin at floor centre, front faces -Y, root empty named after the asset, parts named `<Asset>_<Part>`. Principled BSDF + image textures only (what glTF carries). UV scale = world scale (wood 0.5 m tile, leather 0.2 m tile).
-- Export: `common.export_glb(root, "assets/models/<name>.glb")`. Check in engine: `python3 -m http.server 8765` from the project root, open `http://localhost:8765/viewer/?asset=<name>` (three.js 0.160, same stack as ../video_game).
+- Export: `common.export_glb(root, "assets/models/<name>.glb")`. Check in engine: `python3 tools/serve.py` (port 8765; no-cache headers, so a browser never mixes cached old level files with new ones; reads iCloud-evicted files whole), open `http://localhost:8765/viewer/?asset=<name>` (three.js 0.160, same stack as ../video_game).
 
 ## Levels (the house)
 - `blender/levels/plan.py` is the floor plan as data: rooms (rect, level, kind, double height), OPEN ring corners, CUTS (openings with optional door asset + swing + lock, windows, balustrades, garage door) on wall lines, the floating STAIR, SPAWN. Main house ~52 x 40 m, two floors (ground 0, upper +4.6 m; ceilings 4.2 / 3.8; double-height entry and great room to 8.4 m), courtyard 20 x 14 m ringed by 3.5 m galleries. Future wings attach through the facades (x = ±26, y = ±20).
