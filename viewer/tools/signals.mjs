@@ -99,7 +99,7 @@ await p.evaluate(async ([y, fz]) => {
       glow: +glow.material.emissiveIntensity.toFixed(2), shell: shell.material.visible,
       light: Math.max(...it.lights.map((l) => l.intensity)),
       lamp2: +lamp2.children[0].material.emissiveIntensity.toFixed(2),
-      blindY: +(blind.position.y - y).toFixed(2), blockers: it.sightBlockers().length,
+      blindY: +(blind.position.y - y).toFixed(2), blockers: it.sightBlockers().filter((b) => b.distanceToPoint(new THREE.Vector3(-4, y + 1.5, fz)) < 6).length,   // (the fixture's own: the level has others, e.g. the bathhouse's steam)
       blocks: it.blocksSight(new THREE.Vector3(-4, y + 1.5, fz - 3), new THREE.Vector3(-4, y + 1.5, fz + 3)),
       lamp2Signal: r('Test_Lamp2_Glow')?.signal ?? F.lamp2.find((x) => x.isReactor)?.signal,
       fuse: window.__inventory.count('fuse'), armed: window.__inventory.armed,

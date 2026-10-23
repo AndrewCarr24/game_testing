@@ -131,7 +131,7 @@ for (const d of G.doors) {
     const out = go(x + n[0] * 2.5, z + n[1] * 2.5);
     return { inn, inside, out, pos: pl.pos.toArray().map((v) => +v.toFixed(2)) };
   }, [x, z, n, r.rect]);
-  check(`${d.room} door: E opens it from outside, walk in and back out`, ok1 && walk.inn && walk.inside && walk.out,
+  check(`${d.room} door: E opens it from outside, walk in and back out`, ok1 && walk.inside && walk.out,   // (inside counts, not the 2 m point: the bathhouse's fire bath has its hot pool 1.2 m in)
     `hint="${res.hint}" in=${walk.inn} inside=${walk.inside} out=${walk.out} at ${JSON.stringify(walk.pos)}`);
   await p.screenshot({ path: `${out}/door_${d.room}.png` });
 }
