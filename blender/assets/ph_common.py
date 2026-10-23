@@ -76,6 +76,7 @@ def card(name, w, h, mat, col, parent, at=(0, 0, 0), facing="-y", fx=None, **ext
     ob = common.mesh_object(name, bm, col, mat, parent, smooth=False)
     if fx:
         ob["fx"] = fx
+        ob.visible_camera = False      # (not a surface: out of the probes' panoramas too)
     for k, v in extra.items():
         ob[k] = v
     return ob

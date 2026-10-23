@@ -236,7 +236,7 @@ def base(plan):
     # (the bathhouse: no lawn under detached buildings, whose stair and pools go below it;
     # plan.LAWN_HOLES, bathhouse_plan.py)
     from lib.house import keep_slices
-    for s0, s1, keep in keep_slices(lx0, lx1, ly0, ly1, getattr(plan, "LAWN_HOLES", [])):
+    for s0, s1, keep in keep_slices(lx0, lx1, ly0, ly1, [(h[0], h[2], h[1], h[3]) for h in getattr(plan, "LAWN_HOLES", [])]):
         for ky0, ky1 in keep:
             out.append(((s0, ky0, z - 1.0), (s1, ky1, z), "ground"))
     for x0, y0, x1, y1 in G["terrace"]:

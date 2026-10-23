@@ -1,5 +1,25 @@
 # The pool house: the bathhouse
 
+## Status (2026-10-23, paused by the orchestrator)
+- **Done:** design (below); plan data, shell builder, house.py, grounds and engine hooks; 16 `ph_*` assets
+  plus 3 outdoor `cabana_*` ones; water fx; the zone re-laid; walk test `viewer/tools/bathhouse.mjs`.
+  The house was rebuilt (`build_level.py`, OK, 459 s) after the fixes below. Its outputs (assets/models,
+  levels, mansion.blend) are in the worktree but not committed.
+- **Fixed since the first walk:** the lawn's ground collider wasn't cut under the building (the
+  LAWN_HOLES rect format was wrong), so the stair was blocked at z -1.08 and the player was pushed into
+  the pool; the test's door finder opened the wrong doors; a route detour round a motor-court collider;
+  the fx cards are now kept out of the probes' panoramas.
+- **Next:** `bake.py -- mansion 64 --outdoor-only`, which must follow every build (the raw export has a
+  62-primitive Mansion_Outdoor_Flat that breaks estate_link's splitGateLeaves until the outdoor bake
+  merges it); then a draft bake of only my rooms (`--rooms ph_hall,ph_fire,ph_stair,ph_steam,ph_cold,ph_rest,tunnel_landing`);
+  rerun bathhouse.mjs and `ROOMS=ph_,tunnel walls.mjs`; golden-hour screenshots; perf.mjs/fps.mjs in
+  the hall; commit the build outputs for my rooms.
+- **Open problems:** (1) iCloud keeps evicting worktree and .git files ("dataless") whenever the disk is
+  nearly full. Sandboxed Blender, node and git can't read them (git SIGBUS, numpy EOF, Cycles "not a PNG"),
+  and the first draft bake ran with missing textures. A materialiser run outside the sandbox
+  (read every dataless file) fixes it until the next eviction. (2) Audio has no water or drain sounds.
+  (3) Merge: set `STUB_LANDING = False` once the passage's landing room exists.
+
 ## Meeting point with the secret passage (for the orchestrator)
 
 Taken as given: the passage's tunnel ends at a landing centred on world (40, 33), floor z -4.2,

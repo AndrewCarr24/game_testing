@@ -77,8 +77,13 @@ try {
   const hint = () => p.evaluate(() => document.getElementById('hint').textContent);
   const openDoor = async (name, [x, , z]) => {
     const r = await p.evaluate(([x, z]) => {
-      const it = window.__interact, v = new (window.__camera.position.constructor)();
-      const ds = it.items.filter((i) => i.def.type === 'rotate').map((i) => ({ i, d: i.node.getWorldPosition(v).distanceTo(v.set(x, i.node.getWorldPosition(v).y, z)) }));
+      const it = window.__interact, V = window.__camera.position.constructor, v = new V(), w = new V();
+      // (a door's hinge is at its jamb: measure to the middle of its leaf's box)
+      const ds = it.items.filter((i) => i.def.type === 'rotate').map((i) => {
+        i.node.getWorldPosition(v);
+        if (i.collider && !i.collider.isEmpty()) i.collider.getCenter(v);
+        return { i, d: Math.hypot(v.x - x, v.z - z) };
+      });
       ds.sort((a, b) => a.d - b.d);
       if (!ds.length || ds[0].d > 1.6) return { ok: false, d: ds[0]?.d };
       ds[0].i.target = 1;
@@ -146,6 +151,7 @@ try {
   await walk('out of the south door', B(30.15, 29.6));
   await walk('to the house\'s terrace', B(30.0, 23.0));
   await walk('the east terrace', B(28.5, -22.5), { run: true });
+  await walk('the motor court', B(28.5, -38.0), { run: true });
   await walk('down the drive', B(19.75, -45.0), { run: true });
   await walk('to the gate', B(19.75, -58.5), { run: true });
   // ---- 6. the hidden way: cold room -> steam -> fire bath -> east door -> court
