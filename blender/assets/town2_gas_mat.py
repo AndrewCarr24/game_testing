@@ -41,6 +41,7 @@ def textured(name, path, rough=0.6, reflect=0.0, tile=1.0, rough_map=None):
         sep = nt.nodes.new("ShaderNodeSeparateColor")
         nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
         nt.links.new(sep.outputs["Green"], _bsdf(m).inputs["Roughness"])
+        nt.links.new(sep.outputs["Blue"], _bsdf(m).inputs["Metallic"])
     return dict(mat=m, tile=tile, reflect=reflect)
 
 
@@ -66,6 +67,23 @@ def glass(name, tint, alpha, reflect=1.0):
     return dict(mat=m, tile=1.0, unlit=True, reflect=reflect, glass=True)
 
 
+def alpha_textured(name, path, reflect=0.0, rough=0.5):
+    """Alpha-blended, textured (RGBA): decals (black + alpha: they darken what's under them) and
+    the coolers' frosted glass."""
+    m = common.pbr_material(f"M_Town2Gas_{name}", (1, 1, 1), roughness=rough)
+    nt = m.node_tree
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = _img(path, os.path.splitext(os.path.basename(path))[0])
+    tex.image.alpha_mode = "STRAIGHT"
+    nt.links.new(tex.outputs["Color"], _bsdf(m).inputs["Base Color"])
+    nt.links.new(tex.outputs["Alpha"], _bsdf(m).inputs["Alpha"])
+    if hasattr(m, "surface_render_method"):
+        m.surface_render_method = "BLENDED"
+    else:
+        m.blend_method = "BLEND"
+    return dict(mat=m, tile=1.0, unlit=True, reflect=reflect, glass=True)
+
+
 def materials(feeds=None):
     """Returns (mats, tex): mats name -> dict(mat, tile, unlit, reflect); tex = the atlases' cells
     and the palette's swatches."""
@@ -77,11 +95,12 @@ def materials(feeds=None):
         "stone": textured("Stone", P["stone"], 0.85, 0.0, tile=1.5),
         "siding": textured("Siding", P["siding"], 0.6, 0.05, tile=1.2),
         "oak": textured("Oak", P["oak"], 0.45, 0.25, tile=0.5),
-        "floor": textured("Floor", P["floor"], 0.22, 0.55, tile=1.2),
+        "floor": textured("Floor", P["floor"], 0.22, 1.3, tile=1.2, rough_map=P["floor_rough"]),
         "ceiling": textured("Ceiling", P["ceiling"], 0.95, 0.0, tile=0.61),
-        "paint": textured("Paint", P["paint"], 0.45, 0.35, tile=1.0, rough_map=P["paint_rough"]),
-        "goods": textured("Goods", P["goods"], 0.5, 0.12),
-        "drinks": emissive("Drinks", P["drinks"], 1.25),
+        "paint": textured("Paint", P["paint"], 0.45, 0.6, tile=1.0, rough_map=P["paint_rough"]),
+        "goods": textured("Goods", P["goods"], 0.4, 0.25),
+        "decals": alpha_textured("Decals", P["decals"]),
+        "frost": alpha_textured("Frost", P["frost"], reflect=1.0, rough=0.06),
         "signs": emissive("Signs", P["signs"], 1.8),
         "glass": glass("Glass", (0.80, 0.86, 0.86), 0.14, reflect=1.0),
         "glass_dark": glass("GlassDark", (0.05, 0.06, 0.07), 0.55, reflect=0.8),

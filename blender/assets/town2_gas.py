@@ -47,7 +47,7 @@ P = dict(
 def build(col, feeds=None, **over):
     p = dict(P, **over)
     mats, T = MT.materials(feeds)
-    kit = K.Kit(NAME, mats, swatches=T["palette"], cells=dict(goods=T["goods"], drinks=T["drinks"], signs=T["signs"]))
+    kit = K.Kit(NAME, mats, swatches=T["palette"], cells=dict(goods=T["goods"], signs=T["signs"], decals=T["decals"]))
     rng = random.Random(7)
     lot(kit, p, rng)
     canopy(kit, p)
@@ -56,7 +56,10 @@ def build(col, feeds=None, **over):
     yard(kit, p, rng)
     lod1(kit, p)
     kit.build(col)
-    info = dict(footprint=[p["x0"], p["y0"], p["x1"], p["y1"]], height=p["parapet"], lod_distance=p["lod_distance"])
+    t = p["wall"]
+    info = dict(footprint=[p["x0"], p["y0"], p["x1"], p["y1"]], height=p["parapet"], lod_distance=p["lod_distance"],
+                # the store's inside, for the box-projected reflections (make.py: envBox / envProbe)
+                int_box=[p["sx0"] + t, p["sy0"] + t, p["floor"], p["sx1"] - t, p["sy1"] - t, p["ceil"]])
     return kit, info
 
 
@@ -102,16 +105,24 @@ def lot(kit, p, rng):
         Wp.box((p["sx1"] + 1.8, y - 0.05, 0.0), (p["sx1"] + 7.3, y + 0.05, 0.004), skip="zxXyY")
     for a0, a1 in drives:
         Wp.box((a0 + 0.5, y0 + 2.2, 0.0), (a0 + (a1 - a0) / 2 - 0.2, y0 + 2.6, 0.004), skip="zxXyY")
-    # the forecourt's oil spots and tyre wear (dark, irregular, just above the slab)
-    O = kit.p("stain", "ext", lmw=0.6)
+    # wear (alpha decals that darken): oil where cars stand at the pumps, tyre marks through the
+    # drive aisle and the entrances, gum on the sidewalk by the door, oil under the van
+    import town2_gas_shop as SH
+    Dc = kit.p("decals", "ext")
     for x in p["islands"]:
         for s in (-1, 1):
             for k in range(2):
-                cx, cy = x + s * 1.9 + rng.uniform(-0.3, 0.3), p["island_y"] + rng.uniform(-1.5, 1.5)
-                blot(O, rng, cx, cy, rng.uniform(0.25, 0.5))
-    O2 = kit.p("asphalt_patch", "ext", lmw=0.6)
+                cx, cy = x + s * 1.9 + rng.uniform(-0.3, 0.3), p["island_y"] + rng.uniform(-1.8, 1.8)
+                SH.decal(Dc, kit, cx, cy, 0.004, rng.uniform(0.6, 1.2), rng.uniform(0.5, 1.0), rng.uniform(0, 180), f"oil{rng.randrange(3)}")
+    for k in range(8):
+        SH.decal(Dc, kit, rng.uniform(-14, 8), rng.uniform(-3.8, -0.5), 0.004, rng.uniform(2.5, 4.0), 1.6, rng.uniform(-25, 25) + 90 * (k % 2), "tyre")
+    for a0, a1 in drives:
+        for k in range(3):
+            SH.decal(Dc, kit, rng.uniform(a0 + 2, a1 - 2), y0 + rng.uniform(1.0, 4.0), 0.004, 3.0, 1.6, rng.uniform(70, 110), "tyre")
     for k in range(5):
-        blot(O2, rng, 8.3 + rng.uniform(-0.5, 0.5), 11.0 + k * 1.1, rng.uniform(0.3, 0.6))
+        SH.decal(Dc, kit, rng.uniform(-9.5, -3.5), rng.uniform(1.2, 3.0), p["floor"] + 0.003, 1.0, 1.0, rng.uniform(0, 90), "gum")
+    for k in range(4):
+        SH.decal(Dc, kit, 8.6 + rng.uniform(-0.6, 0.6), 11.5 + k * 1.2, 0.004, rng.uniform(0.8, 1.4), rng.uniform(0.6, 1.0), rng.uniform(0, 180), f"oil{k % 3}")
 
 
 def blot(brush, rng, cx, cy, r):
@@ -489,7 +500,7 @@ def yard(kit, p, rng):
     with kit.at((17.7, 17.0, 0.0)):
         OUT.dumpster_enclosure(kit, rng)
     with kit.at((8.6, 13.4, 0.0), rot=-90):
-        OUT.van(kit, rng)
+        OUT.van2(kit, rng)
 
 
 # ------------------------------------------------------------------ the far version

@@ -45,6 +45,7 @@ def opt(k, d=None):
 
 
 SAMPLES = int(opt("--samples", "256"))
+AO_MIX = dict(int=0.4, ext=0.3, lod1=0.0)
 NO_BAKE = "--no-bake" in argv
 NO_EXPORT = "--no-export" in argv
 SHOTS = "--shots" in argv
@@ -343,9 +344,21 @@ def bake_zone(zone, objs, W, H, hide):
     t = time.time()
     bpy.ops.object.bake(type="DIFFUSE", pass_filter={"DIRECT", "INDIRECT"}, target="IMAGE_TEXTURES")
     log(f"bake {zone} {W}x{H}: {time.time() - t:.0f}s")
+    lin = np.array(img.pixels[:], dtype=np.float32).reshape(H, W, 4)[::-1, :, :3]
+    # ambient occlusion (0.6 m) multiplied in, partly: the contact darkening the house gets from its
+    # screen-space AO, which the wilderness runtime doesn't have (under shelves, at wall bases, round
+    # the gondolas' feet)
+    k_ao = AO_MIX.get(zone, 0.0)
+    if k_ao > 0:
+        scene.world.light_settings.distance = 0.6
+        scene.cycles.samples = max(64, SAMPLES // 4)
+        t = time.time()
+        bpy.ops.object.bake(type="AO", target="IMAGE_TEXTURES")
+        ao = np.array(img.pixels[:], dtype=np.float32).reshape(H, W, 4)[::-1, :, :1]
+        lin = lin * (1.0 - k_ao + k_ao * ao)
+        log(f"ao {zone}: {time.time() - t:.0f}s")
     for mat, node in added:
         mat.node_tree.nodes.remove(node)
-    lin = np.array(img.pixels[:], dtype=np.float32).reshape(H, W, 4)[::-1, :, :3]
     bpy.data.images.remove(img)
     for o in objs:
         o.select_set(False)
@@ -517,7 +530,7 @@ def main():
                     o.hide_render = True
         for name, key in (("int", "probe_int"), ("ext", "probe_ext")):
             if key in kit.marks:
-                f, clamp = env_panorama(name, kit.marks[key])
+                f, clamp = env_panorama(name, kit.marks[key], width=512 if name == "int" else 256)
                 meta["zones"].setdefault(name, {})["env"] = f
                 meta["zones"][name]["env_clamp"] = clamp
         json.dump(meta, open(os.path.join(BUILD, "bake.json"), "w"), indent=1)
@@ -537,6 +550,9 @@ def main():
             if "env" in ez and kit.mats[mat].get("reflect", 0) > 0:
                 m["envMap"] = ez["env"]
                 m["envMapIntensity"] = round(kit.mats[mat]["reflect"] * ez["env_clamp"], 3)
+                if base == "int" and "int_box" in info and "probe_int" in kit.marks:
+                    m["envBox"] = [round(v, 3) for v in info["int_box"]]
+                    m["envProbe"] = list(kit.marks["probe_int"])
     if not NO_EXPORT:
         export(kit, info, objs)
     if SHOTS:

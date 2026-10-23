@@ -319,6 +319,7 @@ export class Town {
         const texs = this._siteTex || (this._siteTex = new Map());
         const tex = (p, f) => { if (!texs.has(p)) { const t = tl.load(`../assets/models/${p}`); f(t); texs.set(p, t); } return texs.get(p); };
         const lod = { near: [], far: [], dist: 140 };
+        const boxes = [];
         root.traverse((o) => {
           if (/_LOD1$/.test(o.name)) { lod.far.push(o); if (o.userData?.lodDistance) lod.dist = o.userData.lodDistance; } else if (/_LOD0$/.test(o.name)) lod.near.push(o);
           if (!o.isMesh) return;
@@ -334,20 +335,44 @@ export class Town {
             if (ep && !m.envMap) {
               m.envMap = tex(ep, (tx) => { tx.mapping = THREE.EquirectangularReflectionMapping; tx.colorSpace = THREE.SRGBColorSpace; });
               m.envMapIntensity = m.userData.envMapIntensity ?? 1;
+              // extras `envBox` [x0, y0, z0, x1, y1, z1] + `envProbe` [x, y, z] (the asset's Blender
+              // frame): the panorama is box-projected (a floor reflects the coolers where they are);
+              // reflections fade where the lightmap is dark (under shelves), except on metals
+              const box = m.userData.envBox && m.userData.envProbe ? { min: new THREE.Vector3(), max: new THREE.Vector3(), probe: new THREE.Vector3(),
+                                                                       src: m.userData.envBox, p: m.userData.envProbe } : null;
+              if (box) boxes.push(box);
               m.onBeforeCompile = (sh) => {
-                sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_maps>', '#include <lights_fragment_maps>\n\tiblIrradiance = vec3( 0.0 );');
+                if (box) {
+                  Object.assign(sh.uniforms, { envBoxMin: { value: box.min }, envBoxMax: { value: box.max }, envProbe: { value: box.probe } });
+                  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vSiteWorld;')
+                    .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvSiteWorld = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;');
+                  sh.fragmentShader = sh.fragmentShader.replace('#include <envmap_physical_pars_fragment>', SITE_BOX_PARS + '\n' +
+                    THREE.ShaderChunk.envmap_physical_pars_fragment.replace('reflectVec = inverseTransformDirection( reflectVec, viewMatrix );',
+                      'reflectVec = siteBoxProject( inverseTransformDirection( reflectVec, viewMatrix ) );'));
+                }
+                sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_maps>', '#include <lights_fragment_maps>\n\tiblIrradiance = vec3( 0.0 );' +
+                  (m.lightMap ? '\n\tradiance *= mix( smoothstep( 0.06, 0.45, dot( lightMapTexel.rgb, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 1.0, step( 0.5, metalnessFactor ) );' : ''));
               };
-              m.customProgramCacheKey = () => 'town2-site-env';
+              m.customProgramCacheKey = () => `town2-site-env${box ? '-box' : ''}${m.lightMap ? '-so' : ''}`;
               m.needsUpdate = true;
             }
           }
         });
-        // [/town2 sites]
         const [ox, oyk] = b.kit_offset || [0, 0];
         root.position.set(b.x, b.z, -(b.y - oy));
         root.rotation.y = b.yaw * Math.PI / 180;
         root.updateMatrix();
         const inner = new THREE.Group(); inner.add(...root.children); inner.position.set(-ox, 0, oyk); root.add(inner);
+        // the reflection boxes in world space (Blender (x, y, z) -> three (x, z, -y), then the placement)
+        root.updateMatrixWorld(true);
+        for (const bx of boxes) {
+          const M = inner.matrixWorld, [x0, y0, z0, x1, y1, z1] = bx.src, [px, py, pz] = bx.p;
+          const c = [new THREE.Vector3(x0, z0, -y0), new THREE.Vector3(x1, z1, -y1)].map((v) => v.applyMatrix4(M));
+          bx.min.set(Math.min(c[0].x, c[1].x), Math.min(c[0].y, c[1].y), Math.min(c[0].z, c[1].z));
+          bx.max.set(Math.max(c[0].x, c[1].x), Math.max(c[0].y, c[1].y), Math.max(c[0].z, c[1].z));
+          bx.probe.set(px, pz, -py).applyMatrix4(M);
+        }
+        // [/town2 sites]
         root.name = `Town_${b.id}`;
         this.group.add(root);
         this.sites.push({ id: b.id, root, lod });
@@ -476,6 +501,16 @@ export class Town {
   }
 }
 
+// [town2 sites] box projection of a site's reflection panorama (as viewer/baked.js does for the house)
+const SITE_BOX_PARS = /* glsl */ `
+uniform vec3 envBoxMin, envBoxMax, envProbe;
+varying vec3 vSiteWorld;
+vec3 siteBoxProject( vec3 dir ) {
+  vec3 p = clamp( vSiteWorld, envBoxMin + 0.01, envBoxMax - 0.01 );
+  vec3 t = max( ( envBoxMax - p ) / dir, ( envBoxMin - p ) / dir );
+  float d = min( min( t.x, t.y ), t.z );
+  return normalize( p + dir * d - envProbe );
+}`;
 const EVIDENCE_KIT = { crates: 'town_crate_stack', crt: 'town_crt_wall', table: 'town_table_phones', model: 'town_estate_model' };
 const params0 = () => new URLSearchParams(location.search);
 
