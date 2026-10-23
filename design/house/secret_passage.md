@@ -152,5 +152,50 @@ den, the den's moved screen wall and sconces) and need re-baking with them.
 `ROOMS=secret_stair,armory,tunnel_e,pump_room,tunnel_n node viewer/tools/walls.mjs`: 0 impossible
 positions in the new rooms (walls.mjs learnt `ROOMS=` and floors below ground).
 
-## Cost
-(filled in after the bench: see the end of this file)
+## Cost (measured 2026-10-23, M4 Pro, other agents' builds running)
+`node viewer/tools/bench.mjs` (the house route never goes below ground), before = this branch's
+start (main 2191042, label sp_base) / after (sp_after):
+
+| | before | after | budget |
+|---|---|---|---|
+| download | 19.72 MB | 21.15 MB | 23.0 |
+| textures (GPU) | 269 MB | 281 MB | 375 |
+| draw calls mean / max | 294.8 / 827 | 290.7 / 830 | 296 / 850 |
+| triangles max | 972k | 974k | 977k |
+| gpu frame p95 | 9.6 ms | 6.6 ms | 7.0 (noise: the machine was busier for "before") |
+| soft gpu p50 | 309.7 | 311.0 | 302 (over in both runs) |
+
+The +1.4 MB are the five rooms' lightmaps, panoramas and lights-off maps (1024x512 for the
+armory, 512 for the others: 8.4 MB GPU outside the house's lightmap budget, so no house room
+changed size) and the props' Draco geometry (~0.3 MB); no new textures. While the folding floor is
+shut it costs 0 draw calls (merged into the library floor); open, 13. Below ground (1600x900 @2,
+`build/sp_cost.mjs`): armory 76 draw calls / 126k triangles, the tunnels 32 / 34k, the shaft at the
+slot 124 / 200k (it sees the den), against the great room's 264 / 380k: the sealed rooms draw nothing
+of the house, the grounds or the sky.
+
+## Tests (2026-10-23)
+- `node viewer/tools/secret_passage.mjs build/secret_passage/final`: all 83 checks pass. The whole
+  walk with the real player physics at a fixed 60 Hz (W held, steered): the ladder (E, the real key),
+  the floor folds, down F1-F4 (on each landing's floor, never inside a box, no falls), the steel door,
+  the armory sealed, the safe wall's wheel, the blast door, the east tunnel, the pump room, the north
+  tunnel's dark stretch, the landing; back to the shaft (not sealed), up F4-F1 into the library, the
+  ladder back: the floor shuts. Screenshots 01-14 there (library before / after / shut again).
+- `ROOMS=secret_stair,armory,tunnel_e,pump_room,tunnel_n,library,den node viewer/tools/walls.mjs`:
+  672 runs, 0 impossible positions.
+- `tour.mjs` (the entry stair, after the ramp change): all pass. `invaders_smoke.mjs`: runs, sweeps,
+  doors as before.
+
+## Bakes
+Draft bakes only, of the rooms changed or added: library (256 samples: at 64 the folding floor's
+strips came out blotchy), den, secret_stair, armory, tunnel_e, pump_room, tunnel_n (64, on + lights
+off). The next full bake brings them to 1024 with the rest.
+
+## Known limits / for later
+- The landing's north edge is closed by `SECRET_EXIT_STUB` (a plain concrete wall + collider) until
+  the pool house's way up is built from y = 34.5; remove the stub then.
+- The invaders don't path below ground (nav false); a sighting through the den's slot is possible
+  (glass passes sight) but they can't follow. Their bodies still draw while the player is in a sealed
+  room (frustum-culled only): the invader workstream could hide them like the house.
+- Weapons are set dressing with `weapon_slot` (15 placements: 7 rifles, 4 shotguns, a bat, 3
+  pistols; rooms/armory.py); the pistols lie on the middle bay's tray (the pegboard's pegs are empty:
+  placements only turn about z, so a pistol can't hang on them).

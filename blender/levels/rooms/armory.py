@@ -50,7 +50,7 @@ def _slot(asset, kind, ax, ay, az, rot=0.0):
     return (asset, pos, r, {"weapon_slot": kind})
 
 
-_LONG = {0: ["armory_rifle"] * 3, 1: ["armory_rifle", "armory_rifle", "armory_rifle"],
+_LONG = {0: ["armory_rifle"] * 3, 1: ["armory_rifle", "armory_rifle_tan", "armory_rifle"],
          3: ["armory_shotgun"] * 3, 4: ["armory_rifle", "armory_shotgun", "armory_bat"]}
 PLACEMENTS = [
     ("armory_safe_wall", (SAFE[0], SAFE[1]), SAFE[2]),
@@ -58,7 +58,8 @@ PLACEMENTS = [
     # y +0.12, on the felt floor at 0.22; pistols on the middle bay's pegboard)
     *[_slot(a, a.split("_")[1], (i - 2) * BAY + dx, 0.12, 0.22)
       for i, assets in _LONG.items() for a, dx in zip(assets, (-0.3, 0.0, 0.3))],
-    *[_slot("armory_pistol", "pistol", sx * 0.2, 0.2, z) for sx in (-1, 1) for z in (1.25, 1.65)],
+    # pistols lie on the middle bay's felt tray (its bed at 1.0)
+    *[_slot("armory_pistol", "pistol", dx, 0.05, 1.0, rot) for dx, rot in ((-0.26, 0), (0.0, 180), (0.26, 0))],
     # the east wall, south to north (backs on the wall at x 3.6, facing west)
     ("armory_power", (3.325, -4.0), -90),
     ("armory_security", (3.2, 0.0), -90),
@@ -66,8 +67,7 @@ PLACEMENTS = [
     # the layout table in the middle, its long axis north-south
     ("armory_table", (0.35, -0.6), 90),
     # supplies along the north wall (the blast door's way in stays clear: x 1.6..3.6, y 4..6.86)
-    ("armory_supplies", (-2.2, 6.61), 180),
-    ("armory_supplies", (0.25, 6.61), 180),
+    ("armory_supplies", (-1.45, 6.61), 180),          # (a 3.77 m run: shelving, hooks, the medical cabinet)
 ]
 
 # Light: two cold lines in the ceiling the length of the room (6000 K), the safe wall's doors

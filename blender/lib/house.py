@@ -251,6 +251,11 @@ class House:
             self.box(D["room"], f"Spine_{k}", D["lo"], D["hi"], steel, uv_tile=0.5, bake=True)
         stub = getattr(P, "SECRET_EXIT_STUB", None)
         if stub:
+            # a plain wall across the opening (until the next room is built there): seen, baked
+            room = stub.get("room")
+            if room:
+                self.box(room, "ExitStub", stub["lo"], stub["hi"], self.finishes[room]["walls"],
+                         uv_tile=self.finishes[room].get("wall_uv_tile", 1.0), bake=True, collide=False)
             self.colliders.append(dict(common.aabb_gltf(stub["lo"], stub["hi"]), under=True, stub=True))
 
     def fold_floor(self, h, fold):

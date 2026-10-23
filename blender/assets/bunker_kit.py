@@ -44,12 +44,17 @@ def stainless():
 
 def felt():
     """Charcoal felt: the lining of the gun bays, the foam of a rifle case."""
-    return materials.fabric("M_Armory_Felt", (0.022, 0.024, 0.027), roughness=0.95)
+    return materials.fabric("M_Armory_Felt", (0.045, 0.048, 0.054), roughness=0.95)
 
 
 def led(strength=6.0):
     """Cold white LED (6000 K): edge lights inside the bays, status lines, linear fixtures."""
     return _emit("M_Armory_LED", (0.80, 0.90, 1.0), strength)
+
+
+def backlight():
+    """A backlit opal diffuser: the gun bays' backs (the guns stand in silhouette against it)."""
+    return _emit("M_Armory_Backlight", (0.62, 0.70, 0.80), 0.9, base=(0.30, 0.32, 0.34))
 
 
 def white():

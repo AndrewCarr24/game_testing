@@ -27,10 +27,13 @@ const check = (label, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'}
 const fmt = (v) => v.map((n) => n.toFixed(2)).join(',');
 // the library: by the reading table, looking south at the bookcases, the ladder and the inlaid panel
 const eye0 = g(-17.6, -13.6, 4.6 + 1.65), look0 = g(-15.1, -17.8, 4.9);
-await p.goto(`${BASE}/viewer/index.html?level=mansion&invaders=0&pos=${fmt(eye0)}&look=${fmt(look0)}`);
+// the library before / after views: from the collector's corner, looking along the bookcases at the ladder and the panel
+const eyeV = g(-12.4, -15.2, 4.6 + 1.7), lookV = g(-16.4, -18.9, 4.75);
+const view = () => p.evaluate(([e, l]) => { window.__player.pos.set(e[0], e[1] - 1.65, e[2]); window.__player.syncCamera(); window.__camera.lookAt(...l); }, [eyeV, lookV]);
+await p.goto(`${BASE}/viewer/index.html?level=mansion&invaders=0&pos=${fmt(eye0)}&look=${fmt(look0)}`, { timeout: 180000 });
 await p.waitForFunction(() => window.__loaded, null, { timeout: 180000 });
 await p.mouse.click(640, 360); await p.waitForTimeout(600);
-const shot = async (name) => { await p.waitForTimeout(250); await p.screenshot({ path: `${out}/${name}.png` }); };
+const shot = async (name) => { await p.evaluate(() => { for (const id of ['hint', 'cross', 'toast']) { const e = document.getElementById(id); if (e) e.style.visibility = 'hidden'; } }); await p.evaluate(() => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)))); await p.waitForTimeout(250); await p.screenshot({ path: `${out}/${name}.png` }); await p.evaluate(() => { for (const id of ['hint', 'cross', 'toast']) { const e = document.getElementById(id); if (e) e.style.visibility = ''; } }); };
 const state = () => p.evaluate(() => {
   const pl = window.__player;
   return { pos: pl.pos.toArray(), here: window.__culler.here?.name ?? null, inside: pl.overlapping(pl.pos).length,
@@ -38,38 +41,36 @@ const state = () => p.evaluate(() => {
 });
 const look = (to) => p.evaluate((t) => window.__camera.lookAt(...t), to);
 
-// walk to a point (glTF x, z), steering every frame; records the feet each frame
+// walk to a point (glTF x, z): the real player physics at a fixed 60 Hz (player.update with W held,
+// steering every step), so the walk doesn't depend on how fast this machine draws frames; the
+// feet every step. Then two real frames, so the culler and the rest of the game catch up.
 async function walkTo(label, x, z, { run = false, timeout = 20000, near = 0.25 } = {}) {
-  await p.evaluate(([x, z, near]) => {
-    window.__walk = { trace: [], done: false };
-    const tick = () => {
-      const pl = window.__player, c = window.__camera, w = window.__walk;
+  const t = await p.evaluate(([x, z, near, run, steps]) => {
+    const pl = window.__player, c = window.__camera, w = { trace: [] };
+    for (let i = 0; i < steps; i++) {
       const d = Math.hypot(x - pl.pos.x, z - pl.pos.z);
       w.trace.push([pl.pos.x, pl.pos.y, pl.pos.z, pl.grounded, pl.overlapping(pl.pos).length]);
-      if (d < near) { w.done = true; return; }
+      if (d < near) break;
       c.lookAt(x, c.position.y, z);
-      w.raf = requestAnimationFrame(tick);
-    };
-    tick();
-  }, [x, z, near]);
-  if (run) await p.keyboard.down('ShiftLeft');
-  await p.keyboard.down('KeyW');
-  await p.waitForFunction(() => window.__walk.done, null, { timeout }).catch(() => {});
-  await p.keyboard.up('KeyW');
-  if (run) await p.keyboard.up('ShiftLeft');
-  await p.waitForTimeout(250);
-  const t = await p.evaluate(() => { cancelAnimationFrame(window.__walk.raf); return window.__walk; });
+      pl.update(1 / 60, { forward: true, run });
+      window.__interact.update(1 / 60, c.position);        // (doors and the floor keep moving meanwhile)
+    }
+    return w;
+  }, [x, z, near, run, Math.round(timeout / 1000 * 60)]);
+  await p.evaluate(() => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res))));
+  await p.waitForTimeout(100);
   const s = await state();
   const d = Math.hypot(x - s.pos[0], z - s.pos[2]);
   const inside = t.trace.filter((f) => f[4]).length;
   let drop = 0;                                    // the biggest one-frame fall (a stair must glide)
   for (let i = 1; i < t.trace.length; i++) drop = Math.max(drop, t.trace[i - 1][1] - t.trace[i][1]);
+  if (process.env.TRACE && label.startsWith(process.env.TRACE)) console.log(label, JSON.stringify(t.trace.filter((_, i) => i % 8 === 0).map((f) => f.slice(0, 4).map((v) => (typeof v === 'number' ? +v.toFixed(2) : v)))));
   return { ...s, d, inside, drop, frames: t.trace.length, label };
 }
 const leg = (r, { room, y, maxDrop = 0.12 }) => {
-  check(`${r.label}: arrived`, r.d < 0.6, `${r.d.toFixed(2)} m short, ${r.frames} frames`);
+  check(`${r.label}: arrived`, r.d < 0.6, `${r.d.toFixed(2)} m short, ${r.frames} frames, at ${r.pos.map((v) => v.toFixed(2)).join(',')}`);
   if (room) check(`${r.label}: in ${room}`, r.here === room, `here=${r.here}`);
-  if (y !== undefined) check(`${r.label}: on the floor at ${y.toFixed(2)}`, Math.abs(r.pos[1] - y) < 0.08, `feet ${r.pos[1].toFixed(2)}`);
+  if (y !== undefined) check(`${r.label}: on the floor at ${y.toFixed(2)}`, Math.abs(r.pos[1] - y) < 0.08, `feet ${r.pos[1].toFixed(2)} at ${r.pos.map((v) => v.toFixed(2)).join(",")}`);
   check(`${r.label}: never inside a box`, r.inside === 0, `${r.inside} frames inside`);
   check(`${r.label}: no falls`, r.drop < maxDrop, `worst one-frame drop ${r.drop.toFixed(3)} m`);
 };
@@ -77,15 +78,30 @@ const press = async (label) => {
   const f = await p.evaluate(() => {
     const it = window.__interact, c = window.__camera;
     const f = it.nearest(c.position, c.getWorldDirection(new c.position.constructor()));
+    window.__pressed = f;
     return f ? { prompt: it.prompt(f), type: f.def.type } : null;
   });
   check(`${label}: E is on offer`, !!f, f ? `"${f.prompt}" (${f.type})` : 'nothing in focus');
+  // (the game picks its focus once a frame: on a loaded machine a frame can take long after look())
+  await p.waitForFunction(() => window.__afford?.focus === window.__pressed, null, { timeout: 5000 }).catch(() => {});
+  await p.waitForTimeout(100);
   await p.keyboard.press('KeyE');
+  await p.waitForTimeout(150);
+  const after = await p.evaluate(() => ({ locked: document.pointerLockElement !== null, toast: window.__toast?.(),
+                                          target: window.__pressed?.target, t: window.__pressed?.t, name: window.__pressed?.node.name,
+                                          focus: window.__afford?.focus?.node?.name }));
+  console.log(`  (${label}: ${after.name} target ${after.target} t ${after.t?.toFixed?.(2)}; the game's focus ${after.focus})`);
+  if (!after.locked) console.log(`  (${label}: the pointer lock was lost; E went nowhere)`);
+  if (after.toast) console.log(`  (${label}: "${after.toast}")`);
   return f;
 };
 
+// wait until what was last pressed has finished moving (real frames: slow on a loaded machine)
+const settle = () => p.waitForFunction(() => { const f = window.__pressed; return !f || (f.t === f.target && f.target === 1) || (f.def.type === "switch" && f.t === f.target); }, null, { timeout: 30000 }).catch(() => console.log("  (it never settled)"));
 const SR = 8.8 / 48, L1 = 4.6 - 13 * SR, L2 = 4.6 - 25 * SR, L3 = 4.6 - 37 * SR;
+await view();
 await shot('01_library_before');
+await p.evaluate(([e, l]) => { window.__player.pos.set(e[0], e[1] - 1.65, e[2]); window.__player.syncCamera(); window.__camera.lookAt(...l); }, [eye0, look0]);
 let s = await state();
 check('library: shut', s.open !== true && s.here === 'library', `here=${s.here} open=${s.open}`);
 
@@ -94,13 +110,14 @@ let r = await walkTo('to the ladder', -20.6, 17.9);
 await look(g(-20.7, -19.6, 4.6 + 1.2));
 await press('the ladder');
 await p.waitForFunction(() => window.__signals.get('secret_library') === true, null, { timeout: 3000 }).catch(() => {});
-await p.waitForFunction(() => [...window.__secret.groups.values()].every((gr) => gr.items.every((i) => i.t === 1)), null, { timeout: 15000 }).catch(() => {});
+await p.waitForFunction(() => [...window.__secret.groups.values()].every((gr) => gr.items.every((i) => i.t === 1)), null, { timeout: 60000 }).catch(() => {});
 s = await state();
 check('the floor has folded into a stair', s.open === true, `signal ${s.open}`);
-await p.evaluate(([e, l]) => { window.__player.pos.set(e[0], e[1] - 1.65, e[2]); window.__player.syncCamera(); window.__camera.lookAt(...l); }, [eye0, look0]);
+await view();
 await shot('02_library_after');
 // a look down the opening from its top
-await walkTo('to the top step', -15.125, 15.0);
+await walkTo('past the reading table', -17.6, 15.15);
+await walkTo('to the top step', -15.125, 15.15, { near: 0.1 });
 await look(g(-15.125, -19.0, 2.5));
 await shot('03_down_the_stair');
 
@@ -126,7 +143,7 @@ leg(r, { room: 'secret_stair', y: -4.2 });
 await walkTo('to the door', -14.85, 15.0, { near: 0.2 });
 await look(g(-14.85, -13.0, -4.2 + 1.5));
 await press('the steel door');
-await p.waitForTimeout(1200);
+await settle();
 r = await walkTo('into the armory', -14.85, 12.6);
 leg(r, { room: 'armory', y: -4.2 });
 s = await state();
@@ -137,14 +154,16 @@ await shot('06_armory');
 await walkTo('to the safe wall', -15.6, 7.5);
 await look(g(-17.0, -7.51, -4.2 + 1.3));
 await press('the safe wheel');
-await p.waitForTimeout(4200);
-await look(g(-17.2, -7.51, -4.2 + 1.4));
+await settle(); await p.waitForTimeout(3500);   // (the safe doors follow the wheel, the last 3.4 s)
+await walkTo('back from the safe', -14.4, 5.6, { near: 0.15 });
+await look(g(-17.3, -7.51, -4.2 + 1.45));
 await shot('07_safe_wall_open');
 // the blast door (east wall, its north end)
 await walkTo('to the blast door', -11.3, 1.0);          // (out of its leaf's sweep: hinge at y -3.4)
 await look(g(-9.5, -2.4, -4.2 + 1.3));
 await press('the blast door');
-await p.waitForTimeout(3800);
+await settle();
+await walkTo('to the blast doorway', -10.7, 2.4);
 r = await walkTo('into the tunnel', -8.0, 2.4);
 leg(r, { room: 'tunnel_e', y: -4.2 });
 await look(g(38.0, -2.4, -4.2 + 1.5));
@@ -173,6 +192,8 @@ await shot('13_landing');
 // back: to the shaft and up to the library
 await walkTo('back to the pump room', 40.0, 2.4, { run: true });
 await walkTo('back along the tunnel', -9.0, 2.4, { run: true, timeout: 30000 });
+await walkTo('back through the blast doorway', -10.7, 2.4);
+await walkTo('round the blast door', -13.0, 2.4);
 await walkTo('through the armory', -14.85, 13.2);
 r = await walkTo('back into the shaft', -14.85, 15.3, { near: 0.2 });
 check('back in the shaft: not sealed, the house drawn', !r.sealed && r.shell !== false, `here=${r.here} sealed=${r.sealed}`);
@@ -186,16 +207,16 @@ await walkTo('across L2', -14.12, 15.2, { near: 0.2 });
 r = await walkTo('F2 up', -14.12, 19.3, { near: 0.2 });
 leg(r, { y: L1 });
 await walkTo('across L1', -15.125, 19.3, { near: 0.2 });
-r = await walkTo('F1 up into the library', -15.125, 14.6, { near: 0.2 });
+r = await walkTo('F1 up into the library', -15.125, 15.1, { near: 0.2 });
 leg(r, { room: 'library', y: 4.6 });
 // close it again with the ladder (now at the end of its rail, x 0.85 local = world -16.15)
 await walkTo('to the ladder', -16.15, 17.9);
 await look(g(-16.15, -19.6, 4.6 + 1.2));
 await press('the ladder (back)');
-await p.waitForFunction(() => [...window.__secret.groups.values()].every((gr) => gr.items.every((i) => i.t === 0)), null, { timeout: 15000 }).catch(() => {});
+await p.waitForFunction(() => [...window.__secret.groups.values()].every((gr) => gr.items.every((i) => i.t === 0)), null, { timeout: 60000 }).catch(() => {});
 s = await state();
 check('the floor is shut again', s.open === false, `signal ${s.open}`);
-await p.evaluate(([e, l]) => { window.__player.pos.set(e[0], e[1] - 1.65, e[2]); window.__player.syncCamera(); window.__camera.lookAt(...l); }, [eye0, look0]);
+await view();
 await shot('14_library_shut_again');
 await b.close();
 console.log(fails ? `${fails} failed` : 'all passed');

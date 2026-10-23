@@ -26,11 +26,15 @@ const result = await p.evaluate(async (only) => {
     return null;
   };
   const starts = {};
+  // (below ground) a shaft stands inside another room's rect (the secret stair in the den): a start
+  // for that room must not be in the shaft
+  const shafts = Object.entries(window.__level.rooms).filter(([, q]) => q.kind === 'shaft');
+  const inShaft = (name, p) => p && shafts.some(([n, q]) => n !== name && p[0] > q.rect[0] - 0.4 && p[0] < q.rect[2] + 0.4 && p[1] > q.rect[1] - 0.4 && p[1] < q.rect[3] + 0.4);
   for (const [name, r] of Object.entries(window.__level.rooms)) {
     if (only && !only.includes(name)) continue;
     const [x0, z0, x1, z1] = r.rect, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
-    starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2]]
-      .map(([x, z]) => clearNear(x, z, r.floor)).filter(Boolean);
+    starts[name] = [[cx, cz], [x0 + 1.2, z0 + 1.2], [x1 - 1.2, z1 - 1.2], [x1 - 1.2, z0 + 1.2]]
+      .map(([x, z]) => clearNear(x, z, r.floor)).filter((p) => p && !inShaft(name, p)).slice(0, 3);
   }
   // going outside: the grounds too (each zone's centre and two corners, the terrace's four sides,
   // on the lawn); outside the house the floor is the lawn, not 0

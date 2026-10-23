@@ -274,4 +274,4 @@ LANDINGS = [
 # the steel plate between the two lanes (the flights' spine), floor to ceiling between the landings
 DIVIDERS = [dict(room="secret_stair", lo=(-14.65, -18.8, -4.2), hi=(-14.6, -15.72, 4.2))]
 # until the pool house's way up exists: an invisible wall across the landing's open north edge
-SECRET_EXIT_STUB = dict(lo=(38.5, 34.5, -4.2), hi=(41.5, 34.7, -1.4))
+SECRET_EXIT_STUB = dict(lo=(38.5, 34.5, -4.2), hi=(41.5, 34.7, -1.4), room="tunnel_n")   # (a plain wall)

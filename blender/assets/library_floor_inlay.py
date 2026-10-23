@@ -53,7 +53,7 @@ def build(**overrides):
     box(0, L / 2 + b / 2, w + 2 * b, b, h)             # the far (north) end
     for sx in (-1, 1):
         box(sx * (w / 2 + b / 2), L / 2 + b / 2, c, c, h * 1.4)     # corner blocks at the far end
-    ob = common.mesh_object(f"{n}_Brass", bm, col, materials.bronze(), root, smooth=False)
+    ob = common.mesh_object(f"{n}_Brass_NoCollide", bm, col, materials.bronze(), root, smooth=False)
     common.box_uv(ob, tile=0.5)
     parts = [ob]
     return root, parts
