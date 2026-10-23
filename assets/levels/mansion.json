@@ -2855,7 +2855,7 @@
         "min": [
           -0.5,
           0.0,
-          -0.5834
+          -0.5825
         ],
         "max": [
           0.6419,
@@ -2875,9 +2875,9 @@
           -0.1955
         ],
         "max": [
-          0.4314,
+          0.4017,
           0.1107,
-          0.2614
+          0.2317
         ]
       },
       "colliders": [],
@@ -6525,14 +6525,14 @@
       "file": "models/decor_a_table_side_cup.gltf",
       "aabb": {
         "min": [
-          0.0316,
+          0.0586,
           0.0,
-          0.0316
+          0.0586
         ],
         "max": [
-          0.2284,
+          0.2014,
           0.0701,
-          0.2284
+          0.2014
         ]
       },
       "colliders": [],
@@ -7564,7 +7564,7 @@
           -0.1457
         ],
         "max": [
-          0.7472,
+          0.747,
           1.1617,
           0.1491
         ]
@@ -7617,7 +7617,7 @@
         "max": [
           0.5153,
           0.2426,
-          0.2484
+          0.2214
         ]
       },
       "colliders": [],
@@ -11832,9 +11832,9 @@
           -0.0642
         ],
         "max": [
-          0.1737,
+          0.1661,
           0.2055,
-          0.1141
+          0.1066
         ]
       },
       "colliders": [],
@@ -12003,40 +12003,6 @@
         }
       ],
       "tris": 490
-    },
-    "ix_wine_bottle": {
-      "file": "models/ix_wine_bottle.gltf",
-      "aabb": {
-        "min": [
-          -0.0374,
-          0.0,
-          -0.0374
-        ],
-        "max": [
-          0.0374,
-          0.3005,
-          0.0374
-        ]
-      },
-      "colliders": [],
-      "tris": 660
-    },
-    "ix_battery": {
-      "file": "models/ix_battery.gltf",
-      "aabb": {
-        "min": [
-          -0.035,
-          -0.0001,
-          -0.0104
-        ],
-        "max": [
-          0.0362,
-          0.0211,
-          0.0104
-        ]
-      },
-      "colliders": [],
-      "tris": 288
     },
     "ix_blender": {
       "file": "models/ix_blender.gltf",
@@ -16877,7 +16843,7 @@
         "max": [
           0.5234,
           0.3229,
-          0.1623
+          0.162
         ]
       },
       "colliders": [],
@@ -16929,23 +16895,6 @@
         }
       ],
       "tris": 1632
-    },
-    "ix_key_locker": {
-      "file": "models/ix_key_locker.gltf",
-      "aabb": {
-        "min": [
-          -0.07,
-          0.0,
-          -0.012
-        ],
-        "max": [
-          0.041,
-          0.0036,
-          0.012
-        ]
-      },
-      "colliders": [],
-      "tris": 836
     },
     "garage_lockers": {
       "file": "models/garage_lockers.gltf",
@@ -17324,7 +17273,7 @@
         "max": [
           0.1545,
           0.0534,
-          0.1759
+          0.1692
         ]
       },
       "colliders": [],
@@ -17777,6 +17726,18 @@
         },
         {
           "min": [
+            -0.884,
+            0.314,
+            -1.409
+          ],
+          "max": [
+            0.884,
+            0.5193,
+            1.7679
+          ]
+        },
+        {
+          "min": [
             -0.868,
             0.8609,
             -1.98
@@ -17825,6 +17786,18 @@
         },
         {
           "min": [
+            0.207,
+            0.6375,
+            0.2184
+          ],
+          "max": [
+            0.593,
+            0.9818,
+            0.3912
+          ]
+        },
+        {
+          "min": [
             -0.9769,
             0.2116,
             -2.4218
@@ -17849,14 +17822,50 @@
         },
         {
           "min": [
+            0.709,
+            0.0,
+            1.19
+          ],
+          "max": [
+            0.9545,
+            0.712,
+            1.91
+          ]
+        },
+        {
+          "min": [
             -0.9545,
+            0.0,
+            1.19
+          ],
+          "max": [
+            -0.709,
+            0.712,
+            1.91
+          ]
+        },
+        {
+          "min": [
+            0.709,
             0.0,
             -1.86
           ],
           "max": [
             0.9545,
             0.712,
-            1.91
+            -1.14
+          ]
+        },
+        {
+          "min": [
+            -0.9545,
+            0.0,
+            -1.86
+          ],
+          "max": [
+            -0.709,
+            0.712,
+            -1.14
           ]
         }
       ],
@@ -17903,6 +17912,18 @@
         },
         {
           "min": [
+            -0.884,
+            0.314,
+            -1.409
+          ],
+          "max": [
+            0.884,
+            0.5193,
+            1.7679
+          ]
+        },
+        {
+          "min": [
             -0.868,
             0.8609,
             -1.98
@@ -17939,6 +17960,18 @@
         },
         {
           "min": [
+            0.207,
+            0.6375,
+            0.2184
+          ],
+          "max": [
+            0.593,
+            0.9818,
+            0.3912
+          ]
+        },
+        {
+          "min": [
             -0.9769,
             0.2116,
             -2.4218
@@ -17963,14 +17996,50 @@
         },
         {
           "min": [
+            0.709,
+            0.0,
+            1.19
+          ],
+          "max": [
+            0.9545,
+            0.712,
+            1.91
+          ]
+        },
+        {
+          "min": [
             -0.9545,
+            0.0,
+            1.19
+          ],
+          "max": [
+            -0.709,
+            0.712,
+            1.91
+          ]
+        },
+        {
+          "min": [
+            0.709,
             0.0,
             -1.86
           ],
           "max": [
             0.9545,
             0.712,
-            1.91
+            -1.14
+          ]
+        },
+        {
+          "min": [
+            -0.9545,
+            0.0,
+            -1.86
+          ],
+          "max": [
+            -0.709,
+            0.712,
+            -1.14
           ]
         }
       ],
@@ -17987,7 +18056,7 @@
         "max": [
           0.8168,
           0.6613,
-          0.1789
+          0.1509
         ]
       },
       "colliders": [],
@@ -18239,23 +18308,6 @@
       ],
       "tris": 3228
     },
-    "ix_key_cellar": {
-      "file": "models/ix_key_cellar.gltf",
-      "aabb": {
-        "min": [
-          -0.072,
-          0.0,
-          -0.013
-        ],
-        "max": [
-          0.049,
-          0.0036,
-          0.013
-        ]
-      },
-      "colliders": [],
-      "tris": 852
-    },
     "ix_gun_locker": {
       "file": "models/ix_gun_locker.gltf",
       "aabb": {
@@ -18442,40 +18494,6 @@
       ],
       "tris": 1792
     },
-    "ix_flashlight": {
-      "file": "models/ix_flashlight.gltf",
-      "aabb": {
-        "min": [
-          -0.0825,
-          0.0,
-          -0.0193
-        ],
-        "max": [
-          0.0825,
-          0.0386,
-          0.0193
-        ]
-      },
-      "colliders": [],
-      "tris": 1868
-    },
-    "ix_fuse": {
-      "file": "models/ix_fuse.gltf",
-      "aabb": {
-        "min": [
-          -0.0255,
-          0.0,
-          -0.0074
-        ],
-        "max": [
-          0.0255,
-          0.0148,
-          0.0074
-        ]
-      },
-      "colliders": [],
-      "tris": 460
-    },
     "decor_c_gallery_bench": {
       "file": "models/decor_c_gallery_bench.gltf",
       "aabb": {
@@ -18559,7 +18577,7 @@
         "min": [
           -0.8,
           0.0,
-          -0.2442
+          -0.206
         ],
         "max": [
           0.8,
@@ -21308,9 +21326,9 @@
       "file": "models/decor_c_vignette_table.gltf",
       "aabb": {
         "min": [
-          -0.5962,
+          -0.5828,
           -0.001,
-          -0.4163
+          -0.4153
         ],
         "max": [
           1.4229,
@@ -21330,9 +21348,9 @@
           -0.1714
         ],
         "max": [
-          0.2137,
+          0.188,
           0.1051,
-          0.1933
+          0.169
         ]
       },
       "colliders": [],
@@ -21452,57 +21470,6 @@
         }
       ],
       "tris": 680
-    },
-    "ix_book": {
-      "file": "models/ix_book.gltf",
-      "aabb": {
-        "min": [
-          -0.1221,
-          -0.0,
-          -0.08
-        ],
-        "max": [
-          0.1175,
-          0.032,
-          0.08
-        ]
-      },
-      "colliders": [],
-      "tris": 156
-    },
-    "ix_book_b": {
-      "file": "models/ix_book_b.gltf",
-      "aabb": {
-        "min": [
-          -0.1111,
-          -0.0,
-          -0.0725
-        ],
-        "max": [
-          0.1075,
-          0.026,
-          0.0725
-        ]
-      },
-      "colliders": [],
-      "tris": 156
-    },
-    "ix_key_safe": {
-      "file": "models/ix_key_safe.gltf",
-      "aabb": {
-        "min": [
-          -0.07,
-          0.0,
-          -0.012
-        ],
-        "max": [
-          0.055,
-          0.0036,
-          0.012
-        ]
-      },
-      "colliders": [],
-      "tris": 948
     },
     "bed": {
       "file": "models/bed.gltf",
@@ -23566,23 +23533,6 @@
       ],
       "tris": 12412
     },
-    "keycard": {
-      "file": "models/keycard.gltf",
-      "aabb": {
-        "min": [
-          -0.0428,
-          0.0,
-          -0.027
-        ],
-        "max": [
-          0.0428,
-          0.0016,
-          0.027
-        ]
-      },
-      "colliders": [],
-      "tris": 176
-    },
     "library_bookcase_o": {
       "file": "models/library_bookcase_o.gltf",
       "aabb": {
@@ -23766,9 +23716,9 @@
       "file": "models/decor_c_vignette_desk.gltf",
       "aabb": {
         "min": [
-          -0.416,
+          -0.4006,
           0.0,
-          -0.3286
+          -0.3122
         ],
         "max": [
           1.0429,
@@ -23819,10 +23769,10 @@
         "min": [
           -0.4456,
           0.0,
-          -0.2094
+          -0.1885
         ],
         "max": [
-          0.454,
+          0.4426,
           0.399,
           0.1788
         ]
@@ -24047,23 +23997,6 @@
         }
       ],
       "tris": 1568
-    },
-    "ix_car_key": {
-      "file": "models/ix_car_key.gltf",
-      "aabb": {
-        "min": [
-          -0.0364,
-          0.0,
-          -0.0174
-        ],
-        "max": [
-          0.0492,
-          0.0125,
-          0.0174
-        ]
-      },
-      "colliders": [],
-      "tris": 940
     },
     "guest_mirror_trim": {
       "file": "models/guest_mirror_trim.gltf",
@@ -26551,7 +26484,7 @@
           -0.2586
         ],
         "max": [
-          0.3209,
+          0.3022,
           0.2589,
           0.1898
         ]
@@ -26563,14 +26496,14 @@
       "file": "models/decor_d_side_reading.gltf",
       "aabb": {
         "min": [
-          -0.2235,
+          -0.2231,
           -0.0001,
-          -0.2257
+          -0.2253
         ],
         "max": [
-          0.2238,
+          0.1994,
           0.062,
-          0.2138
+          0.1894
         ]
       },
       "colliders": [],
@@ -26635,23 +26568,6 @@
         }
       ],
       "tris": 2148
-    },
-    "ix_key_office": {
-      "file": "models/ix_key_office.gltf",
-      "aabb": {
-        "min": [
-          -0.07,
-          0.0,
-          -0.012
-        ],
-        "max": [
-          0.047,
-          0.0036,
-          0.012
-        ]
-      },
-      "colliders": [],
-      "tris": 852
     },
     "secret_button": {
       "file": "models/secret_button.gltf",
@@ -28222,8 +28138,7 @@
         4.6,
         -10.5
       ],
-      "rotationY": 180,
-      "lock": "keycard"
+      "rotationY": 180
     },
     {
       "asset": "door_plain",
@@ -28233,8 +28148,7 @@
         4.6,
         -10.5
       ],
-      "rotationY": 0,
-      "lock": "key_office"
+      "rotationY": 0
     },
     {
       "asset": "door_plain",
@@ -31211,26 +31125,6 @@
       "rotationY": 0
     },
     {
-      "asset": "ix_wine_bottle",
-      "room": "kitchen",
-      "position": [
-        1.68,
-        0.93,
-        -13.63
-      ],
-      "rotationY": 0
-    },
-    {
-      "asset": "ix_battery",
-      "room": "kitchen",
-      "position": [
-        -3.5,
-        0.92,
-        -11.2
-      ],
-      "rotationY": 75
-    },
-    {
       "asset": "ix_blender",
       "room": "kitchen",
       "position": [
@@ -31399,7 +31293,6 @@
         -19.575
       ],
       "rotationY": 0,
-      "lock": "key_cellar",
       "signal": {
         "lights": "lights_wine_room"
       }
@@ -31739,40 +31632,6 @@
       "rotationY": 90,
       "signal": "lights_wine_room",
       "state": true
-    },
-    {
-      "asset": "ix_wine_bottle",
-      "room": "wine_room",
-      "position": [
-        21.05,
-        0.92,
-        -15.7
-      ],
-      "rotationY": 15
-    },
-    {
-      "asset": "ix_wine_bottle",
-      "room": "wine_room",
-      "position": [
-        15.2,
-        0.92,
-        -18.87
-      ],
-      "rotationY": 40
-    },
-    {
-      "asset": "ix_key_locker",
-      "room": "wine_room",
-      "position": [
-        0.0,
-        0.0,
-        -0.0
-      ],
-      "rotationY": 160,
-      "attach": {
-        "asset": "dining_climate_wall",
-        "node": "DiningClimateWall_Inside"
-      }
     },
     {
       "asset": "garage_lockers",
@@ -32332,20 +32191,6 @@
       "state": true
     },
     {
-      "asset": "ix_key_cellar",
-      "room": "garage",
-      "position": [
-        0.06,
-        -0.059,
-        0.15
-      ],
-      "rotationY": 20,
-      "attach": {
-        "asset": "garage_workbench",
-        "node": "GarageWorkbench_Drawer"
-      }
-    },
-    {
       "asset": "ix_gun_locker",
       "room": "garage",
       "position": [
@@ -32353,50 +32198,7 @@
         0.0,
         12.2
       ],
-      "rotationY": 90,
-      "lock": "key_locker"
-    },
-    {
-      "asset": "ix_flashlight",
-      "room": "garage",
-      "position": [
-        -0.2,
-        0.0,
-        -0.0
-      ],
-      "rotationY": 8,
-      "attach": {
-        "asset": "ix_gun_locker",
-        "node": "IX_GunLocker_Inside"
-      }
-    },
-    {
-      "asset": "ix_fuse",
-      "room": "garage",
-      "position": [
-        0.08,
-        0.0,
-        0.04
-      ],
-      "rotationY": -15,
-      "attach": {
-        "asset": "ix_gun_locker",
-        "node": "IX_GunLocker_Inside"
-      }
-    },
-    {
-      "asset": "ix_battery",
-      "room": "garage",
-      "position": [
-        0.26,
-        0.0,
-        -0.05
-      ],
-      "rotationY": 25,
-      "attach": {
-        "asset": "ix_gun_locker",
-        "node": "IX_GunLocker_Inside"
-      }
+      "rotationY": 90
     },
     {
       "asset": "decor_c_gallery_bench",
@@ -34255,36 +34057,6 @@
       "state": true
     },
     {
-      "asset": "ix_book",
-      "room": "library",
-      "position": [
-        -15.4,
-        5.36,
-        13.35
-      ],
-      "rotationY": 10
-    },
-    {
-      "asset": "ix_book_b",
-      "room": "library",
-      "position": [
-        -16.25,
-        5.36,
-        13.7
-      ],
-      "rotationY": -15
-    },
-    {
-      "asset": "ix_key_safe",
-      "room": "library",
-      "position": [
-        -14.95,
-        5.368,
-        14.01
-      ],
-      "rotationY": 35
-    },
-    {
       "asset": "bed",
       "room": "primary_bedroom",
       "position": [
@@ -34641,20 +34413,6 @@
         -13.47
       ],
       "rotationY": 110
-    },
-    {
-      "asset": "ix_battery",
-      "room": "primary_bedroom",
-      "position": [
-        -0.06,
-        -0.073,
-        -0.16
-      ],
-      "rotationY": 70,
-      "attach": {
-        "asset": "nightstand",
-        "node": "Nightstand_Drawer"
-      }
     },
     {
       "asset": "bath_vanity",
@@ -35104,20 +34862,6 @@
       "rotationY": 0
     },
     {
-      "asset": "keycard",
-      "room": "office",
-      "position": [
-        0.09,
-        -0.0185,
-        0.16
-      ],
-      "rotationY": 18,
-      "attach": {
-        "asset": "desk",
-        "node": "Desk_Drawer"
-      }
-    },
-    {
       "asset": "library_bookcase_o",
       "room": "office",
       "position": [
@@ -35544,16 +35288,6 @@
       "signal": "blinds_office"
     },
     {
-      "asset": "ix_book_b",
-      "room": "office",
-      "position": [
-        3.19,
-        4.98,
-        -14.63
-      ],
-      "rotationY": 84
-    },
-    {
       "asset": "ix_safe",
       "room": "office",
       "position": [
@@ -35561,36 +35295,7 @@
         4.6,
         -18.55
       ],
-      "rotationY": -90,
-      "lock": "key_safe"
-    },
-    {
-      "asset": "ix_car_key",
-      "room": "office",
-      "position": [
-        0.06,
-        0.0,
-        -0.0
-      ],
-      "rotationY": 20,
-      "attach": {
-        "asset": "ix_safe",
-        "node": "IX_Safe_Inside"
-      }
-    },
-    {
-      "asset": "ix_battery",
-      "room": "office",
-      "position": [
-        -0.13,
-        0.0,
-        -0.04
-      ],
-      "rotationY": 75,
-      "attach": {
-        "asset": "ix_safe",
-        "node": "IX_Safe_Inside"
-      }
+      "rotationY": -90
     },
     {
       "asset": "guest_mirror_trim",
@@ -36201,20 +35906,6 @@
       "rotationY": 90,
       "signal": "lights_guest_room",
       "state": true
-    },
-    {
-      "asset": "ix_key_office",
-      "room": "guest_room",
-      "position": [
-        0.05,
-        -0.058,
-        -0.12
-      ],
-      "rotationY": 25,
-      "attach": {
-        "asset": "guest_nightstand",
-        "node": "GuestNightstand_Drawer"
-      }
     },
     {
       "asset": "decor_c_plant_snake",
